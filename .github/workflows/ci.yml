@@ -54,7 +54,3 @@ jobs:
       - name: Build
         run: |
           yarn build:all
-
-      - name: Docker
-        run: |
-          yarn nx affected --target=docker-build --parallel=3
