@@ -1,65 +1,62 @@
-# Stage 1 - Create yarn install skeleton layer
-FROM registry.access.redhat.com/ubi9/nodejs-18:latest AS packages
-
-#WORKDIR /app
-COPY package.json yarn.lock ./
-
-COPY packages packages
-
+# Stage 1 - Install dependencies
+FROM registry.access.redhat.com/ubi9/nodejs-18:latest AS deps
 USER 0
 
-RUN chgrp -R 0 /opt/app-root/src && \
-  chmod -R g=u /opt/app-root/src
+# Install yarn
+RUN \
+  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
+  dnf install -y yarn
 
-USER 1001
+COPY ./package.json ./yarn.lock ./
+COPY ./packages ./packages
 
-RUN npm install -g yarn && \
-  fix-permissions ./ && \
-  find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
+# Remove all files except package.json
+RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
-# Stage 2 - Install dependencies and build packages
+RUN yarn install --frozen-lockfile
+
+# Stage 2 - Build packages
 FROM registry.access.redhat.com/ubi9/nodejs-18:latest AS build
+USER 0
 
-COPY --from=packages /opt/app-root/src .
-
-RUN fix-permissions ./ && \
-  yarn install --frozen-lockfile --network-timeout 600000 && rm -rf "$(yarn cache dir)"
+# Install yarn
+RUN \
+  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
+  dnf install -y yarn
 
 COPY . .
-
-USER 0
-
-RUN chgrp -R 0 /opt/app-root/src && \
-  chmod -R g=u /opt/app-root/src
-
-USER 1001
+COPY --from=deps /opt/app-root/src .
 
 RUN yarn tsc
-RUN yarn --cwd packages/backend build
+RUN yarn build:backend
 
 # Stage 3 - Build the actual backend image and install production dependencies
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest
-
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
 USER 0
 
+# Install yarn
+RUN \
+  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
+  microdnf install -y yarn
+
+# Install gzip for tar and clean up
 RUN microdnf install -y gzip && microdnf clean all
 
+# Switch to nodejs user
 USER 1001
 
 # Copy the install dependencies from the build stage and context
 COPY --from=build /opt/app-root/src/yarn.lock /opt/app-root/src/package.json /opt/app-root/src/packages/backend/dist/skeleton.tar.gz ./
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
-RUN npm install -g yarn && \
-  yarn install --frozen-lockfile --production --network-timeout 600000 && rm -rf "$(yarn cache dir)"
+# Install production dependencies
+RUN yarn install --frozen-lockfile --production && yarn cache clean
 
 # Copy the built packages from the build stage
 COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy any other files that we need at runtime
-COPY app-config.yaml ./
-
-RUN fix-permissions ./
+COPY ./app-config.yaml .
 
 CMD ["node", "packages/backend", "--config", "app-config.yaml"]
