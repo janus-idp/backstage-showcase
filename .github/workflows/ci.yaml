@@ -37,6 +37,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Checkout Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Install
         run: |
           yarn install --frozen-lockfile
