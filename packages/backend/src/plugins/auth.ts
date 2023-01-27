@@ -5,7 +5,10 @@ import {
 } from '@backstage/plugin-auth-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
-import { DEFAULT_NAMESPACE, stringifyEntityRef } from '@backstage/catalog-model';
+import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -54,7 +57,7 @@ export default async function createPlugin(
         signIn: {
           async resolver({ result }, ctx) {
             const name = result.getHeader('x-forwarded-preferred-username');
-            if(!name) {
+            if (!name) {
               throw new Error('Request did not contain a user');
             }
 
