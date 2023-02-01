@@ -1,12 +1,12 @@
 # Setting up to use the Helm Chart
 
-The Helm Chart that this project is currently using is the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. For me information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
+The Helm Chart that this project is currently using is the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. For more information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
 
 ## Getting Started
 
 Ensure that you have Helm installed on your local machine, you can find out more information on the [Helm website](https://helm.sh/docs/intro/install/).
 
-Next, is to add the Backstage Helm Chart and its dependent repository.
+Next is to add the Backstage Helm Chart and its dependent repository.
 
 ```shell
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -17,14 +17,14 @@ helm repo add backstage https://backstage.github.io/charts
 
 This guide will have a focus deploying to an OpenShift cluster as that is the main target for this project.
 
-Build and push an image of the Backstage Showcase app that you can test.
+1. Build and push an image of the Backstage Showcase app that you can test.
 
 ```shell
-docker build -t <registry>/<repository>:<tag> .
-docker push <registry>/<repository>:<tag>
+podman build -t <registry>/<repository>:<tag> .
+podman push <registry>/<repository>:<tag>
 ```
 
-Create a file to hold environment variables called values-backstage-showcase.yaml and populate it with the following content.
+2. Create a file to hold environment variables called `values-backstage-showcase.yaml` and populate it with the following content.
 
 ```yaml
 backstage:
@@ -45,29 +45,29 @@ ingress:
   host: localhost
 ```
 
-Environment variables using the prefix APP_CONFIG will override the default variables that are configured within the app-config.yaml file. Ensure to update the <registry> <repository> and <tag> field to point to your image.
+- Environment variables using the prefix APP_CONFIG will override the default variables that are configured within the app-config.yaml file. Ensure to update the `<registry>` `<repository>` and `<tag>` fields to point to your image.
 
-Deploy the Backstage Showcase app to the OpenShift cluster
+3. Deploy the Backstage Showcase app to the OpenShift cluster
 
 ```shell
 helm install -n backstage --create-namespace backstage backstage/backstage -f values-backstage-showcase.yaml
 ```
 
-You can see confirm that the Backstage Showcase pod is running using the command
+4. You can see confirm that the Backstage Showcase pod is running using the command
 
 ```shell
 oc get pods -n backstage
 ```
 
-Finally forward the port to access the Backstage Showcase app
+5. Finally forward the port to access the Backstage Showcase app
 
 ```shell
 oc port-forward -n backstage svc/backstage 7007:7007
 ```
 
-The app can be accessed at http://localhost:7007
+- The app can be accessed at http://localhost:7007
 
-## More Information
+## Additional Resources
 
 For more information on the Helm Chart consult the [official Backstage Helm Chart](https://github.com/backstage/charts).
 
