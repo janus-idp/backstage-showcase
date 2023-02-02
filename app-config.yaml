@@ -3,7 +3,7 @@ app:
   baseUrl: http://localhost:3000
 
 organization:
-  name: My Company
+  name: Red Hat
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -65,7 +65,12 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -77,28 +82,22 @@ catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
   locations:
-    # Local example data, file locations are relative to the backend process, typically `packages/backend`
-    - type: file
-      target: ../../examples/entities.yaml
+    # File locations are relative to the backend process, typically `packages/backend`
 
-    # Local example template
+    # Local systems
     - type: file
-      target: ../../examples/template/template.yaml
+      target: ../../catalog-entities/systems.yaml
       rules:
-        - allow: [Template]
+        - allow: [System]
 
-    # Local example organizational data
+    # Local components
     - type: file
-      target: ../../examples/org.yaml
+      target: ../../catalog-entities/components.yaml
+      rules:
+        - allow: [Component]
+
+    # Local organizational data
+    - type: file
+      target: ../../catalog-entities/org.yaml
       rules:
         - allow: [User, Group]
-
-    ## Uncomment these lines to add more example data
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
-
-    ## Uncomment these lines to add an example org
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-    #   rules:
-    #     - allow: [User, Group]
