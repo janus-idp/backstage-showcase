@@ -1,16 +1,5 @@
 import {BackstageTheme, createTheme, genPageTheme, lightTheme, shapes} from '@backstage/theme';
 
-import { AutocompleteClassKey } from '@material-ui/lab/Autocomplete';
-import { AlertClassKey } from '@material-ui/lab/Alert';
-
-// Labs types not included in overrides; https://github.com/mui/material-ui/issues/19427
-declare module '@material-ui/core/styles/overrides' {
-    export interface ComponentNameToClassKey {
-        MuiAlert: AlertClassKey;
-        MuiAutocomplete: AutocompleteClassKey;
-    }
-}
-
 const baseTheme = createTheme({
     palette: {
         ...lightTheme.palette,
