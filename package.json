@@ -21,7 +21,8 @@
     "lint:all": "backstage-cli repo lint",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write .",
-    "new": "backstage-cli new --scope internal"
+    "new": "backstage-cli new --scope internal",
+    "postinstall": "husky install"
   },
   "workspaces": {
     "packages": [
@@ -33,6 +34,7 @@
     "@backstage/cli": "^0.22.1",
     "@spotify/prettier-config": "^12.0.0",
     "concurrently": "^6.0.0",
+    "husky": "^8.0.3",
     "lerna": "^4.0.0",
     "node-gyp": "^9.0.0",
     "prettier": "^2.3.2",
