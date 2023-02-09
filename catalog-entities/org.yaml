@@ -1,0 +1,9 @@
+---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-group
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: janus-authors
+spec:
+  type: team
+  children: []
