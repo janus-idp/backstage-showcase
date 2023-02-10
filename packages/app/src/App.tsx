@@ -33,6 +33,8 @@ import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { janusTheme } from './themes/janus';
 
 const app = createApp({
   apis,
@@ -51,6 +53,18 @@ const app = createApp({
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
   },
+  themes: [
+    {
+      id: 'janus',
+      title: 'Janus Theme',
+      variant: 'light',
+      Provider: ({ children }) => (
+        <ThemeProvider theme={janusTheme}>
+          <CssBaseline>{children}</CssBaseline>
+        </ThemeProvider>
+      ),
+    },
+  ],
 });
 
 const routes = (
