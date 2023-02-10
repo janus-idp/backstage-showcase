@@ -9,6 +9,7 @@ metadata:
     component: backstage-showcase
   annotations:
     github.com/project-slug: janus-idp/backstage-showcase
+    backstage.io/kubernetes-id: ${K8S_ID}
 spec:
   type: website
   owner: janus-authors
