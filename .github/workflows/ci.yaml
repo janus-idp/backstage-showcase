@@ -28,9 +28,6 @@ jobs:
     name: Main Job
     runs-on: ubuntu-latest
 
-    env:
-      NX_SKIP_NX_CACHE: true
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,20 +39,14 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install
+      - name: Install dependencies
         run: |
           yarn install --frozen-lockfile
 
       - name: Lint
         run: |
-          yarn lint:all
           yarn tsc:full
           yarn prettier:check
 
-      - name: Test
-        run: |
-          yarn test:all
-
-      - name: Build
-        run: |
-          yarn build:all
+      - name: CI
+        run: yarn ci
