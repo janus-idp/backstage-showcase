@@ -1,11 +1,11 @@
 # Stage 1 - Install dependencies
-FROM registry.access.redhat.com/ubi9/nodejs-18:latest AS deps
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS deps
 USER 0
 
 # Install yarn
 RUN \
   curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-  dnf install -y yarn
+  microdnf install -y yarn
 
 COPY ./package.json ./yarn.lock ./
 COPY ./packages ./packages
@@ -13,22 +13,23 @@ COPY ./packages ./packages
 # Remove all files except package.json
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
+ENV IS_CONTAINER="TRUE"
 RUN yarn install --frozen-lockfile
 
 # Stage 2 - Build packages
-FROM registry.access.redhat.com/ubi9/nodejs-18:latest AS build
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
 USER 0
 
 # Install yarn
 RUN \
   curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-  dnf install -y yarn
+  microdnf install -y yarn
 
 COPY . .
 COPY --from=deps /opt/app-root/src .
 
 RUN yarn tsc
-RUN yarn build:backend
+RUN yarn --cwd packages/backend build
 
 # Stage 3 - Build the actual backend image and install production dependencies
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
@@ -50,6 +51,7 @@ COPY --from=build /opt/app-root/src/yarn.lock /opt/app-root/src/package.json /op
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Install production dependencies
+ENV IS_CONTAINER="TRUE"
 RUN yarn install --frozen-lockfile --production && yarn cache clean
 
 # Copy the built packages from the build stage
