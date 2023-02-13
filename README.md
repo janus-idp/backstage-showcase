@@ -1,10 +1,11 @@
-# [Backstage](https://backstage.io)
+# [Janus Showcase](https://backstage.io)
 
-This is your newly scaffolded Backstage App, Good Luck!
+This repo contains Backstage.io customization to showcase the Janus plugins, software templates and more.
 
 To start the app, run:
 
 ```sh
 yarn install
-yarn dev
+yarn start
 ```
+
