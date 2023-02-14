@@ -1,0 +1,107 @@
+[
+  {
+    "title": "Janus Community",
+    "links": [
+      {
+        "iconUrl": "https://img.icons8.com/dotty/80/null/web.png",
+        "label": "Website",
+        "url": "https://janus-idp.io/community"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/external-itim2101-lineal-itim2101/64/null/external-blog-copywriting-itim2101-lineal-itim2101.png",
+        "label": "Blog",
+        "url": "https://janus-idp.io/blog"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/glyph-neue/64/null/github.png",
+        "label": "GitHub",
+        "url": "https://github.com/orgs/janus-idp"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/color/48/null/slack-new.png",
+        "label": "Slack",
+        "url": "https://janus-idp.slack.com/join/shared_invite/zt-1nii16o6e-SGscZ4YtAktL6rRtZZBUfA#/shared-invite/email"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/color/48/null/youtube-play.png",
+        "label": "YouTube Channel",
+        "url": "https://www.youtube.com/@januscommunity"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/external-solidglyph-m-oki-orlando/64/null/external-mailing-list-information-technology-solid-solidglyph-m-oki-orlando.png",
+        "label": "Mailing List",
+        "url": "https://groups.google.com/g/janus-idp-community"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/material-outlined/48/null/tear-off-calendar.png",
+        "label": "Calendar",
+        "url": "https://calendar.google.com/calendar/u/0?cid=amFudXMuaWRwLmNvbW11bml0eUBnbWFpbC5jb20"
+      }
+    ]
+  },
+  {
+    "title": "OpenShift Clusters",
+    "links": [
+      {
+        "iconUrl": "https://img.icons8.com/color/48/null/openshift.png",
+        "label": "OpenShift Smaug NA",
+        "url": "https://console-openshift-console.apps.smaug.na.operate-first.cloud/k8s/ns/janus-idp/pods"
+      }
+    ]
+  },
+  {
+    "title": "Devops Tools",
+    "links": [
+      {
+        "iconUrl": "https://cncf-branding.netlify.app/img/projects/argo/icon/color/argo-icon-color.svg",
+        "label": "ArgoCD",
+        "url": "https://argocd.operate-first.cloud/"
+      },
+      {
+        "iconUrl": "https://cdnjs.cloudflare.com/ajax/libs/simple-icons/3.2.0/sonarqube.svg",
+        "label": "SonarQube (Coming Soon)",
+        "url": ""
+      },
+      {
+        "iconUrl": "https://img.icons8.com/glyph-neue/64/null/github.png",
+        "label": "GitHub",
+        "url": "https://github.com/orgs/janus-idp"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/ios-glyphs/60/null/registry-editor.png",
+        "label": "OCI Registry",
+        "url": "https://quay.io/janus-idp/"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/dotty/80/null/safe-out.png",
+        "label": "Vault",
+        "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
+      }
+    ]
+  },
+  {
+    "title": "Monitoring Tools",
+    "links": [
+      {
+        "iconUrl": "https://img.icons8.com/wired/64/null/system-task.png",
+        "label": "Grafana (Coming Soon)",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "title": "Security Tools",
+    "links": [
+      {
+        "iconUrl": "https://img.icons8.com/material-outlined/48/null/security-checked.png",
+        "label": "GitHub Security",
+        "url": "https://github.com/orgs/janus-idp"
+      },
+      {
+        "iconUrl": "https://img.icons8.com/dotty/80/null/safe-out.png",
+        "label": "Vault",
+        "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
+      }
+    ]
+  }
+]
