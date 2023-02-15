@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: "backstage"
+  labels: 
+    app.kubernetes.io/component: backstage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: backstage
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: backstage
+      annotations:
+        checksum/app-config: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+    spec:
+      serviceAccountName: default
+      containers:
+        - resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 400m
+          name: backstage-showcase
+          image: quay.io/rh_ee_pknight/backstage-showcase:main
+          imagePullPolicy: "Always"
+          command:
+            - node
+            - packages/backend
+          envFrom:
+            - secretRef:
+                name: values-app-config
+          ports:
+            - name: backend
+              containerPort: 7007
+              protocol: TCP

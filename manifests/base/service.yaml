@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backstage
+  namespace: "backstage" 
+  labels:
+    app.kubernetes.io/component: backstage
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: http-backend
+      port: 7007
+      targetPort: backend
+      protocol: TCP
+  selector:
+    app.kubernetes.io/component: backstage

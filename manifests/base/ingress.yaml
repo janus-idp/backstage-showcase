@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backstage
+  namespace: "backstage"
+  labels:
+    app.kubernetes.io/component: backstage
+  annotations:
+spec:
+  tls:
+    - hosts:
+      - backstage.apps-crc.testing
+      secretName: custom-certs-default
+  rules:
+    - host: backstage.apps-crc.testing
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backstage
+                port:
+                  number: 7007
