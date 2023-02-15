@@ -14,7 +14,7 @@ COPY ./packages ./packages
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
 ENV IS_CONTAINER="TRUE"
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --network-timeout 600000
 
 # Stage 2 - Build packages
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
@@ -52,7 +52,7 @@ RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Install production dependencies
 ENV IS_CONTAINER="TRUE"
-RUN yarn install --frozen-lockfile --production && yarn cache clean
+RUN yarn install --frozen-lockfile --production --network-timeout 600000 && yarn cache clean
 
 # Copy the built packages from the build stage
 COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .
@@ -60,5 +60,11 @@ RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy any other files that we need at runtime
 COPY ./app-config.yaml .
+COPY ./github-app-backstage-showcase-credentials.yaml .
+COPY ./catalog-entities ./catalog-entities
+
+# The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
+# The upstream backstage image does not account for this and it causes the container to fail at runtime.
+RUN fix-permissions ./
 
 CMD ["node", "packages/backend", "--config", "app-config.yaml"]
