@@ -4,6 +4,6 @@ describe('App', () => {
     cy.contains('Quick Access');
 
     cy.visit('/catalog');
-    cy.contains('Red Hat Catalog');
+    cy.contains('Janus IDP Catalog');
   });
 });
