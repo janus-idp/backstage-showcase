@@ -1,9 +1,9 @@
 app:
-  title: Scaffolded Backstage App
+  title: Janus IDP Backstage Showcase
   baseUrl: http://localhost:3000
 
 organization:
-  name: Red Hat
+  name: Janus IDP
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "lint": "backstage-cli package lint",
-    "test:e2e": "start-server-and-test \"(cd ../.. && npm run start)\" --expect 200 http://localhost:3000 \"(cypress run --browser chrome)\""
+    "test:e2e": "start-server-and-test \"(cd ../app && npm run start)\" --expect 200 http://localhost:3000 \"(cypress run --browser chrome)\""
   },
   "dependencies": {
     "cypress": "^12.5.1",
