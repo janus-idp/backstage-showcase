@@ -1,10 +1,68 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { Grid, makeStyles } from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import { ComponentAccordion, HomePageToolkit } from '@backstage/plugin-home';
+import {
+  ComponentAccordion,
+  HomePageToolkit,
+  HomePageCompanyLogo,
+  HomePageStarredEntities,
+  type Tool,
+} from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
+import useSWR from 'swr';
+import LogoFull from '../Root/LogoFull';
+
+type QuickAccessLinks = {
+  title: string;
+  isExpanded?: boolean;
+  links: (Tool & { iconUrl: string })[];
+};
+
+const useQuickAccessStyles = makeStyles({
+  img: {
+    height: '40px',
+    width: 'auto',
+  },
+});
+
+const fetcher = (...args: Parameters<typeof fetch>) =>
+  fetch(...args).then(r => r.json()) as Promise<QuickAccessLinks[]>;
+
+const QuickAccess = () => {
+  const classes = useQuickAccessStyles();
+  const { data, error, isLoading } = useSWR('/homepage/data.json', fetcher);
+
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
+  if (!data) return <div>data could not be found</div>;
+
+  return (
+    <InfoCard title="Quick Access" noPadding>
+      {data.map(item => (
+        <HomePageToolkit
+          key={item.title}
+          title={item.title}
+          tools={item.links.map(link => ({
+            ...link,
+            icon: (
+              <img
+                className={classes.img}
+                src={link.iconUrl}
+                alt={link.label}
+              />
+            ),
+          }))}
+          Renderer={
+            item.isExpanded
+              ? props => <ComponentAccordion expanded {...props} />
+              : props => <ComponentAccordion {...props} />
+          }
+        />
+      ))}
+    </InfoCard>
+  );
+};
 
 const useStyles = makeStyles(theme => ({
   searchBar: {
@@ -16,49 +74,24 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '50px',
     margin: 'auto',
   },
-  logoIcon: {
-    display: 'flex',
-    height: '80px',
-    width: 'auto',
-  },
-  iconRoot: {
-    textAlign: 'center',
-    height: '90px',
-    width: 'auto',
-    marginTop: '30px',
-  },
   imageIcon: {
     height: '40px',
   },
 }));
 
+const useLogoStyles = makeStyles(theme => ({
+  container: {
+    margin: theme.spacing(5, 0),
+  },
+  svg: {
+    width: 'auto',
+    height: 100,
+  },
+}));
+
 export const HomePage = () => {
   const classes = useStyles();
-  const [items, setItems] = useState<QuickAccess[]>([]);
-
-  useEffect(() => {
-    fetch('/homepage/data.json')
-      .then((response: Response) => response.json())
-      .then((data: QuickAccess[]) => {
-        for (const quickAccess of data) {
-          for (const item of quickAccess.links) {
-            item.icon = (
-              <img
-                className={classes.imageIcon}
-                src={item.iconUrl}
-                alt={item.label}
-              />
-            );
-          }
-        }
-
-        setItems(data);
-      });
-  }, [classes.imageIcon]);
-
-  const ExpandedComponentAccordion = (props: any) => (
-    <ComponentAccordion expanded {...props} />
-  );
+  const { svg, container } = useLogoStyles();
 
   return (
     <SearchContextProvider>
@@ -66,37 +99,23 @@ export const HomePage = () => {
         <Header title="Welcome back!" />
         <Content>
           <Grid container justifyContent="center" spacing={6}>
-            <Icon classes={{ root: classes.iconRoot }}>
-              <img
-                className={classes.logoIcon}
-                src="/assets/janus-logo.svg"
-                alt="Janus Logo"
-              />
-            </Icon>
+            <HomePageCompanyLogo
+              className={container}
+              logo={<LogoFull classes={{ svg }} />}
+            />
             <Grid item xs={12} alignItems="center" direction="row">
               <HomePageSearchBar
                 classes={{ root: classes.searchBar }}
                 placeholder="Search"
               />
             </Grid>
-            <Grid item xs={12} md={12}>
-              <InfoCard title="Quick Access" noPadding>
-                <Grid item>
-                  {items &&
-                    items.map((item: QuickAccess, index: number) => (
-                      <HomePageToolkit
-                        key={index}
-                        title={item.title}
-                        tools={item.links}
-                        Renderer={
-                          index === 0
-                            ? ExpandedComponentAccordion
-                            : ComponentAccordion
-                        }
-                      />
-                    ))}
-                </Grid>
-              </InfoCard>
+            <Grid container item xs={12}>
+              <Grid item xs={12} md={6}>
+                <HomePageStarredEntities />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <QuickAccess />
+              </Grid>
             </Grid>
           </Grid>
         </Content>

@@ -7,8 +7,14 @@ const useStyles = makeStyles({
     height: 35,
   },
 });
-const LogoFull = () => {
-  const classes = useStyles();
+
+type LogoFullProps = {
+  classes?: ReturnType<typeof useStyles>;
+};
+
+const LogoFull = (props: LogoFullProps) => {
+  const defaultClasses = useStyles();
+  const { classes = defaultClasses } = props;
 
   return (
     <svg
