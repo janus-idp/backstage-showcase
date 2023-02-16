@@ -95,7 +95,7 @@ const routes = (
     <Route path="/api-docs" element={<ApiExplorerPage />} />
     <Route
       path="/tech-radar"
-      element={<TechRadarPage width={1500} height={800} />}
+      element={<TechRadarPage width={1500} height={800} id="default" />}
     />
     <Route
       path="/catalog-import"
