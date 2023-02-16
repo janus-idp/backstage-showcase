@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backstage
-  namespace: "backstage"
+  namespace: "janus-idp"
   labels: 
     app.kubernetes.io/component: backstage
 spec:
