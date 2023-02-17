@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - backstage.apps-crc.testing
-      secretName: custom-certs-default
+      - janus-idp.operate-first.cloud
+      secretName: janus-idp-cert
   rules:
-    - host: backstage.apps-crc.testing
+    - host: janus-idp.operate-first.cloud
       http:
         paths:
           - path: /
