@@ -5,6 +5,9 @@ resources:
   - deployment.yaml
   - ingress.yaml
   - service.yaml
+  - externalsecret.yaml
+  - issuer.yaml
+  - certificate.yaml
 commonLabels:
     app.kubernetes.io/name: backstage
     app.kubernetes.io/instance: backstage
