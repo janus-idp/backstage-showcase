@@ -32,7 +32,7 @@ spec:
             - packages/backend
           envFrom:
             - secretRef:
-                name: values-app-config
+                name: janus-idp
           ports:
             - name: backend
               containerPort: 7007
