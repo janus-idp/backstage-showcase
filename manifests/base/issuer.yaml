@@ -1,6 +1,6 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
-metadate:
+metadata:
   name: letsencrypt
 spec:
   acme:
