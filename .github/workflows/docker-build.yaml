@@ -17,7 +17,6 @@ on:
   push:
     branches:
       - main
-      - publish-to-ghcr
   pull_request:
 
 concurrency:
