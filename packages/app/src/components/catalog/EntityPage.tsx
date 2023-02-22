@@ -55,8 +55,21 @@ import {
 
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
-import { GithubIssuesPage } from '@backstage/plugin-github-issues';
+import { GithubIssuesCard } from '@backstage/plugin-github-issues';
+import {
+  EntityGithubPullRequestsContent,
+  EntityGithubPullRequestsOverviewCard,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityGithubInsightsLanguagesCard,
+  isGithubInsightsAvailable,
+  EntityGithubInsightsComplianceCard,
+} from '@roadiehq/backstage-plugin-github-insights';
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
+import {
+  EntityArgoCDOverviewCard,
+  EntityArgoCDHistoryCard,
+} from '@roadiehq/backstage-plugin-argo-cd';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -72,6 +85,12 @@ const cicdContent = (
   <EntitySwitch>
     <EntitySwitch.Case if={isGithubActionsAvailable}>
       <EntityGithubActionsContent />
+      <Grid item sm={12} md={3}>
+        <EntityArgoCDOverviewCard />
+      </Grid>
+      <Grid item sm={12} md={9}>
+        <EntityArgoCDHistoryCard />
+      </Grid>
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>
@@ -91,6 +110,25 @@ const cicdContent = (
       />
     </EntitySwitch.Case>
   </EntitySwitch>
+);
+
+const githubContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
+        <Grid item md={4} xs={12}>
+          <EntityGithubPullRequestsOverviewCard />
+          <EntityGithubInsightsLanguagesCard />
+          <EntityGithubInsightsComplianceCard />
+        </Grid>
+
+        <Grid item md={8} xs={12}>
+          <GithubIssuesCard />
+          <EntityGithubPullRequestsContent />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+  </Grid>
 );
 
 const entityWarningContent = (
@@ -138,8 +176,16 @@ const serviceEntityPage = (
       {overviewContent}
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/github" title="GitHub">
+      {githubContent}
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
       {cicdContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
+      <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/api" title="API">
@@ -167,14 +213,6 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
     </EntityLayout.Route>
-
-    <EntityLayout.Route path="/github-issues" title="GitHub Issues">
-      <GithubIssuesPage />
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
-      <EntityKubernetesContent refreshIntervalMs={30000} />
-    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -184,8 +222,16 @@ const websiteEntityPage = (
       {overviewContent}
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/github" title="GitHub">
+      {githubContent}
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
       {cicdContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
+      <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
@@ -201,14 +247,6 @@ const websiteEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/github-issues" title="GitHub Issues">
-      <GithubIssuesPage />
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
-      <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
   </EntityLayout>
 );
