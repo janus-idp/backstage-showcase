@@ -110,6 +110,29 @@ catalog:
       rules:
         - allow: [Template]
 
+    # For when building the image with Docker
+    # Local components
+    - type: file
+      target: ./catalog-entities/components.yaml
+      rules:
+        - allow: [Component]
+
+    # Local organizational data
+    - type: file
+      target: ./catalog-entities/org.yaml
+      rules:
+        - allow: [User, Group]
+
+    - type: file
+      target: ./software-templates/scaffolder-templates/nodejs-backend-template/template.yaml
+      rules:
+        - allow: [Template]
+
+    - type: file
+      target: ./software-templates/scaffolder-templates/go-runtime-template/template.yaml
+      rules:
+        - allow: [Template]
+
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'
