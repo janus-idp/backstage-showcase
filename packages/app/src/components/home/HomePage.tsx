@@ -110,11 +110,11 @@ export const HomePage = () => {
               />
             </Grid>
             <Grid container item xs={12}>
-              <Grid item xs={12} md={6}>
-                <HomePageStarredEntities />
-              </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={7}>
                 <QuickAccess />
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <HomePageStarredEntities />
               </Grid>
             </Grid>
           </Grid>
