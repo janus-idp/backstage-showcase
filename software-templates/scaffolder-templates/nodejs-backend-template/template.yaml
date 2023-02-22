@@ -1,16 +1,17 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: nodejs-github-actions-template
-  title: NodeJS Service with GitHub Actions
-  description: Create a NodeJS microservice
+  name: nodejs-backend-template
+  title: Node.js Backend Template
+  description: Create a simple Node.js backend
   tags:
     - recommended
     - nodejs
     - javascript
     - typescript
+    - express
 spec:
-  owner: user:christophe
+  owner: janus-idp
   type: service
 
   parameters:
@@ -20,9 +21,8 @@ spec:
         - repo
       properties:
         org:
-          title: AppCode
+          title: GitHub Organization
           type: string
-          description: GitHub Organization
         repo:
           title: Repository
           type: string
@@ -38,35 +38,30 @@ spec:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: team-a'
+          default: 'group: janus-idp'
           ui:field: OwnerPicker
           ui:options:
             allowedKinds:
               - Group
-    - title: Choose a platform
+    - title: Choose a starter project
       required:
-        - platform
+        - ci
       properties:
-        platform:
-          title: Select a platform for deployment
+        ci:
+          title: Select a CI method
           type: string
-          default: ocp
+          default: GitHub Action
           enum:
-            - ocp
-            - gcp1
-            - vm
-            - mainframe
+            - ./github-action-skeleton
           enumNames:
-            - 'OpenShift'
-            - 'VM'
-            - 'Mainframe'
+            - GitHub Action
   steps:
     - id: template
       name: Generating Component
       action: fetch:template
       input:
-        url: ./skeleton
-        copyWithoutRender:
+        url: ${{ parameters.ci }}
+        copyWithoutTemplating:
           - .github/workflows/
         values:
           component_id: ${{ parameters.repo }}
@@ -83,8 +78,6 @@ spec:
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
         defaultBranch: main
-        repoVisibility: public
-        token : github_your_token
 
     - id: register
       name: Registering the component
@@ -100,6 +93,3 @@ spec:
       - title: Open Component in catalog
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
-      - title: View TechDocs
-        icon: techdocs
-        entityRef: ${{ steps.register.output.entityRef }}/docs

@@ -87,10 +87,6 @@ catalog:
     - allow: [Component, System, API, Resource, Location, Template]
   locations:
     # File locations are relative to the backend process, typically `packages/backend`
-    - type: file
-      target: ../../software-templates/scaffolder-templates/nodejs-helloworld-template/template.yaml
-      rules:
-        - allow: [Template]
 
     # Local components
     - type: file
@@ -104,23 +100,15 @@ catalog:
       rules:
         - allow: [User, Group]
 
-    # For when building the image 
     - type: file
-      target: ./software-templates/scaffolder-templates/nodejs-helloworld-template/template.yaml
+      target: ../../software-templates/scaffolder-templates/nodejs-backend-template/template.yaml
       rules:
         - allow: [Template]
 
-    # Local components
     - type: file
-      target: ./catalog-entities/components.yaml
+      target: ../../software-templates/scaffolder-templates/go-runtime-template/template.yaml
       rules:
-        - allow: [Component]
-
-    # Local organizational data
-    - type: file
-      target: ./catalog-entities/org.yaml
-      rules:
-        - allow: [User, Group]
+        - allow: [Template]
 
 kubernetes:
   serviceLocatorMethod:

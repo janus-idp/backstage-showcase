@@ -1,4 +1,0 @@
-site_name: '${{values.component_id}}'
-
-nav:
-  - Home: index.md

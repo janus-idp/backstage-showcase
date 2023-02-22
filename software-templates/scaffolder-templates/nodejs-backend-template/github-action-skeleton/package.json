@@ -5,10 +5,13 @@
   "scripts": {
     "start": "node src/index.ts"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "~4.18.2"
   },
   "devDependencies": {
-    "@types/node": "^18.11.10"
+    "@types/node": "^18.11.9"
   }
 }
