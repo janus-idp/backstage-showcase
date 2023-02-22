@@ -67,12 +67,22 @@
         "iconUrl": "/homepage/icons/icons8/openshift.png",
         "label": "OpenShift Smaug NA",
         "url": "https://console-openshift-console.apps.smaug.na.operate-first.cloud/k8s/ns/janus-idp/pods"
+      },
+      {
+        "iconUrl": "/homepage/icons/icons8/openshift.png",
+        "label": "OpenShift Dev Spaces",
+        "url": "https://devspaces.apps.sandbox-m3.1530.p1.openshiftapps.com/dashboard/"
       }
     ]
   },
   {
     "title": "Devops Tools",
     "links": [
+      {
+        "iconUrl": "/homepage/icons/icons8/openshift.png",
+        "label": "OpenShift Dev Spaces",
+        "url": "https://devspaces.apps.sandbox-m3.1530.p1.openshiftapps.com/dashboard/"
+      },
       {
         "iconUrl": "/homepage/icons/argo-icon-color.svg",
         "label": "ArgoCD",

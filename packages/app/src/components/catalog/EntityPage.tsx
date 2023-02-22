@@ -59,6 +59,7 @@ import { GithubIssuesCard } from '@backstage/plugin-github-issues';
 import {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
+  isGithubPullRequestsAvailable,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
   EntityGithubInsightsLanguagesCard,
@@ -69,6 +70,7 @@ import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import {
   EntityArgoCDOverviewCard,
   EntityArgoCDHistoryCard,
+  isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
 
 const techdocsContent = (
@@ -82,48 +84,47 @@ const techdocsContent = (
 const cicdContent = (
   // This is an example of how you can implement your company's logic in entity page.
   // You can for example enforce that all components of type 'service' should use GitHubActions
-  <EntitySwitch>
-    <EntitySwitch.Case if={isGithubActionsAvailable}>
-      <EntityGithubActionsContent />
-      <Grid item sm={12} md={3}>
-        <EntityArgoCDOverviewCard />
-      </Grid>
-      <Grid item sm={12} md={9}>
-        <EntityArgoCDHistoryCard />
-      </Grid>
-    </EntitySwitch.Case>
+  <Grid container spacing={3} alignItems="stretch">
+    <EntitySwitch>
+      <EntitySwitch.Case if={isGithubActionsAvailable}>
+        <Grid item sm={12} md={12}>
+          <EntityGithubActionsContent />
+        </Grid>
+      </EntitySwitch.Case>
+      <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
+        <Grid item sm={12} md={12}>
+          <EntityArgoCDHistoryCard />
+        </Grid>
+      </EntitySwitch.Case>
 
-    <EntitySwitch.Case>
-      <EmptyState
-        title="No CI/CD available for this entity"
-        missing="info"
-        description="You need to add an annotation to your component if you want to enable CI/CD for it. You can read more about annotations in Backstage by clicking the button below."
-        action={
-          <Button
-            variant="contained"
-            color="primary"
-            href="https://backstage.io/docs/features/software-catalog/well-known-annotations"
-          >
-            Read more
-          </Button>
-        }
-      />
-    </EntitySwitch.Case>
-  </EntitySwitch>
+      <EntitySwitch.Case>
+        <EmptyState
+          title="No CI/CD available for this entity"
+          missing="info"
+          description="You need to add an annotation to your component if you want to enable CI/CD for it. You can read more about annotations in Backstage by clicking the button below."
+          action={
+            <Button
+              variant="contained"
+              color="primary"
+              href="https://backstage.io/docs/features/software-catalog/well-known-annotations"
+            >
+              Read more
+            </Button>
+          }
+        />
+      </EntitySwitch.Case>
+    </EntitySwitch>
+  </Grid>
 );
 
 const githubContent = (
   <Grid container spacing={3} alignItems="stretch">
+    <Grid item md={12} xs={12}>
+      <GithubIssuesCard />
+    </Grid>
     <EntitySwitch>
-      <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
-        <Grid item md={4} xs={12}>
-          <EntityGithubPullRequestsOverviewCard />
-          <EntityGithubInsightsLanguagesCard />
-          <EntityGithubInsightsComplianceCard />
-        </Grid>
-
-        <Grid item md={8} xs={12}>
-          <GithubIssuesCard />
+      <EntitySwitch.Case if={e => Boolean(isGithubPullRequestsAvailable(e))}>
+        <Grid item md={12} xs={12}>
           <EntityGithubPullRequestsContent />
         </Grid>
       </EntitySwitch.Case>
@@ -154,17 +155,36 @@ const entityWarningContent = (
 const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
     {entityWarningContent}
-    <Grid item md={6}>
+    <Grid item md={4} xs={12}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
-    <Grid item md={6} xs={12}>
-      <EntityCatalogGraphCard variant="gridItem" height={400} />
-    </Grid>
-
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
     </Grid>
-    <Grid item md={8} xs={12}>
+    <Grid item md={4} xs={12}>
+      &nbsp;
+    </Grid>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
+        <Grid item md={4} xs={12}>
+          <EntityGithubInsightsLanguagesCard />
+          <EntityGithubInsightsComplianceCard />
+          <EntityGithubPullRequestsOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
+      <Grid item md={12} xs={12}>
+        <EntityArgoCDOverviewCard />
+      </Grid>
+    </EntitySwitch.Case>
+
+    <Grid item md={6} xs={12}>
+      <EntityCatalogGraphCard variant="gridItem" height={400} />
+    </Grid>
+    <Grid item md={6} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
   </Grid>
