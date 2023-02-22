@@ -25,14 +25,14 @@ spec:
             requests:
               cpu: 400m
           name: backstage-showcase
-          image: quay.io/rh_ee_pknight/backstage-showcase:main
+          image: ghcr.io/janus-idp/backstage-showcase:main
           imagePullPolicy: "Always"
           command:
             - node
             - packages/backend
           envFrom:
             - secretRef:
-                name: values-app-config
+                name: janus-idp
           ports:
             - name: backend
               containerPort: 7007

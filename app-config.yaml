@@ -48,6 +48,13 @@ proxy:
   # '/test':
   #   target: 'https://example.com'
   #   changeOrigin: true
+  '/argocd/api':
+    target: https://argocd.operate-first.cloud/api/v1/
+    changeOrigin: true
+    secure: true
+    headers:
+      Cookie:
+        $env: ARGOCD_AUTH_TOKEN
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -77,15 +84,9 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Template]
   locations:
     # File locations are relative to the backend process, typically `packages/backend`
-
-    # Local systems
-    - type: file
-      target: ../../catalog-entities/systems.yaml
-      rules:
-        - allow: [System]
 
     # Local components
     - type: file

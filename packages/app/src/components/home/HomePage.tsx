@@ -81,11 +81,11 @@ const useStyles = makeStyles(theme => ({
 
 const useLogoStyles = makeStyles(theme => ({
   container: {
-    margin: theme.spacing(5, 0),
+    margin: theme.spacing(5, 0, 1, 0),
   },
   svg: {
     width: 'auto',
-    height: 100,
+    height: 80,
   },
 }));
 
@@ -110,11 +110,11 @@ export const HomePage = () => {
               />
             </Grid>
             <Grid container item xs={12}>
-              <Grid item xs={12} md={6}>
-                <HomePageStarredEntities />
-              </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={7}>
                 <QuickAccess />
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <HomePageStarredEntities />
               </Grid>
             </Grid>
           </Grid>

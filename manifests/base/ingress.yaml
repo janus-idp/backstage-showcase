@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - janus-idp.operate-first.cloud
+      - janus-idp.apps.smaug.na.operate-first.cloud
       secretName: janus-idp-cert
   rules:
-    - host: janus-idp.operate-first.cloud
+    - host: janus-idp.apps.smaug.na.operate-first.cloud
       http:
         paths:
           - path: /
