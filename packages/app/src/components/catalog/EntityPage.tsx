@@ -70,7 +70,6 @@ import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import {
   EntityArgoCDOverviewCard,
   EntityArgoCDHistoryCard,
-  isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
 
 const techdocsContent = (
@@ -91,11 +90,9 @@ const cicdContent = (
           <EntityGithubActionsContent />
         </Grid>
       </EntitySwitch.Case>
-      <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
-        <Grid item sm={12} md={12}>
-          <EntityArgoCDHistoryCard />
-        </Grid>
-      </EntitySwitch.Case>
+      <Grid item sm={12} md={12}>
+        <EntityArgoCDHistoryCard />
+      </Grid>
 
       <EntitySwitch.Case>
         <EmptyState
@@ -119,9 +116,6 @@ const cicdContent = (
 
 const githubContent = (
   <Grid container spacing={3} alignItems="stretch">
-    <Grid item md={12} xs={12}>
-      <GithubIssuesCard />
-    </Grid>
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isGithubPullRequestsAvailable(e))}>
         <Grid item md={12} xs={12}>
@@ -129,6 +123,9 @@ const githubContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
+    <Grid item md={12} xs={12}>
+      <GithubIssuesCard />
+    </Grid>
   </Grid>
 );
 
@@ -161,25 +158,24 @@ const overviewContent = (
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
     </Grid>
-    <Grid item md={4} xs={12}>
-      &nbsp;
-    </Grid>
 
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
         <Grid item md={4} xs={12}>
           <EntityGithubInsightsLanguagesCard />
+        </Grid>
+        <Grid item md={4} xs={12}>
           <EntityGithubInsightsComplianceCard />
+        </Grid>
+        <Grid item md={4} xs={12}>
           <EntityGithubPullRequestsOverviewCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
 
-    <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
-      <Grid item md={12} xs={12}>
-        <EntityArgoCDOverviewCard />
-      </Grid>
-    </EntitySwitch.Case>
+    <Grid item md={12} xs={12}>
+      <EntityArgoCDOverviewCard />
+    </Grid>
 
     <Grid item md={6} xs={12}>
       <EntityCatalogGraphCard variant="gridItem" height={400} />
