@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backstage
   namespace: "backstage"
-  labels: 
+  labels:
     app.kubernetes.io/component: backstage
 spec:
   replicas: 1
@@ -25,7 +25,7 @@ spec:
             requests:
               cpu: 400m
           name: backstage-showcase
-          image: quay.io/rh_ee_pknight/backstage-showcase:main
+          image: ghcr.io/janus-idp/backstage-showcase:main
           imagePullPolicy: "Always"
           command:
             - node
