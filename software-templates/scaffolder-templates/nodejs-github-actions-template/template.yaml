@@ -84,8 +84,7 @@ spec:
         repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
         defaultBranch: main
         repoVisibility: public
-        token : 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
-
+        token : github_your_token
 
     - id: register
       name: Registering the component
