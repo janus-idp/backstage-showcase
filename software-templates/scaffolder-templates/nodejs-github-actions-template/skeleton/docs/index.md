@@ -2,17 +2,18 @@
 
 ${{values.description}}
 
-
 ## Getting started
 
 ### Run locally
 
 After cloning the repository, you need to install the dependencies before running the application for the first time:
+
 ```shell
 npm install
 ```
 
 Once the dependencies are successfully installed, you can now start the application:
+
 ```shell
 npm start
 ```
