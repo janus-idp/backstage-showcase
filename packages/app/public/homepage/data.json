@@ -4,39 +4,59 @@
     "isExpanded": true,
     "links": [
       {
-        "iconUrl": "https://img.icons8.com/dotty/80/null/web.png",
+        "iconUrl": "/homepage/icons/icons8/web.png",
         "label": "Website",
         "url": "https://janus-idp.io/community"
       },
       {
-        "iconUrl": "https://img.icons8.com/external-itim2101-lineal-itim2101/64/null/external-blog-copywriting-itim2101-lineal-itim2101.png",
+        "iconUrl": "/homepage/icons/icons8/external-blog-copywriting-itim2101-lineal-itim2101.png",
         "label": "Blog",
         "url": "https://janus-idp.io/blog"
       },
       {
-        "iconUrl": "https://img.icons8.com/glyph-neue/64/null/github.png",
+        "iconUrl": "/homepage/icons/icons8/github.png",
         "label": "GitHub",
         "url": "https://github.com/orgs/janus-idp"
       },
       {
-        "iconUrl": "https://img.icons8.com/color/48/null/slack-new.png",
+        "iconUrl": "/homepage/icons/icons8/slack-new.png",
         "label": "Slack",
         "url": "https://janus-idp.slack.com/join/shared_invite/zt-1nii16o6e-SGscZ4YtAktL6rRtZZBUfA#/shared-invite/email"
       },
       {
-        "iconUrl": "https://img.icons8.com/color/48/null/youtube-play.png",
+        "iconUrl": "/homepage/icons/icons8/youtube-play.png",
         "label": "YouTube Channel",
         "url": "https://www.youtube.com/@januscommunity"
       },
       {
-        "iconUrl": "https://img.icons8.com/external-solidglyph-m-oki-orlando/64/null/external-mailing-list-information-technology-solid-solidglyph-m-oki-orlando.png",
+        "iconUrl": "/homepage/icons/icons8/external-mailing-list-information-technology-solid-solidglyph-m-oki-orlando.png",
         "label": "Mailing List",
         "url": "https://groups.google.com/g/janus-idp-community"
       },
       {
-        "iconUrl": "https://img.icons8.com/material-outlined/48/null/tear-off-calendar.png",
+        "iconUrl": "/homepage/icons/icons8/tear-off-calendar.png",
         "label": "Calendar",
         "url": "https://calendar.google.com/calendar/u/0?cid=amFudXMuaWRwLmNvbW11bml0eUBnbWFpbC5jb20"
+      }
+    ]
+  },
+  {
+    "title": "Learning Path",
+    "links": [
+      {
+        "iconUrl": "/homepage/icons/openshift-learning/ST-spring-boot_2x.png",
+        "label": "Deploy Spring app on OpenShift",
+        "url": "https://developers.redhat.com/node/264191"
+      },
+      {
+        "iconUrl": "/homepage/icons/openshift-learning/hello-kafka.png",
+        "label": "Kafka 101",
+        "url": "https://developers.redhat.com/node/272761"
+      },
+      {
+        "iconUrl": "/homepage/icons/openshift-learning/2020_RHD_Coding_imageA@2x.png",
+        "label": "Red Hat OpenShift Data Science",
+        "url": "https://developers.redhat.com/node/272361"
       }
     ]
   },
@@ -44,7 +64,7 @@
     "title": "OpenShift Clusters",
     "links": [
       {
-        "iconUrl": "https://img.icons8.com/color/48/null/openshift.png",
+        "iconUrl": "/homepage/icons/icons8/openshift.png",
         "label": "OpenShift Smaug NA",
         "url": "https://console-openshift-console.apps.smaug.na.operate-first.cloud/k8s/ns/janus-idp/pods"
       }
@@ -54,27 +74,32 @@
     "title": "Devops Tools",
     "links": [
       {
-        "iconUrl": "https://cncf-branding.netlify.app/img/projects/argo/icon/color/argo-icon-color.svg",
+        "iconUrl": "/homepage/icons/argo-icon-color.svg",
         "label": "ArgoCD",
         "url": "https://argocd.operate-first.cloud/"
       },
       {
-        "iconUrl": "https://cdnjs.cloudflare.com/ajax/libs/simple-icons/3.2.0/sonarqube.svg",
+        "iconUrl": "/homepage/icons/sonarqube.svg",
         "label": "SonarQube (Coming Soon)",
         "url": ""
       },
       {
-        "iconUrl": "https://img.icons8.com/glyph-neue/64/null/github.png",
+        "iconUrl": "/homepage/icons/icons8/github.png",
         "label": "GitHub",
         "url": "https://github.com/orgs/janus-idp"
       },
       {
-        "iconUrl": "https://img.icons8.com/ios-glyphs/60/null/registry-editor.png",
-        "label": "OCI Registry",
+        "iconUrl": "/homepage/icons/icons8/registry-editor.png",
+        "label": "GitHub Container Registry",
+        "url": "https://github.com/orgs/janus-idp/packages"
+      },
+      {
+        "iconUrl": "/homepage/icons/quay.svg",
+        "label": "Quay.io",
         "url": "https://quay.io/janus-idp/"
       },
       {
-        "iconUrl": "https://img.icons8.com/dotty/80/null/safe-out.png",
+        "iconUrl": "/homepage/icons/icons8/safe-out.png",
         "label": "Vault",
         "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
       }
@@ -84,7 +109,7 @@
     "title": "Monitoring Tools",
     "links": [
       {
-        "iconUrl": "https://img.icons8.com/wired/64/null/system-task.png",
+        "iconUrl": "/homepage/icons/icons8/system-task.png",
         "label": "Grafana (Coming Soon)",
         "url": ""
       }
@@ -94,12 +119,12 @@
     "title": "Security Tools",
     "links": [
       {
-        "iconUrl": "https://img.icons8.com/material-outlined/48/null/security-checked.png",
+        "iconUrl": "/homepage/icons/icons8/security-checked.png",
         "label": "GitHub Security",
         "url": "https://github.com/orgs/janus-idp"
       },
       {
-        "iconUrl": "https://img.icons8.com/dotty/80/null/safe-out.png",
+        "iconUrl": "/homepage/icons/icons8/safe-out.png",
         "label": "Vault",
         "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
       }

@@ -1,9 +1,9 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: backstage
+  name: backstage-showcase
   description: |
-    Backstage is an open-source developer portal that puts the developer experience first.
+    This is the Janus Community Showcase of Backstage.io
   links:
     - title: Website
       url: https://janus-idp.io
@@ -14,6 +14,6 @@ metadata:
   annotations:
     github.com/project-slug: janus-idp/backstage-showcase
 spec:
-  type: library
+  type: website
   owner: janus-authors
-  lifecycle: experimental
+  lifecycle: production
