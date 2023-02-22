@@ -104,6 +104,24 @@ catalog:
       rules:
         - allow: [User, Group]
 
+    # For when building the image 
+    - type: file
+      target: ./software-templates/scaffolder-templates/nodejs-helloworld-template/template.yaml
+      rules:
+        - allow: [Template]
+
+    # Local components
+    - type: file
+      target: ./catalog-entities/components.yaml
+      rules:
+        - allow: [Component]
+
+    # Local organizational data
+    - type: file
+      target: ./catalog-entities/org.yaml
+      rules:
+        - allow: [User, Group]
+
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'
