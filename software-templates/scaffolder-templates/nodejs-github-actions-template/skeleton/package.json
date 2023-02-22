@@ -1,0 +1,14 @@
+{
+  "name": "${{values.component_id}}",
+  "version": "1.0.0",
+  "description": "${{values.description}}",
+  "scripts": {
+    "start": "node src/index.ts"
+  },
+  "dependencies": {
+    "express": "~4.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.10"
+  }
+}

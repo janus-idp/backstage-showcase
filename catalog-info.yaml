@@ -12,6 +12,8 @@ metadata:
     - title: Slack
       url: https://join.slack.com/t/janus-idp/shared_invite/zt-1nii16o6e-SGscZ4YtAktL6rRtZZBUfA
   annotations:
+    argocd/app-name: "janus-idp-smaug"
+    backstage.io/kubernetes-id: "janus-idp"
     github.com/project-slug: janus-idp/backstage-showcase
 spec:
   type: website
