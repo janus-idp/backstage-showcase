@@ -2,17 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: backstage
-  namespace: "backstage"
+  namespace: "janus-idp"
   labels:
     app.kubernetes.io/component: backstage
   annotations:
 spec:
   tls:
     - hosts:
-      - backstage.apps-crc.testing
-      secretName: custom-certs-default
+      - janus-idp.apps.smaug.na.operate-first.cloud
+      secretName: janus-idp-cert
   rules:
-    - host: backstage.apps-crc.testing
+    - host: janus-idp.apps.smaug.na.operate-first.cloud
       http:
         paths:
           - path: /

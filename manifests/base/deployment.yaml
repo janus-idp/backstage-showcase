@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backstage
-  namespace: "backstage"
-  labels:
+  namespace: "janus-idp"
+  labels: 
     app.kubernetes.io/component: backstage
 spec:
   replicas: 1
@@ -32,7 +32,7 @@ spec:
             - packages/backend
           envFrom:
             - secretRef:
-                name: values-app-config
+                name: janus-idp
           ports:
             - name: backend
               containerPort: 7007
