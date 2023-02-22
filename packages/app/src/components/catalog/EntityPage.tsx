@@ -89,10 +89,10 @@ const cicdContent = (
         <Grid item sm={12} md={12}>
           <EntityGithubActionsContent />
         </Grid>
+        <Grid item sm={12} md={12}>
+          <EntityArgoCDHistoryCard />
+        </Grid>
       </EntitySwitch.Case>
-      <Grid item sm={12} md={12}>
-        <EntityArgoCDHistoryCard />
-      </Grid>
 
       <EntitySwitch.Case>
         <EmptyState
@@ -114,7 +114,15 @@ const cicdContent = (
   </Grid>
 );
 
-const githubContent = (
+const githubIssuesContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <Grid item md={12} xs={12}>
+      <GithubIssuesCard />
+    </Grid>
+  </Grid>
+);
+
+const githubPRContent = (
   <Grid container spacing={3} alignItems="stretch">
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isGithubPullRequestsAvailable(e))}>
@@ -123,9 +131,6 @@ const githubContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
-    <Grid item md={12} xs={12}>
-      <GithubIssuesCard />
-    </Grid>
   </Grid>
 );
 
@@ -192,8 +197,12 @@ const serviceEntityPage = (
       {overviewContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/github" title="GitHub">
-      {githubContent}
+    <EntityLayout.Route path="/github-issues" title="GitHub">
+      {githubIssuesContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/github-pr" title="GitHub">
+      {githubPRContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
@@ -238,8 +247,12 @@ const websiteEntityPage = (
       {overviewContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/github" title="GitHub">
-      {githubContent}
+    <EntityLayout.Route path="/github-issues" title="GitHub">
+      {githubIssuesContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/github-pr" title="GitHub">
+      {githubPRContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">

@@ -1,16 +1,19 @@
----
-# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-component
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-showcase
-  description: An example of a Backstage application.
-  labels:
-    component: backstage-showcase
+  description: |
+    This is the Janus Community Showcase of Backstage.io
+  links:
+    - title: Janus Website
+      url: https://janus-idp.io
+    - title: Janus Showcase
+      url: https://janus-idp.apps.smaug.na.operate-first.cloud/
   annotations:
+    argocd/app-name: "janus-idp-smaug"
+    backstage.io/kubernetes-id: "janus-idp"
     github.com/project-slug: janus-idp/backstage-showcase
-    backstage.io/kubernetes-id: ${K8S_ID}
 spec:
   type: website
   owner: janus-authors
-  lifecycle: experimental
+  lifecycle: production
