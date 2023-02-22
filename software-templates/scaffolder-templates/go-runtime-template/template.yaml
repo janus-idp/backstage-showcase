@@ -1,0 +1,92 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: go-runtime-template
+  title: Go Runtime Template
+  description: Create a simple Go runtime
+  tags:
+    - recommended
+    - go
+spec:
+  owner: janus-idp
+  type: service
+
+  parameters:
+    - title: Provide the GitHub location
+      required:
+        - org
+        - repo
+      properties:
+        org:
+          title: GitHub Organization
+          type: string
+        repo:
+          title: Repository
+          type: string
+    - title: Provide information about the new component
+      required:
+        - owner
+      properties:
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for.
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: 'group: janus-idp'
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+    - title: Choose a starter project
+      required:
+        - ci
+      properties:
+        ci:
+          title: Select a CI method
+          type: string
+          default: GitHub Action
+          enum:
+            - ./github-action-skeleton
+          enumNames:
+            - GitHub Action
+  steps:
+    - id: template
+      name: Generating Component
+      action: fetch:template
+      input:
+        url: ${{ parameters.ci }}
+        copyWithoutTemplating:
+          - .github/workflows/
+        values:
+          component_id: ${{ parameters.repo }}
+          description: ${{ parameters.description }}
+          destination: ${{ parameters.org }}/${{ parameters.repo }}
+          org: ${{ parameters.org }}
+          owner: ${{ parameters.owner }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github
+      input:
+        allowedHosts: ["github.com"]
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
+        defaultBranch: main
+
+    - id: register
+      name: Registering the component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open Component in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

@@ -99,6 +99,16 @@ catalog:
       rules:
         - allow: [User, Group]
 
+    - type: file
+      target: ../../software-templates/scaffolder-templates/nodejs-backend-template/template.yaml
+      rules:
+        - allow: [Template]
+
+    - type: file
+      target: ../../software-templates/scaffolder-templates/go-runtime-template/template.yaml
+      rules:
+        - allow: [Template]
+
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'
