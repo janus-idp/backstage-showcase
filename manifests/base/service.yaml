@@ -5,6 +5,7 @@ metadata:
   namespace: "janus-idp" 
   labels:
     app.kubernetes.io/component: backstage
+    backstage.io/kubernetes-id: janus-idp
 spec:
   type: ClusterIP
   sessionAffinity: None
