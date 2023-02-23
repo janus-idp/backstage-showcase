@@ -5,7 +5,7 @@ metadata:
   namespace: "janus-idp"
   labels:
     app.kubernetes.io/component: backstage
-  annotations:
+    backstage.io/kubernetes-id: janus-idp
 spec:
   tls:
     - hosts:
