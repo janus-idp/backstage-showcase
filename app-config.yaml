@@ -100,6 +100,12 @@ catalog:
       rules:
         - allow: [User, Group]
 
+    # Local systems
+    - type: file
+      target: ../../catalog-entities/systems.yaml
+      rules:
+        - allow: [System]
+
     # For when building the image with Docker
     # Local components
     - type: file
@@ -112,6 +118,12 @@ catalog:
       target: ./catalog-entities/org.yaml
       rules:
         - allow: [User, Group]
+
+    # Local systems
+    - type: file
+      target: ./catalog-entities/systems.yaml
+      rules:
+        - allow: [System]
 
     - type: url
       target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
