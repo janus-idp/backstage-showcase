@@ -99,16 +99,6 @@ catalog:
       target: ../../catalog-entities/org.yaml
       rules:
         - allow: [User, Group]
-    
-    - type: file
-      target: ../../software-templates/scaffolder-templates/nodejs-backend-template/template.yaml
-      rules:
-        - allow: [Template]
-
-    - type: file
-      target: ../../software-templates/scaffolder-templates/go-runtime-template/template.yaml
-      rules:
-        - allow: [Template]
 
     # For when building the image with Docker
     # Local components
@@ -123,13 +113,8 @@ catalog:
       rules:
         - allow: [User, Group]
 
-    - type: file
-      target: ./software-templates/scaffolder-templates/nodejs-backend-template/template.yaml
-      rules:
-        - allow: [Template]
-
-    - type: file
-      target: ./software-templates/scaffolder-templates/go-runtime-template/template.yaml
+    - type: url
+      target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
       rules:
         - allow: [Template]
 
