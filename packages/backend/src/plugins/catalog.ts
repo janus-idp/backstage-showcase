@@ -3,6 +3,7 @@ import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backen
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
+import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -12,6 +13,19 @@ export default async function createPlugin(
     logger: env.logger,
   });
   builder.addEntityProvider(ocm);
+
+  builder.addEntityProvider(
+    KeycloakOrgEntityProvider.fromConfig(env.config, {
+      id: 'development',
+      logger: env.logger,
+      schedule: env.scheduler.createScheduledTaskRunner({
+        frequency: { hours: 1 },
+        timeout: { minutes: 50 },
+        initialDelay: { seconds: 15 },
+      }),
+    }),
+  );
+
   builder.addProcessor(new ScaffolderEntitiesProcessor());
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();

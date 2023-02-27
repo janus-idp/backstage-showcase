@@ -1,0 +1,10 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ssl-certificate
+spec:
+  dnsNames:
+    - keycloak-janus-idp.apps.smaug.na.operate-first.cloud
+  issuerRef:
+    name: letsencrypt
+  secretName: keycloak-cert
