@@ -8,8 +8,6 @@ resources:
   - externalsecret.yaml
   - issuer.yaml
   - certificate.yaml
-labels:
-  - pairs:
-      app.kubernetes.io/name: backstage
-      app.kubernetes.io/instance: backstage
-    includeSelectors: false
+commonLabels:
+    app.kubernetes.io/name: backstage
+    app.kubernetes.io/instance: backstage
