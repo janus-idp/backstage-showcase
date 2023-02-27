@@ -12,5 +12,4 @@ labels:
   - pairs:
       app.kubernetes.io/name: backstage
       app.kubernetes.io/instance: backstage
-      backstage.io/kubernetes-id: backstage
     includeSelectors: false
