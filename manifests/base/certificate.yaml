@@ -4,7 +4,7 @@ metadata:
   name: ssl-certificate
 spec:
   dnsNames:
-    - janus-idp.apps.smaug.na.operate-first.cloud
+    - showcase.janus-idp.io
   issuerRef:
     name: letsencrypt
   secretName: janus-idp-cert
