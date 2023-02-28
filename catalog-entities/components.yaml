@@ -8,7 +8,7 @@ metadata:
     - title: Janus Website
       url: https://janus-idp.io
     - title: Janus Showcase
-      url: https://showcase.janus-idp.io/
+      url: https://janus-idp.apps.smaug.na.operate-first.cloud/
   annotations:
     argocd/app-name: "janus-idp-smaug"
     backstage.io/kubernetes-id: "janus-idp"
