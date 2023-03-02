@@ -80,6 +80,11 @@ import {
 } from '@janus-idp/backstage-plugin-ocm';
 import { isType } from './utils';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
+import {
+  EntitySecurityInsightsCard,
+  EntitySecurityInsightsContent,
+  isSecurityInsightsAvailable,
+} from '@roadiehq/backstage-plugin-security-insights';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -128,6 +133,18 @@ const githubIssuesContent = (
     <Grid item md={12} xs={12}>
       <GithubIssuesCard />
     </Grid>
+  </Grid>
+);
+
+const securityContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <EntitySwitch>
+      <EntitySwitch.Case if={isSecurityInsightsAvailable}>
+        <Grid item md={12} xs={12}>
+          <EntitySecurityInsightsContent />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
   </Grid>
 );
 
@@ -188,6 +205,12 @@ const overviewContent = (
       <EntityLinksCard />
     </Grid>
 
+    <EntitySwitch.Case if={isSecurityInsightsAvailable}>
+      <Grid item md={4} xs={12}>
+        <EntitySecurityInsightsCard />
+      </Grid>
+    </EntitySwitch.Case>
+
     <Grid item md={12} xs={12}>
       <EntityArgoCDOverviewCard />
     </Grid>
@@ -218,6 +241,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route if={isQuayAvailable} path="/quay" title="Quay">
       <QuayPage />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/security-insights" title="Security Insights">
+      {securityContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/api" title="API">
@@ -278,6 +305,10 @@ const websiteEntityPage = (
 
     <EntityLayout.Route if={isQuayAvailable} path="/quay" title="Quay">
       <QuayPage />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/security-insights" title="Security Insights">
+      {securityContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
