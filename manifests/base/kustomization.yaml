@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: janus-idp
 resources: 
   - deployment.yaml
-  - ingress.yaml
   - service.yaml
   - externalsecret.yaml
   - issuer.yaml
