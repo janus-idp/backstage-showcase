@@ -80,6 +80,11 @@ import {
 } from '@janus-idp/backstage-plugin-ocm';
 import { isType } from './utils';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
+import {
+  EntitySecurityInsightsCard,
+  EntitySecurityInsightsContent,
+  isSecurityInsightsAvailable,
+} from '@roadiehq/backstage-plugin-security-insights';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -131,6 +136,18 @@ const githubIssuesContent = (
   </Grid>
 );
 
+const securityContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <EntitySwitch>
+      <EntitySwitch.Case if={isSecurityInsightsAvailable}>
+        <Grid item md={12} xs={12}>
+          <EntitySecurityInsightsContent />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+  </Grid>
+);
+
 const githubPRContent = (
   <Grid container spacing={3} alignItems="stretch">
     <EntitySwitch>
@@ -163,6 +180,35 @@ const entityWarningContent = (
   </>
 );
 
+const dependenciesContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <Grid item xs={12} md={6}>
+      <EntityCatalogGraphCard
+        variant="gridItem"
+        direction={Direction.TOP_BOTTOM}
+        height={900}
+      />
+    </Grid>
+    <Grid item xs={12} md={6} container spacing={3} alignItems="stretch">
+      <Grid item xs={12}>
+        <EntityDependsOnComponentsCard variant="gridItem" />
+      </Grid>
+      <Grid item xs={12}>
+        <EntityDependsOnResourcesCard variant="gridItem" />
+      </Grid>
+      <Grid item xs={12}>
+        <EntityHasSubcomponentsCard variant="gridItem" />
+      </Grid>
+      <Grid item xs={12}>
+        <EntityProvidedApisCard />
+      </Grid>
+      <Grid item xs={12}>
+        <EntityConsumedApisCard />
+      </Grid>
+    </Grid>
+  </Grid>
+);
+
 const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
     {entityWarningContent}
@@ -187,6 +233,12 @@ const overviewContent = (
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
     </Grid>
+
+    <EntitySwitch.Case if={isSecurityInsightsAvailable}>
+      <Grid item md={4} xs={12}>
+        <EntitySecurityInsightsCard />
+      </Grid>
+    </EntitySwitch.Case>
 
     <Grid item md={12} xs={12}>
       <EntityArgoCDOverviewCard />
@@ -220,6 +272,10 @@ const serviceEntityPage = (
       <QuayPage />
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/security-insights" title="Security Insights">
+      {securityContent}
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/api" title="API">
       <Grid container spacing={3} alignItems="stretch">
         <Grid item md={6}>
@@ -232,20 +288,7 @@ const serviceEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
-      <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6} xs={12}>
-          <EntityCatalogGraphCard variant="gridItem" height={400} />
-        </Grid>
-        <Grid item md={6} xs={12}>
-          <EntityHasSubcomponentsCard variant="gridItem" />
-        </Grid>
-        <Grid item md={6}>
-          <EntityDependsOnComponentsCard variant="gridItem" />
-        </Grid>
-        <Grid item md={6}>
-          <EntityDependsOnResourcesCard variant="gridItem" />
-        </Grid>
-      </Grid>
+      {dependenciesContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
@@ -280,15 +323,12 @@ const websiteEntityPage = (
       <QuayPage />
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/security-insights" title="Security Insights">
+      {securityContent}
+    </EntityLayout.Route>
+
     <EntityLayout.Route path="/dependencies" title="Dependencies">
-      <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6}>
-          <EntityDependsOnComponentsCard variant="gridItem" />
-        </Grid>
-        <Grid item md={6}>
-          <EntityDependsOnResourcesCard variant="gridItem" />
-        </Grid>
-      </Grid>
+      {dependenciesContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
