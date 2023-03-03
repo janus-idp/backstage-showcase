@@ -1,5 +1,12 @@
 import React from 'react';
-import { Content, Header, InfoCard, Page } from '@backstage/core-components';
+import {
+  Content,
+  Header,
+  InfoCard,
+  Link,
+  Page,
+} from '@backstage/core-components';
+import MuiAlert from '@material-ui/lab/Alert';
 import { Grid, makeStyles } from '@material-ui/core';
 import {
   ComponentAccordion,
@@ -99,6 +106,19 @@ export const HomePage = () => {
         <Header title="Welcome back!" />
         <Content>
           <Grid container justifyContent="center" spacing={6}>
+            {window.location.origin.startsWith(
+              'https://janus-idp.apps.smaug.na.operate-first.cloud',
+            ) && (
+              <Grid item xs={12} md={12}>
+                <MuiAlert severity="warning">
+                  The Janus showcase URL has changed! Please, use this new link
+                  instead{' '}
+                  <Link to="https://showcase.janus-idp.io">
+                    showcase.janus-idp.io
+                  </Link>
+                </MuiAlert>
+              </Grid>
+            )}
             <HomePageCompanyLogo
               className={container}
               logo={<LogoFull classes={{ svg }} />}
