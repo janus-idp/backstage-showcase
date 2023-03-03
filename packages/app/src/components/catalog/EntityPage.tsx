@@ -215,7 +215,7 @@ const overviewContent = (
     <Grid item xs={12} md={12} container spacing={3} alignItems="stretch">
       <Grid item xs={12} md={4}>
         <EntityLinksCard />
-        <div style={{ marginBottom: "24px" }} />
+        <div style={{ marginBottom: '24px' }} />
         <EntityAboutCard />
       </Grid>
 
