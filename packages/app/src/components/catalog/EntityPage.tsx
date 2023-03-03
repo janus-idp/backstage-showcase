@@ -62,7 +62,6 @@ import {
   isGithubPullRequestsAvailable,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
-  EntityGithubInsightsLanguagesCard,
   isGithubInsightsAvailable,
   EntityGithubInsightsComplianceCard,
 } from '@roadiehq/backstage-plugin-github-insights';
@@ -82,8 +81,9 @@ import { isType } from './utils';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
 import {
   EntitySecurityInsightsCard,
+  EntityDependabotAlertsCard,
+  EntityGithubDependabotContent,
   EntitySecurityInsightsContent,
-  isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
 
 const techdocsContent = (
@@ -138,13 +138,12 @@ const githubIssuesContent = (
 
 const securityContent = (
   <Grid container spacing={3} alignItems="stretch">
-    <EntitySwitch>
-      <EntitySwitch.Case if={isSecurityInsightsAvailable}>
-        <Grid item md={12} xs={12}>
-          <EntitySecurityInsightsContent />
-        </Grid>
-      </EntitySwitch.Case>
-    </EntitySwitch>
+    <Grid item md={12} xs={12}>
+      <EntityGithubDependabotContent />
+    </Grid>
+    <Grid item md={12} xs={12}>
+      <EntitySecurityInsightsContent />
+    </Grid>
   </Grid>
 );
 
@@ -210,37 +209,32 @@ const dependenciesContent = (
 );
 
 const overviewContent = (
-  <Grid container spacing={3} alignItems="stretch">
+  <Grid container spacing={3} alignItems={'stretch'}>
     {entityWarningContent}
-    <Grid item md={4} xs={12}>
-      <EntityAboutCard variant="gridItem" />
-    </Grid>
 
-    <EntitySwitch>
-      <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
-        <Grid item md={4} xs={12}>
-          <EntityGithubPullRequestsOverviewCard />
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <EntityGithubInsightsLanguagesCard />
-        </Grid>
-        <Grid item md={4} xs={12}>
-          <EntityGithubInsightsComplianceCard />
-        </Grid>
-      </EntitySwitch.Case>
-    </EntitySwitch>
+    <Grid item xs={12} md={12} container spacing={3} alignItems={'stretch'}>
+      <Grid item xs={12} md={4}>
+        <EntityLinksCard />
+        <div style={{ marginBottom: '24px' }}></div>
+        <EntityAboutCard />
+      </Grid>
 
-    <Grid item md={4} xs={12}>
-      <EntityLinksCard />
-    </Grid>
-
-    <EntitySwitch.Case if={isSecurityInsightsAvailable}>
-      <Grid item md={4} xs={12}>
+      <Grid item xs={12} md={4}>
+        <EntityDependabotAlertsCard />
         <EntitySecurityInsightsCard />
       </Grid>
-    </EntitySwitch.Case>
 
-    <Grid item md={12} xs={12}>
+      <Grid item xs={12} md={4}>
+        <EntityGithubPullRequestsOverviewCard />
+        <EntitySwitch>
+          <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
+            <EntityGithubInsightsComplianceCard />
+          </EntitySwitch.Case>
+        </EntitySwitch>
+      </Grid>
+    </Grid>
+
+    <Grid item xs={12} md={12}>
       <EntityArgoCDOverviewCard />
     </Grid>
   </Grid>
