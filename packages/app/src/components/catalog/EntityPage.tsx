@@ -209,13 +209,13 @@ const dependenciesContent = (
 );
 
 const overviewContent = (
-  <Grid container spacing={3} alignItems={'stretch'}>
+  <Grid container spacing={3} alignItems="stretch">
     {entityWarningContent}
 
-    <Grid item xs={12} md={12} container spacing={3} alignItems={'stretch'}>
+    <Grid item xs={12} md={12} container spacing={3} alignItems="stretch">
       <Grid item xs={12} md={4}>
         <EntityLinksCard />
-        <div style={{ marginBottom: '24px' }} />
+        <div style={{ marginBottom: "24px" }} />
         <EntityAboutCard />
       </Grid>
 
