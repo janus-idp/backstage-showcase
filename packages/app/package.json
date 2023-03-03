@@ -46,6 +46,7 @@
     "@janus-idp/backstage-plugin-quay": "^1.1.0",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "@roadiehq/backstage-plugin-argo-cd": "^2.2.6",
     "@roadiehq/backstage-plugin-github-insights": "^2.3.4",
     "@roadiehq/backstage-plugin-github-pull-requests": "^2.5.1",

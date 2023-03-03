@@ -113,7 +113,7 @@ export const HomePage = () => {
                 <MuiAlert severity="warning">
                   The Janus showcase URL has changed! Please, use this new link
                   instead{' '}
-                  <Link to={'https://showcase.janus-idp.io'}>
+                  <Link to="https://showcase.janus-idp.io">
                     showcase.janus-idp.io
                   </Link>
                 </MuiAlert>
