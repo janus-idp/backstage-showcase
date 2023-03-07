@@ -39,3 +39,13 @@ spec:
             - name: backend
               containerPort: 7007
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 7007
+              scheme: HTTP
+            initialDelaySeconds: 3
+            timeoutSeconds: 1
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
