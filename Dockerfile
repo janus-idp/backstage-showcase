@@ -9,12 +9,14 @@ RUN \
 
 COPY ./package.json ./yarn.lock ./
 COPY ./packages ./packages
+COPY .yarn ./.yarn
+COPY .yarnrc.yml ./
 
 # Remove all files except package.json
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
 ENV IS_CONTAINER="TRUE"
-RUN yarn install --frozen-lockfile --network-timeout 600000
+RUN yarn install --immutable --network-timeout 600000
 
 # Stage 2 - Build packages
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
@@ -27,6 +29,8 @@ RUN \
 
 COPY . .
 COPY --from=deps /opt/app-root/src .
+COPY --from=deps --chown=0:0 /opt/app-root/src/.yarn ./.yarn
+COPY --from=deps --chown=0:0 /opt/app-root/src/.yarnrc.yml  ./
 
 RUN yarn tsc
 RUN yarn --cwd packages/backend build
@@ -43,6 +47,9 @@ RUN \
 # Install gzip for tar and clean up
 RUN microdnf install -y gzip && microdnf clean all
 
+COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarn ./.yarn
+COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarnrc.yml  ./
+
 # Switch to nodejs user
 USER 1001
 
@@ -52,7 +59,7 @@ RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Install production dependencies
 ENV IS_CONTAINER="TRUE"
-RUN yarn install --frozen-lockfile --production --network-timeout 600000 && yarn cache clean
+RUN yarn workspaces focus --all --production && yarn cache clean
 
 # Copy the built packages from the build stage
 COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .
