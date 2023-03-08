@@ -23,9 +23,10 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: quay.io
+  PASSWORD_KEY: QUAY_TOKEN
+  USERNAME: ${{ vars.QUAY_USERNAME }}
   IMAGE_NAME: ${{ github.repository }}
-  IMAGE_TAGS: latest ${{ github.sha }}
 
 jobs:
   docker-build:
@@ -48,20 +49,22 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ env.USERNAME }}
+          password: ${{ secrets[env.PASSWORD_KEY] }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: |
-            ghcr.io/${{ github.repository }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: latest=true
+          tags: type=sha
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
+          provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

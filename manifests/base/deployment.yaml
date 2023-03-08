@@ -27,7 +27,7 @@ spec:
             requests:
               cpu: 400m
           name: backstage-showcase
-          image: ghcr.io/janus-idp/backstage-showcase:main
+          image: backstage-showcase
           imagePullPolicy: "Always"
           command:
             - node
