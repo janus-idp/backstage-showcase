@@ -50,3 +50,6 @@ jobs:
 
       - name: CI
         run: yarn ci
+
+      - name: Docker
+        run: docker build .
