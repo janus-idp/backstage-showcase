@@ -14,6 +14,7 @@ metadata:
     backstage.io/kubernetes-id: "janus-idp"
     github.com/project-slug: janus-idp/backstage-showcase
     quay.io/repository-slug: janus-idp/backstage-showcase
+    backstage.io/kubernetes-namespace: janus-idp
 spec:
   type: website
   owner: janus-authors
