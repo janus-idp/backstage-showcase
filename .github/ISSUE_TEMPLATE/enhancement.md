@@ -1,7 +1,7 @@
 ---
 name: Enhancement
 about: Improve an existing feature or workflow
-labels: ["kind/enhancement", "status/triage"]
+labels: ['kind/enhancement', 'status/triage']
 ---
 
 ### What do you want to improve?
@@ -11,7 +11,9 @@ labels: ["kind/enhancement", "status/triage"]
 ### What is the new behavior?
 
 ### :warning: Is this a breaking change?
+
 _Put an `x` in the boxes that apply_
+
 - [ ] Yes
 - [ ] No
 - [ ] Don't know

@@ -1,4 +1,5 @@
 ## Description
+
 Please explain the changes you made here.
 
 ## Which issue(s) does this PR fix
@@ -6,6 +7,7 @@ Please explain the changes you made here.
 - Fixes #?
 
 ## PR acceptance criteria
+
 _Put an `x` in the boxes that apply_
 
 - [ ] GitHub Actions are completed and successful
