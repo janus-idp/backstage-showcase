@@ -1,0 +1,7 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❓ Janus IDP Community Slack
+    url: https://janus-idp.slack.com/archives/C04EDTPJRK5
+    about: Please ask and answer questions here.
+  - name: 🌐 Janus IDP Showcase
+    url: https://showcase.janus-idp.io
