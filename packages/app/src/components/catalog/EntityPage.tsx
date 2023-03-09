@@ -85,6 +85,7 @@ import {
   EntityGithubDependabotContent,
   EntitySecurityInsightsContent,
 } from '@roadiehq/backstage-plugin-security-insights';
+import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -262,6 +263,10 @@ const serviceEntityPage = (
       <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/topology" title="Topology">
+      <TopologyPage />
+    </EntityLayout.Route>
+
     <EntityLayout.Route if={isQuayAvailable} path="/quay" title="Quay">
       <QuayPage />
     </EntityLayout.Route>
@@ -311,6 +316,10 @@ const websiteEntityPage = (
 
     <EntityLayout.Route path="/kubernetes" title="Kubernetes">
       <EntityKubernetesContent refreshIntervalMs={30000} />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/topology" title="Topology">
+      <TopologyPage />
     </EntityLayout.Route>
 
     <EntityLayout.Route if={isQuayAvailable} path="/quay" title="Quay">
