@@ -31,6 +31,15 @@ The easiest and fastest method for getting started with the Backstage Showcase a
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
+   proxy:
+     '/argocd/api':
+       target: ${ARGOCD_URL}
+       changeOrigin: true
+       secure: true
+       headers:
+         Cookie:
+           $env: ARGOCD_AUTH_TOKEN
+
    auth:
      environment: development
      providers:
@@ -73,6 +82,11 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - This [URL](https://backstage.io/docs/integrations/github/github-apps) can be used to quickly create a GitHub app, you can name the yaml file `github-app-backstage-showcase-credentials.local.yaml`
      - `${GITHUB_APP_CLIENT_ID}` with the client id
      - `${GITHUB_APP_CLIENT_SECRET}` with the client secret
+
+   - Setup an ArgoCD instance (Needed for the ArgoCD plugin) and replace the following variables
+
+     - `${ARGOCD_URL}` with the URL to the instance
+     - `${ARGOCD_AUTH_TOKEN}` with the token to the instance
 
    - Setup a Keycloak instance (Needed for the Keycloak plugin) and replace the following variables
 
