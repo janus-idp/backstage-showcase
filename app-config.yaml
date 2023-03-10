@@ -49,7 +49,7 @@ proxy:
   #   target: 'https://example.com'
   #   changeOrigin: true
   '/argocd/api':
-    target: https://argocd.operate-first.cloud/api/v1/
+    target: ${ARGOCD_URL}
     changeOrigin: true
     secure: true
     headers:
