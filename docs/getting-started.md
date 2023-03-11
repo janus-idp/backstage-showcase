@@ -31,15 +31,6 @@ The easiest and fastest method for getting started with the Backstage Showcase a
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
-   proxy:
-     '/argocd/api':
-       target: ${ARGOCD_URL}
-       changeOrigin: true
-       secure: true
-       headers:
-         Cookie:
-           $env: ARGOCD_AUTH_TOKEN
-
    auth:
      environment: development
      providers:
@@ -75,6 +66,19 @@ The easiest and fastest method for getting started with the Backstage Showcase a
        name: ${OCM_HUB_NAME}
        url: ${OCM_HUB_URL}
        serviceAccountToken: ${moc_infra_token}
+
+   argocd:
+     username: ${ARGOCD_USERNAME}
+     password: ${ARGOCD_PASSWORD}
+     appLocatorMethods:
+       - type: 'config'
+         instances:
+           - name: argoInstance1
+             url: ${ARGOCD_INSTANCE1_URL}
+             token: ${ARGOCD_AUTH_TOKEN}
+           - name: argoInstance2
+             url: ${ARGOCD_INSTANCE2_URL}
+             token: ${ARGOCD_AUTH_TOKEN2}
    ```
 
    - Setup a GitHub app (Needed for the GitHub Issues, GitHub Pull Request plugins) and replace the variables
@@ -83,10 +87,16 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${GITHUB_APP_CLIENT_ID}` with the client id
      - `${GITHUB_APP_CLIENT_SECRET}` with the client secret
 
-   - Setup an ArgoCD instance (Needed for the ArgoCD plugin) and replace the following variables
+   - Setup one to two ArgoCD instances (Needed for the ArgoCD backend plugin) and replace the following variables
 
-     - `${ARGOCD_URL}` with the URL to the instance
+     - If using a shared username and password across the instances, you can define them in the username and password variables and arbitrarily assign the urls and tokens
+     - If using tokens for each individual instance, you can assign arbitrary variables to the tokens
+     - `${ARGOCD_USERNAME}` Username for the instance(s)
+     - `${ARGOCD_PASSWORD}` Password for the instance(s)
+     - `${ARGOCD_INSTANCE1_URL}` with the URL to the instance
      - `${ARGOCD_AUTH_TOKEN}` with the token to the instance
+     - `${ARGOCD_INSTANCE2_URL}` with the URL to the instance
+     - `${ARGOCD_AUTH_TOKEN2}` with the token to the instance
 
    - Setup a Keycloak instance (Needed for the Keycloak plugin) and replace the following variables
 

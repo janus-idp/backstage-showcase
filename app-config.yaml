@@ -48,13 +48,6 @@ proxy:
   # '/test':
   #   target: 'https://example.com'
   #   changeOrigin: true
-  '/argocd/api':
-    target: ${ARGOCD_URL}
-    changeOrigin: true
-    secure: true
-    headers:
-      Cookie:
-        $env: ARGOCD_AUTH_TOKEN
   '/quay/api':
     target: https://quay.io/
     headers:
@@ -164,3 +157,16 @@ ocm:
     name: ${OCM_HUB_NAME}
     url: ${OCM_HUB_URL}
     serviceAccountToken: ${moc_infra_token}
+
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argoInstance1
+          url: ${ARGOCD_INSTANCE1_URL}
+          token: ${ARGOCD_AUTH_TOKEN}
+        - name: argoInstance2
+          url: ${ARGOCD_INSTANCE2_URL}
+          token: ${ARGOCD_AUTH_TOKEN2}
