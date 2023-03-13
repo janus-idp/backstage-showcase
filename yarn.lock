@@ -3459,7 +3459,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/integration-react@npm:^1.1.10, @backstage/integration-react@npm:^1.1.9":
+"@backstage/integration-react@npm:^1.1.10":
   version: 1.1.10
   resolution: "@backstage/integration-react@npm:1.1.10"
   dependencies:
@@ -5463,9 +5463,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-keycloak-backend@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@janus-idp/backstage-plugin-keycloak-backend@npm:1.0.3"
+"@janus-idp/backstage-plugin-keycloak-backend@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@janus-idp/backstage-plugin-keycloak-backend@npm:1.0.4"
   dependencies:
     "@backstage/backend-common": ^0.18.1
     "@backstage/backend-tasks": ^0.4.2
@@ -5476,20 +5476,20 @@ __metadata:
     lodash: ^4.14.189
     uuid: ^9.0.0
     winston: ^3.2.1
-  checksum: e580272cb7869032644e24cff137a41ff2b32eab8805eeea3b9596ce21d01a9cb8cf199b601a16df71de73a3dd6db28d869834c38a2a21661a33149b7837a8b7
+  checksum: 56a653f7cdd029501ed075cc1411b93c323815357e8599a34f63f0b2fb165bd46056481d538b97ee4292c3bc9f5b04292cfebda0970db555cba3e4a2104833f2
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-ocm-backend@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@janus-idp/backstage-plugin-ocm-backend@npm:1.3.0"
+"@janus-idp/backstage-plugin-ocm-backend@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@janus-idp/backstage-plugin-ocm-backend@npm:1.4.1"
   dependencies:
     "@backstage/backend-common": ^0.18.1
     "@backstage/catalog-client": ^1.3.0
     "@backstage/catalog-model": ^1.1.5
     "@backstage/config": ^1.0.6
     "@backstage/plugin-catalog-node": ^1.3.2
-    "@janus-idp/backstage-plugin-ocm-common": 1.1.1
+    "@janus-idp/backstage-plugin-ocm-common": 1.2.1
     "@kubernetes/client-node": ^0.18.0
     express: ^4.17.1
     express-promise-router: ^4.1.0
@@ -5497,20 +5497,20 @@ __metadata:
     semver: ^7.3.8
     winston: ^3.2.1
     yn: ^5.0.0
-  checksum: edd1d04055e39b59d1b82c01c5d1fd530522b87a29764364b0c1305aaa2e93513560c36fc907c41d18f14b1fe5707b155fbb2ea9f2dfc68b6a50229e7a9ecc16
+  checksum: 17228fcf60a7d65d08f2394ebb82ce2163dac2b684f9011fa3eec4c0db5b7c83e2fc4a92f791115b127f6530aa3fff8a5361abca8ae5421bd07c125c803e901e
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-ocm-common@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@janus-idp/backstage-plugin-ocm-common@npm:1.1.1"
-  checksum: e549df1b173b79dd798dfdae701660635f72b88117e9b807b21c18cdd9ea1d4c0eb5adb41ea14e2fa6f10081f0cfe3b853c7adad40dae78faad8d43661bb9ef7
+"@janus-idp/backstage-plugin-ocm-common@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@janus-idp/backstage-plugin-ocm-common@npm:1.2.1"
+  checksum: e69d94e54b6c8a98a88eff4cff3d13720b0c2098025b7654837c9aba664aefb2c57e8d0739c4471b91c32680915e5178cd51ec3197b8495891f492127b053fe3
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-ocm@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@janus-idp/backstage-plugin-ocm@npm:1.1.1"
+"@janus-idp/backstage-plugin-ocm@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "@janus-idp/backstage-plugin-ocm@npm:1.1.3"
   dependencies:
     "@backstage/catalog-model": ^1.1.5
     "@backstage/core-components": ^0.12.3
@@ -5520,20 +5520,20 @@ __metadata:
     "@backstage/plugin-home": ^0.4.30
     "@backstage/plugin-search-react": ^1.4.0
     "@backstage/theme": ^0.2.16
-    "@janus-idp/backstage-plugin-ocm-common": 1.1.1
+    "@janus-idp/backstage-plugin-ocm-common": 1.2.1
     "@material-ui/core": ^4.9.13
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.45
     react-use: ^17.2.4
   peerDependencies:
     react: ^16.13.1 || ^17.0.0
-  checksum: c80c959035b3f2101cc2359512bade160981317b971c3512704ab10d61243e3868ed51c4af71456c96a6010dcde6c20aa7d4986c876494b8362ed67113f2ac13
+  checksum: 546d1de2319e0ae2808af11fb28485ac22d74135da1d260e5760e7b7e48fc88c2a89d9be5e9268658333520743b9395fecd897d939ca2300c0a18e7301a5176f
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-quay@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@janus-idp/backstage-plugin-quay@npm:1.1.0"
+"@janus-idp/backstage-plugin-quay@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@janus-idp/backstage-plugin-quay@npm:1.1.1"
   dependencies:
     "@backstage/catalog-model": 1.1.5
     "@backstage/core-components": ^0.12.1
@@ -5546,13 +5546,13 @@ __metadata:
     react-use: ^17.2.4
   peerDependencies:
     react: ^16.13.1 || ^17.0.0
-  checksum: f30a861a60e580cc948da47f1cda862fe1d7e9a839abdde59ead02c34ad0a253e14f8850c9f26f4d3199d291df056ab30c99977eca592467ff4cf4c1ede109c3
+  checksum: 937917a23b4e445f53328ae8de8f3e07e09ddfea471ada90c3cba2da7964570c5d89521a3da9505375ea769a6fec966599491e9c0bc0f72d19497dd080a9ce7f
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-topology@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@janus-idp/backstage-plugin-topology@npm:1.0.2"
+"@janus-idp/backstage-plugin-topology@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@janus-idp/backstage-plugin-topology@npm:1.0.3"
   dependencies:
     "@backstage/catalog-model": ^1.1.5
     "@backstage/core-components": ^0.12.3
@@ -5579,7 +5579,7 @@ __metadata:
     react-use: ^17.2.4
   peerDependencies:
     react: ^16.13.1 || ^17.0.0
-  checksum: 598f6955f728f90d7222077cca8a8df95fc434d432e460690821649d5c77374893e3e4ead87a6dade6821592d1ae5c409394f64171748c8159f2266608ef0e1a
+  checksum: 87b5ad325d968d6b28ea24fdc98a0d0f8d1e154b573951d24036f9ee90d43369ff0858ce8fe7d5c82a60eee8f5158dadf9a91fb5aa2b031d7c9ead9187aa12d6
   languageName: node
   linkType: hard
 
@@ -7228,15 +7228,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@roadiehq/backstage-plugin-argo-cd@npm:^2.2.6":
-  version: 2.2.6
-  resolution: "@roadiehq/backstage-plugin-argo-cd@npm:2.2.6"
+"@roadiehq/backstage-plugin-argo-cd@npm:^2.2.8":
+  version: 2.2.8
+  resolution: "@roadiehq/backstage-plugin-argo-cd@npm:2.2.8"
   dependencies:
-    "@backstage/catalog-model": ^1.1.5
-    "@backstage/core-components": ^0.12.3
-    "@backstage/core-plugin-api": ^1.3.0
-    "@backstage/plugin-catalog-react": ^1.2.4
-    "@backstage/theme": ^0.2.16
+    "@backstage/catalog-model": ^1.2.0
+    "@backstage/core-components": ^0.12.4
+    "@backstage/core-plugin-api": ^1.4.0
+    "@backstage/plugin-catalog-react": ^1.3.0
+    "@backstage/theme": ^0.2.17
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": 4.0.0-alpha.45
@@ -7254,20 +7254,20 @@ __metadata:
     react-dom: ^16.13.1 || ^17.0.0
     react-router: 6.0.0-beta.0  || ^6.3.0
     react-router-dom: 6.0.0-beta.0  || ^6.3.0
-  checksum: f53a26e6323ad4fe392863a9c2bc692344b2f9bcc901fdb188de242ac8666003b46ff2161f27cc859662f880831be687a7450098c4b3a80667daf1ea6f565f82
+  checksum: 7cdb987509712bdc43804cfa46d77f3c044bf1e784cbd28fce5d77f3fe472b9a00c2e2d433e4fcb621ade368d34700b60c32dea98918328e4dfac3675d8c7fa1
   languageName: node
   linkType: hard
 
-"@roadiehq/backstage-plugin-github-insights@npm:^2.3.4":
-  version: 2.3.4
-  resolution: "@roadiehq/backstage-plugin-github-insights@npm:2.3.4"
+"@roadiehq/backstage-plugin-github-insights@npm:^2.3.7":
+  version: 2.3.7
+  resolution: "@roadiehq/backstage-plugin-github-insights@npm:2.3.7"
   dependencies:
-    "@backstage/catalog-model": ^1.1.5
-    "@backstage/core-components": ^0.12.3
-    "@backstage/core-plugin-api": ^1.3.0
-    "@backstage/integration-react": ^1.1.9
-    "@backstage/plugin-catalog-react": ^1.2.4
-    "@backstage/theme": ^0.2.16
+    "@backstage/catalog-model": ^1.2.0
+    "@backstage/core-components": ^0.12.4
+    "@backstage/core-plugin-api": ^1.4.0
+    "@backstage/integration-react": ^1.1.10
+    "@backstage/plugin-catalog-react": ^1.3.0
+    "@backstage/theme": ^0.2.17
     "@date-io/core": 2.10.7
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
@@ -7282,19 +7282,19 @@ __metadata:
     react: ^16.13.1 || ^17.0.0
     react-dom: ^16.13.1 || ^17.0.0
     react-router: 6.0.0-beta.0 || ^6.3.0
-  checksum: 20a633dc9731ccab4f49a376d272c4b710107eacadd253bfaa3e00f9b0196632fd6fb03f651cc5e44cc99d6838ffc5b9d83c03764c0bd3926a0c8f7b3614aff7
+  checksum: 0818a109c6ebbcc312f1a9f6575cd8d47f7adec6201d3555cfc1ad2d25c5f80ff08ad26eee692a40d059283c7b3dadbb5a6533802318a8ae5c781c1fcaaf077d
   languageName: node
   linkType: hard
 
-"@roadiehq/backstage-plugin-github-pull-requests@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "@roadiehq/backstage-plugin-github-pull-requests@npm:2.5.1"
+"@roadiehq/backstage-plugin-github-pull-requests@npm:^2.5.4":
+  version: 2.5.4
+  resolution: "@roadiehq/backstage-plugin-github-pull-requests@npm:2.5.4"
   dependencies:
-    "@backstage/catalog-model": ^1.1.5
-    "@backstage/core-components": ^0.12.3
-    "@backstage/core-plugin-api": ^1.3.0
-    "@backstage/plugin-catalog-react": ^1.2.4
-    "@backstage/plugin-home": ^0.4.30
+    "@backstage/catalog-model": ^1.2.0
+    "@backstage/core-components": ^0.12.4
+    "@backstage/core-plugin-api": ^1.4.0
+    "@backstage/plugin-catalog-react": ^1.3.0
+    "@backstage/plugin-home": ^0.4.31
     "@material-ui/core": ^4.11.0
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.60
@@ -7311,7 +7311,7 @@ __metadata:
     react: ^16.13.1 || ^17.0.0
     react-dom: ^16.13.1 || ^17.0.0
     react-router: 6.0.0-beta.0 || ^6.3.0
-  checksum: 769991ac46d4466261f2765eaab6eca903e751dc003d94a21dfb0376fca69af8edb2a8b9b12b375e903694278d32a95f8745d1f724a19429df34adeb3fb3e58c
+  checksum: 9e93586a68c2a2f6481138e0ad2e27b170395cc53ed63c682b7ea4f74ce1037eb447efdef18c463d2a9eb96bf00b9354ec562b8913914c7d322ed047c906005f
   languageName: node
   linkType: hard
 
@@ -10042,15 +10042,15 @@ __metadata:
     "@backstage/plugin-user-settings": ^0.7.0
     "@backstage/test-utils": ^1.2.5
     "@backstage/theme": ^0.2.17
-    "@janus-idp/backstage-plugin-ocm": ^1.1.1
-    "@janus-idp/backstage-plugin-quay": ^1.1.0
-    "@janus-idp/backstage-plugin-topology": ^1.0.2
+    "@janus-idp/backstage-plugin-ocm": ^1.1.3
+    "@janus-idp/backstage-plugin-quay": ^1.1.1
+    "@janus-idp/backstage-plugin-topology": ^1.0.3
     "@material-ui/core": ^4.12.2
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.61
-    "@roadiehq/backstage-plugin-argo-cd": ^2.2.6
-    "@roadiehq/backstage-plugin-github-insights": ^2.3.4
-    "@roadiehq/backstage-plugin-github-pull-requests": ^2.5.1
+    "@roadiehq/backstage-plugin-argo-cd": ^2.2.8
+    "@roadiehq/backstage-plugin-github-insights": ^2.3.7
+    "@roadiehq/backstage-plugin-github-pull-requests": ^2.5.4
     "@roadiehq/backstage-plugin-security-insights": ^2.1.8
     "@testing-library/jest-dom": ^5.10.1
     "@testing-library/react": ^12.1.3
@@ -10644,8 +10644,8 @@ __metadata:
     "@backstage/plugin-search-backend-module-pg": ^0.5.3
     "@backstage/plugin-search-backend-node": ^1.1.3
     "@backstage/plugin-techdocs-backend": ^1.5.3
-    "@janus-idp/backstage-plugin-keycloak-backend": ^1.0.3
-    "@janus-idp/backstage-plugin-ocm-backend": ^1.3.0
+    "@janus-idp/backstage-plugin-keycloak-backend": ^1.0.4
+    "@janus-idp/backstage-plugin-ocm-backend": ^1.4.1
     "@roadiehq/backstage-plugin-argo-cd-backend": ^2.7.1
     "@roadiehq/scaffolder-backend-argocd": ^1.1.5
     "@types/dockerode": ^3.3.0
