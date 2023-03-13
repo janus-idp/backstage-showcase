@@ -1,3 +1,7 @@
+**WARNING**
+
+This documentation is currently out of date
+
 # Setting up to use the Helm Chart
 
 The Helm Chart that this project is currently using is the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. For more information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
