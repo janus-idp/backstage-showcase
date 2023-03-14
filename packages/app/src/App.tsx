@@ -38,6 +38,7 @@ import { janusTheme } from './themes/janus';
 import { HomePage } from './components/home/HomePage';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { OcmPage } from '@janus-idp/backstage-plugin-ocm';
+import { EntitySnykContent } from 'backstage-plugin-snyk';
 import Logo from './components/Root/LogoIcon';
 
 const app = createApp({
@@ -113,6 +114,7 @@ const routes = (
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
     <Route path="/ocm" element={<OcmPage logo={<Logo />} />} />
+    <Route path="/snyk" element={<EntitySnykContent />} />
   </FlatRoutes>
 );
 

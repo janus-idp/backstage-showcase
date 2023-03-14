@@ -86,6 +86,11 @@ import {
   EntitySecurityInsightsContent,
 } from '@roadiehq/backstage-plugin-security-insights';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
+import {
+  SnykOverview,
+  EntitySnykContent,
+  isSnykAvailable,
+} from 'backstage-plugin-snyk';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -145,6 +150,9 @@ const securityContent = (
     <Grid item md={12} xs={12}>
       <EntitySecurityInsightsContent />
     </Grid>
+    <Grid item md={12} xs={12}>
+      <EntitySnykContent />
+    </Grid>
   </Grid>
 );
 
@@ -174,6 +182,14 @@ const entityWarningContent = (
       <EntitySwitch.Case if={hasCatalogProcessingErrors}>
         <Grid item xs={12}>
           <EntityProcessingErrorsPanel />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isSnykAvailable}>
+        <Grid item md={6}>
+          <SnykOverview />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

@@ -56,6 +56,11 @@ proxy:
       # Authorization: 'Bearer <YOUR TOKEN>'
     changeOrigin: true
     secure: true
+  '/snyk':
+    target: https://snyk.io/api/v1
+    headers:
+      User-Agent: tech-services/backstage-plugin/1.0
+      Authorization: token ${SNYK_TOKEN}
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs

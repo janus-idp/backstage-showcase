@@ -8,13 +8,15 @@ metadata:
     - title: Janus Website
       url: https://janus-idp.io
     - title: Janus Showcase
-      url: https://janus-idp.apps.smaug.na.operate-first.cloud/
+      url: https://showcase.janus-idp.io
   annotations:
-    argocd/app-name: "janus-idp-smaug"
-    backstage.io/kubernetes-id: "janus-idp"
+    argocd/app-name: janus-idp-smaug
+    backstage.io/kubernetes-id: janus-idp
     github.com/project-slug: janus-idp/backstage-showcase
     quay.io/repository-slug: janus-idp/backstage-showcase
     backstage.io/kubernetes-namespace: janus-idp
+    snyk.io/org-name: janus-idp
+    snyk.io/project-ids: ${SNYK_PROJECT_IDS}
 spec:
   type: website
   owner: janus-authors
