@@ -55,5 +55,3 @@ site
 # Cypress
 **/cypress/downloads
 **/cypress/screenshots
-raf-backstage-demo-app-config.yaml
-secrets.sh
