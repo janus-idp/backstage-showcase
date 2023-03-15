@@ -35,7 +35,7 @@ Dependencies:
 - [node.js](https://nodejs.org/en/) 18
 - [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable)
 
-Information on running the showcase app can be found in our [Getting Started](https://github.com/janus-idp/backstage-showcase/blob/main/docs/getting-started.md) documentation. In the documentation is how to set up and run an instance of the showcase app locally. We plan to expand upon the documentation at a later point if there is enough interest in other methods for getting the app up and running.
+Information on running the showcase app can be found in our [Getting Started](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) documentation. In the documentation is how to set up and run an instance of the showcase app locally. We plan to expand upon the documentation at a later point if there is enough interest in other methods for getting the app up and running.
 
 We are excited to see people wanting to contribute to our project and welcome anyone who wishes to participate. You are more than welcome to browse through our open issues and tackle anything you feel confident in working on.
 
