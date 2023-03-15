@@ -35,6 +35,10 @@ spec:
           envFrom:
             - secretRef:
                 name: janus-idp
+            - configMapRef:
+                name: backstage-showcase-bucket-claim
+            - secretRef:
+                name: backstage-showcase-bucket-claim
           ports:
             - name: backend
               containerPort: 7007
