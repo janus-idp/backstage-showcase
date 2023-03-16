@@ -9,6 +9,7 @@ resources:
   - issuer.yaml
   - certificate.yaml
   - keycloak
+  - obc.yaml
 commonLabels:
     app.kubernetes.io/name: backstage
     app.kubernetes.io/instance: backstage
