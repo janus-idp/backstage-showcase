@@ -239,7 +239,7 @@ const overviewContent = (
     <Grid item xs={12} md={12} container spacing={3} alignItems="stretch">
       <Grid item md={4}>
         <EntitySonarQubeCard variant="gridItem" />
-      </Grid>    
+      </Grid>
 
       <Grid item xs={12} md={8}>
         <EntityArgoCDOverviewCard />

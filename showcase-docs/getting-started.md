@@ -25,6 +25,17 @@ The easiest and fastest method for getting started with the Backstage Showcase a
    ```yaml
    # This is a GitHub App. You can find out how to generate this file, and more information
    # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
+
+  proxy:
+    '/sonarqube':
+      target: ${SONARQUBE_URL}
+      allowedMethods: ['GET']
+      auth: "${SONARQUBE_TOKEN}:"
+
+  # comment this out if using sonarcloud
+  sonarQube:
+    baseUrl: ${SONARQUBE_URL}
+
    integrations:
      github:
        - host: github.com
@@ -116,6 +127,10 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${OCM_HUB_NAME}` with the hub cluster name
      - `${OCM_HUB_URL}` with the hub cluster url
      - `${moc_infra_token}` with the hub token
+
+   - Setup a sonarqube instance then pass the following environment variables to backstage:
+     - `${SONARQUBE_URL}` the uel at which sonarqube can be found
+     - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the sonaqube projects  
 
 3. Run `yarn install` to install the dependencies
 
