@@ -42,17 +42,16 @@ The easiest and fastest method for getting started with the Backstage Showcase a
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
-     proxy:
-       '/sonarqube':
-         target: ${SONARQUBE_URL}
-         allowedMethods: ['GET']
-         auth: '${SONARQUBE_TOKEN}:'
+   techdocs:
+     builder: 'local' # Alternatives - 'external'
+     generator:
+       runIn: 'local' # Alternatives - 'local'
+     publisher:
+       type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
-     # comment this out if using sonarcloud
-     sonarQube:
-       baseUrl: ${SONARQUBE_URL}
-
-     integrations:
+   auth:
+     environment: development
+     providers:
        github:
          - host: github.com
            apps:

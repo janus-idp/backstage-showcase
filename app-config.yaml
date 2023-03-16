@@ -70,11 +70,19 @@ sonarQube:
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: 'local' # Alternatives - 'external'
+  builder: 'external'
   generator:
-    runIn: 'docker' # Alternatives - 'local'
+    runIn: 'local'
   publisher:
-    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+    type: 'awsS3'
+    awsS3:
+      bucketName: ${BUCKET_NAME}
+      region: ${BUCKET_REGION_VAULT}
+      endpoint: https://s3-openshift-storage.apps.smaug.na.operate-first.cloud
+      s3ForcePathStyle: true
+      credentials:
+        accessKeyId: ${AWS_ACCESS_KEY_ID}
+        secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
