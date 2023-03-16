@@ -57,6 +57,14 @@ proxy:
     changeOrigin: true
     secure: true
 
+  '/sonarqube':
+    target: ${SONARQUBE_URL}
+    allowedMethods: ['GET']
+    auth: "${SONARQUBE_TOKEN}:"
+
+sonarQube:
+  baseUrl: ${SONARQUBE_URL}
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
