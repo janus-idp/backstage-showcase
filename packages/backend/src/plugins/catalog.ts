@@ -53,7 +53,7 @@ export default async function createPlugin(
         initialDelay: { seconds: 15 },
       }),
     }),
-  );  
+  );
 
   builder.addProcessor(new ScaffolderEntitiesProcessor());
   const { processingEngine, router } = await builder.build();
