@@ -26,70 +26,70 @@ The easiest and fastest method for getting started with the Backstage Showcase a
    # This is a GitHub App. You can find out how to generate this file, and more information
    # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
 
-  proxy:
-    '/sonarqube':
-      target: ${SONARQUBE_URL}
-      allowedMethods: ['GET']
-      auth: "${SONARQUBE_TOKEN}:"
+    proxy:
+      '/sonarqube':
+        target: ${SONARQUBE_URL}
+        allowedMethods: ['GET']
+        auth: "${SONARQUBE_TOKEN}:"
 
-  # comment this out if using sonarcloud
-  sonarQube:
-    baseUrl: ${SONARQUBE_URL}
+    # comment this out if using sonarcloud
+    sonarQube:
+      baseUrl: ${SONARQUBE_URL}
 
-   integrations:
-     github:
-       - host: github.com
-         apps:
-           - $include: github-app-backstage-showcase-credentials.local.yaml
+    integrations:
+      github:
+        - host: github.com
+          apps:
+            - $include: github-app-backstage-showcase-credentials.local.yaml
 
-   auth:
-     environment: development
-     providers:
-       github:
-         development:
-           clientId: ${AUTH_GITHUB_CLIENT_ID}
-           clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+    auth:
+      environment: development
+      providers:
+        github:
+          development:
+            clientId: ${AUTH_GITHUB_CLIENT_ID}
+            clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
 
-   catalog:
-     providers:
-       keycloakOrg:
-         default:
-           baseUrl: ${KEYCLOAK_BASE_URL}
-           loginRealm: ${KEYCLOAK_LOGIN_REALM}
-           realm: ${KEYCLOAK_REALM}
-           clientId: ${KEYCLOAK_CLIENT_ID}
-           clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+    catalog:
+      providers:
+        keycloakOrg:
+          default:
+            baseUrl: ${KEYCLOAK_BASE_URL}
+            loginRealm: ${KEYCLOAK_LOGIN_REALM}
+            realm: ${KEYCLOAK_REALM}
+            clientId: ${KEYCLOAK_CLIENT_ID}
+            clientSecret: ${KEYCLOAK_CLIENT_SECRET}
 
-   kubernetes:
-     serviceLocatorMethod:
-       type: 'multiTenant'
-     clusterLocatorMethods:
-       - type: 'config'
-         clusters:
-           - name: ${K8S_CLUSTER_NAME}
-             url: ${K8S_CLUSTER_URL}
-             authProvider: 'serviceAccount'
-             skipTLSVerify: true
-             serviceAccountToken: ${K8S_CLUSTER_TOKEN}
+    kubernetes:
+      serviceLocatorMethod:
+        type: 'multiTenant'
+      clusterLocatorMethods:
+        - type: 'config'
+          clusters:
+            - name: ${K8S_CLUSTER_NAME}
+              url: ${K8S_CLUSTER_URL}
+              authProvider: 'serviceAccount'
+              skipTLSVerify: true
+              serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
-   ocm:
-     hub:
-       name: ${OCM_HUB_NAME}
-       url: ${OCM_HUB_URL}
-       serviceAccountToken: ${moc_infra_token}
+    ocm:
+      hub:
+        name: ${OCM_HUB_NAME}
+        url: ${OCM_HUB_URL}
+        serviceAccountToken: ${moc_infra_token}
 
-   argocd:
-     username: ${ARGOCD_USERNAME}
-     password: ${ARGOCD_PASSWORD}
-     appLocatorMethods:
-       - type: 'config'
-         instances:
-           - name: argoInstance1
-             url: ${ARGOCD_INSTANCE1_URL}
-             token: ${ARGOCD_AUTH_TOKEN}
-           - name: argoInstance2
-             url: ${ARGOCD_INSTANCE2_URL}
-             token: ${ARGOCD_AUTH_TOKEN2}
+    argocd:
+      username: ${ARGOCD_USERNAME}
+      password: ${ARGOCD_PASSWORD}
+      appLocatorMethods:
+        - type: 'config'
+          instances:
+            - name: argoInstance1
+              url: ${ARGOCD_INSTANCE1_URL}
+              token: ${ARGOCD_AUTH_TOKEN}
+            - name: argoInstance2
+              url: ${ARGOCD_INSTANCE2_URL}
+              token: ${ARGOCD_AUTH_TOKEN2}
    ```
 
    - Setup a GitHub app (Needed for the GitHub Issues, GitHub Pull Request plugins) and replace the variables
