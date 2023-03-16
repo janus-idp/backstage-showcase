@@ -37,7 +37,7 @@ export default async function createPlugin(
         initialDelay: { minutes: 1 },
       }),
       // optional: alternatively, use schedule
-      //scheduler: env.scheduler,
+      // scheduler: env.scheduler,
     }),
   );
 
