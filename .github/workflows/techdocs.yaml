@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-      - techdocs-ci
+    paths:
+      - "docs/**"
+      - "mkdocs.yaml"
 
 
 jobs:
