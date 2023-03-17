@@ -28,7 +28,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
 
    proxy:
      '/sonarqube':
-       target: ${SONARQUBE_URL}
+       target: ${SONARQUBE_URL}/api
        allowedMethods: ['GET']
        auth: '${SONARQUBE_TOKEN}:'
 
