@@ -4,6 +4,7 @@ import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend'
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
+import { GithubEntityProvider } from '@backstage/plugin-catalog-backend-module-github';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -23,6 +24,20 @@ export default async function createPlugin(
         timeout: { minutes: 50 },
         initialDelay: { seconds: 15 },
       }),
+    }),
+  );
+
+  builder.addEntityProvider(
+    GithubEntityProvider.fromConfig(env.config, {
+      logger: env.logger,
+      // optional: alternatively, use scheduler with schedule defined in app-config.yaml
+      schedule: env.scheduler.createScheduledTaskRunner({
+        frequency: { minutes: 30 },
+        timeout: { minutes: 3 },
+        initialDelay: { minutes: 1 },
+      }),
+      // optional: alternatively, use schedule
+      // scheduler: env.scheduler,
     }),
   );
 
