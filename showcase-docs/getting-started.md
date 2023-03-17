@@ -31,6 +31,13 @@ The easiest and fastest method for getting started with the Backstage Showcase a
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
+   techdocs:
+     builder: 'local' # Alternatives - 'external'
+     generator:
+       runIn: 'local' # Alternatives - 'local'
+     publisher:
+       type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+
    auth:
      environment: development
      providers:
