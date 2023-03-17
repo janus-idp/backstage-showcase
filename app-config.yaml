@@ -58,12 +58,16 @@ proxy:
     secure: true
 
   '/sonarqube':
-    target: ${SONARQUBE_URL}/api
-    allowedMethods: ['GET']
-    auth: "${SONARQUBE_TOKEN}:"
+    target: https://sonarcloud.io/api
 
-sonarQube:
-  baseUrl: ${SONARQUBE_URL}
+    allowedMethods: ['GET']
+    # uncomment if using a local instnace of sonarqube
+    # auth: "${SONARQUBE_TOKEN}:"
+    # target: ${SONARQUBE_URL}/api
+
+  # uncomment if using a local instnace of sonarqube
+  # sonarQube:
+  #   baseUrl: ${SONARQUBE_URL}
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
