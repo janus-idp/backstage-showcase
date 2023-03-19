@@ -58,7 +58,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: latest=true
-          tags: type=sha
+          tags: |
+            type=ref,event=branch
+            type=sha
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
