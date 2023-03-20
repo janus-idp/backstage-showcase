@@ -33,9 +33,10 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  docker-build:
-    name: Docker Build Job
+  push-docker-build:
+    name: Push Docker Build Job
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     permissions:
       contents: read
       packages: write
@@ -72,3 +73,11 @@ jobs:
           provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  pr-docker-build:
+    name: PR Docker Build Job
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - run: docker build .
