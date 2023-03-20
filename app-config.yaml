@@ -42,6 +42,10 @@ integrations:
       apps:
         - $include: github-app-backstage-showcase-credentials.yaml
 
+github-org-provider:
+  id: production
+  orgUrl: ${GITHUB_ORG_URL}        
+
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.

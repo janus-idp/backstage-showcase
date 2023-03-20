@@ -44,8 +44,8 @@ export default async function createPlugin(
 
   builder.addEntityProvider(
     GithubOrgEntityProvider.fromConfig(env.config, {
-      id: 'production',
-      orgUrl: 'https://github.com/raf-backstage-demo',
+      id: env.config.getString('github-org-provider.id'),
+      orgUrl: env.config.getString('github-org-provider.orgUrl'),
       logger: env.logger,
       schedule: env.scheduler.createScheduledTaskRunner({
         frequency: { minutes: 60 },
