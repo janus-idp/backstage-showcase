@@ -5,6 +5,7 @@ import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import { GithubEntityProvider } from '@backstage/plugin-catalog-backend-module-github';
+import { GithubOrgEntityProvider } from '@backstage/plugin-catalog-backend-module-github';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -38,6 +39,19 @@ export default async function createPlugin(
       }),
       // optional: alternatively, use schedule
       // scheduler: env.scheduler,
+    }),
+  );
+
+  builder.addEntityProvider(
+    GithubOrgEntityProvider.fromConfig(env.config, {
+      id: env.config.getString('github-org-provider.id'),
+      orgUrl: env.config.getString('github-org-provider.orgUrl'),
+      logger: env.logger,
+      schedule: env.scheduler.createScheduledTaskRunner({
+        frequency: { minutes: 60 },
+        timeout: { minutes: 15 },
+        initialDelay: { seconds: 15 },
+      }),
     }),
   );
 
