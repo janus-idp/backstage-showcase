@@ -18,5 +18,7 @@ metadata:
     backstage.io/kubernetes-namespace: janus-idp
 spec:
   type: website
+  system: examples
   owner: janus-authors
   lifecycle: production
+  tags: demo
