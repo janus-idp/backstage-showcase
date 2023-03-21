@@ -31,7 +31,6 @@ The easiest and fastest method for getting started with the Backstage Showcase a
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
-
    techdocs:
      builder: 'local' # Alternatives - 'external'
      generator:
@@ -41,7 +40,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
 
    github-org-provider:
      id: production
-     orgUrl: ${GITHUB_ORG_URL}           
+     orgUrl: ${GITHUB_ORG_URL}
 
    auth:
      environment: development
