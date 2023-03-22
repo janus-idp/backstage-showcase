@@ -61,6 +61,18 @@ proxy:
     changeOrigin: true
     secure: true
 
+  '/sonarqube':
+    target: https://sonarcloud.io/api
+
+    allowedMethods: ['GET']
+    # uncomment if using a local instnace of sonarqube
+    # auth: "${SONARQUBE_TOKEN}:"
+    # target: ${SONARQUBE_URL}/api
+
+  # uncomment if using a local instnace of sonarqube
+  # sonarQube:
+  #   baseUrl: ${SONARQUBE_URL}
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
