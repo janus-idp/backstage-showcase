@@ -45,8 +45,7 @@ jobs:
       packages: write
 
     steps:
-      - if: github.event_name == 'pull_request'
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
