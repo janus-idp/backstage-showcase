@@ -25,6 +25,17 @@ The easiest and fastest method for getting started with the Backstage Showcase a
    ```yaml
    # This is a GitHub App. You can find out how to generate this file, and more information
    # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
+
+   proxy:
+     '/sonarqube':
+       target: ${SONARQUBE_URL}/api
+       allowedMethods: ['GET']
+       auth: '${SONARQUBE_TOKEN}:'
+
+   # comment this out if using sonarcloud
+   sonarQube:
+     baseUrl: ${SONARQUBE_URL}
+
    integrations:
      github:
        - host: github.com
@@ -46,50 +57,58 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      environment: development
      providers:
        github:
-         development:
-           clientId: ${AUTH_GITHUB_CLIENT_ID}
-           clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+         - host: github.com
+           apps:
+             - $include: github-app-backstage-showcase-credentials.local.yaml
 
-   catalog:
-     providers:
-       keycloakOrg:
-         default:
-           baseUrl: ${KEYCLOAK_BASE_URL}
-           loginRealm: ${KEYCLOAK_LOGIN_REALM}
-           realm: ${KEYCLOAK_REALM}
-           clientId: ${KEYCLOAK_CLIENT_ID}
-           clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+     auth:
+       environment: development
+       providers:
+         github:
+           development:
+             clientId: ${AUTH_GITHUB_CLIENT_ID}
+             clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
 
-   kubernetes:
-     serviceLocatorMethod:
-       type: 'multiTenant'
-     clusterLocatorMethods:
-       - type: 'config'
-         clusters:
-           - name: ${K8S_CLUSTER_NAME}
-             url: ${K8S_CLUSTER_URL}
-             authProvider: 'serviceAccount'
-             skipTLSVerify: true
-             serviceAccountToken: ${K8S_CLUSTER_TOKEN}
+     catalog:
+       providers:
+         keycloakOrg:
+           default:
+             baseUrl: ${KEYCLOAK_BASE_URL}
+             loginRealm: ${KEYCLOAK_LOGIN_REALM}
+             realm: ${KEYCLOAK_REALM}
+             clientId: ${KEYCLOAK_CLIENT_ID}
+             clientSecret: ${KEYCLOAK_CLIENT_SECRET}
 
-   ocm:
-     hub:
-       name: ${OCM_HUB_NAME}
-       url: ${OCM_HUB_URL}
-       serviceAccountToken: ${moc_infra_token}
+     kubernetes:
+       serviceLocatorMethod:
+         type: 'multiTenant'
+       clusterLocatorMethods:
+         - type: 'config'
+           clusters:
+             - name: ${K8S_CLUSTER_NAME}
+               url: ${K8S_CLUSTER_URL}
+               authProvider: 'serviceAccount'
+               skipTLSVerify: true
+               serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
-   argocd:
-     username: ${ARGOCD_USERNAME}
-     password: ${ARGOCD_PASSWORD}
-     appLocatorMethods:
-       - type: 'config'
-         instances:
-           - name: argoInstance1
-             url: ${ARGOCD_INSTANCE1_URL}
-             token: ${ARGOCD_AUTH_TOKEN}
-           - name: argoInstance2
-             url: ${ARGOCD_INSTANCE2_URL}
-             token: ${ARGOCD_AUTH_TOKEN2}
+     ocm:
+       hub:
+         name: ${OCM_HUB_NAME}
+         url: ${OCM_HUB_URL}
+         serviceAccountToken: ${moc_infra_token}
+
+     argocd:
+       username: ${ARGOCD_USERNAME}
+       password: ${ARGOCD_PASSWORD}
+       appLocatorMethods:
+         - type: 'config'
+           instances:
+             - name: argoInstance1
+               url: ${ARGOCD_INSTANCE1_URL}
+               token: ${ARGOCD_AUTH_TOKEN}
+             - name: argoInstance2
+               url: ${ARGOCD_INSTANCE2_URL}
+               token: ${ARGOCD_AUTH_TOKEN2}
    ```
 
    - Setup a GitHub app (Needed for the GitHub Issues, GitHub Pull Request plugins) and replace the variables
@@ -124,9 +143,14 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${K8S_CLUSTER_TOKEN}` with the cluster token
 
    - Setup up Open Cluster Management, have access to another cluster (Needed for the OCM plugin), and replace the following variables
+
      - `${OCM_HUB_NAME}` with the hub cluster name
      - `${OCM_HUB_URL}` with the hub cluster url
      - `${moc_infra_token}` with the hub token
+
+   - Setup a sonarqube instance then pass the following environment variables to backstage:
+     - `${SONARQUBE_URL}` the uel at which sonarqube can be found
+     - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the sonaqube projects
 
 3. Run `yarn install` to install the dependencies
 

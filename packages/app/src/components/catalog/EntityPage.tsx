@@ -86,6 +86,7 @@ import {
   EntitySecurityInsightsContent,
 } from '@roadiehq/backstage-plugin-security-insights';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
+import { EntitySonarQubeCard } from '@backstage/plugin-sonarqube';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -235,8 +236,14 @@ const overviewContent = (
       </Grid>
     </Grid>
 
-    <Grid item xs={12} md={12}>
-      <EntityArgoCDOverviewCard />
+    <Grid item xs={12} md={12} container spacing={3} alignItems="stretch">
+      <Grid item md={4}>
+        <EntitySonarQubeCard variant="gridItem" />
+      </Grid>
+
+      <Grid item xs={12} md={8}>
+        <EntityArgoCDOverviewCard />
+      </Grid>
     </Grid>
   </Grid>
 );
