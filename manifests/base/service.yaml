@@ -11,8 +11,8 @@ spec:
   sessionAffinity: None
   ports:
     - name: http-backend
-      port: 7007
-      targetPort: backend
+      port: 4180
+      targetPort: oauth2-proxy
       protocol: TCP
   selector:
     app.kubernetes.io/component: backstage
