@@ -157,6 +157,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${moc_infra_token}` with the hub token
 
    - Setup a sonarqube instance then pass the following environment variables to backstage:
+
      - `${SONARQUBE_URL}` the url at which sonarqube can be found
      - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the sonaqube projects
 

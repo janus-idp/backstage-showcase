@@ -4,7 +4,10 @@ import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend'
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
-import { GithubEntityProvider, GithubOrgEntityProvider } from '@backstage/plugin-catalog-backend-module-github';
+import {
+  GithubEntityProvider,
+  GithubOrgEntityProvider,
+} from '@backstage/plugin-catalog-backend-module-github';
 
 export default async function createPlugin(
   env: PluginEnvironment,
