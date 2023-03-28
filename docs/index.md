@@ -1,3 +1,3 @@
 # Backstage Showcase Documentation
 
-This section is coming Soon.
+This section is in progress!
