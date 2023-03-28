@@ -34,6 +34,7 @@ import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import ocm from './plugins/ocm';
 import argocd from './plugins/argocd';
+import s3 from './plugins/s3';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -91,6 +92,7 @@ async function main() {
   const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
   const ocmEnv = useHotMemoize(module, () => createEnv('ocm'));
   const argocdEnv = useHotMemoize(module, () => createEnv('argocd'));
+  const s3Env = useHotMemoize(module, () => createEnv('s3'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -102,6 +104,7 @@ async function main() {
   apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
   apiRouter.use('/ocm', await ocm(ocmEnv));
   apiRouter.use('/argocd', await argocd(argocdEnv));
+  apiRouter.use('/s3', await s3(s3Env));
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());

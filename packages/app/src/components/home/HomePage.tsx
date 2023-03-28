@@ -19,6 +19,7 @@ import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
 import useSWR from 'swr';
 import LogoFull from '../Root/LogoFull';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 type QuickAccessLinks = {
   title: string;
@@ -33,12 +34,30 @@ const useQuickAccessStyles = makeStyles({
   },
 });
 
-const fetcher = (...args: Parameters<typeof fetch>) =>
-  fetch(...args).then(r => r.json()) as Promise<QuickAccessLinks[]>;
+const fetcher = async (urls: Parameters<typeof fetch>[]) => {
+  const responses = await Promise.all(urls.map(args => fetch(...args)));
+
+  const result = responses.find(response => response.ok);
+
+  if (!result) {
+    throw new Error('Could not fetch quick access links');
+  }
+
+  return result.json() as Promise<QuickAccessLinks[]>;
+};
+
+const useGetBaseURL = () => {
+  const config = useApi(configApiRef);
+  return config.getString('backend.baseUrl');
+};
 
 const QuickAccess = () => {
   const classes = useQuickAccessStyles();
-  const { data, error, isLoading } = useSWR('/homepage/data.json', fetcher);
+  const baseUrl = useGetBaseURL();
+  const { data, error, isLoading } = useSWR(
+    [[`${baseUrl}/api/s3/homepage/data.json`], ['/homepage/data.json']],
+    fetcher,
+  );
 
   if (error) return <div>failed to load</div>;
   if (isLoading) return <div>loading...</div>;

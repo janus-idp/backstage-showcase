@@ -41,6 +41,7 @@
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.1",
     "@roadiehq/scaffolder-backend-argocd": "^1.1.5",
     "app": "link:../app",
+    "aws-sdk": "^2.1343.0",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",
