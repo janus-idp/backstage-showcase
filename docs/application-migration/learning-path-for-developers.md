@@ -16,7 +16,7 @@
 4. Learning Path on CI/CD
    1. What’s CI/CD
       1. <https://www.redhat.com/en/topics/devops/what-cicd-pipeline>
-      2. [https://www.redhat.com/en/topics/devops/what-is-ci-cd](https://www.redhat.com/en/topics/devops/what-is-ci-cd)
+      2. [What is CI/CD?](https://www.redhat.com/en/topics/devops/what-is-ci-cd)
    2. [CI/CD with OpenShift](https://www.redhat.com/en/about/videos/learn-cloud-native-series-cicd-with-openshift)
    3. DevOps Best Practices
    4. Azure Pipelines training:
