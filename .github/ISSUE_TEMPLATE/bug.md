@@ -12,25 +12,12 @@ labels: ['kind/bug', 'status/triage']
 2. …
 3. …
 
-### Browser affected
+### Additional information
 
-_Put an `x` in the boxes that apply_
-
-- [ ] All
-- [ ] Chrome
-- [ ] Safari
-- [ ] Edge
-- [ ] Firefox
+- Which devices are affected? ie Desktop, Table, Phone
+- Which browsers are affected? ie Chrome, Firefox, Safari, Edge
+- Which version are you using?
 
 We only support the last 2 major versions.
-
-### Devices affected
-
-_Put an `x` in the boxes that apply_
-
-- [ ] All
-- [ ] Desktop
-- [ ] Tablet
-- [ ] Phone
 
 Attach any related screenshots, if any.
