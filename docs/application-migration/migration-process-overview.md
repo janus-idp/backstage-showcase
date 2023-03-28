@@ -4,4 +4,4 @@ The onboarding process includes steps a team should follow to move their applica
 
 The high-level process to accomplish the onboarding are on the following diagram:
 
-![High-level onboarding process](high_level_onboarding_process.png)
+![High-level onboarding process](high-level-onboarding-process.png)
