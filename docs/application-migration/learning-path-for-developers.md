@@ -20,4 +20,4 @@
    2. [CI/CD with OpenShift](https://www.redhat.com/en/about/videos/learn-cloud-native-series-cicd-with-openshift)
    3. DevOps Best Practices
    4. Azure Pipelines training:
-      1. [https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?view=azure-devops](https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?view=azure-devops)
+      1. [Key concepts for new Azure Pipelines users](https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/key-pipelines-concepts?view=azure-devops)
