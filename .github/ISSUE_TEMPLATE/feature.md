@@ -16,4 +16,10 @@ _Put an `x` in the boxes that apply_
 - [ ] Unauthenticated user/Guest
 - [ ] System Admin only
 
+### UI/UX
+
+Figma links if needed
+
 ### Api documentation/information
+
+OpenAPI link if needed

@@ -8,11 +8,12 @@ Please explain the changes you made here.
 
 ## PR acceptance criteria
 
-_Put an `x` in the boxes that apply_
+Please make sure that the following steps are complete:
 
-- [ ] GitHub Actions are completed and successful
-- [ ] Unit Tests are updated and passing
-- [ ] E2E Tests are updated and passing
-- [ ] Documentation is updated if necessary
+- GitHub Actions are completed and successful
+- Unit Tests are updated and passing
+- E2E Tests are updated and passing
+- Documentation is updated if necessary
+- Add a screenshot if the change is UX/UI related
 
 ## How to test changes / Special notes to the reviewer
