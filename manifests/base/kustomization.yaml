@@ -16,3 +16,13 @@ commonLabels:
 images:
   - name: backstage-showcase
     newName: quay.io/janus-idp/backstage-showcase
+patchesJson6902:
+  - patch: |-
+      - op: remove
+        path: /spec/selector/app.kubernetes.io~1name
+      - op: remove
+        path: /spec/selector/app.kubernetes.io~1instance
+    target:
+      kind: Service
+      version: v1
+      name: keycloak

@@ -43,11 +43,19 @@ The easiest and fastest method for getting started with the Backstage Showcase a
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
    techdocs:
-     builder: 'local' # Alternatives - 'external'
+     builder: 'external' # Alternatives - 'external'
      generator:
        runIn: 'local' # Alternatives - 'local'
      publisher:
-       type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+       type: 'awsS3' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+       awsS3:
+         bucketName: ${BUCKET_NAME}
+         region: ${BUCKET_REGION_VAULT}
+         endpoint: ${BUCKET_URL}
+         s3ForcePathStyle: true
+         credentials:
+           accessKeyId: ${AWS_ACCESS_KEY_ID}
+           secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
 
    github-org-provider:
      id: production
@@ -149,8 +157,16 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${moc_infra_token}` with the hub token
 
    - Setup a sonarqube instance then pass the following environment variables to backstage:
-     - `${SONARQUBE_URL}` the uel at which sonarqube can be found
+
+     - `${SONARQUBE_URL}` the url at which sonarqube can be found
      - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the sonaqube projects
+
+   - Setup Techdocs with an external S3 bucket storage
+     - `${BUCKET_NAME}` the bucket name
+     - `${BUCKET_REGION_VAULT}` the bucket region
+     - `${BUCKET_URL}` the bucket url
+     - `${AWS_ACCESS_KEY_ID}` the AWS credentials Key Id
+     - `${AWS_SECRET_ACCESS_KEY}` the AWS credentials Access Key
 
 3. Run `yarn install` to install the dependencies
 
