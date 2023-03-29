@@ -74,11 +74,11 @@ proxy:
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: ${TECHDOCS_BUILDER_TYPE}
+  builder: ${TECHDOCS_BUILDER_TYPE:external}
   generator:
-    runIn: ${TECHDOCS_GENERATOR_TYPE}
+    runIn: ${TECHDOCS_GENERATOR_TYPE:local}
   publisher:
-    type: ${TECHDOCS_PUBLISHER_TYPE}
+    type: ${TECHDOCS_PUBLISHER_TYPE:awsS3}
     awsS3:
       bucketName: ${BUCKET_NAME}
       region: ${BUCKET_REGION_VAULT}
