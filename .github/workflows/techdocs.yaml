@@ -11,6 +11,7 @@ on:
 
 jobs:
   publish-techdocs-site:
+    name: Publish techdocs site
     runs-on: ubuntu-latest
 
     env:

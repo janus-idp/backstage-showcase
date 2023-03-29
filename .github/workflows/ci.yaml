@@ -29,6 +29,11 @@ jobs:
     name: Main Job
     runs-on: ubuntu-latest
 
+    env:
+      TECHDOCS_BUILDER_TYPE: external
+      TECHDOCS_GENERATOR_TYPE: local
+      TECHDOCS_PUBLISHER_TYPE: awsS3
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
