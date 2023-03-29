@@ -1,24 +1,8 @@
 apiVersion: backstage.io/v1alpha1
-kind: Component
+kind: Location
 metadata:
-  name: backstage-showcase
-  description: |
-    This is the Janus Community Showcase of Backstage.io
-  links:
-    - title: Janus Website
-      url: https://janus-idp.io
-    - title: Janus Showcase
-      url: https://janus-idp.apps.smaug.na.operate-first.cloud/
-  annotations:
-    argocd/app-name: "janus-idp-smaug"
-    backstage.io/kubernetes-id: "janus-idp"
-    backstage.io/kubernetes-namespace: janus-idp
-    backstage.io/techdocs-ref: url:https://github.com/janus-idp/backstage-showcase
-    github.com/project-slug: janus-idp/backstage-showcase
-    quay.io/repository-slug: janus-idp/backstage-showcase
-    sonarqube.org/project-key: janus-idp_backstage-showcase
+  name: components
+  description: A collection of all components
 spec:
-  type: website
-  system: examples
-  owner: janus-authors
-  lifecycle: production
+  targets:
+    - ./components/showcase.yaml
