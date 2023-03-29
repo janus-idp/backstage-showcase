@@ -90,7 +90,7 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  environment: development
+  environment: production
   providers:
     github:
       development:
