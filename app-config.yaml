@@ -107,8 +107,8 @@ catalog:
   rules:
     - allow: [Component, System, Group, Resource, Location, Template]
   locations:
-    - type: file
-      target: ../../catalog-entities/all.yaml
+    - type: url
+      target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
 
     - type: url
       target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
