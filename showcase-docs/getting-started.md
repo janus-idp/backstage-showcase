@@ -43,11 +43,11 @@ The easiest and fastest method for getting started with the Backstage Showcase a
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
    techdocs:
-     builder: 'external' # Alternatives - 'external'
+     builder: ${TECHDOCS_BUILDER_TYPE}
      generator:
-       runIn: 'local' # Alternatives - 'local'
+       runIn: ${TECHDOCS_GENERATOR_TYPE}
      publisher:
-       type: 'awsS3' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+       type: ${TECHDOCS_PUBLISHER_TYPE}
        awsS3:
          bucketName: ${BUCKET_NAME}
          region: ${BUCKET_REGION_VAULT}
@@ -162,6 +162,9 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the sonaqube projects
 
    - Setup Techdocs with an external S3 bucket storage
+     - `${TECHDOCS_BUILDER_TYPE}` Set to 'local' for simple setup, or 'external' to use a pipeline
+     - `${TECHDOCS_GENERATOR_TYPE}` Set to 'local' for most of the use cases. You can use also 'docker'
+     - `${TECHDOCS_PUBLISHER_TYPE}` Set to 'local' for simple setup, or 'awsS3' to use a S3 storage. 'googleGcs' is not supported at the moment.
      - `${BUCKET_NAME}` the bucket name
      - `${BUCKET_REGION_VAULT}` the bucket region
      - `${BUCKET_URL}` the bucket url

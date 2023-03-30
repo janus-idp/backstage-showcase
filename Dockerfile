@@ -2,6 +2,11 @@
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS deps
 USER 0
 
+# Args
+ARG TECHDOCS_BUILDER_TYPE=external
+ARG TECHDOCS_GENERATOR_TYPE=local
+ARG TECHDOCS_PUBLISHER_TYPE=awsS3
+
 # Install yarn
 RUN \
   curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
@@ -22,6 +27,16 @@ RUN yarn install --immutable --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
 USER 0
 
+# Args
+ARG TECHDOCS_BUILDER_TYPE
+ARG TECHDOCS_GENERATOR_TYPE
+ARG TECHDOCS_PUBLISHER_TYPE
+
+# Env vars
+ENV TECHDOCS_BUILDER_TYPE=$TECHDOCS_BUILDER_TYPE
+ENV TECHDOCS_GENERATOR_TYPE=$TECHDOCS_GENERATOR_TYPE
+ENV TECHDOCS_PUBLISHER_TYPE=$TECHDOCS_PUBLISHER_TYPE
+
 # Install yarn
 RUN \
   curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
@@ -38,6 +53,16 @@ RUN yarn --cwd packages/backend build
 # Stage 3 - Build the actual backend image and install production dependencies
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
 USER 0
+
+# Args
+ARG TECHDOCS_BUILDER_TYPE
+ARG TECHDOCS_GENERATOR_TYPE
+ARG TECHDOCS_PUBLISHER_TYPE
+
+# Env vars
+ENV TECHDOCS_BUILDER_TYPE=$TECHDOCS_BUILDER_TYPE
+ENV TECHDOCS_GENERATOR_TYPE=$TECHDOCS_GENERATOR_TYPE
+ENV TECHDOCS_PUBLISHER_TYPE=$TECHDOCS_PUBLISHER_TYPE
 
 # Install yarn
 RUN \
