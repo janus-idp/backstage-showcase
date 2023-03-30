@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backstage
   namespace: "janus-idp"
-  labels: 
+  labels:
     app.kubernetes.io/component: backstage
     backstage.io/kubernetes-id: janus-idp
 spec:
@@ -32,13 +32,22 @@ spec:
           command:
             - node
             - packages/backend
+            - --config
+            - app-config.yaml
+            - --config
+            - app-config.production.yaml
           envFrom:
             - secretRef:
                 name: janus-idp
+            - secretRef:
+                name: janus-idp-pguser-janus-idp
             - configMapRef:
                 name: backstage-showcase-bucket-claim
             - secretRef:
                 name: backstage-showcase-bucket-claim
+          volumeMounts:
+            - name: ca-cert
+              mountPath: "/mnt/certs"
           ports:
             - name: backend
               containerPort: 7007
@@ -53,3 +62,10 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             failureThreshold: 3
+      volumes:
+        - name: ca-cert
+          secret:
+            secretName: janus-idp-cluster-cert
+            items:
+              - key: ca.crt
+                path: ca.crt

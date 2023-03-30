@@ -91,8 +91,8 @@ COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy any other files that we need at runtime
-COPY ./app-config.yaml .
-COPY ./github-app-backstage-showcase-credentials.yaml .
+COPY ./app-config.yaml ./app-config.production.yaml ./
+COPY ./github-app-backstage-showcase-credentials.yaml ./
 COPY ./catalog-entities ./catalog-entities
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
