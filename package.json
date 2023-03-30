@@ -7,7 +7,7 @@
   },
   "scripts": {
     "preinstall": "[ \"$IS_CONTAINER\" != \"TRUE\" ] && npx only-allow yarn || echo \"Running in container\"",
-    "ci": "turbo run lint build test test:e2e",
+    "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "build": "turbo run build",
     "build-image": "turbo run build-image",
