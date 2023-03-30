@@ -1,10 +1,8 @@
+import { S3, S3ClientConfig, S3ServiceException } from '@aws-sdk/client-s3';
+import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import { Router, Request } from 'express';
 import { Logger } from 'winston';
-import { errorHandler } from '@backstage/backend-common';
-import { CredentialsOptions } from 'aws-sdk/lib/credentials';
-import { ClientConfiguration } from 'aws-sdk/clients/s3';
-import AWS, { AWSError } from 'aws-sdk';
 
 export interface RouterOptions {
   logger: Logger;
@@ -14,20 +12,19 @@ export interface RouterOptions {
 function createClient(config: Config) {
   const awsConfig = config.getOptionalConfig('techdocs.publisher.awsS3');
 
-  const cred: CredentialsOptions = {
-    accessKeyId: awsConfig?.getOptionalString('credentials.accessKeyId') || '',
-    secretAccessKey:
-      awsConfig?.getOptionalString('credentials.secretAccessKey') || '',
-  };
-
-  const options: ClientConfiguration = {
+  const options: S3ClientConfig = {
     endpoint: awsConfig?.getOptionalString('endpoint'),
-    credentials: cred,
+    credentials: {
+      accessKeyId:
+        awsConfig?.getOptionalString('credentials.accessKeyId') || '',
+      secretAccessKey:
+        awsConfig?.getOptionalString('credentials.secretAccessKey') || '',
+    },
     region: awsConfig?.getOptionalString('region'),
-    s3ForcePathStyle: awsConfig?.getOptionalBoolean('s3ForcePathStyle'),
+    forcePathStyle: awsConfig?.getOptionalBoolean('s3ForcePathStyle'),
   };
 
-  return new AWS.S3(options);
+  return new S3(options);
 }
 
 export function createRouter({ config }: RouterOptions): Promise<Router> {
@@ -49,18 +46,18 @@ export function createRouter({ config }: RouterOptions): Promise<Router> {
     };
 
     try {
+      const transformedString = (
+        await s3AWS.getObject(params)
+      ).Body?.transformToString();
       const contents = JSON.parse(
-        (await s3AWS
-          .getObject(params)
-          .promise()
-          .then(data => data.Body?.toString())) || '',
+        (await transformedString?.then(data => data.toString())) || '',
       );
       response.status(200);
       response.contentType('application/json');
       response.send(contents);
     } catch (err: unknown) {
-      response.status((err as AWSError).statusCode || 500);
-      response.send(JSON.stringify((err as AWSError).message));
+      response.status((err as S3ServiceException).$response?.statusCode || 500);
+      response.send(JSON.stringify((err as S3ServiceException).message));
     }
   });
 
