@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backstage
   namespace: "janus-idp"
-  labels: 
+  labels:
     app.kubernetes.io/component: backstage
     backstage.io/kubernetes-id: janus-idp
 spec:
