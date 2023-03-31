@@ -18,6 +18,13 @@ spec:
           cpu: 300m
         requests:
           cpu: 200m
+      sidecars:
+        replicaCertCopy:
+          resources:
+            limits:
+              cpu: 300m
+            requests:
+              cpu: 200m
   backups:
     pgbackrest:
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
@@ -45,6 +52,19 @@ spec:
               resources:
                 requests:
                   storage: 2Gi
+      sidecars:
+        pgbackrest:
+          resources:
+            limits:
+              cpu: 300m
+            requests:
+              cpu: 200m
+        pgbackrestConfig:
+          resources:
+            limits:
+              cpu: 300m
+            requests:
+              cpu: 200m
   users:
     - name: janus-idp
       options: "SUPERUSER"
