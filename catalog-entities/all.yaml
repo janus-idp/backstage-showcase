@@ -5,8 +5,8 @@ metadata:
   description: A collection of all the catalog entities
 spec:
   targets:
-    - ./components.yaml
-    - ./groups.yaml
-    - ./systems.yaml
-    - ./resources.yaml
+    - ../../components.yaml
+    - ../../groups.yaml
+    - ../../systems.yaml
+    - ../../resources.yaml
 
