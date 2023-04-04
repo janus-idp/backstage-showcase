@@ -1,10 +1,9 @@
 # Migration Process Steps
 
-1. Prerequisites: Request access and enablement session to onboard into containers.
+1. Prerequisites: Onboarding For Developers
 2. Adapt Code to Container - Application Modernization
    1. Apply a proven methodology to ensure your source code is ready to move into containers.
-3. Onboarding Process:
-4. Build the container Image (Build a docker file): Create your container image using docker files.
+4. Build the container Image
 5. Running your container Image (Deployment)
 6. Integrations:
    1. Understanding the guidelines and practices.
