@@ -96,7 +96,6 @@ auth:
       development:
         clientId: ${AUTH_GITHUB_CLIENT_ID}
         clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
-    oauth2Proxy: {}
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
