@@ -22,7 +22,7 @@ spec:
               service:
                 name: backstage
                 port:
-                  number: 4180
+                  number: 7007
     - host: showcase.janus-idp.io
       http:
         paths:
@@ -32,4 +32,4 @@ spec:
               service:
                 name: backstage
                 port:
-                  number: 4180
+                  number: 7007

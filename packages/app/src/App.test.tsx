@@ -14,7 +14,6 @@ describe('App', () => {
             techdocs: {
               storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
             },
-            auth: { environment: 'development' },
           },
           context: 'test',
         },
