@@ -13,6 +13,7 @@ resources:
   - keycloak
   - obc.yaml
   - postgres.yaml
+  - sonarqube
 commonLabels:
   app.kubernetes.io/name: backstage
   app.kubernetes.io/instance: backstage
@@ -29,3 +30,12 @@ patchesJson6902:
       kind: Service
       version: v1
       name: keycloak
+  - patch: |-
+      - op: remove
+        path: /spec/selector/app.kubernetes.io~1name
+      - op: remove
+        path: /spec/selector/app.kubernetes.io~1instance
+    target:
+      kind: Service
+      version: v1
+      name: sonarqube

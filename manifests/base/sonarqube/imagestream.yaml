@@ -1,0 +1,14 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: sonarqube
+spec:
+  tags:
+  - annotations:
+      description: The SonarQube Docker image
+      tags: sonarqube
+    from:
+      kind: DockerImage
+      name: sonarqube:9.9-community
+    importPolicy: {}
+    name: "9.9-community"

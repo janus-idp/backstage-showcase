@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarqube
+  namespace: "janus-idp" 
+spec:
+  tls:
+    - hosts: 
+      - sonar.apps.smaug.na.operate-first.cloud
+      secretName: sonarqube-cert
+  rules:
+    - host: sonar.apps.smaug.na.operate-first.cloud
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: sonarqube
+                port:
+                  number: 9000

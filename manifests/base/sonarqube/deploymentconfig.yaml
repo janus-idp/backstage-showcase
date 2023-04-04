@@ -1,0 +1,90 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    deploymentconfig: sonarqube
+  name: sonarqube
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: sonarqube
+  strategy:
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/container.sonarqube.image.entrypoint: '["./bin/run.sh"]'
+      creationTimestamp: null
+      labels:
+        deploymentconfig: sonarqube
+    spec:
+      containers:
+        - env:
+          - name: SONARQUBE_JDBC_PASSWORD
+            valueFrom: 
+              secretKeyRef:
+                name: janus-idp-pguser-sonarqube
+                key: password
+          - name: SONAR_JDBC_URL
+            valueFrom:
+              secretKeyRef:
+                name: janus-idp-pguser-sonarqube
+                key: jdbc-uri
+          - name: SONARQUBE_JDBC_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: janus-idp-pguser-sonarqube
+                key: user
+          image: ' '
+          imagePullPolicy: IfNotPresent
+          name: sonarqube
+          ports:
+          - containerPort: 9000
+            protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            successThreshold: 1
+            httpGet:
+              port: 9000
+              path: /
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            successThreshold: 1
+            httpGet:
+              port: 9000
+              path: /
+            timeoutSeconds: 5
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1Gi
+            limits:
+              cpu: 1
+              memory: 2Gi
+          terminationMessagePath: /dev/termination-log
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - sonarqube
+      from:
+        kind: ImageStreamTag
+        name: sonarqube:9.9-community
+    type: ImageChange

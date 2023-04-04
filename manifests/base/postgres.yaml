@@ -68,3 +68,7 @@ spec:
   users:
     - name: janus-idp
       options: "SUPERUSER"
+    - name: sonarqube
+      databases:
+        - sonarqube
+      options: "NOSUPERUSER"

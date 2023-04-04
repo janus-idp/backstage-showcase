@@ -1,0 +1,10 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sonarqube-ssl-certificate
+spec:
+  dnsNames:
+    - sonar.apps.smaug.na.operate-first.cloud
+  issuerRef:
+    name: letsencrypt
+  secretName: sonarqube-cert
