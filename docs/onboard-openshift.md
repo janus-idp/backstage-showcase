@@ -55,7 +55,7 @@ This is a recommended list to start creating your platform guide to successfully
   - [ ] Firewall rules setup per each component/dependency
 - [ ] 3- CI/CD
   - [ ] CI/CD access (For ex. Jenkins/OpenShift Pipelines)
-  - [ ] OpenShift access to the company registry. For example: [Quay Container Registry] (https://quay.io/)
+  - [ ] OpenShift access to the company registry. For example: [Quay Container Registry](https://quay.io/)
 - [ ] 4- Integrations required from OpenShift
   - [ ] Access to the Company Application Logging Tooling
     - [ ] Create a new index for the application.
