@@ -6,7 +6,6 @@ A guide for developers and platform engineers to onboard into containers and Ope
 
 Platform Team set up the OpenShift clusters. Clusters are ready to allocate workloads. Developers want to migrate their applications, but there needs to be a current process to onboard them. This document provides a template that can be used to design your onboarding process or use it as it is.
 
-
 ### Developer Team Guide: Where to start for Developers in their modernization Journey
 
 The Developer Team processes to be ready to start their container journey.
