@@ -6,7 +6,6 @@ A guide for developers and platform engineers to onboard into containers and Ope
 
 Platform Team set up the OpenShift clusters. Clusters are ready to allocate workloads. Developers want to migrate their applications, but there needs to be a current process to onboard them. This document provides a template that can be used to design your onboarding process or use it as it is.
 
-
 ### Developer Team Guide: Where to start for Developers in their modernization Journey
 
 The Developer Team processes to be ready to start their container journey.
@@ -55,7 +54,7 @@ This is a recommended list to start creating your platform guide to successfully
   - [ ] Firewall rules setup per each component/dependency
 - [ ] 3- CI/CD
   - [ ] CI/CD access (For ex. Jenkins/OpenShift Pipelines)
-  - [ ] OpenShift access to the company registry. For example: [Quay Container Registry] (https://quay.io/)
+  - [ ] OpenShift access to the company registry. For example: [Quay Container Registry](https://quay.io/)
 - [ ] 4- Integrations required from OpenShift
   - [ ] Access to the Company Application Logging Tooling
     - [ ] Create a new index for the application.
