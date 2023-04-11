@@ -60,13 +60,17 @@ export default async function createPlugin(
   builder.addProcessor(new ScaffolderEntitiesProcessor());
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
-  await env.scheduler.scheduleTask({
-    id: 'run_ocm_refresh',
-    fn: async () => {
-      await ocm.run();
-    },
-    frequency: { minutes: 30 },
-    timeout: { minutes: 10 },
-  });
+  await Promise.all(
+    ocm.map(o =>
+      env.scheduler.scheduleTask({
+        id: `run_ocm_refresh_${o.getProviderName()}`,
+        fn: async () => {
+          await o.run();
+        },
+        frequency: { minutes: 30 },
+        timeout: { minutes: 10 },
+      }),
+    ),
+  );
   return router;
 }

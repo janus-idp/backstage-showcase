@@ -37,7 +37,7 @@
     "@backstage/plugin-search-backend-node": "^1.1.4",
     "@backstage/plugin-techdocs-backend": "^1.6.0",
     "@janus-idp/backstage-plugin-keycloak-backend": "^1.0.4",
-    "@janus-idp/backstage-plugin-ocm-backend": "^1.4.1",
+    "@janus-idp/backstage-plugin-ocm-backend": "^2.1.0",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.1",
     "@roadiehq/scaffolder-backend-argocd": "^1.1.5",
     "app": "link:../app",

@@ -122,6 +122,13 @@ catalog:
         clientId: ${KEYCLOAK_CLIENT_ID}
         clientSecret: ${KEYCLOAK_CLIENT_SECRET}
 
+    ocm:
+      operate-first:
+        name: ${OCM_HUB_NAME}
+        url: ${OCM_HUB_URL}
+        serviceAccountToken: ${moc_infra_token}
+        owner: janus-authors
+
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'
@@ -133,12 +140,6 @@ kubernetes:
           authProvider: 'serviceAccount'
           skipTLSVerify: true
           serviceAccountToken: ${K8S_CLUSTER_TOKEN}
-
-ocm:
-  hub:
-    name: ${OCM_HUB_NAME}
-    url: ${OCM_HUB_URL}
-    serviceAccountToken: ${moc_infra_token}
 
 argocd:
   username: ${ARGOCD_USERNAME}
