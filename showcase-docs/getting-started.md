@@ -86,6 +86,13 @@ The easiest and fastest method for getting started with the Backstage Showcase a
              realm: ${KEYCLOAK_REALM}
              clientId: ${KEYCLOAK_CLIENT_ID}
              clientSecret: ${KEYCLOAK_CLIENT_SECRET}
+       providers:
+         ocm:
+           hub:
+             name: ${OCM_HUB_NAME}
+             url: ${OCM_HUB_URL}
+             serviceAccountToken: ${moc_infra_token}
+             owner: # Existing catalog entity (User or Group) as the owner of the discovered clusters
 
      kubernetes:
        serviceLocatorMethod:
@@ -99,11 +106,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
                skipTLSVerify: true
                serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
-     ocm:
-       hub:
-         name: ${OCM_HUB_NAME}
-         url: ${OCM_HUB_URL}
-         serviceAccountToken: ${moc_infra_token}
+
 
      argocd:
        username: ${ARGOCD_USERNAME}
