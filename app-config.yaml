@@ -65,7 +65,7 @@ proxy:
     target: https://sonarcloud.io/api
 
     allowedMethods: ['GET']
-    # uncomment if using a local instnace of sonarqube
+    # uncomment if using a local instance of sonarqube
     # auth: "${SONARQUBE_TOKEN}:"
     # target: ${SONARQUBE_URL}/api
 
