@@ -107,8 +107,6 @@ The easiest and fastest method for getting started with the Backstage Showcase a
                skipTLSVerify: true
                serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
-
-
      argocd:
        username: ${ARGOCD_USERNAME}
        password: ${ARGOCD_PASSWORD}
