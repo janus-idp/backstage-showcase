@@ -30,11 +30,12 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      '/sonarqube':
        target: ${SONARQUBE_URL}/api
        allowedMethods: ['GET']
-       auth: '${SONARQUBE_TOKEN}:'
+       auth: ${SONARQUBE_TOKEN}
 
-   # comment this out if using sonarcloud
    sonarQube:
+     enabled: ${SONARQUBE_ENABLED}
      baseUrl: ${SONARQUBE_URL}
+     apiKey: ${SONARQUBE_TOKEN}
 
    integrations:
      github:
@@ -86,7 +87,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
              realm: ${KEYCLOAK_REALM}
              clientId: ${KEYCLOAK_CLIENT_ID}
              clientSecret: ${KEYCLOAK_CLIENT_SECRET}
-       providers:
+
          ocm:
            hub:
              name: ${OCM_HUB_NAME}
@@ -159,10 +160,11 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${OCM_HUB_URL}` with the hub cluster url
      - `${moc_infra_token}` with the hub token
 
-   - Setup a sonarqube instance then pass the following environment variables to backstage:
+   - Setup a SonarQube instance then pass the following environment variables to backstage:
 
-     - `${SONARQUBE_URL}` the url at which sonarqube can be found
-     - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the sonaqube projects
+     - `${SONARQUBE_ENABLED}` Set to `true` to enable the SonarQube backend plugin. Default is `false`
+     - `${SONARQUBE_URL}` the url at which sonarqube can be found. Mandatory if plugin is enabled
+     - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the SonaQube projects. Mandatory if plugin is enabled
 
    - Setup Techdocs with an external S3 bucket storage
      - `${TECHDOCS_BUILDER_TYPE}` Set to 'local' for simple setup, or 'external' to use a pipeline
