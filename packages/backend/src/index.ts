@@ -27,6 +27,7 @@ import catalog from './plugins/catalog';
 import scaffolder from './plugins/scaffolder';
 import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
+import sonarqube from './plugins/sonarqube';
 import search from './plugins/search';
 import kubernetes from './plugins/kubernetes';
 import { PluginEnvironment } from './types';
@@ -102,6 +103,15 @@ async function main() {
   apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
   apiRouter.use('/ocm', await ocm(ocmEnv));
   apiRouter.use('/argocd', await argocd(argocdEnv));
+
+  const isSonarQubeEnabled: boolean =
+    config.getOptionalBoolean('sonarqube.enabled') || false;
+  if (isSonarQubeEnabled) {
+    const sonarqubeEnv: PluginEnvironment = useHotMemoize(module, () =>
+      createEnv('sonarqube'),
+    );
+    apiRouter.use('/sonarqube', await sonarqube(sonarqubeEnv));
+  }
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
