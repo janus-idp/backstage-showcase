@@ -75,6 +75,41 @@ function makeCreateEnv(config: Config) {
   };
 }
 
+type AddPluginBase = {
+  isOptional?: boolean;
+  plugin: string;
+  apiRouter: ReturnType<typeof Router>;
+  createEnv: ReturnType<typeof makeCreateEnv>;
+  router: (env: PluginEnvironment) => Promise<ReturnType<typeof Router>>;
+  options?: { path?: string };
+};
+
+type AddPlugin = {
+  isOptional?: false;
+} & AddPluginBase;
+
+type AddOptionalPlugin = {
+  isOptional: true;
+  config: Config;
+  options?: { key?: string; path?: string };
+} & AddPluginBase;
+
+async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
+  const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
+
+  const isPluginEnabled =
+    !isOptional ||
+    args.config.getOptionalBoolean(options?.key ?? `enabled.${plugin}`) ||
+    false;
+  console.log(`Adding plugin ${plugin} ${isPluginEnabled}...`);
+  if (isPluginEnabled) {
+    const pluginEnv: PluginEnvironment = useHotMemoize(module, () =>
+      createEnv(plugin),
+    );
+    apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
+  }
+}
+
 async function main() {
   const config = await loadBackendConfig({
     argv: process.argv,
@@ -82,36 +117,63 @@ async function main() {
   });
   const createEnv = makeCreateEnv(config);
 
-  const catalogEnv = useHotMemoize(module, () => createEnv('catalog'));
-  const scaffolderEnv = useHotMemoize(module, () => createEnv('scaffolder'));
-  const authEnv = useHotMemoize(module, () => createEnv('auth'));
-  const proxyEnv = useHotMemoize(module, () => createEnv('proxy'));
-  const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
-  const searchEnv = useHotMemoize(module, () => createEnv('search'));
   const appEnv = useHotMemoize(module, () => createEnv('app'));
-  const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
-  const ocmEnv = useHotMemoize(module, () => createEnv('ocm'));
-  const argocdEnv = useHotMemoize(module, () => createEnv('argocd'));
 
   const apiRouter = Router();
-  apiRouter.use('/catalog', await catalog(catalogEnv));
-  apiRouter.use('/scaffolder', await scaffolder(scaffolderEnv));
-  apiRouter.use('/auth', await auth(authEnv));
-  apiRouter.use('/techdocs', await techdocs(techdocsEnv));
-  apiRouter.use('/proxy', await proxy(proxyEnv));
-  apiRouter.use('/search', await search(searchEnv));
-  apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
-  apiRouter.use('/ocm', await ocm(ocmEnv));
-  apiRouter.use('/argocd', await argocd(argocdEnv));
 
-  const isSonarQubeEnabled: boolean =
-    config.getOptionalBoolean('sonarqube.enabled') || false;
-  if (isSonarQubeEnabled) {
-    const sonarqubeEnv: PluginEnvironment = useHotMemoize(module, () =>
-      createEnv('sonarqube'),
-    );
-    apiRouter.use('/sonarqube', await sonarqube(sonarqubeEnv));
-  }
+  // Required plugins
+  await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
+  await addPlugin({ plugin: 'auth', apiRouter, createEnv, router: auth });
+  await addPlugin({ plugin: 'catalog', apiRouter, createEnv, router: catalog });
+  await addPlugin({ plugin: 'search', apiRouter, createEnv, router: search });
+  await addPlugin({
+    plugin: 'scaffolder',
+    apiRouter,
+    createEnv,
+    router: scaffolder,
+  });
+
+  // Optional plugins
+  await addPlugin({
+    plugin: 'ocm',
+    config,
+    apiRouter,
+    createEnv,
+    router: ocm,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'techdocs',
+    config,
+    apiRouter,
+    createEnv,
+    router: techdocs,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'argocd',
+    config,
+    apiRouter,
+    createEnv,
+    router: argocd,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'sonarqube',
+    config,
+    apiRouter,
+    createEnv,
+    router: sonarqube,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'kubernetes',
+    config,
+    apiRouter,
+    createEnv,
+    router: kubernetes,
+    isOptional: true,
+  });
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
