@@ -17,11 +17,11 @@ import {
   EntityDependabotAlertsCard,
   EntitySecurityInsightsCard,
 } from '@roadiehq/backstage-plugin-security-insights';
-import { EntityWarningContent } from './EntityWarning';
+import { entityWarningContent } from './EntityWarning';
 
-export const OverviewContent = () => (
+export const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
-    <EntityWarningContent />
+    {entityWarningContent}
 
     <Grid item xs={12} md={12} container spacing={3} alignItems="stretch">
       <Grid item xs={12} md={4}>

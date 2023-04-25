@@ -6,7 +6,7 @@ import {
   EntitySecurityInsightsContent,
 } from '@roadiehq/backstage-plugin-security-insights';
 
-export const SecurityContent = () => (
+export const securityContent = (
   <Grid container spacing={3} alignItems="stretch">
     <Grid item md={12} xs={12}>
       <EntityGithubDependabotContent />

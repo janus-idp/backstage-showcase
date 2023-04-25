@@ -16,13 +16,13 @@ import {
   ClusterStatusCard,
 } from '@janus-idp/backstage-plugin-ocm';
 import { isType } from '../../utils';
-import { EntityWarningContent } from '../Content/EntityWarning';
+import { entityWarningContent } from '../Content/EntityWarning';
 
-export const ResourcePage = () => (
+export const resourcePage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3} alignItems="stretch">
-        <EntityWarningContent />
+        {entityWarningContent}
         <Grid item md={6}>
           <EntityAboutCard variant="gridItem" />
         </Grid>

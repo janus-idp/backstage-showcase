@@ -6,13 +6,13 @@ import {
 } from '@backstage/plugin-org';
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import { EntityWarningContent } from '../Content/EntityWarning';
+import { entityWarningContent } from '../Content/EntityWarning';
 
-export const GroupPage = () => (
+export const groupPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
-        <EntityWarningContent />
+        {entityWarningContent}
         <Grid item xs={12} md={6}>
           <EntityGroupProfileCard variant="gridItem" />
         </Grid>

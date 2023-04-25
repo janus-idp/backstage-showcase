@@ -71,6 +71,8 @@ const app = createApp({
   ],
 });
 
+// `routes` and every subsequent child needs to be static JSX, so the router can traverse the three without rendering.
+// This is why we can't use a function component here.
 const routes = (
   <FlatRoutes>
     <Route path="/" element={<HomepageCompositionRoot />}>

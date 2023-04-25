@@ -14,22 +14,22 @@ import { Grid } from '@material-ui/core';
 import React from 'react';
 import { defaultEntityPage } from './DefaultEntity';
 import {
-  OverviewContent,
-  CicdContent,
-  DependenciesContent,
-  GithubIssuesContent,
+  overviewContent,
+  cicdContent,
+  dependenciesContent,
+  githubIssuesContent,
   githubPRContent,
-  SecurityContent,
-  TechdocsContent,
+  securityContent,
+  techdocsContent,
 } from '../Content';
 
-const componentEntityPage = (
+const componentEntityPage = (componentType: 'service' | 'website') => (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
-      <OverviewContent />
+      {overviewContent}
     </EntityLayout.Route>
     <EntityLayout.Route path="/github-issues" title="GitHub Issues">
-      <GithubIssuesContent />
+      {githubIssuesContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/github-pr" title="GitHub Pull Requests">
@@ -37,7 +37,7 @@ const componentEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
-      <CicdContent />
+      {cicdContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/kubernetes" title="Kubernetes">
@@ -53,10 +53,10 @@ const componentEntityPage = (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/security-insights" title="Security Insights">
-      <SecurityContent />
+      {securityContent}
     </EntityLayout.Route>
 
-    {false && (
+    {componentType === 'service' && (
       <EntityLayout.Route path="/api" title="API">
         <Grid container spacing={3} alignItems="stretch">
           <Grid item md={6}>
@@ -70,30 +70,23 @@ const componentEntityPage = (
     )}
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
-      <DependenciesContent />
+      {dependenciesContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
-      <TechdocsContent />
+      {techdocsContent}
     </EntityLayout.Route>
   </EntityLayout>
 );
 
-/**
- * NOTE: This page is designed to work on small screens such as mobile devices.
- * This is based on Material UI Grid. If breakpoints are used, each grid item must set the `xs` prop to a column size or to `true`,
- * since this does not default. If no breakpoints are used, the items will equitably share the available space.
- * https://material-ui.com/components/grid/#basic-grid.
- */
-
 export const componentPage = (
   <EntitySwitch>
     <EntitySwitch.Case if={isComponentType('service')}>
-      {componentEntityPage}
+      {componentEntityPage('service')}
     </EntitySwitch.Case>
 
     <EntitySwitch.Case if={isComponentType('website')}>
-      {componentEntityPage}
+      {componentEntityPage('website')}
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>

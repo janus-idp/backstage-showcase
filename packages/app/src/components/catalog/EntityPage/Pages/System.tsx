@@ -22,13 +22,13 @@ import {
 } from '@backstage/plugin-catalog-graph';
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import { EntityWarningContent } from '../Content/EntityWarning';
+import { entityWarningContent } from '../Content/EntityWarning';
 
-export const SystemPage = () => (
+export const systemPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3} alignItems="stretch">
-        <EntityWarningContent />
+        {entityWarningContent}
         <Grid item md={6}>
           <EntityAboutCard variant="gridItem" />
         </Grid>

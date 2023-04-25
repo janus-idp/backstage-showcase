@@ -9,7 +9,7 @@ import React from 'react';
 
 import { EntityArgoCDHistoryCard } from '@roadiehq/backstage-plugin-argo-cd';
 
-export const CicdContent = () => (
+export const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
     <EntitySwitch>
       <EntitySwitch.Case if={isGithubActionsAvailable}>

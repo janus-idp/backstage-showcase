@@ -14,7 +14,7 @@ import {
 import { Grid } from '@material-ui/core';
 import React from 'react';
 
-export const DependenciesContent = () => (
+export const dependenciesContent = (
   <Grid container spacing={3} alignItems="stretch">
     <Grid item xs={12} md={6}>
       <EntityCatalogGraphCard
