@@ -35,12 +35,18 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      ocm: ${OCM_ENABLED}
      github: ${GITHUB_ENABLED}
      githubOrg: ${GITHUB_ORG_ENABLED}
+     jenkins: ${JENKINS_ENABLED}
 
    proxy:
      '/sonarqube':
        target: ${SONARQUBE_URL}/api
        allowedMethods: ['GET']
        auth: ${SONARQUBE_TOKEN}
+
+     '/jenkins/api':
+       target: ${JENKINS_URL}
+       headers:
+         Authorization: ${JENKINS_TOKEN}
 
    sonarqube:
      baseUrl: ${SONARQUBE_URL}
@@ -131,6 +137,11 @@ The easiest and fastest method for getting started with the Backstage Showcase a
              - name: argoInstance2
                url: ${ARGOCD_INSTANCE2_URL}
                token: ${ARGOCD_AUTH_TOKEN2}
+
+     jenkins:
+       baseUrl: ${JENKINS_URL}
+       username: ${JENKINS_USERNAME}
+       apiKey: ${JENKINS_TOKEN}
    ```
 
    - Enable plugins
@@ -144,6 +155,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${GITHUB_ENABLED}` Set to `true` to enable the GitHub Entity backend plugin. Default is `false`
      - `${GITHUB_ORG_ENABLED}` Set to `true` to enable the GitHub Org Entity backend plugin. Default is `false`
      - `${GITLAB_ENABLED}` Set to `true` to enable the GitLab Entity backend plugin. Default is `false`
+     - `${JENKINS_ENABLED}` Set to `true` to enable the Jenkins Entity backend plugin. Default is `false`
 
    - Setup a GitHub app (Needed for the GitHub Issues, GitHub Pull Request plugins) and replace the variables
 
@@ -192,6 +204,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the SonaQube projects. Mandatory if plugin is enabled
 
    - Setup Techdocs with an external S3 bucket storage
+
      - `${TECHDOCS_BUILDER_TYPE}` Set to 'local' for simple setup, or 'external' to use a pipeline
      - `${TECHDOCS_GENERATOR_TYPE}` Set to 'local' for most of the use cases. You can use also 'docker'
      - `${TECHDOCS_PUBLISHER_TYPE}` Set to 'local' for simple setup, or 'awsS3' to use a S3 storage. 'googleGcs' is not supported at the moment.
@@ -200,6 +213,11 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${BUCKET_URL}` the bucket url
      - `${AWS_ACCESS_KEY_ID}` the AWS credentials Key Id
      - `${AWS_SECRET_ACCESS_KEY}` the AWS credentials Access Key
+
+   - Setup a Jenkins instance and then pass the following environment variables to backstage:
+     - `${JENKINS_URL}` with the URL where your Jenkins instance can be accessed
+     - `${JENKINS_USERNAME}` with the name of the user to be accessed through the API
+     - `${JENKINS_TOKEN}` with the API token to be used for the given user
 
 3. Run `yarn install` to install the dependencies
 

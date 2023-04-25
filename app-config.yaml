@@ -67,6 +67,11 @@ proxy:
     allowedMethods: ['GET']
     auth: ${SONARQUBE_TOKEN}
 
+  '/jenkins/api':
+    target: ${JENKINS_URL}
+    headers:
+      Authorization: ${JENKINS_TOKEN}
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -161,6 +166,13 @@ sonarqube:
   baseUrl: ${SONARQUBE_URL}
   apiKey: ${SONARQUBE_TOKEN}
 
+jenkins:
+  instances:
+  - name: default
+    baseUrl: ${JENKINS_URL}
+    username: ${JENKINS_USERNAME}
+    apiKey: ${JENKINS_TOKEN}
+
 enabled:
   kubernetes: ${K8S_ENABLED}
   techdocs: ${TECHDOCS_ENABLED}
@@ -171,3 +183,4 @@ enabled:
   github: ${GITHUB_ENABLED}
   githubOrg: ${GITHUB_ORG_ENABLED}
   gitlab: ${GITLAB_ENABLED}
+  jenkins: ${JENKINS_ENABLED}

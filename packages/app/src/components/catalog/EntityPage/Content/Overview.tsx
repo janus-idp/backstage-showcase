@@ -29,6 +29,10 @@ import {
 } from '@roadiehq/backstage-plugin-security-insights';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
+import {
+  isJenkinsAvailable,
+  EntityLatestJenkinsRunCard,
+} from '@backstage/plugin-jenkins';
 
 export const overviewContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
@@ -179,6 +183,14 @@ export const overviewContent = (
       <EntitySwitch.Case if={isCIsAvailable}>
         <Grid item xs={12}>
           <EntityArgoCDOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isJenkinsAvailable}>
+        <Grid item xs={12}>
+          <EntityLatestJenkinsRunCard branch="main,master" />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

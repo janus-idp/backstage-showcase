@@ -22,11 +22,6 @@ import {
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
-import { apis } from './apis';
-import { entityPage } from './components/catalog/EntityPage';
-import { SearchPage } from './components/search/SearchPage';
-import { Root } from './components/Root';
-
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
@@ -34,12 +29,16 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import { janusTheme } from './themes/janus';
-import { HomePage } from './components/home/HomePage';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { OcmPage } from '@janus-idp/backstage-plugin-ocm';
+import { apis } from './apis';
 import Logo from './components/Root/LogoIcon';
 import { LearningPaths } from './components/learningPaths/LearningPathsPage';
+import { entityPage } from './components/catalog/EntityPage';
+import { SearchPage } from './components/search/SearchPage';
+import { Root } from './components/Root';
+import { HomePage } from './components/home/HomePage';
+import { janusTheme } from './themes/janus';
 
 const app = createApp({
   apis,
