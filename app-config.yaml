@@ -42,10 +42,6 @@ integrations:
       apps:
         - $include: github-app-backstage-showcase-credentials.yaml
 
-github-org-provider:
-  id: production
-  orgUrl: ${GITHUB_ORG_URL}
-
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
@@ -62,6 +58,8 @@ proxy:
     secure: true
 
   '/sonarqube':
+    # if not using sonarcube, assign SONARQUBE_URL to https://sonarcloud.io
+    # target: https://sonarcloud.io/api
     target: ${SONARQUBE_URL}/api
     allowedMethods: ['GET']
     auth: ${SONARQUBE_TOKEN}
@@ -126,6 +124,11 @@ catalog:
         serviceAccountToken: ${moc_infra_token}
         owner: janus-authors
 
+    githubOrg:
+      default:
+        id: production
+        orgUrl: ${GITHUB_ORG_URL}
+
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'
@@ -152,6 +155,15 @@ argocd:
           token: ${ARGOCD_AUTH_TOKEN2}
 
 sonarqube:
-  enabled: ${SONARQUBE_ENABLED}
   baseUrl: ${SONARQUBE_URL}
   apiKey: ${SONARQUBE_TOKEN}
+
+enabled:
+  kubernetes: ${K8S_ENABLED}
+  techdocs: ${TECHDOCS_ENABLED}
+  argocd: ${ARGOCD_ENABLED}
+  sonarqube: ${SONARQUBE_ENABLED}
+  keycloak: ${KEYCLOAK_ENABLED}
+  ocm: ${OCM_ENABLED}
+  github: ${GITHUB_ENABLED}
+  githubOrg: ${GITHUB_ORG_ENABLED}
