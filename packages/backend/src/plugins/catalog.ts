@@ -14,7 +14,7 @@ export default async function createPlugin(
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
-  const isOcmEnabled = env.config.getOptionalBoolean('ocm.enabled') || false;
+  const isOcmEnabled = env.config.getOptionalBoolean('enabled.ocm') || false;
   const isKeycloakEnabled =
     env.config.getOptionalBoolean('enabled.keycloak') || false;
   const isGithubEnabled =

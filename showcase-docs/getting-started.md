@@ -26,20 +26,31 @@ The easiest and fastest method for getting started with the Backstage Showcase a
    # This is a GitHub App. You can find out how to generate this file, and more information
    # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
 
+   enabled:
+     kubernetes: ${K8S_ENABLED}
+     techdocs: ${TECHDOCS_ENABLED}
+     argocd: ${ARGOCD_ENABLED}
+     sonarqube: ${SONARQUBE_ENABLED}
+     keycloak: ${KEYCLOAK_ENABLED}
+     ocm: ${OCM_ENABLED}
+     github: ${GITHUB_ENABLED}
+     githubOrg: ${GITHUB_ORG_ENABLED}
+
    proxy:
      '/sonarqube':
        target: ${SONARQUBE_URL}/api
        allowedMethods: ['GET']
        auth: ${SONARQUBE_TOKEN}
 
-   sonarQube:
-     enabled: ${SONARQUBE_ENABLED}
+   sonarqube:
      baseUrl: ${SONARQUBE_URL}
      apiKey: ${SONARQUBE_TOKEN}
 
    integrations:
      github:
        - host: github.com
+         # This is a GitHub App. You can find out how to generate this file, and more information
+         # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
 
@@ -57,10 +68,6 @@ The easiest and fastest method for getting started with the Backstage Showcase a
          credentials:
            accessKeyId: ${AWS_ACCESS_KEY_ID}
            secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
-
-   github-org-provider:
-     id: production
-     orgUrl: ${GITHUB_ORG_URL}
 
    auth:
      environment: development
@@ -95,6 +102,11 @@ The easiest and fastest method for getting started with the Backstage Showcase a
              serviceAccountToken: ${moc_infra_token}
              owner: # Existing catalog entity (User or Group) as the owner of the discovered clusters
 
+         githubOrg:
+           default:
+             id: production
+             orgUrl: ${GITHUB_ORG_URL}
+
      kubernetes:
        serviceLocatorMethod:
          type: 'multiTenant'
@@ -120,6 +132,17 @@ The easiest and fastest method for getting started with the Backstage Showcase a
                url: ${ARGOCD_INSTANCE2_URL}
                token: ${ARGOCD_AUTH_TOKEN2}
    ```
+
+   - Enable plugins
+
+     - `${K8S_ENABLED}` Set to `true` to enable the Kubernetes backend plugin. Default is `false`
+     - `${TECHDOCS_ENABLED}` Set to `true` to enable the Techdocs backend plugin. Default is `false`
+     - `${ARGOCD_ENABLED}` Set to `true` to enable the ArgoCD backend plugin. Default is `false`
+     - `${SONARQUBE_ENABLED}` Set to `true` to enable the SonarQube backend plugin. Default is `false`
+     - `${KEYCLOAK_ENABLED}` Set to `true` to enable the Keycloak backend plugin. Default is `false`
+     - `${OCM_ENABLED}` Set to `true` to enable the OCM backend plugin. Default is `false`
+     - `${GITHUB_ENABLED}` Set to `true` to enable the GitHub Entity backend plugin. Default is `false`
+     - `${GITHUB_ORG_ENABLED}` Set to `true` to enable the GitHub Org Entity backend plugin. Default is `false`
 
    - Setup a GitHub app (Needed for the GitHub Issues, GitHub Pull Request plugins) and replace the variables
 
@@ -160,7 +183,6 @@ The easiest and fastest method for getting started with the Backstage Showcase a
 
    - Setup a SonarQube instance then pass the following environment variables to backstage:
 
-     - `${SONARQUBE_ENABLED}` Set to `true` to enable the SonarQube backend plugin. Default is `false`
      - `${SONARQUBE_URL}` the url at which sonarqube can be found. Mandatory if plugin is enabled
      - `${SONARQUBE_TOKEN}` a sonarqube [token](https://docs.sonarqube.org/9.8/user-guide/user-account/generating-and-using-tokens/) with enough permission to read all the SonaQube projects. Mandatory if plugin is enabled
 
