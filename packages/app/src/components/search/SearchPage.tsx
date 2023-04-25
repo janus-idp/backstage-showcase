@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const SearchPage = () => {
+export const SearchPage = () => {
   const classes = useStyles();
   const { types } = useSearch();
   const catalogApi = useApi(catalogApiRef);
@@ -120,5 +120,3 @@ const SearchPage = () => {
     </Page>
   );
 };
-
-export const searchPage = <SearchPage />;

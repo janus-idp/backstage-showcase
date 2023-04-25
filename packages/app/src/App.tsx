@@ -12,7 +12,7 @@ import {
 } from '@backstage/plugin-catalog-import';
 import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { orgPlugin } from '@backstage/plugin-org';
-import { SearchPage } from '@backstage/plugin-search';
+import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
 import {
   TechDocsIndexPage,
@@ -24,7 +24,7 @@ import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
-import { searchPage } from './components/search/SearchPage';
+import { SearchPage } from './components/search/SearchPage';
 import { Root } from './components/Root';
 
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
@@ -107,8 +107,8 @@ const routes = (
         </RequirePermission>
       }
     />
-    <Route path="/search" element={<SearchPage />}>
-      {searchPage}
+    <Route path="/search" element={<BackstageSearchPage />}>
+      <SearchPage />
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
