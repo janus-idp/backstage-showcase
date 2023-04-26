@@ -15,10 +15,14 @@ import React from 'react';
 import { defaultEntityPage } from './DefaultEntity';
 import {
   overviewContent,
-  cicdContent,
+  isCIsAvailable,
+  ciContent,
+  cdContent,
   dependenciesContent,
-  githubIssuesContent,
-  githubPRContent,
+  isIssuesAvailable,
+  issuesContent,
+  isPrsAvailable,
+  prContent,
   securityContent,
   techdocsContent,
 } from '../Content';
@@ -28,16 +32,26 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
     </EntityLayout.Route>
-    <EntityLayout.Route path="/github-issues" title="GitHub Issues">
-      {githubIssuesContent}
+
+    <EntityLayout.Route if={isIssuesAvailable} path="/issues" title="Issues">
+      {issuesContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/github-pr" title="GitHub Pull Requests">
-      {githubPRContent}
+    <EntityLayout.Route
+      if={isPrsAvailable}
+      path="/pr"
+      title="Pull/Merge Requests"
+    >
+      {prContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/ci-cd" title="CI/CD">
-      {cicdContent}
+    <EntityLayout.Route if={isCIsAvailable} path="/ci" title="CI">
+      {ciContent}
+    </EntityLayout.Route>
+
+    {/* Use `isArgocdAvailable` once its fixed */}
+    <EntityLayout.Route if={isCIsAvailable} path="/cd" title="CD">
+      {cdContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/kubernetes" title="Kubernetes">
@@ -48,7 +62,11 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       <TopologyPage />
     </EntityLayout.Route>
 
-    <EntityLayout.Route if={isQuayAvailable} path="/quay" title="Quay">
+    <EntityLayout.Route
+      if={isQuayAvailable}
+      path="/image-registry"
+      title="Image Registry"
+    >
       <QuayPage />
     </EntityLayout.Route>
 
@@ -58,7 +76,7 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
 
     {componentType === 'service' && (
       <EntityLayout.Route path="/api" title="API">
-        <Grid container spacing={3} alignItems="stretch">
+        <Grid container spacing={3}>
           <Grid item md={6}>
             <EntityProvidedApisCard />
           </Grid>

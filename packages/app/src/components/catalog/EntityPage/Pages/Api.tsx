@@ -17,16 +17,22 @@ export const apiPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
-        {entityWarningContent}
+        <Grid item xs={12}>
+          {entityWarningContent}
+        </Grid>
+
         <Grid item md={6}>
           <EntityAboutCard />
         </Grid>
+
         <Grid item md={6} xs={12}>
           <EntityCatalogGraphCard variant="gridItem" height={400} />
         </Grid>
+
         <Grid item md={4} xs={12}>
           <EntityLinksCard />
         </Grid>
+
         <Grid container item md={12}>
           <Grid item md={6}>
             <EntityProvidingComponentsCard />

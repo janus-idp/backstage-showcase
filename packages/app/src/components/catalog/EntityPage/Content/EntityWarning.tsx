@@ -9,7 +9,7 @@ import { Grid } from '@material-ui/core';
 import React from 'react';
 
 export const entityWarningContent = (
-  <>
+  <Grid container spacing={3} justifyContent="space-evenly">
     <EntitySwitch>
       <EntitySwitch.Case if={isOrphan}>
         <Grid item xs={12}>
@@ -25,5 +25,5 @@ export const entityWarningContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
-  </>
+  </Grid>
 );
