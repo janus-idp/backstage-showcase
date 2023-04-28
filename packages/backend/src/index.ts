@@ -26,6 +26,7 @@ import Router from 'express-promise-router';
 import app from './plugins/app';
 import argocd from './plugins/argocd';
 import auth from './plugins/auth';
+import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
 import gitlab from './plugins/gitlab';
 import kubernetes from './plugins/kubernetes';
@@ -102,12 +103,12 @@ async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
     !isOptional ||
     args.config.getOptionalBoolean(options?.key ?? `enabled.${plugin}`) ||
     false;
-  console.log(`Adding plugin ${plugin} ${isPluginEnabled}...`);
   if (isPluginEnabled) {
     const pluginEnv: PluginEnvironment = useHotMemoize(module, () =>
       createEnv(plugin),
     );
     apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
+    console.log(`Using backend plugin ${plugin}...`);
   }
 }
 
@@ -182,6 +183,15 @@ async function main() {
     createEnv,
     router: gitlab,
     isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'azure-devops',
+    config,
+    apiRouter,
+    createEnv,
+    router: azureDevOps,
+    isOptional: true,
+    options: { key: 'enabled.azureDevOps' },
   });
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback

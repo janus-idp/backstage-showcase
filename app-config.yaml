@@ -45,6 +45,15 @@ integrations:
     - host: gitlab.com
       token: ${GITLAB_TOKEN}
 
+  azure:
+    - host: dev.azure.com
+      token: ${AZURE_TOKEN}
+
+azureDevOps:
+  host: dev.azure.com
+  token: ${AZURE_TOKEN}
+  organization: ${AZURE_ORG}
+
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
   ### A typical reason to do this is to handle HTTPS and CORS for internal services.
@@ -171,3 +180,4 @@ enabled:
   github: ${GITHUB_ENABLED}
   githubOrg: ${GITHUB_ORG_ENABLED}
   gitlab: ${GITLAB_ENABLED}
+  azureDevOps: ${AZURE_ENABLED}

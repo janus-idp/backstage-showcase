@@ -3662,6 +3662,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage/plugin-azure-devops-backend@npm:^0.3.23":
+  version: 0.3.23
+  resolution: "@backstage/plugin-azure-devops-backend@npm:0.3.23"
+  dependencies:
+    "@backstage/backend-common": ^0.18.4
+    "@backstage/config": ^1.0.7
+    "@backstage/plugin-azure-devops-common": ^0.3.0
+    "@types/express": ^4.17.6
+    azure-devops-node-api: ^11.0.1
+    express: ^4.17.1
+    express-promise-router: ^4.1.0
+    mime-types: ^2.1.27
+    p-limit: ^3.1.0
+    winston: ^3.2.1
+    yn: ^4.0.0
+  checksum: bd285a620cd119d096de4f3bb6de7761440aee2ca84cd8a48586242852098505fdf83083240f3eab124aa20e2b2fb37ed10ed3ed31f16893821eeacec8a067d5
+  languageName: node
+  linkType: hard
+
+"@backstage/plugin-azure-devops-common@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@backstage/plugin-azure-devops-common@npm:0.3.0"
+  checksum: 839ed42b1cf0aef9ec9456d446a955ef81a6ba2275e0c562371663a8554545d203911ddd2c617704abd24bc9f82c54cf62509a3a9ad0e670252230a0b38a1b26
+  languageName: node
+  linkType: hard
+
 "@backstage/plugin-catalog-backend-module-github@npm:^0.2.7":
   version: 0.2.7
   resolution: "@backstage/plugin-catalog-backend-module-github@npm:0.2.7"
@@ -11211,6 +11237,7 @@ __metadata:
     "@backstage/plugin-app-backend": ^0.3.44
     "@backstage/plugin-auth-backend": ^0.18.2
     "@backstage/plugin-auth-node": ^0.2.13
+    "@backstage/plugin-azure-devops-backend": ^0.3.23
     "@backstage/plugin-catalog-backend": ^1.9.0
     "@backstage/plugin-catalog-backend-module-github": ^0.2.7
     "@backstage/plugin-kubernetes-backend": ^0.10.0

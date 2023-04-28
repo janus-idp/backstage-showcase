@@ -25,6 +25,7 @@
     "@backstage/plugin-app-backend": "^0.3.44",
     "@backstage/plugin-auth-backend": "^0.18.2",
     "@backstage/plugin-auth-node": "^0.2.13",
+    "@backstage/plugin-azure-devops-backend": "^0.3.23",
     "@backstage/plugin-catalog-backend": "^1.9.0",
     "@backstage/plugin-catalog-backend-module-github": "^0.2.7",
     "@backstage/plugin-kubernetes-backend": "^0.10.0",
