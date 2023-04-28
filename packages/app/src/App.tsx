@@ -39,6 +39,7 @@ import { HomePage } from './components/home/HomePage';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { OcmPage } from '@janus-idp/backstage-plugin-ocm';
 import Logo from './components/Root/LogoIcon';
+import { LearningPaths } from './components/learningPaths/LearningPathsPage';
 
 const app = createApp({
   apis,
@@ -115,6 +116,7 @@ const routes = (
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
     <Route path="/ocm" element={<OcmPage logo={<Logo />} />} />
+    <Route path="/learning-paths" element={<LearningPaths />} />
   </FlatRoutes>
 );
 
