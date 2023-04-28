@@ -37,6 +37,7 @@
     "@backstage/plugin-search-backend-node": "^1.2.0",
     "@backstage/plugin-sonarqube-backend": "^0.1.9",
     "@backstage/plugin-techdocs-backend": "^1.6.1",
+    "@immobiliarelabs/backstage-plugin-gitlab-backend": "^5.0.2",
     "@janus-idp/backstage-plugin-keycloak-backend": "^1.1.0",
     "@janus-idp/backstage-plugin-ocm-backend": "^2.1.1",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.4",

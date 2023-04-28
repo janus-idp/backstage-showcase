@@ -12,13 +12,17 @@ export const groupPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       <Grid container spacing={3}>
-        {entityWarningContent}
+        <Grid item xs={12}>
+          {entityWarningContent}
+        </Grid>
         <Grid item xs={12} md={6}>
           <EntityGroupProfileCard variant="gridItem" />
         </Grid>
+
         <Grid item xs={12} md={6}>
           <EntityOwnershipCard variant="gridItem" />
         </Grid>
+
         <Grid item xs={12}>
           <EntityMembersListCard />
         </Grid>

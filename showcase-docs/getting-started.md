@@ -143,12 +143,17 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${OCM_ENABLED}` Set to `true` to enable the OCM backend plugin. Default is `false`
      - `${GITHUB_ENABLED}` Set to `true` to enable the GitHub Entity backend plugin. Default is `false`
      - `${GITHUB_ORG_ENABLED}` Set to `true` to enable the GitHub Org Entity backend plugin. Default is `false`
+     - `${GITLAB_ENABLED}` Set to `true` to enable the GitLab Entity backend plugin. Default is `false`
 
    - Setup a GitHub app (Needed for the GitHub Issues, GitHub Pull Request plugins) and replace the variables
 
      - This [URL](https://backstage.io/docs/integrations/github/github-apps) can be used to quickly create a GitHub app, you can name the yaml file `github-app-backstage-showcase-credentials.local.yaml`
      - `${GITHUB_APP_CLIENT_ID}` with the client id
      - `${GITHUB_APP_CLIENT_SECRET}` with the client secret
+
+   - Setup a GitLab personal access token (Needed for the GitLab plugin) and replace the variables
+
+     - `${GITLAB_TOKEN}` with the personal access token
 
    - Setup one to two ArgoCD instances (Needed for the ArgoCD backend plugin) and replace the following variables
 

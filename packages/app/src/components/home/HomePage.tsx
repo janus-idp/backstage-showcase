@@ -136,7 +136,7 @@ export const HomePage = () => {
               className={container}
               logo={<LogoFull classes={{ svg }} />}
             />
-            <Grid item xs={12} alignItems="center" direction="row">
+            <Grid item xs={12} direction="row">
               <HomePageSearchBar
                 classes={{ root: classes.searchBar }}
                 placeholder="Search"

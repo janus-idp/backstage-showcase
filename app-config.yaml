@@ -41,6 +41,9 @@ integrations:
       # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
       apps:
         - $include: github-app-backstage-showcase-credentials.yaml
+  gitlab:
+    - host: gitlab.com
+      token: ${GITLAB_TOKEN}
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
@@ -58,7 +61,7 @@ proxy:
     secure: true
 
   '/sonarqube':
-    # if not using sonarcube, assign SONARQUBE_URL to https://sonarcloud.io
+    # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
     # target: https://sonarcloud.io/api
     target: ${SONARQUBE_URL}/api
     allowedMethods: ['GET']
@@ -167,3 +170,4 @@ enabled:
   ocm: ${OCM_ENABLED}
   github: ${GITHUB_ENABLED}
   githubOrg: ${GITHUB_ORG_ENABLED}
+  gitlab: ${GITLAB_ENABLED}

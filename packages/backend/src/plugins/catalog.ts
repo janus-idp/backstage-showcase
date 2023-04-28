@@ -1,13 +1,14 @@
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
-import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
-import { Router } from 'express';
-import { PluginEnvironment } from '../types';
-import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import {
   GithubEntityProvider,
   GithubOrgEntityProvider,
 } from '@backstage/plugin-catalog-backend-module-github';
+import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
+import { GitlabFillerProcessor } from '@immobiliarelabs/backstage-plugin-gitlab-backend';
+import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
+import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
+import { Router } from 'express';
+import { PluginEnvironment } from '../types';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -21,6 +22,8 @@ export default async function createPlugin(
     env.config.getOptionalBoolean('enabled.github') || false;
   const isGithubOrgEnabled =
     env.config.getOptionalBoolean('enabled.githubOrg') || false;
+  const isGitlabEnabled =
+    env.config.getOptionalBoolean('enabled.gitlab') || false;
 
   const ocm = isOcmEnabled
     ? ManagedClusterProvider.fromConfig(env.config, {
@@ -83,6 +86,10 @@ export default async function createPlugin(
         }),
       );
     });
+  }
+
+  if (isGitlabEnabled) {
+    builder.addProcessor(new GitlabFillerProcessor(env.config));
   }
 
   builder.addProcessor(new ScaffolderEntitiesProcessor());
