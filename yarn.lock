@@ -5666,9 +5666,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-quay@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@janus-idp/backstage-plugin-quay@npm:1.2.0"
+"@janus-idp/backstage-plugin-quay@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@janus-idp/backstage-plugin-quay@npm:1.2.1"
   dependencies:
     "@backstage/catalog-model": 1.1.5
     "@backstage/core-components": ^0.12.1
@@ -5683,7 +5683,7 @@ __metadata:
     react: ^16.13.1 || ^17.0.0
     react-router: ^6.3.0
     react-router-dom: ^6.3.0
-  checksum: f377a7ae4ad9f272ceadfdfddbd3b971fd0d47e956b175d4d692144cadba24214871323884c1779a0b5c47060a9034cd876ec8329616c3cd401efdc309305607
+  checksum: d2372e7e8220ea03051e55ce380b1e25d29eb64504486ddd5b74e3def944e2171c533ea1b6ca292dbc2c1f59c1c93be2d3de025ec2bb7d17513b0470796e58d9
   languageName: node
   linkType: hard
 
@@ -10489,7 +10489,7 @@ __metadata:
     "@backstage/test-utils": ^1.3.0
     "@backstage/theme": ^0.2.19
     "@janus-idp/backstage-plugin-ocm": ^2.1.0
-    "@janus-idp/backstage-plugin-quay": ^1.2.0
+    "@janus-idp/backstage-plugin-quay": ^1.2.1
     "@janus-idp/backstage-plugin-topology": ^1.5.0
     "@material-ui/core": ^4.12.2
     "@material-ui/icons": ^4.9.1
