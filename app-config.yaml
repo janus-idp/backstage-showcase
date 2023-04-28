@@ -103,7 +103,7 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, Group, Resource, Location, Template]
+    - allow: [Component, System, Group, Resource, Location, Template, Api]
   locations:
     - type: url
       target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
