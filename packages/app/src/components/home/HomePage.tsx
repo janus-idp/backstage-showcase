@@ -7,7 +7,7 @@ import {
   Page,
 } from '@backstage/core-components';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Grid, makeStyles } from '@material-ui/core';
+import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
 import {
   ComponentAccordion,
   HomePageToolkit,
@@ -19,6 +19,7 @@ import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
 import useSWR from 'swr';
 import LogoFull from '../Root/LogoFull';
+import { fetcher, ErrorReport } from '../../common';
 
 type QuickAccessLinks = {
   title: string;
@@ -33,16 +34,28 @@ const useQuickAccessStyles = makeStyles({
   },
 });
 
-const fetcher = (...args: Parameters<typeof fetch>) =>
-  fetch(...args).then(r => r.json()) as Promise<QuickAccessLinks[]>;
-
 const QuickAccess = () => {
   const classes = useQuickAccessStyles();
-  const { data, error, isLoading } = useSWR('/homepage/data.json', fetcher);
+  const { data, error, isLoading } = useSWR(
+    '/homepage/data.json',
+    fetcher<QuickAccessLinks>,
+  );
 
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
-  if (!data) return <div>data could not be found</div>;
+  if (!data) {
+    return (
+      <ErrorReport title="Could not fetch data." errorText="Unknown error" />
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorReport title="Could not fetch data." errorText={error.toString()} />
+    );
+  }
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <InfoCard title="Quick Access" noPadding>
