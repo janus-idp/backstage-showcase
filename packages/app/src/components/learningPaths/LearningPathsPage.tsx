@@ -73,7 +73,7 @@ const LearningPathCards = () => {
       <Grid item xs={12} container justifyContent="center">
         {data.map(p => (
           <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={p.label}>
-            <Link href={p.url} className={classes.link}>
+            <Link href={p.url} className={classes.link} target="_blank">
               <InfoCard
                 className={classes.root}
                 title={p.label}
