@@ -76,6 +76,11 @@ proxy:
     allowedMethods: ['GET']
     auth: ${SONARQUBE_TOKEN}
 
+  '/jenkins/api':
+    target: ${JENKINS_URL}
+    headers:
+      Authorization: ${JENKINS_TOKEN}
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -112,7 +117,7 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, Group, Resource, Location, Template]
+    - allow: [Component, System, Group, Resource, Location, Template, API]
   locations:
     - type: url
       target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
@@ -170,6 +175,13 @@ sonarqube:
   baseUrl: ${SONARQUBE_URL}
   apiKey: ${SONARQUBE_TOKEN}
 
+jenkins:
+  instances:
+  - name: default
+    baseUrl: ${JENKINS_URL}
+    username: ${JENKINS_USERNAME}
+    apiKey: ${JENKINS_TOKEN}
+
 enabled:
   kubernetes: ${K8S_ENABLED}
   techdocs: ${TECHDOCS_ENABLED}
@@ -181,3 +193,4 @@ enabled:
   githubOrg: ${GITHUB_ORG_ENABLED}
   gitlab: ${GITLAB_ENABLED}
   azureDevOps: ${AZURE_ENABLED}
+  jenkins: ${JENKINS_ENABLED}

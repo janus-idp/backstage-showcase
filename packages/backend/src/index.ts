@@ -29,6 +29,7 @@ import auth from './plugins/auth';
 import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
 import gitlab from './plugins/gitlab';
+import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
 import ocm from './plugins/ocm';
 import proxy from './plugins/proxy';
@@ -192,6 +193,14 @@ async function main() {
     router: azureDevOps,
     isOptional: true,
     options: { key: 'enabled.azureDevOps' },
+  });
+  await addPlugin({
+    plugin: 'jenkins',
+    config,
+    apiRouter,
+    createEnv,
+    router: jenkins,
+    isOptional: true,
   });
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
