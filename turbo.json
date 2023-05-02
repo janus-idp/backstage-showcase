@@ -15,8 +15,7 @@
       "outputs": ["coverage/**"]
     },
     "lint": {},
-    "test:e2e": {},
-    "build-image": {}
+    "test:e2e": {}
   },
   "globalDependencies": ["tsconfig.json"]
 }
