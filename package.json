@@ -10,7 +10,6 @@
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "build": "turbo run build",
-    "build-image": "turbo run build-image",
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "turbo run clean",
