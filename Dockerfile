@@ -2,15 +2,8 @@
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS deps
 USER 0
 
-# Args
-ARG TECHDOCS_BUILDER_TYPE=external
-ARG TECHDOCS_GENERATOR_TYPE=local
-ARG TECHDOCS_PUBLISHER_TYPE=awsS3
-
-# Install yarn
-RUN \
-  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-  microdnf install -y yarn
+# Env vars
+ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
 COPY ./package.json ./yarn.lock ./
 COPY ./packages ./packages
@@ -21,53 +14,35 @@ COPY .yarnrc.yml ./
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
 ENV IS_CONTAINER="TRUE"
-RUN yarn install --immutable --network-timeout 600000
+RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 2 - Build packages
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
 USER 0
 
-# Args
-ARG TECHDOCS_BUILDER_TYPE
-ARG TECHDOCS_GENERATOR_TYPE
-ARG TECHDOCS_PUBLISHER_TYPE
-
 # Env vars
-ENV TECHDOCS_BUILDER_TYPE=$TECHDOCS_BUILDER_TYPE
-ENV TECHDOCS_GENERATOR_TYPE=$TECHDOCS_GENERATOR_TYPE
-ENV TECHDOCS_PUBLISHER_TYPE=$TECHDOCS_PUBLISHER_TYPE
-
-# Install yarn
-RUN \
-  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-  microdnf install -y yarn
+ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
+ENV TECHDOCS_BUILDER_TYPE=external
+ENV TECHDOCS_GENERATOR_TYPE=local
+ENV TECHDOCS_PUBLISHER_TYPE=awsS3
 
 COPY . .
 COPY --from=deps /opt/app-root/src .
 COPY --from=deps --chown=0:0 /opt/app-root/src/.yarn ./.yarn
 COPY --from=deps --chown=0:0 /opt/app-root/src/.yarnrc.yml  ./
 
-RUN yarn tsc
-RUN yarn --cwd packages/backend build
+RUN $YARN tsc
+RUN echo $YARN && $YARN --cwd packages/backend build
 
 # Stage 3 - Build the actual backend image and install production dependencies
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
 USER 0
 
-# Args
-ARG TECHDOCS_BUILDER_TYPE
-ARG TECHDOCS_GENERATOR_TYPE
-ARG TECHDOCS_PUBLISHER_TYPE
-
 # Env vars
-ENV TECHDOCS_BUILDER_TYPE=$TECHDOCS_BUILDER_TYPE
-ENV TECHDOCS_GENERATOR_TYPE=$TECHDOCS_GENERATOR_TYPE
-ENV TECHDOCS_PUBLISHER_TYPE=$TECHDOCS_PUBLISHER_TYPE
-
-# Install yarn
-RUN \
-  curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
-  microdnf install -y yarn
+ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
+ENV TECHDOCS_BUILDER_TYPE=external
+ENV TECHDOCS_GENERATOR_TYPE=local
+ENV TECHDOCS_PUBLISHER_TYPE=awsS3
 
 # Install gzip for tar and clean up
 RUN microdnf install -y gzip && microdnf clean all
@@ -84,7 +59,7 @@ RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Install production dependencies
 ENV IS_CONTAINER="TRUE"
-RUN yarn workspaces focus --all --production && yarn cache clean
+RUN $YARN install --frozen-lockfile --production --network-timeout 600000 && $YARN cache clean
 
 # Copy the built packages from the build stage
 COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .

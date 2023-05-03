@@ -52,7 +52,7 @@ jobs:
 
       - name: Lint
         run: |
-          yarn tsc:full
+          yarn tsc
           yarn prettier:check
 
       - name: CI
