@@ -11,7 +11,6 @@
     "start": "turbo run start --parallel",
     "build": "turbo run build",
     "tsc": "tsc",
-    "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "turbo run clean",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
