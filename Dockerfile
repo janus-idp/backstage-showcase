@@ -32,7 +32,7 @@ COPY --from=deps --chown=0:0 /opt/app-root/src/.yarn ./.yarn
 COPY --from=deps --chown=0:0 /opt/app-root/src/.yarnrc.yml  ./
 
 RUN $YARN tsc
-RUN echo $YARN && $YARN --cwd packages/backend build
+RUN $YARN --cwd packages/backend build
 
 # Stage 3 - Build the actual backend image and install production dependencies
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
