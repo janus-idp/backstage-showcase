@@ -14,9 +14,7 @@ COPY .yarnrc.yml ./
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
 ENV IS_CONTAINER="TRUE"
-RUN $YARN add -D -W --arch=x64 --platform=linux turbo
-RUN $YARN add -D -W --arch=x64 --platform=linux @esbuild/linux-x64
-RUN $YARN install --frozen-lockfile --network-timeout 600000 --ignore-optional
+RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 2 - Build packages
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
@@ -31,7 +29,7 @@ ENV TECHDOCS_PUBLISHER_TYPE=awsS3
 COPY . .
 COPY --from=deps /opt/app-root/src .
 COPY --from=deps --chown=0:0 /opt/app-root/src/.yarn ./.yarn
-COPY --from=deps --chown=0:0 /opt/app-root/src/.yarnrc.yml  ./
+COPY --from=deps --chown=0:0 /opt/app-root/src/.yarnrc.yml ./
 
 RUN $YARN tsc
 RUN $YARN --cwd packages/backend build
@@ -50,7 +48,7 @@ ENV TECHDOCS_PUBLISHER_TYPE=awsS3
 RUN microdnf install -y gzip && microdnf clean all
 
 COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarn ./.yarn
-COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarnrc.yml  ./
+COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarnrc.yml ./
 
 # Switch to nodejs user
 USER 1001
@@ -61,7 +59,7 @@ RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Install production dependencies
 ENV IS_CONTAINER="TRUE"
-RUN $YARN install --frozen-lockfile --production --network-timeout 600000 --ignore-optional && $YARN cache clean
+RUN $YARN install --frozen-lockfile --production --network-timeout 600000 && $YARN cache clean
 
 # Copy the built packages from the build stage
 COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .
