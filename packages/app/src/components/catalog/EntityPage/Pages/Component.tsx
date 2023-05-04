@@ -8,6 +8,7 @@ import {
   isComponentType,
 } from '@backstage/plugin-catalog';
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
+import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
 import { Grid } from '@material-ui/core';
@@ -60,6 +61,10 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
 
     <EntityLayout.Route path="/topology" title="Topology">
       <TopologyPage />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/tekton" title="Tekton">
+      <TektonPage />
     </EntityLayout.Route>
 
     <EntityLayout.Route

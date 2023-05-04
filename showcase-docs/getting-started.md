@@ -114,6 +114,13 @@ The easiest and fastest method for getting started with the Backstage Showcase a
              orgUrl: ${GITHUB_ORG_URL}
 
      kubernetes:
+       customResources:
+         - group: 'tekton.dev'
+           apiVersion: 'v1beta1'
+           plural: 'pipelineruns'
+         - group: 'tekton.dev'
+           apiVersion: 'v1beta1'
+           plural: 'taskruns'
        serviceLocatorMethod:
          type: 'multiTenant'
        clusterLocatorMethods:
@@ -186,7 +193,7 @@ The easiest and fastest method for getting started with the Backstage Showcase a
      - `${KEYCLOAK_CLIENT_ID}` with the client id
      - `${KEYCLOAK_CLIENT_SECRET}` with the client secret
 
-   - Setup a kubernetes cluster (Needed for the Kubernetes plugin) and replace the following variables
+   - Setup a kubernetes cluster (Needed for the Kubernetes plugin and the Tekton plugin) and replace the following variables
 
      - `${K8S_CLUSTER_NAME}` with the cluster name
      - `${K8S_CLUSTER_URL}` with the cluster url
