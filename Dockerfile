@@ -14,7 +14,9 @@ COPY .yarnrc.yml ./
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
 
 ENV IS_CONTAINER="TRUE"
-RUN $YARN install --frozen-lockfile --network-timeout 600000
+RUN $YARN add -D -W --arch=x64 --platform=linux turbo
+RUN $YARN add -D -W --arch=x64 --platform=linux @esbuild/linux-x64
+RUN $YARN install --frozen-lockfile --network-timeout 600000 --ignore-optional
 
 # Stage 2 - Build packages
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
@@ -59,7 +61,7 @@ RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Install production dependencies
 ENV IS_CONTAINER="TRUE"
-RUN $YARN install --frozen-lockfile --production --network-timeout 600000 && $YARN cache clean
+RUN $YARN install --frozen-lockfile --production --network-timeout 600000 --ignore-optional && $YARN cache clean
 
 # Copy the built packages from the build stage
 COPY --from=build /opt/app-root/src/packages/backend/dist/bundle.tar.gz .
