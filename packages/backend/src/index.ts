@@ -28,6 +28,7 @@ import argocd from './plugins/argocd';
 import auth from './plugins/auth';
 import catalog from './plugins/catalog';
 import gitlab from './plugins/gitlab';
+import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
 import ocm from './plugins/ocm';
 import proxy from './plugins/proxy';
@@ -181,6 +182,14 @@ async function main() {
     apiRouter,
     createEnv,
     router: gitlab,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'jenkins',
+    config,
+    apiRouter,
+    createEnv,
+    router: jenkins,
     isOptional: true,
   });
 

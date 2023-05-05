@@ -5,6 +5,10 @@ import {
   isGithubActionsAvailable,
 } from '@backstage/plugin-github-actions';
 import {
+  isTektonCIAvailable,
+  LatestPipelineRun,
+} from '@janus-idp/backstage-plugin-tekton';
+import {
   EntityGitlabMergeRequestsTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
@@ -14,6 +18,7 @@ import React from 'react';
 const ifCIs: ((e: Entity) => boolean)[] = [
   isGithubActionsAvailable,
   isGitlabAvailable,
+  isTektonCIAvailable,
 ];
 
 export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
@@ -30,6 +35,9 @@ export const ciContent = (
         <Grid item xs={12}>
           <EntityGitlabMergeRequestsTable />
         </Grid>
+        <Grid item xs={12}>
+          <LatestPipelineRun linkTekton />
+        </Grid>
       </EntitySwitch.Case>
 
       <EntitySwitch.Case if={isGithubActionsAvailable}>
@@ -41,6 +49,12 @@ export const ciContent = (
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
           <EntityGitlabMergeRequestsTable />
+        </Grid>
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isTektonCIAvailable}>
+        <Grid item xs={12}>
+          <LatestPipelineRun linkTekton />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

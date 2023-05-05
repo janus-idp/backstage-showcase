@@ -13,7 +13,6 @@ import useSWR from 'swr';
 import { fetcher, ErrorReport } from '../../common';
 
 type Path = {
-  iconUrl: string;
   label: string;
   url: string;
   description?: string;
