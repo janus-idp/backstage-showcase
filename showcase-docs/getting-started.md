@@ -177,7 +177,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${GITHUB_ORG_ENABLED}` Set to `true` to enable the GitHub Org Entity backend plugin.
      - `${GITLAB_ENABLED}` Set to `true` to enable the GitLab Entity backend plugin.
      - `${AZURE_ENABLED}` Set to `true` to enable the Azure DevOps Entity backend plugin.
-     - ${JENKINS_ENABLED}`Set to`true` to enable the Jenkins Entity backend plugin.
+     - `${JENKINS_ENABLED}` Set to `true` to enable the Jenkins Entity backend plugin.
 
    - Setup the GitHub plugins (GitHub Issues and GitHub Pull Request)
 
@@ -192,7 +192,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the Azure DevOps plugin
 
-     - This [URL](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) can be used to quickly create a GitLab personal access token
+     - This [URL](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) can be used to quickly create an Azure personal access token
      - `${AZURE_TOKEN}`: personal access token
      - `${AZURE_ORG}`: Azure DevOps Services (cloud) Organization name or the Azure DevOps Server
 
