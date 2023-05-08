@@ -146,6 +146,11 @@
         "iconUrl": "/homepage/icons/icons8/safe-out.png",
         "label": "Vault",
         "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
+      },
+      {
+        "iconUrl": "/homepage/icons/keycloak.svg",
+        "label": "Keycloak",
+        "url": "https://keycloak.apps.smaug.na.operate-first.cloud/"
       }
     ]
   }
