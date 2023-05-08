@@ -30,12 +30,14 @@ Our current list of plugins within the showcase app include:
 - [Keycloak plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/keycloak-backend)
 - [SonarQube plugin](https://roadie.io/backstage/plugins/sonarqube/)
 - [Tekton plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/tekton)
+- [Jenkins Plugin](https://github.com/backstage/backstage/tree/master/plugins/jenkins)
+- [GitLab Plugin](https://github.com/immobiliare/backstage-plugin-gitlab)
 
 ## Getting Started
 
 Dependencies:
 
-- [node.js](https://nodejs.org/en/) 18
+- [Node.js](https://nodejs.org/en/) 18
 - [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable)
 
 Information on running the showcase app can be found in our [Getting Started](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) documentation. In the documentation is how to set up and run an instance of the showcase app locally. We plan to expand upon the documentation at a later point if there is enough interest in other methods for getting the app up and running.
