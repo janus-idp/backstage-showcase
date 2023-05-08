@@ -30,6 +30,7 @@ Our current list of plugins within the showcase app include:
 - [Keycloak plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/keycloak-backend)
 - [SonarQube plugin](https://roadie.io/backstage/plugins/sonarqube/)
 - [Tekton plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/tekton)
+- [Azure DevOps Plugin](https://github.com/backstage/backstage/blob/master/plugins/azure-devops/README.md)
 
 ## Getting Started
 
