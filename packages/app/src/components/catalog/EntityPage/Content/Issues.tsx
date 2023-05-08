@@ -16,20 +16,9 @@ const ifIssues: ((e: Entity) => boolean)[] = [
 
 export const isIssuesAvailable = (e: Entity) => ifIssues.some(f => f(e));
 
-export const areAllIssuesAvailable = (e: Entity) => ifIssues.every(f => f(e));
-
 export const issuesContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
     <EntitySwitch>
-      <EntitySwitch.Case if={areAllIssuesAvailable}>
-        <Grid item xs={12}>
-          <GithubIssuesCard />
-        </Grid>
-        <Grid item xs={12}>
-          <EntityGitlabIssuesTable />
-        </Grid>
-      </EntitySwitch.Case>
-
       <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
         <Grid item xs={12}>
           <GithubIssuesCard />
