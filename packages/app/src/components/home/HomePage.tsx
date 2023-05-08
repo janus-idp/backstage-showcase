@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Content,
   Header,
@@ -6,20 +5,21 @@ import {
   Link,
   Page,
 } from '@backstage/core-components';
-import MuiAlert from '@material-ui/lab/Alert';
-import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
 import {
   ComponentAccordion,
-  HomePageToolkit,
   HomePageCompanyLogo,
   HomePageStarredEntities,
+  HomePageToolkit,
   type Tool,
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
+import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+import React from 'react';
 import useSWR from 'swr';
+import { ErrorReport, fetcher } from '../../common';
 import LogoFull from '../Root/LogoFull';
-import { fetcher, ErrorReport } from '../../common';
 
 type QuickAccessLinks = {
   title: string;
@@ -136,7 +136,7 @@ export const HomePage = () => {
               className={container}
               logo={<LogoFull classes={{ svg }} />}
             />
-            <Grid item xs={12} direction="row">
+            <Grid item xs={12}>
               <HomePageSearchBar
                 classes={{ root: classes.searchBar }}
                 placeholder="Search"

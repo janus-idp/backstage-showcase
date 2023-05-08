@@ -12,10 +12,10 @@
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --coverage",
-    "clean": "backstage-cli package clean",
-    "build-image": "docker build ../.. -f Dockerfile --tag backstage"
+    "clean": "backstage-cli package clean"
   },
   "dependencies": {
+    "app": "*",
     "@backstage/backend-common": "^0.18.4",
     "@backstage/backend-tasks": "^0.5.1",
     "@backstage/catalog-client": "^1.4.1",
@@ -45,7 +45,6 @@
     "@janus-idp/backstage-plugin-ocm-backend": "^2.1.1",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.4",
     "@roadiehq/scaffolder-backend-argocd": "^1.1.7",
-    "app": "link:../app",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",

@@ -147,6 +147,13 @@ catalog:
         orgUrl: ${GITHUB_ORG_URL}
 
 kubernetes:
+  customResources:
+    - group: 'tekton.dev'
+      apiVersion: 'v1beta1'
+      plural: 'pipelineruns'
+    - group: 'tekton.dev'
+      apiVersion: 'v1beta1'
+      plural: 'taskruns'
   serviceLocatorMethod:
     type: 'multiTenant'
   clusterLocatorMethods:

@@ -20,6 +20,9 @@ on:
       - 'docs/**'
       - 'showcase-docs/**'
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
@@ -52,7 +55,7 @@ jobs:
 
       - name: Lint
         run: |
-          yarn tsc:full
+          yarn tsc
           yarn prettier:check
 
       - name: CI
