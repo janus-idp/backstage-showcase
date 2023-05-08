@@ -19,6 +19,7 @@ metadata:
     backstage.io/kubernetes-id: "janus-idp"
     github.com/project-slug: janus-idp/backstage-showcase
     quay.io/repository-slug: janus-idp/backstage-showcase
+    janus-idp.io/tekton-enabled: 'true'
     backstage.io/techdocs-ref: url:https://github.com/janus-idp/backstage-showcase
     backstage.io/kubernetes-namespace: janus-idp
     sonarqube.org/project-key: janus-idp_backstage-showcase
