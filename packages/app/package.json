@@ -50,7 +50,7 @@
     "@janus-idp/backstage-plugin-ocm": "^2.1.0",
     "@janus-idp/backstage-plugin-quay": "^1.2.1",
     "@janus-idp/backstage-plugin-tekton": "^1.4.1",
-    "@janus-idp/backstage-plugin-topology": "^1.5.1",
+    "@janus-idp/backstage-plugin-topology": "^1.5.3",
     "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.61",
