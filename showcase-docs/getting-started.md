@@ -102,8 +102,8 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
        providers:
          github:
            development:
-             clientId: ${AUTH_GITHUB_CLIENT_ID}
-             clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+             clientId: ${GITHUB_APP_CLIENT_ID}
+             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
 
      catalog:
        providers:
