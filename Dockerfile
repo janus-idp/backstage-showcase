@@ -1,5 +1,20 @@
+#
+# Copyright (c) 2023 Red Hat, Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 # Stage 1 - Install dependencies
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS deps
+#@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS deps
 USER 0
 
 # Env vars
@@ -7,8 +22,8 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
 COPY ./package.json ./yarn.lock ./
 COPY ./packages ./packages
-COPY .yarn ./.yarn
-COPY .yarnrc.yml ./
+COPY ./.yarn ./.yarn
+COPY ./.yarnrc.yml ./
 
 # Remove all files except package.json
 RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
@@ -17,7 +32,8 @@ ENV IS_CONTAINER="TRUE"
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 2 - Build packages
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS build
+#@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS build
 USER 0
 
 # Env vars
@@ -35,7 +51,8 @@ RUN $YARN tsc
 RUN $YARN --cwd packages/backend build
 
 # Stage 3 - Build the actual backend image and install production dependencies
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
+#@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
 # Env vars
