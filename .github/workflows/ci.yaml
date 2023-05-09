@@ -43,20 +43,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout Node 18
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           yarn install --frozen-lockfile
 
       - name: Lint
         run: |
-          yarn tsc
           yarn prettier:check
+          yarn tsc
 
       - name: CI
         run: yarn ci
