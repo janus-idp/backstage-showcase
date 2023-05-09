@@ -19,7 +19,7 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "new": "backstage-cli new --scope internal",
-    "postinstall": "[ \"$IS_CONTAINER\" != \"TRUE\" ] && husky install || echo \"Running in container\""
+    "prepare": "[ \"$IS_CONTAINER\" != \"TRUE\" ] && husky install || echo \"Running in container\""
   },
   "workspaces": {
     "packages": [
