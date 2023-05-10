@@ -9,24 +9,25 @@ import {
 } from '@backstage/plugin-catalog';
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
-import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import { defaultEntityPage } from './DefaultEntity';
 import {
-  overviewContent,
-  isCIsAvailable,
-  ciContent,
   cdContent,
+  ciContent,
   dependenciesContent,
+  imageRegistry,
+  isCIsAvailable,
+  isImageRegistriesAvailable,
   isIssuesAvailable,
-  issuesContent,
   isPrsAvailable,
+  issuesContent,
+  overviewContent,
   prContent,
   securityContent,
   techdocsContent,
 } from '../Content';
+import { defaultEntityPage } from './DefaultEntity';
 
 const componentEntityPage = (componentType: 'service' | 'website') => (
   <EntityLayout>
@@ -68,11 +69,11 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
     </EntityLayout.Route>
 
     <EntityLayout.Route
-      if={isQuayAvailable}
+      if={isImageRegistriesAvailable}
       path="/image-registry"
       title="Image Registry"
     >
-      <QuayPage />
+      {imageRegistry}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/security-insights" title="Security Insights">
