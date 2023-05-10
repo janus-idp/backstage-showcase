@@ -30,9 +30,10 @@ Our current list of plugins within the showcase app include:
 - [Keycloak plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/keycloak-backend)
 - [SonarQube plugin](https://roadie.io/backstage/plugins/sonarqube/)
 - [Tekton plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/tekton)
-- [Azure DevOps Plugin](https://github.com/backstage/backstage/blob/master/plugins/azure-devops/README.md)
-- [Jenkins Plugin](https://github.com/backstage/backstage/tree/master/plugins/jenkins)
-- [GitLab Plugin](https://github.com/immobiliare/backstage-plugin-gitlab)
+- [Azure DevOps plugin](https://github.com/backstage/backstage/blob/master/plugins/azure-devops/README.md)
+- [Jenkins plugin](https://github.com/backstage/backstage/tree/master/plugins/jenkins)
+- [GitLab plugin](https://github.com/immobiliare/backstage-plugin-gitlab)
+- [Jira plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira)
 
 ## Getting Started
 

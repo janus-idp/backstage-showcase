@@ -7,11 +7,16 @@ import {
 } from '@immobiliarelabs/backstage-plugin-gitlab';
 import { Grid } from '@material-ui/core';
 import { isGithubPullRequestsAvailable } from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityJiraOverviewCard,
+  isJiraAvailable,
+} from '@roadiehq/backstage-plugin-jira';
 import React from 'react';
 
 const ifIssues: ((e: Entity) => boolean)[] = [
   isGithubPullRequestsAvailable,
   isGitlabAvailable,
+  isJiraAvailable,
 ];
 
 export const isIssuesAvailable = (e: Entity) => ifIssues.some(f => f(e));
@@ -19,17 +24,23 @@ export const isIssuesAvailable = (e: Entity) => ifIssues.some(f => f(e));
 export const issuesContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
     <EntitySwitch>
-      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
-        <Grid item xs={12}>
-          <GithubIssuesCard />
-        </Grid>
-      </EntitySwitch.Case>
-
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
           <EntityGitlabIssuesTable />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
+
+    <EntitySwitch.Case if={isJiraAvailable}>
+      <Grid item xs={12}>
+        <EntityJiraOverviewCard />
+      </Grid>
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+      <Grid item xs={12}>
+        <GithubIssuesCard />
+      </Grid>
+    </EntitySwitch.Case>
   </Grid>
 );

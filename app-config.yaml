@@ -18,9 +18,18 @@ backend:
     # Uncomment the following host directive to bind to specific interfaces
     # host: 127.0.0.1
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+    connect-src:
+      - "'self'"
+      - 'http:'
+      - 'https:'
+    img-src:
+      # "'self'" and 'data' are from the backstage default but must be set since img-src is overwritten
+      - "'self'"
+      - 'data:'
+      # Allow your Jira instance for @roadiehq/backstage-plugin-jira
+      - ${JIRA_URL}
   cors:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
@@ -80,6 +89,15 @@ proxy:
     target: ${JENKINS_URL}
     headers:
       Authorization: ${JENKINS_TOKEN}
+
+  '/jira/api':
+    target: ${JIRA_URL}
+    headers:
+      Authorization: ${JIRA_TOKEN}
+      Accept: 'application/json'
+      Content-Type: 'application/json'
+      X-Atlassian-Token: 'no-check'
+      User-Agent: ${JIRA_USER_AGENT}
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs

@@ -26,12 +26,6 @@ export const isPrsAvailable = (e: Entity) => ifPrs.some(f => f(e));
 export const prContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
     <EntitySwitch>
-      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
-        <Grid item xs={12}>
-          <EntityGithubPullRequestsContent />
-        </Grid>
-      </EntitySwitch.Case>
-
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
           <EntityGitlabMergeRequestsTable />
@@ -41,6 +35,12 @@ export const prContent = (
       <EntitySwitch.Case if={isAzureDevOpsAvailable}>
         <Grid item xs={12}>
           <EntityAzurePullRequestsContent defaultLimit={25} />
+        </Grid>
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+        <Grid item xs={12}>
+          <EntityGithubPullRequestsContent />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

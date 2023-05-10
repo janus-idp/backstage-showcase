@@ -39,6 +39,29 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      azureDevOps: ${AZURE_ENABLED}
      jenkins: ${JENKINS_ENABLED}
 
+   backend:
+     baseUrl: http://localhost:7007
+     listen:
+       port: 7007
+     csp:
+       connect-src:
+         - "'self'"
+         - 'http:'
+         - 'https:'
+       img-src:
+         - "'self'"
+         - 'data:'
+         - ${JIRA_URL}
+     cors:
+       origin: <http://localhost:3000>
+       methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+       credentials: true
+     database:
+       client: better-sqlite3
+       connection: ':memory:'
+     cache:
+       store: memory
+
    proxy:
      '/sonarqube':
        target: ${SONARQUBE_URL}/api
@@ -50,6 +73,15 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
        headers:
          Authorization: ${JENKINS_TOKEN}
 
+     '/jira/api':
+       target: ${JIRA_URL}
+       headers:
+         Authorization: ${JIRA_TOKEN}
+         Accept: 'application/json'
+         Content-Type: 'application/json'
+         X-Atlassian-Token: 'no-check'
+         User-Agent: ${JIRA_USER_AGENT}
+
    sonarqube:
      baseUrl: ${SONARQUBE_URL}
      apiKey: ${SONARQUBE_TOKEN}
@@ -57,8 +89,6 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
    integrations:
      github:
        - host: github.com
-         # This is a GitHub App. You can find out how to generate this file, and more information
-         # about setting up the GitHub integration here: <https://backstage.io/docs/integrations/github/github-apps>
          apps:
            - $include: github-app-backstage-showcase-credentials.local.yaml
      gitlab:
@@ -120,7 +150,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
              name: ${OCM_HUB_NAME}
              url: ${OCM_HUB_URL}
              serviceAccountToken: ${moc_infra_token}
-             owner: # Existing catalog entity (User or Group) as the owner of the discovered clusters
+             owner: example-owner
 
          githubOrg:
            default:
@@ -195,6 +225,13 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - This [URL](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&tabs=Windows) can be used to quickly create an Azure personal access token
      - `${AZURE_TOKEN}`: personal access token
      - `${AZURE_ORG}`: Azure DevOps Services (cloud) Organization name or the Azure DevOps Server
+
+   - Setup the Jira plugin
+
+     - This [URL](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira#how-to-use-jira-plugin-in-backstage) is explains how to use the Jira plugin
+     - `${JIRA_URL}`: URL for the Jira instance
+     - `${JIRA_TOKEN}`: API token
+     - `${JIRA_USER_AGENT}`: User-Agent (UA) string
 
    - Setup the ArgoCD instances(s)
 
