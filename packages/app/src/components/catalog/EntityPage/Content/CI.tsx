@@ -31,12 +31,6 @@ export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
 export const ciContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
     <EntitySwitch>
-      <EntitySwitch.Case if={isGithubActionsAvailable}>
-        <Grid item xs={12}>
-          <EntityGithubActionsContent />
-        </Grid>
-      </EntitySwitch.Case>
-
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
           <EntityGitlabMergeRequestsTable />
@@ -52,6 +46,12 @@ export const ciContent = (
       <EntitySwitch.Case if={isAzureDevOpsAvailable}>
         <Grid item xs={12}>
           <EntityAzurePipelinesContent defaultLimit={25} />
+        </Grid>
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isGithubActionsAvailable}>
+        <Grid item xs={12}>
+          <EntityGithubActionsContent />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

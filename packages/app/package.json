@@ -57,6 +57,7 @@
     "@roadiehq/backstage-plugin-argo-cd": "^2.2.11",
     "@roadiehq/backstage-plugin-github-insights": "^2.3.9",
     "@roadiehq/backstage-plugin-github-pull-requests": "^2.5.7",
+    "@roadiehq/backstage-plugin-jira": "^2.4.4",
     "@roadiehq/backstage-plugin-security-insights": "^2.3.0",
     "history": "^5.0.0",
     "react": "^17.0.2",
