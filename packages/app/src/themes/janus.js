@@ -1,5 +1,4 @@
 import {
-  BackstageTheme,
   createTheme,
   genPageTheme,
   lightTheme,
@@ -46,8 +45,7 @@ const baseTheme = createTheme({
   },
 });
 
-// @ts-ignore
-export const janusTheme: BackstageTheme = {
+export const janusTheme = {
   ...baseTheme,
   overrides: {
     ...baseTheme.overrides,
