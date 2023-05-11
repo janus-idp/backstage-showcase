@@ -99,6 +99,13 @@ proxy:
       X-Atlassian-Token: 'no-check'
       User-Agent: ${JIRA_USER_AGENT}
 
+    '/jfrog-artifactory/api':
+      target: ${ARTIFACTORY_URL}
+      headers:
+        Authorization: Bearer ${ARTIFACTORY_TOKEN}
+      # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
+      secure: ${ARTIFACTORY_SECURE}
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.

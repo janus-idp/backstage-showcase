@@ -82,6 +82,12 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
          X-Atlassian-Token: 'no-check'
          User-Agent: ${JIRA_USER_AGENT}
 
+     '/jfrog-artifactory/api':
+       target: ${ARTIFACTORY_URL}
+       headers:
+         Authorization: Bearer ${ARTIFACTORY_TOKEN}
+       secure: ${ARTIFACTORY_SECURE}
+
    sonarqube:
      baseUrl: ${SONARQUBE_URL}
      apiKey: ${SONARQUBE_TOKEN}
@@ -228,10 +234,17 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the Jira plugin
 
-     - This [URL](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira#how-to-use-jira-plugin-in-backstage) is explains how to use the Jira plugin
+     - This [URL](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira#how-to-use-jira-plugin-in-backstage) explains how to use the Jira plugin
      - `${JIRA_URL}`: URL for the Jira instance
      - `${JIRA_TOKEN}`: API token
-     - `${JIRA_USER_AGENT}`: User-Agent (UA) string
+     - `${JIRA_USER_AGENT}`: User-Agent (UA) string (Any dummy string without whitespace works because Jira APIs reject browser origin requests)
+
+   - Setup the Jfrog Artifactory plugin
+
+     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/jfrog-artifactory#getting-started) explains how to use the Jfrog Artifactory plugin
+     - `${ARTIFACTORY_URL}`: URL for the Jfrog Artifactory instance
+     - `${ARTIFACTORY_TOKEN}`: API token
+     - `${ARTIFACTORY_SECURE}`: Change to `false` in case of using self hosted artifactory instance with a self-signed certificate
 
    - Setup the ArgoCD instances(s)
 

@@ -4817,6 +4817,21 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
+"@janus-idp/backstage-plugin-jfrog-artifactory@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-jfrog-artifactory/-/backstage-plugin-jfrog-artifactory-1.0.2.tgz#ace5ce0e6e0e7c4bc2ce303500dd6655ac806ac2"
+  integrity sha512-EmuQknLQuhcb27UA3DUf8wv5dukP5OwDu0lY5+qtBfAXyMo2//Ml1AXHuSjVW5ApcUUcAV37YlAETJU74oanKg==
+  dependencies:
+    "@backstage/catalog-model" "^1.3.0"
+    "@backstage/core-components" "^0.13.0"
+    "@backstage/core-plugin-api" "^1.5.1"
+    "@backstage/plugin-catalog-react" "^1.5.0"
+    "@backstage/theme" "^0.2.19"
+    "@material-ui/core" "^4.9.13"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "^4.0.0-alpha.45"
+    react-use "^17.2.4"
+
 "@janus-idp/backstage-plugin-keycloak-backend@^1.1.0":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-keycloak-backend/-/backstage-plugin-keycloak-backend-1.3.1.tgz#9ad268fe55076a189c405ca955ec5cc4c86d992c"
