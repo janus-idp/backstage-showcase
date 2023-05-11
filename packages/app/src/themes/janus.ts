@@ -6,7 +6,20 @@ import {
   shapes,
 } from '@backstage/theme';
 
+const redhatFont = {
+  fontFamily: 'Red Hat Font',
+  fontStyle: 'normal',
+  fontDisplay: 'swap',
+  fontWeight: 400,
+  src: `
+    url(/fonts/RedHatText-Regular.woff2) format('woff2'),
+    url(/fonts/RedHatText-Regular.otf) format('opentype'),
+    url(/fonts/RedHatText-Regular.ttf) format('truetype')
+  `,
+};
+
 const baseTheme = createTheme({
+  fontFamily: '"Red Hat Font", Arial',
   palette: {
     ...lightTheme.palette,
     navigation: {
@@ -33,9 +46,15 @@ const baseTheme = createTheme({
   },
 });
 
+// @ts-ignore
 export const janusTheme: BackstageTheme = {
   ...baseTheme,
   overrides: {
     ...baseTheme.overrides,
+    MuiCssBaseline: {
+      '@global': {
+        '@font-face': [redhatFont],
+      },
+    },
   },
 };
