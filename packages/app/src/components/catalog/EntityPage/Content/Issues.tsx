@@ -37,7 +37,7 @@ export const issuesContent = (
       </Grid>
     </EntitySwitch.Case>
 
-    <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+    <EntitySwitch.Case if={e => !isGitlabAvailable(e) && !isJiraAvailable(e)}>
       <Grid item xs={12}>
         <GithubIssuesCard />
       </Grid>
