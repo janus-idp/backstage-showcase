@@ -84,7 +84,6 @@ RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy any other files that we need at runtime
 COPY ./app-config.yaml ./app-config.production.yaml ./
-COPY ./github-app-backstage-showcase-credentials.yaml ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

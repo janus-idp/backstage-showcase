@@ -115,7 +115,8 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
    - Setup the Segment plugin
 
      - `${SEGMENT_WRITE_KEY}`: Segment write key
-     - `${SEGMENT_MASK_IP}`: Anonymize the IP Address
+     - `${SEGMENT_MASK_IP}`: prevents IP addresses to be sent if true
+     - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
 
 3. Run `yarn install` to install the dependencies
 

@@ -5,7 +5,8 @@ app:
   analytics:
     segment:
       writeKey: ${SEGMENT_WRITE_KEY}
-      maskIP: ${SEGMENT_MASK_IP} # prevents IP addresses to be sent if true
+      maskIP: ${SEGMENT_MASK_IP} # prevents IP addresses from being sent if true
+      testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
 organization:
   name: Janus IDP
