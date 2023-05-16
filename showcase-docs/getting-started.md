@@ -2,204 +2,17 @@
 
 There are several different methods for running the Backstage Showcase app today. We currently have support for running the application locally, using a helm chart to deploy to a cluster, and manifests for deployment using ArgoCD.
 
-## Running Locally
+## Running Locally with a basic configuration
 
 The easiest and fastest method for getting started: Backstage Showcase app, running it locally only requires a few simple steps.
 
-1. Create an app-config.local.yaml file that will be used for storing the environment variables that the showcase app needs
+1. Copy `app-config.basic.yaml` and rename it as `app-config.local.yaml`.
 
-2. Copy the below into the app-config.local.yaml file
+## Running Locally with the Optional Plugins
 
-   ***
+1. Create an `app-config.local.yaml` file that will be used for storing the environment variables that the showcase app needs
 
-   **NOTE**
-
-   We currently utilize several plugins that require environment variables to be setup prior to running the showcase app
-
-   All of these variables can be changed to "temp" if you only need the app up to test new functionality
-
-   Otherwise to test a specific plugin or the entire app, one will need to setup and get each of these variables
-
-   ***
-
-   ```yaml
-   # This is a GitHub App. You can find out how to generate this file, and more information
-   # about setting up the GitHub integration here: <https://backstage.io/docs/integrations/github/github-apps>
-
-   enabled:
-     kubernetes: ${K8S_ENABLED}
-     techdocs: ${TECHDOCS_ENABLED}
-     argocd: ${ARGOCD_ENABLED}
-     sonarqube: ${SONARQUBE_ENABLED}
-     keycloak: ${KEYCLOAK_ENABLED}
-     ocm: ${OCM_ENABLED}
-     github: ${GITHUB_ENABLED}
-     githubOrg: ${GITHUB_ORG_ENABLED}
-     gitlab: ${GITLAB_ENABLED}
-     azureDevOps: ${AZURE_ENABLED}
-     jenkins: ${JENKINS_ENABLED}
-
-   backend:
-     baseUrl: http://localhost:7007
-     listen:
-       port: 7007
-     csp:
-       connect-src:
-         - "'self'"
-         - 'http:'
-         - 'https:'
-       img-src:
-         - "'self'"
-         - 'data:'
-         - ${JIRA_URL}
-     cors:
-       origin: <http://localhost:3000>
-       methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-       credentials: true
-     database:
-       client: better-sqlite3
-       connection: ':memory:'
-     cache:
-       store: memory
-
-   proxy:
-     '/sonarqube':
-       target: ${SONARQUBE_URL}/api
-       allowedMethods: ['GET']
-       auth: ${SONARQUBE_TOKEN}
-
-     '/jenkins/api':
-       target: ${JENKINS_URL}
-       headers:
-         Authorization: ${JENKINS_TOKEN}
-
-     '/jira/api':
-       target: ${JIRA_URL}
-       headers:
-         Authorization: ${JIRA_TOKEN}
-         Accept: 'application/json'
-         Content-Type: 'application/json'
-         X-Atlassian-Token: 'no-check'
-         User-Agent: ${JIRA_USER_AGENT}
-
-     '/jfrog-artifactory/api':
-       target: ${ARTIFACTORY_URL}
-       headers:
-         Authorization: Bearer ${ARTIFACTORY_TOKEN}
-       secure: ${ARTIFACTORY_SECURE}
-
-   sonarqube:
-     baseUrl: ${SONARQUBE_URL}
-     apiKey: ${SONARQUBE_TOKEN}
-
-   integrations:
-     github:
-       - host: github.com
-         apps:
-           - $include: github-app-backstage-showcase-credentials.local.yaml
-     gitlab:
-       - host: gitlab.com
-         token: ${GITLAB_TOKEN}
-
-     azure:
-       - host: dev.azure.com
-         token: ${AZURE_TOKEN}
-
-   azureDevOps:
-     host: dev.azure.com
-     token: ${AZURE_TOKEN}
-     organization: ${AZURE_ORG}
-
-   techdocs:
-     builder: ${TECHDOCS_BUILDER_TYPE}
-     generator:
-       runIn: ${TECHDOCS_GENERATOR_TYPE}
-     publisher:
-       type: ${TECHDOCS_PUBLISHER_TYPE}
-       awsS3:
-         bucketName: ${BUCKET_NAME}
-         region: ${BUCKET_REGION_VAULT}
-         endpoint: ${BUCKET_URL}
-         s3ForcePathStyle: true
-         credentials:
-           accessKeyId: ${AWS_ACCESS_KEY_ID}
-           secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
-
-   auth:
-     environment: development
-     providers:
-       github:
-         - host: github.com
-           apps:
-             - $include: github-app-backstage-showcase-credentials.local.yaml
-
-     auth:
-       environment: development
-       providers:
-         github:
-           development:
-             clientId: ${GITHUB_APP_CLIENT_ID}
-             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
-
-     catalog:
-       providers:
-         keycloakOrg:
-           default:
-             baseUrl: ${KEYCLOAK_BASE_URL}
-             loginRealm: ${KEYCLOAK_LOGIN_REALM}
-             realm: ${KEYCLOAK_REALM}
-             clientId: ${KEYCLOAK_CLIENT_ID}
-             clientSecret: ${KEYCLOAK_CLIENT_SECRET}
-
-         ocm:
-           hub:
-             name: ${OCM_HUB_NAME}
-             url: ${OCM_HUB_URL}
-             serviceAccountToken: ${moc_infra_token}
-             owner: example-owner
-
-         githubOrg:
-           default:
-             id: production
-             orgUrl: ${GITHUB_ORG_URL}
-
-     kubernetes:
-       customResources:
-         - group: 'tekton.dev'
-           apiVersion: 'v1beta1'
-           plural: 'pipelineruns'
-         - group: 'tekton.dev'
-           apiVersion: 'v1beta1'
-           plural: 'taskruns'
-       serviceLocatorMethod:
-         type: 'multiTenant'
-       clusterLocatorMethods:
-         - type: 'config'
-           clusters:
-             - name: ${K8S_CLUSTER_NAME}
-               url: ${K8S_CLUSTER_URL}
-               authProvider: 'serviceAccount'
-               skipTLSVerify: true
-               serviceAccountToken: ${K8S_CLUSTER_TOKEN}
-
-     argocd:
-       username: ${ARGOCD_USERNAME}
-       password: ${ARGOCD_PASSWORD}
-       appLocatorMethods:
-         - type: 'config'
-           instances:
-             - name: argoInstance1
-               url: ${ARGOCD_INSTANCE1_URL}
-               token: ${ARGOCD_AUTH_TOKEN}
-             - name: argoInstance2
-               url: ${ARGOCD_INSTANCE2_URL}
-               token: ${ARGOCD_AUTH_TOKEN2}
-
-     jenkins:
-       baseUrl: ${JENKINS_URL}
-       username: ${JENKINS_USERNAME}
-       apiKey: ${JENKINS_TOKEN}
-   ```
+2. Copy the required code snippet from `app-config.yaml` into `app-config.local.yaml`. Note: Each plugin has a `# Plugin: <PLUGIN_NAME>` comment above the required code snippet(s).
 
    - Enable plugins (All plugins have a default of `false`)
 
@@ -294,9 +107,15 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${AWS_SECRET_ACCESS_KEY}` the AWS credentials Access Key
 
    - Setup a Jenkins instance and then pass the following environment variables to backstage:
+
      - `${JENKINS_URL}` with the URL where your Jenkins instance can be accessed
      - `${JENKINS_USERNAME}` with the name of the user to be accessed through the API
      - `${JENKINS_TOKEN}` with the API token to be used for the given user
+
+   - Setup the Segment plugin
+
+     - `${SEGMENT_WRITE_KEY}`: Segment write key
+     - `${SEGMENT_MASK_IP}`: Anonymize the IP Address
 
 3. Run `yarn install` to install the dependencies
 
