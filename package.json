@@ -6,7 +6,7 @@
     "node": "16 || 18"
   },
   "scripts": {
-    "preinstall": "[ \"$IS_CONTAINER\" != \"TRUE\" ] && npx only-allow yarn || echo \"Running in container\"",
+    "preinstall": "npx only-allow yarn",
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "build": "turbo run build",
@@ -19,7 +19,7 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "new": "backstage-cli new --scope internal",
-    "prepare": "[ \"$IS_CONTAINER\" != \"TRUE\" ] && husky install || echo \"Running in container\""
+    "prepare": "husky install"
   },
   "workspaces": {
     "packages": [
@@ -37,8 +37,8 @@
     "typescript": "^5.0.4"
   },
   "resolutions": {
-    "@types/react": "^17",
-    "@types/react-dom": "^17",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.2",
     "@backstage/plugin-home": "^0.5.1",
     "@backstage/plugin-kubernetes": "^0.8.0",
     "@backstage/backend-tasks": "^0.5.1",

@@ -38,6 +38,8 @@ jobs:
       TECHDOCS_BUILDER_TYPE: external
       TECHDOCS_GENERATOR_TYPE: local
       TECHDOCS_PUBLISHER_TYPE: awsS3
+      SEGMENT_WRITE_KEY: temp
+      SEGMENT_TEST_MODE: true
 
     steps:
       - name: Checkout

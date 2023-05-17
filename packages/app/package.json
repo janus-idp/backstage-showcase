@@ -47,6 +47,7 @@
     "@backstage/plugin-user-settings": "^0.7.2",
     "@backstage/theme": "^0.2.19",
     "@immobiliarelabs/backstage-plugin-gitlab": "^5.0.1",
+    "@janus-idp/backstage-plugin-analytics-provider-segment": "^1.0.1",
     "@janus-idp/backstage-plugin-jfrog-artifactory": "^1.0.2",
     "@janus-idp/backstage-plugin-ocm": "^2.1.0",
     "@janus-idp/backstage-plugin-quay": "^1.2.1",
@@ -74,7 +75,8 @@
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^14.0.0",
     "@types/node": "^16.11.26",
-    "@types/react-dom": "*"
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.2"
   },
   "browserslist": {
     "production": [

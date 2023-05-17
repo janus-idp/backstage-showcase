@@ -1,6 +1,12 @@
 app:
   title: Janus IDP Backstage Showcase
   baseUrl: http://localhost:3000
+  # Plugin: Segment
+  analytics:
+    segment:
+      writeKey: ${SEGMENT_WRITE_KEY}
+      maskIP: ${SEGMENT_MASK_IP} # prevents IP addresses from being sent if true
+      testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
 organization:
   name: Janus IDP
@@ -24,6 +30,7 @@ backend:
       - "'self'"
       - 'http:'
       - 'https:'
+    # Plugin: Jira
     img-src:
       # "'self'" and 'data' are from the backstage default but must be set since img-src is overwritten
       - "'self'"
@@ -44,20 +51,32 @@ backend:
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
+  # Plugin: GitHub
   github:
     - host: github.com
       # This is a GitHub App. You can find out how to generate this file, and more information
       # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
       apps:
-        - $include: github-app-backstage-showcase-credentials.yaml
+        # - $include: github-app-backstage-showcase-credentials.yaml
+        - appId: ${GITHUB_APP_APP_ID}
+          webhookUrl: ${GITHUB_APP_WEBHOOK_URL}
+          clientId: ${GITHUB_APP_CLIENT_ID}
+          clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+          webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
+          privateKey: |
+            ${GITHUB_APP_PRIVATE_KEY}
+
+  # Plugin: GitLab
   gitlab:
     - host: gitlab.com
       token: ${GITLAB_TOKEN}
 
+  # Plugin: Azure DevOps
   azure:
     - host: dev.azure.com
       token: ${AZURE_TOKEN}
 
+# Plugin: Azure DevOps
 azureDevOps:
   host: dev.azure.com
   token: ${AZURE_TOKEN}
@@ -69,6 +88,8 @@ proxy:
   # '/test':
   #   target: 'https://example.com'
   #   changeOrigin: true
+
+  # Plugin: Quay
   '/quay/api':
     target: https://quay.io/
     headers:
@@ -78,6 +99,7 @@ proxy:
     changeOrigin: true
     secure: true
 
+  # Plugin: SonarQube
   '/sonarqube':
     # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
     # target: https://sonarcloud.io/api
@@ -85,11 +107,13 @@ proxy:
     allowedMethods: ['GET']
     auth: ${SONARQUBE_TOKEN}
 
+  # Plugin: Jenkins
   '/jenkins/api':
     target: ${JENKINS_URL}
     headers:
       Authorization: ${JENKINS_TOKEN}
 
+  # Plugin: Jira
   '/jira/api':
     target: ${JIRA_URL}
     headers:
@@ -99,17 +123,20 @@ proxy:
       X-Atlassian-Token: 'no-check'
       User-Agent: ${JIRA_USER_AGENT}
 
-    '/jfrog-artifactory/api':
-      target: ${ARTIFACTORY_URL}
-      headers:
-        Authorization: Bearer ${ARTIFACTORY_TOKEN}
-      # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
-      secure: ${ARTIFACTORY_SECURE}
+  # Plugin: Jfrog Artifactory
+  '/jfrog-artifactory/api':
+    target: ${ARTIFACTORY_URL}
+    headers:
+      Authorization: Bearer ${ARTIFACTORY_TOKEN}
+    # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
+    secure: ${ARTIFACTORY_SECURE}
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
+
+# Plugin: TechDocs
 techdocs:
   builder: ${TECHDOCS_BUILDER_TYPE}
   generator:
@@ -129,6 +156,7 @@ auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   environment: development
   providers:
+    # Plugin: GitHub
     github:
       development:
         clientId: ${GITHUB_APP_CLIENT_ID}
@@ -151,6 +179,7 @@ catalog:
       target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
 
   providers:
+    # Plugin: Keycloak
     keycloakOrg:
       default:
         baseUrl: ${KEYCLOAK_BASE_URL}
@@ -159,6 +188,7 @@ catalog:
         clientId: ${KEYCLOAK_CLIENT_ID}
         clientSecret: ${KEYCLOAK_CLIENT_SECRET}
 
+    # Plugin: OCM
     ocm:
       operate-first:
         name: ${OCM_HUB_NAME}
@@ -166,11 +196,13 @@ catalog:
         serviceAccountToken: ${moc_infra_token}
         owner: janus-authors
 
+    # Plugin: GitHub Discovery & Org Data
     githubOrg:
       default:
         id: production
         orgUrl: ${GITHUB_ORG_URL}
 
+# Plugin: Kubernetes, OCM
 kubernetes:
   customResources:
     - group: 'tekton.dev'
@@ -190,6 +222,7 @@ kubernetes:
           skipTLSVerify: true
           serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
+# Plugin: ArgoCD
 argocd:
   username: ${ARGOCD_USERNAME}
   password: ${ARGOCD_PASSWORD}
@@ -203,10 +236,12 @@ argocd:
           url: ${ARGOCD_INSTANCE2_URL}
           token: ${ARGOCD_AUTH_TOKEN2}
 
+# Plugin: SonarQube
 sonarqube:
   baseUrl: ${SONARQUBE_URL}
   apiKey: ${SONARQUBE_TOKEN}
 
+# Plugin: Jenkins
 jenkins:
   instances:
   - name: default
