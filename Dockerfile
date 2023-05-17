@@ -13,8 +13,8 @@
 # limitations under the License.
 #
 # Stage 1 - Install dependencies
-#@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS deps
+#@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18:1 AS deps
 USER 0
 
 # Env vars
@@ -32,8 +32,8 @@ ENV IS_CONTAINER="TRUE"
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 2 - Build packages
-#@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS build
+#@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18:1 AS build
 USER 0
 
 # Env vars
@@ -41,6 +41,8 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV TECHDOCS_BUILDER_TYPE=external
 ENV TECHDOCS_GENERATOR_TYPE=local
 ENV TECHDOCS_PUBLISHER_TYPE=awsS3
+ENV SEGMENT_WRITE_KEY=temp
+ENV SEGMENT_TEST_MODE=true
 
 COPY . .
 COPY --from=deps /opt/app-root/src .
@@ -60,6 +62,8 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV TECHDOCS_BUILDER_TYPE=external
 ENV TECHDOCS_GENERATOR_TYPE=local
 ENV TECHDOCS_PUBLISHER_TYPE=awsS3
+ENV SEGMENT_WRITE_KEY=temp
+ENV SEGMENT_TEST_MODE=true
 
 # Install gzip for tar and clean up
 RUN microdnf install -y gzip && microdnf clean all
