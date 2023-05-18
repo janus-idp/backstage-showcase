@@ -32,6 +32,7 @@ spec:
           command:
             - node
             - packages/backend
+          args:
             - --config
             - app-config.yaml
             - --config

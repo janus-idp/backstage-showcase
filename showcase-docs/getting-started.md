@@ -6,7 +6,7 @@ There are several different methods for running the Backstage Showcase app today
 
 The easiest and fastest method for getting started: Backstage Showcase app, running it locally only requires a few simple steps.
 
-1. Copy `app-config.basic.yaml` and rename it as `app-config.local.yaml`.
+1. Copy `app-config.example.yaml` and rename it as `app-config.local.yaml`.
 
 ## Running Locally with the Optional Plugins
 
