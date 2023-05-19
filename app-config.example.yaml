@@ -43,6 +43,13 @@ integrations:
           webhookSecret: temp
           privateKey: |
             temp
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: temp
+        clientSecret: temp
 
 techdocs:
   builder: external
