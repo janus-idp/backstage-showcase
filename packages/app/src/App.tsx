@@ -1,7 +1,7 @@
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
-import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
+import { ApiExplorerPage, apiDocsPlugin } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
   CatalogIndexPage,
@@ -21,22 +21,22 @@ import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
 import {
   TechDocsIndexPage,
-  techdocsPlugin,
   TechDocsReaderPage,
+  techdocsPlugin,
 } from '@backstage/plugin-techdocs';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
+import { UnifiedThemeProvider } from '@backstage/theme';
 import { OcmPage } from '@janus-idp/backstage-plugin-ocm';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { apis } from './apis';
+import { Root } from './components/Root';
+import Logo from './components/Root/LogoIcon';
 import { entityPage } from './components/catalog/EntityPage';
 import { HomePage } from './components/home/HomePage';
 import { LearningPaths } from './components/learningPaths/LearningPathsPage';
-import { Root } from './components/Root';
-import Logo from './components/Root/LogoIcon';
 import { SearchPage } from './components/search/SearchPage';
 import { janusTheme } from './themes/janus';
 
@@ -63,9 +63,7 @@ const app = createApp({
       title: 'Janus Theme',
       variant: 'light',
       Provider: ({ children }) => (
-        <ThemeProvider theme={janusTheme}>
-          <CssBaseline>{children}</CssBaseline>
-        </ThemeProvider>
+        <UnifiedThemeProvider theme={janusTheme} children={children} />
       ),
     },
   ],
