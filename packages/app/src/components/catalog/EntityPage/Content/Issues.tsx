@@ -29,18 +29,19 @@ export const issuesContent = (
           <EntityGitlabIssuesTable />
         </Grid>
       </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isJiraAvailable}>
+        <Grid item xs={12}>
+          <EntityJiraOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+
+      {/* TODO: update GithubIssuesCard if entity check once its available */}
+      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+        <Grid item xs={12}>
+          <GithubIssuesCard />
+        </Grid>
+      </EntitySwitch.Case>
     </EntitySwitch>
-
-    <EntitySwitch.Case if={isJiraAvailable}>
-      <Grid item xs={12}>
-        <EntityJiraOverviewCard />
-      </Grid>
-    </EntitySwitch.Case>
-
-    <EntitySwitch.Case if={e => !isGitlabAvailable(e) && !isJiraAvailable(e)}>
-      <Grid item xs={12}>
-        <GithubIssuesCard />
-      </Grid>
-    </EntitySwitch.Case>
   </Grid>
 );
