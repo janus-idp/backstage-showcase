@@ -5,7 +5,7 @@ import {
   isJfrogArtifactoryAvailable,
 } from '@janus-idp/backstage-plugin-jfrog-artifactory';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 const ifImageRegistries: ((e: Entity) => boolean)[] = [

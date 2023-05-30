@@ -14,8 +14,9 @@ import {
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import { css } from '@emotion/css';
+import MuiAlert from '@mui/lab/Alert';
+import { Box, CircularProgress, Grid } from '@mui/material';
 import React from 'react';
 import useSWR from 'swr';
 import { ErrorReport, fetcher } from '../../common';
@@ -27,15 +28,7 @@ type QuickAccessLinks = {
   links: (Tool & { iconUrl: string })[];
 };
 
-const useQuickAccessStyles = makeStyles({
-  img: {
-    height: '40px',
-    width: 'auto',
-  },
-});
-
 const QuickAccess = () => {
-  const classes = useQuickAccessStyles();
   const { data, error, isLoading } = useSWR(
     '/homepage/data.json',
     fetcher<QuickAccessLinks>,
@@ -67,7 +60,10 @@ const QuickAccess = () => {
             ...link,
             icon: (
               <img
-                className={classes.img}
+                className={css`
+                  height: 40px;
+                  width: auto;
+                `}
                 src={link.iconUrl}
                 alt={link.label}
               />
@@ -84,65 +80,58 @@ const QuickAccess = () => {
   );
 };
 
-const useStyles = makeStyles(theme => ({
-  searchBar: {
-    display: 'flex',
-    maxWidth: '60vw',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[1],
-    padding: '8px 10px',
-    borderRadius: '50px',
-    margin: 'auto',
-  },
-  imageIcon: {
-    height: '40px',
-  },
-}));
-
-const useLogoStyles = makeStyles(theme => ({
-  container: {
-    margin: theme.spacing(5, 0, 1, 0),
-  },
-  svg: {
-    width: 'auto',
-    height: 80,
-  },
-}));
-
 export const HomePage = () => {
-  const classes = useStyles();
-  const { svg, container } = useLogoStyles();
-
   return (
     <SearchContextProvider>
       <Page themeId="home">
         <Header title="Welcome back!" />
         <Content>
-          <Grid container justifyContent="center" spacing={6}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+            }}
+          >
             {window.location.origin.startsWith(
               'https://janus-idp.apps.smaug.na.operate-first.cloud',
             ) && (
-              <Grid item xs={12} md={12}>
-                <MuiAlert severity="warning">
-                  The Janus showcase URL has changed! Please, use this new link
-                  instead{' '}
-                  <Link to="https://showcase.janus-idp.io">
-                    showcase.janus-idp.io
-                  </Link>
-                </MuiAlert>
-              </Grid>
+              <MuiAlert severity="warning">
+                The Janus showcase URL has changed! Please, use this new link
+                instead{' '}
+                <Link to="https://showcase.janus-idp.io">
+                  showcase.janus-idp.io
+                </Link>
+              </MuiAlert>
             )}
             <HomePageCompanyLogo
-              className={container}
-              logo={<LogoFull classes={{ svg }} />}
+              className={css`
+                margin: 5px 0px 1px 0px;
+              `}
+              logo={
+                <LogoFull
+                  className={css`
+                    height: 80px;
+                  `}
+                />
+              }
             />
-            <Grid item xs={12}>
-              <HomePageSearchBar
-                classes={{ root: classes.searchBar }}
-                placeholder="Search"
-              />
-            </Grid>
-            <Grid container item xs={12}>
+            <HomePageSearchBar
+              classes={{
+                root: css`
+                  display: flex;
+                  max-width: 60vw;
+                  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+                    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+                    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+                  border-radius: 50px;
+                  margin: auto;
+                `,
+              }}
+              placeholder="Search"
+            />
+            <Grid container xs={12}>
               <Grid item xs={12} md={7}>
                 <QuickAccess />
               </Grid>
@@ -150,7 +139,7 @@ export const HomePage = () => {
                 <HomePageStarredEntities />
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Content>
       </Page>
     </SearchContextProvider>

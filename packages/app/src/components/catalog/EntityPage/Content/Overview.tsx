@@ -4,9 +4,13 @@ import {
   EntityLinksCard,
   EntitySwitch,
 } from '@backstage/plugin-catalog';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import React from 'react';
 
+import {
+  EntityLatestJenkinsRunCard,
+  isJenkinsAvailable,
+} from '@backstage/plugin-jenkins';
 import { EntitySonarQubeCard } from '@backstage/plugin-sonarqube';
 import { isSonarQubeAvailable } from '@backstage/plugin-sonarqube-react';
 import {
@@ -28,10 +32,6 @@ import {
 } from '@roadiehq/backstage-plugin-security-insights';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
-import {
-  isJenkinsAvailable,
-  EntityLatestJenkinsRunCard,
-} from '@backstage/plugin-jenkins';
 
 export const overviewContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
