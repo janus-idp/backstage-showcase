@@ -1,21 +1,23 @@
 import {
-  createUnifiedTheme,
+  createTheme,
   genPageTheme,
   lightTheme,
   shapes,
 } from '@backstage/theme';
 
-const redhatFont = `@font-face {
-  font-family: 'Red Hat Font';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url(/fonts/RedHatText-Regular.woff2) format('woff2'),
+const redhatFont = {
+  fontFamily: 'Red Hat Font',
+  fontStyle: 'normal',
+  fontDisplay: 'swap',
+  fontWeight: 400,
+  src: `
+    url(/fonts/RedHatText-Regular.woff2) format('woff2'),
     url(/fonts/RedHatText-Regular.otf) format('opentype'),
-    url(/fonts/RedHatText-Regular.ttf) format('truetype');
-}`;
+    url(/fonts/RedHatText-Regular.ttf) format('truetype')
+  `,
+};
 
-export const janusTheme = createUnifiedTheme({
+const baseTheme = createTheme({
   fontFamily: '"Red Hat Font", Arial',
   palette: {
     ...lightTheme.palette,
@@ -41,9 +43,16 @@ export const janusTheme = createUnifiedTheme({
     tool: genPageTheme({ colors: ['#005f60', '#73c5c5'], shape: shapes.round }),
     other: genPageTheme({ colors: ['#005f60', '#73c5c5'], shape: shapes.wave }),
   },
-  components: {
+});
+
+export const janusTheme = {
+  ...baseTheme,
+  overrides: {
+    ...baseTheme.overrides,
     MuiCssBaseline: {
-      styleOverrides: redhatFont,
+      '@global': {
+        '@font-face': [redhatFont],
+      },
     },
   },
-});
+};

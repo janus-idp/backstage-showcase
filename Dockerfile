@@ -50,7 +50,8 @@ COPY --from=deps --chown=0:0 /opt/app-root/src/.yarn ./.yarn
 COPY --from=deps --chown=0:0 /opt/app-root/src/.yarnrc.yml ./
 
 RUN git config --global --add safe.directory /opt/app-root/src
-RUN $YARN build --filter=backend
+RUN $YARN tsc
+RUN $YARN --cwd packages/backend build
 
 # Stage 3 - Build the actual backend image and install production dependencies
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)

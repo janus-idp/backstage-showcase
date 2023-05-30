@@ -6,12 +6,7 @@
       "persistent": true
     },
     "build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["//#tsc", "^build"]
-    },
-    "app#build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
+      "outputs": ["dist/**"]
     },
     "clean": {
       "cache": false
@@ -20,9 +15,7 @@
       "outputs": ["coverage/**"]
     },
     "lint": {},
-    "//#tsc": {
-      "outputs": ["dist-types/**"]
-    }
+    "test:e2e": {}
   },
   "globalDependencies": ["tsconfig.json"]
 }
