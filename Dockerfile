@@ -66,7 +66,9 @@ ENV SEGMENT_WRITE_KEY=temp
 ENV SEGMENT_TEST_MODE=true
 
 # Install gzip for tar and clean up
-RUN microdnf install -y gzip && microdnf clean all
+RUN microdnf install -y gzip python3 python3-pip && \
+    pip3 install mkdocs-techdocs-core==1.2.1 && \
+    microdnf clean all
 
 COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarn ./.yarn
 COPY --from=build --chown=1001:1001 /opt/app-root/src/.yarnrc.yml ./
