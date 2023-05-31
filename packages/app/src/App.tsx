@@ -33,7 +33,6 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { apis } from './apis';
 import { Root } from './components/Root';
-import Logo from './components/Root/LogoIcon';
 import { entityPage } from './components/catalog/EntityPage';
 import { HomePage } from './components/home/HomePage';
 import { LearningPaths } from './components/learningPaths/LearningPathsPage';
@@ -111,7 +110,7 @@ const routes = (
     </Route>
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
-    <Route path="/ocm" element={<OcmPage logo={<Logo />} />} />
+    <Route path="/ocm" element={<OcmPage />} />
     <Route path="/learning-paths" element={<LearningPaths />} />
   </FlatRoutes>
 );

@@ -26,14 +26,17 @@ export default async function createPlugin(
   const isGitlabEnabled =
     env.config.getOptionalBoolean('enabled.gitlab') || false;
 
-  const ocm = isOcmEnabled
-    ? ManagedClusterProvider.fromConfig(env.config, {
-        logger: env.logger,
-      })
-    : [];
-
   if (isOcmEnabled) {
-    builder.addEntityProvider(ocm);
+    builder.addEntityProvider(
+      ManagedClusterProvider.fromConfig(env.config, {
+        logger: env.logger,
+        schedule: env.scheduler.createScheduledTaskRunner({
+          frequency: { hours: 1 },
+          timeout: { minutes: 15 },
+          initialDelay: { seconds: 15 },
+        }),
+      }),
+    );
   }
 
   if (isKeycloakEnabled) {
@@ -99,17 +102,6 @@ export default async function createPlugin(
   builder.addProcessor(new ScaffolderEntitiesProcessor());
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
-  await Promise.all(
-    ocm.map(o =>
-      env.scheduler.scheduleTask({
-        id: `run_ocm_refresh_${o.getProviderName()}`,
-        fn: async () => {
-          await o.run();
-        },
-        frequency: { minutes: 30 },
-        timeout: { minutes: 10 },
-      }),
-    ),
-  );
+
   return router;
 }
