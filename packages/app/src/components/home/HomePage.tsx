@@ -129,6 +129,13 @@ export const HomePage = () => {
                   margin: auto;
                 `,
               }}
+              InputProps={{
+                classes: {
+                  notchedOutline: css`
+                    border-style: none;
+                  `,
+                },
+              }}
               placeholder="Search"
             />
             <Grid container xs={12}>

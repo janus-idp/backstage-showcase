@@ -37,6 +37,13 @@ export const SearchPage = () => {
         <Grid container direction="row">
           <Grid item xs={12}>
             <SearchBar
+              InputProps={{
+                classes: {
+                  notchedOutline: css`
+                    border-style: none;
+                  `,
+                },
+              }}
               className={css`
                 border-radius: 50px;
                 margin: auto;
