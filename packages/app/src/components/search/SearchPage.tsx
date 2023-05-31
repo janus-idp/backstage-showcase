@@ -25,8 +25,27 @@ import {
   useSearch,
 } from '@backstage/plugin-search-react';
 import { css } from '@emotion/css';
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()(theme => ({
+  searchBar: {
+    borderRadius: '50px',
+    margin: 'auto',
+    boxShadow: theme.shadows.at(1),
+  },
+  filters: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  filter: {
+    '& + &': {
+      marginTop: theme.spacing(2.5),
+    },
+  },
+}));
 
 export const SearchPage = () => {
+  const { classes } = useStyles();
   const { types } = useSearch();
   const catalogApi = useApi(catalogApiRef);
 
@@ -36,6 +55,7 @@ export const SearchPage = () => {
       <Content>
         <Grid container direction="row">
           <Grid item xs={12}>
+            {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
             <SearchBar
               InputProps={{
                 classes: {
@@ -44,13 +64,7 @@ export const SearchPage = () => {
                   `,
                 },
               }}
-              className={css`
-                border-radius: 50px;
-                margin: auto;
-                box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-                  0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-                  0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-              `}
+              className={classes.searchBar}
             />
           </Grid>
           <Grid item xs={3}>
@@ -70,17 +84,10 @@ export const SearchPage = () => {
                 },
               ]}
             />
-            <Paper
-              className={css`
-                margin-top: 0.75rem;
-                padding: 0.75rem;
-              `}
-            >
+            <Paper className={classes.filters}>
               {types.includes('techdocs') && (
                 <SearchFilter.Select
-                  className={css`
-                    margin-top: 0.75rem;
-                  `}
+                  className={classes.filter}
                   label="Entity"
                   name="name"
                   values={async () => {
@@ -100,17 +107,13 @@ export const SearchPage = () => {
                 />
               )}
               <SearchFilter.Select
-                className={css`
-                  margin-top: 0.75rem;
-                `}
+                className={classes.filter}
                 label="Kind"
                 name="kind"
                 values={['Component', 'Template']}
               />
               <SearchFilter.Checkbox
-                className={css`
-                  margin-top: 0.75rem;
-                `}
+                className={classes.filter}
                 label="Lifecycle"
                 name="lifecycle"
                 values={['experimental', 'production']}

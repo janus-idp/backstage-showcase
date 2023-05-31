@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
-const Svg = styled.svg`
+const Svg = styled('svg')`
   width: auto;
   height: 28px;
 `;

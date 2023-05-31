@@ -1,10 +1,27 @@
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { css } from '@emotion/css';
 import { CircularProgress, Grid, Link, Typography } from '@mui/material';
 import React from 'react';
 import useSWR from 'swr';
+import { makeStyles } from 'tss-react/mui';
 import { ErrorReport, fetcher } from '../../common';
+
+const useStyles = makeStyles()({
+  link: {
+    textDecoration: 'none',
+  },
+  infoCard: {
+    height: '100%',
+    transition: 'all 0.25s linear',
+    textAlign: 'left',
+    '&:hover': {
+      boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.8)',
+    },
+    '& svg': {
+      fontSize: '80px',
+    },
+  },
+});
 
 type Path = {
   label: string;
@@ -15,6 +32,7 @@ type Path = {
 };
 
 const LearningPathCards = () => {
+  const { classes } = useStyles();
   const { data, error, isLoading } = useSWR(
     '/learning-paths/data.json',
     fetcher<Path>,
@@ -41,25 +59,9 @@ const LearningPathCards = () => {
       <Grid item xs={12} container justifyContent="center">
         {data.map(p => (
           <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={p.label}>
-            <Link
-              href={p.url}
-              className={css`
-                text-decoration: none;
-              `}
-              target="_blank"
-            >
+            <Link href={p.url} className={classes.link} target="_blank">
               <InfoCard
-                className={css`
-                  height: 100%;
-                  transition: all 0.25s linear;
-                  text-align: left;
-                  &:hover {
-                    box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.8);
-                  }
-                  & svg {
-                    font-size: 80px;
-                  }
-                `}
+                className={classes.infoCard}
                 title={p.label}
                 subheader={
                   <>

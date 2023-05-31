@@ -14,7 +14,6 @@ import {
   Settings as SidebarSettings,
   UserSettingsSignInAvatar,
 } from '@backstage/plugin-user-settings';
-import { css } from '@emotion/css';
 import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
 import AppsIcon from '@mui/icons-material/Apps';
 import ExtensionIcon from '@mui/icons-material/Extension';
@@ -26,23 +25,26 @@ import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import StorageIcon from '@mui/icons-material/Storage';
 import React, { PropsWithChildren } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
 
+const useStyles = makeStyles()({
+  sidebarLogo: {
+    margin: '24px 0px 6px 24px',
+  },
+});
+
 const SidebarLogo = () => {
+  const { classes } = useStyles();
   const { isOpen } = useSidebarOpenState();
 
   return (
-    <Link
-      to="/"
-      underline="none"
-      aria-label="Home"
-      className={css`
-        margin: 24px 0px 6px 24px;
-      `}
-    >
-      {isOpen ? <LogoFull /> : <LogoIcon />}
-    </Link>
+    <div className={classes.sidebarLogo}>
+      <Link to="/" underline="none" aria-label="Home">
+        {isOpen ? <LogoFull /> : <LogoIcon />}
+      </Link>
+    </div>
   );
 };
 

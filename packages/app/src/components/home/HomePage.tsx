@@ -19,8 +19,30 @@ import MuiAlert from '@mui/lab/Alert';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import React from 'react';
 import useSWR from 'swr';
+import { makeStyles } from 'tss-react/mui';
 import { ErrorReport, fetcher } from '../../common';
 import LogoFull from '../Root/LogoFull';
+
+const useStyles = makeStyles()(theme => ({
+  img: {
+    height: '40px',
+    width: 'auto',
+  },
+  janusLogo: {
+    height: '80px',
+    width: 'auto',
+  },
+  janusLogoContainer: {
+    margin: theme.spacing(5, 0, 1, 0),
+  },
+  searchBar: {
+    display: 'flex',
+    maxWidth: '60vw',
+    boxShadow: theme.shadows.at(1),
+    borderRadius: '50px',
+    margin: 'auto',
+  },
+}));
 
 type QuickAccessLinks = {
   title: string;
@@ -29,6 +51,7 @@ type QuickAccessLinks = {
 };
 
 const QuickAccess = () => {
+  const { classes } = useStyles();
   const { data, error, isLoading } = useSWR(
     '/homepage/data.json',
     fetcher<QuickAccessLinks>,
@@ -60,10 +83,7 @@ const QuickAccess = () => {
             ...link,
             icon: (
               <img
-                className={css`
-                  height: 40px;
-                  width: auto;
-                `}
+                className={classes.img}
                 src={link.iconUrl}
                 alt={link.label}
               />
@@ -81,6 +101,8 @@ const QuickAccess = () => {
 };
 
 export const HomePage = () => {
+  const { classes } = useStyles();
+
   return (
     <SearchContextProvider>
       <Page themeId="home">
@@ -106,28 +128,13 @@ export const HomePage = () => {
               </MuiAlert>
             )}
             <HomePageCompanyLogo
-              className={css`
-                margin: 5px 0px 1px 0px;
-              `}
-              logo={
-                <LogoFull
-                  className={css`
-                    height: 80px;
-                  `}
-                />
-              }
+              className={classes.janusLogoContainer}
+              logo={<LogoFull className={classes.janusLogo} />}
             />
+            {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
             <HomePageSearchBar
               classes={{
-                root: css`
-                  display: flex;
-                  max-width: 60vw;
-                  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-                    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-                    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-                  border-radius: 50px;
-                  margin: auto;
-                `,
+                root: classes.searchBar,
               }}
               InputProps={{
                 classes: {

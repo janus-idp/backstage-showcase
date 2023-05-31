@@ -2464,7 +2464,7 @@
     express "^4.17.1"
     knex "^2.0.0"
 
-"@backstage/backend-tasks@^0.5.1", "@backstage/backend-tasks@^0.5.2":
+"@backstage/backend-tasks@^0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@backstage/backend-tasks/-/backend-tasks-0.5.2.tgz#28403d5d979b4311983cc18df82633bcab24e977"
   integrity sha512-LZTDWutQ/xexv7Np3Q2TZIajgF+xzcRdTR1qTDnkuylpzWrYyXHggqBSkfCgSzGVDDLdWNkViyutALhZR2SePQ==
@@ -3318,7 +3318,7 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-kubernetes-common@^0.6.2", "@backstage/plugin-kubernetes-common@^0.6.3":
+"@backstage/plugin-kubernetes-common@^0.6.3":
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes-common/-/plugin-kubernetes-common-0.6.3.tgz#3e3876a28b06c581c235dc81998aad42aa191028"
   integrity sha512-WhX2Ib7LjfwBB3p7a/sp2RMwN+ITvZQurvjFAbv4IKV+rN0VBCx5jGPwuMN35klbwKhIggCp7oNl1oT9sFQxcA==
@@ -3327,19 +3327,20 @@
     "@backstage/plugin-permission-common" "^0.7.5"
     "@kubernetes/client-node" "0.18.1"
 
-"@backstage/plugin-kubernetes@^0.8.0", "@backstage/plugin-kubernetes@^0.9.1":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes/-/plugin-kubernetes-0.8.0.tgz#3bf46912ef8675ec3b1253b6aaea126988706273"
-  integrity sha512-U8bzoTIgbeCWeWa4qoZTfiPLq/lWcE4IHJ9h5o/GkeX39m7ZOdm0jAiOJKCEw79eVPJ1w1ZmYqjL3GthG249kA==
+"@backstage/plugin-kubernetes@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes/-/plugin-kubernetes-0.9.1.tgz#83b3f05c038c94f9a0672942aca3039fbaa7d59d"
+  integrity sha512-QsNUGKxc6QX685DlsmfOHmCO4hT8f8Z0Hk6wY93VuQK6vQZ2h626gDQEDabyoy70/lDceyWMsBrDu/D5ROTIUA==
   dependencies:
     "@backstage/catalog-model" "^1.3.0"
     "@backstage/config" "^1.0.7"
-    "@backstage/core-components" "^0.13.0"
+    "@backstage/core-components" "^0.13.1"
     "@backstage/core-plugin-api" "^1.5.1"
     "@backstage/errors" "^1.1.5"
-    "@backstage/plugin-catalog-react" "^1.5.0"
-    "@backstage/plugin-kubernetes-common" "^0.6.2"
-    "@backstage/theme" "^0.2.19"
+    "@backstage/plugin-catalog-react" "^1.6.0"
+    "@backstage/plugin-kubernetes-common" "^0.6.3"
+    "@backstage/theme" "^0.3.0"
+    "@kubernetes-models/apimachinery" "^1.1.0"
     "@kubernetes/client-node" "0.18.1"
     "@material-ui/core" "^4.12.2"
     "@material-ui/icons" "^4.9.1"
@@ -4378,7 +4379,7 @@
     source-map "^0.5.7"
     stylis "4.2.0"
 
-"@emotion/cache@^11.11.0":
+"@emotion/cache@*", "@emotion/cache@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.11.0.tgz#809b33ee6b1cb1a625fef7a45bc568ccd9b8f3ff"
   integrity sha512-P34z9ssTCBi3e9EI1ZsWpNHcfY1r09ZO0rZbRO2ob3ZQMnFI35jB536qoXbkdesr5EUhYi22anuEJuyxifaqAQ==
@@ -4436,7 +4437,7 @@
     "@emotion/weak-memoize" "^0.3.1"
     hoist-non-react-statics "^3.3.1"
 
-"@emotion/serialize@^1.1.2":
+"@emotion/serialize@*", "@emotion/serialize@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@emotion/serialize/-/serialize-1.1.2.tgz#017a6e4c9b8a803bd576ff3d52a0ea6fa5a62b51"
   integrity sha512-zR6a/fkFP4EAcCMQtLOhIgpprZOwNmCldtpaISpvz348+DP4Mz8ZoKaGGCQpbzepNIUWbq4w6hNZkwDyKoS+HA==
@@ -4474,7 +4475,7 @@
   resolved "https://registry.yarnpkg.com/@emotion/use-insertion-effect-with-fallbacks/-/use-insertion-effect-with-fallbacks-1.0.1.tgz#08de79f54eb3406f9daaf77c76e35313da963963"
   integrity sha512-jT/qyKZ9rzLErtrjGgdkMBn2OP8wl0G3sQlBb3YPryvKHsjvINUhVaPFfP+fpBcOkmrVOVEEHQFJ7nbj2TH2gw==
 
-"@emotion/utils@^1.2.1":
+"@emotion/utils@*", "@emotion/utils@^1.2.1":
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-1.2.1.tgz#bbab58465738d31ae4cb3dbb6fc00a5991f755e4"
   integrity sha512-Y2tGf3I+XVnajdItskUCn6LX+VUDmP6lTL4fcqsXAv43dnlbZiuW4MWQW38rW/BVWSE7Q/7+XQocmpnRYILUmg==
@@ -5446,7 +5447,7 @@
   dependencies:
     ioredis "^5.3.2"
 
-"@kubernetes-models/apimachinery@^1.2.0":
+"@kubernetes-models/apimachinery@^1.1.0", "@kubernetes-models/apimachinery@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@kubernetes-models/apimachinery/-/apimachinery-1.2.0.tgz#3199192962c354ed64f8401a51c1a7a071eace25"
   integrity sha512-y9ls/waQMX0/2yzc5D05yC3AOvOx/xhDq8OvywnhcU/0p7OOT1F1tx76Uvtke1GotwZzmxzIKLud/S7qwqW4XQ==
@@ -21676,6 +21677,15 @@ tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.2.tgz#1b6f07185c881557b0ffa84b111a0106989e8338"
   integrity sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA==
+
+tss-react@^4.8.5:
+  version "4.8.5"
+  resolved "https://registry.yarnpkg.com/tss-react/-/tss-react-4.8.5.tgz#10bb044de68fe23f5174ac9371fc0ac9d3e60f96"
+  integrity sha512-AMUU6fYYmdhorTq/8phPe3BL/SiD7UIX/IHAa4se5UmXtc8v7dR+9Ij4xDyK22ajhYXz/2QMPEz/CQMpuwWG/g==
+  dependencies:
+    "@emotion/cache" "*"
+    "@emotion/serialize" "*"
+    "@emotion/utils" "*"
 
 tsutils@^3.21.0:
   version "3.21.0"
