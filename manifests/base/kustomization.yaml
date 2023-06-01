@@ -6,7 +6,6 @@ components:
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress.yaml
   - externalsecret.yaml
   - issuer.yaml
   - certificate.yaml
