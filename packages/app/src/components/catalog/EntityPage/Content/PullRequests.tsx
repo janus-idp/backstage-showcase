@@ -1,9 +1,12 @@
+import React from 'react';
+
 import { Entity } from '@backstage/catalog-model';
 import {
   EntityAzurePullRequestsContent,
   isAzureDevOpsAvailable,
 } from '@backstage/plugin-azure-devops';
 import { EntitySwitch } from '@backstage/plugin-catalog';
+
 import {
   EntityGitlabMergeRequestsTable,
   isGitlabAvailable,
@@ -13,7 +16,6 @@ import {
   EntityGithubPullRequestsContent,
   isGithubPullRequestsAvailable,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
-import React from 'react';
 
 const ifPrs: ((e: Entity) => boolean)[] = [
   isGithubPullRequestsAvailable,
@@ -21,7 +23,7 @@ const ifPrs: ((e: Entity) => boolean)[] = [
   isAzureDevOpsAvailable,
 ];
 
-export const isPrsAvailable = (e: Entity) => ifPrs.some(f => f(e));
+export const isPrsAvailable = (e: Entity) => ifPrs.some((f) => f(e));
 
 export const prContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

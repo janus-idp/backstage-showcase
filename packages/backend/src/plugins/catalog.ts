@@ -5,26 +5,23 @@ import {
 } from '@backstage/plugin-catalog-backend-module-github';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
+
 import { GitlabFillerProcessor } from '@immobiliarelabs/backstage-plugin-gitlab-backend';
+import { Router } from 'express';
+
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
-import { Router } from 'express';
+
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
+export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
   const isOcmEnabled = env.config.getOptionalBoolean('enabled.ocm') || false;
-  const isKeycloakEnabled =
-    env.config.getOptionalBoolean('enabled.keycloak') || false;
-  const isGithubEnabled =
-    env.config.getOptionalBoolean('enabled.github') || false;
-  const isGithubOrgEnabled =
-    env.config.getOptionalBoolean('enabled.githubOrg') || false;
-  const isGitlabEnabled =
-    env.config.getOptionalBoolean('enabled.gitlab') || false;
+  const isKeycloakEnabled = env.config.getOptionalBoolean('enabled.keycloak') || false;
+  const isGithubEnabled = env.config.getOptionalBoolean('enabled.github') || false;
+  const isGithubOrgEnabled = env.config.getOptionalBoolean('enabled.githubOrg') || false;
+  const isGitlabEnabled = env.config.getOptionalBoolean('enabled.gitlab') || false;
 
   if (isOcmEnabled) {
     builder.addEntityProvider(
@@ -67,11 +64,9 @@ export default async function createPlugin(
   }
 
   if (isGithubOrgEnabled) {
-    const providersConfig = env.config.getOptionalConfig(
-      'catalog.providers.githubOrg',
-    );
+    const providersConfig = env.config.getOptionalConfig('catalog.providers.githubOrg');
 
-    providersConfig?.keys().forEach(id => {
+    providersConfig?.keys().forEach((id) => {
       const githubOrgConfig = providersConfig?.getConfig(id);
 
       const githubOrgId = githubOrgConfig.getString('id');

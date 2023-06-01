@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   EntityAboutCard,
   EntityHasSystemsCard,
@@ -6,14 +8,15 @@ import {
   EntitySwitch,
 } from '@backstage/plugin-catalog';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
+
 import { Grid } from '@mui/material';
-import React from 'react';
 
 import {
   ClusterAvailableResourceCard,
   ClusterContextProvider,
   ClusterInfoCard,
 } from '@janus-idp/backstage-plugin-ocm';
+
 import { isType } from '../../utils';
 import { entityWarningContent } from '../Content/EntityWarning';
 

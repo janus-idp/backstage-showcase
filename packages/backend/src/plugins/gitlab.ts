@@ -1,10 +1,9 @@
-import { PluginEnvironment } from '../types';
-import { Router } from 'express-serve-static-core';
 import { createRouter } from '@immobiliarelabs/backstage-plugin-gitlab-backend';
+import { Router } from 'express-serve-static-core';
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
+import { PluginEnvironment } from '../types';
+
+export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
   return createRouter({
     logger: env.logger,
     config: env.config,

@@ -1,11 +1,14 @@
+import React from 'react';
+
 import { EntityLayout } from '@backstage/plugin-catalog';
 import {
   EntityGroupProfileCard,
   EntityMembersListCard,
   EntityOwnershipCard,
 } from '@backstage/plugin-org';
+
 import { Grid } from '@mui/material';
-import React from 'react';
+
 import { entityWarningContent } from '../Content/EntityWarning';
 
 export const groupPage = (

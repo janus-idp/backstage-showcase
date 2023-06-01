@@ -1,10 +1,10 @@
-import { EntityLayout } from '@backstage/plugin-catalog';
-import {
-  EntityOwnershipCard,
-  EntityUserProfileCard,
-} from '@backstage/plugin-org';
-import { Grid } from '@mui/material';
 import React from 'react';
+
+import { EntityLayout } from '@backstage/plugin-catalog';
+import { EntityOwnershipCard, EntityUserProfileCard } from '@backstage/plugin-org';
+
+import { Grid } from '@mui/material';
+
 import { entityWarningContent } from '../Content/EntityWarning';
 
 export const userPage = (

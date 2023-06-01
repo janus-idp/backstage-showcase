@@ -1,8 +1,10 @@
+import React from 'react';
+
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
+
 import { Grid } from '@mui/material';
-import React from 'react';
 
 export const techdocsContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

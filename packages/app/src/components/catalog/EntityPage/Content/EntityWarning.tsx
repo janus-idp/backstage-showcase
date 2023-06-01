@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   EntityOrphanWarning,
   EntityProcessingErrorsPanel,
@@ -5,8 +7,8 @@ import {
   hasCatalogProcessingErrors,
   isOrphan,
 } from '@backstage/plugin-catalog';
+
 import { Grid } from '@mui/material';
-import React from 'react';
 
 export const entityWarningContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

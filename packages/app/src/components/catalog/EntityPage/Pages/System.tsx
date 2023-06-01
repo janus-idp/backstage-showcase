@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   RELATION_API_CONSUMED_BY,
   RELATION_API_PROVIDED_BY,
@@ -16,12 +18,10 @@ import {
   EntityLayout,
   EntityLinksCard,
 } from '@backstage/plugin-catalog';
-import {
-  Direction,
-  EntityCatalogGraphCard,
-} from '@backstage/plugin-catalog-graph';
+import { Direction, EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
+
 import { Grid } from '@mui/material';
-import React from 'react';
+
 import { entityWarningContent } from '../Content/EntityWarning';
 
 export const systemPage = (

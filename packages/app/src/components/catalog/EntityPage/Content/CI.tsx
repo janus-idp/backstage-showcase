@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Entity } from '@backstage/catalog-model';
 import {
   EntityAzurePipelinesContent,
@@ -8,16 +10,14 @@ import {
   EntityGithubActionsContent,
   isGithubActionsAvailable,
 } from '@backstage/plugin-github-actions';
+
 import {
   EntityGitlabMergeRequestsTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
-import {
-  LatestPipelineRun,
-  isTektonCIAvailable,
-} from '@janus-idp/backstage-plugin-tekton';
 import { Grid } from '@mui/material';
-import React from 'react';
+
+import { isTektonCIAvailable, LatestPipelineRun } from '@janus-idp/backstage-plugin-tekton';
 
 const ifCIs: ((e: Entity) => boolean)[] = [
   isGithubActionsAvailable,
@@ -26,7 +26,7 @@ const ifCIs: ((e: Entity) => boolean)[] = [
   isAzureDevOpsAvailable,
 ];
 
-export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
+export const isCIsAvailable = (e: Entity) => ifCIs.some((f) => f(e));
 
 export const ciContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

@@ -1,16 +1,13 @@
 import { CatalogClient } from '@backstage/catalog-client';
-import {
-  createBuiltinActions,
-  createRouter,
-} from '@backstage/plugin-scaffolder-backend';
-import { Router } from 'express';
-import type { PluginEnvironment } from '../types';
 import { ScmIntegrations } from '@backstage/integration';
-import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
+import { createBuiltinActions, createRouter } from '@backstage/plugin-scaffolder-backend';
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
+import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
+import { Router } from 'express';
+
+import type { PluginEnvironment } from '../types';
+
+export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
   const catalogClient = new CatalogClient({
     discoveryApi: env.discovery,
   });
@@ -23,10 +20,7 @@ export default async function createPlugin(
     reader: env.reader,
   });
 
-  const actions = [
-    ...builtInActions,
-    createArgoCdResources(env.config, env.logger),
-  ];
+  const actions = [...builtInActions, createArgoCdResources(env.config, env.logger)];
 
   return await createRouter({
     actions,

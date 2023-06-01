@@ -1,9 +1,10 @@
+import React from 'react';
+
 import { Grid } from '@mui/material';
 import {
   EntityGithubDependabotContent,
   EntitySecurityInsightsContent,
 } from '@roadiehq/backstage-plugin-security-insights';
-import React from 'react';
 
 export const securityContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

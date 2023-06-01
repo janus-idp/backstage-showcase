@@ -1,27 +1,19 @@
-import {
-  EntityConsumedApisCard,
-  EntityProvidedApisCard,
-} from '@backstage/plugin-api-docs';
+import React from 'react';
+
+import { EntityConsumedApisCard, EntityProvidedApisCard } from '@backstage/plugin-api-docs';
 import {
   EntityDependsOnComponentsCard,
   EntityDependsOnResourcesCard,
   EntityHasSubcomponentsCard,
 } from '@backstage/plugin-catalog';
-import {
-  Direction,
-  EntityCatalogGraphCard,
-} from '@backstage/plugin-catalog-graph';
+import { Direction, EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
+
 import { Grid } from '@mui/material';
-import React from 'react';
 
 export const dependenciesContent = (
   <Grid container spacing={3} justifyContent="space-evenly">
     <Grid item xs={12} md={6}>
-      <EntityCatalogGraphCard
-        variant="gridItem"
-        direction={Direction.TOP_BOTTOM}
-        height={900}
-      />
+      <EntityCatalogGraphCard variant="gridItem" direction={Direction.TOP_BOTTOM} height={900} />
     </Grid>
 
     <Grid item xs={12} md={6} container spacing={3}>

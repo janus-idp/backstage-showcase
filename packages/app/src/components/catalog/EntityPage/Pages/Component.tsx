@@ -1,17 +1,14 @@
-import {
-  EntityConsumedApisCard,
-  EntityProvidedApisCard,
-} from '@backstage/plugin-api-docs';
-import {
-  EntityLayout,
-  EntitySwitch,
-  isComponentType,
-} from '@backstage/plugin-catalog';
+import React from 'react';
+
+import { EntityConsumedApisCard, EntityProvidedApisCard } from '@backstage/plugin-api-docs';
+import { EntityLayout, EntitySwitch, isComponentType } from '@backstage/plugin-catalog';
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
+
+import { Grid } from '@mui/material';
+
 import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
-import { Grid } from '@mui/material';
-import React from 'react';
+
 import {
   cdContent,
   ciContent,
@@ -39,11 +36,7 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {issuesContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      if={isPrsAvailable}
-      path="/pr"
-      title="Pull/Merge Requests"
-    >
+    <EntityLayout.Route if={isPrsAvailable} path="/pr" title="Pull/Merge Requests">
       {prContent}
     </EntityLayout.Route>
 

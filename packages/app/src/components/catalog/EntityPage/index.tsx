@@ -1,15 +1,16 @@
-import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
 import React from 'react';
 
+import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
+
 import {
+  apiPage,
   componentPage,
   defaultEntityPage,
-  apiPage,
-  groupPage,
-  userPage,
-  systemPage,
   domainPage,
+  groupPage,
   resourcePage,
+  systemPage,
+  userPage,
 } from './Pages';
 
 export const entityPage = (

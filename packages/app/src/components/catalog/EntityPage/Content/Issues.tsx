@@ -1,17 +1,16 @@
+import React from 'react';
+
 import { Entity } from '@backstage/catalog-model';
 import { EntitySwitch } from '@backstage/plugin-catalog';
 import { GithubIssuesCard } from '@backstage/plugin-github-issues';
+
 import {
   EntityGitlabIssuesTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
 import { Grid } from '@mui/material';
 import { isGithubPullRequestsAvailable } from '@roadiehq/backstage-plugin-github-pull-requests';
-import {
-  EntityJiraOverviewCard,
-  isJiraAvailable,
-} from '@roadiehq/backstage-plugin-jira';
-import React from 'react';
+import { EntityJiraOverviewCard, isJiraAvailable } from '@roadiehq/backstage-plugin-jira';
 
 const ifIssues: ((e: Entity) => boolean)[] = [
   isGithubPullRequestsAvailable,
@@ -19,7 +18,7 @@ const ifIssues: ((e: Entity) => boolean)[] = [
   isJiraAvailable,
 ];
 
-export const isIssuesAvailable = (e: Entity) => ifIssues.some(f => f(e));
+export const isIssuesAvailable = (e: Entity) => ifIssues.some((f) => f(e));
 
 export const issuesContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

@@ -1,22 +1,16 @@
-import { EmptyState } from '@backstage/core-components';
-import {
-  EntityAboutCard,
-  EntityLinksCard,
-  EntitySwitch,
-} from '@backstage/plugin-catalog';
-import { Grid } from '@mui/material';
 import React from 'react';
 
-import {
-  EntityLatestJenkinsRunCard,
-  isJenkinsAvailable,
-} from '@backstage/plugin-jenkins';
+import { EmptyState } from '@backstage/core-components';
+import { EntityAboutCard, EntityLinksCard, EntitySwitch } from '@backstage/plugin-catalog';
+import { EntityLatestJenkinsRunCard, isJenkinsAvailable } from '@backstage/plugin-jenkins';
 import { EntitySonarQubeCard } from '@backstage/plugin-sonarqube';
 import { isSonarQubeAvailable } from '@backstage/plugin-sonarqube-react';
+
 import {
   EntityGitlabMergeRequestStatsCard,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
+import { Grid } from '@mui/material';
 import { EntityArgoCDOverviewCard } from '@roadiehq/backstage-plugin-argo-cd';
 import {
   EntityGithubInsightsComplianceCard,
@@ -30,6 +24,7 @@ import {
   EntityDependabotAlertsCard,
   isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
+
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
 
@@ -69,13 +64,8 @@ export const overviewContent = (
           </Grid>
         </EntitySwitch.Case>
 
-        <EntitySwitch.Case
-          if={e => !isGithubPullRequestsAvailable(e) && !isGitlabAvailable(e)}
-        >
-          <EmptyState
-            title="A Git repository was not found for this entity"
-            missing="info"
-          />
+        <EntitySwitch.Case if={(e) => !isGithubPullRequestsAvailable(e) && !isGitlabAvailable(e)}>
+          <EmptyState title="A Git repository was not found for this entity" missing="info" />
         </EntitySwitch.Case>
       </EntitySwitch>
     </Grid>

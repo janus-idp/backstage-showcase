@@ -1,16 +1,15 @@
+import React from 'react';
+
 import {
   EntityApiDefinitionCard,
   EntityConsumingComponentsCard,
   EntityProvidingComponentsCard,
 } from '@backstage/plugin-api-docs';
-import {
-  EntityAboutCard,
-  EntityLayout,
-  EntityLinksCard,
-} from '@backstage/plugin-catalog';
+import { EntityAboutCard, EntityLayout, EntityLinksCard } from '@backstage/plugin-catalog';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
+
 import { Grid } from '@mui/material';
-import React from 'react';
+
 import { entityWarningContent } from '../Content/EntityWarning';
 
 export const apiPage = (
@@ -21,15 +20,7 @@ export const apiPage = (
           {entityWarningContent}
         </Grid>
 
-        <Grid
-          item
-          container
-          spacing={3}
-          xs={12}
-          md={6}
-          lg={4}
-          direction="column"
-        >
+        <Grid item container spacing={3} xs={12} md={6} lg={4} direction="column">
           <Grid item>
             <EntityAboutCard />
           </Grid>

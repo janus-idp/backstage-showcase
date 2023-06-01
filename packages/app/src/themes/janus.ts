@@ -1,9 +1,4 @@
-import {
-  createUnifiedTheme,
-  genPageTheme,
-  lightTheme,
-  shapes,
-} from '@backstage/theme';
+import { createUnifiedTheme, genPageTheme, lightTheme, shapes } from '@backstage/theme';
 
 const redhatFont = `@font-face {
   font-family: 'Red Hat Font';

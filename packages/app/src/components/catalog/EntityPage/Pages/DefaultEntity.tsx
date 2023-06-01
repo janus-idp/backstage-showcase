@@ -1,5 +1,7 @@
-import { EntityLayout } from '@backstage/plugin-catalog';
 import React from 'react';
+
+import { EntityLayout } from '@backstage/plugin-catalog';
+
 import { overviewContent, techdocsContent } from '../Content';
 
 export const defaultEntityPage = (

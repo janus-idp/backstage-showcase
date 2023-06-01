@@ -1,5 +1,3 @@
-import { Logger } from 'winston';
-import { Config } from '@backstage/config';
 import {
   PluginCacheManager,
   PluginDatabaseManager,
@@ -8,8 +6,11 @@ import {
   UrlReader,
 } from '@backstage/backend-common';
 import { PluginTaskScheduler } from '@backstage/backend-tasks';
-import { PermissionEvaluator } from '@backstage/plugin-permission-common';
+import { Config } from '@backstage/config';
 import { IdentityApi } from '@backstage/plugin-auth-node';
+import { PermissionEvaluator } from '@backstage/plugin-permission-common';
+
+import { Logger } from 'winston';
 
 export type PluginEnvironment = {
   logger: Logger;

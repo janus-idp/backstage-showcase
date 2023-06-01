@@ -1,10 +1,6 @@
-import {
-  Content,
-  Header,
-  InfoCard,
-  Link,
-  Page,
-} from '@backstage/core-components';
+import React from 'react';
+
+import { Content, Header, InfoCard, Link, Page } from '@backstage/core-components';
 import {
   ComponentAccordion,
   HomePageCompanyLogo,
@@ -14,16 +10,17 @@ import {
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
+
 import { css } from '@emotion/css';
 import MuiAlert from '@mui/lab/Alert';
 import { Box, CircularProgress, Grid } from '@mui/material';
-import React from 'react';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
+
 import { ErrorReport, fetcher } from '../../common';
 import LogoFull from '../Root/LogoFull';
 
-const useStyles = makeStyles()(theme => ({
+const useStyles = makeStyles()((theme) => ({
   img: {
     height: '40px',
     width: 'auto',
@@ -52,21 +49,14 @@ type QuickAccessLinks = {
 
 const QuickAccess = () => {
   const { classes } = useStyles();
-  const { data, error, isLoading } = useSWR(
-    '/homepage/data.json',
-    fetcher<QuickAccessLinks>,
-  );
+  const { data, error, isLoading } = useSWR('/homepage/data.json', fetcher<QuickAccessLinks>);
 
   if (!data) {
-    return (
-      <ErrorReport title="Could not fetch data." errorText="Unknown error" />
-    );
+    return <ErrorReport title="Could not fetch data." errorText="Unknown error" />;
   }
 
   if (error) {
-    return (
-      <ErrorReport title="Could not fetch data." errorText={error.toString()} />
-    );
+    return <ErrorReport title="Could not fetch data." errorText={error.toString()} />;
   }
 
   if (isLoading) {
@@ -75,24 +65,18 @@ const QuickAccess = () => {
 
   return (
     <InfoCard title="Quick Access" noPadding>
-      {data.map(item => (
+      {data.map((item) => (
         <HomePageToolkit
           key={item.title}
           title={item.title}
-          tools={item.links.map(link => ({
+          tools={item.links.map((link) => ({
             ...link,
-            icon: (
-              <img
-                className={classes.img}
-                src={link.iconUrl}
-                alt={link.label}
-              />
-            ),
+            icon: <img className={classes.img} src={link.iconUrl} alt={link.label} />,
           }))}
           Renderer={
             item.isExpanded
-              ? props => <ComponentAccordion expanded {...props} />
-              : props => <ComponentAccordion {...props} />
+              ? (props) => <ComponentAccordion expanded {...props} />
+              : (props) => <ComponentAccordion {...props} />
           }
         />
       ))}
@@ -120,11 +104,8 @@ export const HomePage = () => {
               'https://janus-idp.apps.smaug.na.operate-first.cloud',
             ) && (
               <MuiAlert severity="warning">
-                The Janus showcase URL has changed! Please, use this new link
-                instead{' '}
-                <Link to="https://showcase.janus-idp.io">
-                  showcase.janus-idp.io
-                </Link>
+                The Janus showcase URL has changed! Please, use this new link instead{' '}
+                <Link to="https://showcase.janus-idp.io">showcase.janus-idp.io</Link>
               </MuiAlert>
             )}
             <HomePageCompanyLogo
