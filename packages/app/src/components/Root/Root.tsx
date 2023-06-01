@@ -1,23 +1,6 @@
-import React, { PropsWithChildren } from 'react';
-import { makeStyles } from '@material-ui/core';
-import AppsIcon from '@material-ui/icons/Apps';
-import HomeIcon from '@material-ui/icons/Home';
-import ExtensionIcon from '@material-ui/icons/Extension';
-import StorageIcon from '@material-ui/icons/Storage';
-import MapIcon from '@material-ui/icons/MyLocation';
-import LibraryBooks from '@material-ui/icons/LibraryBooks';
-import CreateComponentIcon from '@material-ui/icons/AddCircleOutline';
-import SchoolIcon from '@material-ui/icons/School';
-import LogoFull from './LogoFull';
-import LogoIcon from './LogoIcon';
 import {
-  Settings as SidebarSettings,
-  UserSettingsSignInAvatar,
-} from '@backstage/plugin-user-settings';
-import { SidebarSearchModal } from '@backstage/plugin-search';
-import {
+  Link,
   Sidebar,
-  sidebarConfig,
   SidebarDivider,
   SidebarGroup,
   SidebarItem,
@@ -25,33 +8,40 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
   useSidebarOpenState,
-  Link,
 } from '@backstage/core-components';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import { SidebarSearchModal } from '@backstage/plugin-search';
+import {
+  Settings as SidebarSettings,
+  UserSettingsSignInAvatar,
+} from '@backstage/plugin-user-settings';
+import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
+import AppsIcon from '@mui/icons-material/Apps';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import HomeIcon from '@mui/icons-material/Home';
+import LibraryBooks from '@mui/icons-material/LibraryBooks';
+import MenuIcon from '@mui/icons-material/Menu';
+import MapIcon from '@mui/icons-material/MyLocation';
+import SchoolIcon from '@mui/icons-material/School';
+import SearchIcon from '@mui/icons-material/Search';
+import StorageIcon from '@mui/icons-material/Storage';
+import React, { PropsWithChildren } from 'react';
+import { makeStyles } from 'tss-react/mui';
+import LogoFull from './LogoFull';
+import LogoIcon from './LogoIcon';
 
-const useSidebarLogoStyles = makeStyles({
-  root: {
-    width: sidebarConfig.drawerWidthClosed,
-    height: 3 * sidebarConfig.logoHeight,
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    marginBottom: -14,
-  },
-  link: {
-    width: sidebarConfig.drawerWidthClosed,
-    marginLeft: 24,
+const useStyles = makeStyles()({
+  sidebarLogo: {
+    margin: '24px 0px 6px 24px',
   },
 });
 
 const SidebarLogo = () => {
-  const classes = useSidebarLogoStyles();
+  const { classes } = useStyles();
   const { isOpen } = useSidebarOpenState();
 
   return (
-    <div className={classes.root}>
-      <Link to="/" underline="none" className={classes.link} aria-label="Home">
+    <div className={classes.sidebarLogo}>
+      <Link to="/" underline="none" aria-label="Home">
         {isOpen ? <LogoFull /> : <LogoIcon />}
       </Link>
     </div>
@@ -68,21 +58,29 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
       <SidebarDivider />
       <SidebarGroup label="Menu" icon={<MenuIcon />}>
         {/* Global nav, not org-specific */}
-        <SidebarItem icon={HomeIcon} to="/" text="Home" />
-        <SidebarItem icon={AppsIcon} to="catalog" text="Catalog" />
-        <SidebarItem icon={ExtensionIcon} to="api-docs" text="APIs" />
-        <SidebarItem icon={LibraryBooks} to="docs" text="Docs" />
+        <SidebarItem icon={HomeIcon as any} to="/" text="Home" />
+        <SidebarItem icon={AppsIcon as any} to="catalog" text="Catalog" />
+        <SidebarItem icon={ExtensionIcon as any} to="api-docs" text="APIs" />
+        <SidebarItem icon={LibraryBooks as any} to="docs" text="Docs" />
         <SidebarItem
-          icon={SchoolIcon}
+          icon={SchoolIcon as any}
           to="learning-paths"
           text="Learning Paths"
         />
-        <SidebarItem icon={StorageIcon} to="ocm" text="Clusters" />
-        <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
+        <SidebarItem icon={StorageIcon as any} to="ocm" text="Clusters" />
+        <SidebarItem
+          icon={CreateComponentIcon as any}
+          to="create"
+          text="Create..."
+        />
         {/* End global nav */}
         <SidebarDivider />
         <SidebarScrollWrapper>
-          <SidebarItem icon={MapIcon} to="tech-radar" text="Tech Radar" />
+          <SidebarItem
+            icon={MapIcon as any}
+            to="tech-radar"
+            text="Tech Radar"
+          />
         </SidebarScrollWrapper>
       </SidebarGroup>
       <SidebarSpace />

@@ -1,16 +1,27 @@
-import React from 'react';
+import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { Content, Page, InfoCard, Header } from '@backstage/core-components';
-import {
-  CircularProgress,
-  Grid,
-  Link,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-
+import { CircularProgress, Grid, Link, Typography } from '@mui/material';
+import React from 'react';
 import useSWR from 'swr';
-import { fetcher, ErrorReport } from '../../common';
+import { makeStyles } from 'tss-react/mui';
+import { ErrorReport, fetcher } from '../../common';
+
+const useStyles = makeStyles()({
+  link: {
+    textDecoration: 'none',
+  },
+  infoCard: {
+    height: '100%',
+    transition: 'all 0.25s linear',
+    textAlign: 'left',
+    '&:hover': {
+      boxShadow: '0px 0px 16px 0px rgba(0, 0, 0, 0.8)',
+    },
+    '& svg': {
+      fontSize: '80px',
+    },
+  },
+});
 
 type Path = {
   label: string;
@@ -20,32 +31,8 @@ type Path = {
   paths?: number;
 };
 
-const useCatalogStyles = makeStyles({
-  root: {
-    height: '100%',
-    transition: 'all .25s linear',
-    textAlign: 'left',
-    '&:hover': {
-      boxShadow: '0px 0px 16px 0px rgba(0,0,0,0.8)',
-    },
-    '& svg': {
-      fontSize: 80,
-    },
-  },
-  subheader: {
-    display: 'block',
-    width: '100%',
-  },
-  link: {
-    '&:hover': {
-      textDecoration: 'none',
-    },
-  },
-});
-
 const LearningPathCards = () => {
-  const classes = useCatalogStyles();
-
+  const { classes } = useStyles();
   const { data, error, isLoading } = useSWR(
     '/learning-paths/data.json',
     fetcher<Path>,
@@ -74,13 +61,13 @@ const LearningPathCards = () => {
           <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={p.label}>
             <Link href={p.url} className={classes.link} target="_blank">
               <InfoCard
-                className={classes.root}
+                className={classes.infoCard}
                 title={p.label}
                 subheader={
-                  <div className={classes.subheader}>
+                  <>
                     {p.hours} {p.hours === 1 ? 'hour' : 'hours'} | {p.paths}{' '}
                     learning paths
-                  </div>
+                  </>
                 }
               >
                 <Typography paragraph>{p.description}</Typography>

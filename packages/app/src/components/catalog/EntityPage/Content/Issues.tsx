@@ -5,7 +5,7 @@ import {
   EntityGitlabIssuesTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { isGithubPullRequestsAvailable } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
   EntityJiraOverviewCard,

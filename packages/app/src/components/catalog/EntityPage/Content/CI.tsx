@@ -16,7 +16,7 @@ import {
   LatestPipelineRun,
   isTektonCIAvailable,
 } from '@janus-idp/backstage-plugin-tekton';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import React from 'react';
 
 const ifCIs: ((e: Entity) => boolean)[] = [

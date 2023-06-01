@@ -1,22 +1,18 @@
+import { styled } from '@mui/material/styles';
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  svg: {
-    width: 'auto',
-    height: 28,
-  },
-});
+const Svg = styled('svg')`
+  width: auto;
+  height: 28px;
+`;
 
-const LogoIcon = () => {
-  const classes = useStyles();
-
+const LogoIcon = (props: React.ComponentProps<typeof Svg>) => {
   return (
-    <svg
+    <Svg
       viewBox="0 0 335 340"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      className={classes.svg}
+      {...props}
     >
       <g clipPath="url(#clip0_1_11)">
         <path
@@ -44,7 +40,7 @@ const LogoIcon = () => {
           <rect width="335" height="340" fill="white" />
         </clipPath>
       </defs>
-    </svg>
+    </Svg>
   );
 };
 

@@ -10,7 +10,7 @@ import {
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import React from 'react';
 import {
   cdContent,

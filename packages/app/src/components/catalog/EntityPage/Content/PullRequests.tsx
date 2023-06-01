@@ -8,7 +8,7 @@ import {
   EntityGitlabMergeRequestsTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import {
   EntityGithubPullRequestsContent,
   isGithubPullRequestsAvailable,

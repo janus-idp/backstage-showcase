@@ -46,6 +46,9 @@
     "@backstage/plugin-techdocs-react": "^1.1.6",
     "@backstage/plugin-user-settings": "^0.7.3",
     "@backstage/theme": "0.4.0-next.0",
+    "@emotion/css": "^11.11.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
     "@immobiliarelabs/backstage-plugin-gitlab": "^5.0.1",
     "@janus-idp/backstage-plugin-analytics-provider-segment": "^1.0.3",
     "@janus-idp/backstage-plugin-jfrog-artifactory": "^1.0.7",
@@ -53,9 +56,9 @@
     "@janus-idp/backstage-plugin-quay": "^1.2.10",
     "@janus-idp/backstage-plugin-tekton": "^1.4.10",
     "@janus-idp/backstage-plugin-topology": "^1.6.0",
-    "@material-ui/core": "^4.12.2",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/lab": "^5.0.0-alpha.132",
+    "@mui/material": "^5.13.3",
     "@roadiehq/backstage-plugin-argo-cd": "^2.2.14",
     "@roadiehq/backstage-plugin-github-insights": "^2.3.12",
     "@roadiehq/backstage-plugin-github-pull-requests": "^2.5.10",
@@ -66,7 +69,8 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.3.0",
     "react-use": "^17.2.4",
-    "swr": "^2.0.3"
+    "swr": "^2.0.3",
+    "tss-react": "^4.8.5"
   },
   "devDependencies": {
     "@backstage/test-utils": "^1.3.1",

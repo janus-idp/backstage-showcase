@@ -1,28 +1,19 @@
+import { styled } from '@mui/material/styles';
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  svg: {
-    width: 'auto',
-    height: 35,
-  },
-});
+const Svg = styled('svg')`
+  width: auto;
+  height: 35px;
+`;
 
-type LogoFullProps = {
-  classes?: ReturnType<typeof useStyles>;
-};
-
-const LogoFull = (props: LogoFullProps) => {
-  const defaultClasses = useStyles();
-  const { classes = defaultClasses } = props;
-
+const LogoFull = (props: React.ComponentProps<typeof Svg>) => {
   return (
-    <svg
+    <Svg
       viewBox="0 0 1061 340"
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"
       fill="none"
-      className={classes.svg}
+      {...props}
     >
       <g clipPath="url(#clip0_1_30)">
         <path
@@ -54,7 +45,7 @@ const LogoFull = (props: LogoFullProps) => {
           <rect width="1061" height="340" fill="white" />
         </clipPath>
       </defs>
-    </svg>
+    </Svg>
   );
 };
 
