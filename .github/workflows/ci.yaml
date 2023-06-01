@@ -34,13 +34,6 @@ jobs:
     name: Main Job
     runs-on: ubuntu-latest
 
-    env:
-      TECHDOCS_BUILDER_TYPE: external
-      TECHDOCS_GENERATOR_TYPE: local
-      TECHDOCS_PUBLISHER_TYPE: awsS3
-      SEGMENT_WRITE_KEY: temp
-      SEGMENT_TEST_MODE: true
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -55,6 +48,9 @@ jobs:
 
       - name: Setup local Turbo cache
         uses: dtinth/setup-github-actions-caching-for-turbo@v1
+
+      - name: Use app-config.example.yaml
+        run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
       - name: Install Dependencies
         run: |
