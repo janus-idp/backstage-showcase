@@ -1,14 +1,19 @@
 import { useHotCleanup } from '@backstage/backend-common';
 import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
 import { createRouter } from '@backstage/plugin-search-backend';
-import { IndexBuilder, LunrSearchEngine } from '@backstage/plugin-search-backend-node';
+import {
+  IndexBuilder,
+  LunrSearchEngine,
+} from '@backstage/plugin-search-backend-node';
 import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-techdocs-backend';
 
 import { Router } from 'express';
 
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   // Initialize a connection to a search engine.
   const searchEngine = new LunrSearchEngine({
     logger: env.logger,

@@ -1,7 +1,14 @@
 import React from 'react';
 
-import { EntityConsumedApisCard, EntityProvidedApisCard } from '@backstage/plugin-api-docs';
-import { EntityLayout, EntitySwitch, isComponentType } from '@backstage/plugin-catalog';
+import {
+  EntityConsumedApisCard,
+  EntityProvidedApisCard,
+} from '@backstage/plugin-api-docs';
+import {
+  EntityLayout,
+  EntitySwitch,
+  isComponentType,
+} from '@backstage/plugin-catalog';
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 
 import { Grid } from '@mui/material';
@@ -36,7 +43,11 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {issuesContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route if={isPrsAvailable} path="/pr" title="Pull/Merge Requests">
+    <EntityLayout.Route
+      if={isPrsAvailable}
+      path="/pr"
+      title="Pull/Merge Requests"
+    >
       {prContent}
     </EntityLayout.Route>
 

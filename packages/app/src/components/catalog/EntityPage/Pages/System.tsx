@@ -18,7 +18,10 @@ import {
   EntityLayout,
   EntityLinksCard,
 } from '@backstage/plugin-catalog';
-import { Direction, EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
+import {
+  Direction,
+  EntityCatalogGraphCard,
+} from '@backstage/plugin-catalog-graph';
 
 import { Grid } from '@mui/material';
 

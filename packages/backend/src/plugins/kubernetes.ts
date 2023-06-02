@@ -5,7 +5,9 @@ import { Router } from 'express';
 
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   const catalogApi = new CatalogClient({ discoveryApi: env.discovery });
   const { router } = await KubernetesBuilder.createBuilder({
     logger: env.logger,

@@ -1,11 +1,16 @@
 import { CatalogClient } from '@backstage/catalog-client';
-import { createRouter, DefaultJenkinsInfoProvider } from '@backstage/plugin-jenkins-backend';
+import {
+  createRouter,
+  DefaultJenkinsInfoProvider,
+} from '@backstage/plugin-jenkins-backend';
 
 import { Router } from 'express';
 
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   const catalog = new CatalogClient({
     discoveryApi: env.discovery,
   });

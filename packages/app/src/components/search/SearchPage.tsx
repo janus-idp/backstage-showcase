@@ -1,9 +1,18 @@
 import React from 'react';
 
-import { CatalogIcon, Content, DocsIcon, Header, Page } from '@backstage/core-components';
+import {
+  CatalogIcon,
+  Content,
+  DocsIcon,
+  Header,
+  Page,
+} from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
 import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
-import { CATALOG_FILTER_EXISTS, catalogApiRef } from '@backstage/plugin-catalog-react';
+import {
+  CATALOG_FILTER_EXISTS,
+  catalogApiRef,
+} from '@backstage/plugin-catalog-react';
 import { SearchType } from '@backstage/plugin-search';
 import {
   SearchBar,
@@ -18,7 +27,7 @@ import { css } from '@emotion/css';
 import { Grid, Paper } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles()(theme => ({
   searchBar: {
     borderRadius: '50px',
     margin: 'auto',
@@ -86,11 +95,12 @@ export const SearchPage = () => {
                     const { items } = await catalogApi.getEntities({
                       fields: ['metadata.name'],
                       filter: {
-                        'metadata.annotations.backstage.io/techdocs-ref': CATALOG_FILTER_EXISTS,
+                        'metadata.annotations.backstage.io/techdocs-ref':
+                          CATALOG_FILTER_EXISTS,
                       },
                     });
 
-                    const names = items.map((entity) => entity.metadata.name);
+                    const names = items.map(entity => entity.metadata.name);
                     names.sort();
                     return names;
                   }}

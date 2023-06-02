@@ -35,7 +35,11 @@ const LogoFull = (props: React.ComponentProps<typeof Svg>) => {
           stroke="#009596"
           strokeWidth="24"
         />
-        <path d="M240.977 327.471L88.9774 326.983" stroke="#009596" strokeWidth="24" />
+        <path
+          d="M240.977 327.471L88.9774 326.983"
+          stroke="#009596"
+          strokeWidth="24"
+        />
       </g>
       <defs>
         <clipPath id="clip0_1_30">

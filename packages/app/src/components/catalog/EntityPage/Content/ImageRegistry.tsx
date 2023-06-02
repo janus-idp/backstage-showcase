@@ -16,7 +16,8 @@ const ifImageRegistries: ((e: Entity) => boolean)[] = [
   isJfrogArtifactoryAvailable,
 ];
 
-export const isImageRegistriesAvailable = (e: Entity) => ifImageRegistries.some((f) => f(e));
+export const isImageRegistriesAvailable = (e: Entity) =>
+  ifImageRegistries.some(f => f(e));
 
 export const imageRegistry = (
   <Grid container spacing={3} justifyContent="space-evenly">

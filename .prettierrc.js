@@ -1,9 +1,5 @@
 module.exports = {
   ...require('@spotify/prettier-config'),
-  arrowParens: 'always',
-  printWidth: 100,
-  singleQuote: true,
-  trailingComma: 'all',
   importOrder: [
     '^react(.*)$',
     '',

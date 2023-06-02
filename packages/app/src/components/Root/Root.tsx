@@ -65,18 +65,34 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
         <SidebarItem icon={AppsIcon as any} to="catalog" text="Catalog" />
         <SidebarItem icon={ExtensionIcon as any} to="api-docs" text="APIs" />
         <SidebarItem icon={LibraryBooks as any} to="docs" text="Docs" />
-        <SidebarItem icon={SchoolIcon as any} to="learning-paths" text="Learning Paths" />
+        <SidebarItem
+          icon={SchoolIcon as any}
+          to="learning-paths"
+          text="Learning Paths"
+        />
         <SidebarItem icon={StorageIcon as any} to="ocm" text="Clusters" />
-        <SidebarItem icon={CreateComponentIcon as any} to="create" text="Create..." />
+        <SidebarItem
+          icon={CreateComponentIcon as any}
+          to="create"
+          text="Create..."
+        />
         {/* End global nav */}
         <SidebarDivider />
         <SidebarScrollWrapper>
-          <SidebarItem icon={MapIcon as any} to="tech-radar" text="Tech Radar" />
+          <SidebarItem
+            icon={MapIcon as any}
+            to="tech-radar"
+            text="Tech Radar"
+          />
         </SidebarScrollWrapper>
       </SidebarGroup>
       <SidebarSpace />
       <SidebarDivider />
-      <SidebarGroup label="Settings" icon={<UserSettingsSignInAvatar />} to="/settings">
+      <SidebarGroup
+        label="Settings"
+        icon={<UserSettingsSignInAvatar />}
+        to="/settings"
+      >
         <SidebarSettings />
       </SidebarGroup>
     </Sidebar>

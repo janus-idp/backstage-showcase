@@ -23,7 +23,7 @@ const ifPrs: ((e: Entity) => boolean)[] = [
   isAzureDevOpsAvailable,
 ];
 
-export const isPrsAvailable = (e: Entity) => ifPrs.some((f) => f(e));
+export const isPrsAvailable = (e: Entity) => ifPrs.some(f => f(e));
 
 export const prContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

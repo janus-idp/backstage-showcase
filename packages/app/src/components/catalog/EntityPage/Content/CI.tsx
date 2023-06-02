@@ -17,7 +17,10 @@ import {
 } from '@immobiliarelabs/backstage-plugin-gitlab';
 import { Grid } from '@mui/material';
 
-import { isTektonCIAvailable, LatestPipelineRun } from '@janus-idp/backstage-plugin-tekton';
+import {
+  isTektonCIAvailable,
+  LatestPipelineRun,
+} from '@janus-idp/backstage-plugin-tekton';
 
 const ifCIs: ((e: Entity) => boolean)[] = [
   isGithubActionsAvailable,
@@ -26,7 +29,7 @@ const ifCIs: ((e: Entity) => boolean)[] = [
   isAzureDevOpsAvailable,
 ];
 
-export const isCIsAvailable = (e: Entity) => ifCIs.some((f) => f(e));
+export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
 
 export const ciContent = (
   <Grid container spacing={3} justifyContent="space-evenly">

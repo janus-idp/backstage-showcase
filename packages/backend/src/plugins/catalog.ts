@@ -14,14 +14,20 @@ import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend'
 
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
   const isOcmEnabled = env.config.getOptionalBoolean('enabled.ocm') || false;
-  const isKeycloakEnabled = env.config.getOptionalBoolean('enabled.keycloak') || false;
-  const isGithubEnabled = env.config.getOptionalBoolean('enabled.github') || false;
-  const isGithubOrgEnabled = env.config.getOptionalBoolean('enabled.githubOrg') || false;
-  const isGitlabEnabled = env.config.getOptionalBoolean('enabled.gitlab') || false;
+  const isKeycloakEnabled =
+    env.config.getOptionalBoolean('enabled.keycloak') || false;
+  const isGithubEnabled =
+    env.config.getOptionalBoolean('enabled.github') || false;
+  const isGithubOrgEnabled =
+    env.config.getOptionalBoolean('enabled.githubOrg') || false;
+  const isGitlabEnabled =
+    env.config.getOptionalBoolean('enabled.gitlab') || false;
 
   if (isOcmEnabled) {
     builder.addEntityProvider(
@@ -64,9 +70,11 @@ export default async function createPlugin(env: PluginEnvironment): Promise<Rout
   }
 
   if (isGithubOrgEnabled) {
-    const providersConfig = env.config.getOptionalConfig('catalog.providers.githubOrg');
+    const providersConfig = env.config.getOptionalConfig(
+      'catalog.providers.githubOrg',
+    );
 
-    providersConfig?.keys().forEach((id) => {
+    providersConfig?.keys().forEach(id => {
       const githubOrgConfig = providersConfig?.getConfig(id);
 
       const githubOrgId = githubOrgConfig.getString('id');

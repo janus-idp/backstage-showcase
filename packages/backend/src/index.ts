@@ -103,9 +103,13 @@ async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
   const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
 
   const isPluginEnabled =
-    !isOptional || args.config.getOptionalBoolean(options?.key ?? `enabled.${plugin}`) || false;
+    !isOptional ||
+    args.config.getOptionalBoolean(options?.key ?? `enabled.${plugin}`) ||
+    false;
   if (isPluginEnabled) {
-    const pluginEnv: PluginEnvironment = useHotMemoize(module, () => createEnv(plugin));
+    const pluginEnv: PluginEnvironment = useHotMemoize(module, () =>
+      createEnv(plugin),
+    );
     apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
     console.log(`Using backend plugin ${plugin}...`);
   }
@@ -209,14 +213,14 @@ async function main() {
     .addRouter('/api', apiRouter)
     .addRouter('', await app(appEnv));
 
-  await service.start().catch((err) => {
+  await service.start().catch(err => {
     console.log(err);
     process.exit(1);
   });
 }
 
 module.hot?.accept();
-main().catch((error) => {
+main().catch(error => {
   console.error('Backend failed to start up', error);
   process.exit(1);
 });
