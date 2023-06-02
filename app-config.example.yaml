@@ -43,6 +43,18 @@ integrations:
           webhookSecret: temp
           privateKey: |
             temp
+
+argocd:
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argoInstance1
+          url: temp
+          token: temp
+        - name: argoInstance2
+          url: temp
+          token: temp
+
 auth:
   environment: development
   providers:
