@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# To transform into Brew-friendly Dockerfile:
+# 1. remove ENV REMOTE_SOURCES and REMOTE_SOURCES_DIR (Brew will set its own values: REMOTE_SOURCES=unpacked_remote_sources and REMOTE_SOURCES_DIR=/remote-source)
+# 2. replace $REMOTE_SOURCES_DIR/ with $REMOTE_SOURCES_DIR/upstream1/app/ (full path to where sources are copied via Brew)
+# 3. before each yarn instlal/build, add '$YARN config set nodedir /usr; $YARN config set unsafe-perm true;'
+# 4. (?) add RUN source $REMOTE_SOURCES_DIR/upstream1/cachito.env after each COPY into REMOTE_SOURCES_DIR
+
 # Stage 1 - Install dependencies
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
 FROM registry.access.redhat.com/ubi9/nodejs-18:1 AS deps
@@ -22,7 +28,7 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV REMOTE_SOURCES=.
 ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR
+WORKDIR $REMOTE_SOURCES_DIR/
 COPY $REMOTE_SOURCES $REMOTE_SOURCES_DIR
 RUN chmod +x $REMOTE_SOURCES_DIR/.yarn/releases/yarn-1.22.19.cjs
 
@@ -41,11 +47,11 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV REMOTE_SOURCES=.
 ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR
+WORKDIR $REMOTE_SOURCES_DIR/
 COPY $REMOTE_SOURCES $REMOTE_SOURCES_DIR
 COPY --from=deps $REMOTE_SOURCES_DIR $REMOTE_SOURCES_DIR
 RUN chmod +x $REMOTE_SOURCES_DIR/.yarn/releases/yarn-1.22.19.cjs
-RUN git config --global --add safe.directory $REMOTE_SOURCES_DIR
+RUN git config --global --add safe.directory $REMOTE_SOURCES_DIR/
 RUN rm $REMOTE_SOURCES_DIR/app-config.yaml && mv $REMOTE_SOURCES_DIR/app-config.example.yaml $REMOTE_SOURCES_DIR/app-config.yaml
 
 RUN $YARN build --filter=backend
@@ -65,7 +71,7 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV REMOTE_SOURCES=.
 ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR
+WORKDIR $REMOTE_SOURCES_DIR/
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/.yarn $REMOTE_SOURCES_DIR/.yarn
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/.yarnrc.yml $REMOTE_SOURCES_DIR/
 RUN chmod +x $REMOTE_SOURCES_DIR/.yarn/releases/yarn-1.22.19.cjs
@@ -75,20 +81,22 @@ COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/yarn.lock $REMOTE_SOURCE
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Copy the built packages from the build stage
-COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz $REMOTE_SOURCES_DIR
+COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz $REMOTE_SOURCES_DIR/
 RUN tar xzf $REMOTE_SOURCES_DIR/bundle.tar.gz && rm $REMOTE_SOURCES_DIR/bundle.tar.gz
 
 # Copy any other files that we need at runtime
-COPY --chown=1001:1001 $REMOTE_SOURCES/app-config.yaml $REMOTE_SOURCES/app-config.production.yaml $REMOTE_SOURCES/app-config.example.yaml $REMOTE_SOURCES/app-config.example.production.yaml $REMOTE_SOURCES_DIR
+COPY --chown=1001:1001 $REMOTE_SOURCES/app-config.yaml $REMOTE_SOURCES/app-config.production.yaml $REMOTE_SOURCES/app-config.example.yaml $REMOTE_SOURCES/app-config.example.production.yaml $REMOTE_SOURCES_DIR/
 
 # Install production dependencies
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000 --ignore-scripts && $YARN cache clean
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
-RUN fix-permissions $REMOTE_SOURCES_DIR
+RUN fix-permissions $REMOTE_SOURCES_DIR/
 
 # Switch to nodejs user
 USER 1001
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
+
+# append Brew metadata here
