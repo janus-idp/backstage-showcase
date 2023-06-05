@@ -14,7 +14,6 @@ import {
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { css } from '@emotion/css';
 import MuiAlert from '@mui/lab/Alert';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import React from 'react';
@@ -41,6 +40,11 @@ const useStyles = makeStyles()(theme => ({
     boxShadow: theme.shadows.at(1),
     borderRadius: '50px',
     margin: 'auto',
+  },
+  notchedOutline: {
+    '&&': {
+      borderStyle: 'none',
+    },
   },
 }));
 
@@ -131,16 +135,13 @@ export const HomePage = () => {
               className={classes.janusLogoContainer}
               logo={<LogoFull className={classes.janusLogo} />}
             />
-            {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
             <HomePageSearchBar
               classes={{
                 root: classes.searchBar,
               }}
               InputProps={{
                 classes: {
-                  notchedOutline: css`
-                    border-style: none;
-                  `,
+                  notchedOutline: classes.notchedOutline,
                 },
               }}
               placeholder="Search"

@@ -24,7 +24,6 @@ import {
   SearchResult,
   useSearch,
 } from '@backstage/plugin-search-react';
-import { css } from '@emotion/css';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
@@ -42,6 +41,11 @@ const useStyles = makeStyles()(theme => ({
       marginTop: theme.spacing(2.5),
     },
   },
+  notchedOutline: {
+    '&&': {
+      borderStyle: 'none',
+    },
+  },
 }));
 
 export const SearchPage = () => {
@@ -55,13 +59,10 @@ export const SearchPage = () => {
       <Content>
         <Grid container direction="row">
           <Grid item xs={12}>
-            {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
             <SearchBar
               InputProps={{
                 classes: {
-                  notchedOutline: css`
-                    border-style: none;
-                  `,
+                  notchedOutline: classes.notchedOutline,
                 },
               }}
               className={classes.searchBar}
