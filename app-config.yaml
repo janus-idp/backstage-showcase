@@ -76,6 +76,13 @@ integrations:
     - host: dev.azure.com
       token: ${AZURE_TOKEN}
 
+  # Plugin: Bitbucket Server
+  bitbucketServer:
+    - host: ${BITBUCKET_SERVER_HOST}
+      apiBaseUrl: ${BITBUCKET_API_BASE_URL}
+      username: ${BITBUCKET_SERVER_USERNAME}
+      password: ${BITBUCKET_SERVER_PASSWORD}
+
 # Plugin: Azure DevOps
 azureDevOps:
   host: dev.azure.com
@@ -244,10 +251,10 @@ sonarqube:
 # Plugin: Jenkins
 jenkins:
   instances:
-  - name: default
-    baseUrl: ${JENKINS_URL}
-    username: ${JENKINS_USERNAME}
-    apiKey: ${JENKINS_TOKEN}
+    - name: default
+      baseUrl: ${JENKINS_URL}
+      username: ${JENKINS_USERNAME}
+      apiKey: ${JENKINS_TOKEN}
 
 enabled:
   kubernetes: ${K8S_ENABLED}
