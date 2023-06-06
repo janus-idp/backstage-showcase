@@ -19,7 +19,8 @@
 # 4. add RUN source $REMOTE_SOURCES_DIR/upstream1/cachito.env after each COPY into REMOTE_SOURCES_DIR
 # 5. before each yarn install/build, add '$YARN config set nodedir /usr; $YARN config set unsafe-perm true;'
 # 6. remove python and pip installs from runtime container (not required)
-# 7. if not copying all of REMOTE_SOURCES to REMOTE_SOURCES_DIR, copy upstream1/cachito.env and upstream1/app/registry-ca.pem
+# 7. copy ALL of REMOTE_SOURCES to REMOTE_SOURCES_DIR, not just upstream1/cachito.env and upstream1/app/registry-ca.pem
+# 8. add Brew metadata
 
 # Stage 1 - Install dependencies
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
