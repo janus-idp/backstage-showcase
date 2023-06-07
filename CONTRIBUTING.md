@@ -60,4 +60,4 @@ A special note. If there will be changes to the [app config](https://github.com/
 
 ## Support
 
-You can reach out to us in our [community slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) if you run into any issues with setting up, running, and testing the application. Here members of the team and community can come and assist you with questions and concerns you might have. Even if you don't need help consider joining and being involved in our community.
+You can reach out to us in our [community slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) if you run into any issues with setting up, running, and testing the application. Here members of the team and community can come and assist you with questions and concerns you might have. Even if you don't need help, consider joining and being involved in our community.
