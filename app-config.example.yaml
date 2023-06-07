@@ -44,7 +44,6 @@ integrations:
           privateKey: |
             temp
 
-  # Plugin: Bitbucket Server
   bitbucketServer:
     - host: bitbucket.com
       apiBaseUrl: temp
