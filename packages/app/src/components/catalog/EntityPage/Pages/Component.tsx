@@ -20,7 +20,7 @@ import {
   isCIsAvailable,
   isImageRegistriesAvailable,
   isIssuesAvailable,
-  isPrsAvailable,
+  isPRsAvailable,
   issuesContent,
   overviewContent,
   prContent,
@@ -40,7 +40,7 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
     </EntityLayout.Route>
 
     <EntityLayout.Route
-      if={isPrsAvailable}
+      if={isPRsAvailable}
       path="/pr"
       title="Pull/Merge Requests"
     >

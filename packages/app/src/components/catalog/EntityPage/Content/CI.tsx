@@ -1,4 +1,4 @@
-import { Entity } from '@backstage/catalog-model';
+import { type Entity } from '@backstage/catalog-model';
 import {
   EntityAzurePipelinesContent,
   isAzureDevOpsAvailable,
@@ -29,7 +29,7 @@ const ifCIs: ((e: Entity) => boolean)[] = [
 export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
 
 export const ciContent = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <EntitySwitch>
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
