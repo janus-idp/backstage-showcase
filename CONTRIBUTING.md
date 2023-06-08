@@ -1,6 +1,6 @@
 # Contributing
 
-We are excited to see you want to be a part of this project by contributing. Here is some information on how to get started as well as some knowledge on our requirements.
+We are excited to see you want to be a part of this project by contributing. Here is some information on how to get started, as well as some knowledge on our requirements.
 
 ## Get Started
 
