@@ -118,6 +118,13 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${SEGMENT_MASK_IP}`: prevents IP addresses to be sent if true
      - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
 
+   - Setup the Dynatrace plugin
+
+     - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
+     - `${DYNATRACE_URL}`: The baseURL for rendering links to problems in the table
+     - `${DYNATRACE_API_URL}`: The URL to the Dynatrace API
+     - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with entities.read and problems.read permissions.
+
 3. Run `yarn install` to install the dependencies
 
 4. Start the application using `yarn start`

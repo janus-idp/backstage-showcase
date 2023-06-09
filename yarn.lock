@@ -3162,6 +3162,20 @@
     react-use "^17.2.4"
     zen-observable "^0.10.0"
 
+"@backstage/plugin-dynatrace@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-dynatrace/-/plugin-dynatrace-5.0.0.tgz#6823a1b2a83084475eee66be11eb2644502dce33"
+  integrity sha512-xqJ/tTPfJsnorXWg83peZ9OyZ2KT2G0MfzgPPhh9GeM53BBo4toT7aD46X61cbEmAXqcgIW+gks+pPjj6AmsCA==
+  dependencies:
+    "@backstage/catalog-model" "^1.3.0"
+    "@backstage/core-components" "^0.13.1"
+    "@backstage/core-plugin-api" "^1.5.1"
+    "@backstage/theme" "^0.3.0"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.61"
+    react-use "^17.2.4"
+
 "@backstage/plugin-events-node@^0.2.6":
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-events-node/-/plugin-events-node-0.2.6.tgz#3ed342d4cab8a108e98e14e4662c0a134b8e8ad5"

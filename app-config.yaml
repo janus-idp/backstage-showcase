@@ -131,6 +131,13 @@ proxy:
     # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
     secure: ${ARTIFACTORY_SECURE}
 
+  '/dynatrace':
+    target: ${DYNATRACE_API_URL}
+    headers:
+      # This API access token requires entities.read and problems.read permissions
+      # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
+      Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -244,10 +251,14 @@ sonarqube:
 # Plugin: Jenkins
 jenkins:
   instances:
-  - name: default
-    baseUrl: ${JENKINS_URL}
-    username: ${JENKINS_USERNAME}
-    apiKey: ${JENKINS_TOKEN}
+    - name: default
+      baseUrl: ${JENKINS_URL}
+      username: ${JENKINS_USERNAME}
+      apiKey: ${JENKINS_TOKEN}
+
+# Plugin: Dynatrace
+dynatrace:
+  baseURL: ${DYNATRACE_URL}
 
 enabled:
   kubernetes: ${K8S_ENABLED}
