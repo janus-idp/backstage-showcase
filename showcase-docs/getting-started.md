@@ -118,6 +118,28 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${SEGMENT_MASK_IP}`: prevents IP addresses to be sent if true
      - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
 
+   - Setup the PagerDuty plugin
+
+     - `${PAGERDUTY_TOKEN}` with the [API token](https://support.pagerduty.com/docs/api-access-keys#generating-a-general-access-rest-api-key) used to make requests to the [PagerDuty API](https://developer.pagerduty.com/docs/rest-api-v2/rest-api/). Note that this will require a PaperDuty Admin role.
+     - To integrate with a PagerDuty Service, you will need to annotate the appropriate entity with the [PagerDuty Integration key](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#integrating-with-a-pagerduty-service) in its `.yaml` configuration file:
+
+     ```yaml
+     annotations:
+       pagerduty.com/integration-key: [INTEGRATION_KEY]
+     ```
+
+     - Alternatively, you can integrate with the [PagerDuty ServiceID](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#annotating-with-service-id) instead of the integration key:
+
+     ```yaml
+     annotations:
+       pagerduty.com/service-id: [SERVICE_ID]
+     ```
+
+     - **WARNING**: The default implementation of the PagerDuty plugin will require the `/pagerduty` endpoint to be exposed as an unprotected endpoint.
+       - If this is considered problematic, consider using the plugin in `readOnly` mode by making the following modifications:
+         - Changing `<EntityPagerDutyCard />` to `<EntityPagerDutyCard readOnly={true}/>` in the [`Overview.tsx`](../packages/app/src/components/catalog/EntityPage/Content/Overview.tsx) file
+         - Uncommenting `allowedMethods: ['GET']` in the `proxy` section of `app-config.yaml`
+
 3. Run `yarn install` to install the dependencies
 
 4. Start the application using `yarn start`

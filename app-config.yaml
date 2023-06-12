@@ -131,6 +131,16 @@ proxy:
     # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
     secure: ${ARTIFACTORY_SECURE}
 
+  # Plugin: PagerDuty
+  '/pagerduty':
+    target: https://api.pagerduty.com
+    headers:
+      Authorization: Token token=${PAGERDUTY_TOKEN}
+      # To utilize the plugin in `readOnly` mode (<EntityPagerDutyCard readOnly={true}/>), 
+      # uncomment the allowedMethods line
+      # prohibit the `/pagerduty` proxy endpoint from servicing non-GET requests
+      # allowedMethods: ['GET']
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -248,6 +258,11 @@ jenkins:
     baseUrl: ${JENKINS_URL}
     username: ${JENKINS_USERNAME}
     apiKey: ${JENKINS_TOKEN}
+
+# Plugin: PagerDuty
+pagerduty:
+  # uncomment the following, and provide a URL to override the default URL used for events
+  # eventsBaseUrl: <PagerDuty Event URL>
 
 enabled:
   kubernetes: ${K8S_ENABLED}
