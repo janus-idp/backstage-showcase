@@ -3354,6 +3354,30 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
+"@backstage/plugin-lighthouse-common@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-lighthouse-common/-/plugin-lighthouse-common-0.1.1.tgz#45361e61390b6fc9bf6a6edf89bb129732508270"
+  integrity sha512-87YztrAkgQEk8rY3O74MsAERDPe2n6+UnKSqTx1T7E51cdci0u8ztFECljYdyOYPIgB3GYgTf8Zpcs3T1JY/qw==
+  dependencies:
+    "@backstage/config" "^1.0.7"
+
+"@backstage/plugin-lighthouse@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-lighthouse/-/plugin-lighthouse-0.4.3.tgz#57271f3d0b3c0025b20de5fd6012f3eb062f58b3"
+  integrity sha512-b1WvrXX+aOaQaWFOvgKV33S5aoszLqF9tSm36AK9j1zPTirz0STZvqWGfU/mkiaU6LxBT2/vMmfQTd+BSAuqYw==
+  dependencies:
+    "@backstage/catalog-model" "^1.3.0"
+    "@backstage/config" "^1.0.7"
+    "@backstage/core-components" "^0.13.1"
+    "@backstage/core-plugin-api" "^1.5.1"
+    "@backstage/plugin-catalog-react" "^1.6.0"
+    "@backstage/plugin-lighthouse-common" "^0.1.1"
+    "@backstage/theme" "^0.3.0"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.61"
+    react-use "^17.2.4"
+
 "@backstage/plugin-org@^0.6.8":
   version "0.6.8"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-org/-/plugin-org-0.6.8.tgz#13dd01cb6b910c370e8f9c0e4f21fbb2276a2f3b"
@@ -8947,7 +8971,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react-dom@17.0.20", "@types/react-dom@<18.0.0", "@types/react-dom@^17.0.2":
+"@types/react-dom@<18.0.0", "@types/react-dom@^17.0.2":
   version "17.0.20"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.20.tgz#e0c8901469d732b36d8473b40b679ad899da1b53"
   integrity sha512-4pzIjSxDueZZ90F52mU3aPoogkHIoSIDG+oQ+wQK7Cy2B9S+MvOqY0uEA/qawKz381qrEDkvpwyt8Bm31I8sbA==
@@ -9007,7 +9031,7 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.60", "@types/react@^16.13.1 || ^17.0.0", "@types/react@^17", "@types/react@^17.0.2":
+"@types/react@*", "@types/react@^16.13.1 || ^17.0.0", "@types/react@^17", "@types/react@^17.0.2":
   version "17.0.60"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.60.tgz#a4a97dcdbebad76612c188fc06440e4995fd8ad2"
   integrity sha512-pCH7bqWIfzHs3D+PDs3O/COCQJka+Kcw3RnO9rFA2zalqoXg7cNjJDh6mZ7oRtY1wmY4LVwDdAbA1F7Z8tv3BQ==
