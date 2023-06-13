@@ -135,11 +135,6 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
        pagerduty.com/service-id: [SERVICE_ID]
      ```
 
-     - **WARNING**: The default implementation of the PagerDuty plugin will require the `/pagerduty` endpoint to be exposed as an unprotected endpoint.
-       - If this is considered problematic, consider using the plugin in `readOnly` mode by making the following modifications:
-         - Changing `<EntityPagerDutyCard />` to `<EntityPagerDutyCard readOnly={true}/>` in the [`Overview.tsx`](../packages/app/src/components/catalog/EntityPage/Content/Overview.tsx) file
-         - Uncommenting `allowedMethods: ['GET']` in the `proxy` section of `app-config.yaml`
-
 3. Run `yarn install` to install the dependencies
 
 4. Start the application using `yarn start`

@@ -136,10 +136,6 @@ proxy:
     target: https://api.pagerduty.com
     headers:
       Authorization: Token token=${PAGERDUTY_TOKEN}
-      # To utilize the plugin in `readOnly` mode (<EntityPagerDutyCard readOnly={true}/>), 
-      # uncomment the allowedMethods line
-      # prohibit the `/pagerduty` proxy endpoint from servicing non-GET requests
-      # allowedMethods: ['GET']
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
