@@ -15,8 +15,12 @@
 # To transform into Brew-friendly Dockerfile:
 # 1. remove ENV REMOTE_SOURCES and REMOTE_SOURCES_DIR (Brew will set its own values: REMOTE_SOURCES=unpacked_remote_sources and REMOTE_SOURCES_DIR=/remote-source)
 # 2. replace $REMOTE_SOURCES_DIR/ with $REMOTE_SOURCES_DIR/upstream1/app/ (full path to where sources are copied via Brew)
-# 3. before each yarn instlal/build, add '$YARN config set nodedir /usr; $YARN config set unsafe-perm true;'
-# 4. (?) add RUN source $REMOTE_SOURCES_DIR/upstream1/cachito.env after each COPY into REMOTE_SOURCES_DIR
+# 3. replace $REMOTE_SOURCES/ with $REMOTE_SOURCES/upstream1/app/ (full path to where sources are copied via Brew)
+# 4. add RUN source $REMOTE_SOURCES_DIR/upstream1/cachito.env after each COPY into REMOTE_SOURCES_DIR
+# 5. before each yarn install/build, add '$YARN config set nodedir /usr; $YARN config set unsafe-perm true;'
+# 6. remove python and pip installs from runtime container (not required)
+# 7. copy ALL of REMOTE_SOURCES to REMOTE_SOURCES_DIR, not just upstream1/cachito.env and upstream1/app/registry-ca.pem
+# 8. add Brew metadata
 
 # Stage 1 - Install dependencies
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
@@ -84,8 +88,8 @@ RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz $REMOTE_SOURCES_DIR/
 RUN tar xzf $REMOTE_SOURCES_DIR/bundle.tar.gz && rm $REMOTE_SOURCES_DIR/bundle.tar.gz
 
-# Copy any other files that we need at runtime
-COPY --chown=1001:1001 $REMOTE_SOURCES/app-config.yaml $REMOTE_SOURCES/app-config.production.yaml $REMOTE_SOURCES/app-config.example.yaml $REMOTE_SOURCES/app-config.example.production.yaml $REMOTE_SOURCES_DIR/
+# Copy app-config files needed in runtime
+COPY --chown=1001:1001 $REMOTE_SOURCES/app-config*.yaml $REMOTE_SOURCES_DIR/
 
 # Install production dependencies
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000 --ignore-scripts && $YARN cache clean
