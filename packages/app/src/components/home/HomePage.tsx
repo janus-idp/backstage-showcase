@@ -20,6 +20,7 @@ import React from 'react';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
 import { ErrorReport, fetcher } from '../../common';
+import { useGetBaseURL } from '../../utils';
 
 const useStyles = makeStyles()(theme => ({
   img: {
@@ -43,8 +44,9 @@ type QuickAccessLinks = {
 
 const QuickAccess = () => {
   const { classes } = useStyles();
+  const baseUrl = useGetBaseURL();
   const { data, error, isLoading } = useSWR(
-    '/homepage/data.json',
+    [[`${baseUrl}/api/s3/homepage/data.json`], ['/homepage/data.json']],
     fetcher<QuickAccessLinks>,
   );
 

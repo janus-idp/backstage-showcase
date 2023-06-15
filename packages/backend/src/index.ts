@@ -37,6 +37,7 @@ import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
+import s3 from './plugins/s3';
 import { PluginEnvironment } from './types';
 
 function makeCreateEnv(config: Config) {
@@ -201,6 +202,13 @@ async function main() {
     createEnv,
     router: jenkins,
     isOptional: true,
+  });
+  await addPlugin({
+    plugin: 's3',
+    config,
+    apiRouter,
+    createEnv,
+    router: s3,
   });
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback

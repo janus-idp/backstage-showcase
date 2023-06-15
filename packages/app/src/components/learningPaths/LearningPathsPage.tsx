@@ -5,6 +5,7 @@ import React from 'react';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
 import { ErrorReport, fetcher } from '../../common';
+import { useGetBaseURL } from '../../utils';
 
 const useStyles = makeStyles()({
   link: {
@@ -33,8 +34,12 @@ type Path = {
 
 const LearningPathCards = () => {
   const { classes } = useStyles();
+  const baseUrl = useGetBaseURL();
   const { data, error, isLoading } = useSWR(
-    '/learning-paths/data.json',
+    [
+      [`${baseUrl}/api/s3/learning-paths/data.json`],
+      ['/learning-paths/data.json'],
+    ],
     fetcher<Path>,
   );
 

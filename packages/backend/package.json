@@ -15,6 +15,7 @@
     "clean": "backstage-cli package clean"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.350.0",
     "@backstage/backend-common": "^0.18.5",
     "@backstage/backend-tasks": "^0.5.2",
     "@backstage/catalog-client": "^1.4.1",
