@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "config:js-app",
+    ":gitSignOff",
+    ":rebaseStalePrs",
+    "group:linters",
+    "group:test"
+  ],
+  "labels": ["kind/dependency upgrade"],
+  "npm": {
+    "minimumReleaseAge": "1 day"
+  },
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@backstage/"],
+      "groupName": ["Core Backstage packages"]
+    },
+    {
+      "matchPackagePatterns": ["^@janus-idp/"],
+      "groupName": ["Janus-IDP Backstage packages"]
+    },
+    {
+      "matchPackagePatterns": ["^@immobiliarelabs/", "^@roadiehq/"],
+      "groupName": ["Third Party Backstage packages"]
+    }
+  ]
+}
