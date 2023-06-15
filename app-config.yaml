@@ -251,10 +251,10 @@ sonarqube:
 # Plugin: Jenkins
 jenkins:
   instances:
-  - name: default
-    baseUrl: ${JENKINS_URL}
-    username: ${JENKINS_USERNAME}
-    apiKey: ${JENKINS_TOKEN}
+    - name: default
+      baseUrl: ${JENKINS_URL}
+      username: ${JENKINS_USERNAME}
+      apiKey: ${JENKINS_TOKEN}
 
 # Plugin: Dynatrace
 dynatrace:
