@@ -258,7 +258,7 @@ jenkins:
 
 # Plugin: Dynatrace
 dynatrace:
-  baseURL: ${DYNATRACE_URL}
+  baseUrl: ${DYNATRACE_URL}
 
 enabled:
   kubernetes: ${K8S_ENABLED}
