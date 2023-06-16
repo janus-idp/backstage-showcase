@@ -123,7 +123,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
      - `${DYNATRACE_URL}`: The baseURL for rendering links to problems in the table
      - `${DYNATRACE_API_URL}`: The URL to the Dynatrace API
-     - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with entities.read and problems.read permissions.
+     - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with `entities.read`,`problems.read` permissions. It will also need one of the following permissions: `DataExport`, `ExternalSyntheticIntegration`, or `ReadSyntheticData`.
 
 3. Run `yarn install` to install the dependencies
 
