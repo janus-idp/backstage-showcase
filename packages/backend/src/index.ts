@@ -37,6 +37,7 @@ import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
+import permission from './plugins/permission';
 import { PluginEnvironment } from './types';
 
 function makeCreateEnv(config: Config) {
@@ -134,6 +135,13 @@ async function main() {
     apiRouter,
     createEnv,
     router: scaffolder,
+  });
+  await addPlugin({
+    plugin: 'permission',
+    config,
+    apiRouter,
+    createEnv,
+    router: permission,
   });
 
   // Optional plugins

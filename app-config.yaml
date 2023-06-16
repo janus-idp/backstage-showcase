@@ -249,6 +249,9 @@ jenkins:
       username: ${JENKINS_USERNAME}
       apiKey: ${JENKINS_TOKEN}
 
+permission:
+  enabled: true
+
 enabled:
   kubernetes: ${K8S_ENABLED}
   techdocs: ${TECHDOCS_ENABLED}

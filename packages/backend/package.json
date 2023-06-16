@@ -15,7 +15,6 @@
     "clean": "backstage-cli package clean"
   },
   "dependencies": {
-    "app": "*",
     "@backstage/backend-common": "^0.18.5",
     "@backstage/backend-tasks": "^0.5.2",
     "@backstage/catalog-client": "^1.4.1",
@@ -29,8 +28,10 @@
     "@backstage/plugin-catalog-backend": "^1.9.1",
     "@backstage/plugin-catalog-backend-module-github": "^0.3.0",
     "@backstage/plugin-catalog-backend-module-openapi": "^0.1.11",
+    "@backstage/plugin-catalog-common": "^1.0.13",
     "@backstage/plugin-jenkins-backend": "^0.2.0",
     "@backstage/plugin-kubernetes-backend": "^0.11.0",
+    "@backstage/plugin-permission-backend": "^0.5.20",
     "@backstage/plugin-permission-common": "^0.7.5",
     "@backstage/plugin-permission-node": "^0.7.8",
     "@backstage/plugin-proxy-backend": "^0.2.39",
@@ -45,6 +46,7 @@
     "@janus-idp/backstage-plugin-ocm-backend": "^3.0.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.6",
     "@roadiehq/scaffolder-backend-argocd": "^1.1.8",
+    "app": "*",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",
