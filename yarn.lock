@@ -4963,7 +4963,7 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@janus-idp/backstage-plugin-analytics-provider-segment@^1.0.5":
+"@janus-idp/backstage-plugin-analytics-provider-segment@1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-analytics-provider-segment/-/backstage-plugin-analytics-provider-segment-1.0.5.tgz#d111a3ecaa76cbb58f4953f5220586a92407618b"
   integrity sha512-StBnVvFiuo5Y3WEFHen7WoGkUJcaG/BjN40O6TX3OpTUtg3F1KckgQWzGuNPstREPJEyCw6FFJhRT1UDmiSMoQ==
@@ -4979,7 +4979,7 @@
     prop-types "^15.7.2"
     react-use "^17.2.4"
 
-"@janus-idp/backstage-plugin-jfrog-artifactory@^1.0.9":
+"@janus-idp/backstage-plugin-jfrog-artifactory@1.0.9":
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-jfrog-artifactory/-/backstage-plugin-jfrog-artifactory-1.0.9.tgz#dac0650f738d47d8864f1e32a19ccd493e8b76bc"
   integrity sha512-e99qf+DS27HUu5wiwzdSeaieDnbSoAhps02AQBbDdHAKIH3rQvoUkU9sxH0Q8PuVrS2NIJ+3Mm0sFUUKTKnZpw==
@@ -4994,7 +4994,7 @@
     "@material-ui/lab" "^4.0.0-alpha.45"
     react-use "^17.2.4"
 
-"@janus-idp/backstage-plugin-keycloak-backend@^1.3.7":
+"@janus-idp/backstage-plugin-keycloak-backend@1.3.7":
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-keycloak-backend/-/backstage-plugin-keycloak-backend-1.3.7.tgz#3efa1164a66826f2147b286e2a45e59259d227d3"
   integrity sha512-nhppLmOgsr7We59KaAG+/jZwROz/RfD4ChjcUZMehyycQ8pn5SagknZFXQY+Fdn0qIvg4FvMAkhS7CZjlSDr8Q==
@@ -5009,7 +5009,7 @@
     uuid "^9.0.0"
     winston "^3.2.1"
 
-"@janus-idp/backstage-plugin-ocm-backend@^3.0.2":
+"@janus-idp/backstage-plugin-ocm-backend@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-backend/-/backstage-plugin-ocm-backend-3.0.2.tgz#fb5ba50561d9d37c5410ed620855a038371c1174"
   integrity sha512-yuquzoSE7bN17dXNy58zvo9rSZDNePYU+iMgQxU3R82pAnK5+JC2WcX19xtV9ZbtxJzjRwktiaLNXs0k9lVI6w==
@@ -5034,7 +5034,7 @@
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-common/-/backstage-plugin-ocm-common-2.1.0.tgz#1ab3272fd7fb6f532ab2e472860efc537ea58f89"
   integrity sha512-IAXsX/YaicunGPKE91Ww0/JokAMOR3NeFJlSicv0uiFZK/x0KeDWdSXrOrb7gglO+gwXVk+pKPILEyiRShJYlg==
 
-"@janus-idp/backstage-plugin-ocm@^3.0.1":
+"@janus-idp/backstage-plugin-ocm@3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm/-/backstage-plugin-ocm-3.0.1.tgz#51aa6858d86fd7bc0c2e07a268a9976d37e0f50b"
   integrity sha512-dXEXFILJcCmaCXCX3jhR2bsefLYDkBoecigsUqjB+r6awgqSvCgDmvt4WfIB8avRtksKNjsG7KkQE4MQTjO2WA==
@@ -5055,7 +5055,7 @@
     "@patternfly/react-icons" "^4.93.6"
     react-use "^17.2.4"
 
-"@janus-idp/backstage-plugin-quay@^1.2.12":
+"@janus-idp/backstage-plugin-quay@1.2.12":
   version "1.2.12"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-quay/-/backstage-plugin-quay-1.2.12.tgz#49198578e64d5899b0bb7a2ed11f4ae36744105a"
   integrity sha512-yAwF31wvI7A+Jg8PlA2AiVkX3xHZl9OfhjmLKuk4aJAIzwR71xX//TjnkAbaGZVcmiWquHb/9GQGs+DibyAwmw==
@@ -5070,7 +5070,7 @@
     "@material-ui/lab" "4.0.0-alpha.61"
     react-use "^17.2.4"
 
-"@janus-idp/backstage-plugin-tekton@^1.5.0":
+"@janus-idp/backstage-plugin-tekton@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-tekton/-/backstage-plugin-tekton-1.5.0.tgz#8800e83b8f780ded3a373e19a0fcb180f7fe10a3"
   integrity sha512-GufgX/6FhoeXsfy1vfraAjvuofSCkBKpNaPkJQsvu+hx44uZRJRAU+cL663hRHMYnqC1lFHXgxHuzcAC990uLg==
@@ -5103,7 +5103,7 @@
     react-use "^17.2.4"
     react-virtualized "9.22.5"
 
-"@janus-idp/backstage-plugin-topology@^1.7.0":
+"@janus-idp/backstage-plugin-topology@1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-topology/-/backstage-plugin-topology-1.7.0.tgz#27acd2b43dfa37f8522ea76c906014d281ca23b1"
   integrity sha512-oKm3E6/R/aJvIxBdYLt2PNhPXJgE4mWz2HATRD6BGJ3FCTfe2ig/5G6NJuIqNwiBLC0YvYbmCwJ2oC50bvl8HA==
