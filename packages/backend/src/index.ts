@@ -37,6 +37,7 @@ import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
+import { startServer as startLighthouseAuditService } from '@spotify/lighthouse-audit-service';
 import { PluginEnvironment } from './types';
 
 function makeCreateEnv(config: Config) {
@@ -202,6 +203,35 @@ async function main() {
     router: jenkins,
     isOptional: true,
   });
+
+  // Only try to start up the Lighthouse Audit Service
+  if (
+    config.getOptionalString('backend.database.plugin.lighthouse.client') ===
+    'pg'
+  ) {
+    await startLighthouseAuditService({
+      port: 8080,
+      cors: true,
+      postgresConfig: {
+        database: config.getOptionalString(
+          'backend.database.plugin.lighthouse.connection.database',
+        ),
+        host: config.getOptionalString(
+          'backend.database.plugin.lighthouse.connection.host',
+        ),
+        user: config.getOptionalString(
+          'backend.database.plugin.lighthouse.connection.user',
+        ),
+        password: config.getOptionalString(
+          'backend.database.plugin.lighthouse.connection.password',
+        ),
+        port: config.getOptionalNumber(
+          'backend.database.plugin.lighthouse.connection.port',
+        ),
+      },
+    });
+    console.log(`Starting the lighthouse-audit-service...`);
+  }
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
