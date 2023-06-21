@@ -10,6 +10,10 @@ import {
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
+import {
+  EntityLighthouseContent,
+  isLighthouseAvailable,
+} from '@backstage/plugin-lighthouse';
 import { Grid } from '@mui/material';
 import React from 'react';
 import {
@@ -78,6 +82,14 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
 
     <EntityLayout.Route path="/security-insights" title="Security Insights">
       {securityContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
+      path="/lighthouse"
+      title="Lighthouse"
+      if={isLighthouseAvailable}
+    >
+      <EntityLighthouseContent />
     </EntityLayout.Route>
 
     {componentType === 'service' && (

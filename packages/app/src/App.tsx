@@ -38,6 +38,7 @@ import { HomePage } from './components/home/HomePage';
 import { LearningPaths } from './components/learningPaths/LearningPathsPage';
 import { SearchPage } from './components/search/SearchPage';
 import { janusTheme } from './themes/janus';
+import { LighthousePage } from '@backstage/plugin-lighthouse';
 
 const app = createApp({
   apis,
@@ -112,6 +113,7 @@ const routes = (
     <Route path="/catalog-graph" element={<CatalogGraphPage />} />
     <Route path="/ocm" element={<OcmPage />} />
     <Route path="/learning-paths" element={<LearningPaths />} />
+    <Route path="/lighthouse" element={<LighthousePage />} />
   </FlatRoutes>
 );
 

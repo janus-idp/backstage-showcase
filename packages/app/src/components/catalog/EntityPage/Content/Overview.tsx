@@ -30,6 +30,10 @@ import {
   EntityDependabotAlertsCard,
   isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
+import {
+  EntityLastLighthouseAuditCard,
+  isLighthouseAvailable,
+} from '@backstage/plugin-lighthouse';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
 
@@ -114,6 +118,15 @@ export const overviewContent = (
     </Grid>
     <Grid item container xs={4}>
       &nbsp;
+    </Grid>
+    <Grid container spacing={3} alignItems="stretch">
+      <EntitySwitch>
+        <EntitySwitch.Case if={isLighthouseAvailable}>
+          <Grid item md={6}>
+            <EntityLastLighthouseAuditCard />
+          </Grid>
+        </EntitySwitch.Case>
+      </EntitySwitch>
     </Grid>
   </Grid>
 );
