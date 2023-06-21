@@ -5070,7 +5070,7 @@
     "@material-ui/lab" "4.0.0-alpha.61"
     react-use "^17.2.4"
 
-"@janus-idp/backstage-plugin-tekton@^1.4.14":
+"@janus-idp/backstage-plugin-tekton@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-tekton/-/backstage-plugin-tekton-1.5.0.tgz#8800e83b8f780ded3a373e19a0fcb180f7fe10a3"
   integrity sha512-GufgX/6FhoeXsfy1vfraAjvuofSCkBKpNaPkJQsvu+hx44uZRJRAU+cL663hRHMYnqC1lFHXgxHuzcAC990uLg==
@@ -5103,7 +5103,7 @@
     react-use "^17.2.4"
     react-virtualized "9.22.5"
 
-"@janus-idp/backstage-plugin-topology@^1.6.3":
+"@janus-idp/backstage-plugin-topology@^1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-topology/-/backstage-plugin-topology-1.7.0.tgz#27acd2b43dfa37f8522ea76c906014d281ca23b1"
   integrity sha512-oKm3E6/R/aJvIxBdYLt2PNhPXJgE4mWz2HATRD6BGJ3FCTfe2ig/5G6NJuIqNwiBLC0YvYbmCwJ2oC50bvl8HA==
