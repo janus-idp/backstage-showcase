@@ -44,7 +44,6 @@
     "@janus-idp/backstage-plugin-ocm-backend": "^3.0.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.6",
     "@roadiehq/scaffolder-backend-argocd": "^1.1.8",
-    "@spotify/lighthouse-audit-service": "^2.0.0",
     "app": "*",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
