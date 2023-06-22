@@ -7,7 +7,6 @@ import {
 } from '@backstage/core-components';
 import {
   ComponentAccordion,
-  HomePageCompanyLogo,
   HomePageStarredEntities,
   HomePageToolkit,
   type Tool,
@@ -21,19 +20,11 @@ import React from 'react';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
 import { ErrorReport, fetcher } from '../../common';
-import LogoFull from '../Root/LogoFull';
 
 const useStyles = makeStyles()(theme => ({
   img: {
     height: '40px',
     width: 'auto',
-  },
-  janusLogo: {
-    height: '80px',
-    width: 'auto',
-  },
-  janusLogoContainer: {
-    margin: theme.spacing(5, 0, 1, 0),
   },
   searchBar: {
     display: 'flex',
@@ -127,10 +118,6 @@ export const HomePage = () => {
                 </Link>
               </MuiAlert>
             )}
-            <HomePageCompanyLogo
-              className={classes.janusLogoContainer}
-              logo={<LogoFull className={classes.janusLogo} />}
-            />
             {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
             <HomePageSearchBar
               classes={{
