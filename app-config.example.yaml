@@ -44,6 +44,12 @@ integrations:
           privateKey: |
             temp
 
+  bitbucketServer:
+    - host: bitbucket.com
+      apiBaseUrl: temp
+      username: temp
+      password: temp
+
 argocd:
   appLocatorMethods:
     - type: 'config'
