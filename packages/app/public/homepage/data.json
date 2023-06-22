@@ -1,7 +1,7 @@
 [
   {
-    "title": "Janus Community",
-    "isExpanded": true,
+    "title": "COMMUNITY",
+    "isExpanded": false,
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/web.png",
@@ -41,7 +41,51 @@
     ]
   },
   {
-    "title": "Learning Path",
+    "title": "DEVELOPER TOOLS",
+    "isExpanded": true,
+    "links": [
+      {
+        "iconUrl": "/homepage/icons/podman_logo.svg",
+        "label": "Podman Desktop",
+        "url": "https://podman-desktop.io"
+      }
+    ]
+  },
+  {
+    "title": "CI/CD TOOLS",
+    "isExpanded": true,
+    "links": [
+      {
+        "iconUrl": "/homepage/icons/argo-icon-color.svg",
+        "label": "ArgoCD",
+        "url": ""
+      },
+      {
+        "iconUrl": "/homepage/icons/sonarqube.svg",
+        "label": "SonarQube (Coming Soon)",
+        "url": ""
+      },
+      {
+        "iconUrl": "/homepage/icons/quay.svg",
+        "label": "Quay.io",
+        "url": "https://quay.io/"
+      }
+    ]
+  },
+  {
+    "title": "OPENSHIFT CLUSTERS",
+    "isExpanded": true,
+    "links": [
+      {
+        "iconUrl": "/homepage/icons/icons8/openshift.png",
+        "label": "OpenShift",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "title": "OPENSHIFT LEARNING PATHS",
+    "isExpanded": true,
     "links": [
       {
         "iconUrl": "/homepage/icons/openshift-learning/ST-spring-boot_2x.png",
@@ -70,72 +114,17 @@
     ]
   },
   {
-    "title": "OpenShift Clusters",
-    "links": [
-      {
-        "iconUrl": "/homepage/icons/icons8/openshift.png",
-        "label": "OpenShift Smaug NA",
-        "url": "https://console-openshift-console.apps.smaug.na.operate-first.cloud/k8s/ns/janus-idp/pods"
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/devspaces.png",
-        "label": "OpenShift Dev Spaces",
-        "url": "https://devspaces.apps.sandbox-m3.1530.p1.openshiftapps.com/dashboard/"
-      }
-    ]
-  },
-  {
-    "title": "Devops Tools",
-    "links": [
-      {
-        "iconUrl": "/homepage/icons/icons8/devspaces.png",
-        "label": "OpenShift Dev Spaces",
-        "url": "https://devspaces.apps.sandbox-m3.1530.p1.openshiftapps.com/dashboard/"
-      },
-      {
-        "iconUrl": "/homepage/icons/argo-icon-color.svg",
-        "label": "ArgoCD",
-        "url": "https://argocd.operate-first.cloud/"
-      },
-      {
-        "iconUrl": "/homepage/icons/sonarqube.svg",
-        "label": "SonarQube (Coming Soon)",
-        "url": ""
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/github.png",
-        "label": "GitHub",
-        "url": "https://github.com/orgs/janus-idp"
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/registry-editor.png",
-        "label": "GitHub Container Registry",
-        "url": "https://github.com/orgs/janus-idp/packages"
-      },
-      {
-        "iconUrl": "/homepage/icons/quay.svg",
-        "label": "Quay.io",
-        "url": "https://quay.io/janus-idp/"
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/safe-out.png",
-        "label": "Vault",
-        "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
-      }
-    ]
-  },
-  {
-    "title": "Monitoring Tools",
+    "title": "MONITORING TOOLS",
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/system-task.png",
-        "label": "Grafana (Coming Soon)",
+        "label": "Grafana",
         "url": ""
       }
     ]
   },
   {
-    "title": "Security Tools",
+    "title": "SECURITY TOOLS",
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/security-checked.png",
@@ -143,14 +132,14 @@
         "url": "https://github.com/orgs/janus-idp"
       },
       {
-        "iconUrl": "/homepage/icons/icons8/safe-out.png",
-        "label": "Vault",
-        "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
-      },
-      {
         "iconUrl": "/homepage/icons/keycloak.svg",
         "label": "Keycloak",
-        "url": "https://keycloak.apps.smaug.na.operate-first.cloud/"
+        "url": ""
+      },
+      {
+        "iconUrl": "/homepage/icons/icons8/safe-out.png",
+        "label": "Vault",
+        "url": ""
       }
     ]
   }
