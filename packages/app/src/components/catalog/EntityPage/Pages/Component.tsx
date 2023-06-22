@@ -20,8 +20,10 @@ import {
   isCIsAvailable,
   isImageRegistriesAvailable,
   isIssuesAvailable,
+  isMonitoringAvailable,
   isPrsAvailable,
   issuesContent,
+  monitoringContent,
   overviewContent,
   prContent,
   securityContent,
@@ -78,6 +80,14 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
 
     <EntityLayout.Route path="/security-insights" title="Security Insights">
       {securityContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
+      if={isMonitoringAvailable}
+      path="/monitoring"
+      title="Monitoring"
+    >
+      {monitoringContent}
     </EntityLayout.Route>
 
     {componentType === 'service' && (
