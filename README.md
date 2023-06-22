@@ -36,6 +36,7 @@ Our current list of plugins within the showcase app include:
 - [Jira plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira)
 - [Jfrog Artifactory plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/jfrog-artifactory)
 - [Segment plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment)
+- [Datadog plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog)
 
 ## Getting Started
 
