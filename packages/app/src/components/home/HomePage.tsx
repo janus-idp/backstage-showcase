@@ -9,7 +9,6 @@ import {
   ComponentAccordion,
   HomePageStarredEntities,
   HomePageToolkit,
-  type Tool,
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
@@ -17,9 +16,9 @@ import { css } from '@emotion/css';
 import MuiAlert from '@mui/lab/Alert';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import React from 'react';
-import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
-import { ErrorReport, fetcher } from '../../common';
+import { ErrorReport } from '../../common';
+import { useQuickAccess } from '../../hooks/useQuickAccess';
 
 const useStyles = makeStyles()(theme => ({
   img: {
@@ -35,18 +34,13 @@ const useStyles = makeStyles()(theme => ({
   },
 }));
 
-type QuickAccessLinks = {
-  title: string;
-  isExpanded?: boolean;
-  links: (Tool & { iconUrl: string })[];
-};
-
 const QuickAccess = () => {
   const { classes } = useStyles();
-  const { data, error, isLoading } = useSWR(
-    '/homepage/data.json',
-    fetcher<QuickAccessLinks>,
-  );
+  const { data, error, isLoading } = useQuickAccess();
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   if (!data) {
     return (
@@ -54,14 +48,10 @@ const QuickAccess = () => {
     );
   }
 
-  if (error) {
+  if (!isLoading && !data && error) {
     return (
       <ErrorReport title="Could not fetch data." errorText={error.toString()} />
     );
-  }
-
-  if (isLoading) {
-    return <CircularProgress />;
   }
 
   return (
