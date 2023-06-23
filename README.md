@@ -38,6 +38,7 @@ Our current list of plugins within the showcase app include:
 - [Segment plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment)
 - [Datadog plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog)
 - [PagerDuty](https://github.com/backstage/backstage/tree/master/plugins/pagerduty)
+- [Lighthouse plugin](https://github.com/backstage/backstage/tree/master/plugins/lighthouse)
 
 ## Getting Started
 

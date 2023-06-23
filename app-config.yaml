@@ -267,6 +267,10 @@ pagerduty:
   # uncomment the following, and provide a URL to override the default URL used for events
   # eventsBaseUrl: <PagerDuty Event URL>
 
+# Plugin: Lighthouse
+lighthouse:
+  baseUrl: ${LIGHTHOUSE_BASEURL}
+
 enabled:
   kubernetes: ${K8S_ENABLED}
   techdocs: ${TECHDOCS_ENABLED}
