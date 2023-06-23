@@ -30,11 +30,20 @@ import {
   EntityDependabotAlertsCard,
   isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
+import {
+  isPluginApplicableToEntity as isPagerDutyAvailable,
+  EntityPagerDutyCard,
+} from '@backstage/plugin-pagerduty';
+import {
+  EntityLastLighthouseAuditCard,
+  isLighthouseAvailable,
+} from '@backstage/plugin-lighthouse';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
+import { isPRsAvailable } from './PullRequests';
 
 export const overviewContent = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <Grid item xs={12}>
       {entityWarningContent}
     </Grid>
@@ -69,9 +78,7 @@ export const overviewContent = (
           </Grid>
         </EntitySwitch.Case>
 
-        <EntitySwitch.Case
-          if={e => !isGithubPullRequestsAvailable(e) && !isGitlabAvailable(e)}
-        >
+        <EntitySwitch.Case if={e => !isPRsAvailable(e)}>
           <EmptyState
             title="A Git repository was not found for this entity"
             missing="info"
@@ -114,6 +121,22 @@ export const overviewContent = (
     </Grid>
     <Grid item container xs={4}>
       &nbsp;
+    </Grid>
+    <Grid container spacing={3} alignItems="stretch">
+      <EntitySwitch>
+        <EntitySwitch.Case if={isLighthouseAvailable}>
+          <Grid item md={6}>
+            <EntityLastLighthouseAuditCard />
+          </Grid>
+        </EntitySwitch.Case>
+      </EntitySwitch>
+      <EntitySwitch>
+        <EntitySwitch.Case if={isPagerDutyAvailable}>
+          <Grid item md={6}>
+            <EntityPagerDutyCard />
+          </Grid>
+        </EntitySwitch.Case>
+      </EntitySwitch>
     </Grid>
   </Grid>
 );

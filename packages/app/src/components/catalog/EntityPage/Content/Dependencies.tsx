@@ -15,7 +15,7 @@ import { Grid } from '@mui/material';
 import React from 'react';
 
 export const dependenciesContent = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <Grid item xs={12} md={6}>
       <EntityCatalogGraphCard
         variant="gridItem"

@@ -138,6 +138,12 @@ proxy:
     # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
     secure: ${ARTIFACTORY_SECURE}
 
+  # Plugin: PagerDuty
+  '/pagerduty':
+    target: https://api.pagerduty.com
+    headers:
+      Authorization: Token token=${PAGERDUTY_TOKEN}
+
   '/dynatrace':
     target: ${DYNATRACE_API_URL}
     headers:
@@ -262,6 +268,15 @@ jenkins:
       baseUrl: ${JENKINS_URL}
       username: ${JENKINS_USERNAME}
       apiKey: ${JENKINS_TOKEN}
+
+# Plugin: PagerDuty
+pagerduty:
+  # uncomment the following, and provide a URL to override the default URL used for events
+  # eventsBaseUrl: <PagerDuty Event URL>
+
+# Plugin: Lighthouse
+lighthouse:
+  baseUrl: ${LIGHTHOUSE_BASEURL}
 
 # Plugin: Dynatrace
 dynatrace:

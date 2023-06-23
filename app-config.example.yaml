@@ -76,6 +76,9 @@ techdocs:
   publisher:
     type: awsS3
 
+lighthouse:
+  baseUrl: temp
+
 catalog:
   import:
     entityFilename: catalog-info.yaml

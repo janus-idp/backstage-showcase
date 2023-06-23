@@ -125,6 +125,41 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${BITBUCKET_SERVER_USERNAME}`: Basic Auth Username for Bitbucket Server
      - `${BITBUCKET_SERVER_PASSWORD}`: Basic Auth Password for Bitbucket Server. A [token](https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html) can be used in place of the password.
 
+   - Setup the PagerDuty plugin
+
+     - `${PAGERDUTY_TOKEN}` with the [API token](https://support.pagerduty.com/docs/api-access-keys#generating-a-general-access-rest-api-key) used to make requests to the [PagerDuty API](https://developer.pagerduty.com/docs/rest-api-v2/rest-api/). Note that this will require a PaperDuty Admin role.
+     - To integrate with a PagerDuty Service, you will need to annotate the appropriate entity with the [PagerDuty Integration key](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#integrating-with-a-pagerduty-service) in its `.yaml` configuration file:
+
+     ```yaml
+     annotations:
+       pagerduty.com/integration-key: [INTEGRATION_KEY]
+     ```
+
+     - Alternatively, you can integrate with the [PagerDuty ServiceID](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#annotating-with-service-id) instead of the integration key:
+
+     ```yaml
+     annotations:
+       pagerduty.com/service-id: [SERVICE_ID]
+     ```
+
+   - Setup the Lighthouse plugin
+
+     - `${LIGHTHOUSE_BASEURL}`: Base URL for the `lighthouse-audit-service` instance
+     - To integrate the Lighthouse plugin into the catalog so that the Lighthouse audit info for a component can be displayed in that component's entity page, it is necessary to annotate the entity as shown below.
+     - Please note that it is **essential** to include the `https://` or `http::/` in front of the link for this plugin to function correctly.
+
+     ```yaml
+     apiVersion: backstage.io/v1alpha1
+     kind: Component
+     metadata:
+       # ...
+       annotations:
+         lighthouse.com/website-url: # A single website url e.g. https://backstage.io/
+     ```
+
+     - Also please note that ending the website url with a `/` will cause it to be treated as a separate link compared to the same url without the `/`.
+       - i.e. `https://backstage.io/` and `https://backstage.io` are not considered the same, therefore audits for each will be grouped separately.
+
    - Setup the Dynatrace plugin
 
      - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
