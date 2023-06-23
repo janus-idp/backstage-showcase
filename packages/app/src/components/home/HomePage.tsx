@@ -1,10 +1,4 @@
-import {
-  Content,
-  Header,
-  InfoCard,
-  Link,
-  Page,
-} from '@backstage/core-components';
+import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import {
   ComponentAccordion,
   HomePageStarredEntities,
@@ -14,7 +8,6 @@ import {
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
 import { css } from '@emotion/css';
-import MuiAlert from '@mui/lab/Alert';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import React from 'react';
 import useSWR from 'swr';
@@ -107,18 +100,7 @@ export const HomePage = () => {
               gap: 2,
             }}
           >
-            {window.location.origin.startsWith(
-              'https://janus-idp.apps.smaug.na.operate-first.cloud',
-            ) && (
-              <MuiAlert severity="warning">
-                The Janus showcase URL has changed! Please, use this new link
-                instead{' '}
-                <Link to="https://showcase.janus-idp.io">
-                  showcase.janus-idp.io
-                </Link>
-              </MuiAlert>
-            )}
-            {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
+            {/* useStyles has a lower precedence over mui styles hence why we need to use css */}
             <HomePageSearchBar
               classes={{
                 root: classes.searchBar,
