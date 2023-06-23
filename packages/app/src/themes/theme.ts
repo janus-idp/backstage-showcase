@@ -15,7 +15,7 @@ const redhatFont = `@font-face {
     url(/fonts/RedHatText-Regular.ttf) format('truetype');
 }`;
 
-export const janusTheme = createUnifiedTheme({
+export const customTheme = createUnifiedTheme({
   fontFamily: '"Red Hat Font", Arial',
   palette: {
     ...lightTheme.palette,
