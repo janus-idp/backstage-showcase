@@ -5,9 +5,16 @@ import {
   DynatraceTab,
   isDynatraceAvailable,
 } from '@backstage/plugin-dynatrace';
+import {
+  EntityDatadogContent,
+  isDatadogAvailable,
+} from '@roadiehq/backstage-plugin-datadog';
 import React from 'react';
 
-const ifMonitoring: ((e: Entity) => boolean)[] = [isDynatraceAvailable];
+const ifMonitoring: ((e: Entity) => boolean)[] = [
+  isDatadogAvailable,
+  isDynatraceAvailable,
+];
 
 export const isMonitoringAvailable = (e: Entity) =>
   ifMonitoring.some(f => f(e));
@@ -18,6 +25,11 @@ export const monitoringContent = (
       <EntitySwitch.Case if={isDynatraceAvailable}>
         <Grid item>
           <DynatraceTab />
+        </Grid>
+      </EntitySwitch.Case>
+      <EntitySwitch.Case if={isDatadogAvailable}>
+        <Grid item xs={12}>
+          <EntityDatadogContent />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

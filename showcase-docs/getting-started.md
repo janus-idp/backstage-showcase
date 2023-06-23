@@ -118,6 +118,13 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${SEGMENT_MASK_IP}`: prevents IP addresses to be sent if true
      - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
 
+   - Setup the Bitbucket Server Instance
+
+     - `${BITBUCKET_SERVER_HOST}`: The host of the bitbucket Server Instance. e.g. `bitbucket.mycompany.com`
+     - `${BITBUCKET_API_BASE_URL}`: The URL of the Bitbucket Server API. For self-hosted installations, it is commonly at `https://<host>/rest/api/1.0`
+     - `${BITBUCKET_SERVER_USERNAME}`: Basic Auth Username for Bitbucket Server
+     - `${BITBUCKET_SERVER_PASSWORD}`: Basic Auth Password for Bitbucket Server. A [token](https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html) can be used in place of the password.
+
    - Setup the Dynatrace plugin
 
      - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
