@@ -7,7 +7,7 @@ app:
       writeKey: temp
 
 organization:
-  name: Janus IDP
+  name: My Org
 
 backend:
   baseUrl: http://localhost:7007

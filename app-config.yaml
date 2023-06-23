@@ -9,7 +9,7 @@ app:
       testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
 organization:
-  name: Janus IDP
+  name: My Org
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
