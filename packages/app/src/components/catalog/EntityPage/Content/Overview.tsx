@@ -36,9 +36,10 @@ import {
 } from '@backstage/plugin-pagerduty';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
+import { isPRsAvailable } from './PullRequests';
 
 export const overviewContent = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <Grid item xs={12}>
       {entityWarningContent}
     </Grid>
@@ -73,9 +74,7 @@ export const overviewContent = (
           </Grid>
         </EntitySwitch.Case>
 
-        <EntitySwitch.Case
-          if={e => !isGithubPullRequestsAvailable(e) && !isGitlabAvailable(e)}
-        >
+        <EntitySwitch.Case if={e => !isPRsAvailable(e)}>
           <EmptyState
             title="A Git repository was not found for this entity"
             missing="info"
