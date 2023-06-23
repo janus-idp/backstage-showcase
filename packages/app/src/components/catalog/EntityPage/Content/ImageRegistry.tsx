@@ -1,4 +1,4 @@
-import { Entity } from '@backstage/catalog-model';
+import { type Entity } from '@backstage/catalog-model';
 import { EntitySwitch } from '@backstage/plugin-catalog';
 import {
   JfrogArtifactoryPage,
@@ -17,7 +17,7 @@ export const isImageRegistriesAvailable = (e: Entity) =>
   ifImageRegistries.some(f => f(e));
 
 export const imageRegistry = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <EntitySwitch>
       <EntitySwitch.Case if={isQuayAvailable}>
         <Grid item xs={12}>
