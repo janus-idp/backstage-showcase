@@ -15,7 +15,6 @@
     "clean": "backstage-cli package clean"
   },
   "dependencies": {
-    "app": "*",
     "@backstage/backend-common": "^0.18.5",
     "@backstage/backend-tasks": "^0.5.2",
     "@backstage/catalog-client": "^1.4.1",
@@ -45,6 +44,7 @@
     "@janus-idp/backstage-plugin-ocm-backend": "^3.0.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.6",
     "@roadiehq/scaffolder-backend-argocd": "^1.1.8",
+    "app": "*",
     "better-sqlite3": "^8.0.0",
     "dockerode": "^3.3.1",
     "express": "^4.17.1",
