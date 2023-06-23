@@ -30,6 +30,10 @@ import {
   EntityDependabotAlertsCard,
   isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
+import {
+  isPluginApplicableToEntity as isPagerDutyAvailable,
+  EntityPagerDutyCard,
+} from '@backstage/plugin-pagerduty';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
 import { isPRsAvailable } from './PullRequests';
@@ -107,6 +111,18 @@ export const overviewContent = (
         <EntitySwitch.Case if={isJenkinsAvailable}>
           <Grid item xs={12}>
             <EntityLatestJenkinsRunCard branch="main,master" />
+          </Grid>
+        </EntitySwitch.Case>
+      </EntitySwitch>
+    </Grid>
+    <Grid item container xs={4}>
+      &nbsp;
+    </Grid>
+    <Grid item container>
+      <EntitySwitch>
+        <EntitySwitch.Case if={isPagerDutyAvailable}>
+          <Grid item md={6}>
+            <EntityPagerDutyCard />
           </Grid>
         </EntitySwitch.Case>
       </EntitySwitch>

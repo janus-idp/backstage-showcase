@@ -119,10 +119,28 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
 
    - Setup the Bitbucket Server Instance
+
      - `${BITBUCKET_SERVER_HOST}`: The host of the bitbucket Server Instance. e.g. `bitbucket.mycompany.com`
      - `${BITBUCKET_API_BASE_URL}`: The URL of the Bitbucket Server API. For self-hosted installations, it is commonly at `https://<host>/rest/api/1.0`
      - `${BITBUCKET_SERVER_USERNAME}`: Basic Auth Username for Bitbucket Server
      - `${BITBUCKET_SERVER_PASSWORD}`: Basic Auth Password for Bitbucket Server. A [token](https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html) can be used in place of the password.
+
+   - Setup the PagerDuty plugin
+
+     - `${PAGERDUTY_TOKEN}` with the [API token](https://support.pagerduty.com/docs/api-access-keys#generating-a-general-access-rest-api-key) used to make requests to the [PagerDuty API](https://developer.pagerduty.com/docs/rest-api-v2/rest-api/). Note that this will require a PaperDuty Admin role.
+     - To integrate with a PagerDuty Service, you will need to annotate the appropriate entity with the [PagerDuty Integration key](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#integrating-with-a-pagerduty-service) in its `.yaml` configuration file:
+
+     ```yaml
+     annotations:
+       pagerduty.com/integration-key: [INTEGRATION_KEY]
+     ```
+
+     - Alternatively, you can integrate with the [PagerDuty ServiceID](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#annotating-with-service-id) instead of the integration key:
+
+     ```yaml
+     annotations:
+       pagerduty.com/service-id: [SERVICE_ID]
+     ```
 
 3. Run `yarn install` to install the dependencies
 
