@@ -27,6 +27,8 @@ export const monitoringContent = (
           <DynatraceTab />
         </Grid>
       </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={isDatadogAvailable}>
         <Grid item xs={12}>
           <EntityDatadogContent />

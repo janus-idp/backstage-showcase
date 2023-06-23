@@ -85,14 +85,6 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {monitoringContent}
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      if={isMonitoringAvailable}
-      path="/monitoring"
-      title="Monitoring"
-    >
-      {monitoringContent}
-    </EntityLayout.Route>
-
     {componentType === 'service' && (
       <EntityLayout.Route path="/api" title="API">
         <Grid container spacing={3}>
