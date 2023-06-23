@@ -20,11 +20,12 @@ import {
   isCIsAvailable,
   isImageRegistriesAvailable,
   isIssuesAvailable,
+  isMonitoringAvailable,
   isPrsAvailable,
   issuesContent,
+  monitoringContent,
   overviewContent,
   prContent,
-  securityContent,
   techdocsContent,
 } from '../Content';
 import { defaultEntityPage } from './DefaultEntity';
@@ -33,6 +34,10 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/topology" title="Topology">
+      <TopologyPage />
     </EntityLayout.Route>
 
     <EntityLayout.Route if={isIssuesAvailable} path="/issues" title="Issues">
@@ -60,10 +65,6 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/topology" title="Topology">
-      <TopologyPage />
-    </EntityLayout.Route>
-
     <EntityLayout.Route path="/tekton" title="Tekton">
       <TektonPage />
     </EntityLayout.Route>
@@ -76,8 +77,12 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {imageRegistry}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/security-insights" title="Security Insights">
-      {securityContent}
+    <EntityLayout.Route
+      if={isMonitoringAvailable}
+      path="/monitoring"
+      title="Monitoring"
+    >
+      {monitoringContent}
     </EntityLayout.Route>
 
     {componentType === 'service' && (

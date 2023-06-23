@@ -7,7 +7,7 @@ app:
       writeKey: temp
 
 organization:
-  name: Janus IDP
+  name: My Org
 
 backend:
   baseUrl: http://localhost:7007
@@ -43,6 +43,12 @@ integrations:
           webhookSecret: temp
           privateKey: |
             temp
+
+  bitbucketServer:
+    - host: bitbucket.com
+      apiBaseUrl: temp
+      username: temp
+      password: temp
 
 argocd:
   appLocatorMethods:

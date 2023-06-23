@@ -37,7 +37,7 @@ import { entityPage } from './components/catalog/EntityPage';
 import { HomePage } from './components/home/HomePage';
 import { LearningPaths } from './components/learningPaths/LearningPathsPage';
 import { SearchPage } from './components/search/SearchPage';
-import { janusTheme } from './themes/janus';
+import { customTheme } from './themes/theme';
 
 const app = createApp({
   apis,
@@ -58,11 +58,11 @@ const app = createApp({
   },
   themes: [
     {
-      id: 'janus',
-      title: 'Janus Theme',
+      id: 'default',
+      title: 'Default Theme',
       variant: 'light',
       Provider: ({ children }) => (
-        <UnifiedThemeProvider theme={janusTheme} children={children} />
+        <UnifiedThemeProvider theme={customTheme} children={children} />
       ),
     },
   ],
@@ -91,7 +91,12 @@ const routes = (
         <ReportIssue />
       </TechDocsAddons>
     </Route>
-    <Route path="/create" element={<ScaffolderPage />} />
+    <Route
+      path="/create"
+      element={
+        <ScaffolderPage headerOptions={{ title: 'Golden Path Templates' }} />
+      }
+    />
     <Route path="/api-docs" element={<ApiExplorerPage />} />
     <Route
       path="/tech-radar"
