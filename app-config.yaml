@@ -220,10 +220,16 @@ kubernetes:
   customResources:
     - group: 'tekton.dev'
       apiVersion: 'v1beta1'
+      plural: 'pipelines'
+    - group: 'tekton.dev'
+      apiVersion: 'v1beta1'
       plural: 'pipelineruns'
     - group: 'tekton.dev'
       apiVersion: 'v1beta1'
       plural: 'taskruns'
+    - group: 'route.openshift.io'
+      apiVersion: 'v1'
+      plural: 'routes'
   serviceLocatorMethod:
     type: 'multiTenant'
   clusterLocatorMethods:
