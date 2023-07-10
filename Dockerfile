@@ -56,7 +56,7 @@ ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 WORKDIR $REMOTE_SOURCES_DIR/
 COPY $REMOTE_SOURCES $REMOTE_SOURCES_DIR
 COPY --from=deps $REMOTE_SOURCES_DIR $REMOTE_SOURCES_DIR
-RUN chmod +x $REMOTE_SOURCES_DIR/.yarn/releases/yarn-1.22.19.cjs
+RUN chmod +x $REMOTE_SOURCES_DIR/$YARN
 RUN git config --global --add safe.directory $REMOTE_SOURCES_DIR/
 RUN rm $REMOTE_SOURCES_DIR/app-config.yaml && mv $REMOTE_SOURCES_DIR/app-config.example.yaml $REMOTE_SOURCES_DIR/app-config.yaml
 
@@ -81,7 +81,7 @@ ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 WORKDIR $REMOTE_SOURCES_DIR/
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/.yarn $REMOTE_SOURCES_DIR/.yarn
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/.yarnrc.yml $REMOTE_SOURCES_DIR/
-RUN chmod +x $REMOTE_SOURCES_DIR/.yarn/releases/yarn-1.22.19.cjs
+RUN chmod +x $REMOTE_SOURCES_DIR/$YARN
 
 # Copy the install dependencies from the build stage and context
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/yarn.lock $REMOTE_SOURCES_DIR/package.json $REMOTE_SOURCES_DIR/packages/backend/dist/skeleton.tar.gz $REMOTE_SOURCES_DIR/
