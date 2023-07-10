@@ -31,13 +31,15 @@ USER 0
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV REMOTE_SOURCES=.
 ENV REMOTE_SOURCES_DIR=/opt/app-root/src
-
 WORKDIR $REMOTE_SOURCES_DIR/
-COPY $REMOTE_SOURCES $REMOTE_SOURCES_DIR
-RUN chmod +x $REMOTE_SOURCES_DIR/.yarn/releases/yarn-1.22.19.cjs
 
-# Remove all files except package.json
-RUN find packages -mindepth 2 -maxdepth 2 \! -name "package.json" -exec rm -rf {} \+
+# Copy only the package.json and yarn.lock files
+COPY $REMOTE_SOURCES/package.json $REMOTE_SOURCES/yarn.lock $REMOTE_SOURCES_DIR/
+COPY $REMOTE_SOURCES/packages/app/package.json $REMOTE_SOURCES_DIR/packages/app/package.json
+COPY $REMOTE_SOURCES/packages/backend/package.json $REMOTE_SOURCES_DIR/packages/backend/package.json
+# Copy the yarn release
+COPY $REMOTE_SOURCES/$YARN $REMOTE_SOURCES_DIR/$YARN
+RUN chmod +x $YARN
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000 --ignore-scripts
 
@@ -67,9 +69,9 @@ USER 0
 
 # Install gzip for tar and clean up
 RUN microdnf update -y  && \
-    microdnf install -y gzip python3 python3-pip && \
-    pip3 install mkdocs-techdocs-core==1.2.1 && \
-    microdnf clean all
+  microdnf install -y gzip python3 python3-pip && \
+  pip3 install mkdocs-techdocs-core==1.2.1 && \
+  microdnf clean all
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
