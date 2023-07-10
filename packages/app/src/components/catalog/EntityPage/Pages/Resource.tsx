@@ -6,7 +6,7 @@ import {
   EntitySwitch,
 } from '@backstage/plugin-catalog';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import {

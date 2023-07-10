@@ -1,6 +1,6 @@
 import { type Entity } from '@backstage/catalog-model';
 import { EntitySwitch } from '@backstage/plugin-catalog';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   EntityDatadogContent,
   isDatadogAvailable,

@@ -1,6 +1,9 @@
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { CircularProgress, Grid, Link, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
