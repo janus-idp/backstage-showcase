@@ -9,6 +9,7 @@
     "preinstall": "npx only-allow yarn",
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
+    "start-backend": "turbo run start --filter=backend",
     "build": "turbo run build",
     "tsc": "tsc",
     "clean": "turbo run clean",
