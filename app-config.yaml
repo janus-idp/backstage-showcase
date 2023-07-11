@@ -46,8 +46,6 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -220,10 +218,16 @@ kubernetes:
   customResources:
     - group: 'tekton.dev'
       apiVersion: 'v1beta1'
+      plural: 'pipelines'
+    - group: 'tekton.dev'
+      apiVersion: 'v1beta1'
       plural: 'pipelineruns'
     - group: 'tekton.dev'
       apiVersion: 'v1beta1'
       plural: 'taskruns'
+    - group: 'route.openshift.io'
+      apiVersion: 'v1'
+      plural: 'routes'
   serviceLocatorMethod:
     type: 'multiTenant'
   clusterLocatorMethods:

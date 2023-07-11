@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { EntityArgoCDHistoryCard } from '@roadiehq/backstage-plugin-argo-cd';
 import React from 'react';
 
