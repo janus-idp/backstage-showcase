@@ -5,7 +5,7 @@ import {
   hasCatalogProcessingErrors,
   isOrphan,
 } from '@backstage/plugin-catalog';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 export const entityWarningContent = (

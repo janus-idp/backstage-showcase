@@ -9,6 +9,7 @@
     "preinstall": "npx only-allow yarn",
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
+    "start-backend": "turbo run start --filter=backend",
     "build": "turbo run build",
     "tsc": "tsc",
     "clean": "turbo run clean",
@@ -28,9 +29,10 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.7",
+    "@backstage/cli": "^0.22.8",
     "@changesets/cli": "^2.26.1",
     "@spotify/prettier-config": "^12.0.0",
+    "eslint-plugin-import": "^2.27.5",
     "husky": "^8.0.3",
     "prettier": "^2.3.2",
     "turbo": "^1.9.3",

@@ -66,7 +66,8 @@ FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
 # Install gzip for tar and clean up
-RUN microdnf install -y gzip python3 python3-pip && \
+RUN microdnf update -y  && \
+    microdnf install -y gzip python3 python3-pip && \
     pip3 install mkdocs-techdocs-core==1.2.1 && \
     microdnf clean all
 
