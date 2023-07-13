@@ -38,26 +38,26 @@ ENV REMOTE_SOURCES=.
 ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
 WORKDIR $REMOTE_SOURCES_DIR/
-COPY $REMOTE_SOURCES/.yarn $REMOTE_SOURCES_DIR/.yarn
-COPY $REMOTE_SOURCES/.yarnrc.yml $REMOTE_SOURCES_DIR/
-RUN chmod +x $REMOTE_SOURCES_DIR/$YARN
+COPY $REMOTE_SOURCES/.yarn ./.yarn
+COPY $REMOTE_SOURCES/.yarnrc.yml ./
+RUN chmod +x $YARN
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
 
-COPY $REMOTE_SOURCES/package.json $REMOTE_SOURCES/yarn.lock $REMOTE_SOURCES_DIR
-COPY $REMOTE_SOURCES/packages/app/package.json $REMOTE_SOURCES_DIR/packages/app/package.json
-COPY $REMOTE_SOURCES/packages/backend/package.json $REMOTE_SOURCES_DIR/packages/backend/package.json
+COPY $REMOTE_SOURCES/package.json $REMOTE_SOURCES/yarn.lock ./
+COPY $REMOTE_SOURCES/packages/app/package.json ./packages/app/package.json
+COPY $REMOTE_SOURCES/packages/backend/package.json ./packages/backend/package.json
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 3 - Build packages
 FROM deps AS build
 
-COPY $REMOTE_SOURCES $REMOTE_SOURCES_DIR
+COPY $REMOTE_SOURCES ./
 
-RUN git config --global --add safe.directory $REMOTE_SOURCES_DIR/
-RUN rm $REMOTE_SOURCES_DIR/app-config.yaml && mv $REMOTE_SOURCES_DIR/app-config.example.yaml $REMOTE_SOURCES_DIR/app-config.yaml
+RUN git config --global --add safe.directory ./
+RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 RUN $YARN build --filter=backend
 
@@ -65,15 +65,15 @@ RUN $YARN build --filter=backend
 FROM skeleton AS cleanup
 
 # Copy the install dependencies from the build stage and context
-COPY --from=build $REMOTE_SOURCES_DIR/yarn.lock $REMOTE_SOURCES_DIR/package.json $REMOTE_SOURCES_DIR/packages/backend/dist/skeleton.tar.gz $REMOTE_SOURCES_DIR/
+COPY --from=build $REMOTE_SOURCES_DIR/yarn.lock $REMOTE_SOURCES_DIR/package.json $REMOTE_SOURCES_DIR/packages/backend/dist/skeleton.tar.gz ./
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Copy the built packages from the build stage
-COPY --from=build $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz $REMOTE_SOURCES_DIR/
-RUN tar xzf $REMOTE_SOURCES_DIR/bundle.tar.gz && rm $REMOTE_SOURCES_DIR/bundle.tar.gz
+COPY --from=build $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz ./
+RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy app-config files needed in runtime
-COPY $REMOTE_SOURCES/app-config*.yaml $REMOTE_SOURCES_DIR/
+COPY $REMOTE_SOURCES/app-config*.yaml ./
 
 # Install production dependencies
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000 && $YARN cache clean
@@ -95,11 +95,11 @@ ENV REMOTE_SOURCES=.
 ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
 WORKDIR $REMOTE_SOURCES_DIR/
-COPY --from=cleanup --chown=1001:1001 $REMOTE_SOURCES_DIR/ $REMOTE_SOURCES_DIR/
+COPY --from=cleanup --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
-RUN fix-permissions $REMOTE_SOURCES_DIR/
+RUN fix-permissions ./
 
 # Switch to nodejs user
 USER 1001
