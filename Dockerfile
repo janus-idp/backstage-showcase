@@ -27,7 +27,7 @@
 FROM registry.access.redhat.com/ubi9/nodejs-18:1 AS skeleton
 USER 0
 
-# Install isolate-vm dependencies
+# Install isolated-vm dependencies
 RUN dnf update -y && \
   dnf install -y zlib-devel brotli-devel
 
