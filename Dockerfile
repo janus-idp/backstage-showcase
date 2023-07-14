@@ -31,7 +31,7 @@ RUN dnf update -y && \
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
-# Midstream sources
+# Upstream sources
 # Downstream comment
 ENV EXTERNAL_SOURCE=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -119,7 +119,7 @@ RUN microdnf update -y && \
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
-# Midstream sources
+# Upstream sources
 # Downstream comment
 ENV EXTERNAL_SOURCE=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
