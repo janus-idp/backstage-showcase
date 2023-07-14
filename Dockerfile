@@ -29,35 +29,55 @@ USER 0
 
 # Install isolate-vm dependencies
 RUN dnf update -y && \
-  dnf install -y zlib-devel brotli-devel && \
-  dnf clean all
+  dnf install -y zlib-devel brotli-devel
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-ENV REMOTE_SOURCES=.
-ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR/
-COPY $REMOTE_SOURCES/.yarn ./.yarn
-COPY $REMOTE_SOURCES/.yarnrc.yml ./
+# Midstream sources
+ENV EXTERNAL_SOURCE=.
+ENV CONTAINER_SOURCE=/opt/app-root/src
+
+# Downstream sources
+# ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
+# ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+
+WORKDIR $CONTAINER_SOURCE/
+COPY $EXTERNAL_SOURCE/.yarn ./.yarn
+COPY $EXTERNAL_SOURCE/.yarnrc.yml ./
 RUN chmod +x $YARN
+
+# Downstream
+# COPY $EXTERNAL_SOURCE/../cachito.env $EXTERNAL_SOURCE/../registry-ca.pem ./
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
 
-COPY $REMOTE_SOURCES/package.json $REMOTE_SOURCES/yarn.lock ./
-COPY $REMOTE_SOURCES/packages/app/package.json ./packages/app/package.json
-COPY $REMOTE_SOURCES/packages/backend/package.json ./packages/backend/package.json
+COPY $EXTERNAL_SOURCE/package.json $EXTERNAL_SOURCE/yarn.lock ./
+COPY $EXTERNAL_SOURCE/packages/app/package.json ./packages/app/package.json
+COPY $EXTERNAL_SOURCE/packages/backend/package.json ./packages/backend/package.json
+
+# Downstream
+# RUN \
+#     source $CONTAINER_SOURCE/cachito.env && \
+#     # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+#     $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 3 - Build packages
 FROM deps AS build
 
-COPY $REMOTE_SOURCES ./
+COPY $EXTERNAL_SOURCE ./
 
 RUN git config --global --add safe.directory ./
 RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
+
+# Downstream
+# RUN \
+#     source $CONTAINER_SOURCE/cachito.env && \
+#     # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+#     $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
 
 RUN $YARN build --filter=backend
 
@@ -65,25 +85,31 @@ RUN $YARN build --filter=backend
 FROM skeleton AS cleanup
 
 # Copy the install dependencies from the build stage and context
-COPY --from=build $REMOTE_SOURCES_DIR/yarn.lock $REMOTE_SOURCES_DIR/package.json $REMOTE_SOURCES_DIR/packages/backend/dist/skeleton.tar.gz ./
+COPY --from=build $CONTAINER_SOURCE/yarn.lock $CONTAINER_SOURCE/package.json $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz ./
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Copy the built packages from the build stage
-COPY --from=build $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz ./
+COPY --from=build $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz ./
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy app-config files needed in runtime
-COPY $REMOTE_SOURCES/app-config*.yaml ./
+COPY $EXTERNAL_SOURCE/app-config*.yaml ./
+
+# Downstream
+# RUN \
+#     source $CONTAINER_SOURCE/cachito.env && \
+#     # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+#     $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
 
 # Install production dependencies
-RUN $YARN install --frozen-lockfile --production --network-timeout 600000 && $YARN cache clean
+RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
-# Install techdocs dependencies
+# Install techdocs dependencies - Midstream only
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
   pip3 install mkdocs-techdocs-core==1.2.1 && \
@@ -91,11 +117,20 @@ RUN microdnf update -y && \
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-ENV REMOTE_SOURCES=.
-ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR/
-COPY --from=cleanup --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
+# Midstream sources
+ENV EXTERNAL_SOURCE=.
+ENV CONTAINER_SOURCE=/opt/app-root/src
+
+# Downstream sources
+# ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
+# ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+
+WORKDIR $CONTAINER_SOURCE/
+COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
+
+# Downstream
+# COPY $EXTERNAL_SOURCE/../cachito.env $EXTERNAL_SOURCE/../registry-ca.pem ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
