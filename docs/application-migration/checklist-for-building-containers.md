@@ -1,6 +1,16 @@
 ## A methodology for developers to build new containerized applications
 
-A methodology for developers to build new containerized applications
+Background
+
+This document was born after helping several customers adopt OpenShift and containers. Developers must know the required design principles and development practices to ensure the application runs in a container platform. This document will serve as a guide for new applications and new architectures.
+
+This guide is technology agnostic and will serve any enterprise/web application.
+
+This tool is based on the Twelve-Factor App created by Heroku's team when they built this for applications to be ready to run on the cloud.
+
+Who should read this document?
+
+Any developer building applications which run as a service. Ops engineers who deploy or manage such applications.
 
 ### I - Security:
 
