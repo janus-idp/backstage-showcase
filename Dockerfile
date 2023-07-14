@@ -13,14 +13,11 @@
 # limitations under the License.
 #
 # To transform into Brew-friendly Dockerfile:
-# 1. remove ENV REMOTE_SOURCES and REMOTE_SOURCES_DIR (Brew will set its own values: REMOTE_SOURCES=unpacked_remote_sources and REMOTE_SOURCES_DIR=/remote-source)
-# 2. replace $REMOTE_SOURCES_DIR/ with $REMOTE_SOURCES_DIR/upstream1/app/ (full path to where sources are copied via Brew)
-# 3. replace $REMOTE_SOURCES/ with $REMOTE_SOURCES/upstream1/app/ (full path to where sources are copied via Brew)
-# 4. add RUN source $REMOTE_SOURCES_DIR/upstream1/cachito.env after each COPY into REMOTE_SOURCES_DIR
-# 5. before each yarn install/build, add '$YARN config set nodedir /usr; $YARN config set unsafe-perm true;'
-# 6. remove python and pip installs from runtime container (not required)
-# 7. copy ALL of REMOTE_SOURCES to REMOTE_SOURCES_DIR, not just upstream1/cachito.env and upstream1/app/registry-ca.pem
-# 8. add Brew metadata
+# 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
+# 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
+# 3. uncomment lines with RUN source .../cachito.env
+# 4. remove python and pip installs from runtime container (not required)
+# 5. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
@@ -35,20 +32,25 @@ RUN dnf update -y && \
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
 # Midstream sources
+# Downstream comment
 ENV EXTERNAL_SOURCE=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
+#/ Downstream comment
 
 # Downstream sources
+# Downstream uncomment
 # ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
 # ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+#/ Downstream uncomment
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE/.yarnrc.yml ./
 RUN chmod +x $YARN
 
-# Downstream
+# Downstream uncomment
 # COPY $EXTERNAL_SOURCE/../cachito.env $EXTERNAL_SOURCE/../registry-ca.pem ./
+#/ Downstream uncomment
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
@@ -57,11 +59,10 @@ COPY $EXTERNAL_SOURCE/package.json $EXTERNAL_SOURCE/yarn.lock ./
 COPY $EXTERNAL_SOURCE/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE/packages/backend/package.json ./packages/backend/package.json
 
-# Downstream
-# RUN \
-#     source $CONTAINER_SOURCE/cachito.env && \
-#     # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
-#     $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+# see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+# Downstream uncomment
+# RUN source $CONTAINER_SOURCE/cachito.env && $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+#/ Downstream uncomment
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
@@ -73,11 +74,10 @@ COPY $EXTERNAL_SOURCE ./
 RUN git config --global --add safe.directory ./
 RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
-# Downstream
-# RUN \
-#     source $CONTAINER_SOURCE/cachito.env && \
-#     # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
-#     $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+# see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+# Downstream uncomment
+# RUN source $CONTAINER_SOURCE/cachito.env && $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+#/ Downstream uncomment
 
 RUN $YARN build --filter=backend
 
@@ -95,11 +95,10 @@ RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 # Copy app-config files needed in runtime
 COPY $EXTERNAL_SOURCE/app-config*.yaml ./
 
-# Downstream
-# RUN \
-#     source $CONTAINER_SOURCE/cachito.env && \
-#     # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
-#     $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+# see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+# Downstream uncomment
+# RUN source $CONTAINER_SOURCE/cachito.env && $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+#/ Downstream uncomment
 
 # Install production dependencies
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
@@ -109,28 +108,31 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
-# Install techdocs dependencies - Midstream only
+# Install techdocs dependencies
+# Downstream comment
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
   pip3 install mkdocs-techdocs-core==1.2.1 && \
   microdnf clean all
+#/ Downstream comment
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
 # Midstream sources
+# Downstream comment
 ENV EXTERNAL_SOURCE=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
+#/ Downstream comment
 
 # Downstream sources
+# Downstream uncomment
 # ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
 # ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+#/ Downstream uncomment
 
 WORKDIR $CONTAINER_SOURCE/
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
-
-# Downstream
-# COPY $EXTERNAL_SOURCE/../cachito.env $EXTERNAL_SOURCE/../registry-ca.pem ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
