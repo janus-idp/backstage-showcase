@@ -13,51 +13,71 @@
 # limitations under the License.
 #
 # To transform into Brew-friendly Dockerfile:
-# 1. remove ENV REMOTE_SOURCES and REMOTE_SOURCES_DIR (Brew will set its own values: REMOTE_SOURCES=unpacked_remote_sources and REMOTE_SOURCES_DIR=/remote-source)
-# 2. replace $REMOTE_SOURCES_DIR/ with $REMOTE_SOURCES_DIR/upstream1/app/ (full path to where sources are copied via Brew)
-# 3. replace $REMOTE_SOURCES/ with $REMOTE_SOURCES/upstream1/app/ (full path to where sources are copied via Brew)
-# 4. add RUN source $REMOTE_SOURCES_DIR/upstream1/cachito.env after each COPY into REMOTE_SOURCES_DIR
-# 5. before each yarn install/build, add '$YARN config set nodedir /usr; $YARN config set unsafe-perm true;'
-# 6. remove python and pip installs from runtime container (not required)
-# 7. copy ALL of REMOTE_SOURCES to REMOTE_SOURCES_DIR, not just upstream1/cachito.env and upstream1/app/registry-ca.pem
-# 8. add Brew metadata
+# 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
+# 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
+# 3. uncomment lines with RUN source .../cachito.env
+# 4. remove python and pip installs from runtime container (not required)
+# 5. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
 FROM registry.access.redhat.com/ubi9/nodejs-18:1 AS skeleton
 USER 0
 
-# Install isolate-vm dependencies
+# Install isolated-vm dependencies
 RUN dnf update -y && \
-  dnf install -y zlib-devel brotli-devel && \
-  dnf clean all
+  dnf install -y zlib-devel brotli-devel
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-ENV REMOTE_SOURCES=.
-ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR/
-COPY $REMOTE_SOURCES/.yarn $REMOTE_SOURCES_DIR/.yarn
-COPY $REMOTE_SOURCES/.yarnrc.yml $REMOTE_SOURCES_DIR/
-RUN chmod +x $REMOTE_SOURCES_DIR/$YARN
+# Upstream sources
+# Downstream comment
+ENV EXTERNAL_SOURCE=.
+ENV CONTAINER_SOURCE=/opt/app-root/src
+#/ Downstream comment
+
+# Downstream sources
+# Downstream uncomment
+# ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
+# ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+#/ Downstream uncomment
+
+WORKDIR $CONTAINER_SOURCE/
+COPY $EXTERNAL_SOURCE/.yarn ./.yarn
+COPY $EXTERNAL_SOURCE/.yarnrc.yml ./
+RUN chmod +x $YARN
+
+# Downstream uncomment
+# COPY $EXTERNAL_SOURCE/../cachito.env $EXTERNAL_SOURCE/../registry-ca.pem ./
+#/ Downstream uncomment
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
 
-COPY $REMOTE_SOURCES/package.json $REMOTE_SOURCES/yarn.lock $REMOTE_SOURCES_DIR
-COPY $REMOTE_SOURCES/packages/app/package.json $REMOTE_SOURCES_DIR/packages/app/package.json
-COPY $REMOTE_SOURCES/packages/backend/package.json $REMOTE_SOURCES_DIR/packages/backend/package.json
+COPY $EXTERNAL_SOURCE/package.json $EXTERNAL_SOURCE/yarn.lock ./
+COPY $EXTERNAL_SOURCE/packages/app/package.json ./packages/app/package.json
+COPY $EXTERNAL_SOURCE/packages/backend/package.json ./packages/backend/package.json
+
+# see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+# Downstream uncomment
+# RUN source $CONTAINER_SOURCE/cachito.env && $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+#/ Downstream uncomment
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 3 - Build packages
 FROM deps AS build
 
-COPY $REMOTE_SOURCES $REMOTE_SOURCES_DIR
+COPY $EXTERNAL_SOURCE ./
 
-RUN git config --global --add safe.directory $REMOTE_SOURCES_DIR/
-RUN rm $REMOTE_SOURCES_DIR/app-config.yaml && mv $REMOTE_SOURCES_DIR/app-config.example.yaml $REMOTE_SOURCES_DIR/app-config.yaml
+RUN git config --global --add safe.directory ./
+RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
+
+# see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+# Downstream uncomment
+# RUN source $CONTAINER_SOURCE/cachito.env && $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+#/ Downstream uncomment
 
 RUN $YARN build --filter=backend
 
@@ -65,18 +85,23 @@ RUN $YARN build --filter=backend
 FROM skeleton AS cleanup
 
 # Copy the install dependencies from the build stage and context
-COPY --from=build $REMOTE_SOURCES_DIR/yarn.lock $REMOTE_SOURCES_DIR/package.json $REMOTE_SOURCES_DIR/packages/backend/dist/skeleton.tar.gz $REMOTE_SOURCES_DIR/
+COPY --from=build $CONTAINER_SOURCE/yarn.lock $CONTAINER_SOURCE/package.json $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz ./
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # Copy the built packages from the build stage
-COPY --from=build $REMOTE_SOURCES_DIR/packages/backend/dist/bundle.tar.gz $REMOTE_SOURCES_DIR/
-RUN tar xzf $REMOTE_SOURCES_DIR/bundle.tar.gz && rm $REMOTE_SOURCES_DIR/bundle.tar.gz
+COPY --from=build $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz ./
+RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
 # Copy app-config files needed in runtime
-COPY $REMOTE_SOURCES/app-config*.yaml $REMOTE_SOURCES_DIR/
+COPY $EXTERNAL_SOURCE/app-config*.yaml ./
+
+# see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
+# Downstream uncomment
+# RUN source $CONTAINER_SOURCE/cachito.env && $YARN config set nodedir /usr; $YARN config set unsafe-perm true; # $YARN config list --verbose
+#/ Downstream uncomment
 
 # Install production dependencies
-RUN $YARN install --frozen-lockfile --production --network-timeout 600000 && $YARN cache clean
+RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
@@ -84,22 +109,34 @@ FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
 # Install techdocs dependencies
+# Downstream comment
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
   pip3 install mkdocs-techdocs-core==1.2.1 && \
   microdnf clean all
+#/ Downstream comment
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-ENV REMOTE_SOURCES=.
-ENV REMOTE_SOURCES_DIR=/opt/app-root/src
 
-WORKDIR $REMOTE_SOURCES_DIR/
-COPY --from=cleanup --chown=1001:1001 $REMOTE_SOURCES_DIR/ $REMOTE_SOURCES_DIR/
+# Upstream sources
+# Downstream comment
+ENV EXTERNAL_SOURCE=.
+ENV CONTAINER_SOURCE=/opt/app-root/src
+#/ Downstream comment
+
+# Downstream sources
+# Downstream uncomment
+# ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
+# ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+#/ Downstream uncomment
+
+WORKDIR $CONTAINER_SOURCE/
+COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
-RUN fix-permissions $REMOTE_SOURCES_DIR/
+RUN fix-permissions ./
 
 # Switch to nodejs user
 USER 1001
