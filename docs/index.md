@@ -13,7 +13,7 @@ The Developer Team processes to be ready to start their container journey.
 1. Developer Foundational Learning: Follow the Lear
 2. Application Assessment: Apply Twelve-Factor App for Containers.
 
-[A checklist for The Top Twelve-Factor App for Containers]()
+[A methodology for developers to build new containerized applications](checklist-for-building-containers.md)
 
 The application owner and the team will perform a high-Level application assessment to understand the application maturity level, risks, potential changes, and feasibility.
 
