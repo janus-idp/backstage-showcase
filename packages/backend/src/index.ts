@@ -37,6 +37,7 @@ import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
+import permission from './plugins/permission';
 import { PluginEnvironment } from './types';
 
 function makeCreateEnv(config: Config) {
@@ -45,7 +46,7 @@ function makeCreateEnv(config: Config) {
   const discovery = HostDiscovery.fromConfig(config);
   const cacheManager = CacheManager.fromConfig(config);
   const databaseManager = DatabaseManager.fromConfig(config, { logger: root });
-  const tokenManager = ServerTokenManager.noop();
+  const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
   const taskScheduler = TaskScheduler.fromConfig(config);
 
   const identity = DefaultIdentityClient.create({
@@ -201,6 +202,13 @@ async function main() {
     createEnv,
     router: jenkins,
     isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'permission',
+    config,
+    apiRouter,
+    createEnv,
+    router: permission,
   });
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
