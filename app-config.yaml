@@ -142,6 +142,13 @@ proxy:
     headers:
       Authorization: Token token=${PAGERDUTY_TOKEN}
 
+  '/dynatrace':
+    target: ${DYNATRACE_API_URL}
+    headers:
+      # This API access token requires entities.read and problems.read permissions
+      # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
+      Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -274,6 +281,10 @@ pagerduty:
 # Plugin: Lighthouse
 lighthouse:
   baseUrl: ${LIGHTHOUSE_BASEURL}
+
+# Plugin: Dynatrace
+dynatrace:
+  baseUrl: ${DYNATRACE_URL}
 
 enabled:
   kubernetes: ${K8S_ENABLED}
