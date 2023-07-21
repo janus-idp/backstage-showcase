@@ -39,6 +39,7 @@ Our current list of plugins within the showcase app include:
 - [Datadog plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog)
 - [PagerDuty](https://github.com/backstage/backstage/tree/master/plugins/pagerduty)
 - [Lighthouse plugin](https://github.com/backstage/backstage/tree/master/plugins/lighthouse)
+- [Dynatrace plugin](https://github.com/backstage/backstage/tree/master/plugins/dynatrace)
 
 ## Getting Started
 
