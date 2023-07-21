@@ -7,6 +7,12 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { ScmIntegrations } from '@backstage/integration';
 import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
+import {
+  createGitlabProjectAccessTokenAction,
+  createGitlabProjectDeployTokenAction,
+  createGitlabProjectVariableAction,
+  createGitlabGroupEnsureExistsAction,
+} from '@backstage/plugin-scaffolder-backend-module-gitlab';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -26,6 +32,10 @@ export default async function createPlugin(
   const actions = [
     ...builtInActions,
     createArgoCdResources(env.config, env.logger),
+    createGitlabProjectAccessTokenAction({ integrations: integrations }),
+    createGitlabProjectDeployTokenAction({ integrations: integrations }),
+    createGitlabProjectVariableAction({ integrations: integrations }),
+    createGitlabGroupEnsureExistsAction({ integrations: integrations }),
   ];
 
   return await createRouter({
