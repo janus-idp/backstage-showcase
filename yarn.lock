@@ -4428,6 +4428,18 @@
     yn "^4.0.0"
     yup "^0.32.9"
 
+"@backstage/plugin-scaffolder-backend-module-gitlab@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend-module-gitlab/-/plugin-scaffolder-backend-module-gitlab-0.2.2.tgz#03adf108c18fb65550bdf3391f8eaa8532c8a597"
+  integrity sha512-cNMt/bEICboPmcZbAi2lyxBCt/fdpL5QOJIgbyert8U+Pkz51BEWsIOrmoFcyhySD1s6Y8s7DiwbkxCvDfmo9w==
+  dependencies:
+    "@backstage/config" "^1.0.8"
+    "@backstage/errors" "^1.2.1"
+    "@backstage/integration" "^1.5.1"
+    "@backstage/plugin-scaffolder-node" "^0.1.5"
+    "@gitbeaker/node" "^35.8.0"
+    zod "^3.21.4"
+
 "@backstage/plugin-scaffolder-backend@^1.15.0", "@backstage/plugin-scaffolder-backend@^1.15.1":
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.15.1.tgz#81d25f84f84c6ec08e99358cc2972bbc692c2d1c"
@@ -5881,7 +5893,7 @@
     query-string "^7.0.0"
     xcase "^2.0.1"
 
-"@gitbeaker/node@^35.1.0":
+"@gitbeaker/node@^35.1.0", "@gitbeaker/node@^35.8.0":
   version "35.8.1"
   resolved "https://registry.yarnpkg.com/@gitbeaker/node/-/node-35.8.1.tgz#d67885c827f2d7405afd7e39538a230721756e5c"
   integrity sha512-g6rX853y61qNhzq9cWtxIEoe2KDeFBtXAeWMGWJnc3nz3WRump2pIICvJqw/yobLZqmTNt+ea6w3/n92Mnbn3g==
