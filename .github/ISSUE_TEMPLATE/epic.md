@@ -12,10 +12,8 @@ labels: ['kind/epic', 'status/triage']
 
 ## Requirements
 
-- [ ] Plugin
 - [ ] Test plan
-- [ ] Installation documentation
-- [ ] End user documentation
+- [ ] Documentation
 
 ## Issues in Epic
 
@@ -24,4 +22,4 @@ labels: ['kind/epic', 'status/triage']
 ## Notes
 
 **Additional context**
-Add any other context or screenshots about the feature request here.
+Add any other context or screenshots about the epic here.
