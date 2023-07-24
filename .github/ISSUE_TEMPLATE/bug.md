@@ -12,7 +12,7 @@ A clear and concise description of what the bug is.
 
 ### Actual Behavior (provide screenshots if applicable)
 
-### What are the steps to reproduce this issue?
+### What are the steps to reproduce this bug?
 
 1. …
 2. …
