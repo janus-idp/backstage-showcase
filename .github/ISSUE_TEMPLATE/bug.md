@@ -4,7 +4,13 @@ about: If something isn't working
 labels: ['kind/bug', 'status/triage']
 ---
 
-### What happened?
+### Describe the bug
+
+A clear and concise description of what the bug is.
+
+### Expected Behavior
+
+### Actual Behavior (provide screenshots if applicable)
 
 ### What are the steps to reproduce this issue?
 
