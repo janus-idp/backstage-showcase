@@ -79,6 +79,9 @@ techdocs:
 lighthouse:
   baseUrl: temp
 
+dynatrace:
+  baseUrl: temp
+
 catalog:
   import:
     entityFilename: catalog-info.yaml
