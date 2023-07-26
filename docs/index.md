@@ -71,3 +71,5 @@ This is a recommended list to start creating your platform guide to successfully
 #### Step 2 Welcome OpenShift
 
 Send confirmation to the user. Developers will follow the Developer Guide for Containers.
+
+test
