@@ -24,6 +24,7 @@ import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import StorageIcon from '@mui/icons-material/Storage';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import React, { PropsWithChildren } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import LogoFull from './LogoFull';
@@ -80,6 +81,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
             icon={MapIcon as any}
             to="tech-radar"
             text="Tech Radar"
+          />
+          <SidebarItem
+            icon={AssessmentIcon as any}
+            to="lighthouse"
+            text="Lighthouse"
           />
         </SidebarScrollWrapper>
       </SidebarGroup>

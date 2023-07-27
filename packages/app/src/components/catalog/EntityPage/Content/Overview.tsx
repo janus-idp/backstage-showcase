@@ -4,7 +4,7 @@ import {
   EntityLinksCard,
   EntitySwitch,
 } from '@backstage/plugin-catalog';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import {
@@ -34,6 +34,10 @@ import {
   isPluginApplicableToEntity as isPagerDutyAvailable,
   EntityPagerDutyCard,
 } from '@backstage/plugin-pagerduty';
+import {
+  EntityLastLighthouseAuditCard,
+  isLighthouseAvailable,
+} from '@backstage/plugin-lighthouse';
 import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
 import { isPRsAvailable } from './PullRequests';
@@ -118,7 +122,14 @@ export const overviewContent = (
     <Grid item container xs={4}>
       &nbsp;
     </Grid>
-    <Grid item container>
+    <Grid container spacing={3} alignItems="stretch">
+      <EntitySwitch>
+        <EntitySwitch.Case if={isLighthouseAvailable}>
+          <Grid item md={6}>
+            <EntityLastLighthouseAuditCard />
+          </Grid>
+        </EntitySwitch.Case>
+      </EntitySwitch>
       <EntitySwitch>
         <EntitySwitch.Case if={isPagerDutyAvailable}>
           <Grid item md={6}>

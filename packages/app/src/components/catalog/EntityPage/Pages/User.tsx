@@ -3,7 +3,7 @@ import {
   EntityOwnershipCard,
   EntityUserProfileCard,
 } from '@backstage/plugin-org';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import { entityWarningContent } from '../Content/EntityWarning';
 

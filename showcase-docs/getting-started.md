@@ -142,6 +142,31 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
        pagerduty.com/service-id: [SERVICE_ID]
      ```
 
+   - Setup the Lighthouse plugin
+
+     - `${LIGHTHOUSE_BASEURL}`: Base URL for the `lighthouse-audit-service` instance
+     - To integrate the Lighthouse plugin into the catalog so that the Lighthouse audit info for a component can be displayed in that component's entity page, it is necessary to annotate the entity as shown below.
+     - Please note that it is **essential** to include the `https://` or `http::/` in front of the link for this plugin to function correctly.
+
+     ```yaml
+     apiVersion: backstage.io/v1alpha1
+     kind: Component
+     metadata:
+       # ...
+       annotations:
+         lighthouse.com/website-url: # A single website url e.g. https://backstage.io/
+     ```
+
+     - Also please note that ending the website url with a `/` will cause it to be treated as a separate link compared to the same url without the `/`.
+       - i.e. `https://backstage.io/` and `https://backstage.io` are not considered the same, therefore audits for each will be grouped separately.
+
+   - Setup the Dynatrace plugin
+
+     - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
+     - `${DYNATRACE_URL}`: The baseURL for rendering links to problems in the table
+     - `${DYNATRACE_API_URL}`: The URL to the Dynatrace API
+     - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with `entities.read`,`problems.read` permissions. It will also need one of the following permissions: `DataExport`, `ExternalSyntheticIntegration`, or `ReadSyntheticData`.
+
 3. Run `yarn install` to install the dependencies
 
 4. Start the application using `yarn start`
