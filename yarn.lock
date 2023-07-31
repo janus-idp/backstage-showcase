@@ -4269,7 +4269,7 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-kubernetes-common@^0.6.3", "@backstage/plugin-kubernetes-common@^0.6.5":
+"@backstage/plugin-kubernetes-common@^0.6.5":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes-common/-/plugin-kubernetes-common-0.6.5.tgz#8764cb5c6ba0647098f596b3bd18be906ed32086"
   integrity sha512-b764fy1/XLTvmlJJiHiCu1jshjBEb5HtPeYQiphr59/7Z3Cz7WfkeyI4+WZO+iLwrPO9oqSxZ7SZudPMwUublA==
@@ -4278,7 +4278,7 @@
     "@backstage/plugin-permission-common" "^0.7.7"
     "@kubernetes/client-node" "0.18.1"
 
-"@backstage/plugin-kubernetes@^0.9.1", "@backstage/plugin-kubernetes@^0.9.3":
+"@backstage/plugin-kubernetes@^0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes/-/plugin-kubernetes-0.9.3.tgz#75b5d50b8338e35dbd9b8d1bc2c1fb7521ac7823"
   integrity sha512-gLQ6VZKDqZofMySV4ZJwLUNqedySRH4I1vaT37kl+cdJr62ingpfhqFdliwZyecauslxLfidZhq3KzaPm0hTsg==
