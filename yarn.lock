@@ -4269,7 +4269,7 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-kubernetes-common@^0.6.3", "@backstage/plugin-kubernetes-common@^0.6.5":
+"@backstage/plugin-kubernetes-common@^0.6.5":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes-common/-/plugin-kubernetes-common-0.6.5.tgz#8764cb5c6ba0647098f596b3bd18be906ed32086"
   integrity sha512-b764fy1/XLTvmlJJiHiCu1jshjBEb5HtPeYQiphr59/7Z3Cz7WfkeyI4+WZO+iLwrPO9oqSxZ7SZudPMwUublA==
@@ -4278,7 +4278,7 @@
     "@backstage/plugin-permission-common" "^0.7.7"
     "@kubernetes/client-node" "0.18.1"
 
-"@backstage/plugin-kubernetes@^0.9.1", "@backstage/plugin-kubernetes@^0.9.3":
+"@backstage/plugin-kubernetes@^0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-kubernetes/-/plugin-kubernetes-0.9.3.tgz#75b5d50b8338e35dbd9b8d1bc2c1fb7521ac7823"
   integrity sha512-gLQ6VZKDqZofMySV4ZJwLUNqedySRH4I1vaT37kl+cdJr62ingpfhqFdliwZyecauslxLfidZhq3KzaPm0hTsg==
@@ -7677,6 +7677,24 @@
     "@roadiehq/backstage-plugin-argo-cd-backend" "^2.8.1"
     winston "^3.2.1"
 
+"@roadiehq/scaffolder-backend-module-utils@^1.10.1":
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/@roadiehq/scaffolder-backend-module-utils/-/scaffolder-backend-module-utils-1.10.1.tgz#7384239f521c28132b70f55928b21002307d0c61"
+  integrity sha512-Nh/ZUb47g5tSpUQE5y0Hs15PFrSm9NSyIAx3T5uBnjVCBhTinNNP5F0v0JP0Cdl3Eu+8Gk1SEWZ8XhW/QmMOPA==
+  dependencies:
+    "@backstage/backend-common" "^0.19.1"
+    "@backstage/config" "^1.0.8"
+    "@backstage/errors" "^1.2.1"
+    "@backstage/plugin-scaffolder-backend" "^1.15.1"
+    "@backstage/plugin-scaffolder-node" "^0.1.5"
+    adm-zip "^0.5.9"
+    cross-fetch "^3.1.4"
+    fs-extra "^10.0.0"
+    js-yaml "^4.0.0"
+    jsonata "^1.8.6"
+    lodash "^4.17.21"
+    winston "^3.2.1"
+
 "@rollup/plugin-commonjs@^23.0.0":
   version "23.0.7"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-23.0.7.tgz#7d26d879caa54283086de1974b66f512ef60abdc"
@@ -10741,6 +10759,11 @@ address@^1.0.1, address@^1.1.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/address/-/address-1.2.2.tgz#2b5248dac5485a6390532c6a517fda2e3faac89e"
   integrity sha512-4B/qKCfeE/ODUaAUpSwfzazo5x29WD4r3vXiWsB7I2mSDAihwEqKO+g8GELZUQSSAo5e1XTYh3ZVfLyxBc12nA==
+
+adm-zip@^0.5.9:
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.10.tgz#4a51d5ab544b1f5ce51e1b9043139b639afff45b"
+  integrity sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==
 
 agent-base@6:
   version "6.0.2"
@@ -17155,6 +17178,11 @@ json5@^2.1.2, json5@^2.1.3, json5@^2.2.0, json5@^2.2.2:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
+
+jsonata@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/jsonata/-/jsonata-1.8.6.tgz#e5f0e6ace870a34bac881a182ca2b31227122791"
+  integrity sha512-ZH2TPYdNP2JecOl/HvrH47Xc+9imibEMQ4YqKy/F/FrM+2a6vfbGxeCX23dB9Fr6uvGwv+ghf1KxWB3iZk09wA==
 
 jsonc-parser@^3.0.0, jsonc-parser@^3.2.0:
   version "3.2.0"
