@@ -167,6 +167,35 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${DYNATRACE_API_URL}`: The URL to the Dynatrace API
      - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with `entities.read`,`problems.read` permissions. It will also need one of the following permissions: `DataExport`, `ExternalSyntheticIntegration`, or `ReadSyntheticData`.
 
+   - Enabling Authentication in Showcase
+
+     - There are currently three options for sign on providers within the showcase app. The availability of the sign on providers are determined by the variable set under `auth.environment`.
+
+     - To enable the GitHub and Guest sign on providers, add the following to the config file
+
+     ```yaml
+     auth:
+       environment: development
+       providers:
+         github:
+           development:
+             clientId: ${GITHUB_APP_CLIENT_ID}
+             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+     ```
+
+     - To enable the oauth2Proxy sign on provider, add the following to the config file. GitHub will still need to be included and configured as it is relied on by the GitHub plugins.
+
+     ```yaml
+     auth:
+       environment: production
+       providers:
+         github:
+           production:
+             clientId: ${GITHUB_APP_CLIENT_ID}
+             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+         oauth2Proxy: {}
+     ```
+
 3. Run `yarn install` to install the dependencies
 
 4. Start the application using `yarn start`
