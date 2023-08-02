@@ -6,11 +6,9 @@ labels: ['kind/bug', 'status/triage']
 
 ### Describe the bug
 
-A clear and concise description of what the bug is.
+A clear and concise description of what the bug is. (provide screenshots if applicable)
 
 ### Expected Behavior
-
-### Actual Behavior (provide screenshots if applicable)
 
 ### What are the steps to reproduce this bug?
 
