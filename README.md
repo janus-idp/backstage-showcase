@@ -40,6 +40,8 @@ Our current list of plugins within the showcase app include:
 - [PagerDuty](https://github.com/backstage/backstage/tree/master/plugins/pagerduty)
 - [Lighthouse plugin](https://github.com/backstage/backstage/tree/master/plugins/lighthouse)
 - [Dynatrace plugin](https://github.com/backstage/backstage/tree/master/plugins/dynatrace)
+- [Gitlab Scaffolder actions](https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-gitlab)
+- [Utils Scaffolder actions](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-utils)
 
 ## Getting Started
 
