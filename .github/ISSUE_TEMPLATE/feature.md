@@ -1,25 +1,13 @@
 ---
 name: Feature Request
-about: If you have a feature request
+about: Request for a new feature
 labels: ['kind/feature', 'status/triage']
 ---
 
-### Acceptance criteria
+### Provide a clear and concise description of the feature request
 
-What are you trying to do, need? What are the acceptance criteria?
+### Describe the problem that this feature resolves
 
-### Who will have access:
+### Additional context or screenshots for the feature request
 
-_Put an `x` in the boxes that apply_
-
-- [ ] Authenticated user
-- [ ] Unauthenticated user/Guest
-- [ ] System Admin only
-
-### UI/UX
-
-Figma links if needed
-
-### Api documentation/information
-
-OpenAPI link if needed
+### Acceptance Criteria

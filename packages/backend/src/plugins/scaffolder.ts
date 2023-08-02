@@ -13,6 +13,21 @@ import {
   createGitlabProjectVariableAction,
   createGitlabGroupEnsureExistsAction,
 } from '@backstage/plugin-scaffolder-backend-module-gitlab';
+import {
+  createZipAction,
+  createSleepAction,
+  createWriteFileAction,
+  createAppendFileAction,
+  createMergeJSONAction,
+  createMergeAction,
+  createParseFileAction,
+  createReplaceInFileAction,
+  createSerializeYamlAction,
+  createSerializeJsonAction,
+  createJSONataAction,
+  createYamlJSONataTransformAction,
+  createJsonJSONataTransformAction,
+} from '@roadiehq/scaffolder-backend-module-utils';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -36,6 +51,19 @@ export default async function createPlugin(
     createGitlabProjectDeployTokenAction({ integrations: integrations }),
     createGitlabProjectVariableAction({ integrations: integrations }),
     createGitlabGroupEnsureExistsAction({ integrations: integrations }),
+    createAppendFileAction(),
+    createJSONataAction(),
+    createJsonJSONataTransformAction(),
+    createMergeAction(),
+    createMergeJSONAction({}),
+    createParseFileAction(),
+    createReplaceInFileAction(),
+    createSerializeJsonAction(),
+    createSerializeYamlAction(),
+    createSleepAction(),
+    createWriteFileAction(),
+    createYamlJSONataTransformAction(),
+    createZipAction(),
   ];
 
   return await createRouter({
