@@ -1,7 +1,7 @@
 ---
 name: Dependency Upgrade
 about: Upgrade a dependency in the project
-labels: ['kind/dependency upgrade', 'status/triage']
+labels: ['kind/dependency', 'status/triage']
 ---
 
 ### Which dependency needs to be upgraded?
@@ -12,12 +12,4 @@ labels: ['kind/dependency upgrade', 'status/triage']
 
 ### Changelog link
 
-Put the dependency changelog link, if there is one available
-
-### :warning: Is this a breaking change?
-
-_Put an `x` in the boxes that apply_
-
-- [ ] Yes
-- [ ] No
-- [ ] Don't know
+Provide the dependency changelog link, if there is one available
