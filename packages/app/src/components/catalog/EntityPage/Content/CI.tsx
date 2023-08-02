@@ -9,7 +9,7 @@ import {
   isGithubActionsAvailable,
 } from '@backstage/plugin-github-actions';
 import {
-  EntityGitlabMergeRequestsTable,
+  EntityGitlabPipelinesTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
 import {
@@ -33,22 +33,25 @@ export const ciContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
-          <EntityGitlabMergeRequestsTable />
+          <EntityGitlabPipelinesTable />
         </Grid>
       </EntitySwitch.Case>
-
+    </EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={isTektonCIAvailable}>
         <Grid item xs={12}>
           <LatestPipelineRun linkTekton />
         </Grid>
       </EntitySwitch.Case>
-
+    </EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={isAzureDevOpsAvailable}>
         <Grid item xs={12}>
           <EntityAzurePipelinesContent defaultLimit={25} />
         </Grid>
       </EntitySwitch.Case>
-
+    </EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={isGithubActionsAvailable}>
         <Grid item xs={12}>
           <EntityGithubActionsContent />

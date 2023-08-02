@@ -25,8 +25,6 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
 
 proxy: []
 
@@ -77,6 +75,9 @@ techdocs:
     type: awsS3
 
 lighthouse:
+  baseUrl: temp
+
+dynatrace:
   baseUrl: temp
 
 catalog:
