@@ -1,26 +1,5 @@
 [
   {
-    "paths": 2,
-    "hours": 1,
-    "description": "Kafka Streams provides a domain-specific language (DSL) that lets developers create scalable data stream processing pipelines with minimal amounts of code. This guided workshop will show you how to develop an application that uses the Kafka Streams DSL to produce new OpenShift Streams for Apache Kafka topics containing aggregate and filtered data.",
-    "label": "A guided workshop for Kafka Streams",
-    "url": "https://developers.redhat.com/learn/openshift-streams-for-apache-kafka/guided-workshop-for-kafka-streams"
-  },
-  {
-    "paths": 2,
-    "hours": 1,
-    "description": "Red Hat OpenShift Service Registry is a managed cloud service that provides a schema registry instance for storing and managing different kinds of schemas. In this guided exercise, you will deploy a couple of Quarkus applications that connect to the Kafka instance and exchange messages in the Avro format. The Avro schema is stored in the Service Registry instance.",
-    "label": "A guided workshop for Red Hat OpenShift Service Registry",
-    "url": "https://developers.redhat.com/learn/openshift-streams-for-apache-kafka/guided-workshop-for-redhat-openshift-service-registry"
-  },
-  {
-    "paths": 2,
-    "hours": 1,
-    "description": "This step-by-step tutorial guides you through how to access and connect to a managed Kafka cluster and how to stream data using a Quarkus-based Java application.",
-    "label": "A guided workshop for Red Hat OpenShift Streams for Apache Kafka",
-    "url": "https://developers.redhat.com/learn/openshift-streams-for-apache-kafka/guided-workshop-red-hat-openshift-streams-apache-kafka"
-  },
-  {
     "paths": 6,
     "minutes": 20,
     "description": "Learn about k8s API fundamentals and the etcd operator, as well as how to use the Operator SDK with Go and Helm, review Ansible basics, and use Ansible to deploy Kubernetes modules.",
@@ -155,13 +134,6 @@
     "description": "Learn to simplify your tasks by creating a centralized and automated process with Ansible.",
     "label": "Get started with Ansible",
     "url": "https://developers.redhat.com/learn/ansible"
-  },
-  {
-    "paths": 11,
-    "hours": 3,
-    "description": "Red Hat OpenShift Streams for Apache Kafka is a managed cloud service for architects and developers working on event-driven applications. It provides hosted and managed, high-availability Kafka clusters on-demand, so you can focus on developing your applications while Red Hat takes care of the infrastructure.\u00a0\r\n\r\nIn this learning path you\u2019ll sign up for a free Red Hat account, provision a managed Kafka instance, and connect to it using service account credentials via SSL.",
-    "label": "Get started with OpenShift Streams for Apache Kafka",
-    "url": "https://developers.redhat.com/learn/openshift-streams-for-apache-kafka/get-started-with-openshift-streams-for-apache-kafka"
   },
   {
     "paths": 11,
