@@ -36,8 +36,10 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the GitLab plugin
 
+     - `${GITLAB_HOST}`: your gitlab host
      - This [URL](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) can be used to quickly create a GitLab personal access token
      - `${GITLAB_TOKEN}`: personal access token
+     - `${GITLAB_API_BASE_URL}`: the base url for the gitlab api. Typically it is `https://${GITLAB_HOST}/api/v4`. Note: if your `${GITLAB_HOST}` is set to `gitlab.com`, then you won't need to provide a value for this since it will be automatically inferred to be `https://gitlab.com/api/v4`
 
    - Setup the Azure DevOps plugin
 
