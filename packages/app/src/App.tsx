@@ -1,6 +1,11 @@
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
-import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
+import {
+  AlertDisplay,
+  OAuthRequestDialog,
+  ProxiedSignInPage,
+  SignInPage,
+} from '@backstage/core-components';
 import { ApiExplorerPage, apiDocsPlugin } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
@@ -39,6 +44,11 @@ import { LearningPaths } from './components/learningPaths/LearningPathsPage';
 import { SearchPage } from './components/search/SearchPage';
 import { LighthousePage } from '@backstage/plugin-lighthouse';
 import { customTheme } from './themes/theme';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  useApi,
+} from '@backstage/core-plugin-api';
 
 const app = createApp({
   apis,
@@ -69,6 +79,30 @@ const app = createApp({
       ),
     },
   ],
+  components: {
+    SignInPage: props => {
+      const configApi = useApi(configApiRef);
+      if (configApi.getString('auth.environment') === 'development') {
+        return (
+          <SignInPage
+            {...props}
+            title="Select a sign-in method"
+            align="center"
+            providers={[
+              'guest',
+              {
+                id: 'github-auth-provider',
+                title: 'GitHub',
+                message: 'Sign in using GitHub',
+                apiRef: githubAuthApiRef,
+              },
+            ]}
+          />
+        );
+      }
+      return <ProxiedSignInPage {...props} provider="oauth2Proxy" />;
+    },
+  },
 });
 
 // `routes` and every subsequent child needs to be static JSX, so the router can traverse the three without rendering.
