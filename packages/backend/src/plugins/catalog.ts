@@ -102,7 +102,6 @@ export default async function createPlugin(
           frequency: { minutes: 30 },
           timeout: { minutes: 3 },
         }),
-        // optional: alternatively, use schedule
         scheduler: env.scheduler,
       }),
     );
