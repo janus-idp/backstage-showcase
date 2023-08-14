@@ -214,11 +214,17 @@ catalog:
         serviceAccountToken: ${moc_infra_token}
         owner: janus-authors
 
-    # Plugin: GitHub Discovery & Org Data
+    # Plugin: GitHub Org Data
     githubOrg:
       default:
         id: production
         orgUrl: ${GITHUB_ORG_URL}
+
+    # Plugin: GitHub Discovery
+    # uncomment following lines and set GITHUB_ORG to enable GitHub Discovery
+    # github:
+    #   providerId:
+    #     organization: "${GITHUB_ORG}"
 
 # Plugin: Kubernetes, OCM
 kubernetes:
