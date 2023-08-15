@@ -66,8 +66,9 @@ integrations:
 
   # Plugin: GitLab
   gitlab:
-    - host: gitlab.com
+    - host: ${GITLAB_HOST}
       token: ${GITLAB_TOKEN}
+      apiBaseUrl: ${GITLAB_API_BASE_URL}
 
   # Plugin: Azure DevOps
   azure:

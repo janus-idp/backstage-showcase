@@ -3891,6 +3891,25 @@
     uuid "^8.0.0"
     winston "^3.2.1"
 
+"@backstage/plugin-catalog-backend-module-gitlab@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-gitlab/-/plugin-catalog-backend-module-gitlab-0.2.3.tgz#bb13f6e1a2156badf1618e33479927dee2a4d068"
+  integrity sha512-w5tfWhHiqtvxLvizHqcE7soBRYLDRhPEOf7AxCs47w3Ypnq7y+t6AIJgM07epVK4K84G3ukw0INrV4ALN4acFg==
+  dependencies:
+    "@backstage/backend-common" "^0.19.1"
+    "@backstage/backend-plugin-api" "^0.5.4"
+    "@backstage/backend-tasks" "^0.5.4"
+    "@backstage/catalog-model" "^1.4.1"
+    "@backstage/config" "^1.0.8"
+    "@backstage/errors" "^1.2.1"
+    "@backstage/integration" "^1.5.1"
+    "@backstage/plugin-catalog-node" "^1.4.0"
+    "@backstage/types" "^1.1.0"
+    lodash "^4.17.21"
+    node-fetch "^2.6.7"
+    uuid "^8.0.0"
+    winston "^3.2.1"
+
 "@backstage/plugin-catalog-backend-module-openapi@^0.1.13":
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-openapi/-/plugin-catalog-backend-module-openapi-0.1.13.tgz#91c55a3e1ec848ed077d4378e5096cc809e99e84"
