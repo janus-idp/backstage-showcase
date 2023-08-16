@@ -1,11 +1,11 @@
-import { Entity } from '@backstage/catalog-model';
+import { type Entity } from '@backstage/catalog-model';
 import { EntitySwitch } from '@backstage/plugin-catalog';
 import {
   JfrogArtifactoryPage,
   isJfrogArtifactoryAvailable,
 } from '@janus-idp/backstage-plugin-jfrog-artifactory';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 const ifImageRegistries: ((e: Entity) => boolean)[] = [
@@ -17,7 +17,7 @@ export const isImageRegistriesAvailable = (e: Entity) =>
   ifImageRegistries.some(f => f(e));
 
 export const imageRegistry = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <EntitySwitch>
       <EntitySwitch.Case if={isQuayAvailable}>
         <Grid item xs={12}>

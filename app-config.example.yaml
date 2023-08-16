@@ -7,7 +7,7 @@ app:
       writeKey: temp
 
 organization:
-  name: Janus IDP
+  name: My Org
 
 backend:
   baseUrl: http://localhost:7007
@@ -15,7 +15,7 @@ backend:
     port: 7007
   csp:
     connect-src:
-      - "'self'"
+      - 'self'
       - 'http:'
       - 'https:'
   cors:
@@ -25,8 +25,6 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
 
 proxy: []
 
@@ -43,6 +41,15 @@ integrations:
           webhookSecret: temp
           privateKey: |
             temp
+
+  bitbucketServer:
+    - host: bitbucket.com
+      apiBaseUrl: temp
+      username: temp
+      password: temp
+  gitlab:
+    - host: gitlab.com
+      token: temp
 
 argocd:
   appLocatorMethods:
@@ -69,6 +76,12 @@ techdocs:
     runIn: local
   publisher:
     type: awsS3
+
+lighthouse:
+  baseUrl: temp
+
+dynatrace:
+  baseUrl: temp
 
 catalog:
   import:

@@ -36,8 +36,27 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the GitLab plugin
 
-     - This [URL](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) can be used to quickly create a GitLab personal access token
+     - `${GITLAB_HOST}`: your gitlab host
+       - This [URL](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) describes how to create a GitLab personal access token
      - `${GITLAB_TOKEN}`: personal access token
+     - `${GITLAB_API_BASE_URL}`: the base url for the gitlab api.
+       - Typically it is in the form `https://${GITLAB_HOST}/api/v4`.
+       - Note: if your `${GITLAB_HOST}` is set to `gitlab.com`, then you won't need to provide a value for this since it will be automatically inferred to be `https://gitlab.com/api/v4`
+     - If you want to enable gitlab discovery for components, you will need to add the following snippet into your `app-config.yaml`:
+
+     ```yaml
+     catalog:
+       providers:
+         gitlab:
+           yourProviderId:
+             host: ${GITLAB_HOST}
+             group: example-group # Note that this is an optional field
+     ```
+
+     - Note that the group field is completely optional, but we highly recommend you specify a group/subgroup to narrow the scope in which the Discovery would search through
+       - The Gitlab Discovery does not ingest the discovered components into the catalog until it is done searching through the ENTIRE provided scope of the instance
+       - This may result in a delay of potentially hours before the component is ingested if the provided instance is large enough.
+       - For more information on how to configure for Gitlab Discovery, please refer to the [Documentation](https://backstage.io/docs/integrations/gitlab/discovery/) for the plugin.
 
    - Setup the Azure DevOps plugin
 
@@ -117,6 +136,84 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${SEGMENT_WRITE_KEY}`: Segment write key
      - `${SEGMENT_MASK_IP}`: prevents IP addresses to be sent if true
      - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
+
+   - Setup the Bitbucket Server Instance
+
+     - `${BITBUCKET_SERVER_HOST}`: The host of the bitbucket Server Instance. e.g. `bitbucket.mycompany.com`
+     - `${BITBUCKET_API_BASE_URL}`: The URL of the Bitbucket Server API. For self-hosted installations, it is commonly at `https://<host>/rest/api/1.0`
+     - `${BITBUCKET_SERVER_USERNAME}`: Basic Auth Username for Bitbucket Server
+     - `${BITBUCKET_SERVER_PASSWORD}`: Basic Auth Password for Bitbucket Server. A [token](https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html) can be used in place of the password.
+
+   - Setup the PagerDuty plugin
+
+     - `${PAGERDUTY_TOKEN}` with the [API token](https://support.pagerduty.com/docs/api-access-keys#generating-a-general-access-rest-api-key) used to make requests to the [PagerDuty API](https://developer.pagerduty.com/docs/rest-api-v2/rest-api/). Note that this will require a PaperDuty Admin role.
+     - To integrate with a PagerDuty Service, you will need to annotate the appropriate entity with the [PagerDuty Integration key](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#integrating-with-a-pagerduty-service) in its `.yaml` configuration file:
+
+     ```yaml
+     annotations:
+       pagerduty.com/integration-key: [INTEGRATION_KEY]
+     ```
+
+     - Alternatively, you can integrate with the [PagerDuty ServiceID](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#annotating-with-service-id) instead of the integration key:
+
+     ```yaml
+     annotations:
+       pagerduty.com/service-id: [SERVICE_ID]
+     ```
+
+   - Setup the Lighthouse plugin
+
+     - `${LIGHTHOUSE_BASEURL}`: Base URL for the `lighthouse-audit-service` instance
+     - To integrate the Lighthouse plugin into the catalog so that the Lighthouse audit info for a component can be displayed in that component's entity page, it is necessary to annotate the entity as shown below.
+     - Please note that it is **essential** to include the `https://` or `http::/` in front of the link for this plugin to function correctly.
+
+     ```yaml
+     apiVersion: backstage.io/v1alpha1
+     kind: Component
+     metadata:
+       # ...
+       annotations:
+         lighthouse.com/website-url: # A single website url e.g. https://backstage.io/
+     ```
+
+     - Also please note that ending the website url with a `/` will cause it to be treated as a separate link compared to the same url without the `/`.
+       - i.e. `https://backstage.io/` and `https://backstage.io` are not considered the same, therefore audits for each will be grouped separately.
+
+   - Setup the Dynatrace plugin
+
+     - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
+     - `${DYNATRACE_URL}`: The baseURL for rendering links to problems in the table
+     - `${DYNATRACE_API_URL}`: The URL to the Dynatrace API
+     - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with `entities.read`,`problems.read` permissions. It will also need one of the following permissions: `DataExport`, `ExternalSyntheticIntegration`, or `ReadSyntheticData`.
+
+   - Enabling Authentication in Showcase
+
+     - There are currently three options for sign on providers within the showcase app. The availability of the sign on providers are determined by the variable set under `auth.environment`.
+
+     - To enable the GitHub and Guest sign on providers, add the following to the config file
+
+     ```yaml
+     auth:
+       environment: development
+       providers:
+         github:
+           development:
+             clientId: ${GITHUB_APP_CLIENT_ID}
+             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+     ```
+
+     - To enable the oauth2Proxy sign on provider, add the following to the config file. GitHub will still need to be included and configured as it is relied on by the GitHub plugins.
+
+     ```yaml
+     auth:
+       environment: production
+       providers:
+         github:
+           production:
+             clientId: ${GITHUB_APP_CLIENT_ID}
+             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+         oauth2Proxy: {}
+     ```
 
 3. Run `yarn install` to install the dependencies
 

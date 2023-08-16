@@ -2,9 +2,14 @@ import {
   createRouter,
   providers,
   defaultAuthProviderFactories,
+  getDefaultOwnershipEntityRefs,
 } from '@backstage/plugin-auth-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
+import {
+  stringifyEntityRef,
+  DEFAULT_NAMESPACE,
+} from '@backstage/catalog-model';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -37,16 +42,65 @@ export default async function createPlugin(
       //   https://backstage.io/docs/auth/identity-resolver
       github: providers.github.create({
         signIn: {
-          resolver(_, ctx) {
-            const userRef = 'user:default/guest'; // Must be a full entity reference
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.username;
+            if (!userId) {
+              throw new Error(
+                `GitHub user profile does not contain a username`,
+              );
+            }
+
+            // Creates an entity
+            const userEntity = stringifyEntityRef({
+              kind: 'User',
+              name: userId,
+              namespace: DEFAULT_NAMESPACE,
+            });
+
+            const { entity } = await ctx.findCatalogUser({
+              entityRef: userEntity,
+            });
+
+            const ownership = getDefaultOwnershipEntityRefs(entity);
+
             return ctx.issueToken({
               claims: {
-                sub: userRef, // The user's own identity
-                ent: [userRef], // A list of identities that the user claims ownership through
+                sub: userEntity,
+                ent: ownership,
               },
             });
           },
-          // resolver: providers.github.resolvers.usernameMatchingUserEntityName(),
+        },
+      }),
+      oauth2Proxy: providers.oauth2Proxy.create({
+        signIn: {
+          async resolver({ result }, ctx) {
+            const name = result.getHeader('x-forwarded-preferred-username');
+            if (!name) {
+              throw new Error('Request did not contain a user');
+            }
+
+            try {
+              const signedInUser = await ctx.signInWithCatalogUser({
+                entityRef: { name },
+              });
+
+              return Promise.resolve(signedInUser);
+            } catch (e) {
+              const userEntityRef = stringifyEntityRef({
+                kind: 'User',
+                name: name,
+                namespace: DEFAULT_NAMESPACE,
+              });
+
+              return ctx.issueToken({
+                claims: {
+                  sub: userEntityRef,
+                  ent: [userEntityRef],
+                },
+              });
+            }
+          },
         },
       }),
     },

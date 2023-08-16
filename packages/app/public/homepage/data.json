@@ -1,7 +1,7 @@
 [
   {
-    "title": "Janus Community",
-    "isExpanded": true,
+    "title": "COMMUNITY",
+    "isExpanded": false,
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/web.png",
@@ -41,91 +41,50 @@
     ]
   },
   {
-    "title": "Learning Path",
+    "title": "DEVELOPER TOOLS",
+    "isExpanded": true,
     "links": [
       {
-        "iconUrl": "/homepage/icons/openshift-learning/ST-spring-boot_2x.png",
-        "label": "Deploy Spring app on OpenShift",
-        "url": "https://developers.redhat.com/node/264191",
-        "description": "This hands on experience will introduce you to developing on OpenShift. Learn how to access OpenShift from the command line, deploy an existing Spring application, and scale up your application to handle increased web traffic.",
-        "hours": 8,
-        "paths": 20
-      },
-      {
-        "iconUrl": "/homepage/icons/openshift-learning/hello-kafka.png",
-        "label": "Kafka 101",
-        "url": "https://developers.redhat.com/node/272761",
-        "description": " Learn about the fundamentals of Apache Kafka. This tutorial covers basic concepts of Kafka and its components.",
-        "hours": 2,
-        "paths": 7
-      },
-      {
-        "iconUrl": "/homepage/icons/openshift-learning/2020_RHD_Coding_imageA@2x.png",
-        "label": "Red Hat OpenShift Data Science",
-        "url": "https://developers.redhat.com/node/272361",
-        "description": "In this learning path, we use a pre-existing Jupyter Notebook project to start exploring data science. Project Jupyter offers the interactive JupyterHub and JupyterLab tools, which we'll introduce in this path.",
-        "hours": 1,
-        "paths": 4
+        "iconUrl": "/homepage/icons/podman_logo.svg",
+        "label": "Podman Desktop",
+        "url": "https://podman-desktop.io"
       }
     ]
   },
   {
-    "title": "OpenShift Clusters",
+    "title": "CI/CD TOOLS",
+    "isExpanded": true,
     "links": [
-      {
-        "iconUrl": "/homepage/icons/icons8/openshift.png",
-        "label": "OpenShift Smaug NA",
-        "url": "https://console-openshift-console.apps.smaug.na.operate-first.cloud/k8s/ns/janus-idp/pods"
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/devspaces.png",
-        "label": "OpenShift Dev Spaces",
-        "url": "https://devspaces.apps.sandbox-m3.1530.p1.openshiftapps.com/dashboard/"
-      }
-    ]
-  },
-  {
-    "title": "Devops Tools",
-    "links": [
-      {
-        "iconUrl": "/homepage/icons/icons8/devspaces.png",
-        "label": "OpenShift Dev Spaces",
-        "url": "https://devspaces.apps.sandbox-m3.1530.p1.openshiftapps.com/dashboard/"
-      },
       {
         "iconUrl": "/homepage/icons/argo-icon-color.svg",
         "label": "ArgoCD",
-        "url": "https://argocd.operate-first.cloud/"
+        "url": "https://openshift-gitops-server-openshift-gitops.apps.janus.djpe.p1.openshiftapps.com/"
       },
       {
         "iconUrl": "/homepage/icons/sonarqube.svg",
-        "label": "SonarQube (Coming Soon)",
-        "url": ""
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/github.png",
-        "label": "GitHub",
-        "url": "https://github.com/orgs/janus-idp"
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/registry-editor.png",
-        "label": "GitHub Container Registry",
-        "url": "https://github.com/orgs/janus-idp/packages"
+        "label": "SonarQube",
+        "url": "https://sonarqube.apps.janus.djpe.p1.openshiftapps.com/"
       },
       {
         "iconUrl": "/homepage/icons/quay.svg",
         "label": "Quay.io",
-        "url": "https://quay.io/janus-idp/"
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/safe-out.png",
-        "label": "Vault",
-        "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
+        "url": "https://quay.io/"
       }
     ]
   },
   {
-    "title": "Monitoring Tools",
+    "title": "OPENSHIFT CLUSTERS",
+    "isExpanded": true,
+    "links": [
+      {
+        "iconUrl": "/homepage/icons/icons8/openshift.png",
+        "label": "OpenShift",
+        "url": "https://console-openshift-console.apps.janus.djpe.p1.openshiftapps.com/"
+      }
+    ]
+  },
+  {
+    "title": "MONITORING TOOLS",
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/system-task.png",
@@ -135,7 +94,7 @@
     ]
   },
   {
-    "title": "Security Tools",
+    "title": "SECURITY TOOLS",
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/security-checked.png",
@@ -143,14 +102,9 @@
         "url": "https://github.com/orgs/janus-idp"
       },
       {
-        "iconUrl": "/homepage/icons/icons8/safe-out.png",
-        "label": "Vault",
-        "url": "https://vault-ui-vault.apps.smaug.na.operate-first.cloud/ui/"
-      },
-      {
         "iconUrl": "/homepage/icons/keycloak.svg",
         "label": "Keycloak",
-        "url": "https://keycloak.apps.smaug.na.operate-first.cloud/"
+        "url": "https://keycloak.apps.janus.djpe.p1.openshiftapps.com/"
       }
     ]
   }

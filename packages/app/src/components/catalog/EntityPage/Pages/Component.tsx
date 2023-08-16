@@ -10,7 +10,11 @@ import {
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
 import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
 import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
-import { Grid } from '@mui/material';
+import {
+  EntityLighthouseContent,
+  isLighthouseAvailable,
+} from '@backstage/plugin-lighthouse';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import {
   cdContent,
@@ -20,11 +24,12 @@ import {
   isCIsAvailable,
   isImageRegistriesAvailable,
   isIssuesAvailable,
-  isPrsAvailable,
+  isMonitoringAvailable,
+  isPRsAvailable,
   issuesContent,
+  monitoringContent,
   overviewContent,
   prContent,
-  securityContent,
   techdocsContent,
 } from '../Content';
 import { defaultEntityPage } from './DefaultEntity';
@@ -35,12 +40,16 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {overviewContent}
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/topology" title="Topology">
+      <TopologyPage />
+    </EntityLayout.Route>
+
     <EntityLayout.Route if={isIssuesAvailable} path="/issues" title="Issues">
       {issuesContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route
-      if={isPrsAvailable}
+      if={isPRsAvailable}
       path="/pr"
       title="Pull/Merge Requests"
     >
@@ -60,10 +69,6 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       <EntityKubernetesContent refreshIntervalMs={30000} />
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/topology" title="Topology">
-      <TopologyPage />
-    </EntityLayout.Route>
-
     <EntityLayout.Route path="/tekton" title="Tekton">
       <TektonPage />
     </EntityLayout.Route>
@@ -76,8 +81,20 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {imageRegistry}
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/security-insights" title="Security Insights">
-      {securityContent}
+    <EntityLayout.Route
+      if={isMonitoringAvailable}
+      path="/monitoring"
+      title="Monitoring"
+    >
+      {monitoringContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
+      path="/lighthouse"
+      title="Lighthouse"
+      if={isLighthouseAvailable}
+    >
+      <EntityLighthouseContent />
     </EntityLayout.Route>
 
     {componentType === 'service' && (

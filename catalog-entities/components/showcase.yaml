@@ -15,12 +15,12 @@ metadata:
     - title: Slack
       url: https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg
   annotations:
-    argocd/app-name: "janus-idp-smaug"
-    backstage.io/kubernetes-id: "janus-idp"
+    argocd/app-name: 'janus-idp'
+    backstage.io/kubernetes-id: 'janus-idp'
     github.com/project-slug: janus-idp/backstage-showcase
     quay.io/repository-slug: janus-idp/backstage-showcase
     backstage.io/techdocs-ref: url:https://github.com/janus-idp/backstage-showcase
-    backstage.io/kubernetes-namespace: janus-idp
+    backstage.io/kubernetes-namespace: janus-idp-prod
     sonarqube.org/project-key: janus-idp_backstage-showcase
 spec:
   type: website

@@ -1,4 +1,4 @@
-import { Entity } from '@backstage/catalog-model';
+import { type Entity } from '@backstage/catalog-model';
 
 export const isType = (types: string | string[]) => (entity: Entity) => {
   if (!entity?.spec?.type) {

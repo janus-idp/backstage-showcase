@@ -9,7 +9,7 @@ app:
       testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
 organization:
-  name: Janus IDP
+  name: My Org
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -46,8 +46,6 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -68,13 +66,21 @@ integrations:
 
   # Plugin: GitLab
   gitlab:
-    - host: gitlab.com
+    - host: ${GITLAB_HOST}
       token: ${GITLAB_TOKEN}
+      apiBaseUrl: ${GITLAB_API_BASE_URL}
 
   # Plugin: Azure DevOps
   azure:
     - host: dev.azure.com
       token: ${AZURE_TOKEN}
+
+  # Plugin: Bitbucket Server
+  bitbucketServer:
+    - host: ${BITBUCKET_SERVER_HOST}
+      apiBaseUrl: ${BITBUCKET_API_BASE_URL}
+      username: ${BITBUCKET_SERVER_USERNAME}
+      password: ${BITBUCKET_SERVER_PASSWORD}
 
 # Plugin: Azure DevOps
 azureDevOps:
@@ -130,6 +136,19 @@ proxy:
       Authorization: Bearer ${ARTIFACTORY_TOKEN}
     # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
     secure: ${ARTIFACTORY_SECURE}
+
+  # Plugin: PagerDuty
+  '/pagerduty':
+    target: https://api.pagerduty.com
+    headers:
+      Authorization: Token token=${PAGERDUTY_TOKEN}
+
+  '/dynatrace':
+    target: ${DYNATRACE_API_URL}
+    headers:
+      # This API access token requires entities.read and problems.read permissions
+      # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
+      Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -207,10 +226,16 @@ kubernetes:
   customResources:
     - group: 'tekton.dev'
       apiVersion: 'v1beta1'
+      plural: 'pipelines'
+    - group: 'tekton.dev'
+      apiVersion: 'v1beta1'
       plural: 'pipelineruns'
     - group: 'tekton.dev'
       apiVersion: 'v1beta1'
       plural: 'taskruns'
+    - group: 'route.openshift.io'
+      apiVersion: 'v1'
+      plural: 'routes'
   serviceLocatorMethod:
     type: 'multiTenant'
   clusterLocatorMethods:
@@ -244,10 +269,23 @@ sonarqube:
 # Plugin: Jenkins
 jenkins:
   instances:
-  - name: default
-    baseUrl: ${JENKINS_URL}
-    username: ${JENKINS_USERNAME}
-    apiKey: ${JENKINS_TOKEN}
+    - name: default
+      baseUrl: ${JENKINS_URL}
+      username: ${JENKINS_USERNAME}
+      apiKey: ${JENKINS_TOKEN}
+
+# Plugin: PagerDuty
+pagerduty:
+  # uncomment the following, and provide a URL to override the default URL used for events
+  # eventsBaseUrl: <PagerDuty Event URL>
+
+# Plugin: Lighthouse
+lighthouse:
+  baseUrl: ${LIGHTHOUSE_BASEURL}
+
+# Plugin: Dynatrace
+dynatrace:
+  baseUrl: ${DYNATRACE_URL}
 
 enabled:
   kubernetes: ${K8S_ENABLED}

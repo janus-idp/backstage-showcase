@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "config:js-app",
+    ":gitSignOff",
+    ":rebaseStalePrs",
+    "group:allNonMajor",
+    "group:linters",
+    "group:test"
+  ],
+  "labels": ["kind/dependency upgrade"],
+  "npm": {
+    "minimumReleaseAge": "1 day"
+  },
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "^@backstage/",
+        "^@janus-idp/",
+        "^@immobiliarelabs/",
+        "^@roadiehq/"
+      ],
+      "groupName": ["Backstage packages"],
+      "dependencyDashboardApproval": true
+    }
+  ]
+}

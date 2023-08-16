@@ -1,39 +1,24 @@
-import {
-  Content,
-  Header,
-  InfoCard,
-  Link,
-  Page,
-} from '@backstage/core-components';
+import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import {
   ComponentAccordion,
-  HomePageCompanyLogo,
   HomePageStarredEntities,
   HomePageToolkit,
-  type Tool,
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
 import { css } from '@emotion/css';
-import MuiAlert from '@mui/lab/Alert';
-import { Box, CircularProgress, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
 import React from 'react';
-import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
-import { ErrorReport, fetcher } from '../../common';
-import LogoFull from '../Root/LogoFull';
+import { ErrorReport } from '../../common';
+import { useQuickAccess } from '../../hooks/useQuickAccess';
 
 const useStyles = makeStyles()(theme => ({
   img: {
     height: '40px',
     width: 'auto',
-  },
-  janusLogo: {
-    height: '80px',
-    width: 'auto',
-  },
-  janusLogoContainer: {
-    margin: theme.spacing(5, 0, 1, 0),
   },
   searchBar: {
     display: 'flex',
@@ -44,18 +29,13 @@ const useStyles = makeStyles()(theme => ({
   },
 }));
 
-type QuickAccessLinks = {
-  title: string;
-  isExpanded?: boolean;
-  links: (Tool & { iconUrl: string })[];
-};
-
 const QuickAccess = () => {
   const { classes } = useStyles();
-  const { data, error, isLoading } = useSWR(
-    '/homepage/data.json',
-    fetcher<QuickAccessLinks>,
-  );
+  const { data, error, isLoading } = useQuickAccess();
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   if (!data) {
     return (
@@ -63,14 +43,10 @@ const QuickAccess = () => {
     );
   }
 
-  if (error) {
+  if (!isLoading && !data && error) {
     return (
       <ErrorReport title="Could not fetch data." errorText={error.toString()} />
     );
-  }
-
-  if (isLoading) {
-    return <CircularProgress />;
   }
 
   return (
@@ -116,22 +92,7 @@ export const HomePage = () => {
               gap: 2,
             }}
           >
-            {window.location.origin.startsWith(
-              'https://janus-idp.apps.smaug.na.operate-first.cloud',
-            ) && (
-              <MuiAlert severity="warning">
-                The Janus showcase URL has changed! Please, use this new link
-                instead{' '}
-                <Link to="https://showcase.janus-idp.io">
-                  showcase.janus-idp.io
-                </Link>
-              </MuiAlert>
-            )}
-            <HomePageCompanyLogo
-              className={classes.janusLogoContainer}
-              logo={<LogoFull className={classes.janusLogo} />}
-            />
-            {/* useStyles has a lower precedence over mui styles hence why we need use use css */}
+            {/* useStyles has a lower precedence over mui styles hence why we need to use css */}
             <HomePageSearchBar
               classes={{
                 root: classes.searchBar,
