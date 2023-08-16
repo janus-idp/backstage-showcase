@@ -36,8 +36,27 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the GitLab plugin
 
-     - This [URL](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) can be used to quickly create a GitLab personal access token
+     - `${GITLAB_HOST}`: your gitlab host
+       - This [URL](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) describes how to create a GitLab personal access token
      - `${GITLAB_TOKEN}`: personal access token
+     - `${GITLAB_API_BASE_URL}`: the base url for the gitlab api.
+       - Typically it is in the form `https://${GITLAB_HOST}/api/v4`.
+       - Note: if your `${GITLAB_HOST}` is set to `gitlab.com`, then you won't need to provide a value for this since it will be automatically inferred to be `https://gitlab.com/api/v4`
+     - If you want to enable gitlab discovery for components, you will need to add the following snippet into your `app-config.yaml`:
+
+     ```yaml
+     catalog:
+       providers:
+         gitlab:
+           yourProviderId:
+             host: ${GITLAB_HOST}
+             group: example-group # Note that this is an optional field
+     ```
+
+     - Note that the group field is completely optional, but we highly recommend you specify a group/subgroup to narrow the scope in which the Discovery would search through
+       - The Gitlab Discovery does not ingest the discovered components into the catalog until it is done searching through the ENTIRE provided scope of the instance
+       - This may result in a delay of potentially hours before the component is ingested if the provided instance is large enough.
+       - For more information on how to configure for Gitlab Discovery, please refer to the [Documentation](https://backstage.io/docs/integrations/gitlab/discovery/) for the plugin.
 
    - Setup the Azure DevOps plugin
 

@@ -27,6 +27,7 @@
     "@backstage/plugin-azure-devops-backend": "^0.3.26",
     "@backstage/plugin-catalog-backend": "^1.11.0",
     "@backstage/plugin-catalog-backend-module-github": "^0.3.2",
+    "@backstage/plugin-catalog-backend-module-gitlab": "^0.2.3",
     "@backstage/plugin-catalog-backend-module-openapi": "^0.1.13",
     "@backstage/plugin-jenkins-backend": "^0.2.2",
     "@backstage/plugin-kubernetes-backend": "^0.11.2",
