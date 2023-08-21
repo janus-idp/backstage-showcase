@@ -50,7 +50,7 @@ ENV CONTAINER_SOURCE=/opt/app-root/src
 # Downstream sources
 # Downstream uncomment
 # ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
-# ENV EXTERNAL_SOURCE_NESTED=$REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh-hub
+# ENV EXTERNAL_SOURCE_NESTED=$EXTERNAL_SOURCE/distgit/containers/rhdh-hub
 # # /remote-source/
 # ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 #/ Downstream uncomment
