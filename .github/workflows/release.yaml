@@ -20,18 +20,18 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
-    permissions:
-      contents: write # need write to generate a pull request in this repo
-      packages: write # do we need this? are we publishing to a package registry?
+    # permissions:
+    #   contents: write # need write to generate a pull request in this repo
+    #   packages: write # do we need this? are we publishing to a package registry?
 
     steps:
-      - name: Set up git env
-        run: |
-          git config --global pull.rebase true
-          git config --global user.name "Janus-IDP Build Bot"
-          # TODO switch to new bot email and token - see https://github.com/che-incubator/github-secrets-generator/
-          git config --global user.email "nboldt@redhat.com"
-          export GITHUB_TOKEN=${{ secrets.GH_WRITE_TOKEN }}
+      # - name: Set up git env
+      #   run: |
+      #     git config --global pull.rebase true
+      #     git config --global user.name "Janus-IDP Build Bot"
+      #     # TODO switch to new bot email and token - see https://github.com/che-incubator/github-secrets-generator/
+      #     git config --global user.email "nboldt@redhat.com"
+      #     export GITHUB_TOKEN=${{ secrets.GH_WRITE_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -54,7 +54,7 @@ jobs:
         with:
           version: yarn version
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_WRITE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish
         if: steps.changesets.outputs.hasChangesets == 'false'
