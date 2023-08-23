@@ -19,9 +19,10 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
-      contents: read
-      packages: write
+      contents: write # need write to generate a pull request in this repo
+      packages: write # do we need this? are we publishing to a package registry?
 
     steps:
       - name: Set up git env
@@ -53,7 +54,7 @@ jobs:
         with:
           version: yarn version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_WRITE_TOKEN }}
 
       - name: Publish
         if: steps.changesets.outputs.hasChangesets == 'false'
