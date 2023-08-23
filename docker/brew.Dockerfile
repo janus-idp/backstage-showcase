@@ -108,11 +108,9 @@ RUN git config --global --add safe.directory ./
 RUN $YARN build --filter=backend
 
 # Stage 4 - Build the actual backend image and install production dependencies
-# Copy the install dependencies from the build stage and context
 
-# Downstream only - debugging
+# Downstream only - files already exist, nothing to copy - debugging
 # RUN ls -l $CONTAINER_SOURCE/ $CONTAINER_SOURCE/packages/backend/dist/
-
 ENV TARBALL_PATH=./packages/backend/dist
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
     rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz

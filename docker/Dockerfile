@@ -68,13 +68,12 @@ RUN $YARN build --filter=backend
 # Stage 4 - Build the actual backend image and install production dependencies
 FROM skeleton AS cleanup
 
-# Copy the install dependencies from the build stage and context
+# Upstream only - copy the install dependencies from the build stage and context
 COPY --from=build $CONTAINER_SOURCE/yarn.lock \
      $CONTAINER_SOURCE/package.json \
      $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
      $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
      ./
-
 ENV TARBALL_PATH=.
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
     rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
