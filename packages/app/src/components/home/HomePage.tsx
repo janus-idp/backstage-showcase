@@ -6,7 +6,6 @@ import {
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { css } from '@emotion/css';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
@@ -26,6 +25,9 @@ const useStyles = makeStyles()(theme => ({
     boxShadow: theme.shadows.at(1),
     borderRadius: '50px',
     margin: 'auto',
+  },
+  notchedOutline: {
+    borderStyle: 'none!important',
   },
 }));
 
@@ -99,9 +101,7 @@ export const HomePage = () => {
               }}
               InputProps={{
                 classes: {
-                  notchedOutline: css`
-                    border-style: none;
-                  `,
+                  notchedOutline: classes.notchedOutline,
                 },
               }}
               placeholder="Search"
