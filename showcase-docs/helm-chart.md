@@ -24,7 +24,7 @@ This guide will have a focus deploying to an OpenShift cluster as that is the ma
 1. Build and push an image of the Backstage Showcase app that you can test.
 
    ```shell
-   podman build -t <registry>/<repository>:<tag> .
+   podman build -t <registry>/<repository>:<tag> . -f docker/Dockerfile
    podman push <registry>/<repository>:<tag>
    ```
 
