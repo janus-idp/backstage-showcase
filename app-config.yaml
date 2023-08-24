@@ -89,66 +89,62 @@ azureDevOps:
   organization: ${AZURE_ORG}
 
 proxy:
-  ### Example for how to add a proxy endpoint for the frontend.
-  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # '/test':
-  #   target: 'https://example.com'
-  #   changeOrigin: true
+  endpoints:
+    # Plugin: Quay
+    '/quay/api':
+      target: https://quay.io/
+      headers:
+        X-Requested-With: 'XMLHttpRequest'
+        # Uncomment the following line to access a private Quay Repository using a token
+        # Authorization: 'Bearer <YOUR TOKEN>'
+      changeOrigin: true
+      secure: true
 
-  # Plugin: Quay
-  '/quay/api':
-    target: https://quay.io/
-    headers:
-      X-Requested-With: 'XMLHttpRequest'
-      # Uncomment the following line to access a private Quay Repository using a token
-      # Authorization: 'Bearer <YOUR TOKEN>'
-    changeOrigin: true
-    secure: true
+    # Plugin: SonarQube
+    '/sonarqube':
+      # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
+      # target: https://sonarcloud.io/api
+      target: ${SONARQUBE_URL}/api
+      allowedMethods: ['GET']
+      auth: ${SONARQUBE_TOKEN}
 
-  # Plugin: SonarQube
-  '/sonarqube':
-    # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
-    # target: https://sonarcloud.io/api
-    target: ${SONARQUBE_URL}/api
-    allowedMethods: ['GET']
-    auth: ${SONARQUBE_TOKEN}
+    # Plugin: Jenkins
+    '/jenkins/api':
+      target: ${JENKINS_URL}
+      headers:
+        Authorization: ${JENKINS_TOKEN}
 
-  # Plugin: Jenkins
-  '/jenkins/api':
-    target: ${JENKINS_URL}
-    headers:
-      Authorization: ${JENKINS_TOKEN}
+    # Plugin: Jira
+    '/jira/api':
+      target: ${JIRA_URL}
+      headers:
+        Authorization: ${JIRA_TOKEN}
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Atlassian-Token: 'no-check'
+        User-Agent: ${JIRA_USER_AGENT}
 
-  # Plugin: Jira
-  '/jira/api':
-    target: ${JIRA_URL}
-    headers:
-      Authorization: ${JIRA_TOKEN}
-      Accept: 'application/json'
-      Content-Type: 'application/json'
-      X-Atlassian-Token: 'no-check'
-      User-Agent: ${JIRA_USER_AGENT}
+    # Plugin: Jfrog Artifactory
+    '/jfrog-artifactory/api':
+      target: ${ARTIFACTORY_URL}
+      headers:
+        Authorization: Bearer ${ARTIFACTORY_TOKEN}
+      # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
+      secure: ${ARTIFACTORY_SECURE}
 
-  # Plugin: Jfrog Artifactory
-  '/jfrog-artifactory/api':
-    target: ${ARTIFACTORY_URL}
-    headers:
-      Authorization: Bearer ${ARTIFACTORY_TOKEN}
-    # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
-    secure: ${ARTIFACTORY_SECURE}
+    # Plugin: PagerDuty
+    '/pagerduty':
+      target: https://api.pagerduty.com
+      headers:
+        Authorization: Token token=${PAGERDUTY_TOKEN}
 
-  # Plugin: PagerDuty
-  '/pagerduty':
-    target: https://api.pagerduty.com
-    headers:
-      Authorization: Token token=${PAGERDUTY_TOKEN}
-
-  '/dynatrace':
-    target: ${DYNATRACE_API_URL}
-    headers:
-      # This API access token requires entities.read and problems.read permissions
-      # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
-      Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
+    # Plugin: Dynatrace
+    '/dynatrace':
+      target: ${DYNATRACE_API_URL}
+      headers:
+        # This API access token requires entities.read and problems.read permissions
+        # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
+        Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -209,7 +205,7 @@ catalog:
 
     # Plugin: OCM
     ocm:
-      operate-first:
+      default:
         name: ${OCM_HUB_NAME}
         url: ${OCM_HUB_URL}
         serviceAccountToken: ${moc_infra_token}
