@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "engines": {
     "node": "16 || 18"
@@ -19,7 +19,9 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "new": "backstage-cli new --scope internal",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "git:tag": "cross-var git tag $npm_package_version",
+    "version": "yarn changeset version && yarn git:tag"
   },
   "workspaces": {
     "packages": [
@@ -28,17 +30,17 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.9",
-    "@changesets/cli": "^2.26.1",
-    "@spotify/prettier-config": "^12.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "husky": "^8.0.3",
-    "prettier": "^2.3.2",
-    "turbo": "^1.9.3",
-    "typescript": "^5.0.4"
+    "@backstage/cli": "0.22.12",
+    "@changesets/cli": "2.26.2",
+    "@spotify/prettier-config": "15.0.0",
+    "cross-var": "1.1.0",
+    "husky": "8.0.3",
+    "prettier": "3.0.2",
+    "turbo": "1.10.12",
+    "typescript": "5.1.6"
   },
   "resolutions": {
-    "@types/react": "17.0.60",
+    "@types/react": "17.0.64",
     "@types/react-dom": "17.0.20"
   },
   "prettier": "@spotify/prettier-config",

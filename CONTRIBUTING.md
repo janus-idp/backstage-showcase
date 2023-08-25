@@ -25,7 +25,7 @@ yarn test:e2e
 yarn lint # Lint packages
 yarn ci # Mirrors our CI in GitHub
 yarn prettier:check # Checks for formatting errors
-yarn prettier:write # Fixes formatting errors
+yarn prettier:fix # Fixes formatting errors
 ```
 
 ## Contributions
@@ -37,6 +37,16 @@ We welcome code and non-code contributions to our project. Non-code contribution
 If you found a bug in our showcase app, please submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fbug%2Cstatus%2Ftriage&template=bug.md) describing the problem that you ran into. Some important information to include are steps to reproduce the bug, the app-config.yaml that is being used, and any relevant logs. This will help us narrow down the potential cause of the bug and speed up the time it takes to solve the problem at hand.
 
 **Please remember to remove all secrets from the app-config.yaml before sharing.**
+
+### Updating Backstage Dependencies
+
+1. Run the following command
+
+   ```console
+   yarn backstage-cli versions:bump --pattern '@{backstage,roadiehq,immobiliarelabs,janus-idp}/*'
+   ```
+
+2. Find and replace all `"^` with `"` filtered by `package.json` files.
 
 ### Enhancement Requests
 
