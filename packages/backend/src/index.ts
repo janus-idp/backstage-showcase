@@ -9,8 +9,8 @@
 import {
   CacheManager,
   DatabaseManager,
-  ServerTokenManager,
   HostDiscovery,
+  ServerTokenManager,
   UrlReaders,
   createServiceBuilder,
   getRootLogger,
@@ -32,12 +32,12 @@ import gitlab from './plugins/gitlab';
 import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
 import ocm from './plugins/ocm';
+import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
-import permission from './plugins/permission';
 import { PluginEnvironment } from './types';
 
 function makeCreateEnv(config: Config) {
@@ -209,6 +209,7 @@ async function main() {
     apiRouter,
     createEnv,
     router: permission,
+    isOptional: true,
   });
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback

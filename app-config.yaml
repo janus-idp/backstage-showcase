@@ -285,7 +285,7 @@ dynatrace:
 
 # Plugin: Permission
 permission:
-  enabled: ${PERMISSIONS_ENABLED}
+  enabled: ${PERMISSION_ENABLED}
 
 enabled:
   kubernetes: ${K8S_ENABLED}
@@ -299,3 +299,4 @@ enabled:
   gitlab: ${GITLAB_ENABLED}
   azureDevOps: ${AZURE_ENABLED}
   jenkins: ${JENKINS_ENABLED}
+  permission: ${PERMISSION_ENABLED}

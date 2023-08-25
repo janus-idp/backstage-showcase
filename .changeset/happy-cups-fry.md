@@ -14,5 +14,9 @@ backend:
 ...
 
 + permission:
-+   enabled: ${PERMISSIONS_ENABLED}
++   enabled: ${PERMISSION_ENABLED}
+...
+
+  enabled:
++   permission: ${PERMISSION_ENABLED}
 ```
