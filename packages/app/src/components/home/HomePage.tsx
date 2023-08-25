@@ -6,7 +6,6 @@ import {
 } from '@backstage/plugin-home';
 import { HomePageSearchBar } from '@backstage/plugin-search';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { css } from '@emotion/css';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
@@ -26,6 +25,14 @@ const useStyles = makeStyles()(theme => ({
     boxShadow: theme.shadows.at(1),
     borderRadius: '50px',
     margin: 'auto',
+  },
+  title: {
+    'div > div > div > div > p': {
+      textTransform: 'uppercase',
+    },
+  },
+  notchedOutline: {
+    borderStyle: 'none!important',
   },
 }));
 
@@ -50,7 +57,7 @@ const QuickAccess = () => {
   }
 
   return (
-    <InfoCard title="Quick Access" noPadding>
+    <InfoCard title="Quick Access" noPadding className={classes.title}>
       {data.map(item => (
         <HomePageToolkit
           key={item.title}
@@ -99,9 +106,7 @@ export const HomePage = () => {
               }}
               InputProps={{
                 classes: {
-                  notchedOutline: css`
-                    border-style: none;
-                  `,
+                  notchedOutline: classes.notchedOutline,
                 },
               }}
               placeholder="Search"
