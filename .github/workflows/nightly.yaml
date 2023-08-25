@@ -1,9 +1,8 @@
-name: Release
+name: Nightly
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '15 12 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -19,6 +18,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
@@ -26,26 +28,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install Dependencies
-        run: |
-          yarn install --frozen-lockfile
-
-      - name: Create Release Pull Request
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: yarn version
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-
       - name: Publish
-        if: steps.changesets.outputs.hasChangesets == 'false'
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
@@ -53,8 +36,5 @@ jobs:
           password: ${{ secrets[env.PASSWORD_KEY] }}
           imageName: ${{ env.IMAGE_NAME }}
           imageTags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
+            type=schedule,pattern={{date 'YYYYMMDD'}},prefix=nightly-
           push: true
