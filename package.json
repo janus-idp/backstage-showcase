@@ -20,7 +20,7 @@
     "prettier:fix": "prettier --write .",
     "new": "backstage-cli new --scope internal",
     "prepare": "husky install",
-    "git:tag": "cross-var git tag $npm_package_version",
+    "git:tag": "cross-var git tag v$npm_package_version",
     "version": "yarn changeset version && yarn git:tag"
   },
   "workspaces": {
