@@ -1,6 +1,6 @@
 [
   {
-    "title": "COMMUNITY",
+    "title": "Community",
     "isExpanded": false,
     "links": [
       {
@@ -41,7 +41,7 @@
     ]
   },
   {
-    "title": "DEVELOPER TOOLS",
+    "title": "Developer Tools",
     "isExpanded": true,
     "links": [
       {
@@ -52,7 +52,7 @@
     ]
   },
   {
-    "title": "CI/CD TOOLS",
+    "title": "CI/CD Tools",
     "isExpanded": true,
     "links": [
       {
@@ -73,7 +73,7 @@
     ]
   },
   {
-    "title": "OPENSHIFT CLUSTERS",
+    "title": "OpenShift Clusters",
     "isExpanded": true,
     "links": [
       {
@@ -84,7 +84,7 @@
     ]
   },
   {
-    "title": "MONITORING TOOLS",
+    "title": "Monitoring Tools",
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/system-task.png",
@@ -94,7 +94,7 @@
     ]
   },
   {
-    "title": "SECURITY TOOLS",
+    "title": "Security Tools",
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/security-checked.png",
