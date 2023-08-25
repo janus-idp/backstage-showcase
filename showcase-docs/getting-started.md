@@ -54,6 +54,25 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${GITHUB_APP_CLIENT_ID}`: client id
      - `${GITHUB_APP_CLIENT_SECRET}`: client secret
 
+   - Setup the GitHub Org Entity backend plugin
+
+     - `${GITHUB_ORG_URL}`: URL for the GitHub Org (example: `https://github.com/janus-idp`)
+
+   - Setup the GitHub Entity backend plugin with automatic discovery
+
+     - add `github` provider to your `app-config.local.yaml`:
+
+       ```yaml
+       catalog:
+         providers:
+           github:
+             myorg:
+               organization: '${GITHUB_ORG}'
+       ```
+
+   - set the environment variable `${GITHUB_ORG}` to the name of your GitHub organization (example: `janus-idp`)
+   - This [URL](https://backstage.io/docs/integrations/github/discovery#configuration) documents all available configuration options
+
    - Setup the GitLab plugin
 
      - `${GITLAB_HOST}`: your gitlab host
