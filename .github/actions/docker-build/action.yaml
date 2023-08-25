@@ -75,7 +75,6 @@ runs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ inputs.registry }}/${{ inputs.imageName }}
-        flavor: latest=true
         tags: |
           ${{ inputs.imageTags }}
 
