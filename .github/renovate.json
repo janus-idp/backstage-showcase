@@ -3,6 +3,7 @@
     "config:js-app",
     ":gitSignOff",
     ":rebaseStalePrs",
+    "group:allNonMajor",
     "group:linters",
     "group:test"
   ],
@@ -12,16 +13,14 @@
   },
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@backstage/"],
-      "groupName": ["Core Backstage packages"]
-    },
-    {
-      "matchPackagePatterns": ["^@janus-idp/"],
-      "groupName": ["Janus-IDP Backstage packages"]
-    },
-    {
-      "matchPackagePatterns": ["^@immobiliarelabs/", "^@roadiehq/"],
-      "groupName": ["Third Party Backstage packages"]
+      "matchPackagePatterns": [
+        "^@backstage/",
+        "^@janus-idp/",
+        "^@immobiliarelabs/",
+        "^@roadiehq/"
+      ],
+      "groupName": ["Backstage packages"],
+      "dependencyDashboardApproval": true
     }
   ]
 }

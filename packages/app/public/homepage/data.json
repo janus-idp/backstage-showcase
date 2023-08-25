@@ -58,12 +58,12 @@
       {
         "iconUrl": "/homepage/icons/argo-icon-color.svg",
         "label": "ArgoCD",
-        "url": ""
+        "url": "https://openshift-gitops-server-openshift-gitops.apps.janus.djpe.p1.openshiftapps.com/"
       },
       {
         "iconUrl": "/homepage/icons/sonarqube.svg",
-        "label": "SonarQube (Coming Soon)",
-        "url": ""
+        "label": "SonarQube",
+        "url": "https://sonarqube.apps.janus.djpe.p1.openshiftapps.com/"
       },
       {
         "iconUrl": "/homepage/icons/quay.svg",
@@ -79,7 +79,7 @@
       {
         "iconUrl": "/homepage/icons/icons8/openshift.png",
         "label": "OpenShift",
-        "url": ""
+        "url": "https://console-openshift-console.apps.janus.djpe.p1.openshiftapps.com/"
       }
     ]
   },
@@ -88,7 +88,7 @@
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/system-task.png",
-        "label": "Grafana",
+        "label": "Grafana (Coming Soon)",
         "url": ""
       }
     ]
@@ -104,12 +104,7 @@
       {
         "iconUrl": "/homepage/icons/keycloak.svg",
         "label": "Keycloak",
-        "url": ""
-      },
-      {
-        "iconUrl": "/homepage/icons/icons8/safe-out.png",
-        "label": "Vault",
-        "url": ""
+        "url": "https://keycloak.apps.janus.djpe.p1.openshiftapps.com/"
       }
     ]
   }

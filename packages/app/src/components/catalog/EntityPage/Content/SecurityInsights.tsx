@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import {
   EntityGithubDependabotContent,
   EntitySecurityInsightsContent,
@@ -6,7 +6,7 @@ import {
 import React from 'react';
 
 export const securityContent = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <Grid item xs={12}>
       <EntityGithubDependabotContent />
     </Grid>

@@ -1,11 +1,11 @@
-import { Entity } from '@backstage/catalog-model';
+import { type Entity } from '@backstage/catalog-model';
 import { EntitySwitch } from '@backstage/plugin-catalog';
 import { GithubIssuesCard } from '@backstage/plugin-github-issues';
 import {
   EntityGitlabIssuesTable,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { isGithubPullRequestsAvailable } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
   EntityJiraOverviewCard,
@@ -22,7 +22,7 @@ const ifIssues: ((e: Entity) => boolean)[] = [
 export const isIssuesAvailable = (e: Entity) => ifIssues.some(f => f(e));
 
 export const issuesContent = (
-  <Grid container spacing={3} justifyContent="space-evenly">
+  <Grid container spacing={3}>
     <EntitySwitch>
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>

@@ -25,10 +25,9 @@ backend:
   database:
     client: better-sqlite3
     connection: ':memory:'
-  cache:
-    store: memory
 
-proxy: []
+proxy:
+  endpoints: []
 
 integrations:
   github:
@@ -49,6 +48,9 @@ integrations:
       apiBaseUrl: temp
       username: temp
       password: temp
+  gitlab:
+    - host: gitlab.com
+      token: temp
 
 argocd:
   appLocatorMethods:
@@ -75,6 +77,12 @@ techdocs:
     runIn: local
   publisher:
     type: awsS3
+
+lighthouse:
+  baseUrl: temp
+
+dynatrace:
+  baseUrl: temp
 
 catalog:
   import:

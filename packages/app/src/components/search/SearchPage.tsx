@@ -1,4 +1,5 @@
-import { Grid, Paper } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import React from 'react';
 
 import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
@@ -24,7 +25,6 @@ import {
   SearchResult,
   useSearch,
 } from '@backstage/plugin-search-react';
-import { css } from '@emotion/css';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()(theme => ({
@@ -41,6 +41,9 @@ const useStyles = makeStyles()(theme => ({
     '& + &': {
       marginTop: theme.spacing(2.5),
     },
+  },
+  notchedOutline: {
+    borderStyle: 'none!important',
   },
 }));
 
@@ -59,9 +62,7 @@ export const SearchPage = () => {
             <SearchBar
               InputProps={{
                 classes: {
-                  notchedOutline: css`
-                    border-style: none;
-                  `,
+                  notchedOutline: classes.notchedOutline,
                 },
               }}
               className={classes.searchBar}

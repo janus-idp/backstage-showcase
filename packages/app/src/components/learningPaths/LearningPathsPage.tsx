@@ -1,6 +1,9 @@
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
-import { CircularProgress, Grid, Link, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
@@ -28,7 +31,18 @@ type Path = {
   url: string;
   description?: string;
   hours?: number;
+  minutes?: number;
   paths?: number;
+};
+
+const learningPathLengthInfo = (path: Path) => {
+  const hoursText = path.hours === 1 ? 'hour' : 'hours';
+  const minutesText = path.minutes === 1 ? 'minute' : 'minutes';
+
+  const hours = path.hours ? `${path.hours} ${hoursText}` : '';
+  const minutes = path.minutes ? `${path.minutes} ${minutesText}` : '';
+
+  return `${hours} ${minutes} | ${path.paths} learning paths`;
 };
 
 const LearningPathCards = () => {
@@ -63,12 +77,7 @@ const LearningPathCards = () => {
               <InfoCard
                 className={classes.infoCard}
                 title={p.label}
-                subheader={
-                  <>
-                    {p.hours} {p.hours === 1 ? 'hour' : 'hours'} | {p.paths}{' '}
-                    learning paths
-                  </>
-                }
+                subheader={learningPathLengthInfo(p)}
               >
                 <Typography paragraph>{p.description}</Typography>
               </InfoCard>

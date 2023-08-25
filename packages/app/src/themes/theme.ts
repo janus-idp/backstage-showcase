@@ -1,8 +1,8 @@
 import {
   createUnifiedTheme,
   genPageTheme,
-  lightTheme,
   shapes,
+  themes,
 } from '@backstage/theme';
 
 const redhatFont = `@font-face {
@@ -18,7 +18,7 @@ const redhatFont = `@font-face {
 export const customTheme = createUnifiedTheme({
   fontFamily: '"Red Hat Font", Arial',
   palette: {
-    ...lightTheme.palette,
+    ...themes.light.getTheme('v5')?.palette,
     navigation: {
       background: '#222427',
       indicator: '#009596',

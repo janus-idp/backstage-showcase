@@ -9,15 +9,34 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  REGISTRY: quay.io
+  PASSWORD_KEY: QUAY_TOKEN
+  USERNAME: ${{ vars.QUAY_USERNAME }}
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+    # permissions:
+    #   contents: write # need write to generate a pull request in this repo
+    #   packages: write # do we need this? are we publishing to a package registry?
+
     steps:
+      # - name: Set up git env
+      #   run: |
+      #     git config --global pull.rebase true
+      #     git config --global user.name "Janus-IDP Build Bot"
+      #     # TODO switch to new bot email and token - see https://github.com/che-incubator/github-secrets-generator/
+      #     git config --global user.email "nboldt@redhat.com"
+      #     export GITHUB_TOKEN=${{ secrets.GH_WRITE_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          # token: ${{ secrets.GH_WRITE_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -30,6 +49,24 @@ jobs:
           yarn install --frozen-lockfile
 
       - name: Create Release Pull Request
+        id: changesets
         uses: changesets/action@v1
+        with:
+          version: yarn version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        uses: ./.github/actions/docker-build
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.USERNAME }}
+          password: ${{ secrets[env.PASSWORD_KEY] }}
+          imageName: ${{ env.IMAGE_NAME }}
+          imageTags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+          push: true

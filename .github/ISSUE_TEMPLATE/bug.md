@@ -4,20 +4,16 @@ about: If something isn't working
 labels: ['kind/bug', 'status/triage']
 ---
 
-### What happened?
+### Describe the bug
 
-### What are the steps to reproduce this issue?
+A clear and concise description of what the bug is. (provide screenshots if applicable)
+
+### Expected Behavior
+
+### What are the steps to reproduce this bug?
 
 1. …
 2. …
 3. …
 
-### Additional information
-
-- Which devices are affected? ie Desktop, Table, Phone
-- Which browsers are affected? ie Chrome, Firefox, Safari, Edge
-- Which version are you using?
-
-We only support the last 2 major versions.
-
-Attach any related screenshots, if any.
+### Versions of software used and environment
