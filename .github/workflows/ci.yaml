@@ -64,11 +64,11 @@ jobs:
 
       - name: Lint
         run: |
-          yarn prettier:check
-          yarn tsc
+          yarn run prettier:check
+          yarn run tsc
 
       - name: CI
-        run: yarn ci
+        run: yarn run ci
 
   docker-build:
     name: Docker Build
