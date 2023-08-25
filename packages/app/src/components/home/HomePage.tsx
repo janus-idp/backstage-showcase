@@ -26,6 +26,11 @@ const useStyles = makeStyles()(theme => ({
     borderRadius: '50px',
     margin: 'auto',
   },
+  title: {
+    'div > div > div > div > p': {
+      textTransform: 'uppercase',
+    },
+  },
   notchedOutline: {
     borderStyle: 'none!important',
   },
@@ -52,7 +57,7 @@ const QuickAccess = () => {
   }
 
   return (
-    <InfoCard title="Quick Access" noPadding>
+    <InfoCard title="Quick Access" noPadding className={classes.title}>
       {data.map(item => (
         <HomePageToolkit
           key={item.title}
