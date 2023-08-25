@@ -43,7 +43,7 @@ jobs:
 
       - name: Lint
         run: |
-          yarn prettier:check
+          yarn run prettier:check
 
       - name: Setup Python
         uses: actions/setup-python@v4
