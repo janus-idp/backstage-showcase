@@ -15,6 +15,12 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
    - If you are on Windows, then follow the [instructions](https://github.com/nodejs/node-gyp#on-windows) in `node-gyp` for Windows
    - If you are on macOS, then follow the [instructions](https://github.com/nodejs/node-gyp#on-macos) in `node-gyp` for macOS
 
+3. Run `yarn install` to install the dependencies
+
+4. Start the application using `yarn start`
+
+5. Navigate to <http://localhost:3000>
+
 ## Running Locally with the Optional Plugins
 
 1. Create an `app-config.local.yaml` file that will be used for storing the environment variables that the showcase app needs
