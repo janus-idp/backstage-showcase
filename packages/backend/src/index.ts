@@ -9,8 +9,8 @@
 import {
   CacheManager,
   DatabaseManager,
-  ServerTokenManager,
   HostDiscovery,
+  ServerTokenManager,
   UrlReaders,
   createServiceBuilder,
   getRootLogger,
@@ -32,6 +32,7 @@ import gitlab from './plugins/gitlab';
 import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
 import ocm from './plugins/ocm';
+import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
@@ -45,7 +46,7 @@ function makeCreateEnv(config: Config) {
   const discovery = HostDiscovery.fromConfig(config);
   const cacheManager = CacheManager.fromConfig(config);
   const databaseManager = DatabaseManager.fromConfig(config, { logger: root });
-  const tokenManager = ServerTokenManager.noop();
+  const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
   const taskScheduler = TaskScheduler.fromConfig(config);
 
   const identity = DefaultIdentityClient.create({
@@ -200,6 +201,14 @@ async function main() {
     apiRouter,
     createEnv,
     router: jenkins,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'permission',
+    config,
+    apiRouter,
+    createEnv,
+    router: permission,
     isOptional: true,
   });
 
