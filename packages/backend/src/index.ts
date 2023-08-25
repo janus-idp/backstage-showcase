@@ -39,6 +39,7 @@ import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
 import { PluginEnvironment } from './types';
+import { metricsHandler } from './metrics';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -218,6 +219,7 @@ async function main() {
   const service = createServiceBuilder(module)
     .loadConfig(config)
     .addRouter('/api', apiRouter)
+    .addRouter('', metricsHandler())
     .addRouter('', await app(appEnv));
 
   await service.start().catch(err => {

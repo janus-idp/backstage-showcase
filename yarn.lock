@@ -14739,6 +14739,14 @@ express-openapi-validator@^5.0.4:
     ono "^7.1.3"
     path-to-regexp "^6.2.0"
 
+express-prom-bundle@^6.3.6:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/express-prom-bundle/-/express-prom-bundle-6.6.0.tgz#9c33c1bd1478d70e3961a53aed2d17f15ef821ca"
+  integrity sha512-tZh2P2p5a8/yxQ5VbRav011Poa4R0mHqdFwn9Swe/obXDe5F0jY9wtRAfNYnqk4LXY7akyvR/nrvAHxQPWUjsQ==
+  dependencies:
+    on-finished "^2.3.0"
+    url-value-parser "^2.0.0"
+
 express-promise-router@4.1.1, express-promise-router@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/express-promise-router/-/express-promise-router-4.1.1.tgz#8fac102060b9bcc868f84d34fbb12fd8fa494291"
@@ -19555,7 +19563,7 @@ oidc-token-hash@^5.0.3:
   resolved "https://registry.yarnpkg.com/oidc-token-hash/-/oidc-token-hash-5.0.3.tgz#9a229f0a1ce9d4fc89bcaee5478c97a889e7b7b6"
   integrity sha512-IF4PcGgzAr6XXSff26Sk/+P4KZFJVuHAJZj3wgO3vX2bMdNVp/QXTP3P7CEm9V1IdG8lDLY3HhiqpsE/nOwpPw==
 
-on-finished@2.4.1:
+on-finished@2.4.1, on-finished@^2.3.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.4.1.tgz#58c8c44116e54845ad57f14ab10b03533184ac3f"
   integrity sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==
@@ -24020,6 +24028,11 @@ url-template@^2.0.8:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/url-template/-/url-template-2.0.8.tgz#fc565a3cccbff7730c775f5641f9555791439f21"
   integrity sha512-XdVKMF4SJ0nP/O7XIPB0JwAEuT9lDIYnNsK8yGVe43y0AWoKeJNdv3ZNWh7ksJ6KqQFjOO6ox/VEitLnaVNufw==
+
+url-value-parser@^2.0.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/url-value-parser/-/url-value-parser-2.2.0.tgz#f38ae8cd24604ec69bc219d66929ddbbd93a2b32"
+  integrity sha512-yIQdxJpgkPamPPAPuGdS7Q548rLhny42tg8d4vyTNzFqvOnwqrgHXvgehT09U7fwrzxi3RxCiXjoNUNnNOlQ8A==
 
 url@^0.11.0, url@~0.11.0:
   version "0.11.1"
