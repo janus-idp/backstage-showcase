@@ -58,3 +58,15 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
           push: true
+
+      - name: Get Latest Tag
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+
+      - name: Publish Tag
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: ${{ steps.get-latest-tag.outputs.tag }}
+          message: 'Release ${{ steps.get-latest-tag.outputs.tag }}'
