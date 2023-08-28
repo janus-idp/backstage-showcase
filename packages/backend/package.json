@@ -49,7 +49,7 @@
     "@roadiehq/scaffolder-backend-argocd": "1.1.13",
     "@roadiehq/scaffolder-backend-module-utils": "1.10.2",
     "app": "*",
-    "better-sqlite3": "8.5.1",
+    "better-sqlite3": "8.5.2",
     "dockerode": "3.3.5",
     "express": "4.18.2",
     "express-promise-router": "4.1.1",
@@ -61,7 +61,7 @@
     "@backstage/cli": "0.22.12",
     "@types/dockerode": "3.3.19",
     "@types/express": "4.17.17",
-    "@types/express-serve-static-core": "4.17.35"
+    "@types/express-serve-static-core": "4.17.36"
   },
   "files": [
     "dist"
