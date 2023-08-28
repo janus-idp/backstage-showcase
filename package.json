@@ -17,8 +17,9 @@
     "test:e2e": "turbo run test:e2e",
     "test:e2e-ci": "turbo run test:e2e-ci",
     "lint": "turbo run lint",
-    "prettier:check": "prettier --check .",
-    "prettier:fix": "prettier --write .",
+    "lint-staged": "lint-staged",
+    "prettier:check": "prettier --ignore-unknown --check .",
+    "prettier:fix": "prettier --ignore-unknown --write .",
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
     "changeset": "changeset",
@@ -37,6 +38,7 @@
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
+    "lint-staged": "14.0.1",
     "prettier": "3.0.2",
     "turbo": "1.10.12",
     "typescript": "5.1.6"
@@ -47,13 +49,8 @@
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
+    "*": "yarn run prettier:fix",
+    "*.{js,jsx,ts,tsx,mjs,cjs}": "yarn run lint -- -- --fix"
   },
   "packageManager": "yarn@1.22.19"
 }
