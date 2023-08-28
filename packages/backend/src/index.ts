@@ -17,6 +17,7 @@ import {
   loadBackendConfig,
   notFoundHandler,
   useHotMemoize,
+  ServiceBuilder,
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
@@ -40,6 +41,7 @@ import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
 import { PluginEnvironment } from './types';
 import { metricsHandler } from './metrics';
+import { RequestHandler } from 'express';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -112,6 +114,34 @@ async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
     );
     apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
     console.log(`Using backend plugin ${plugin}...`);
+  }
+}
+
+type AddRouterBase = {
+  name: string;
+  service: ServiceBuilder;
+  root: string;
+  router: RequestHandler | ReturnType<typeof Router>;
+};
+
+type AddRouterOptional = {
+  isOptional: true;
+  config: Config;
+} & AddRouterBase;
+
+type AddRouter = {
+  isOptional?: false;
+} & AddRouterBase;
+
+async function addRouter(args: AddRouter | AddRouterOptional): Promise<void> {
+  const { isOptional, name, service, root, router } = args;
+
+  const isRouterEnabled =
+    !isOptional || args.config.getOptionalBoolean(`enabled.${name}`) || false;
+
+  if (isRouterEnabled) {
+    console.log(`Adding router ${name} to backend...`);
+    service.addRouter(root, router);
   }
 }
 
@@ -216,11 +246,30 @@ async function main() {
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
 
-  const service = createServiceBuilder(module)
-    .loadConfig(config)
-    .addRouter('/api', apiRouter)
-    .addRouter('', metricsHandler())
-    .addRouter('', await app(appEnv));
+  const service = createServiceBuilder(module).loadConfig(config);
+
+  // Required routers
+  await addRouter({
+    name: 'api',
+    service,
+    root: '/api',
+    router: apiRouter,
+  });
+  await addRouter({
+    name: 'app',
+    service,
+    root: '',
+    router: await app(appEnv),
+  });
+
+  // Optional routers
+  await addRouter({
+    name: 'metrics',
+    config,
+    service,
+    root: '',
+    router: metricsHandler(),
+  });
 
   await service.start().catch(err => {
     console.log(err);
