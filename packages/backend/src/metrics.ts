@@ -1,4 +1,3 @@
-// packages/backend/src/metrics.ts
 import { useHotCleanup } from '@backstage/backend-common';
 import { RequestHandler } from 'express';
 import promBundle from 'express-prom-bundle';
