@@ -42,9 +42,16 @@ jobs:
         with:
           version: yarn run version
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
+      - name: Get Latest Tag and Publish
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          git fetch --tags
+          echo "latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))" >> "$GITHUB_ENV"
+          git push origin "$latest_tag"
+
+      - name: Publish Image
         if: steps.changesets.outputs.hasChangesets == 'false'
         uses: ./.github/actions/docker-build
         with:
@@ -59,14 +66,3 @@ jobs:
             type=sha
           push: true
 
-      - name: Get Latest Tag
-        if: steps.changesets.outputs.hasChangesets == 'false'
-        uses: actions-ecosystem/action-get-latest-tag@v1
-        id: get-latest-tag
-
-      - name: Publish Tag
-        if: steps.changesets.outputs.hasChangesets == 'false'
-        uses: actions-ecosystem/action-push-tag@v1
-        with:
-          tag: ${{ steps.get-latest-tag.outputs.tag }}
-          message: 'Release ${{ steps.get-latest-tag.outputs.tag }}'

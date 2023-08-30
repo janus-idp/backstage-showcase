@@ -10,6 +10,9 @@ organization:
   name: My Org
 
 backend:
+  auth:
+    keys:
+      - secret: temp
   baseUrl: http://localhost:7007
   listen:
     port: 7007
