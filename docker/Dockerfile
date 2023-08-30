@@ -27,7 +27,7 @@ USER 0
 # Install isolated-vm dependencies
 # hadolint ignore=DL3041
 RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
-  # already installed or installed as deps: 
+  # already installed or installed as deps:
   openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
   dnf update -y && dnf clean all
 
@@ -93,7 +93,7 @@ USER 0
 # Upstream only - install techdocs dependencies
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
-  pip3 install mkdocs-techdocs-core==1.2.1 && \
+  pip3 install mkdocs-techdocs-core==1.* && \
   microdnf clean all
 
 # Env vars
