@@ -1,5 +1,13 @@
 # backend
 
+## 1.0.1
+
+### Patch Changes
+
+- 69c6c7d: fix `app-config.example.yaml`
+- Updated dependencies [69c6c7d]
+  - app@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
