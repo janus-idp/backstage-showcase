@@ -62,13 +62,16 @@ jobs:
         run: |
           yarn install --frozen-lockfile
 
-      - name: Lint
+      - name: Prettier
         run: |
           yarn run prettier:check
-          yarn run tsc
 
       - name: CI
         run: yarn run ci
+
+      - name: Check Changeset
+        run: |
+          yarn changeset status --since=main
 
   docker-build:
     name: Docker Build
