@@ -71,7 +71,7 @@ jobs:
 
       - name: Check Changeset
         run: |
-          yarn changeset status --since=main
+          yarn changeset status --since=origin/main
 
   docker-build:
     name: Docker Build
