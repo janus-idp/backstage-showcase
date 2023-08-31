@@ -12,6 +12,7 @@ import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { entityWarningContent } from '../Content/EntityWarning';
+import { EntityApiDocsSpectralLinterContent, isApiDocsSpectralLinterAvailable } from '@dweber019/backstage-plugin-api-docs-spectral-linter';
 
 export const apiPage = (
   <EntityLayout>
@@ -59,6 +60,10 @@ export const apiPage = (
           <EntityApiDefinitionCard />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+
+    <EntityLayout.Route if={isApiDocsSpectralLinterAvailable} path="/linter" title="Linter">
+      <EntityApiDocsSpectralLinterContent />
     </EntityLayout.Route>
   </EntityLayout>
 );
