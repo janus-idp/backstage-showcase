@@ -49,7 +49,6 @@
     "@backstage/plugin-techdocs-react": "1.1.9",
     "@backstage/plugin-user-settings": "0.7.8",
     "@backstage/theme": "0.4.1",
-    "@dweber019/backstage-plugin-api-docs-spectral-linter": "^0.2.5",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@immobiliarelabs/backstage-plugin-gitlab": "6.1.0",
