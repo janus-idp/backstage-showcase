@@ -47,10 +47,12 @@ jobs:
       - name: Get Latest Tag and Publish
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          git fetch --tags
+          # pull recent commits and tags
+          git pull origin; git fetch --all
+          echo "recent tags:"; git rev-list --tags --max-count=4
           latest_tag="$(git describe --tags $(git rev-list --tags --max-count=1))"; echo "Got latest tag = $latest_tag"
           echo "latest_tag=$latst_tag" >> "$GITHUB_ENV"
-          git push origin "$latest_tag"
+          git push origin "$latest_tag" || exit 1 # fail if tag already exists 
 
       - name: Publish Image
         if: steps.changesets.outputs.hasChangesets == 'false'
