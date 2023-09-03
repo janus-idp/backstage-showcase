@@ -30,6 +30,9 @@ inputs:
   imageTags:
     description: The tags to apply to the image
     required: true
+  imageLabels:
+    description: The labels for the Docker image
+    required: false
   push:
     description: Whether to push the image
     required: true
@@ -77,6 +80,8 @@ runs:
         images: ${{ inputs.registry }}/${{ inputs.imageName }}
         tags: |
           ${{ inputs.imageTags }}
+        labels: |
+          ${{ inputs.imageLabels }}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4

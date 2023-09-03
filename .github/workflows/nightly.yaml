@@ -37,4 +37,5 @@ jobs:
           imageName: ${{ env.IMAGE_NAME }}
           imageTags: |
             type=schedule,pattern={{date 'YYYYMMDD'}},prefix=nightly-
+          imageLabels: quay.expires-after=14d
           push: true
