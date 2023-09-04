@@ -18,12 +18,17 @@ import {
 } from '@janus-idp/backstage-plugin-tekton';
 import Grid from '@mui/material/Grid';
 import React from 'react';
+import {
+  isTeamcityAvailable,
+  EntityTeamcityContent,
+} from '@internal/plugin-hq-teamcity';
 
 const ifCIs: ((e: Entity) => boolean)[] = [
   isGithubActionsAvailable,
   isGitlabAvailable,
   isTektonCIAvailable,
   isAzureDevOpsAvailable,
+  isTeamcityAvailable,
 ];
 
 export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
@@ -34,6 +39,13 @@ export const ciContent = (
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
           <EntityGitlabPipelinesTable />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isTeamcityAvailable}>
+        <Grid item sm={12}>
+          <EntityTeamcityContent />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

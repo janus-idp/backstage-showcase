@@ -29,9 +29,9 @@ export default async function createPlugin(
   const isGitlabEnabled =
     env.config.getOptionalBoolean('enabled.gitlab') || false;
   const isMicrocksEnabled =
-      env.config.getOptionalBoolean('enabled.microcks') || false;
+    env.config.getOptionalBoolean('enabled.microcks') || false;
   const isThreeScaleEnabled =
-        env.config.getOptionalBoolean('enabled.threescale') || false;
+    env.config.getOptionalBoolean('enabled.threescale') || false;
 
   if (isOcmEnabled) {
     builder.addEntityProvider(
@@ -116,7 +116,7 @@ export default async function createPlugin(
     builder.addEntityProvider(
       MicrocksApiEntityProvider.fromConfig(env.config, {
         logger: env.logger,
-        scheduler: env.scheduler
+        scheduler: env.scheduler,
       }),
     );
   }
