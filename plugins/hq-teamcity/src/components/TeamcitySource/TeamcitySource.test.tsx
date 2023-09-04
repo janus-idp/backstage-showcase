@@ -7,7 +7,7 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 
 describe('TeamcitySource', () => {
   const server = setupServer();
@@ -24,7 +24,7 @@ describe('TeamcitySource', () => {
   it('should render with just branch name', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcitySource branchName='main' />
+        <TeamcitySource branchName="main" />
       </ThemeProvider>,
     );
     expect(rendered.getByText('main')).toBeInTheDocument();
@@ -33,17 +33,31 @@ describe('TeamcitySource', () => {
   it('should render with link', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcitySource branchName='main' revision={{version: '123456789','vcs-root-instance': {name: 'https://github.com/Weyn/backstage-teamcity#refs/heads/master'}}}/>
+        <TeamcitySource
+          branchName="main"
+          revision={{
+            version: '123456789',
+            'vcs-root-instance': {
+              name: 'https://github.com/Weyn/backstage-teamcity#refs/heads/master',
+            },
+          }}
+        />
       </ThemeProvider>,
     );
-    expect(rendered.getByText('main').closest('a')).toHaveAttribute('href', 'https://github.com/Weyn/backstage-teamcity#refs/heads/master');
-    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute('href', 'https://github.com/Weyn/backstage-teamcity/commit/123456789');
+    expect(rendered.getByText('main').closest('a')).toHaveAttribute(
+      'href',
+      'https://github.com/Weyn/backstage-teamcity#refs/heads/master',
+    );
+    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute(
+      'href',
+      'https://github.com/Weyn/backstage-teamcity/commit/123456789',
+    );
   });
 
   it('should render without link', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcitySource branchName='main' revision={{version: '123456789'}} />
+        <TeamcitySource branchName="main" revision={{ version: '123456789' }} />
       </ThemeProvider>,
     );
     expect(rendered.getByText('main (123456789)')).toBeInTheDocument();

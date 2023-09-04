@@ -6,41 +6,38 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 
 jest.mock('@backstage/plugin-catalog-react', () => {
-  return { 
-    useEntity: jest.fn(() => (
-      {
-        metadata: {
-          annotations: {
-            'teamcity/project-id': 'test'
-          }
-        }
-      }
-    ))
-  } 
-})
-
+  return {
+    useEntity: jest.fn(() => ({
+      metadata: {
+        annotations: {
+          'teamcity/project-id': 'test',
+        },
+      },
+    })),
+  };
+});
 
 jest.mock('../routes', () => {
-  return { 
+  return {
     isTeamcityAvailable: jest.fn(() => {
       return false;
-    })
-  } 
-})
+    }),
+  };
+});
 
 jest.mock('../plugin', () => {
-  return { 
+  return {
     buildRouteRef: {
-      path: '/'
+      path: '/',
     },
     buildLogsRouteRef: {
-      path: '/'
-    }
-  } 
-})
+      path: '/',
+    },
+  };
+});
 
 describe('Router', () => {
   const server = setupServer();
@@ -49,7 +46,7 @@ describe('Router', () => {
   it('should render with missing annotation error message', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <Router/>
+        <Router />
       </ThemeProvider>,
     );
     expect(rendered.getByText('Missing Annotation')).toBeInTheDocument();

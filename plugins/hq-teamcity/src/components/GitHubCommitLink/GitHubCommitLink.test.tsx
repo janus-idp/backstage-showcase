@@ -7,7 +7,7 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 
 describe('GitHubCommitLink', () => {
   const server = setupServer();
@@ -33,7 +33,7 @@ describe('GitHubCommitLink', () => {
   it('should render with revision without link', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <GitHubCommitLink revision='1234567890'/>
+        <GitHubCommitLink revision="1234567890" />
       </ThemeProvider>,
     );
     expect(rendered.getByText('(12345678)')).toBeInTheDocument();
@@ -42,27 +42,42 @@ describe('GitHubCommitLink', () => {
   it('should render with revision with link', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <GitHubCommitLink revision='1234567890' repoUrl='https://github.com/Weyn/backstage-teamcity'/>
+        <GitHubCommitLink
+          revision="1234567890"
+          repoUrl="https://github.com/Weyn/backstage-teamcity"
+        />
       </ThemeProvider>,
     );
-    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute('href', 'https://github.com/Weyn/backstage-teamcity/commit/1234567890');
+    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute(
+      'href',
+      'https://github.com/Weyn/backstage-teamcity/commit/1234567890',
+    );
   });
 
   it('should render with revision with no link when its not github', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <GitHubCommitLink revision='1234567890' repoUrl='https://git.com'/>
+        <GitHubCommitLink revision="1234567890" repoUrl="https://git.com" />
       </ThemeProvider>,
     );
-    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute('href', 'https://git.com/commit/1234567890');
+    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute(
+      'href',
+      'https://git.com/commit/1234567890',
+    );
   });
 
   it('should render revision with link (removing ref)', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <GitHubCommitLink revision='1234567890' repoUrl='https://github.com/Weyn/backstage-teamcity#refs/heads/master'/>
+        <GitHubCommitLink
+          revision="1234567890"
+          repoUrl="https://github.com/Weyn/backstage-teamcity#refs/heads/master"
+        />
       </ThemeProvider>,
     );
-    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute('href', 'https://github.com/Weyn/backstage-teamcity/commit/1234567890');
+    expect(rendered.getByText('(12345678)').closest('a')).toHaveAttribute(
+      'href',
+      'https://github.com/Weyn/backstage-teamcity/commit/1234567890',
+    );
   });
 });

@@ -19,7 +19,10 @@ export const Router = () => {
     <Routes>
       <Route path="/" element={<TeamcityTableComponent />} />
       <Route path={`/${buildRouteRef.path}`} element={<TeamcityBuildPage />} />
-      <Route path={`/${buildLogsRouteRef.path}`} element={<TeamcityLogPage />} />
+      <Route
+        path={`/${buildLogsRouteRef.path}`}
+        element={<TeamcityLogPage />}
+      />
     </Routes>
   );
 };

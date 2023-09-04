@@ -8,26 +8,33 @@ import { TeamcitySource } from '../TeamcitySource/TeamcitySource';
 import { useRouteRef, useRouteRefParams } from '@backstage/core-plugin-api';
 import { buildLogsRouteRef, buildRouteRef } from '../../plugin';
 
-export const buildLogUrl = (buildName?: string, buildId?: string, buildRunId?: string) => {
+export const buildLogUrl = (
+  buildName?: string,
+  buildId?: string,
+  buildRunId?: string,
+) => {
   const LinkWrapper = () => {
     const routeLink = useRouteRef(buildLogsRouteRef);
     return buildRunId ? (
       <Link
-      style={{float:'left'}}
+        style={{ float: 'left' }}
         to={routeLink({
           buildName: String(buildName),
           buildId: String(buildId),
-          buildRunId: String(buildRunId)
-        })}>
+          buildRunId: String(buildRunId),
+        })}
+      >
         (view logs)
       </Link>
-      ) : (<></>);
-  }
+    ) : (
+      <></>
+    );
+  };
 
   return <LinkWrapper />;
-}
+};
 
-export const TeamcityHistoryTableComponent = ({builds}: BuildCollection) => {
+export const TeamcityHistoryTableComponent = ({ builds }: BuildCollection) => {
   const { buildName, buildId } = useRouteRefParams(buildRouteRef);
   const columns: TableColumn[] = [
     { title: 'Source', field: 'branchName' },
@@ -39,11 +46,15 @@ export const TeamcityHistoryTableComponent = ({builds}: BuildCollection) => {
   const data = builds.map(build => {
     const branchName = build?.branchName;
     const revisions = build?.revisions;
-    const revision = revisions?.revision[revisions?.revision.length-1];
-    const finishedAt = build?.finishDate ? moment(build?.finishDate).format('MMM Do, HH:mm') : '';
-    
+    const revision = revisions?.revision[revisions?.revision.length - 1];
+    const finishedAt = build?.finishDate
+      ? moment(build?.finishDate).format('MMM Do, HH:mm')
+      : '';
+
     return {
-      branchName: (<TeamcitySource revision={revision} branchName={branchName}/>),
+      branchName: (
+        <TeamcitySource revision={revision} branchName={branchName} />
+      ),
       status: (
         <>
           <TeamcityStatus status={build.status} statusText={build.statusText} />
@@ -52,10 +63,9 @@ export const TeamcityHistoryTableComponent = ({builds}: BuildCollection) => {
       ),
       finishedAt: `${finishedAt}`,
       webUrl: (
-        <Link
-          to={build.webUrl || ''}
-          target="_blank"
-        ><Launch fontSize="small"/></Link>
+        <Link to={build.webUrl || ''} target="_blank">
+          <Launch fontSize="small" />
+        </Link>
       ),
     };
   });

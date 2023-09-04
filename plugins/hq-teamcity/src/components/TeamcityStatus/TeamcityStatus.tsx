@@ -10,14 +10,14 @@ const useStyles = makeStyles({
     flexWrap: 'wrap',
   },
   pl3: {
-    paddingLeft: '3px'
+    paddingLeft: '3px',
   },
   success: {
     color: '#388e3c',
   },
   error: {
     color: '#c62828',
-  }
+  },
 });
 
 type PropTypes = {
@@ -29,18 +29,18 @@ export const TeamcityStatus = (props: PropTypes) => {
   const classes = useStyles();
 
   const getIcon = (status: string) => {
-    switch(status) {
+    switch (status) {
       case 'FAILURE':
-        return <Cancel fontSize="small" className='icon'/>;
+        return <Cancel fontSize="small" className="icon" />;
       case 'SUCCESS':
-        return <CheckCircle fontSize="small" className='icon'/>;
+        return <CheckCircle fontSize="small" className="icon" />;
       default:
-        return (<></>);
+        return <></>;
     }
-  }
+  };
 
   const getClass = (status: string): string => {
-    switch(status) {
+    switch (status) {
       case 'FAILURE':
         return classes.error;
       case 'SUCCESS':
@@ -48,14 +48,14 @@ export const TeamcityStatus = (props: PropTypes) => {
       default:
         return '';
     }
-  }
+  };
 
   return (
-    <span className={[getClass(props.status), classes.verticalCenter].join(' ')}>
+    <span
+      className={[getClass(props.status), classes.verticalCenter].join(' ')}
+    >
       {getIcon(props.status)}
-      <span className={classes.pl3}>
-        {props.statusText}
-      </span>
+      <span className={classes.pl3}>{props.statusText}</span>
     </span>
   );
 };

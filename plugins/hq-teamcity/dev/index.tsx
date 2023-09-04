@@ -7,6 +7,6 @@ createDevApp()
   .addPage({
     element: <EntityTeamcityContent />,
     title: 'Root Page',
-    path: '/teamcity'
+    path: '/teamcity',
   })
   .render();

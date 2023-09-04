@@ -9,14 +9,14 @@ type PropTypes = {
 };
 
 const isValidUrl = (urlString: string): boolean => {
-  const urlPattern = new RegExp('(?:https):\/\/');
+  const urlPattern = new RegExp('(?:https)://');
   return !!urlPattern.test(urlString);
-}
+};
 
 const isGithubUrl = (urlString: string): boolean => {
-  const urlPattern = new RegExp('(?:https?):\/\/(github.com)');
+  const urlPattern = new RegExp('(?:https?)://(github.com)');
   return !!urlPattern.test(urlString);
-}
+};
 
 export const TeamcitySource = (props: PropTypes) => {
   const buildBranchLink = (branchName: string, revision?: Revision) => {
@@ -27,8 +27,17 @@ export const TeamcitySource = (props: PropTypes) => {
       if (isUrl) {
         return (
           <>
-            <Link to={revision['vcs-root-instance'].name} target="_blank">{branchName}</Link>
-            {isGithub ? (<GitHubCommitLink revision={revision?.version} repoUrl={revision['vcs-root-instance'].name} />) : revision?.version}
+            <Link to={revision['vcs-root-instance'].name} target="_blank">
+              {branchName}
+            </Link>
+            {isGithub ? (
+              <GitHubCommitLink
+                revision={revision?.version}
+                repoUrl={revision['vcs-root-instance'].name}
+              />
+            ) : (
+              revision?.version
+            )}
           </>
         );
       }
@@ -36,10 +45,10 @@ export const TeamcitySource = (props: PropTypes) => {
 
     return (
       <>
-        {branchName} {revision?.version && (<>({revision.version})</>) }
+        {branchName} {revision?.version && <>({revision.version})</>}
       </>
     );
-  }
+  };
 
   return buildBranchLink(props.branchName, props.revision);
 };

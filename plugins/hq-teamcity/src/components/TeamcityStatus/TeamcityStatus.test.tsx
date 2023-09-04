@@ -7,7 +7,7 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 
 describe('TeamcityStatus', () => {
   const server = setupServer();
@@ -24,7 +24,7 @@ describe('TeamcityStatus', () => {
   it('should render with just text', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityStatus status='' statusText='success'/>
+        <TeamcityStatus status="" statusText="success" />
       </ThemeProvider>,
     );
     expect(rendered.getByText('success')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('TeamcityStatus', () => {
   it('should render with text and success icon', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityStatus status='SUCCESS' statusText='success'/>
+        <TeamcityStatus status="SUCCESS" statusText="success" />
       </ThemeProvider>,
     );
     expect(rendered.getByText('success')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('TeamcityStatus', () => {
   it('should render with text and failure icon', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityStatus status='FAILURE' statusText='success'/>
+        <TeamcityStatus status="FAILURE" statusText="success" />
       </ThemeProvider>,
     );
     expect(rendered.getByText('success')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('TeamcityStatus', () => {
   it('should render with text and no icon', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityStatus status='RANDOM' statusText='success'/>
+        <TeamcityStatus status="RANDOM" statusText="success" />
       </ThemeProvider>,
     );
     expect(rendered.getByText('success')).toBeInTheDocument();

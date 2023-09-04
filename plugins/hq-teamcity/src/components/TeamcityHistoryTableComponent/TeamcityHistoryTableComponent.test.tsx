@@ -6,7 +6,7 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 import { TeamcityHistoryTableComponent } from './TeamcityHistoryTableComponent';
 
 describe('TeamcityHistoryTableComponent', () => {
@@ -24,7 +24,7 @@ describe('TeamcityHistoryTableComponent', () => {
   it('should render with empty table', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityHistoryTableComponent builds={[]}/>
+        <TeamcityHistoryTableComponent builds={[]} />
       </ThemeProvider>,
     );
     expect(rendered.getByText('Source')).toBeInTheDocument();

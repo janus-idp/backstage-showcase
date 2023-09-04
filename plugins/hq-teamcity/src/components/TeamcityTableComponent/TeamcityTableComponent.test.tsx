@@ -6,21 +6,19 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 
 jest.mock('@backstage/plugin-catalog-react', () => {
-  return { 
-    useEntity: jest.fn(() => (
-      {
-        metadata: {
-          annotations: {
-            'teamcity/project-id': 'test'
-          }
-        }
-      }
-    ))
-  } 
-})
+  return {
+    useEntity: jest.fn(() => ({
+      metadata: {
+        annotations: {
+          'teamcity/project-id': 'test',
+        },
+      },
+    })),
+  };
+});
 
 describe('TeamcityTableComponent', () => {
   const server = setupServer();
@@ -29,16 +27,18 @@ describe('TeamcityTableComponent', () => {
   it('should render with missing config error message', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityTableComponent/>
+        <TeamcityTableComponent />
       </ThemeProvider>,
     );
-    expect(rendered.getByText('Missing required config value at \'backend.baseUrl\'')).toBeInTheDocument();
+    expect(
+      rendered.getByText("Missing required config value at 'backend.baseUrl'"),
+    ).toBeInTheDocument();
   });
 
   it('should render with empty table', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <DenseTable builds={[]}/>
+        <DenseTable builds={[]} />
       </ThemeProvider>,
     );
     expect(rendered.getByText('Name')).toBeInTheDocument();

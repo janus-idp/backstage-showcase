@@ -20,7 +20,7 @@ export type BuildType = {
   webUrl: string;
   builds: {
     build: Build[];
-  }
+  };
 };
 
 export type RevisionsCollection = {

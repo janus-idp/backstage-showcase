@@ -1,4 +1,4 @@
-import { 
+import {
   createSubRouteRef,
   createPlugin,
   createRoutableExtension,
@@ -9,7 +9,7 @@ import { rootRouteRef } from './routes';
 export const teamcityPlugin = createPlugin({
   id: 'hq-teamcity',
   routes: {
-    entityContent: rootRouteRef
+    entityContent: rootRouteRef,
   },
 });
 

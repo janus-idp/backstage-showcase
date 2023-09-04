@@ -7,21 +7,19 @@ import { setupServer } from 'msw/node';
 import {
   setupRequestMockHandlers,
   renderInTestApp,
-} from "@backstage/test-utils";
+} from '@backstage/test-utils';
 
 jest.mock('@backstage/plugin-catalog-react', () => {
-  return { 
-    useEntity: jest.fn(() => (
-      {
-        metadata: {
-          annotations: {
-            'teamcity/project-id': 'test'
-          }
-        }
-      }
-    ))
-  } 
-})
+  return {
+    useEntity: jest.fn(() => ({
+      metadata: {
+        annotations: {
+          'teamcity/project-id': 'test',
+        },
+      },
+    })),
+  };
+});
 
 describe('TeamcityBuildPage', () => {
   const server = setupServer();
@@ -38,9 +36,11 @@ describe('TeamcityBuildPage', () => {
   it('should render with missing config error', async () => {
     const rendered = await renderInTestApp(
       <ThemeProvider theme={lightTheme}>
-        <TeamcityBuildPage/>
+        <TeamcityBuildPage />
       </ThemeProvider>,
     );
-    expect(rendered.getByText('Missing required config value at \'backend.baseUrl\'')).toBeInTheDocument();
+    expect(
+      rendered.getByText("Missing required config value at 'backend.baseUrl'"),
+    ).toBeInTheDocument();
   });
 });
