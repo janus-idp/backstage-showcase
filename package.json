@@ -6,6 +6,7 @@
     "node": "16 || 18"
   },
   "scripts": {
+    "prepare": "husky install",
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "start-backend": "turbo run start --filter=backend",
@@ -20,9 +21,10 @@
     "prettier:check": "prettier --ignore-unknown --check .",
     "prettier:fix": "prettier --ignore-unknown --write .",
     "new": "backstage-cli new --scope internal",
-    "prepare": "husky install",
-    "git:tag": "cross-var git tag v$npm_package_version",
-    "version": "yarn changeset version && yarn git:tag"
+    "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
+    "changeset": "changeset",
+    "changeset:empty": "changeset --empty",
+    "version": "yarn changeset version && yarn run git:tag"
   },
   "workspaces": {
     "packages": [

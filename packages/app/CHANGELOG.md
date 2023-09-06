@@ -1,5 +1,11 @@
 # app
 
+## 1.0.1
+
+### Patch Changes
+
+- 69c6c7d: fix `app-config.example.yaml`
+
 ## 1.0.0
 
 ### Major Changes
