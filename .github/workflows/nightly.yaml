@@ -2,7 +2,7 @@ name: Nightly
 
 on:
   schedule:
-    - cron: '0 19 * * *'
+    - cron: '0 4 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -37,4 +37,5 @@ jobs:
           imageName: ${{ env.IMAGE_NAME }}
           imageTags: |
             type=schedule,pattern={{date 'YYYYMMDD'}},prefix=nightly-
+          imageLabels: quay.expires-after=14d
           push: true
