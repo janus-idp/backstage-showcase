@@ -47,6 +47,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${GITLAB_ENABLED}` Set to `true` to enable the GitLab Entity backend plugin.
      - `${AZURE_ENABLED}` Set to `true` to enable the Azure DevOps Entity backend plugin.
      - `${JENKINS_ENABLED}` Set to `true` to enable the Jenkins Entity backend plugin.
+     - `${METRICS_ENABLED}` Set to `true` to enable Prometheus metrics (metrics will be available on `http://localhost:7007/metrics`).
 
    - Setup the GitHub plugins (GitHub Issues and GitHub Pull Request)
 
