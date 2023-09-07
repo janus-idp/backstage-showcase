@@ -45,6 +45,7 @@
     "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.2.0",
     "@janus-idp/backstage-plugin-keycloak-backend": "1.5.3",
     "@janus-idp/backstage-plugin-ocm-backend": "3.2.1",
+    "@janus-idp/backstage-plugin-aap-backend": "^1.2.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "2.11.1",
     "@roadiehq/scaffolder-backend-argocd": "1.1.14",
     "@roadiehq/scaffolder-backend-module-utils": "1.10.2",
