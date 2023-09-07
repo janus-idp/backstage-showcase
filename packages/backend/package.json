@@ -43,6 +43,7 @@
     "@backstage/plugin-sonarqube-backend": "0.2.4",
     "@backstage/plugin-techdocs-backend": "1.6.7",
     "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.1.0",
+    "@janus-idp/backstage-plugin-aap-backend": "^1.2.2",
     "@janus-idp/backstage-plugin-keycloak-backend": "1.5.3",
     "@janus-idp/backstage-plugin-ocm-backend": "3.1.1",
     "@roadiehq/backstage-plugin-argo-cd-backend": "2.11.1",

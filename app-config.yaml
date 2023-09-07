@@ -223,6 +223,14 @@ catalog:
     #   providerId:
     #     organization: "${GITHUB_ORG}"
 
+    # Plugin: AAP backend plugin
+    aap:
+      prod:
+        baseUrl: ${AAP_BASE_URL}
+        authorization: ${AAP_AUTH_TOKEN}
+        owner: janus-authors
+        system: janus-idp
+
 # Plugin: Kubernetes, OCM
 kubernetes:
   customResources:
