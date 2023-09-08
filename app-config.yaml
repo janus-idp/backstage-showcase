@@ -12,12 +12,13 @@ organization:
   name: My Org
 
 backend:
-  # Used for enabling authentication, secret is shared by all backend plugins
+  # Required for authentication. This secret is shared by all backend plugins.
+  # In development mode a temporary secret is automatically created.
   # See https://backstage.io/docs/auth/service-to-service-auth for
   # information on the format
-  auth:
-    keys:
-      - secret: ${BACKEND_AUTH_SECRET}
+  # auth:
+  #   keys:
+  #     - secret: ${BACKEND_AUTH_SECRET}
   baseUrl: http://localhost:7007
   listen:
     port: 7007

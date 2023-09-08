@@ -3,6 +3,12 @@ app:
   baseUrl: http://localhost:7007
 
 backend:
+  # Required for authentication. This secret is shared by all backend plugins.
+  # See https://backstage.io/docs/auth/service-to-service-auth for
+  # information on the format
+  # auth:
+  #   keys:
+  #     - secret: ${BACKEND_AUTH_SECRET}
   # Note that the baseUrl should be the URL that the browser and other clients
   # should use when communicating with the backend, i.e. it needs to be
   # reachable not just from within the backend host, but from all of your
