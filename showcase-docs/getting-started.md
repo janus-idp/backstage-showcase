@@ -229,30 +229,30 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
      - There are currently three options for sign on providers within the showcase app. The availability of the sign on providers are determined by the variable set under `auth.environment`.
 
-     - To enable the GitHub and Guest sign on providers, add the following to the config file
+     - To enable the GitHub and Guest sign on providers, add the following to the config file and set `clientId` and `clientSecret` to the appropriate values based on your GitHub OAuth App. See G[itHub Authentication Provider](https://backstage.io/docs/auth/github/provider) documentation for more information and all available configuration options.
 
-     ```yaml
-     auth:
-       environment: development
-       providers:
-         github:
-           development:
-             clientId: ${GITHUB_APP_CLIENT_ID}
-             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
-     ```
+       ```yaml
+       auth:
+         environment: development
+         providers:
+           github:
+             development:
+               clientId: ${AUTH_GITHUB_CLIENT_ID}
+               clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+       ```
 
      - To enable the oauth2Proxy sign on provider, add the following to the config file. GitHub will still need to be included and configured as it is relied on by the GitHub plugins.
 
-     ```yaml
-     auth:
-       environment: production
-       providers:
-         github:
-           production:
-             clientId: ${GITHUB_APP_CLIENT_ID}
-             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
-         oauth2Proxy: {}
-     ```
+       ```yaml
+       auth:
+         environment: production
+         providers:
+           github:
+             production:
+               clientId: ${AUTH_GITHUB_CLIENT_ID}
+               clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+           oauth2Proxy: {}
+       ```
 
 4. Run `yarn install` to install the dependencies
 
