@@ -1,5 +1,4 @@
 ---
-<!-- im not sure if we really need a VersionPump since the changes are only related to the CI -->
 'app': patch
 'backend': patch
 ---
