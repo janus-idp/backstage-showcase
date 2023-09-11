@@ -113,8 +113,8 @@ export default async function createPlugin(
       AapResourceEntityProvider.fromConfig(env.config, {
         logger: env.logger,
         schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { minutes: 1 },
-          timeout: { minutes: 1 },
+          frequency: { minutes: 30 },
+          timeout: { minutes: 3 },
         }),
       }),
     );

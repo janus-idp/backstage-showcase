@@ -240,8 +240,6 @@ catalog:
       prod:
         baseUrl: ${AAP_BASE_URL}
         authorization: ${AAP_AUTH_TOKEN}
-        owner: janus-authors
-        system: janus-idp
 
 # Plugin: Kubernetes, OCM
 kubernetes:
