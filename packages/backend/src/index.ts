@@ -29,6 +29,7 @@ import argocd from './plugins/argocd';
 import auth from './plugins/auth';
 import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
+import events from './plugins/events';
 import gitlab from './plugins/gitlab';
 import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
@@ -39,11 +40,16 @@ import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
 import techdocs from './plugins/techdocs';
-import { PluginEnvironment } from './types';
 import { metricsHandler } from './metrics';
 import { RequestHandler } from 'express';
+import {
+  PluginManager,
+  BackendPluginProvider,
+  LegacyPluginEnvironment as PluginEnvironment,
+} from '@backstage/backend-plugin-manager';
+import { DefaultEventBroker } from '@backstage/plugin-events-backend';
 
-function makeCreateEnv(config: Config) {
+function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
   const reader = UrlReaders.default({ logger: root, config });
   const discovery = HostDiscovery.fromConfig(config);
@@ -51,6 +57,7 @@ function makeCreateEnv(config: Config) {
   const databaseManager = DatabaseManager.fromConfig(config, { logger: root });
   const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
   const taskScheduler = TaskScheduler.fromConfig(config);
+  const eventBroker = new DefaultEventBroker(root);
 
   const identity = DefaultIdentityClient.create({
     discovery,
@@ -78,6 +85,8 @@ function makeCreateEnv(config: Config) {
       scheduler,
       permissions,
       identity,
+      eventBroker,
+      pluginProvider,
     };
   };
 }
@@ -146,11 +155,13 @@ async function addRouter(args: AddRouter | AddRouterOptional): Promise<void> {
 }
 
 async function main() {
+  const logger = getRootLogger();
   const config = await loadBackendConfig({
     argv: process.argv,
-    logger: getRootLogger(),
+    logger,
   });
-  const createEnv = makeCreateEnv(config);
+  const pluginManager = await PluginManager.fromConfig(config, logger);
+  const createEnv = makeCreateEnv(config, pluginManager);
 
   const appEnv = useHotMemoize(module, () => createEnv('app'));
 
@@ -167,6 +178,7 @@ async function main() {
     createEnv,
     router: scaffolder,
   });
+  await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
   // Optional plugins
   await addPlugin({
@@ -242,6 +254,21 @@ async function main() {
     router: permission,
     isOptional: true,
   });
+
+  for (const plugin of pluginManager.backendPlugins()) {
+    if (plugin.installer.kind === 'legacy') {
+      const pluginRouter = plugin.installer.router;
+      if (pluginRouter !== undefined) {
+        const pluginEnv = useHotMemoize(module, () =>
+          createEnv(pluginRouter.pluginID),
+        );
+        apiRouter.use(
+          `/${pluginRouter.pluginID}`,
+          await pluginRouter.createPlugin(pluginEnv),
+        );
+      }
+    }
+  }
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
