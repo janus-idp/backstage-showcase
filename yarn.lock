@@ -4958,6 +4958,22 @@
     uuid "^9.0.0"
     winston "^3.2.1"
 
+"@janus-idp/backstage-plugin-nexus-repository-manager@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-nexus-repository-manager/-/backstage-plugin-nexus-repository-manager-1.1.0.tgz#d25075288bdbd83253b564ea7c142bae9acb20e1"
+  integrity sha512-C20H52Zm3s4YnebCh1IBiVQYb4WjK6KCFr9Gfn8nrmZAjMP2BGDDar1bvq+L0tfe0TmmpJ4CNmEPCPXjFQhelA==
+  dependencies:
+    "@backstage/catalog-model" "^1.4.1"
+    "@backstage/core-components" "^0.13.3"
+    "@backstage/core-plugin-api" "^1.5.3"
+    "@backstage/plugin-catalog-react" "^1.8.0"
+    "@backstage/theme" "^0.4.1"
+    "@janus-idp/shared-react" "1.3.0"
+    "@material-ui/core" "^4.9.13"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "^4.0.0-alpha.45"
+    react-use "^17.2.4"
+
 "@janus-idp/backstage-plugin-ocm-backend@3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-backend/-/backstage-plugin-ocm-backend-3.2.1.tgz#33c25d2f7d88e855fa4ed8448007dabc3ca3dff9"
