@@ -30,9 +30,7 @@ jobs:
               const names = [];
               for (const file of files) {
                 const data = JSON.parse(await fs.readFile(file, "utf8"));
-                if (!data.private) {
-                  names.push(data.name);
-                }
+                names.push(data.name);
               }
               return names;
             }

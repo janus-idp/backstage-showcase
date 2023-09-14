@@ -5,6 +5,10 @@ import {
   isJfrogArtifactoryAvailable,
 } from '@janus-idp/backstage-plugin-jfrog-artifactory';
 import { QuayPage, isQuayAvailable } from '@janus-idp/backstage-plugin-quay';
+import {
+  isNexusRepositoryManagerAvailable,
+  NexusRepositoryManagerPage,
+} from '@janus-idp/backstage-plugin-nexus-repository-manager';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 
@@ -24,10 +28,18 @@ export const imageRegistry = (
           <QuayPage />
         </Grid>
       </EntitySwitch.Case>
-
+    </EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={isJfrogArtifactoryAvailable}>
         <Grid item xs={12}>
           <JfrogArtifactoryPage />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isNexusRepositoryManagerAvailable}>
+        <Grid item xs={12}>
+          <NexusRepositoryManagerPage />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
