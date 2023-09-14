@@ -147,6 +147,17 @@ proxy:
         # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
         Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
 
+    # Plugin: Nexus Repository Manager
+    '/nexus-repository-manager':
+      target: ${NEXUS_REPOSITORY_MANAGER_URL}
+      headers:
+        X-Requested-With: 'XMLHttpRequest'
+        # Uncomment the following line to access a private Nexus Repository Manager using a token
+        # Authorization: 'Bearer <NEXUS_REPOSITORY_MANAGER_TOKEN>'
+      changeOrigin: true
+      # Change to "false" in case of using self hosted Nexus Repository Manager instance with a self-signed certificate
+      secure: ${NEXUS_REPOSITORY_MANAGER_SECURE}
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
