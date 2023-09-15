@@ -1,10 +1,10 @@
 import { createUnifiedTheme, themes } from '@backstage/theme';
 import { components } from './componentOverrides';
-import { fontFamily } from './consts';
+import { pageFontFamily, typography } from './consts';
 import { pageTheme } from './pageTheme';
 
 export const customDarkTheme = createUnifiedTheme({
-  fontFamily,
+  fontFamily: pageFontFamily,
   palette: {
     ...themes.dark.getTheme('v5')?.palette,
     navigation: {
@@ -20,4 +20,5 @@ export const customDarkTheme = createUnifiedTheme({
   defaultPageTheme: 'home',
   pageTheme,
   components,
+  typography,
 });

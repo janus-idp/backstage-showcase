@@ -1,10 +1,10 @@
 import { createUnifiedTheme, themes } from '@backstage/theme';
 import { components } from './componentOverrides';
-import { fontFamily } from './consts';
+import { pageFontFamily, typography } from './consts';
 import { pageTheme } from './pageTheme';
 
 export const customLightTheme = createUnifiedTheme({
-  fontFamily,
+  fontFamily: pageFontFamily,
   palette: {
     ...themes.light.getTheme('v5')?.palette,
     navigation: {
@@ -20,4 +20,5 @@ export const customLightTheme = createUnifiedTheme({
   defaultPageTheme: 'home',
   pageTheme,
   components,
+  typography,
 });
