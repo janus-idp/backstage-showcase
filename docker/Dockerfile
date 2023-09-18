@@ -22,7 +22,7 @@
 # Stage 1 - Build nodejs skeleton
 FROM registry.access.redhat.com/ubi9/nodejs-18:1-62.1692771036 AS skeleton
 # Add user and group 1001
-RUN addgroup -S appgroup && adduser -S appuser -u 1001 -G appgroup
+RUN groupadd -r appgroup -g 1001 && useradd -r -g appgroup 1001
 # hadolint ignore=DL3002
 USER 0
 
