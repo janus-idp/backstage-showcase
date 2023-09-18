@@ -22,10 +22,7 @@
 # Stage 1 - Build nodejs skeleton
 FROM registry.access.redhat.com/ubi9/nodejs-18:1-62.1692771036 AS skeleton
 # hadolint ignore=DL3002
-USER 1001
-# Add user and group 1001
-RUN groupadd -r appgroup -g 1001 && useradd -r -g appgroup 1001
-
+USER 0
 
 # Install isolated-vm dependencies
 # hadolint ignore=DL3041
@@ -107,7 +104,7 @@ ENV CONTAINER_SOURCE=/opt/app-root/src
 
 WORKDIR $CONTAINER_SOURCE/
 # Upstream only
-COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
+COPY --from=cleanup $CONTAINER_SOURCE/ ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
