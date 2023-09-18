@@ -18,10 +18,6 @@ import {
 } from '@janus-idp/backstage-plugin-tekton';
 import Grid from '@mui/material/Grid';
 import React from 'react';
-import {
-  isTeamcityAvailable,
-  EntityTeamcityContent,
-} from '@internal/plugin-hq-teamcity';
 
 const ifCIs: ((e: Entity) => boolean)[] = [
   isGithubActionsAvailable,
