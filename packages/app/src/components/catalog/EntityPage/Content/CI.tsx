@@ -24,7 +24,6 @@ const ifCIs: ((e: Entity) => boolean)[] = [
   isGitlabAvailable,
   isTektonCIAvailable,
   isAzureDevOpsAvailable,
-  isTeamcityAvailable,
 ];
 
 export const isCIsAvailable = (e: Entity) => ifCIs.some(f => f(e));
@@ -35,13 +34,6 @@ export const ciContent = (
       <EntitySwitch.Case if={isGitlabAvailable}>
         <Grid item xs={12}>
           <EntityGitlabPipelinesTable />
-        </Grid>
-      </EntitySwitch.Case>
-    </EntitySwitch>
-    <EntitySwitch>
-      <EntitySwitch.Case if={isTeamcityAvailable}>
-        <Grid item sm={12}>
-          <EntityTeamcityContent />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
