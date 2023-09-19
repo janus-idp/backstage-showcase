@@ -30,7 +30,7 @@ backend:
     connection: ':memory:'
 
 proxy:
-  endpoints: []
+  endpoints: 
 
 integrations:
   github:
