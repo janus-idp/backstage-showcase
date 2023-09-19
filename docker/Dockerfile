@@ -60,7 +60,7 @@ COPY $EXTERNAL_SOURCE_NESTED ./
 
 RUN git config --global --add safe.directory ./
 # Upstream only
-RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
+#RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 # hadolint ignore=DL3059
 RUN $YARN build --filter=backend
