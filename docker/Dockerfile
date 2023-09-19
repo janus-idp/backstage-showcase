@@ -113,6 +113,6 @@ RUN fix-permissions ./
 # Switch to nodejs user
 USER 1001
 
-ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.production.yaml"]
+ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
