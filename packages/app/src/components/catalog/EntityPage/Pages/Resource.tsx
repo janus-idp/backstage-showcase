@@ -45,6 +45,19 @@ export const resourcePage = (
               </Grid>
             </ClusterContextProvider>
           </EntitySwitch.Case>
+          <EntitySwitch.Case
+            if={isType(['job_template', 'workflow_job_template'])}
+          >
+            <Grid item md={6}>
+              <EntityAboutCard variant="gridItem" />
+            </Grid>
+            <Grid item md={6}>
+              <EntityLinksCard />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <EntityCatalogGraphCard variant="gridItem" height={400} />
+            </Grid>
+          </EntitySwitch.Case>
           <EntitySwitch.Case>
             <Grid item md={6}>
               <EntityAboutCard variant="gridItem" />
