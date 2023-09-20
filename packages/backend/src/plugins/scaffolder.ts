@@ -28,6 +28,7 @@ import {
   createYamlJSONataTransformAction,
   createJsonJSONataTransformAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
+import { createRunYeomanAction } from '@backstage/plugin-scaffolder-backend-module-yeoman';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -64,6 +65,7 @@ export default async function createPlugin(
     createWriteFileAction(),
     createYamlJSONataTransformAction(),
     createZipAction(),
+    createRunYeomanAction(),
   ];
 
   return await createRouter({
