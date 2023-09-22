@@ -20,7 +20,7 @@
 # 5. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-62.1692771036 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-18:1-70 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -60,7 +60,7 @@ COPY $EXTERNAL_SOURCE_NESTED ./
 
 RUN git config --global --add safe.directory ./
 # Upstream only
-#RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
+RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 # hadolint ignore=DL3059
 RUN $YARN build --filter=backend
@@ -87,7 +87,7 @@ COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-67 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74 AS runner
 USER 0
 
 # Upstream only - install techdocs dependencies
@@ -104,7 +104,7 @@ ENV CONTAINER_SOURCE=/opt/app-root/src
 
 WORKDIR $CONTAINER_SOURCE/
 # Upstream only
-COPY --from=cleanup $CONTAINER_SOURCE/ ./
+COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
