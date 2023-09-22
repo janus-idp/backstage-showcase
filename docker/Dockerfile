@@ -25,7 +25,7 @@ FROM registry.access.redhat.com/ubi9/nodejs-18:1-70 AS skeleton
 USER 0
 USER 1001:1001
 USER 0
-RUN addgroup 1001 && adduser -S -H 1001 -G 1001
+RUN groupadd 1001 && useradd -S -H 1001 -G 1001
 
 
 # Install isolated-vm dependencies
