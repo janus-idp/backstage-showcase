@@ -23,9 +23,6 @@
 FROM registry.access.redhat.com/ubi9/nodejs-18:1-70 AS skeleton
 # hadolint ignore=DL3002
 USER 0
-USER 1001:1001
-USER 0
-
 
 # Install isolated-vm dependencies
 # hadolint ignore=DL3041
@@ -45,8 +42,6 @@ ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 RUN chown 1001:1001 ./.yarn
-#Adding an instruction to fail explicitely
-COPY --chown=1001:100 $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 RUN chmod +x $YARN
 
