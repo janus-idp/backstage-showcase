@@ -295,7 +295,7 @@ permission:
 
 enabled:
   kubernetes: ${K8S_ENABLED}
-  techdocs: ${TECHDOCS_ENABLED}
+  techdocs: false
   argocd: ${ARGOCD_ENABLED}
   sonarqube: ${SONARQUBE_ENABLED}
   keycloak: ${KEYCLOAK_ENABLED}
@@ -306,3 +306,20 @@ enabled:
   azureDevOps: ${AZURE_ENABLED}
   jenkins: ${JENKINS_ENABLED}
   permission: ${PERMISSION_ENABLED}
+
+# Plugin Confluence
+confluence:
+  # Confluence base URL for wiki API
+  # Typically: https://{org-name}.atlassian.net/wiki
+  wikiUrl: https://org-name.atlassian.net/wiki
+
+  # List of spaces to index
+  # See https://confluence.atlassian.com/conf59/spaces-792498593.html
+  spaces: [ENG]
+
+  # Authentication credentials towards Confluence API
+  auth:
+    username: ${CONFLUENCE_USERNAME}
+    # While Confluence supports BASIC authentication, using an API token is preferred.
+    # See: https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
+    password: ${CONFLUENCE_PASSWORD}

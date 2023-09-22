@@ -27,6 +27,8 @@ import {
 } from '@backstage/plugin-search-react';
 import { makeStyles } from 'tss-react/mui';
 
+import { ConfluenceResultListItem } from '@k-phoen/backstage-plugin-confluence';
+
 const useStyles = makeStyles()(theme => ({
   searchBar: {
     borderRadius: '50px',
@@ -83,6 +85,11 @@ export const SearchPage = () => {
                   name: 'Documentation',
                   icon: <DocsIcon />,
                 },
+                {
+                  value: 'confluence',
+                  name: 'Confluence',
+                  icon: <DocsIcon />,
+                },
               ]}
             />
             <Paper className={classes.filters}>
@@ -126,6 +133,7 @@ export const SearchPage = () => {
             <SearchResult>
               <CatalogSearchResultListItem icon={<CatalogIcon />} />
               <TechDocsSearchResultListItem icon={<DocsIcon />} />
+              <ConfluenceResultListItem />
             </SearchResult>
           </Grid>
         </Grid>
