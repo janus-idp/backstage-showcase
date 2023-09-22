@@ -146,6 +146,7 @@ proxy:
         # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
         Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
 
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -306,3 +307,20 @@ enabled:
   azureDevOps: ${AZURE_ENABLED}
   jenkins: ${JENKINS_ENABLED}
   permission: ${PERMISSION_ENABLED}
+
+# Plugin Confluence
+confluence:
+  # Confluence base URL for wiki API
+  # Typically: https://{org-name}.atlassian.net/wiki
+  wikiUrl: ${CONFLUENCE_URL}
+
+  # List of spaces to index
+  # See https://confluence.atlassian.com/conf59/spaces-792498593.html
+  spaces: [ENG]
+
+  # Authentication credentials towards Confluence API
+  auth:
+    username: ${CONFLUENCE_USERNAME}
+    # While Confluence supports BASIC authentication, using an API token is preferred.
+    # See: https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
+    password: ${CONFLUENCE_PASSWORD}

@@ -47,6 +47,7 @@
     "@janus-idp/backstage-plugin-3scale-backend": "^1.1.1",
     "@janus-idp/backstage-plugin-keycloak-backend": "1.5.3",
     "@janus-idp/backstage-plugin-ocm-backend": "3.1.1",
+    "@k-phoen/backstage-plugin-confluence-backend": "^0.0.14",
     "@microcks/microcks-backstage-provider": "^0.0.3",
     "@roadiehq/backstage-plugin-argo-cd-backend": "2.11.1",
     "@roadiehq/scaffolder-backend-argocd": "1.1.13",
