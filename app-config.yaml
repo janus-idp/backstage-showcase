@@ -146,6 +146,7 @@ proxy:
         # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
         Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
 
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -295,7 +296,7 @@ permission:
 
 enabled:
   kubernetes: ${K8S_ENABLED}
-  techdocs: false
+  techdocs: ${TECHDOCS_ENABLED}
   argocd: ${ARGOCD_ENABLED}
   sonarqube: ${SONARQUBE_ENABLED}
   keycloak: ${KEYCLOAK_ENABLED}

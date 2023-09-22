@@ -10,33 +10,16 @@ import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-techdocs-backe
 import { Router } from 'express';
 import { ConfluenceCollatorFactory } from '@k-phoen/backstage-plugin-confluence-backend';
 
-export default async function createPlugin({
-  logger,
-  permissions,
-  discovery,
-  config,
-  tokenManager,
-}: PluginEnvironment) {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   // Initialize a connection to a search engine.
-  const searchEngine = await ElasticSearchSearchEngine.fromConfig({
-    logger,
-    config,
+  const searchEngine = new LunrSearchEngine({
+    logger: env.logger,
   });
-  const indexBuilder = new IndexBuilder({ logger, searchEngine });
-
-  // Confluence indexing
-  const halfHourSchedule = env.scheduler.createScheduledTaskRunner({
-    frequency: Duration.fromObject({ minutes: 30 }),
-    timeout: Duration.fromObject({ minutes: 15 }),
-    // A 3 second delay gives the backend server a chance to initialize before
-    // any collators are executed, which may attempt requests against the API.
-    initialDelay: Duration.fromObject({ seconds: 3 }),
-  });
-  indexBuilder.addCollator({
-    schedule: halfHourSchedule,
-    factory: ConfluenceCollatorFactory.fromConfig(env.config, {
-      logger: env.logger,
-    }),
+  const indexBuilder = new IndexBuilder({
+    logger: env.logger,
+    searchEngine,
   });
 
   const schedule = env.scheduler.createScheduledTaskRunner({
@@ -67,12 +50,24 @@ export default async function createPlugin({
     }),
   });
 
+  // Confluence indexing
+  const halfHourSchedule = env.scheduler.createScheduledTaskRunner({
+    frequency: { minutes: 30 },
+    timeout: { minutes: 15 },
+    // A 3 second delay gives the backend server a chance to initialize before
+    // any collators are executed, which may attempt requests against the API.
+    initialDelay: { seconds: 3 },
+  });
+  indexBuilder.addCollator({
+    schedule: halfHourSchedule,
+    factory: ConfluenceCollatorFactory.fromConfig(env.config, {
+      logger: env.logger,
+    }),
+  });
+
   // The scheduler controls when documents are gathered from collators and sent
   // to the search engine for indexing.
   const { scheduler } = await indexBuilder.build();
-
-  // A 3 second delay gives the backend server a chance to initialize before
-  // any collators are executed, which may attempt requests against the API.
   setTimeout(() => scheduler.start(), 3000);
 
   useHotCleanup(module, () => scheduler.stop());
@@ -80,8 +75,8 @@ export default async function createPlugin({
   return await createRouter({
     engine: indexBuilder.getSearchEngine(),
     types: indexBuilder.getDocumentTypes(),
-    permissions,
-    config,
-    logger,
+    permissions: env.permissions,
+    config: env.config,
+    logger: env.logger,
   });
 }
