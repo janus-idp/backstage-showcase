@@ -30,7 +30,8 @@ backend:
     connection: ':memory:'
 
 proxy:
-  endpoints: 
+  skipInvalidProxies: true
+  endpoints: {}
 
 integrations:
   github:
