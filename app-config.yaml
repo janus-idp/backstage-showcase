@@ -312,7 +312,7 @@ enabled:
 confluence:
   # Confluence base URL for wiki API
   # Typically: https://{org-name}.atlassian.net/wiki
-  wikiUrl: https://org-name.atlassian.net/wiki
+  wikiUrl: ${CONFLUENCE_URL}
 
   # List of spaces to index
   # See https://confluence.atlassian.com/conf59/spaces-792498593.html
