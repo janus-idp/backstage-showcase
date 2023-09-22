@@ -25,7 +25,6 @@ FROM registry.access.redhat.com/ubi9/nodejs-18:1-70 AS skeleton
 USER 0
 USER 1001:1001
 USER 0
-RUN groupadd 1001 && useradd -S -H 1001 -G 1001
 
 
 # Install isolated-vm dependencies
@@ -44,7 +43,8 @@ ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 WORKDIR $CONTAINER_SOURCE/
-COPY --chown=1001:1001 $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
+COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
+RUN chown 1001:1001 ./.yarn
 #Adding an instruction to fail explicitely
 COPY --chown=1001:100 $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
