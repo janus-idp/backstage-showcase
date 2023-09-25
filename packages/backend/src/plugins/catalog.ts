@@ -9,6 +9,7 @@ import { GitlabDiscoveryEntityProvider } from '@backstage/plugin-catalog-backend
 import { GitlabFillerProcessor } from '@immobiliarelabs/backstage-plugin-gitlab-backend';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
+import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 
@@ -26,6 +27,7 @@ export default async function createPlugin(
     env.config.getOptionalBoolean('enabled.githubOrg') || false;
   const isGitlabEnabled =
     env.config.getOptionalBoolean('enabled.gitlab') || false;
+  const isAapEnabled = env.config.getOptionalBoolean('enabled.aap') || false;
 
   if (isOcmEnabled) {
     builder.addEntityProvider(
@@ -97,6 +99,18 @@ export default async function createPlugin(
     builder.addProcessor(new GitlabFillerProcessor(env.config));
     builder.addEntityProvider(
       ...GitlabDiscoveryEntityProvider.fromConfig(env.config, {
+        logger: env.logger,
+        schedule: env.scheduler.createScheduledTaskRunner({
+          frequency: { minutes: 30 },
+          timeout: { minutes: 3 },
+        }),
+      }),
+    );
+  }
+
+  if (isAapEnabled) {
+    builder.addEntityProvider(
+      AapResourceEntityProvider.fromConfig(env.config, {
         logger: env.logger,
         schedule: env.scheduler.createScheduledTaskRunner({
           frequency: { minutes: 30 },
