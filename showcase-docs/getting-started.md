@@ -49,6 +49,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${JENKINS_ENABLED}` Set to `true` to enable the Jenkins Entity backend plugin.
      - `${METRICS_ENABLED}` Set to `true` to enable Prometheus metrics (metrics will be available on `http://localhost:7007/metrics`).
      - `${AAP_ENABLED}` Set to `true` to enable the AAP backend plugin
+     - `${DEVTOOLS_ENABLED}` Set to `true` to enable the Devtools backend plugin
 
    - Setup the GitHub plugins (GitHub Issues and GitHub Pull Request)
 
@@ -273,11 +274,26 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
        - `${NEXUS_REPOSITORY_MANAGER_TOKEN}` (Only for private Nexus Repository Manager instances): Nexus instance API token (see [documentation](https://help.sonatype.com/repomanager3/nexus-repository-administration/user-authentication/user-tokens)) with `nx-repository-view-*-*-read` [permissions](https://help.sonatype.com/repomanager3/nexus-repository-administration/access-control/privileges), or read permissions to view all the repositories you want to display in the plugin.
 
-- Setup the AAP backend plugin
+   - Setup the AAP backend plugin
 
-  - This [URL](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/README.md#installation-and-configuration) explains how to use the AAP backend plugin
-  - `${AAP_BASE_URL}`: URL for the Ansible Automation Platform(AAP). Mandatory if plugin is enabled
-  - `${AAP_AUTH_TOKEN}`: Ansible Automation Platform(AAP) [token](https://docs.ansible.com/automation-controller/latest/html/userguide/users.html#users-tokens) with enough permission to read job templates. Mandatory if plugin is enabled (e.g 'Bearer XXXX')
+     - This [URL](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/README.md#installation-and-configuration) explains how to use the AAP backend plugin
+     - `${AAP_BASE_URL}`: URL for the Ansible Automation Platform(AAP). Mandatory if plugin is enabled
+     - `${AAP_AUTH_TOKEN}`: Ansible Automation Platform(AAP) [token](https://docs.ansible.com/automation-controller/latest/html/userguide/users.html#users-tokens) with enough permission to read job templates. Mandatory if plugin is enabled (e.g 'Bearer XXXX')
+
+   - Setup the Devtools plugin
+
+     - To capture packages outside of the `@backstage/*` packages, add the following to the config file:
+
+     ```yaml
+     devTools:
+       info:
+         packagePrefixes:
+           - '@roadiehq/'
+           - '@spotify/'
+           - '@janus-idp/'
+           - '@immobiliarelabs/'
+           - '@yourotherpackage/'
+     ```
 
 4. Run `yarn install` to install the dependencies
 

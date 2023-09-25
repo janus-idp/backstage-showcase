@@ -44,6 +44,8 @@ Our current list of plugins within the showcase app include:
 - [Utils Scaffolder actions](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-utils)
 - [Nexus Repository Manager plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/nexus-repository-manager)
 - [AAP Backend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/aap-backend)
+- [Devtools Backend plugin](https://github.com/backstage/backstage/tree/master/plugins/devtools-backend)
+- [Devtools Frontend plugin](https://github.com/backstage/backstage/tree/master/plugins/devtools)
 
 ## Getting Started
 

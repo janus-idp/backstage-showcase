@@ -29,6 +29,7 @@ import argocd from './plugins/argocd';
 import auth from './plugins/auth';
 import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
+import devTools from './plugins/devtools';
 import gitlab from './plugins/gitlab';
 import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
@@ -240,6 +241,14 @@ async function main() {
     apiRouter,
     createEnv,
     router: permission,
+    isOptional: true,
+  });
+  await addPlugin({
+    plugin: 'devtools',
+    config,
+    apiRouter,
+    createEnv,
+    router: devTools,
     isOptional: true,
   });
 

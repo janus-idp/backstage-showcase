@@ -25,6 +25,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import StorageIcon from '@mui/icons-material/Storage';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import BuildIcon from '@mui/icons-material/Build';
 import React, { PropsWithChildren } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import LogoFull from './LogoFull';
@@ -87,6 +88,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
             to="lighthouse"
             text="Lighthouse"
           />
+          <SidebarItem icon={BuildIcon} to="devtools" text="DevTools" />
         </SidebarScrollWrapper>
       </SidebarGroup>
       <SidebarSpace />

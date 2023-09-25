@@ -311,6 +311,14 @@ dynatrace:
 permission:
   enabled: ${PERMISSION_ENABLED}
 
+# Plugin: DevTools
+devTools:
+  info:
+    packagePrefixes:
+      - '@roadiehq/'
+      - '@spotify/'
+      - '@janus-idp/'
+      - '@immobiliarelabs/'
 enabled:
   kubernetes: ${K8S_ENABLED}
   techdocs: ${TECHDOCS_ENABLED}
@@ -326,3 +334,4 @@ enabled:
   permission: ${PERMISSION_ENABLED}
   metrics: ${METRICS_ENABLED}
   aap: ${AAP_ENABLED}
+  devtools: ${DEVTOOLS_ENABLED}
