@@ -15,12 +15,12 @@ app:
         primaryColor: ${PRIMARY_LIGHT_COLOR}
         headerColor1: ${HEADER_LIGHT_COLOR_1}
         headerColor2: ${HEADER_LIGHT_COLOR_2}
-        navigationIndicator: ${NAV_INDICATOR_LIGHT_COLOR}
+        navigationIndicatorColor: ${NAV_INDICATOR_LIGHT_COLOR}
       dark:
         primaryColor: ${PRIMARY_DARK_COLOR}
         headerColor1: ${HEADER_DARK_COLOR_1}
         headerColor2: ${HEADER_DARK_COLOR_2}
-        navigationIndicator: ${NAV_INDICATOR_LIGHT_COLOR}
+        navigationIndicatorColor: ${NAV_INDICATOR_LIGHT_COLOR}
 organization:
   name: My Org
 
