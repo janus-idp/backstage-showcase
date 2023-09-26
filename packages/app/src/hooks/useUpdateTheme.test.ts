@@ -8,13 +8,28 @@ jest.mock('@backstage/core-plugin-api', () => ({
 }));
 
 describe('useUpdateTheme', () => {
-  it('returns the primaryColor when config is available', () => {
-    (useApi as any).mockReturnValue({
-      getOptionalString: jest.fn().mockReturnValue('blue'),
+  it('returns the themeColors when config for them is available', () => {
+    (useApi as jest.Mock).mockReturnValue({
+      getOptionalString: jest.fn().mockImplementation(key => {
+        switch (key) {
+          case 'app.branding.theme.someTheme.primaryColor':
+            return 'blue';
+          case 'app.branding.theme.someTheme.headerColor1':
+            return 'red';
+          case 'app.branding.theme.someTheme.headerColor2':
+            return 'yellow';
+          case 'app.branding.theme.someTheme.navigationIndicatorColor':
+            return 'purple';
+          default:
+            return '';
+        }
+      }),
     });
-
     const { result } = renderHook(() => useUpdateTheme('someTheme'));
     expect(result.current.primaryColor).toBe('blue');
+    expect(result.current.headerColor1).toBe('red');
+    expect(result.current.headerColor2).toBe('yellow');
+    expect(result.current.navigationIndicatorColor).toBe('purple');
   });
 
   it('returns undefined when config is unavailable', () => {
