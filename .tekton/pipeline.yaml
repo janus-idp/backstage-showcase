@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: clone-build-push
+  namespace: tekton-tasks
+spec:
+  description: | 
+    This pipeline clones a git repo, builds a Docker image with Buildah and
+    pushes it to a registry
+  params:
+  - name: repo-url
+    type: string
+  - name: gitRevision
+    type: string
+  - name: image-reference
+    type: string
+  - name: dockerfile-path
+    type: string
+  workspaces:
+  - name: quay-credentials
+  - name: shared-data
+  tasks:
+    - name: fetch-source
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+      - name: url
+        value: $(params.repo-url)
+      - name: revision
+        value: "$(params.gitRevision)"
+      workspaces:
+      - name: output
+        workspace: shared-data
+    - name: build-push
+      runAfter: ["fetch-source"]
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      workspaces:
+      - name: dockerconfig
+        workspace: quay-credentials
+      - name: source
+        workspace: shared-data
+      params:
+      - name: IMAGE
+        value: $(params.image-reference)
+      - name: DOCKERFILE
+        value: $(params.dockerfile-path)

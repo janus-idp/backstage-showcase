@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: clone-build-push-run-
+  namespace: tekton-tasks
+spec:
+  pipelineRef:
+    name: clone-build-push
+  workspaces:
+  - name: quay-credentials
+    secret:
+      secretName: quay-credentials
+  - name: shared-data
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  params:
+  - name: repo-url
+    value: https://github.com/janus-api-idp/backstage-showcase.git
+  - name: gitRevision
+    value: main
+  - name: image-reference
+    value: quay.io/maximilianb/backstage-showcase:latest
+  - name: dockerfile-path
+    value: ./docker/Dockerfile

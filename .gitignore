@@ -52,3 +52,6 @@ site
 # Cypress
 **/cypress/downloads
 **/cypress/screenshots
+
+#tekton
+.tekton/quay-credentials.yml
