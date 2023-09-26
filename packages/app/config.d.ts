@@ -7,4 +7,28 @@ export interface Config {
      */
     proxyPath?: string;
   };
+  app: {
+    branding?: {
+      /**
+       * Base64 URI for the full logo
+       * @visibility frontend
+       */
+      fullLogo?: string;
+      /**
+       * Base64 URI for the icon logo
+       * @visibility frontend
+       */
+      iconLogo?: string;
+      theme?: {
+        [key: string]: {
+          /**
+           * primaryColor Configuration for the instance
+           * The following formats are supported: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()
+           * @visibility frontend
+           */
+          primaryColor: string;
+        };
+      };
+    };
+  };
 }

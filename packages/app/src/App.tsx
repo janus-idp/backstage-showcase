@@ -52,6 +52,7 @@ import {
 } from '@backstage/core-plugin-api';
 import { customLightTheme } from './themes/lightTheme';
 import { customDarkTheme } from './themes/darkTheme';
+import { useUpdateTheme } from './hooks/useUpdateTheme';
 
 const app = createApp({
   apis,
@@ -78,18 +79,30 @@ const app = createApp({
       title: 'Light Theme',
       variant: 'light',
       icon: <LightIcon />,
-      Provider: ({ children }) => (
-        <UnifiedThemeProvider theme={customLightTheme} children={children} />
-      ),
+      Provider: ({ children }) => {
+        const { primaryColor } = useUpdateTheme('light');
+        return (
+          <UnifiedThemeProvider
+            theme={customLightTheme(primaryColor)}
+            children={children}
+          />
+        );
+      },
     },
     {
       id: 'dark',
       title: 'Dark Theme',
       variant: 'dark',
       icon: <DarkIcon />,
-      Provider: ({ children }) => (
-        <UnifiedThemeProvider theme={customDarkTheme} children={children} />
-      ),
+      Provider: ({ children }) => {
+        const { primaryColor } = useUpdateTheme('dark');
+        return (
+          <UnifiedThemeProvider
+            theme={customDarkTheme(primaryColor)}
+            children={children}
+          />
+        );
+      },
     },
   ],
   components: {
