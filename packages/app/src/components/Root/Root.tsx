@@ -1,5 +1,4 @@
 import {
-  Link,
   Sidebar,
   SidebarDivider,
   SidebarGroup,
@@ -7,7 +6,6 @@ import {
   SidebarPage,
   SidebarScrollWrapper,
   SidebarSpace,
-  useSidebarOpenState,
 } from '@backstage/core-components';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import {
@@ -26,28 +24,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import StorageIcon from '@mui/icons-material/Storage';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import React, { PropsWithChildren } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import LogoFull from './LogoFull';
-import LogoIcon from './LogoIcon';
-
-const useStyles = makeStyles()({
-  sidebarLogo: {
-    margin: '24px 0px 6px 24px',
-  },
-});
-
-const SidebarLogo = () => {
-  const { classes } = useStyles();
-  const { isOpen } = useSidebarOpenState();
-
-  return (
-    <div className={classes.sidebarLogo}>
-      <Link to="/" underline="none" aria-label="Home">
-        {isOpen ? <LogoFull /> : <LogoIcon />}
-      </Link>
-    </div>
-  );
-};
+import { SidebarLogo } from './SidebarLogo';
 
 export const Root = ({ children }: PropsWithChildren<{}>) => (
   <SidebarPage>
