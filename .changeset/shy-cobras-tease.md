@@ -2,4 +2,4 @@
 'app': minor
 ---
 
-Adds ability to configure branding icons and primarty color
+Adds ability to configure branding icons and primary color
