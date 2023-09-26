@@ -23,10 +23,28 @@ export interface Config {
         [key: string]: {
           /**
            * primaryColor Configuration for the instance
-           * The following formats are supported: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()
+           * The following formats are supported: #nnn, #nnnnnn
            * @visibility frontend
            */
-          primaryColor: string;
+          primaryColor?: string;
+          /**
+           * Header Theme color Configuration for the instance
+           * The following formats are supported: #nnn, #nnnnnn
+           * @visibility frontend
+           */
+          headerColor1?: string;
+          /**
+           * Header Theme color Configuration for the instance
+           * The following formats are supported: #nnn, #nnnnnn
+           * @visibility frontend
+           */
+          headerColor2?: string;
+          /**
+           * Navigation Side Bar Indicator color Configuration for the instance
+           * The following formats are supported: #nnn, #nnnnnn
+           * @visibility frontend
+           */
+          navigationIndicatorColor?: string;
         };
       };
     };

@@ -80,10 +80,10 @@ const app = createApp({
       variant: 'light',
       icon: <LightIcon />,
       Provider: ({ children }) => {
-        const { primaryColor } = useUpdateTheme('light');
+        const themeColors = useUpdateTheme('light');
         return (
           <UnifiedThemeProvider
-            theme={customLightTheme(primaryColor)}
+            theme={customLightTheme(themeColors)}
             children={children}
           />
         );
@@ -95,10 +95,10 @@ const app = createApp({
       variant: 'dark',
       icon: <DarkIcon />,
       Provider: ({ children }) => {
-        const { primaryColor } = useUpdateTheme('dark');
+        const themeColors = useUpdateTheme('dark');
         return (
           <UnifiedThemeProvider
-            theme={customDarkTheme(primaryColor)}
+            theme={customDarkTheme(themeColors)}
             children={children}
           />
         );
