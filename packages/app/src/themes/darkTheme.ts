@@ -2,21 +2,22 @@ import { createUnifiedTheme, themes } from '@backstage/theme';
 import { components } from './componentOverrides';
 import { pageFontFamily, typography } from './consts';
 import { pageTheme } from './pageTheme';
+import { ThemeColors } from '../types/types';
 
-export const customDarkTheme = (primaryColor?: string | undefined) =>
+export const customDarkTheme = (themeColors: ThemeColors) =>
   createUnifiedTheme({
     fontFamily: pageFontFamily,
     palette: {
       ...themes.dark.getTheme('v5')?.palette,
-      ...(primaryColor && {
+      ...(themeColors.primaryColor && {
         primary: {
           ...themes.light.getTheme('v5')?.palette.primary,
-          main: primaryColor,
+          main: themeColors.primaryColor,
         },
       }),
       navigation: {
         background: '#0f1214',
-        indicator: '#009596',
+        indicator: themeColors.navigationIndicatorColor || '#009596',
         color: '#ffffff',
         selectedColor: '#ffffff',
         navItem: {
@@ -25,7 +26,7 @@ export const customDarkTheme = (primaryColor?: string | undefined) =>
       },
     },
     defaultPageTheme: 'home',
-    pageTheme,
+    pageTheme: pageTheme(themeColors),
     components,
     typography,
   });
