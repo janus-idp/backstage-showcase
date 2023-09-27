@@ -17,11 +17,11 @@ import {
   loadBackendConfig,
   notFoundHandler,
   useHotMemoize,
+  createStatusCheckRouter,
   ServiceBuilder,
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
-import { createStatusCheckRouter } from '@backstage/backend-common';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import Router from 'express-promise-router';
