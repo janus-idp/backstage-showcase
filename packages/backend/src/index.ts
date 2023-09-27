@@ -21,6 +21,7 @@ import {
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
+import { createStatusCheckRouter } from '@backstage/backend-common';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import Router from 'express-promise-router';
@@ -287,6 +288,12 @@ async function main() {
     service,
     root: '',
     router: await app(appEnv),
+  });
+  await addRouter({
+    name: 'healthcheck',
+    service,
+    root: '',
+    router: await createStatusCheckRouter(appEnv),
   });
 
   // Optional routers
