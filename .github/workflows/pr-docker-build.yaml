@@ -16,12 +16,6 @@ name: PR Docker Build
 
 on:
   pull_request_target:
-    paths-ignore:
-      - 'docs/**'
-      - 'showcase-docs/**'
-      - '.changeset/**'
-    branches-ignore:
-      - 'changeset-release/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
