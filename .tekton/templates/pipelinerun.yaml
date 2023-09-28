@@ -1,11 +1,11 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
-metadata:
-  generateName: clone-build-push-run-
+metadata: 
+  name: devhub-build-initial-run
   namespace: tekton-tasks
 spec:
   pipelineRef:
-    name: clone-build-push
+    name: devhub-build
   workspaces:
   - name: quay-credentials
     secret:
@@ -19,11 +19,11 @@ spec:
           requests:
             storage: 1Gi
   params:
-  - name: repo-url
-    value: https://github.com/janus-api-idp/backstage-showcase.git
+  - name: gitRepositoryUrl
+    value: {{ .Values.gitRepositoryUrl }}
   - name: gitRevision
-    value: main
-  - name: image-reference
-    value: quay.io/maximilianb/backstage-showcase:latest
-  - name: dockerfile-path
-    value: ./docker/Dockerfile
+    value: {{ .Values.gitRevision }}
+  - name: imageUrl
+    value: {{ .Values.imageUrl }}
+  - name: dockerfilePath
+    value: {{ .Values.dockerfilePath }}

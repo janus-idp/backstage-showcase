@@ -1,0 +1,4 @@
+gitRepositoryUrl: https://github.com/janus-api-idp/backstage-showcase.git
+gitRevision: main
+imageUrl: quay.io/maximilianb/backstage-showcase:latest
+dockerfilePath: ./docker/Dockerfile
