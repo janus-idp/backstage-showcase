@@ -86,7 +86,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Publish
+      - name: Build with Buildx (no push)
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
