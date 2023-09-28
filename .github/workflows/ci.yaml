@@ -29,11 +29,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  REGISTRY: quay.io
-  USERNAME: ${{ vars.QUAY_USERNAME }}
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   ci:
     name: Main Job

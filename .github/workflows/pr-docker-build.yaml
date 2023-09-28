@@ -16,7 +16,12 @@ name: PR Docker Build
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'docs/**'
+      - 'showcase-docs/**'
+      - '.changeset/**'
+    branches-ignore:
+      - 'changeset-release/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -24,8 +29,6 @@ concurrency:
 
 env:
   REGISTRY: quay.io
-  USERNAME: ${{ vars.QUAY_USERNAME }}
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   pr-docker-build:
@@ -47,9 +50,9 @@ jobs:
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ env.USERNAME }}
+          username: ${{ vars.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ env.IMAGE_NAME }}
+          imageName: ${{ github.repository }}
           imageTags: |
             type=sha
           push: false

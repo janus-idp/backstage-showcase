@@ -11,8 +11,6 @@ concurrency:
 
 env:
   REGISTRY: quay.io
-  USERNAME: ${{ vars.QUAY_USERNAME }}
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   release:
@@ -58,9 +56,9 @@ jobs:
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ env.USERNAME }}
+          username: ${{ vars.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ env.IMAGE_NAME }}
+          imageName: ${{ github.repository }}
           imageTags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
