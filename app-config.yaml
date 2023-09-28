@@ -20,7 +20,7 @@ app:
         primaryColor: ${PRIMARY_DARK_COLOR}
         headerColor1: ${HEADER_DARK_COLOR_1}
         headerColor2: ${HEADER_DARK_COLOR_2}
-        navigationIndicatorColor: ${NAV_INDICATOR_LIGHT_COLOR}
+        navigationIndicatorColor: ${NAV_INDICATOR_DARK_COLOR}
 organization:
   name: My Org
 
