@@ -64,5 +64,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
+          # if we want image tags to autodelete, can set an expiry date
+          # imageLabels: quay.expires-after=365d
           push: true
 

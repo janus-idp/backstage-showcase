@@ -34,5 +34,6 @@ jobs:
           imageName: ${{ github.repository }}
           imageTags: |
             type=schedule,pattern={{date 'YYYYMMDD'}},prefix=nightly-
+          # to autodelete CI image tags, set an expiry date
           imageLabels: quay.expires-after=14d
           push: true
