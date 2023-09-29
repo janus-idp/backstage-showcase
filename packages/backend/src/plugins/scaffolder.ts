@@ -1,33 +1,34 @@
 import { CatalogClient } from '@backstage/catalog-client';
+import { ScmIntegrations } from '@backstage/integration';
 import {
   createBuiltinActions,
   createRouter,
 } from '@backstage/plugin-scaffolder-backend';
-import { Router } from 'express';
-import type { PluginEnvironment } from '../types';
-import { ScmIntegrations } from '@backstage/integration';
-import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
 import {
+  createGitlabGroupEnsureExistsAction,
   createGitlabProjectAccessTokenAction,
   createGitlabProjectDeployTokenAction,
   createGitlabProjectVariableAction,
-  createGitlabGroupEnsureExistsAction,
 } from '@backstage/plugin-scaffolder-backend-module-gitlab';
+import { createServiceNowActions } from '@janus-idp/backstage-scaffolder-backend-module-servicenow';
+import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
 import {
-  createZipAction,
-  createSleepAction,
-  createWriteFileAction,
   createAppendFileAction,
-  createMergeJSONAction,
+  createJSONataAction,
+  createJsonJSONataTransformAction,
   createMergeAction,
+  createMergeJSONAction,
   createParseFileAction,
   createReplaceInFileAction,
-  createSerializeYamlAction,
   createSerializeJsonAction,
-  createJSONataAction,
+  createSerializeYamlAction,
+  createSleepAction,
+  createWriteFileAction,
   createYamlJSONataTransformAction,
-  createJsonJSONataTransformAction,
+  createZipAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
+import { Router } from 'express';
+import type { PluginEnvironment } from '../types';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -46,6 +47,7 @@ export default async function createPlugin(
 
   const actions = [
     ...builtInActions,
+    ...createServiceNowActions({ config: env.config }),
     createArgoCdResources(env.config, env.logger),
     createGitlabProjectAccessTokenAction({ integrations: integrations }),
     createGitlabProjectDeployTokenAction({ integrations: integrations }),
