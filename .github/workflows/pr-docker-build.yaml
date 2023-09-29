@@ -55,6 +55,6 @@ jobs:
           imageName: ${{ github.repository }}
           imageTags: |
             type=ref,prefix=pr-,event=pr
-          # to autodelete CI image tags, set an expiry date
+          # to autodelete PR image tags, set an expiry date
           imageLabels: quay.expires-after=14d
           push: true
