@@ -46,7 +46,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - name: Build with Buildx (no push)
+      - name: Build and Push with Buildx
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
