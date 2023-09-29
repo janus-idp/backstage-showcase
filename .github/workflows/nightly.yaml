@@ -10,9 +10,6 @@ concurrency:
 
 env:
   REGISTRY: quay.io
-  PASSWORD_KEY: QUAY_TOKEN
-  USERNAME: ${{ vars.QUAY_USERNAME }}
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   release:
@@ -32,9 +29,9 @@ jobs:
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ env.USERNAME }}
-          password: ${{ secrets[env.PASSWORD_KEY] }}
-          imageName: ${{ env.IMAGE_NAME }}
+          username: ${{ vars.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+          imageName: ${{ github.repository }}
           imageTags: |
             type=schedule,pattern={{date 'YYYYMMDD'}},prefix=nightly-
           imageLabels: quay.expires-after=14d

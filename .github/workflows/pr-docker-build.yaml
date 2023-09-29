@@ -12,57 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI
+name: PR Docker Build
 
 on:
-  pull_request:
+  pull_request_target:
     paths-ignore:
       - 'docs/**'
       - 'showcase-docs/**'
       - '.changeset/**'
     branches-ignore:
       - 'changeset-release/**'
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  REGISTRY: quay.io
+
 jobs:
-  ci:
-    name: Main Job
+  pr-docker-build:
+    name: Docker Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Build with Buildx (no push)
+        uses: ./.github/actions/docker-build
         with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Setup local Turbo cache
-        uses: dtinth/setup-github-actions-caching-for-turbo@v1
-
-      - name: Use app-config.example.yaml
-        run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
-
-      - name: Install Dependencies
-        run: |
-          yarn install --frozen-lockfile
-
-      - name: Prettier
-        run: |
-          yarn run prettier:check
-
-      - name: CI
-        run: yarn run ci
-
-      - name: Check Changeset
-        run: |
-          yarn changeset status --since=origin/main
+          registry: ${{ env.REGISTRY }}
+          username: ${{ vars.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+          imageName: ${{ github.repository }}
+          imageTags: |
+            type=sha
+          push: false

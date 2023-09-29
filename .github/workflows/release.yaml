@@ -11,9 +11,6 @@ concurrency:
 
 env:
   REGISTRY: quay.io
-  PASSWORD_KEY: QUAY_TOKEN
-  USERNAME: ${{ vars.QUAY_USERNAME }}
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   release:
@@ -52,16 +49,16 @@ jobs:
           echo "recent tags:"; git rev-list --tags --max-count=4
           latest_tag="$(git describe --tags $(git rev-list --tags --max-count=1))"; echo "Got latest tag = $latest_tag"
           echo "latest_tag=$latst_tag" >> "$GITHUB_ENV"
-          git push origin "$latest_tag" || exit 1 # fail if tag already exists 
+          git push origin "$latest_tag" || exit 1 # fail if tag already exists
 
       - name: Publish Image
         if: steps.changesets.outputs.hasChangesets == 'false'
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ env.USERNAME }}
-          password: ${{ secrets[env.PASSWORD_KEY] }}
-          imageName: ${{ env.IMAGE_NAME }}
+          username: ${{ vars.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+          imageName: ${{ github.repository }}
           imageTags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
