@@ -39,13 +39,14 @@
     "cross-var": "1.1.0",
     "husky": "8.0.3",
     "lint-staged": "14.0.1",
+    "node-gyp": "9.4.0",
     "prettier": "3.0.3",
     "turbo": "1.10.14",
     "typescript": "5.2.2"
   },
   "resolutions": {
-    "@types/react": "17.0.65",
-    "@types/react-dom": "17.0.20"
+    "@types/react": "17.0.66",
+    "@types/react-dom": "17.0.21"
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
