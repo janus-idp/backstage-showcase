@@ -65,7 +65,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
             to="lighthouse"
             text="Lighthouse"
           />
-          <SidebarItem icon={BuildIcon} to="devtools" text="DevTools" />
+          <SidebarItem icon={BuildIcon as any} to="devtools" text="DevTools" />
         </SidebarScrollWrapper>
       </SidebarGroup>
       <SidebarSpace />
