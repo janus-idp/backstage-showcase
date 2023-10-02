@@ -292,3 +292,7 @@ COMING SOON
 ## Deploying with ArgoCD
 
 COMING SOON
+
+## Openshift Logging Integration
+
+[Openshift Logging](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.13/html/logging/index) can be used to monitor Backstage Showcase logs. The only requirement is to correctly filter logs in Kibana. A possible filter is using the field `kubernetes.container_name` with operator `is` and value `backstage-backend`.
