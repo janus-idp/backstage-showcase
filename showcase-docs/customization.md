@@ -50,9 +50,26 @@ For all the color related customizations, the supported color formats are:
 - [rgb()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb) and [rgba()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/rgb#**legacy_syntax_rgba)
 - [color()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color)
 
+### Customizing the primary colors
+
+To customize the color of links and buttons, provide your color in a [supported format](#customizing-the-your-showcase-colors) to the `app.branding.theme.[light or dark].primaryColor` field of the `app-config.yaml`:
+
+```yaml
+app:
+  branding:
+    theme:
+      light:
+        primaryColor: '#38be8b'
+      dark:
+        primaryColor: '#ab75cf'
+```
+
+![Example Light Mode Primary Color](images/example-light-mode-primary-color.png)
+![Example Dark Mode Primary Color](images/example-dark-mode-primary-color.png)
+
 ### Customizing the header banner colors
 
-The header banner is a comprised of a pattern of two colors. It is possible to provide different customizations depending on whether the app is in light mode or dark mode. To customize the header banner colors, provide your colors in supported formats described [above](#customizing-the-your-showcase-colors) to the relevant `app.branding.theme.[light or dark].headerColor[1 or 2]` fields of the `app-config.yaml`.
+The header banner is a comprised of a pattern of two colors. It is possible to provide different customizations depending on whether the app is in light mode or dark mode. To customize the header banner colors, provide your colors in a [supported format](#customizing-the-your-showcase-colors) to the `app.branding.theme.[light or dark].headerColor[1 or 2]` fields of the `app-config.yaml`.
 
 Example configurations:
 
