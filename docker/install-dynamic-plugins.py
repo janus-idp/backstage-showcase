@@ -6,7 +6,7 @@ import shutil
 import subprocess
 
 dynamicPluginsRoot = sys.argv[1]
-maxEntrySize = os.environ.get('MAX_ENTRY_SIZE', 10000000)
+maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
 
 dynamicPluginsFile = os.path.join(dynamicPluginsRoot, 'dynamic-plugins.yaml')
 dynamicPluginsGlobalConfigFile = os.path.join(dynamicPluginsRoot, 'app-config.dynamic-plugins.yaml')
