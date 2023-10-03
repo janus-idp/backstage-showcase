@@ -98,7 +98,7 @@ ENV CONTAINER_SOURCE=/opt/app-root/src
 
 WORKDIR $CONTAINER_SOURCE/
 
-# Upstream only
+# Upstream only - copy from cleanup stage
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
 # Upstream only - install techdocs dependencies

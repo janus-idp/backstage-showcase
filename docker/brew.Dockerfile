@@ -16,8 +16,7 @@
 # 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
 # 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
 # 3. uncomment lines with RUN source .../cachito.env
-# 4. remove python and pip installs from runtime container (not required)
-# 5. add Brew metadata
+# 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
@@ -128,18 +127,31 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.redhat.io/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
-# Downstream only - do not install techdocs dependencies (not required)
-
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
 # Downstream sources
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
-
+    
 WORKDIR $CONTAINER_SOURCE/
+
 # Downstream only - copy from builder, not cleanup stage
 COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
+# ENV PYTHON_VERSION="3.9"
+# Downstream only - install techdocs dependencies using cachito sources
+COPY $REMOTE_SOURCES/upstream2 $CONTAINER_SOURCE/
+RUN microdnf update -y && \
+    microdnf install -y python3 python3-pip && \
+    cat $CONTAINER_SOURCE/upstream2/cachito.env && \
+    source $CONTAINER_SOURCE/upstream2/cachito.env && \
+    pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker >/dev/null && \
+        set -xe; \
+        python3 -V; \
+        python3 -m pip install --user --no-cache-dir --upgrade pip setuptools mkdocs-techdocs-core==1.*
+    popd >/dev/null; \
+    microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
+    
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
 RUN fix-permissions ./
