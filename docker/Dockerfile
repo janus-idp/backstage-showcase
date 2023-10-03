@@ -90,12 +90,6 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1695740475 AS runner
 USER 0
 
-# Upstream only - install techdocs dependencies
-RUN microdnf update -y && \
-  microdnf install -y python3 python3-pip && \
-  pip3 install mkdocs-techdocs-core==1.* && \
-  microdnf clean all
-
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
@@ -103,8 +97,15 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 WORKDIR $CONTAINER_SOURCE/
+
 # Upstream only
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
+
+# Upstream only - install techdocs dependencies
+RUN microdnf update -y && \
+  microdnf install -y python3 python3-pip && \
+  pip3 install mkdocs-techdocs-core==1.* && \
+  microdnf clean all
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
