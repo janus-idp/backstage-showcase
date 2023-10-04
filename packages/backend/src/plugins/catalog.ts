@@ -1,7 +1,6 @@
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
 import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
 import { Router } from 'express';
@@ -16,8 +15,6 @@ export default async function createPlugin(
   const builder = await CatalogBuilder.create(env);
 
   const isOcmEnabled = env.config.getOptionalBoolean('enabled.ocm') || false;
-  const isKeycloakEnabled =
-    env.config.getOptionalBoolean('enabled.keycloak') || false;
   const isAapEnabled = env.config.getOptionalBoolean('enabled.aap') || false;
 
   if (isOcmEnabled) {
@@ -27,20 +24,6 @@ export default async function createPlugin(
         schedule: env.scheduler.createScheduledTaskRunner({
           frequency: { hours: 1 },
           timeout: { minutes: 15 },
-          initialDelay: { seconds: 15 },
-        }),
-      }),
-    );
-  }
-
-  if (isKeycloakEnabled) {
-    builder.addEntityProvider(
-      KeycloakOrgEntityProvider.fromConfig(env.config, {
-        id: 'development',
-        logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { hours: 1 },
-          timeout: { minutes: 50 },
           initialDelay: { seconds: 15 },
         }),
       }),
