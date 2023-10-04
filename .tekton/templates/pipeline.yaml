@@ -9,12 +9,16 @@ spec:
   params:
   - name: gitRepositoryUrl
     type: string
+    default: {{ .Values.gitRepositoryUrl }}
   - name: gitRevision
     type: string
+    default: {{ .Values.gitRevision }}
   - name: imageUrl
     type: string
+    default: {{ .Values.imageUrl }}
   - name: dockerfilePath
     type: string
+    default: {{ .Values.deckerfilePath }}
   workspaces:
   - name: quay-credentials
   - name: shared-data
