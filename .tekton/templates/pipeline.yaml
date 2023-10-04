@@ -20,7 +20,6 @@ spec:
     type: string
     default: {{ .Values.dockerfilePath }}
   workspaces:
-  - name: quay-credentials
   - name: shared-data
   tasks:
     - name: fetch-source
@@ -41,8 +40,6 @@ spec:
         name: buildah
         kind: ClusterTask
       workspaces:
-      - name: dockerconfig
-        workspace: quay-credentials
       - name: source
         workspace: shared-data
       params:
