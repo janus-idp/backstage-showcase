@@ -1,8 +1,4 @@
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
-import {
-  GithubEntityProvider,
-  GithubOrgEntityProvider,
-} from '@backstage/plugin-catalog-backend-module-github';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
@@ -22,10 +18,6 @@ export default async function createPlugin(
   const isOcmEnabled = env.config.getOptionalBoolean('enabled.ocm') || false;
   const isKeycloakEnabled =
     env.config.getOptionalBoolean('enabled.keycloak') || false;
-  const isGithubEnabled =
-    env.config.getOptionalBoolean('enabled.github') || false;
-  const isGithubOrgEnabled =
-    env.config.getOptionalBoolean('enabled.githubOrg') || false;
   const isAapEnabled = env.config.getOptionalBoolean('enabled.aap') || false;
 
   if (isOcmEnabled) {
@@ -53,45 +45,6 @@ export default async function createPlugin(
         }),
       }),
     );
-  }
-
-  if (isGithubEnabled) {
-    builder.addEntityProvider(
-      GithubEntityProvider.fromConfig(env.config, {
-        logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { minutes: 30 },
-          timeout: { minutes: 3 },
-          initialDelay: { minutes: 1 },
-        }),
-      }),
-    );
-  }
-
-  if (isGithubOrgEnabled) {
-    const providersConfig = env.config.getOptionalConfig(
-      'catalog.providers.githubOrg',
-    );
-
-    providersConfig?.keys().forEach(id => {
-      const githubOrgConfig = providersConfig?.getConfig(id);
-
-      const githubOrgId = githubOrgConfig.getString('id');
-      const githubOrgUrl = githubOrgConfig.getString('orgUrl');
-
-      builder.addEntityProvider(
-        GithubOrgEntityProvider.fromConfig(env.config, {
-          id: githubOrgId,
-          orgUrl: githubOrgUrl,
-          logger: env.logger,
-          schedule: env.scheduler.createScheduledTaskRunner({
-            frequency: { minutes: 60 },
-            timeout: { minutes: 15 },
-            initialDelay: { seconds: 15 },
-          }),
-        }),
-      );
-    });
   }
 
   if (isAapEnabled) {
