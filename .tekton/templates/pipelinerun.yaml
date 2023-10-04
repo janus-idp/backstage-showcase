@@ -7,9 +7,6 @@ spec:
   pipelineRef:
     name: devhub-build
   workspaces:
-  - name: quay-credentials
-    secret:
-      secretName: quay-credentials
   - name: shared-data
     volumeClaimTemplate:
       spec:
