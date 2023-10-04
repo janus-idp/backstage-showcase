@@ -1,8 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: dehub-build
-  namespace: tekton-tasks
+  name: devhub-build
 spec:
   description: | 
     This pipeline clones a git repo, builds a Docker image with Buildah and
