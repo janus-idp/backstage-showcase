@@ -28,7 +28,7 @@ USER 0
 # Install isolated-vm dependencies
 # hadolint ignore=DL3041
 RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
-  # already installed or installed as deps: 
+  # already installed or installed as deps:
   openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
   dnf update -y && dnf clean all
 
@@ -77,7 +77,7 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
 # hadolint ignore=SC1091
 RUN \
     # debug
-    # ls -l $CONTAINER_SOURCE/cachito.env; \ 
+    # ls -l $CONTAINER_SOURCE/cachito.env; \
     # load envs
     source $CONTAINER_SOURCE/cachito.env; \
     \
@@ -107,6 +107,10 @@ RUN git config --global --add safe.directory ./
 # hadolint ignore=DL3059
 RUN $YARN build --filter=backend
 
+# Build dynamic plugins
+# hadolint ignore=DL3059
+RUN $YARN --cwd ./dynamic-plugins export-dynamic
+
 # Stage 4 - Build the actual backend image and install production dependencies
 
 # Downstream only - files already exist, nothing to copy - debugging
@@ -128,7 +132,11 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.redhat.io/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
-# Downstream only - do not install techdocs dependencies (not required)
+# Downstream only - install techdocs dependencies using cachito sources
+RUN microdnf update -y && \
+  microdnf install -y python3 python3-pip && \
+  pip3 install mkdocs-techdocs-core==1.* && \
+  microdnf clean all
 
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
@@ -139,6 +147,14 @@ ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 WORKDIR $CONTAINER_SOURCE/
 # Downstream only - copy from builder, not cleanup stage
 COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
+
+# Copy python script used to gather dynamic plugins
+COPY docker/install-dynamic-plugins.py ./
+RUN chmod a+r ./install-dynamic-plugins.py
+
+# Copy embedded dynamic plugins
+COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/ ./dynamic-plugins/
+RUN chmod -R a+r ./dynamic-plugins/
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

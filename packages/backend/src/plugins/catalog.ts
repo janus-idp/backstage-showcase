@@ -11,7 +11,10 @@ import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
 import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
 import { Router } from 'express';
-import { PluginEnvironment } from '../types';
+import {
+  LegacyBackendPluginInstaller,
+  LegacyPluginEnvironment as PluginEnvironment,
+} from '@backstage/backend-plugin-manager';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -124,6 +127,17 @@ export default async function createPlugin(
   builder.setPlaceholderResolver('asyncapi', jsonSchemaRefPlaceholderResolver);
 
   builder.addProcessor(new ScaffolderEntitiesProcessor());
+
+  env.pluginProvider
+    .backendPlugins()
+    .map(p => p.installer)
+    .filter((i): i is LegacyBackendPluginInstaller => i.kind === 'legacy')
+    .forEach(i => {
+      if (i.catalog) {
+        i.catalog(builder, env);
+      }
+    });
+
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
 
