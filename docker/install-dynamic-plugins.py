@@ -5,43 +5,9 @@ import tarfile
 import shutil
 import subprocess
 
-dynamicPluginsRoot = sys.argv[1]
-maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
-
-dynamicPluginsFile = os.path.join(dynamicPluginsRoot, 'dynamic-plugins.yaml')
-dynamicPluginsGlobalConfigFile = os.path.join(dynamicPluginsRoot, 'app-config.dynamic-plugins.yaml')
-
-# test if file dynamic-plugins.yaml exists
-if not os.path.isfile(dynamicPluginsFile):
-    print(f'No {dynamicPluginsFile} file found. Skipping dynamic plugins installation.')
-    with open(dynamicPluginsGlobalConfigFile, 'w') as file:
-        file.write('')
-        file.close()
-    exit(0)
-
-with open(dynamicPluginsFile, 'r') as file:
-  plugins = yaml.safe_load(file)
-
-if plugins == '' or plugins is None:
-    print(f'{dynamicPluginsFile} file is empty. Skipping dynamic plugins installation.')
-    with open(dynamicPluginsGlobalConfigFile, 'w') as file:
-        file.write('')
-        file.close()
-    exit(0)
-
 class InstallException(Exception):
     """Exception class from which every exception in this library will derive."""
     pass
-
-# test that plugins is a list
-if not isinstance(plugins, list):
-    raise InstallException(f'{dynamicPluginsFile} content must be a list')
-
-globalConfig = {
-  'dynamicPlugins': {
-        'rootDirectory': 'dynamic-plugins-root'
-  }
-}
 
 def merge(source, destination):
     for key, value in source.items():
@@ -58,61 +24,98 @@ def merge(source, destination):
 
     return destination
 
-# iterate through the list of plugins
-for plugin in plugins:
-    package = plugin['package']
-    if package.startswith('./'):
-        package = os.path.join(os.getcwd(), package[2:])
+def main():
+    dynamicPluginsRoot = sys.argv[1]
+    maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
 
-    print('\n======= Installing dynamic plugin', package, flush=True)
+    dynamicPluginsFile = os.path.join(dynamicPluginsRoot, 'dynamic-plugins.yaml')
+    dynamicPluginsGlobalConfigFile = os.path.join(dynamicPluginsRoot, 'app-config.dynamic-plugins.yaml')
 
-    print('\t==> Grabbing package archive through `npm pack`', flush=True)
-    completed = subprocess.run(['npm', 'pack', package], capture_output=True, cwd=dynamicPluginsRoot)
-    if completed.returncode != 0:
-        raise InstallException(f'Error while installing plugin { package } with \'npm pack\' : ' + completed.stderr.decode('utf-8'))
+    # test if file dynamic-plugins.yaml exists
+    if not os.path.isfile(dynamicPluginsFile):
+        print(f'No {dynamicPluginsFile} file found. Skipping dynamic plugins installation.')
+        with open(dynamicPluginsGlobalConfigFile, 'w') as file:
+            file.write('')
+            file.close()
+        exit(0)
 
-    archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
-    directory = archive.replace('.tgz', '')
+    with open(dynamicPluginsFile, 'r') as file:
+        plugins = yaml.safe_load(file)
 
-    print('\t==> Removing previous plugin directory', directory, flush=True)
-    shutil.rmtree(directory, ignore_errors=True, onerror=None)
-    os.mkdir(directory)
+    if plugins == '' or plugins is None:
+        print(f'{dynamicPluginsFile} file is empty. Skipping dynamic plugins installation.')
+        with open(dynamicPluginsGlobalConfigFile, 'w') as file:
+            file.write('')
+            file.close()
+        exit(0)
 
-    print('\t==> Extracting package archive', archive, flush=True)
-    file = tarfile.open(archive, 'r:gz') # NOSONAR
-    # extract the archive content but take care of zip bombs
-    for member in file.getmembers():
-        if member.isreg():
-            if not member.name.startswith('package/'):
-                raise InstallException("NPM package archive archive does not start with 'package/' as it should: " + member.name)
+    # test that plugins is a list
+    if not isinstance(plugins, list):
+        raise InstallException(f'{dynamicPluginsFile} content must be a list')
 
-            if member.size > maxEntrySize:
-                raise InstallException('Zip bomb detected in ' + member.name)
+    globalConfig = {
+      'dynamicPlugins': {
+            'rootDirectory': 'dynamic-plugins-root'
+      }
+    }
 
-            # Remove the `package/` prefix from the file name
-            member.name = member.name[8:]
-            file.extract(member, path=directory)
-        elif member.isdir():
-            print('\t\tSkipping directory entry', member.name, flush=True)
-        else:
-            raise InstallException('NPM package archive contains a non regular file: ' + member.name)
+    # iterate through the list of plugins
+    for plugin in plugins:
+        package = plugin['package']
+        if package.startswith('./'):
+            package = os.path.join(os.getcwd(), package[2:])
 
-    file.close()
+        print('\n======= Installing dynamic plugin', package, flush=True)
 
-    print('\t==> Removing package archive', archive, flush=True)
-    os.remove(archive)
+        print('\t==> Grabbing package archive through `npm pack`', flush=True)
+        completed = subprocess.run(['npm', 'pack', package], capture_output=True, cwd=dynamicPluginsRoot)
+        if completed.returncode != 0:
+            raise InstallException(f'Error while installing plugin { package } with \'npm pack\' : ' + completed.stderr.decode('utf-8'))
 
-    if 'pluginConfig' not in plugin:
-      print('\t==> Successfully installed dynamic plugin', package, flush=True)
-      continue
+        archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
+        directory = archive.replace('.tgz', '')
 
-    # if some plugin configuration is defined, merge it with the global configuration
+        print('\t==> Removing previous plugin directory', directory, flush=True)
+        shutil.rmtree(directory, ignore_errors=True, onerror=None)
+        os.mkdir(directory)
 
-    print('\t==> Merging plugin-specific configuration', flush=True)
-    config = plugin['pluginConfig']
-    if config is not None and isinstance(config, dict):
-            merge(config, globalConfig)
+        print('\t==> Extracting package archive', archive, flush=True)
+        file = tarfile.open(archive, 'r:gz') # NOSONAR
+        # extract the archive content but take care of zip bombs
+        for member in file.getmembers():
+            if member.isreg():
+                if not member.name.startswith('package/'):
+                    raise InstallException("NPM package archive archive does not start with 'package/' as it should: " + member.name)
 
-    print('\t==> Successfully installed dynamic plugin', package, flush=True)
+                if member.size > maxEntrySize:
+                    raise InstallException('Zip bomb detected in ' + member.name)
 
-yaml.safe_dump(globalConfig, open(dynamicPluginsGlobalConfigFile, 'w'))
+                # Remove the `package/` prefix from the file name
+                member.name = member.name[8:]
+                file.extract(member, path=directory)
+            elif member.isdir():
+                print('\t\tSkipping directory entry', member.name, flush=True)
+            else:
+                raise InstallException('NPM package archive contains a non regular file: ' + member.name)
+
+        file.close()
+
+        print('\t==> Removing package archive', archive, flush=True)
+        os.remove(archive)
+
+        if 'pluginConfig' not in plugin:
+          print('\t==> Successfully installed dynamic plugin', package, flush=True)
+          continue
+
+        # if some plugin configuration is defined, merge it with the global configuration
+
+        print('\t==> Merging plugin-specific configuration', flush=True)
+        config = plugin['pluginConfig']
+        if config is not None and isinstance(config, dict):
+                merge(config, globalConfig)
+
+        print('\t==> Successfully installed dynamic plugin', package, flush=True)
+
+    yaml.safe_dump(globalConfig, open(dynamicPluginsGlobalConfigFile, 'w'))
+
+main()

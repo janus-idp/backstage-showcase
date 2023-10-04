@@ -162,7 +162,7 @@ An example of such a wrapper plugin can be found in the [dynamic backend plugin 
 
 - Create a `dynamic-plugins-root` folder at the root of the showcase application repository.
 
-- In the `app-config.yaml`` file, add the following entry:
+- In the `app-config.yaml` file, add the following entry:
 
   ```yaml
   dynamicPlugins:
