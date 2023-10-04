@@ -40,7 +40,6 @@
     "@backstage/plugin-search-backend-node": "1.2.9",
     "@backstage/plugin-sonarqube-backend": "0.2.7",
     "@backstage/plugin-techdocs-backend": "1.7.2",
-    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.2.0",
     "@janus-idp/backstage-plugin-keycloak-backend": "1.5.5",
     "@janus-idp/backstage-plugin-ocm-backend": "3.2.2",
     "@janus-idp/backstage-plugin-aap-backend": "1.2.2",

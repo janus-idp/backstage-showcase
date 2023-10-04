@@ -31,7 +31,6 @@ import auth from './plugins/auth';
 import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
 import events from './plugins/events';
-import gitlab from './plugins/gitlab';
 import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
 import ocm from './plugins/ocm';
@@ -263,14 +262,6 @@ async function main() {
     apiRouter,
     createEnv,
     router: kubernetes,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'gitlab',
-    config,
-    apiRouter,
-    createEnv,
-    router: gitlab,
     isOptional: true,
   });
   await addPlugin({
