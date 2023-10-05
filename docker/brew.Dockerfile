@@ -27,7 +27,7 @@ USER 0
 # Install isolated-vm dependencies
 # hadolint ignore=DL3041
 RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
-  # already installed or installed as deps: 
+  # already installed or installed as deps:
   openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
   dnf update -y && dnf clean all
 
@@ -132,26 +132,34 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
 # Downstream sources
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
-    
+
 WORKDIR $CONTAINER_SOURCE/
 
-# Downstream only - copy from builder, not cleanup stage
-COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
-
-# ENV PYTHON_VERSION="3.9"
 # Downstream only - install techdocs dependencies using cachito sources
-COPY $REMOTE_SOURCES/upstream2 $CONTAINER_SOURCE/
+COPY $REMOTE_SOURCES/upstream2 ./upstream2/
 RUN microdnf update -y && \
-    microdnf install -y python3 python3-pip && \
+    microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
+    ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
+    ln -s /usr/bin/pip3.11 /usr/bin/pip; \
+    # ls -la $CONTAINER_SOURCE/ $CONTAINER_SOURCE/upstream2/ $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
     cat $CONTAINER_SOURCE/upstream2/cachito.env && \
+    # cachito.env contains path to cert:
+    # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
     source $CONTAINER_SOURCE/upstream2/cachito.env && \
-    pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker >/dev/null && \
+    # fix ownership for pip install folder
+    mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
+    # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
+    pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
         set -xe; \
-        python3 -V; \
-        python3 -m pip install --user --no-cache-dir --upgrade pip setuptools mkdocs-techdocs-core==1.*
+        python3.11 -V; pip3.11 -V; \
+        pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
+        pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
     popd >/dev/null; \
     microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
     
+# Downstream only - copy from builder, not cleanup stage
+COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
+
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
 RUN fix-permissions ./
