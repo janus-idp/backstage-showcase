@@ -4,10 +4,13 @@ import {
   IndexBuilder,
   LunrSearchEngine,
 } from '@backstage/plugin-search-backend-node';
-import { PluginEnvironment } from '../types';
 import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
 import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-techdocs-backend';
 import { Router } from 'express';
+import {
+  LegacyBackendPluginInstaller,
+  LegacyPluginEnvironment as PluginEnvironment,
+} from '@backstage/backend-plugin-manager';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -48,6 +51,16 @@ export default async function createPlugin(
       tokenManager: env.tokenManager,
     }),
   });
+
+  env.pluginProvider
+    .backendPlugins()
+    .map(p => p.installer)
+    .filter((i): i is LegacyBackendPluginInstaller => i.kind === 'legacy')
+    .forEach(i => {
+      if (i.search) {
+        i.search(indexBuilder, schedule, env);
+      }
+    });
 
   // The scheduler controls when documents are gathered from collators and sent
   // to the search engine for indexing.
