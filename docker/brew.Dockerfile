@@ -16,8 +16,7 @@
 # 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
 # 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
 # 3. uncomment lines with RUN source .../cachito.env
-# 4. remove python and pip installs from runtime container (not required)
-# 5. add Brew metadata
+# 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
@@ -28,7 +27,7 @@ USER 0
 # Install isolated-vm dependencies
 # hadolint ignore=DL3041
 RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
-  # already installed or installed as deps: 
+  # already installed or installed as deps:
   openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
   dnf update -y && dnf clean all
 
@@ -77,7 +76,7 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
 # hadolint ignore=SC1091
 RUN \
     # debug
-    # ls -l $CONTAINER_SOURCE/cachito.env; \ 
+    # ls -l $CONTAINER_SOURCE/cachito.env; \
     # load envs
     source $CONTAINER_SOURCE/cachito.env; \
     \
@@ -107,6 +106,10 @@ RUN git config --global --add safe.directory ./
 # hadolint ignore=DL3059
 RUN $YARN build --filter=backend
 
+# Build dynamic plugins
+# hadolint ignore=DL3059
+RUN $YARN --cwd ./dynamic-plugins export-dynamic
+
 # Stage 4 - Build the actual backend image and install production dependencies
 
 # Downstream only - files already exist, nothing to copy - debugging
@@ -128,8 +131,6 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.redhat.io/ubi9/nodejs-18-minimal:1 AS runner
 USER 0
 
-# Downstream only - do not install techdocs dependencies (not required)
-
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
@@ -137,8 +138,39 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 
 WORKDIR $CONTAINER_SOURCE/
+
+# Downstream only - install techdocs dependencies using cachito sources
+COPY $REMOTE_SOURCES/upstream2 ./upstream2/
+RUN microdnf update -y && \
+    microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
+    ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
+    ln -s /usr/bin/pip3.11 /usr/bin/pip; \
+    # ls -la $CONTAINER_SOURCE/ $CONTAINER_SOURCE/upstream2/ $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
+    cat $CONTAINER_SOURCE/upstream2/cachito.env && \
+    # cachito.env contains path to cert:
+    # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
+    source $CONTAINER_SOURCE/upstream2/cachito.env && \
+    # fix ownership for pip install folder
+    mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
+    # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
+    pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
+        set -xe; \
+        python3.11 -V; pip3.11 -V; \
+        pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
+        pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
+    popd >/dev/null; \
+    microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
+    
 # Downstream only - copy from builder, not cleanup stage
 COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
+
+# Copy python script used to gather dynamic plugins
+COPY docker/install-dynamic-plugins.py ./
+RUN chmod a+r ./install-dynamic-plugins.py
+
+# Copy embedded dynamic plugins
+COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/ ./dynamic-plugins/
+RUN chmod -R a+r ./dynamic-plugins/
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

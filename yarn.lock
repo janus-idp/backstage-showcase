@@ -2232,7 +2232,35 @@
     express "^4.17.1"
     knex "^2.0.0"
 
-"@backstage/backend-tasks@0.5.9", "@backstage/backend-tasks@^0.5.9":
+"@backstage/backend-plugin-manager@npm:@janus-idp/backend-plugin-manager@0.0.4-janus.0":
+  version "0.0.4-janus.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backend-plugin-manager/-/backend-plugin-manager-0.0.4-janus.0.tgz#15845bdb306e17e9374ee18e1056d6549f394ff0"
+  integrity sha512-nEFBXKEEEJUVRp7yvksyJ+iUYLTiUlNa48QLy3z+k44713Er7wOEcE7/m72OdTkdZIQ6rtQIRlkQ6JDgqPsEUA==
+  dependencies:
+    "@backstage/backend-common" "^0.19.6"
+    "@backstage/backend-plugin-api" "^0.6.4"
+    "@backstage/backend-tasks" "^0.5.9"
+    "@backstage/cli-common" "^0.1.12"
+    "@backstage/cli-node" "^0.1.4"
+    "@backstage/config" "^1.1.0"
+    "@backstage/errors" "^1.2.2"
+    "@backstage/plugin-auth-node" "^0.3.1"
+    "@backstage/plugin-catalog-backend" "^1.13.2"
+    "@backstage/plugin-events-backend" "^0.2.13"
+    "@backstage/plugin-events-node" "^0.2.13"
+    "@backstage/plugin-permission-common" "^0.7.8"
+    "@backstage/plugin-permission-node" "^0.7.15"
+    "@backstage/plugin-scaffolder-node" "^0.2.4"
+    "@backstage/plugin-search-backend-node" "^1.2.8"
+    "@backstage/plugin-search-common" "^1.2.6"
+    "@backstage/types" "^1.1.1"
+    "@types/express" "^4.17.6"
+    chokidar "^3.5.3"
+    express "^4.17.1"
+    lodash "^4.17.21"
+    winston "^3.2.1"
+
+"@backstage/backend-tasks@0.5.9", "@backstage/backend-tasks@^0.5.4", "@backstage/backend-tasks@^0.5.9":
   version "0.5.9"
   resolved "https://registry.yarnpkg.com/@backstage/backend-tasks/-/backend-tasks-0.5.9.tgz#31a90f070f25b33738204556c1738198e5fb033a"
   integrity sha512-omT2JpP63yaBLAC7O9bo6PicK6ffFmsgHghT2ayJtfEYYlfUnEmz52TK54ESa1D2qQ3DFStkM4i0ApTNLT4PnA==
@@ -3381,7 +3409,21 @@
     "@types/react" "^16.13.1 || ^17.0.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-events-node@^0.2.13":
+"@backstage/plugin-events-backend@0.2.13", "@backstage/plugin-events-backend@^0.2.13":
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-events-backend/-/plugin-events-backend-0.2.13.tgz#eed125d2aa21afe41d9d4fcac9eb4b20c619475f"
+  integrity sha512-V3wznusYvJYGJKQmI3Em7W0TdtZ9UJzzcjPmPlhSqYqukyifLtZ6xVpRK+0XRP3dFtfWgtJNODNVNV5apCkcqw==
+  dependencies:
+    "@backstage/backend-common" "^0.19.6"
+    "@backstage/backend-plugin-api" "^0.6.4"
+    "@backstage/config" "^1.1.0"
+    "@backstage/plugin-events-node" "^0.2.13"
+    "@types/express" "^4.17.6"
+    express "^4.17.1"
+    express-promise-router "^4.1.0"
+    winston "^3.2.1"
+
+"@backstage/plugin-events-node@0.2.13", "@backstage/plugin-events-node@^0.2.13":
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-events-node/-/plugin-events-node-0.2.13.tgz#8151e67629701536c0f9f45a1afe0aa98e3adfb6"
   integrity sha512-R63ILC3ANmh8a2ny+7jWaplZypNAomfnAWGjRZCRlIGe0j8gSVkNDi277uiD5KAsm4LdXxdMTt469Nhe57t9LQ==
@@ -26628,11 +26670,6 @@ zod@^3.21.4:
   version "3.22.2"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.2.tgz#3add8c682b7077c05ac6f979fea6998b573e157b"
   integrity sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==
-
-zod@~3.21.4:
-  version "3.21.4"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
-  integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==
 
 zustand@3.6.9:
   version "3.6.9"
