@@ -49,6 +49,7 @@ import {
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
@@ -161,7 +162,12 @@ async function main() {
     argv: process.argv,
     logger,
   });
-  const pluginManager = await PluginManager.fromConfig(config, logger);
+  const pluginManager = await PluginManager.fromConfig(
+    config,
+    logger,
+    undefined,
+    new CommonJSModuleLoader(logger),
+  );
   const createEnv = makeCreateEnv(config, pluginManager);
 
   const appEnv = useHotMemoize(module, () => createEnv('app'));
