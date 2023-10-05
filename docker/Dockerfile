@@ -16,8 +16,7 @@
 # 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
 # 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
 # 3. uncomment lines with RUN source .../cachito.env
-# 4. remove python and pip installs from runtime container (not required)
-# 5. add Brew metadata
+# 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
 FROM registry.access.redhat.com/ubi9/nodejs-18:1-70.1695740477 AS skeleton
@@ -93,12 +92,6 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1695740475 AS runner
 USER 0
 
-# Upstream only - install techdocs dependencies directly
-RUN microdnf update -y && \
-  microdnf install -y python3 python3-pip && \
-  pip3 install mkdocs-techdocs-core==1.* && \
-  microdnf clean all
-
 # Env vars
 ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 
@@ -106,7 +99,14 @@ ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 WORKDIR $CONTAINER_SOURCE/
-# Upstream only
+
+# Upstream only - install techdocs dependencies (PyPI source tarballs not required)
+RUN microdnf update -y && \
+  microdnf install -y python3 python3-pip && \
+  pip3 install mkdocs-techdocs-core==1.2.3 && \
+  microdnf clean all
+
+# Upstream only - copy from cleanup stage
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
 # Copy python script used to gather dynamic plugins
