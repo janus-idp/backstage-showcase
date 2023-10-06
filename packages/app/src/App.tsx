@@ -46,6 +46,7 @@ import { LearningPaths } from './components/learningPaths/LearningPathsPage';
 import { SearchPage } from './components/search/SearchPage';
 import { LighthousePage } from '@backstage/plugin-lighthouse';
 import { DevToolsPage } from '@backstage/plugin-devtools';
+import { devToolsAdministerPermission } from '@backstage/plugin-devtools-common';
 import {
   configApiRef,
   githubAuthApiRef,
@@ -182,7 +183,14 @@ const routes = (
     <Route path="/ocm" element={<OcmPage />} />
     <Route path="/learning-paths" element={<LearningPaths />} />
     <Route path="/lighthouse" element={<LighthousePage />} />
-    <Route path="/devtools" element={<DevToolsPage />} />
+    <Route
+      path="/devtools"
+      element={
+        <RequirePermission permission={devToolsAdministerPermission}>
+          <DevToolsPage />
+        </RequirePermission>
+      }
+    />
   </FlatRoutes>
 );
 

@@ -26,6 +26,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import BuildIcon from '@mui/icons-material/Build';
 import React, { PropsWithChildren } from 'react';
 import { SidebarLogo } from './SidebarLogo';
+import { devToolsAdministerPermission } from '@backstage/plugin-devtools-common';
+import { RequirePermission } from '@backstage/plugin-permission-react';
 
 export const Root = ({ children }: PropsWithChildren<{}>) => (
   <SidebarPage>
@@ -65,7 +67,16 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
             to="lighthouse"
             text="Lighthouse"
           />
-          <SidebarItem icon={BuildIcon as any} to="devtools" text="DevTools" />
+          <RequirePermission
+            permission={devToolsAdministerPermission}
+            errorPage={<></>}
+          >
+            <SidebarItem
+              icon={BuildIcon as any}
+              to="devtools"
+              text="DevTools"
+            />
+          </RequirePermission>
         </SidebarScrollWrapper>
       </SidebarGroup>
       <SidebarSpace />

@@ -3368,7 +3368,7 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-devtools-common@^0.1.4":
+"@backstage/plugin-devtools-common@0.1.4", "@backstage/plugin-devtools-common@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-devtools-common/-/plugin-devtools-common-0.1.4.tgz#abf002660b69fd99a1860d9ac612369a55dee177"
   integrity sha512-5Qp7b97+SOPZftc9o6VrOevxcTg86WM4h3xQ0xj/NwXB2COM1PadGPDWKA/4+tgo2bicZlj8KoU5IKgDE+4y5Q==

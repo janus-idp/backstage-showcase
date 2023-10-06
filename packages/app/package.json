@@ -29,6 +29,7 @@
     "@backstage/plugin-catalog-import": "0.10.0",
     "@backstage/plugin-catalog-react": "1.8.4",
     "@backstage/plugin-devtools": "0.1.4",
+    "@backstage/plugin-devtools-common": "0.1.4",
     "@backstage/plugin-dynatrace": "7.0.4",
     "@backstage/plugin-github-actions": "0.6.5",
     "@backstage/plugin-github-issues": "0.2.13",
