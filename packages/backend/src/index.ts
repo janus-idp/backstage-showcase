@@ -17,6 +17,7 @@ import {
   loadBackendConfig,
   notFoundHandler,
   useHotMemoize,
+  createStatusCheckRouter,
   ServiceBuilder,
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
@@ -296,6 +297,12 @@ async function main() {
     service,
     root: '',
     router: await app(appEnv),
+  });
+  await addRouter({
+    name: 'healthcheck',
+    service,
+    root: '',
+    router: await createStatusCheckRouter(appEnv),
   });
 
   // Optional routers
