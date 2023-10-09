@@ -1,7 +1,6 @@
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
 import { Router } from 'express';
 import {
   LegacyBackendPluginInstaller,
@@ -12,20 +11,6 @@ export default async function createPlugin(
   env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
-
-  const isAapEnabled = env.config.getOptionalBoolean('enabled.aap') || false;
-
-  if (isAapEnabled) {
-    builder.addEntityProvider(
-      AapResourceEntityProvider.fromConfig(env.config, {
-        logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { minutes: 30 },
-          timeout: { minutes: 3 },
-        }),
-      }),
-    );
-  }
 
   builder.setPlaceholderResolver('openapi', jsonSchemaRefPlaceholderResolver);
   builder.setPlaceholderResolver('asyncapi', jsonSchemaRefPlaceholderResolver);
