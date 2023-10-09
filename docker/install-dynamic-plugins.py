@@ -1,3 +1,18 @@
+#
+# Copyright (c) 2023 Red Hat, Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 import os
 import sys
 import yaml
@@ -5,20 +20,42 @@ import tarfile
 import shutil
 import subprocess
 
+# This script is used to install dynamic plugins in the Backstage application,
+# and is available in the container image to be called at container initialization,
+# for example in an init container when using Kubernetes.
+#
+# It expects, as the only argument, the path to the root directory where
+# the dynamic plugins will be installed.
+#
+# Additionally The MAX_ENTRY_SIZE environment variable can be defined to set
+# the maximum size of a file in the archive (default: 10MB).
+#
+# It expects the `dynamic-plugins.yaml` file to be present in the current directory and
+# to contain the list of plugins to install along with their optional configuration.
+#
+# The `dynamic-plugins.yaml` file must be a list of objects with the following properties:
+#   - `package`: the NPM package to install (either a package name or a path to a local package)
+#   - `pluginConfig`: an optional plugin-specific configuration fragment
+#
+# For each package mentioned in the `dynamic-plugins.yaml` file, the script will:
+#   - call `npm pack` to get the package archive and extract it in the dynamic plugins root directory
+#   - merge the plugin-specific configuration fragment in a global configuration file named `app-config.dynamic-plugins.yaml`
+#
+
 class InstallException(Exception):
     """Exception class from which every exception in this library will derive."""
     pass
 
-def merge(source, destination):
+def merge(source, destination, prefix = ''):
     for key, value in source.items():
         if isinstance(value, dict):
             # get node or create one
             node = destination.setdefault(key, {})
-            merge(value, node)
+            merge(value, node, key + '.')
         else:
             # if key exists in destination trigger an error
-            if key in destination:
-                raise InstallException('Config key ' + key + ' defined for 2 dynamic plugins')
+            if key in destination and destination[key] != value:
+                raise InstallException("Config key '" + prefix + key + "' defined differently for 2 dynamic plugins")
 
             destination[key] = value
 
