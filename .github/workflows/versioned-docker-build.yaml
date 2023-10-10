@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# on push of a tag, trigger a container build for that tag and push to http://quay.io/janus-idp/backstage-showcase
 name: Versioned Docker Build
 
 on:
