@@ -38,7 +38,6 @@ import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
 import sonarqube from './plugins/sonarqube';
-import techdocs from './plugins/techdocs';
 import { metricsHandler } from './metrics';
 import { RequestHandler } from 'express';
 import {
@@ -222,15 +221,6 @@ async function main() {
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
-  // Optional plugins
-  await addPlugin({
-    plugin: 'techdocs',
-    config,
-    apiRouter,
-    createEnv,
-    router: techdocs,
-    isOptional: true,
-  });
   await addPlugin({
     plugin: 'argocd',
     config,

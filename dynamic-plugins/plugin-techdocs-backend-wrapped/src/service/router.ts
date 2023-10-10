@@ -6,12 +6,14 @@ import {
   Publisher,
 } from '@backstage/plugin-techdocs-backend';
 import Docker from 'dockerode';
-import { Router } from 'express';
-import { PluginEnvironment } from '../types';
+import { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-plugin-manager';
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
+export async function buildRouter(
+  env: Pick<
+    PluginEnvironment,
+    'config' | 'logger' | 'discovery' | 'cache' | 'reader'
+  >,
+) {
   // Preparers are responsible for fetching source files for documentation.
   const preparers = await Preparers.fromConfig(env.config, {
     logger: env.logger,

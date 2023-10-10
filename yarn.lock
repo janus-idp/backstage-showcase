@@ -3730,7 +3730,7 @@
     uuid "^8.3.2"
     winston "^3.2.1"
 
-"@backstage/plugin-search-backend-module-techdocs@^0.1.9":
+"@backstage/plugin-search-backend-module-techdocs@0.1.9", "@backstage/plugin-search-backend-module-techdocs@^0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-search-backend-module-techdocs/-/plugin-search-backend-module-techdocs-0.1.9.tgz#5e198140786eb92cbaf646fb9d36b5d7508898a1"
   integrity sha512-7Lw+hg2OMMSahntjETUq5N4cO1Fa9c4ppdYtSXpjB1/9A/0rW5AxXuUWknd8BHS3ayMJK6wcd9FzGQf3o5nBtA==
