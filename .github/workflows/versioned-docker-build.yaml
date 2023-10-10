@@ -42,9 +42,13 @@ jobs:
 
       - name: Check if current tag is the newest version
         run: |
+          # Get the current tag
           current_tag="$(git describe --tags --abbrev=0)"; echo "Current tag: $current_tag"
-          newest_tag="$(bash ./scripts/get_newest_tag.sh)"; echo "Newest tag: $newest_tag"
 
+          # Get the newest version tag
+          newest_tag="$(git tag -l 'v*' | sort -uV | tail -1)"; echo "Newest tag: $newest_tag"
+
+          # Check if the current tag is the newest version
           [ "$current_tag" == "$newest_version" ] && is_latest=true || is_latest=false
           echo "is_latest=$is_latest" >> "$GITHUB_ENV"
 
