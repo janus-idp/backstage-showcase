@@ -49,6 +49,7 @@ import {
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
 // in the upstream @backstage/backend-plugin-manager package.
@@ -179,6 +180,17 @@ async function main() {
   const appEnv = useHotMemoize(module, () => createEnv('app'));
 
   const apiRouter = Router();
+
+  // Scalprum frontend plugins provider
+  const scalprumEmv = useHotMemoize(module, () => createEnv('scalprum'));
+  apiRouter.use(
+    '/scalprum',
+    await scalprumRouter({
+      logger: scalprumEmv.logger,
+      pluginManager,
+      discovery: scalprumEmv.discovery,
+    }),
+  );
 
   // Required plugins
   await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
