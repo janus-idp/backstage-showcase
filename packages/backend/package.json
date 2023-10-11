@@ -27,7 +27,6 @@
     "@backstage/plugin-catalog-backend": "1.13.3",
     "@backstage/plugin-catalog-backend-module-openapi": "0.1.22",
     "@backstage/plugin-jenkins-backend": "0.2.8",
-    "@backstage/plugin-kubernetes-backend": "0.12.2",
     "@backstage/plugin-permission-backend": "0.5.28",
     "@backstage/plugin-permission-common": "0.7.8",
     "@backstage/plugin-permission-node": "0.7.16",

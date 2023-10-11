@@ -30,7 +30,6 @@ import auth from './plugins/auth';
 import catalog from './plugins/catalog';
 import events from './plugins/events';
 import jenkins from './plugins/jenkins';
-import kubernetes from './plugins/kubernetes';
 import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
@@ -225,14 +224,6 @@ async function main() {
     apiRouter,
     createEnv,
     router: sonarqube,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'kubernetes',
-    config,
-    apiRouter,
-    createEnv,
-    router: kubernetes,
     isOptional: true,
   });
   await addPlugin({
