@@ -38,7 +38,6 @@
     "@backstage/plugin-search-backend-module-pg": "0.5.14",
     "@backstage/plugin-search-backend-node": "1.2.9",
     "@backstage/plugin-sonarqube-backend": "0.2.7",
-    "@roadiehq/backstage-plugin-argo-cd-backend": "2.11.3",
     "@internal/plugin-scalprum-backend": "^0.1.0",
     "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
     "@backstage/plugin-events-backend": "0.2.14",

@@ -26,7 +26,6 @@ import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import Router from 'express-promise-router';
 import app from './plugins/app';
-import argocd from './plugins/argocd';
 import auth from './plugins/auth';
 import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
@@ -221,14 +220,6 @@ async function main() {
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
-  await addPlugin({
-    plugin: 'argocd',
-    config,
-    apiRouter,
-    createEnv,
-    router: argocd,
-    isOptional: true,
-  });
   await addPlugin({
     plugin: 'sonarqube',
     config,
