@@ -33,7 +33,6 @@ import catalog from './plugins/catalog';
 import events from './plugins/events';
 import jenkins from './plugins/jenkins';
 import kubernetes from './plugins/kubernetes';
-import ocm from './plugins/ocm';
 import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
@@ -224,14 +223,6 @@ async function main() {
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
   // Optional plugins
-  await addPlugin({
-    plugin: 'ocm',
-    config,
-    apiRouter,
-    createEnv,
-    router: ocm,
-    isOptional: true,
-  });
   await addPlugin({
     plugin: 'techdocs',
     config,

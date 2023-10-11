@@ -1,7 +1,6 @@
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
 import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
 import { Router } from 'express';
 import {
@@ -14,21 +13,7 @@ export default async function createPlugin(
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
-  const isOcmEnabled = env.config.getOptionalBoolean('enabled.ocm') || false;
   const isAapEnabled = env.config.getOptionalBoolean('enabled.aap') || false;
-
-  if (isOcmEnabled) {
-    builder.addEntityProvider(
-      ManagedClusterProvider.fromConfig(env.config, {
-        logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { hours: 1 },
-          timeout: { minutes: 15 },
-          initialDelay: { seconds: 15 },
-        }),
-      }),
-    );
-  }
 
   if (isAapEnabled) {
     builder.addEntityProvider(
