@@ -29,7 +29,6 @@ import app from './plugins/app';
 import auth from './plugins/auth';
 import catalog from './plugins/catalog';
 import events from './plugins/events';
-import jenkins from './plugins/jenkins';
 import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
@@ -224,14 +223,6 @@ async function main() {
     apiRouter,
     createEnv,
     router: sonarqube,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'jenkins',
-    config,
-    apiRouter,
-    createEnv,
-    router: jenkins,
     isOptional: true,
   });
   await addPlugin({
