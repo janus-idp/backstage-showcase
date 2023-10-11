@@ -47,7 +47,6 @@
     "@janus-idp/backstage-plugin-ocm-backend": "3.2.2",
     "@janus-idp/backstage-plugin-aap-backend": "1.2.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "2.11.3",
-    "@roadiehq/scaffolder-backend-argocd": "1.1.17",
     "@internal/plugin-scalprum-backend": "^0.1.0",
     "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
     "@backstage/plugin-events-backend": "0.2.14",
