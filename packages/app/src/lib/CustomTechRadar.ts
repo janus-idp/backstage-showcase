@@ -2,7 +2,7 @@ import {
   TechRadarApi,
   type TechRadarLoaderResponse,
 } from '@backstage/plugin-tech-radar';
-import { JanusBackstageCustomizeApi } from '../api';
+import { JanusBackstageCustomizeApi } from '../api/JanusBackstageCustomizeApiClient';
 
 export class CustomTechRadar implements TechRadarApi {
   private readonly janusBackstageCustomizeApi: JanusBackstageCustomizeApi;

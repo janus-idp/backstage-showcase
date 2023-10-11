@@ -1,11 +1,6 @@
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
-import {
-  AlertDisplay,
-  OAuthRequestDialog,
-  ProxiedSignInPage,
-  SignInPage,
-} from '@backstage/core-components';
+import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { ApiExplorerPage, apiDocsPlugin } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
@@ -19,6 +14,7 @@ import {
   catalogImportPlugin,
 } from '@backstage/plugin-catalog-import';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
+import { LighthousePage } from '@backstage/plugin-lighthouse';
 import { orgPlugin } from '@backstage/plugin-org';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
@@ -33,26 +29,21 @@ import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import { UnifiedThemeProvider } from '@backstage/theme';
-import LightIcon from '@mui/icons-material/WbSunny';
-import DarkIcon from '@mui/icons-material/Brightness2';
 import { OcmPage } from '@janus-idp/backstage-plugin-ocm';
+import DarkIcon from '@mui/icons-material/Brightness2';
+import LightIcon from '@mui/icons-material/WbSunny';
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { apis } from './apis';
 import { Root } from './components/Root';
+import { SignInPage } from './components/SignInPage/SignInPage';
 import { entityPage } from './components/catalog/EntityPage';
 import { HomePage } from './components/home/HomePage';
 import { LearningPaths } from './components/learningPaths/LearningPathsPage';
 import { SearchPage } from './components/search/SearchPage';
-import { LighthousePage } from '@backstage/plugin-lighthouse';
-import {
-  configApiRef,
-  githubAuthApiRef,
-  useApi,
-} from '@backstage/core-plugin-api';
-import { customLightTheme } from './themes/lightTheme';
-import { customDarkTheme } from './themes/darkTheme';
 import { useUpdateTheme } from './hooks/useUpdateTheme';
+import { customDarkTheme } from './themes/darkTheme';
+import { customLightTheme } from './themes/lightTheme';
 
 const app = createApp({
   apis,
@@ -106,28 +97,7 @@ const app = createApp({
     },
   ],
   components: {
-    SignInPage: props => {
-      const configApi = useApi(configApiRef);
-      if (configApi.getString('auth.environment') === 'development') {
-        return (
-          <SignInPage
-            {...props}
-            title="Select a sign-in method"
-            align="center"
-            providers={[
-              'guest',
-              {
-                id: 'github-auth-provider',
-                title: 'GitHub',
-                message: 'Sign in using GitHub',
-                apiRef: githubAuthApiRef,
-              },
-            ]}
-          />
-        );
-      }
-      return <ProxiedSignInPage {...props} provider="oauth2Proxy" />;
-    },
+    SignInPage: props => <SignInPage {...props} />,
   },
 });
 
