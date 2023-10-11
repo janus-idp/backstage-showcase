@@ -6,12 +6,6 @@ import {
 import { Router } from 'express';
 import { ScmIntegrations } from '@backstage/integration';
 import {
-  createGitlabProjectAccessTokenAction,
-  createGitlabProjectDeployTokenAction,
-  createGitlabProjectVariableAction,
-  createGitlabGroupEnsureExistsAction,
-} from '@backstage/plugin-scaffolder-backend-module-gitlab';
-import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
@@ -43,10 +37,6 @@ export default async function createPlugin(
         }
         return [];
       }),
-    createGitlabProjectAccessTokenAction({ integrations: integrations }),
-    createGitlabProjectDeployTokenAction({ integrations: integrations }),
-    createGitlabProjectVariableAction({ integrations: integrations }),
-    createGitlabGroupEnsureExistsAction({ integrations: integrations }),
   ];
 
   return await createRouter({
