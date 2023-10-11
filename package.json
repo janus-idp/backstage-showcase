@@ -54,7 +54,8 @@
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
     "*": "yarn run prettier:fix",
-    "*.{js,jsx,ts,tsx,mjs,cjs}": "yarn run lint -- -- --fix"
+    "*.{jsx,ts,tsx,mjs,cjs}": "yarn run lint -- -- --fix",
+    "!(.eslintrc).js": "yarn run lint -- -- --fix"
   },
   "packageManager": "yarn@1.22.19"
 }
