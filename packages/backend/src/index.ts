@@ -27,7 +27,6 @@ import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import Router from 'express-promise-router';
 import app from './plugins/app';
 import auth from './plugins/auth';
-import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
 import events from './plugins/events';
 import jenkins from './plugins/jenkins';
@@ -235,15 +234,6 @@ async function main() {
     createEnv,
     router: kubernetes,
     isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'azure-devops',
-    config,
-    apiRouter,
-    createEnv,
-    router: azureDevOps,
-    isOptional: true,
-    options: { key: 'enabled.azureDevOps' },
   });
   await addPlugin({
     plugin: 'jenkins',
