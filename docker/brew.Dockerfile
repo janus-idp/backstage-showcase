@@ -46,6 +46,7 @@ COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 RUN chmod +x $YARN
 
 # Stage 2 - Install dependencies
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
@@ -108,8 +109,18 @@ RUN git config --global --add safe.directory ./
 RUN $YARN build --filter=backend
 
 # Build dynamic plugins
-# hadolint ignore=DL3059
-RUN $YARN --cwd ./dynamic-plugins export-dynamic
+RUN $YARN export-dynamic
+RUN $YARN clean-dynamic-sources
+RUN mkdir -p dynamic-plugins-root && \
+    cd dynamic-plugins-root && \
+    rm -Rf * && \
+    for pkg in $CONTAINER_SOURCE/dynamic-plugins/*/dist-dynamic; do \
+      if [ -d $pkg ]; then \
+        archive=$(npm pack $pkg) && \
+        tar -xzf "$archive" && rm "$archive" && \
+        mv package $(echo $archive | sed -e 's:\.tgz$::'); \
+      fi; \
+    done
 
 # Stage 4 - Build the actual backend image and install production dependencies
 
@@ -161,7 +172,7 @@ RUN microdnf update -y && \
         pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
     popd >/dev/null; \
     microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
-    
+
 # Downstream only - copy from builder, not cleanup stage
 COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
@@ -172,6 +183,10 @@ RUN chmod a+r ./install-dynamic-plugins.py
 # Copy embedded dynamic plugins
 COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/ ./dynamic-plugins/
 RUN chmod -R a+r ./dynamic-plugins/
+
+# Copy default dynamic plugins root
+COPY --from=build $CONTAINER_SOURCE/dynamic-plugins-root/ ./dynamic-plugins-root/
+RUN chmod -R a+r ./dynamic-plugins-root/
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

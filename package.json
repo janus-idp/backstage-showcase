@@ -12,6 +12,8 @@
     "start-backend": "turbo run start --filter=backend",
     "build": "turbo run build",
     "tsc": "tsc",
+    "export-dynamic": "turbo run export-dynamic --concurrency 1",
+    "clean-dynamic-sources": "turbo run clean-dynamic-sources",
     "clean": "turbo run clean",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
@@ -29,7 +31,8 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "plugins/*"
+      "plugins/*",
+      "dynamic-plugins/*"
     ]
   },
   "devDependencies": {
