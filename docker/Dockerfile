@@ -96,6 +96,7 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 # Copy app-config files needed in runtime
 # Upstream only
 COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059

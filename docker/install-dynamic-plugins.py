@@ -65,16 +65,20 @@ def main():
     dynamicPluginsRoot = sys.argv[1]
     maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
 
-    dynamicPluginsFile = os.path.join(dynamicPluginsRoot, 'dynamic-plugins.yaml')
+    dynamicPluginsFile = 'dynamic-plugins.yaml'
+    dynamicPluginsDefaultFile = 'dynamic-plugins.default.yaml'
     dynamicPluginsGlobalConfigFile = os.path.join(dynamicPluginsRoot, 'app-config.dynamic-plugins.yaml')
 
     # test if file dynamic-plugins.yaml exists
     if not os.path.isfile(dynamicPluginsFile):
-        print(f'No {dynamicPluginsFile} file found. Skipping dynamic plugins installation.')
-        with open(dynamicPluginsGlobalConfigFile, 'w') as file:
-            file.write('')
-            file.close()
-        exit(0)
+        print(f'No {dynamicPluginsFile} file found, trying {dynamicPluginsDefaultFile} file.')
+        dynamicPluginsFile = dynamicPluginsDefaultFile
+        if not os.path.isfile(dynamicPluginsFile):
+            print(f'No {dynamicPluginsFile} file found. Skipping dynamic plugins installation.')
+            with open(dynamicPluginsGlobalConfigFile, 'w') as file:
+                file.write('')
+                file.close()
+            exit(0)
 
     with open(dynamicPluginsFile, 'r') as file:
         plugins = yaml.safe_load(file)
