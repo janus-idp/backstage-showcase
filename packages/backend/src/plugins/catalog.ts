@@ -5,7 +5,6 @@ import {
 } from '@backstage/plugin-catalog-backend-module-github';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { GitlabDiscoveryEntityProvider } from '@backstage/plugin-catalog-backend-module-gitlab';
 import { GitlabFillerProcessor } from '@immobiliarelabs/backstage-plugin-gitlab-backend';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
@@ -100,15 +99,6 @@ export default async function createPlugin(
 
   if (isGitlabEnabled) {
     builder.addProcessor(new GitlabFillerProcessor(env.config));
-    builder.addEntityProvider(
-      ...GitlabDiscoveryEntityProvider.fromConfig(env.config, {
-        logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { minutes: 30 },
-          timeout: { minutes: 3 },
-        }),
-      }),
-    );
   }
 
   if (isAapEnabled) {
