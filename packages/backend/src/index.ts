@@ -33,7 +33,6 @@ import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
-import sonarqube from './plugins/sonarqube';
 import { metricsHandler } from './metrics';
 import { RequestHandler } from 'express';
 import {
@@ -217,14 +216,6 @@ async function main() {
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
-  await addPlugin({
-    plugin: 'sonarqube',
-    config,
-    apiRouter,
-    createEnv,
-    router: sonarqube,
-    isOptional: true,
-  });
   await addPlugin({
     plugin: 'permission',
     config,
