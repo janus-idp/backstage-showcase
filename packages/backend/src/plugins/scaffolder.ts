@@ -5,7 +5,6 @@ import {
 } from '@backstage/plugin-scaffolder-backend';
 import { Router } from 'express';
 import { ScmIntegrations } from '@backstage/integration';
-import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
 import {
   createGitlabProjectAccessTokenAction,
   createGitlabProjectDeployTokenAction,
@@ -44,7 +43,6 @@ export default async function createPlugin(
         }
         return [];
       }),
-    createArgoCdResources(env.config, env.logger),
     createGitlabProjectAccessTokenAction({ integrations: integrations }),
     createGitlabProjectDeployTokenAction({ integrations: integrations }),
     createGitlabProjectVariableAction({ integrations: integrations }),
