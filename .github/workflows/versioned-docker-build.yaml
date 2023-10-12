@@ -12,27 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: PR Docker Build
+# on push of a tag, trigger a container build for that tag and push to http://quay.io/janus-idp/backstage-showcase
+name: Versioned Docker Build
 
 on:
-  pull_request_target:
-    paths-ignore:
-      - 'docs/**'
-      - 'showcase-docs/**'
-      - '.changeset/**'
-    branches-ignore:
-      - 'changeset-release/**'
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   REGISTRY: quay.io
 
 jobs:
-  pr-docker-build:
-    name: PR Docker Build
+  versioned-docker-build:
+    name: Versioned Docker Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,8 +40,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Check if current tag is the newest version
+        run: |
+          # Get the current tag
+          current_tag="$(git describe --tags --abbrev=0)"; echo "Current tag: $current_tag"
+
+          # Get the newest version tag
+          newest_tag="$(git tag -l 'v*' | sort -uV | tail -1)"; echo "Newest tag: $newest_tag"
+
+          # Check if the current tag is the newest version
+          [ "$current_tag" == "$newest_version" ] && is_latest=true || is_latest=false
+          echo "is_latest=$is_latest" >> "$GITHUB_ENV"
 
       - name: Build and Push with Buildx
         uses: ./.github/actions/docker-build
@@ -54,18 +61,8 @@ jobs:
           password: ${{ secrets.QUAY_TOKEN }}
           imageName: ${{ github.repository }}
           imageTags: |
-            type=ref,prefix=pr-,event=pr
-          # to autodelete PR image tags, set an expiry date
-          imageLabels: quay.expires-after=14d
+            type=raw,value=latest,enable=${{ env.is_latest }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
           push: true
-
-      - name: Comment the image pull link
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'The image is available at: `quay.io/${{ github.repository }}:pr-${{ github.event.number }}`!'
-            })
