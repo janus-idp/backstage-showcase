@@ -6,7 +6,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -36,35 +36,5 @@ jobs:
       - name: Create Release Pull Request
         id: changesets
         uses: changesets/action@v1
-        with:
-          version: yarn run version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get Latest Tag and Publish
-        if: steps.changesets.outputs.hasChangesets == 'false'
-        run: |
-          # pull recent commits and tags
-          git pull origin; git fetch --all
-          echo "recent tags:"; git rev-list --tags --max-count=4
-          latest_tag="$(git describe --tags $(git rev-list --tags --max-count=1))"; echo "Got latest tag = $latest_tag"
-          echo "latest_tag=$latst_tag" >> "$GITHUB_ENV"
-          git push origin "$latest_tag" || exit 1 # fail if tag already exists
-
-      - name: Publish Image
-        if: steps.changesets.outputs.hasChangesets == 'false'
-        uses: ./.github/actions/docker-build
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
-          imageTags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
-          # if we want image tags to autodelete, can set an expiry date
-          # imageLabels: quay.expires-after=365d
-          push: true
-

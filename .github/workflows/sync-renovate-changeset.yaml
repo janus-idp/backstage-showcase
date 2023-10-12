@@ -5,6 +5,10 @@ on:
       - '.github/workflows/sync-renovate-changeset.yaml'
       - '**/yarn.lock'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   generate-changeset:
     runs-on: ubuntu-latest
