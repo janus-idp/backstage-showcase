@@ -23,8 +23,7 @@
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
     "changeset": "changeset",
-    "changeset:empty": "changeset --empty",
-    "version": "yarn changeset version && yarn run git:tag && changeset --empty"
+    "changeset:empty": "changeset --empty"
   },
   "workspaces": {
     "packages": [

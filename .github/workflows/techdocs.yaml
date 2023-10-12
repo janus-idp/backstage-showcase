@@ -8,6 +8,10 @@ on:
       - "docs/**"
       - "mkdocs.yaml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   publish-techdocs-site:
     name: Publish techdocs site

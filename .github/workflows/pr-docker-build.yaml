@@ -1,0 +1,71 @@
+# Copyright 2023 Janus Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: PR Docker Build
+
+on:
+  pull_request_target:
+    paths-ignore:
+      - 'docs/**'
+      - 'showcase-docs/**'
+      - '.changeset/**'
+    branches-ignore:
+      - 'changeset-release/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: quay.io
+
+jobs:
+  pr-docker-build:
+    name: PR Docker Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Build and Push with Buildx
+        uses: ./.github/actions/docker-build
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ vars.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+          imageName: ${{ github.repository }}
+          imageTags: |
+            type=ref,prefix=pr-,event=pr
+          # to autodelete PR image tags, set an expiry date
+          imageLabels: quay.expires-after=14d
+          push: true
+
+      - name: Comment the image pull link
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'The image is available at: `quay.io/${{ github.repository }}:pr-${{ github.event.number }}`!'
+            })
