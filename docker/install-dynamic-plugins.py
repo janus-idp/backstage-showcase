@@ -115,6 +115,7 @@ def main():
 
         archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
         directory = archive.replace('.tgz', '')
+        directoryRealpath = os.path.realpath(directory)
 
         print('\t==> Removing previous plugin directory', directory, flush=True)
         shutil.rmtree(directory, ignore_errors=True, onerror=None)
@@ -136,8 +137,30 @@ def main():
                 file.extract(member, path=directory)
             elif member.isdir():
                 print('\t\tSkipping directory entry', member.name, flush=True)
+            elif member.islnk() or member.issym():
+                if not member.linkpath.startswith('package/'):
+                  raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
+
+                member.name = member.name[8:]
+                member.linkpath = member.linkpath[8:]
+
+
+                realpath = os.path.realpath(os.path.join(directory, *os.path.split(member.linkname)))
+                if not realpath.startswith(directoryRealpath):
+                  raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
+
+                file.extract(member, path=directory)
             else:
-                raise InstallException('NPM package archive contains a non regular file: ' + member.name)
+              if member.type == tarfile.CHRTYPE:
+                  type_str = "character device"
+              elif member.type == tarfile.BLKTYPE:
+                  type_str = "block device"
+              elif member.type == tarfile.FIFOTYPE:
+                  type_str = "FIFO"
+              else:
+                  type_str = "unknown"
+
+              raise InstallException('NPM package archive contains a non regular file: ' + member.name + ' - ' + type_str)
 
         file.close()
 
