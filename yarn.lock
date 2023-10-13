@@ -3082,7 +3082,7 @@
     "@rjsf/utils" "5.13.0"
     "@types/react" "^16.13.1 || ^17.0.0"
 
-"@backstage/plugin-home@0.5.8", "@backstage/plugin-home@^0.5.4", "@backstage/plugin-home@^0.5.8":
+"@backstage/plugin-home@0.5.8", "@backstage/plugin-home@^0.5.4":
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-home/-/plugin-home-0.5.8.tgz#eefe5569c32a6471a24d7d5df1a5f611b7c5a6bc"
   integrity sha512-GPcGjLNzEzfs9MwJMS2NGraZVeLaU9OBTgNfDYW/aeup6H85YvimBlFVGI3awvb0+/9as3+hYWDMMIoOcPrTcg==
@@ -5244,10 +5244,10 @@
     "@material-ui/lab" "4.0.0-alpha.61"
     react-use "^17.2.4"
 
-"@janus-idp/backstage-plugin-tekton@1.9.6":
-  version "1.9.6"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-tekton/-/backstage-plugin-tekton-1.9.6.tgz#b5d30b7284223d3c4dc542bbd5b3d250e6059641"
-  integrity sha512-Z+TEQ65OmDAQbuQB0JPKbqEw9/VuF335QobCAfHSWZWW7xsaJbQwNSe1v92kIIi9jGBtA3ebOxq1uSdcVyPsxw==
+"@janus-idp/backstage-plugin-tekton@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-tekton/-/backstage-plugin-tekton-2.0.0.tgz#1df93efd7349f1f19402a8de5596619915c43f45"
+  integrity sha512-qKQuGqIzZ8Nf0FBR3nuDyXx9Dl81+uBvthNUfyXDj8RzeVmxSU52Vt9zott0vajrtILnOOeSKXIbfUp4efJRbw==
   dependencies:
     "@backstage/catalog-model" "^1.4.1"
     "@backstage/core-components" "^0.13.3"
@@ -6665,16 +6665,16 @@
     react-use "^17.2.4"
     zustand "3.6.9"
 
-"@roadiehq/backstage-plugin-github-pull-requests@2.5.16":
-  version "2.5.16"
-  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-github-pull-requests/-/backstage-plugin-github-pull-requests-2.5.16.tgz#7d23004f0daa2ec74603959a1a049318d44c1537"
-  integrity sha512-Lfez93743Ms8w5Gl0VC4Ep2ygTopAvPVhAcU+4JLUNUg+2D1w1HgEEZ5rv0nCMIIsHqsB8EXwzBeHMg+TVMqQg==
+"@roadiehq/backstage-plugin-github-pull-requests@2.5.18":
+  version "2.5.18"
+  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-github-pull-requests/-/backstage-plugin-github-pull-requests-2.5.18.tgz#d6d94c48d86cdd5b9edd175cf3b717d99b013366"
+  integrity sha512-uTD4M/sQuuZQF7bxXNLjqSpXdtknEy2PDtS5wbbDH8P7I5dQhTgGoi46cosNNQFe6qasndLUElHsuA91wJvZLw==
   dependencies:
     "@backstage/catalog-model" "^1.4.2"
     "@backstage/core-components" "^0.13.5"
     "@backstage/core-plugin-api" "^1.6.0"
     "@backstage/plugin-catalog-react" "^1.8.4"
-    "@backstage/plugin-home" "^0.5.8"
+    "@backstage/plugin-home-react" "^0.1.3"
     "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/lab" "^4.0.0-alpha.60"
