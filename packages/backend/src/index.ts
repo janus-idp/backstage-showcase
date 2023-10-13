@@ -57,7 +57,7 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const cacheManager = CacheManager.fromConfig(config);
   const databaseManager = DatabaseManager.fromConfig(config, { logger: root });
   const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
-  const taskScheduler = TaskScheduler.fromConfig(config);
+  const taskScheduler = TaskScheduler.fromConfig(config, { databaseManager });
   const eventBroker = new DefaultEventBroker(root);
 
   const identity = DefaultIdentityClient.create({
