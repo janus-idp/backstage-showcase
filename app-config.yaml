@@ -293,6 +293,14 @@ dynatrace:
 # Plugin: Permission
 permission:
   enabled: ${PERMISSION_ENABLED}
+  rbac:
+    admin:
+      users:
+        - name: user:default/alice
+        - name: group:default/admins
+    policies-csv-file: ./rbac/rbac-policy.csv
+    database:
+      enabled: true
 
 enabled:
   kubernetes: ${K8S_ENABLED}

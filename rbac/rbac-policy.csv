@@ -1,0 +1,2 @@
+p, user:default/bob, catalog-entity, read, deny
+p, user:default/alice, catalog.entity.create, use, deny
