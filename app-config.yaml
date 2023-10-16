@@ -296,11 +296,10 @@ permission:
   rbac:
     admin:
       users:
-        - name: user:default/alice
         - name: group:default/admins
-    policies-csv-file: ./rbac/rbac-policy.csv
+    policies-csv-file: ${RBAC_POLICY_FILE}
     database:
-      enabled: true
+      enabled: false
 
 enabled:
   kubernetes: ${K8S_ENABLED}
