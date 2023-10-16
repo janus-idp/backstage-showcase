@@ -12,40 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: PR Docker Build
+name: Next Docker Build
 
 on:
-  pull_request_target:
-    paths-ignore:
-      - 'docs/**'
-      - 'showcase-docs/**'
-      - '.changeset/**'
-    branches-ignore:
-      - 'changeset-release/**'
+  push:
+    branches:
+      - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   REGISTRY: quay.io
 
 jobs:
-  pr-docker-build:
-    name: PR Docker Build
+  next-docker-build:
+    name: Next Docker Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      pull-requests: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Build and Push with Buildx
         uses: ./.github/actions/docker-build
@@ -55,18 +48,7 @@ jobs:
           password: ${{ secrets.QUAY_TOKEN }}
           imageName: ${{ github.repository }}
           imageTags: |
-            type=ref,prefix=pr-,event=pr
-          # to autodelete PR image tags, set an expiry date
+            type=raw,value=next
+            type=sha
           imageLabels: quay.expires-after=14d
           push: true
-
-      - name: Comment the image pull link
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'The image is available at: `quay.io/${{ github.repository }}:pr-${{ github.event.number }}`!'
-            })

@@ -16,6 +16,7 @@
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "test:e2e-ci": "turbo run test:e2e-ci",
+    "fix": "backstage-cli repo fix",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "prettier:check": "prettier --ignore-unknown --check .",
@@ -23,8 +24,7 @@
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
     "changeset": "changeset",
-    "changeset:empty": "changeset --empty",
-    "version": "yarn changeset version && yarn run git:tag"
+    "changeset:empty": "changeset --empty"
   },
   "workspaces": {
     "packages": [
