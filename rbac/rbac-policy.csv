@@ -1,0 +1,2 @@
+p, group:default/operators, catalog-entity, read, allow
+p, group:default/contributor, catalog-entity, read, allow
