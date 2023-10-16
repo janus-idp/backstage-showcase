@@ -113,11 +113,27 @@ type AddPlugin = {
   isOptional?: false;
 } & AddPluginBase;
 
+type OptionalPluginOptions = {
+  key?: string;
+  path?: string;
+};
+
 type AddOptionalPlugin = {
   isOptional: true;
   config: Config;
-  options?: { key?: string; path?: string };
+  options?: OptionalPluginOptions;
 } & AddPluginBase;
+
+const optionalDynamicPlugins: { [key: string]: OptionalPluginOptions } = {
+  techdocs: {},
+  argocd: {},
+  sonarqube: {},
+  kubernetes: {},
+  'azure-devops': { key: 'enabled.azureDevOps' },
+  jenkins: {},
+  ocm: {},
+  gitlab: {},
+};
 
 async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
   const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
@@ -132,10 +148,13 @@ async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
     );
     apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
     console.log(`Using backend plugin ${plugin}...`);
+  } else if (isOptional) {
+    console.log(`Backend plugin ${plugin} is disabled`);
   }
 }
 
 type AddRouterBase = {
+  isOptional?: boolean;
   name: string;
   service: ServiceBuilder;
   root: string;
@@ -284,13 +303,21 @@ async function main() {
     if (plugin.installer.kind === 'legacy') {
       const pluginRouter = plugin.installer.router;
       if (pluginRouter !== undefined) {
-        const pluginEnv = useHotMemoize(module, () =>
-          createEnv(pluginRouter.pluginID),
-        );
-        apiRouter.use(
-          `/${pluginRouter.pluginID}`,
-          await pluginRouter.createPlugin(pluginEnv),
-        );
+        let optionals = {};
+        if (pluginRouter.pluginID in optionalDynamicPlugins) {
+          optionals = {
+            isOptional: true,
+            config: config,
+            options: optionalDynamicPlugins[pluginRouter.pluginID],
+          };
+        }
+        await addPlugin({
+          plugin: pluginRouter.pluginID,
+          apiRouter,
+          createEnv,
+          router: pluginRouter.createPlugin,
+          ...optionals,
+        });
       }
     }
   }
