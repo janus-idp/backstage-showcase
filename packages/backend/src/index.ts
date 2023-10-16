@@ -49,6 +49,12 @@ import {
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+
+// TODO(davidfestal): The following import is a temporary workaround for a bug
+// in the upstream @backstage/backend-plugin-manager package.
+//
+// It should be removed as soon as the upstream package is fixed and released.
+// see https://github.com/janus-idp/backstage-showcase/pull/600
 import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
