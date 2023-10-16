@@ -1,26 +1,16 @@
-import { createRouter } from '@backstage/plugin-permission-backend';
-import {
-  AuthorizeResult,
-  PolicyDecision,
-} from '@backstage/plugin-permission-common';
-import { PermissionPolicy } from '@backstage/plugin-permission-node';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
-
-class DefaultPermissionPolicy implements PermissionPolicy {
-  async handle(): Promise<PolicyDecision> {
-    return { result: AuthorizeResult.ALLOW };
-  }
-}
+import { PolicyBuilder } from '@janus-idp/backstage-plugin-rbac-backend';
 
 export default async function createPlugin(
   env: PluginEnvironment,
 ): Promise<Router> {
-  return await createRouter({
+  return await PolicyBuilder.build({
     config: env.config,
     logger: env.logger,
     discovery: env.discovery,
-    policy: new DefaultPermissionPolicy(),
+    database: env.database,
     identity: env.identity,
+    permissions: env.permissions,
   });
 }
