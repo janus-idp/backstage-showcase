@@ -8,27 +8,22 @@ import { QuickAccessLinks } from '../types/types';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';
 
-export interface JanusBackstageCustomizeApi {
+export interface CustomDataApi {
   getHomeDataJson(): Promise<QuickAccessLinks[]>;
   getTechRadarDataJson(): Promise<TechRadarLoaderResponse>;
 }
 
-export const janusBackstageCustomizeApiRef =
-  createApiRef<JanusBackstageCustomizeApi>({
-    id: 'app.developer-hub.service',
-  });
+export const customDataApiRef = createApiRef<CustomDataApi>({
+  id: 'app.developer-hub.service',
+});
 
 export type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
 };
 
-export class JanusBackstageCustomizeApiClient
-  implements JanusBackstageCustomizeApi
-{
-  // @ts-ignore
+export class CustomDataApiClient implements CustomDataApi {
   private readonly discoveryApi: DiscoveryApi;
-
   private readonly configApi: ConfigApi;
 
   constructor(options: Options) {

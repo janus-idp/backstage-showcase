@@ -2,19 +2,17 @@ import {
   TechRadarApi,
   type TechRadarLoaderResponse,
 } from '@backstage/plugin-tech-radar';
-import { JanusBackstageCustomizeApi } from '../api/JanusBackstageCustomizeApiClient';
+import { CustomDataApi } from '../api/CustomDataApiClient';
 
 export class CustomTechRadar implements TechRadarApi {
-  private readonly janusBackstageCustomizeApi: JanusBackstageCustomizeApi;
-  constructor(options: {
-    janusBackstageCustomizeApi: JanusBackstageCustomizeApi;
-  }) {
-    this.janusBackstageCustomizeApi = options.janusBackstageCustomizeApi;
+  private readonly customDataApi: CustomDataApi;
+  constructor(options: { customDataApi: CustomDataApi }) {
+    this.customDataApi = options.customDataApi;
   }
   async load(id: string | undefined): Promise<TechRadarLoaderResponse> {
     let data;
     try {
-      data = await this.janusBackstageCustomizeApi.getTechRadarDataJson();
+      data = await this.customDataApi.getTechRadarDataJson();
     } catch (e) {
       const res = await fetch(`/tech-radar/data-${id}.json`);
       data = (await res.json()) as TechRadarLoaderResponse;

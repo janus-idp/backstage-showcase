@@ -17,9 +17,9 @@ import { techRadarApiRef } from '@backstage/plugin-tech-radar';
 import { SegmentAnalytics } from '@janus-idp/backstage-plugin-analytics-provider-segment';
 import { auth0AuthApiRef, oidcAuthApiRef } from './api/AuthApiRefs';
 import {
-  JanusBackstageCustomizeApiClient,
-  janusBackstageCustomizeApiRef,
-} from './api/JanusBackstageCustomizeApiClient';
+  CustomDataApiClient,
+  customDataApiRef,
+} from './api/CustomDataApiClient';
 import { CustomTechRadar } from './lib/CustomTechRadar';
 
 export const apis: AnyApiFactory[] = [
@@ -36,21 +36,20 @@ export const apis: AnyApiFactory[] = [
       SegmentAnalytics.fromConfig(configApi, identityApi),
   }),
   createApiFactory({
-    api: janusBackstageCustomizeApiRef,
+    api: customDataApiRef,
     deps: {
       discoveryApi: discoveryApiRef,
       configApi: configApiRef,
     },
     factory: ({ discoveryApi, configApi }) =>
-      new JanusBackstageCustomizeApiClient({ discoveryApi, configApi }),
+      new CustomDataApiClient({ discoveryApi, configApi }),
   }),
   createApiFactory({
     api: techRadarApiRef,
     deps: {
-      janusBackstageCustomizeApi: janusBackstageCustomizeApiRef,
+      customDataApi: customDataApiRef,
     },
-    factory: ({ janusBackstageCustomizeApi }) =>
-      new CustomTechRadar({ janusBackstageCustomizeApi }),
+    factory: ({ customDataApi }) => new CustomTechRadar({ customDataApi }),
   }),
   // OIDC
   createApiFactory({

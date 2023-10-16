@@ -1,2 +1,2 @@
 export * from './AuthApiRefs';
-export * from './JanusBackstageCustomizeApiClient';
+export * from './CustomDataApiClient';
