@@ -23,25 +23,25 @@ export interface Config {
         [key: string]: {
           /**
            * primaryColor Configuration for the instance
-           * The following formats are supported: #nnn, #nnnnnn
+           * The following formats are supported: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()
            * @visibility frontend
            */
           primaryColor?: string;
           /**
            * Header Theme color Configuration for the instance
-           * The following formats are supported: #nnn, #nnnnnn
+           * The following formats are supported: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()
            * @visibility frontend
            */
           headerColor1?: string;
           /**
            * Header Theme color Configuration for the instance
-           * The following formats are supported: #nnn, #nnnnnn
+           * The following formats are supported: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()
            * @visibility frontend
            */
           headerColor2?: string;
           /**
            * Navigation Side Bar Indicator color Configuration for the instance
-           * The following formats are supported: #nnn, #nnnnnn
+           * The following formats are supported: #nnn, #nnnnnn, rgb(), rgba(), hsl(), hsla(), color()
            * @visibility frontend
            */
           navigationIndicatorColor?: string;
