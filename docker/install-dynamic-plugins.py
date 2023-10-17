@@ -132,8 +132,7 @@ def main():
                 if member.size > maxEntrySize:
                     raise InstallException('Zip bomb detected in ' + member.name)
 
-                # Remove the `package/` prefix from the file name
-                member.name = member.name[8:]
+                member.name = member.name.removeprefix('package/')
                 file.extract(member, path=directory)
             elif member.isdir():
                 print('\t\tSkipping directory entry', member.name, flush=True)
@@ -141,9 +140,8 @@ def main():
                 if not member.linkpath.startswith('package/'):
                   raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
 
-                member.name = member.name[8:]
-                member.linkpath = member.linkpath[8:]
-
+                member.name = member.name.removeprefix('package/')
+                member.linkpath = member.linkpath.removeprefix('package/')
 
                 realpath = os.path.realpath(os.path.join(directory, *os.path.split(member.linkname)))
                 if not realpath.startswith(directoryRealpath):
