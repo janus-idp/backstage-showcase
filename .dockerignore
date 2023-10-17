@@ -3,6 +3,7 @@
 **/dist
 **/node_modules
 plugins
+!plugins/scalprum-backend
 *.local.yaml
 coverage
 dist-types
