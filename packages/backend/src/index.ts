@@ -124,7 +124,7 @@ type AddOptionalPlugin = {
   options?: OptionalPluginOptions;
 } & AddPluginBase;
 
-const optionalDynamicPlugins: { [key: string]: OptionalPluginOptions } = {
+const OPTIONAL_DYNAMIC_PLUGINS: { [key: string]: OptionalPluginOptions } = {
   techdocs: {},
   argocd: {},
   sonarqube: {},
@@ -133,7 +133,7 @@ const optionalDynamicPlugins: { [key: string]: OptionalPluginOptions } = {
   jenkins: {},
   ocm: {},
   gitlab: {},
-};
+} as const satisfies { [key: string]: OptionalPluginOptions };
 
 async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
   const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
@@ -304,11 +304,11 @@ async function main() {
       const pluginRouter = plugin.installer.router;
       if (pluginRouter !== undefined) {
         let optionals = {};
-        if (pluginRouter.pluginID in optionalDynamicPlugins) {
+        if (pluginRouter.pluginID in OPTIONAL_DYNAMIC_PLUGINS) {
           optionals = {
             isOptional: true,
             config: config,
-            options: optionalDynamicPlugins[pluginRouter.pluginID],
+            options: OPTIONAL_DYNAMIC_PLUGINS[pluginRouter.pluginID],
           };
         }
         await addPlugin({
