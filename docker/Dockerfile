@@ -142,6 +142,10 @@ RUN fix-permissions ./
 # Switch to nodejs user
 USER 1001
 
+# Temporary workaround to avoid triggering issue
+# https://github.com/backstage/backstage/issues/20644
+ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
+
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
