@@ -12,10 +12,13 @@
     "start-backend": "turbo run start --filter=backend",
     "build": "turbo run build",
     "tsc": "tsc",
+    "export-dynamic": "turbo run export-dynamic --concurrency 1",
+    "clean-dynamic-sources": "turbo run clean-dynamic-sources",
     "clean": "turbo run clean",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "test:e2e-ci": "turbo run test:e2e-ci",
+    "fix": "backstage-cli repo fix",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "prettier:check": "prettier --ignore-unknown --check .",
@@ -28,7 +31,8 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "plugins/*"
+      "plugins/*",
+      "dynamic-plugins/*"
     ]
   },
   "devDependencies": {
@@ -40,17 +44,18 @@
     "lint-staged": "14.0.1",
     "node-gyp": "9.4.0",
     "prettier": "3.0.3",
-    "turbo": "1.10.14",
+    "turbo": "1.10.15",
     "typescript": "5.2.2"
   },
   "resolutions": {
-    "@types/react": "17.0.66",
+    "@types/react": "17.0.68",
     "@types/react-dom": "17.0.21"
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
     "*": "yarn run prettier:fix",
-    "*.{js,jsx,ts,tsx,mjs,cjs}": "yarn run lint -- -- --fix"
+    "*.{jsx,ts,tsx,mjs,cjs}": "yarn run lint -- -- --fix",
+    "!(.eslintrc).js": "yarn run lint -- -- --fix"
   },
   "packageManager": "yarn@1.22.19"
 }

@@ -50,6 +50,14 @@ import {
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
+
+// TODO(davidfestal): The following import is a temporary workaround for a bug
+// in the upstream @backstage/backend-plugin-manager package.
+//
+// It should be removed as soon as the upstream package is fixed and released.
+// see https://github.com/janus-idp/backstage-showcase/pull/600
+import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
@@ -58,7 +66,7 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const cacheManager = CacheManager.fromConfig(config);
   const databaseManager = DatabaseManager.fromConfig(config, { logger: root });
   const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
-  const taskScheduler = TaskScheduler.fromConfig(config);
+  const taskScheduler = TaskScheduler.fromConfig(config, { databaseManager });
   const eventBroker = new DefaultEventBroker(root);
 
   const identity = DefaultIdentityClient.create({
@@ -106,11 +114,27 @@ type AddPlugin = {
   isOptional?: false;
 } & AddPluginBase;
 
+type OptionalPluginOptions = {
+  key?: string;
+  path?: string;
+};
+
 type AddOptionalPlugin = {
   isOptional: true;
   config: Config;
-  options?: { key?: string; path?: string };
+  options?: OptionalPluginOptions;
 } & AddPluginBase;
+
+const OPTIONAL_DYNAMIC_PLUGINS: { [key: string]: OptionalPluginOptions } = {
+  techdocs: {},
+  argocd: {},
+  sonarqube: {},
+  kubernetes: {},
+  'azure-devops': { key: 'enabled.azureDevOps' },
+  jenkins: {},
+  ocm: {},
+  gitlab: {},
+} as const satisfies { [key: string]: OptionalPluginOptions };
 
 async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
   const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
@@ -125,10 +149,13 @@ async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
     );
     apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
     console.log(`Using backend plugin ${plugin}...`);
+  } else if (isOptional) {
+    console.log(`Backend plugin ${plugin} is disabled`);
   }
 }
 
 type AddRouterBase = {
+  isOptional?: boolean;
   name: string;
   service: ServiceBuilder;
   root: string;
@@ -162,12 +189,28 @@ async function main() {
     argv: process.argv,
     logger,
   });
-  const pluginManager = await PluginManager.fromConfig(config, logger);
+  const pluginManager = await PluginManager.fromConfig(
+    config,
+    logger,
+    undefined,
+    new CommonJSModuleLoader(logger),
+  );
   const createEnv = makeCreateEnv(config, pluginManager);
 
   const appEnv = useHotMemoize(module, () => createEnv('app'));
 
   const apiRouter = Router();
+
+  // Scalprum frontend plugins provider
+  const scalprumEmv = useHotMemoize(module, () => createEnv('scalprum'));
+  apiRouter.use(
+    '/scalprum',
+    await scalprumRouter({
+      logger: scalprumEmv.logger,
+      pluginManager,
+      discovery: scalprumEmv.discovery,
+    }),
+  );
 
   // Required plugins
   await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
@@ -269,13 +312,21 @@ async function main() {
     if (plugin.installer.kind === 'legacy') {
       const pluginRouter = plugin.installer.router;
       if (pluginRouter !== undefined) {
-        const pluginEnv = useHotMemoize(module, () =>
-          createEnv(pluginRouter.pluginID),
-        );
-        apiRouter.use(
-          `/${pluginRouter.pluginID}`,
-          await pluginRouter.createPlugin(pluginEnv),
-        );
+        let optionals = {};
+        if (pluginRouter.pluginID in OPTIONAL_DYNAMIC_PLUGINS) {
+          optionals = {
+            isOptional: true,
+            config: config,
+            options: OPTIONAL_DYNAMIC_PLUGINS[pluginRouter.pluginID],
+          };
+        }
+        await addPlugin({
+          plugin: pluginRouter.pluginID,
+          apiRouter,
+          createEnv,
+          router: pluginRouter.createPlugin,
+          ...optionals,
+        });
       }
     }
   }

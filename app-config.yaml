@@ -348,3 +348,6 @@ enabled:
   metrics: ${METRICS_ENABLED}
   aap: ${AAP_ENABLED}
   devtools: ${DEVTOOLS_ENABLED}
+
+dynamicPlugins:
+  rootDirectory: dynamic-plugins-root
