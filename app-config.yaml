@@ -339,3 +339,6 @@ enabled:
   permission: ${PERMISSION_ENABLED}
   metrics: ${METRICS_ENABLED}
   aap: ${AAP_ENABLED}
+
+dynamicPlugins:
+  rootDirectory: dynamic-plugins-root
