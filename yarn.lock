@@ -3962,7 +3962,7 @@
     photoswipe "^5.3.7"
     react-use "^17.2.4"
 
-"@backstage/plugin-techdocs-node@^1.8.2":
+"@backstage/plugin-techdocs-node@1.8.2", "@backstage/plugin-techdocs-node@^1.8.2":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs-node/-/plugin-techdocs-node-1.8.2.tgz#3c10e23e30050c2d2379e4f1b7407da82fa0eb5b"
   integrity sha512-g9f8sYh4ugWBYyj1Msw9lXAjOk+P3p2X1TvI+0hl+iaCk9PT3G+VVJNgzslJ7HBW+Q2QuC+wrBAbwHKIaO0Zng==

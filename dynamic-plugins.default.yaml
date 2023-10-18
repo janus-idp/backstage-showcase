@@ -1,6 +1,6 @@
-- package: ./dynamic-plugins/scaffolder-backend-module-utils-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
-- package: ./dynamic-plugins/backstage-plugin-aap-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
   pluginConfig:
     enabled:
       aap: true
@@ -11,7 +11,7 @@
             baseUrl: '${AAP_BASE_URL}'
             authorization: "${AAP_AUTH_TOKEN}"
 
-- package: ./dynamic-plugins/backstage-plugin-gitlab-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
   pluginConfig:
     enabled:
       gitlab: true
@@ -19,7 +19,7 @@
       host: ${GITLAB_HOST}
       token: ${GITLAB_TOKEN}
 
-- package: ./dynamic-plugins/backstage-plugin-keycloak-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
   pluginConfig:
     enabled:
       keycloak: true
@@ -33,7 +33,7 @@
             clientId: "${KEYCLOAK_CLIENT_ID}"
             clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
 
-- package: ./dynamic-plugins/backstage-plugin-ocm-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
   pluginConfig:
     enabled:
       ocm: true
@@ -46,7 +46,7 @@
             serviceAccountToken: "${moc_infra_token}"
             owner: janus-authors
 
-- package: ./dynamic-plugins/plugin-catalog-backend-module-github-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
   pluginConfig:
     enabled:
       github: true
@@ -64,7 +64,7 @@
         #   providerId:
         #     organization: "${GITHUB_ORG}"
 
-- package: ./dynamic-plugins/plugin-catalog-backend-module-gitlab-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
   pluginConfig:
     enabled:
       gitlab: true
@@ -72,9 +72,9 @@
       providers:
         gitlab: {}
 
-- package: ./dynamic-plugins/plugin-scaffolder-backend-module-gitlab-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
 
-- package: ./dynamic-plugins/backstage-plugin-argo-cd-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
   pluginConfig:
     enabled:
       argocd: true
@@ -91,7 +91,7 @@
               url: "${ARGOCD_INSTANCE2_URL}"
               token: "${ARGOCD_AUTH_TOKEN2}"
 
-- package: ./dynamic-plugins/scaffolder-backend-argocd-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
   pluginConfig:
     enabled:
       argocd: true
@@ -108,7 +108,7 @@
               url: "${ARGOCD_INSTANCE2_URL}"
               token: "${ARGOCD_AUTH_TOKEN2}"
 
-- package: ./dynamic-plugins/plugin-azure-devops-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
   pluginConfig:
     enabled:
       azureDevOps: true
@@ -117,7 +117,7 @@
       token: ${AZURE_TOKEN}
       organization: ${AZURE_ORG}
 
-- package: ./dynamic-plugins/plugin-jenkins-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
   pluginConfig:
     enabled:
       jenkins: true
@@ -128,7 +128,7 @@
           username: ${JENKINS_USERNAME}
           apiKey: ${JENKINS_TOKEN}
 
-- package: ./dynamic-plugins/plugin-kubernetes-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
   pluginConfig:
     enabled:
       kubernetes: true
@@ -157,7 +157,7 @@
               skipTLSVerify: true
               serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
-- package: ./dynamic-plugins/plugin-sonarqube-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
   pluginConfig:
     enabled:
       sonarqube: true
@@ -165,7 +165,7 @@
       baseUrl: ${SONARQUBE_URL}
       apiKey: ${SONARQUBE_TOKEN}
 
-- package: ./dynamic-plugins/plugin-techdocs-backend-wrapped/dist-dynamic
+- package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
   pluginConfig:
     enabled:
       techdocs: true
