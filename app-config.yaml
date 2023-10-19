@@ -223,17 +223,12 @@ catalog:
     # github:
     #   providerId:
     #     organization: "${GITHUB_ORG}"
-
+    
+    # User Group Discovery
+    # See https://backstage.io/docs/integrations/azure/org for more config options
     microsoftGraphOrg:
       default:
         tenantId: ${AZURE_TENANT_ID}
-        user:
-          filter: accountEnabled eq true and userType eq 'member'
-        group:
-          filter: >
-            securityEnabled eq false
-            and mailEnabled eq true
-            and groupTypes/any(c:c+eq+'Unified')
 
 # Plugin: Kubernetes, OCM
 kubernetes:
