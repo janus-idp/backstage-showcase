@@ -13,6 +13,7 @@ import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import { MicrocksApiEntityProvider } from '@microcks/microcks-backstage-provider';
 import { ThreeScaleApiEntityProvider } from '@janus-idp/backstage-plugin-3scale-backend';
+import { MicrosoftGraphOrgEntityProvider } from '@backstage/plugin-catalog-backend-module-msgraph';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -32,6 +33,8 @@ export default async function createPlugin(
     env.config.getOptionalBoolean('enabled.microcks') || false;
   const isThreeScaleEnabled =
     env.config.getOptionalBoolean('enabled.threescale') || false;
+  const isAzureAdEnabled =
+    env.config.getOptionalBoolean('enabled.azureAd') || false;
 
   if (isOcmEnabled) {
     builder.addEntityProvider(
@@ -126,6 +129,19 @@ export default async function createPlugin(
       ThreeScaleApiEntityProvider.fromConfig(env.config, {
         logger: env.logger,
         scheduler: env.scheduler,
+      }),
+    );
+  }
+
+  if (isAzureAdEnabled) {
+    builder.addEntityProvider(
+      MicrosoftGraphOrgEntityProvider.fromConfig(env.config, {
+        logger: env.logger,
+        schedule: env.scheduler.createScheduledTaskRunner({
+          frequency: { hours: 1 },
+          timeout: { minutes: 50 },
+          initialDelay: { seconds: 15 },
+        }),
       }),
     );
   }

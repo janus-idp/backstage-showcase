@@ -28,6 +28,7 @@
     "@backstage/plugin-catalog-backend": "1.12.3",
     "@backstage/plugin-catalog-backend-module-github": "0.3.6",
     "@backstage/plugin-catalog-backend-module-gitlab": "0.2.6",
+    "@backstage/plugin-catalog-backend-module-msgraph": "^0.5.13",
     "@backstage/plugin-catalog-backend-module-openapi": "0.1.17",
     "@backstage/plugin-jenkins-backend": "0.2.5",
     "@backstage/plugin-kubernetes-backend": "0.11.5",
