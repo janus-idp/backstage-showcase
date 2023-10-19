@@ -223,6 +223,12 @@ catalog:
     # github:
     #   providerId:
     #     organization: "${GITHUB_ORG}"
+    
+    # User Group Discovery
+    # See https://backstage.io/docs/integrations/azure/org for more config options
+    microsoftGraphOrg:
+      default:
+        tenantId: ${AZURE_TENANT_ID}
 
 # Plugin: Kubernetes, OCM
 kubernetes:
@@ -314,6 +320,7 @@ enabled:
   azureDevOps: ${AZURE_ENABLED}
   jenkins: ${JENKINS_ENABLED}
   permission: ${PERMISSION_ENABLED}
+  azureAd: ${AZURE_AD_ENABLED}
 
 # Plugin Confluence
 confluence:
