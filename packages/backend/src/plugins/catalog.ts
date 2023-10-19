@@ -1,20 +1,20 @@
+import {
+  LegacyBackendPluginInstaller,
+  LegacyPluginEnvironment as PluginEnvironment,
+} from '@backstage/backend-plugin-manager';
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
 import {
   GithubEntityProvider,
   GithubOrgEntityProvider,
 } from '@backstage/plugin-catalog-backend-module-github';
+import { GitlabDiscoveryEntityProvider } from '@backstage/plugin-catalog-backend-module-gitlab';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { GitlabDiscoveryEntityProvider } from '@backstage/plugin-catalog-backend-module-gitlab';
 import { GitlabFillerProcessor } from '@immobiliarelabs/backstage-plugin-gitlab-backend';
+import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
 import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
-import { AapResourceEntityProvider } from '@janus-idp/backstage-plugin-aap-backend';
-import { Router } from 'express';
-import {
-  LegacyBackendPluginInstaller,
-  LegacyPluginEnvironment as PluginEnvironment,
-} from '@backstage/backend-plugin-manager';
+import type { Router } from 'express';
 
 export default async function createPlugin(
   env: PluginEnvironment,

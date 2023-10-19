@@ -1,5 +1,5 @@
 import { createRouter } from '@backstage/plugin-azure-devops-backend';
-import { Router } from 'express';
+import type { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 
 export default function createPlugin(env: PluginEnvironment): Promise<Router> {

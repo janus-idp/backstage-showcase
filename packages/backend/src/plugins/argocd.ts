@@ -1,5 +1,5 @@
 import { createRouter } from '@roadiehq/backstage-plugin-argo-cd-backend';
-import { PluginEnvironment } from '../types';
+import type { PluginEnvironment } from '../types';
 
 export default async function createPlugin({
   logger,

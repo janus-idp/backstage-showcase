@@ -1,16 +1,16 @@
 import { useHotCleanup } from '@backstage/backend-common';
+import {
+  LegacyBackendPluginInstaller,
+  LegacyPluginEnvironment as PluginEnvironment,
+} from '@backstage/backend-plugin-manager';
+import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
 import { createRouter } from '@backstage/plugin-search-backend';
 import {
   IndexBuilder,
   LunrSearchEngine,
 } from '@backstage/plugin-search-backend-node';
-import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
 import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-techdocs-backend';
-import { Router } from 'express';
-import {
-  LegacyBackendPluginInstaller,
-  LegacyPluginEnvironment as PluginEnvironment,
-} from '@backstage/backend-plugin-manager';
+import type { Router } from 'express';
 
 export default async function createPlugin(
   env: PluginEnvironment,
