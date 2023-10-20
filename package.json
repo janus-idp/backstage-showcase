@@ -13,7 +13,7 @@
     "build": "turbo run build",
     "tsc": "tsc",
     "export-dynamic": "turbo run export-dynamic --concurrency 1",
-    "clean-dynamic-sources": "turbo run clean-dynamic-sources",
+    "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
     "clean": "turbo run clean",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
@@ -32,7 +32,9 @@
     "packages": [
       "packages/*",
       "plugins/*",
-      "dynamic-plugins/*"
+      "dynamic-plugins/_utils",
+      "dynamic-plugins/imports",
+      "dynamic-plugins/wrappers/*"
     ]
   },
   "devDependencies": {
@@ -54,8 +56,8 @@
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
     "*": "yarn run prettier:fix",
-    "*.{jsx,ts,tsx,mjs,cjs}": "yarn run lint -- -- --fix",
-    "!(.eslintrc).js": "yarn run lint -- -- --fix"
+    "*.{jsx,ts,tsx,mjs,cjs}": "yarn run lint -- --concurrency=1 -- --fix",
+    "!(.eslintrc).js": "yarn run lint -- --concurrency=1 -- --fix"
   },
   "packageManager": "yarn@1.22.19"
 }

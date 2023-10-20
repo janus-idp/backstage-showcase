@@ -9,7 +9,6 @@ import {
   IndexBuilder,
   LunrSearchEngine,
 } from '@backstage/plugin-search-backend-node';
-import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-techdocs-backend';
 import type { Router } from 'express';
 
 export default async function createPlugin(
@@ -38,16 +37,6 @@ export default async function createPlugin(
     schedule,
     factory: DefaultCatalogCollatorFactory.fromConfig(env.config, {
       discovery: env.discovery,
-      tokenManager: env.tokenManager,
-    }),
-  });
-
-  // collator gathers entities from techdocs.
-  indexBuilder.addCollator({
-    schedule,
-    factory: DefaultTechDocsCollatorFactory.fromConfig(env.config, {
-      discovery: env.discovery,
-      logger: env.logger,
       tokenManager: env.tokenManager,
     }),
   });

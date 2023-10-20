@@ -8,28 +8,6 @@ import {
   createBuiltinActions,
   createRouter,
 } from '@backstage/plugin-scaffolder-backend';
-import {
-  createGitlabGroupEnsureExistsAction,
-  createGitlabProjectAccessTokenAction,
-  createGitlabProjectDeployTokenAction,
-  createGitlabProjectVariableAction,
-} from '@backstage/plugin-scaffolder-backend-module-gitlab';
-import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
-import {
-  createAppendFileAction,
-  createJSONataAction,
-  createJsonJSONataTransformAction,
-  createMergeAction,
-  createMergeJSONAction,
-  createParseFileAction,
-  createReplaceInFileAction,
-  createSerializeJsonAction,
-  createSerializeYamlAction,
-  createSleepAction,
-  createWriteFileAction,
-  createYamlJSONataTransformAction,
-  createZipAction,
-} from '@roadiehq/scaffolder-backend-module-utils';
 import type { Router } from 'express';
 
 export default async function createPlugin(
@@ -59,24 +37,6 @@ export default async function createPlugin(
         }
         return [];
       }),
-    createArgoCdResources(env.config, env.logger),
-    createGitlabProjectAccessTokenAction({ integrations: integrations }),
-    createGitlabProjectDeployTokenAction({ integrations: integrations }),
-    createGitlabProjectVariableAction({ integrations: integrations }),
-    createGitlabGroupEnsureExistsAction({ integrations: integrations }),
-    createAppendFileAction(),
-    createJSONataAction(),
-    createJsonJSONataTransformAction(),
-    createMergeAction(),
-    createMergeJSONAction({}),
-    createParseFileAction(),
-    createReplaceInFileAction(),
-    createSerializeJsonAction(),
-    createSerializeYamlAction(),
-    createSleepAction(),
-    createWriteFileAction(),
-    createYamlJSONataTransformAction(),
-    createZipAction(),
   ];
 
   return await createRouter({

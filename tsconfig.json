@@ -5,7 +5,7 @@
     "plugins/*/src",
     "plugins/*/dev",
     "plugins/*/migrations",
-    "dynamic-plugins/*/src"
+    "dynamic-plugins/wrappers/*/src"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
