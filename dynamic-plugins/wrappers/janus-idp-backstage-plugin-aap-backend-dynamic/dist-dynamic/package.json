@@ -1,0 +1,56 @@
+{
+  "name": "janus-idp-backstage-plugin-aap-backend-dynamic",
+  "version": "1.2.2",
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin-module"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test --coverage",
+    "clean": "backstage-cli package clean",
+    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-aap-backend"
+  },
+  "dependencies": {
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {},
+  "files": [
+    "dist"
+  ],
+  "bundleDependencies": true,
+  "peerDependencies": {
+    "@backstage/backend-common": "^0.19.7",
+    "@backstage/backend-plugin-api": "^0.6.5",
+    "@backstage/plugin-catalog-node": "^1.4.6",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
+    "@backstage/backend-tasks": "^0.5.4",
+    "@backstage/catalog-model": "^1.4.1",
+    "@backstage/config": "^1.0.8"
+  },
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@^2.0.0"
+  }
+}

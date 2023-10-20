@@ -4,9 +4,6 @@
     "export-dynamic": {
       "outputs": ["dist-dynamic/**"]
     },
-    "clean-dynamic-sources": {
-      "cache": false
-    },
     "start": {
       "cache": false,
       "persistent": true

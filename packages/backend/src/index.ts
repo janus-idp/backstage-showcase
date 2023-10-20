@@ -26,21 +26,13 @@ import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import Router from 'express-promise-router';
 import app from './plugins/app';
-import argocd from './plugins/argocd';
 import auth from './plugins/auth';
-import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
 import events from './plugins/events';
-import gitlab from './plugins/gitlab';
-import jenkins from './plugins/jenkins';
-import kubernetes from './plugins/kubernetes';
-import ocm from './plugins/ocm';
 import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
-import sonarqube from './plugins/sonarqube';
-import techdocs from './plugins/techdocs';
 import { metricsHandler } from './metrics';
 import { RequestHandler } from 'express';
 import {
@@ -224,72 +216,6 @@ async function main() {
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
-  // Optional plugins
-  await addPlugin({
-    plugin: 'ocm',
-    config,
-    apiRouter,
-    createEnv,
-    router: ocm,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'techdocs',
-    config,
-    apiRouter,
-    createEnv,
-    router: techdocs,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'argocd',
-    config,
-    apiRouter,
-    createEnv,
-    router: argocd,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'sonarqube',
-    config,
-    apiRouter,
-    createEnv,
-    router: sonarqube,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'kubernetes',
-    config,
-    apiRouter,
-    createEnv,
-    router: kubernetes,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'gitlab',
-    config,
-    apiRouter,
-    createEnv,
-    router: gitlab,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'azure-devops',
-    config,
-    apiRouter,
-    createEnv,
-    router: azureDevOps,
-    isOptional: true,
-    options: { key: 'enabled.azureDevOps' },
-  });
-  await addPlugin({
-    plugin: 'jenkins',
-    config,
-    apiRouter,
-    createEnv,
-    router: jenkins,
-    isOptional: true,
-  });
   await addPlugin({
     plugin: 'permission',
     config,
