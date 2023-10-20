@@ -29,7 +29,7 @@ export async function createRouter(
     }
     return p as BaseDynamicPlugin;
   });
-  router.get('/dynamic-plugins', (_, response) => {
+  router.get('/loaded-plugins', (_, response) => {
     response.send(dynamicPlugins);
   });
   router.use(errorHandler());

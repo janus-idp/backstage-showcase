@@ -26,9 +26,9 @@ describe('createRouter', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET /dynamic-plugins', () => {
-    it('returns the list of dynamic plugins', async () => {
-      const response = await request(app).get('/dynamic-plugins');
+  describe('GET /loaded-plugins', () => {
+    it('returns the list of loaded dynamic plugins', async () => {
+      const response = await request(app).get('/loaded-plugins');
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(expectedList);
     });
