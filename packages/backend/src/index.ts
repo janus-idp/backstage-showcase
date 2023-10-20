@@ -50,6 +50,7 @@ import {
 } from '@backstage/backend-plugin-manager';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
 import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
+import { createRouter as dynamicPluginsInfoRouter } from '@internal/plugin-dynamic-plugins-info-backend';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
 // in the upstream @backstage/backend-plugin-manager package.
@@ -201,13 +202,25 @@ async function main() {
   const apiRouter = Router();
 
   // Scalprum frontend plugins provider
-  const scalprumEmv = useHotMemoize(module, () => createEnv('scalprum'));
+  const scalprumEnv = useHotMemoize(module, () => createEnv('scalprum'));
   apiRouter.use(
     '/scalprum',
     await scalprumRouter({
-      logger: scalprumEmv.logger,
+      logger: scalprumEnv.logger,
       pluginManager,
-      discovery: scalprumEmv.discovery,
+      discovery: scalprumEnv.discovery,
+    }),
+  );
+
+  // Dynamic plugins info provider
+  const dynamicPluginsInfoEnv = useHotMemoize(module, () =>
+    createEnv('dynamic-plugins-info'),
+  );
+  apiRouter.use(
+    '/dynamic-plugins-info',
+    await dynamicPluginsInfoRouter({
+      logger: dynamicPluginsInfoEnv.logger,
+      pluginManager,
     }),
   );
 
