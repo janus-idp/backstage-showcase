@@ -2,7 +2,6 @@ import { errorHandler } from '@backstage/backend-common';
 import {
   PluginManager,
   BaseDynamicPlugin,
-  BackendDynamicPlugin,
 } from '@backstage/backend-plugin-manager';
 import express from 'express';
 import Router from 'express-promise-router';
