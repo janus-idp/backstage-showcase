@@ -15,7 +15,11 @@ import {
 } from '@backstage/integration-react';
 import { techRadarApiRef } from '@backstage/plugin-tech-radar';
 import { SegmentAnalytics } from '@janus-idp/backstage-plugin-analytics-provider-segment';
-import { auth0AuthApiRef, oidcAuthApiRef } from './api/AuthApiRefs';
+import {
+  auth0AuthApiRef,
+  oidcAuthApiRef,
+  samlAuthApiRef,
+} from './api/AuthApiRefs';
 import {
   CustomDataApiClient,
   customDataApiRef,
@@ -89,6 +93,26 @@ export const apis: AnyApiFactory[] = [
           icon: () => null,
         },
         defaultScopes: ['openid', 'email', 'profile'],
+        environment: configApi.getOptionalString('auth.environment'),
+      }),
+  }),
+  // SAML
+  createApiFactory({
+    api: samlAuthApiRef,
+    deps: {
+      discoveryApi: discoveryApiRef,
+      oauthRequestApi: oauthRequestApiRef,
+      configApi: configApiRef,
+    },
+    factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
+      OAuth2.create({
+        discoveryApi,
+        oauthRequestApi,
+        provider: {
+          id: 'saml',
+          title: 'SAML',
+          icon: () => null,
+        },
         environment: configApi.getOptionalString('auth.environment'),
       }),
   }),

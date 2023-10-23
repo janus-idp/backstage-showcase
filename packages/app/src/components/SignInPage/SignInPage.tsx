@@ -20,8 +20,16 @@ import {
   ProxiedSignInPage,
   type SignInProviderConfig,
 } from '@backstage/core-components';
-import { auth0AuthApiRef, oidcAuthApiRef } from '../../api';
+import { auth0AuthApiRef, oidcAuthApiRef, samlAuthApiRef } from '../../api';
 
+/**
+ * Key:
+ * string - Provider name.
+ *
+ * Value:
+ * SignInProviderConfig - Local sign-in provider configuration.
+ * string - Proxy sign-in provider configuration.
+ */
 const PROVIDERS = new Map<string, SignInProviderConfig | string>([
   [
     'auth0',
@@ -124,6 +132,15 @@ const PROVIDERS = new Map<string, SignInProviderConfig | string>([
       title: 'OneLogin',
       message: 'Sign in using OneLogin',
       apiRef: oneloginAuthApiRef,
+    },
+  ],
+  [
+    'saml',
+    {
+      id: 'saml-auth-provider',
+      title: 'SAML',
+      message: 'Sign in using SAML',
+      apiRef: samlAuthApiRef,
     },
   ],
 ]);

@@ -8,22 +8,20 @@ import {
   type SessionApi,
 } from '@backstage/core-plugin-api';
 
-export const oidcAuthApiRef: ApiRef<
-  OAuthApi &
-    OpenIdConnectApi &
-    ProfileInfoApi &
-    BackstageIdentityApi &
-    SessionApi
-> = createApiRef({
+type CustomAuthApiRefType = OAuthApi &
+  OpenIdConnectApi &
+  ProfileInfoApi &
+  BackstageIdentityApi &
+  SessionApi;
+
+export const oidcAuthApiRef: ApiRef<CustomAuthApiRefType> = createApiRef({
   id: 'internal.auth.oidc',
 });
 
-export const auth0AuthApiRef: ApiRef<
-  OAuthApi &
-    OpenIdConnectApi &
-    ProfileInfoApi &
-    BackstageIdentityApi &
-    SessionApi
-> = createApiRef({
+export const auth0AuthApiRef: ApiRef<CustomAuthApiRefType> = createApiRef({
   id: 'internal.auth.auth0',
+});
+
+export const samlAuthApiRef: ApiRef<CustomAuthApiRefType> = createApiRef({
+  id: 'internal.auth.saml',
 });
