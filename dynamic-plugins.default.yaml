@@ -1,185 +1,187 @@
-- package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+plugins:
+  - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
-- package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
-  pluginConfig:
-    enabled:
-      aap: true
-    catalog:
-      providers:
-        aap:
-          prod:
-            baseUrl: '${AAP_BASE_URL}'
-            authorization: "${AAP_AUTH_TOKEN}"
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
+    pluginConfig:
+      enabled:
+        aap: true
+      catalog:
+        providers:
+          aap:
+            prod:
+              baseUrl: '${AAP_BASE_URL}'
+              authorization: "${AAP_AUTH_TOKEN}"
 
-- package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
-  pluginConfig:
-    enabled:
-      gitlab: true
-    gitlab:
-      host: ${GITLAB_HOST}
-      token: ${GITLAB_TOKEN}
+  - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
+    pluginConfig:
+      enabled:
+        gitlab: true
+      gitlab:
+        host: ${GITLAB_HOST}
+        token: ${GITLAB_TOKEN}
 
-- package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
-  pluginConfig:
-    enabled:
-      keycloak: true
-    catalog:
-      providers:
-        keycloakOrg:
-          default:
-            baseUrl: "${KEYCLOAK_BASE_URL}"
-            loginRealm: "${KEYCLOAK_LOGIN_REALM}"
-            realm: "${KEYCLOAK_REALM}"
-            clientId: "${KEYCLOAK_CLIENT_ID}"
-            clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+    pluginConfig:
+      enabled:
+        keycloak: true
+      catalog:
+        providers:
+          keycloakOrg:
+            default:
+              baseUrl: "${KEYCLOAK_BASE_URL}"
+              loginRealm: "${KEYCLOAK_LOGIN_REALM}"
+              realm: "${KEYCLOAK_REALM}"
+              clientId: "${KEYCLOAK_CLIENT_ID}"
+              clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
 
-- package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
-  pluginConfig:
-    enabled:
-      ocm: true
-    catalog:
-      providers:
-        ocm:
-          default:
-            name: "${OCM_HUB_NAME}"
-            url: "${OCM_HUB_URL}"
-            serviceAccountToken: "${moc_infra_token}"
-            owner: janus-authors
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+    pluginConfig:
+      enabled:
+        ocm: true
+      catalog:
+        providers:
+          ocm:
+            default:
+              name: "${OCM_HUB_NAME}"
+              url: "${OCM_HUB_URL}"
+              serviceAccountToken: "${moc_infra_token}"
+              owner: janus-authors
 
-- package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
-  pluginConfig:
-    enabled:
-      github: true
-      githubOrg: true
-    catalog:
-      providers:
-        githubOrg:
-          default:
-            id: production
-            orgUrl: "${GITHUB_ORG_URL}"
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+    pluginConfig:
+      enabled:
+        github: true
+        githubOrg: true
+      catalog:
+        providers:
+          githubOrg:
+            default:
+              id: production
+              orgUrl: "${GITHUB_ORG_URL}"
 
-        # Plugin: GitHub Discovery
-        # uncomment following lines and set GITHUB_ORG to enable GitHub Discovery
-        # github:
-        #   providerId:
-        #     organization: "${GITHUB_ORG}"
+          # Plugin: GitHub Discovery
+          # uncomment following lines and set GITHUB_ORG to enable GitHub Discovery
+          # github:
+          #   providerId:
+          #     organization: "${GITHUB_ORG}"
 
-- package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
-  pluginConfig:
-    enabled:
-      gitlab: true
-    catalog:
-      providers:
-        gitlab: {}
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
+    pluginConfig:
+      enabled:
+        gitlab: true
+      catalog:
+        providers:
+          gitlab: {}
 
-- package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
 
-- package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
-  pluginConfig:
-    enabled:
-      argocd: true
-    argocd:
-      username: "${ARGOCD_USERNAME}"
-      password: "${ARGOCD_PASSWORD}"
-      appLocatorMethods:
-        - type: 'config'
-          instances:
-            - name: argoInstance1
-              url: "${ARGOCD_INSTANCE1_URL}"
-              token: "${ARGOCD_AUTH_TOKEN}"
-            - name: argoInstance2
-              url: "${ARGOCD_INSTANCE2_URL}"
-              token: "${ARGOCD_AUTH_TOKEN2}"
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
+    pluginConfig:
+      enabled:
+        argocd: true
+      argocd:
+        username: "${ARGOCD_USERNAME}"
+        password: "${ARGOCD_PASSWORD}"
+        appLocatorMethods:
+          - type: 'config'
+            instances:
+              - name: argoInstance1
+                url: "${ARGOCD_INSTANCE1_URL}"
+                token: "${ARGOCD_AUTH_TOKEN}"
+              - name: argoInstance2
+                url: "${ARGOCD_INSTANCE2_URL}"
+                token: "${ARGOCD_AUTH_TOKEN2}"
 
-- package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
-  pluginConfig:
-    enabled:
-      argocd: true
-    argocd:
-      username: "${ARGOCD_USERNAME}"
-      password: "${ARGOCD_PASSWORD}"
-      appLocatorMethods:
-        - type: 'config'
-          instances:
-            - name: argoInstance1
-              url: "${ARGOCD_INSTANCE1_URL}"
-              token: "${ARGOCD_AUTH_TOKEN}"
-            - name: argoInstance2
-              url: "${ARGOCD_INSTANCE2_URL}"
-              token: "${ARGOCD_AUTH_TOKEN2}"
+  - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
+    pluginConfig:
+      enabled:
+        argocd: true
+      argocd:
+        username: "${ARGOCD_USERNAME}"
+        password: "${ARGOCD_PASSWORD}"
+        appLocatorMethods:
+          - type: 'config'
+            instances:
+              - name: argoInstance1
+                url: "${ARGOCD_INSTANCE1_URL}"
+                token: "${ARGOCD_AUTH_TOKEN}"
+              - name: argoInstance2
+                url: "${ARGOCD_INSTANCE2_URL}"
+                token: "${ARGOCD_AUTH_TOKEN2}"
 
-- package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
-  pluginConfig:
-    enabled:
-      azureDevOps: true
-    azureDevOps:
-      host: dev.azure.com
-      token: ${AZURE_TOKEN}
-      organization: ${AZURE_ORG}
+  - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
+    pluginConfig:
+      enabled:
+        azureDevOps: true
+      azureDevOps:
+        host: dev.azure.com
+        token: ${AZURE_TOKEN}
+        organization: ${AZURE_ORG}
 
-- package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
-  pluginConfig:
-    enabled:
-      jenkins: true
-    jenkins:
-      instances:
-        - name: default
-          baseUrl: ${JENKINS_URL}
-          username: ${JENKINS_USERNAME}
-          apiKey: ${JENKINS_TOKEN}
+  - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
+    pluginConfig:
+      enabled:
+        jenkins: true
+      jenkins:
+        instances:
+          - name: default
+            baseUrl: ${JENKINS_URL}
+            username: ${JENKINS_USERNAME}
+            apiKey: ${JENKINS_TOKEN}
 
-- package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
-  pluginConfig:
-    enabled:
-      kubernetes: true
-    kubernetes:
-      customResources:
-        - group: 'tekton.dev'
-          apiVersion: 'v1beta1'
-          plural: 'pipelines'
-        - group: 'tekton.dev'
-          apiVersion: 'v1beta1'
-          plural: 'pipelineruns'
-        - group: 'tekton.dev'
-          apiVersion: 'v1beta1'
-          plural: 'taskruns'
-        - group: 'route.openshift.io'
-          apiVersion: 'v1'
-          plural: 'routes'
-      serviceLocatorMethod:
-        type: 'multiTenant'
-      clusterLocatorMethods:
-        - type: 'config'
-          clusters:
-            - name: ${K8S_CLUSTER_NAME}
-              url: ${K8S_CLUSTER_URL}
-              authProvider: 'serviceAccount'
-              skipTLSVerify: true
-              serviceAccountToken: ${K8S_CLUSTER_TOKEN}
+  - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+    pluginConfig:
+      enabled:
+        kubernetes: true
+      kubernetes:
+        customResources:
+          - group: 'tekton.dev'
+            apiVersion: 'v1beta1'
+            plural: 'pipelines'
+          - group: 'tekton.dev'
+            apiVersion: 'v1beta1'
+            plural: 'pipelineruns'
+          - group: 'tekton.dev'
+            apiVersion: 'v1beta1'
+            plural: 'taskruns'
+          - group: 'route.openshift.io'
+            apiVersion: 'v1'
+            plural: 'routes'
+        serviceLocatorMethod:
+          type: 'multiTenant'
+        clusterLocatorMethods:
+          - type: 'config'
+            clusters:
+              - name: ${K8S_CLUSTER_NAME}
+                url: ${K8S_CLUSTER_URL}
+                authProvider: 'serviceAccount'
+                skipTLSVerify: true
+                serviceAccountToken: ${K8S_CLUSTER_TOKEN}
 
-- package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
-  pluginConfig:
-    enabled:
-      sonarqube: true
-    sonarqube:
-      baseUrl: ${SONARQUBE_URL}
-      apiKey: ${SONARQUBE_TOKEN}
+  - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
+    pluginConfig:
+      enabled:
+        sonarqube: true
+      sonarqube:
+        baseUrl: ${SONARQUBE_URL}
+        apiKey: ${SONARQUBE_TOKEN}
 
-- package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
-  pluginConfig:
-    enabled:
-      techdocs: true
-    techdocs:
-      builder: ${TECHDOCS_BUILDER_TYPE}
-      generator:
-        runIn: ${TECHDOCS_GENERATOR_TYPE}
-      publisher:
-        type: ${TECHDOCS_PUBLISHER_TYPE}
-        awsS3:
-          bucketName: ${BUCKET_NAME}
-          region: ${BUCKET_REGION_VAULT}
-          endpoint: ${BUCKET_URL}
-          s3ForcePathStyle: true
-          credentials:
-            accessKeyId: ${AWS_ACCESS_KEY_ID}
-            secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+    disabled: true
+    pluginConfig:
+      enabled:
+        techdocs: true
+      techdocs:
+        builder: ${TECHDOCS_BUILDER_TYPE}
+        generator:
+          runIn: ${TECHDOCS_GENERATOR_TYPE}
+        publisher:
+          type: ${TECHDOCS_PUBLISHER_TYPE}
+          awsS3:
+            bucketName: ${BUCKET_NAME}
+            region: ${BUCKET_REGION_VAULT}
+            endpoint: ${BUCKET_URL}
+            s3ForcePathStyle: true
+            credentials:
+              accessKeyId: ${AWS_ACCESS_KEY_ID}
+              secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
