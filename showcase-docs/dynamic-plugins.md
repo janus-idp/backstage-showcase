@@ -33,7 +33,7 @@ So there are some changes to be made to the plugin code, in order to make it com
 1. The plugin must:
 
 - import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@0.0.5-janus.0` package,
-- add the `@janus-idp/cli` dependency to use the `@janus-idp` fork of te backstage CLI that supports a new, required `export-dynamic-plugin` command,
+- add the `@janus-idp/cli` dependency to use the `@janus-idp` fork of the backstage CLI that supports a new, required `export-dynamic-plugin` command,
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
 
