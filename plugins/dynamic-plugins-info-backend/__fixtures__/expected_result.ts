@@ -1,3 +1,4 @@
+// BEGIN-NOSCAN
 export const expectedList = [
   {
     name: 'backstage-plugin-aap-backend-wrapped-dynamic',
@@ -90,3 +91,4 @@ export const expectedList = [
     role: 'backend-plugin-module',
   },
 ];
+// END-NOSCAN

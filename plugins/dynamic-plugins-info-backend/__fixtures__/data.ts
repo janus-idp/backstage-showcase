@@ -1,3 +1,4 @@
+// BEGIN-NOSCAN
 export const plugins = [
   {
     name: 'backstage-plugin-aap-backend-wrapped-dynamic',
@@ -159,3 +160,4 @@ export const plugins = [
     },
   },
 ];
+// END-NOSCAN
