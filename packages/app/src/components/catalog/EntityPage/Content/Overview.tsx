@@ -17,7 +17,10 @@ import {
   EntityGitlabMergeRequestStatsCard,
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
-import { EntityArgoCDOverviewCard } from '@roadiehq/backstage-plugin-argo-cd';
+import {
+  EntityArgoCDOverviewCard,
+  isArgocdAvailable,
+} from '@roadiehq/backstage-plugin-argo-cd';
 import {
   EntityGithubInsightsComplianceCard,
   isGithubInsightsAvailable,
@@ -38,7 +41,6 @@ import {
   EntityLastLighthouseAuditCard,
   isLighthouseAvailable,
 } from '@backstage/plugin-lighthouse';
-import { isCIsAvailable } from './CI';
 import { entityWarningContent } from './EntityWarning';
 import { isPRsAvailable } from './PullRequests';
 
@@ -104,9 +106,8 @@ export const overviewContent = (
     </Grid>
 
     <Grid item container xs={8}>
-      {/* Use `isArgocdAvailable` once its fixed */}
       <EntitySwitch>
-        <EntitySwitch.Case if={isCIsAvailable}>
+        <EntitySwitch.Case if={isArgocdAvailable}>
           <Grid item xs={12}>
             <EntityArgoCDOverviewCard />
           </Grid>

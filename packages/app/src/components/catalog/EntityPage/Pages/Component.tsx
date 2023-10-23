@@ -33,6 +33,7 @@ import {
   techdocsContent,
 } from '../Content';
 import { defaultEntityPage } from './DefaultEntity';
+import { isArgocdAvailable } from '@roadiehq/backstage-plugin-argo-cd';
 
 const componentEntityPage = (componentType: 'service' | 'website') => (
   <EntityLayout>
@@ -60,8 +61,7 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
       {ciContent}
     </EntityLayout.Route>
 
-    {/* Use `isArgocdAvailable` once its fixed */}
-    <EntityLayout.Route if={isCIsAvailable} path="/cd" title="CD">
+    <EntityLayout.Route if={isArgocdAvailable} path="/cd" title="CD">
       {cdContent}
     </EntityLayout.Route>
 
