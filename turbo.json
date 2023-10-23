@@ -1,6 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "export-dynamic": {
+      "outputs": ["dist-dynamic/**"]
+    },
     "start": {
       "cache": false,
       "persistent": true

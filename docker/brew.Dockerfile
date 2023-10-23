@@ -46,9 +46,11 @@ COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 RUN chmod +x $YARN
 
 # Stage 2 - Install dependencies
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
 
 # Downstream only - debugging
 # COPY $REMOTE_SOURCES/ ./
@@ -107,8 +109,12 @@ RUN git config --global --add safe.directory ./
 RUN $YARN build --filter=backend
 
 # Build dynamic plugins
-# hadolint ignore=DL3059
-RUN $YARN --cwd ./dynamic-plugins export-dynamic
+RUN $YARN export-dynamic
+RUN $YARN copy-dynamic-plugins dist
+
+# Cleanup dynamic plugins sources
+# Downstream only
+RUN find dynamic-plugins -type f -not -name 'dist' -delete
 
 # Stage 4 - Build the actual backend image and install production dependencies
 
@@ -160,7 +166,7 @@ RUN microdnf update -y && \
         pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
     popd >/dev/null; \
     microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
-    
+
 # Downstream only - copy from builder, not cleanup stage
 COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
@@ -169,8 +175,11 @@ COPY docker/install-dynamic-plugins.py ./
 RUN chmod a+r ./install-dynamic-plugins.py
 
 # Copy embedded dynamic plugins
-COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/ ./dynamic-plugins/
+COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/dist ./dynamic-plugins/dist
 RUN chmod -R a+r ./dynamic-plugins/
+
+# Copy embedded dynamic plugins to default dynamic plugins root
+RUN rm -f dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
@@ -178,6 +187,10 @@ RUN fix-permissions ./
 
 # Switch to nodejs user
 USER 1001
+
+# Temporary workaround to avoid triggering issue
+# https://github.com/backstage/backstage/issues/20644
+ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 

@@ -26,21 +26,13 @@ import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import Router from 'express-promise-router';
 import app from './plugins/app';
-import argocd from './plugins/argocd';
 import auth from './plugins/auth';
-import azureDevOps from './plugins/azure-devops';
 import catalog from './plugins/catalog';
 import events from './plugins/events';
-import gitlab from './plugins/gitlab';
-import jenkins from './plugins/jenkins';
-import kubernetes from './plugins/kubernetes';
-import ocm from './plugins/ocm';
 import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
-import sonarqube from './plugins/sonarqube';
-import techdocs from './plugins/techdocs';
 import { metricsHandler } from './metrics';
 import { RequestHandler } from 'express';
 import {
@@ -49,6 +41,7 @@ import {
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
 // in the upstream @backstage/backend-plugin-manager package.
@@ -112,11 +105,27 @@ type AddPlugin = {
   isOptional?: false;
 } & AddPluginBase;
 
+type OptionalPluginOptions = {
+  key?: string;
+  path?: string;
+};
+
 type AddOptionalPlugin = {
   isOptional: true;
   config: Config;
-  options?: { key?: string; path?: string };
+  options?: OptionalPluginOptions;
 } & AddPluginBase;
+
+const OPTIONAL_DYNAMIC_PLUGINS: { [key: string]: OptionalPluginOptions } = {
+  techdocs: {},
+  argocd: {},
+  sonarqube: {},
+  kubernetes: {},
+  'azure-devops': { key: 'enabled.azureDevOps' },
+  jenkins: {},
+  ocm: {},
+  gitlab: {},
+} as const satisfies { [key: string]: OptionalPluginOptions };
 
 async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
   const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
@@ -131,10 +140,13 @@ async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
     );
     apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
     console.log(`Using backend plugin ${plugin}...`);
+  } else if (isOptional) {
+    console.log(`Backend plugin ${plugin} is disabled`);
   }
 }
 
 type AddRouterBase = {
+  isOptional?: boolean;
   name: string;
   service: ServiceBuilder;
   root: string;
@@ -180,6 +192,17 @@ async function main() {
 
   const apiRouter = Router();
 
+  // Scalprum frontend plugins provider
+  const scalprumEmv = useHotMemoize(module, () => createEnv('scalprum'));
+  apiRouter.use(
+    '/scalprum',
+    await scalprumRouter({
+      logger: scalprumEmv.logger,
+      pluginManager,
+      discovery: scalprumEmv.discovery,
+    }),
+  );
+
   // Required plugins
   await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
   await addPlugin({ plugin: 'auth', apiRouter, createEnv, router: auth });
@@ -193,72 +216,6 @@ async function main() {
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
 
-  // Optional plugins
-  await addPlugin({
-    plugin: 'ocm',
-    config,
-    apiRouter,
-    createEnv,
-    router: ocm,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'techdocs',
-    config,
-    apiRouter,
-    createEnv,
-    router: techdocs,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'argocd',
-    config,
-    apiRouter,
-    createEnv,
-    router: argocd,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'sonarqube',
-    config,
-    apiRouter,
-    createEnv,
-    router: sonarqube,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'kubernetes',
-    config,
-    apiRouter,
-    createEnv,
-    router: kubernetes,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'gitlab',
-    config,
-    apiRouter,
-    createEnv,
-    router: gitlab,
-    isOptional: true,
-  });
-  await addPlugin({
-    plugin: 'azure-devops',
-    config,
-    apiRouter,
-    createEnv,
-    router: azureDevOps,
-    isOptional: true,
-    options: { key: 'enabled.azureDevOps' },
-  });
-  await addPlugin({
-    plugin: 'jenkins',
-    config,
-    apiRouter,
-    createEnv,
-    router: jenkins,
-    isOptional: true,
-  });
   await addPlugin({
     plugin: 'permission',
     config,
@@ -272,13 +229,21 @@ async function main() {
     if (plugin.installer.kind === 'legacy') {
       const pluginRouter = plugin.installer.router;
       if (pluginRouter !== undefined) {
-        const pluginEnv = useHotMemoize(module, () =>
-          createEnv(pluginRouter.pluginID),
-        );
-        apiRouter.use(
-          `/${pluginRouter.pluginID}`,
-          await pluginRouter.createPlugin(pluginEnv),
-        );
+        let optionals = {};
+        if (pluginRouter.pluginID in OPTIONAL_DYNAMIC_PLUGINS) {
+          optionals = {
+            isOptional: true,
+            config: config,
+            options: OPTIONAL_DYNAMIC_PLUGINS[pluginRouter.pluginID],
+          };
+        }
+        await addPlugin({
+          plugin: pluginRouter.pluginID,
+          apiRouter,
+          createEnv,
+          router: pluginRouter.createPlugin,
+          ...optionals,
+        });
       }
     }
   }

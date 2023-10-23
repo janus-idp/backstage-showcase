@@ -1,6 +1,0 @@
-{
-  "private": true,
-  "scripts": {
-    "export-dynamic": "for D in $(ls -d */ 2>/dev/null); do yarn --cwd \"${D}\" install --frozen-lockfile && yarn --cwd \"${D}\" export-dynamic && rm -Rf ${D}/node_modules ${D}/.yarn ${D}/dist; done"
-  }
-}
