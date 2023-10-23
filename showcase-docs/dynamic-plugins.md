@@ -188,7 +188,7 @@ Examples of such a wrapper plugins can be found in the [Janus showcase repositor
 
 ### Helm deployment
 
-- In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm values used during helm chart installation must be overriden by the values found [here](https://raw.githubusercontent.com/davidfestal/helm-backstage/a7a1cb42f5bffbb3f0668a3437b0366be9f819b8/charts/backstage/values.yaml)
+- In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm values used during helm chart installation must be overriden by the values found [here](https://raw.githubusercontent.com/davidfestal/helm-backstage/01a60490114963796fd4a3052db060d6943c9867/charts/backstage/values.yaml)
 
 - These updated Helm values contain a new `global.dynamic` value, with 2 fields: `plugins` and `includes`. `plugins` contains the list of dynamic plugins to be installed, and by default is an empty list. A package can be specified either as a local path to the dynamic plugin `dist-dynamic/dist` sub-folder, or as a package specification in an NPM repository. `includes` contains a list of YAML files with the same syntax, of which `plugins` list will be included, and possibly overriden by the `plugins` list of the main helm values. By default the `includes` fields contains the `dynamic-plugins.default.yaml` file, which contains all the dynamic plugins shipped with the showcase application, either enabled or disabled by default.
 
