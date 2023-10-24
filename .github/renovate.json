@@ -22,5 +22,6 @@
       "groupName": ["Backstage packages"],
       "dependencyDashboardApproval": true
     }
-  ]
+  ],
+  "ignorePaths": ["**/dist-dynamic/**"]
 }
