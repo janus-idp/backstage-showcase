@@ -32,7 +32,19 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
    - If you are on Windows, then follow the [instructions](https://github.com/nodejs/node-gyp#on-windows) in `node-gyp` for Windows
    - If you are on macOS, then follow the [instructions](https://github.com/nodejs/node-gyp#on-macos) in `node-gyp` for macOS
 
-3. Copy the required code snippet from `app-config.yaml` into `app-config.local.yaml`. Note: Each plugin has a `# Plugin: <PLUGIN_NAME>` comment above the required code snippet(s).
+3. Run `yarn install` to install the dependencies
+
+4. In the `dynamic-plugins-root` folder, verify that you have the dynamic plugins you want to load into
+   the backend application. To have all the plugins originally included in the Showcase application,
+   run the following command at the root of the showcase repository:
+
+   ```bash
+   yarn export-dynamic -- -- --dev
+   ```
+
+   **Note:** The `-- -- ` arguments are required to forward the `--dev` argument to every yarn workspace providing an `export-dynamic` script.
+
+5. Copy the required code snippet from `app-config.yaml` into `app-config.local.yaml`. Note: Each plugin has a `# Plugin: <PLUGIN_NAME>` comment above the required code snippet(s).
 
    - Enable plugins (All plugins have a default of `false`)
 
@@ -279,11 +291,9 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
   - `${AAP_BASE_URL}`: URL for the Ansible Automation Platform(AAP). Mandatory if plugin is enabled
   - `${AAP_AUTH_TOKEN}`: Ansible Automation Platform(AAP) [token](https://docs.ansible.com/automation-controller/latest/html/userguide/users.html#users-tokens) with enough permission to read job templates. Mandatory if plugin is enabled (e.g 'Bearer XXXX')
 
-4. Run `yarn install` to install the dependencies
+6. Start the application using `yarn start`
 
-5. Start the application using `yarn start`
-
-6. Navigate to <http://localhost:3000>
+7. Navigate to <http://localhost:3000>
 
 ## Running with Helm
 
