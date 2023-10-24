@@ -73,7 +73,7 @@ jobs:
   pr-run-test:
     name: PR Container Image test
     runs-on: ubuntu-latest
-    # needs: pr-docker-build
+    needs: pr-docker-build
     permissions:
       contents: read
       packages: write
