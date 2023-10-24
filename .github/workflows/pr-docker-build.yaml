@@ -58,7 +58,7 @@ jobs:
             type=ref,prefix=pr-,event=pr
           # to autodelete PR image tags, set an expiry date
           imageLabels: quay.expires-after=14d
-          push: true
+          push: false
 
       - name: Comment the image pull link
         uses: actions/github-script@v6
