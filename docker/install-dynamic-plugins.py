@@ -33,11 +33,18 @@ import subprocess
 # It expects the `dynamic-plugins.yaml` file to be present in the current directory and
 # to contain the list of plugins to install along with their optional configuration.
 #
-# The `dynamic-plugins.yaml` file must be a list of objects with the following properties:
-#   - `package`: the NPM package to install (either a package name or a path to a local package)
-#   - `pluginConfig`: an optional plugin-specific configuration fragment
+# The `dynamic-plugins.yaml` file must contain:
+#   - a `plugins` list of objects with the following properties:
+#     - `package`: the NPM package to install (either a package name or a path to a local package)
+#     - `pluginConfig`: an optional plugin-specific configuration fragment
+#     - `disabled`: an optional boolean to disable the plugin (`false` by default)
+#   - an optional `includes` list of yaml files to include, each file containing a list of plugins.
 #
-# For each package mentioned in the `dynamic-plugins.yaml` file, the script will:
+# The plugins listed in the included files will be included in the main list of considered plugins
+# and possibly overriden by the plugins already listed in the main `plugins` list.
+#
+# For each enabled plugin mentioned in the main `plugins` list and the various included files,
+# the script will:
 #   - call `npm pack` to get the package archive and extract it in the dynamic plugins root directory
 #   - merge the plugin-specific configuration fragment in a global configuration file named `app-config.dynamic-plugins.yaml`
 #
@@ -55,7 +62,7 @@ def merge(source, destination, prefix = ''):
         else:
             # if key exists in destination trigger an error
             if key in destination and destination[key] != value:
-                raise InstallException("Config key '" + prefix + key + "' defined differently for 2 dynamic plugins")
+                raise InstallException(f"Config key '{ prefix + key }' defined differently for 2 dynamic plugins")
 
             destination[key] = value
 
@@ -66,33 +73,15 @@ def main():
     maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
 
     dynamicPluginsFile = 'dynamic-plugins.yaml'
-    dynamicPluginsDefaultFile = 'dynamic-plugins.default.yaml'
     dynamicPluginsGlobalConfigFile = os.path.join(dynamicPluginsRoot, 'app-config.dynamic-plugins.yaml')
 
     # test if file dynamic-plugins.yaml exists
     if not os.path.isfile(dynamicPluginsFile):
-        print(f'No {dynamicPluginsFile} file found, trying {dynamicPluginsDefaultFile} file.')
-        dynamicPluginsFile = dynamicPluginsDefaultFile
-        if not os.path.isfile(dynamicPluginsFile):
-            print(f'No {dynamicPluginsFile} file found. Skipping dynamic plugins installation.')
-            with open(dynamicPluginsGlobalConfigFile, 'w') as file:
-                file.write('')
-                file.close()
-            exit(0)
-
-    with open(dynamicPluginsFile, 'r') as file:
-        plugins = yaml.safe_load(file)
-
-    if plugins == '' or plugins is None:
-        print(f'{dynamicPluginsFile} file is empty. Skipping dynamic plugins installation.')
+        print(f"No {dynamicPluginsFile} file found. Skipping dynamic plugins installation.")
         with open(dynamicPluginsGlobalConfigFile, 'w') as file:
             file.write('')
             file.close()
         exit(0)
-
-    # test that plugins is a list
-    if not isinstance(plugins, list):
-        raise InstallException(f'{dynamicPluginsFile} content must be a list')
 
     globalConfig = {
       'dynamicPlugins': {
@@ -100,9 +89,84 @@ def main():
       }
     }
 
-    # iterate through the list of plugins
+    with open(dynamicPluginsFile, 'r') as file:
+        content = yaml.safe_load(file)
+
+    if content == '' or content is None:
+        print(f"{dynamicPluginsFile} file is empty. Skipping dynamic plugins installation.")
+        with open(dynamicPluginsGlobalConfigFile, 'w') as file:
+            file.write('')
+            file.close()
+        exit(0)
+
+    if not isinstance(content, dict):
+        raise InstallException(f"{dynamicPluginsFile} content must be a YAML object")
+
+    allPlugins = {}
+
+    if 'includes' in content:
+        includes = content['includes']
+    else:
+        includes = []
+
+    if not isinstance(includes, list):
+        raise InstallException(f"content of the \'includes\' field must be a list in {dynamicPluginsFile}")
+
+    for include in includes:
+        if not isinstance(include, str):
+            raise InstallException(f"content of the \'includes\' field must be a list of strings in {dynamicPluginsFile}")
+
+        print('\n======= Including dynamic plugins from', include, flush=True)
+
+        if not os.path.isfile(include):
+            raise InstallException(f"File {include} does not exist")
+
+        with open(include, 'r') as file:
+            includeContent = yaml.safe_load(file)
+
+        if not isinstance(includeContent, dict):
+            raise InstallException(f"{include} content must be a YAML object")
+
+        includePlugins = includeContent['plugins']
+        if not isinstance(includePlugins, list):
+            raise InstallException(f"content of the \'plugins\' field must be a list in {include}")
+
+        for plugin in includePlugins:
+            allPlugins[plugin['package']] = plugin
+
+    if 'plugins' in content:
+        plugins = content['plugins']
+    else:
+        plugins = []
+
+    if not isinstance(plugins, list):
+        raise InstallException(f"content of the \'plugins\' field must be a list in {dynamicPluginsFile}")
+
     for plugin in plugins:
         package = plugin['package']
+        if not isinstance(package, str):
+            raise InstallException(f"content of the \'plugins.package\' field must be a string in {dynamicPluginsFile}")
+
+        # if `package` already exists in `allPlugins`, then override its fields
+        if package not in allPlugins:
+            allPlugins[package] = plugin
+            continue
+
+        # override the included plugins with fields in the main plugins list
+        print('\n======= Overriding dynamic plugin configuration', package, flush=True)
+        for key in plugin:
+            if key == 'package':
+                continue
+            allPlugins[package][key] = plugin[key]
+
+    # iterate through the list of plugins
+    for plugin in allPlugins.values():
+        package = plugin['package']
+
+        if 'disabled' in plugin and plugin['disabled'] is True:
+            print('\n======= Skipping disabled dynamic plugin', package, flush=True)
+            continue
+
         if package.startswith('./'):
             package = os.path.join(os.getcwd(), package[2:])
 
