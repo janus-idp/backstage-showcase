@@ -33,7 +33,7 @@
     "winston": "3.11.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.23.0",
+    "@backstage/cli": "0.23.1",
     "@types/supertest": "2.0.14",
     "@types/mock-fs": "4.13.2",
     "mock-fs": "5.2.0",

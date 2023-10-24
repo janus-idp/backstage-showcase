@@ -46,7 +46,7 @@ If you found a bug in our showcase app, please submit an [issue](https://github.
    yarn backstage-cli versions:bump --pattern '@{backstage,roadiehq,immobiliarelabs,janus-idp}/*'
    ```
 
-2. Find and replace all `"^` with `"` filtered by `package.json` files.
+2. Find and replace all `"^` instances with `"` filtered by "files to include" `package.json` and "files to exclude" `node_modules,**/dist-dynamic/**`.
 
 ### Enhancement Requests
 

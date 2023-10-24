@@ -23,7 +23,7 @@
     "@backstage/config": "1.1.1",
     "@backstage/integration": "1.7.1",
     "@backstage/plugin-app-backend": "0.3.54",
-    "@backstage/plugin-auth-backend": "0.19.3",
+    "@backstage/plugin-auth-backend": "0.19.4",
     "@backstage/plugin-auth-node": "0.4.0",
     "@backstage/plugin-catalog-backend": "1.14.0",
     "@backstage/plugin-catalog-backend-module-openapi": "0.1.23",
@@ -32,8 +32,8 @@
     "@backstage/plugin-permission-backend": "0.5.29",
     "@backstage/plugin-permission-common": "0.7.9",
     "@backstage/plugin-permission-node": "0.7.17",
-    "@backstage/plugin-proxy-backend": "0.4.3",
-    "@backstage/plugin-scaffolder-backend": "1.18.0",
+    "@backstage/plugin-proxy-backend": "0.4.4",
+    "@backstage/plugin-scaffolder-backend": "1.18.1",
     "@backstage/plugin-search-backend": "1.4.6",
     "@backstage/plugin-search-backend-module-pg": "0.5.15",
     "@backstage/plugin-search-backend-node": "1.2.10",
@@ -48,7 +48,7 @@
     "winston": "3.11.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.23.0",
+    "@backstage/cli": "0.23.1",
     "@types/express": "4.17.19",
     "cross-env": "7.0.3"
   },
