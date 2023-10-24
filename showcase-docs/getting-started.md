@@ -34,12 +34,15 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
 3. Run `yarn install` to install the dependencies
 
-4. Make sure you that, in the `dynamic-plugins-root` folder, you have the dynamic plugins you want to load in the backend application. To have all the plugins normally included in the Showcase application,
+4. In the `dynamic-plugins-root` folder, verify that you have the dynamic plugins you want to load into
+   the backend application. To have all the plugins originally included in the Showcase application,
    run the following command at the root of the showcase repository:
 
    ```bash
    yarn export-dynamic -- -- --dev
    ```
+
+   **Note:** The `-- -- ` arguments are required to forward the `--dev` argument to every yarn workspace providing an `export-dynamic` script.
 
 5. Copy the required code snippet from `app-config.yaml` into `app-config.local.yaml`. Note: Each plugin has a `# Plugin: <PLUGIN_NAME>` comment above the required code snippet(s).
 
