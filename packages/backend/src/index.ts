@@ -213,7 +213,6 @@ async function main() {
     router: permission,
   });
 
-
   for (const plugin of pluginManager.backendPlugins()) {
     if (plugin.installer.kind === 'legacy') {
       const pluginRouter = plugin.installer.router;

@@ -12,5 +12,6 @@ export default async function createPlugin(
     database: env.database,
     identity: env.identity,
     permissions: env.permissions,
+    tokenManager: env.tokenManager,
   });
 }
