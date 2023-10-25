@@ -3,10 +3,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "cypress",
-    "@typescript-eslint"
-  ],
+  "plugins": ["cypress", "@typescript-eslint"],
   "env": {
     "cypress/globals": true
   },
