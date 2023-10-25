@@ -1,0 +1,138 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: app-config-rhdh
+
+data:
+  app-config-rhdh.yaml: |
+    app:
+      title: Red Hat Developer Hub
+      analytics:
+        segment:
+          testMode: true
+          writeKey: temp
+    backend:
+      auth:
+        keys:
+          - secret: temp
+    integrations:
+      # Plugin: GitHub
+      github:
+        - host: github.com
+          apps:
+            - appId: ${GITHUB_APP_APP_ID}
+              clientId: ${GITHUB_APP_CLIENT_ID}
+              clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+              webhookUrl: ${GITHUB_APP_WEBHOOK_URL}
+              webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
+              privateKey: |
+                ${GITHUB_APP_PRIVATE_KEY}
+      bitbucketServer:
+        - host: bitbucket.com
+          apiBaseUrl: temp
+          username: temp
+          password: temp
+      gitlab:
+        - host: gitlab.com
+          token: temp
+    auth:
+      # see https://backstage.io/docs/auth/ to learn about auth providers
+      environment: development
+      providers:
+        # Plugin: GitHub
+        github:
+          development:
+            clientId: ${GITHUB_APP_CLIENT_ID}
+            clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+
+    proxy:
+      skipInvalidProxies: true
+      # endpoints: {}
+      endpoints: 
+        # Other Proxies
+        # customize developer hub instance
+        '/developer-hub':
+          target: http://test-backstage-customization-provider-rhdh.backstage-os-2-eu-de-2-bx2-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud/
+          changeOrigin: true
+          # Change to "false" in case of using self hosted cluster with a self-signed certificate
+          secure: true   
+        '/developer-hub/tech-radar':
+          target: http://test-backstage-customization-provider-rhdh.backstage-os-2-eu-de-2-bx2-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud/tech-radar
+          changeOrigin: true
+          # Change to "false" in case of using self hosted cluster with a self-signed certificate
+          secure: true
+
+    catalog:
+      providers:    
+        githubOrg:
+          default:
+            id: development
+            orgUrl: '${GITHUB_ORG_URL}'
+      import:
+        entityFilename: catalog-info.yaml
+        # pullRequestBranchName: rhdh-integration
+        pullRequestBranchName: backstage-integration
+      rules:
+        - allow: [API, Component, Group, Location, Resource, System, Template]
+      locations:
+        - type: url
+          target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
+        - type: url
+          target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
+        - type: url
+          target: https://github.com/janus-qe/test-bs-nodejs/blob/main/catalog-info.yaml
+
+    kubernetes:
+      clusterLocatorMethods:
+        - clusters:
+          - authProvider: serviceAccount
+            name: ${K8S_CLUSTER_NAME}
+            serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
+            url: ${K8S_CLUSTER_API_SERVER_URL}
+          type: config
+      customResources:
+        # Add for tekton
+        - apiVersion: 'v1beta1'
+          group: 'tekton.dev'
+          plural: 'pipelines'
+        - apiVersion: v1beta1
+          group: tekton.dev
+          plural: pipelineruns
+        - apiVersion: v1beta1
+          group: tekton.dev
+          plural: taskruns
+        # Add for topology plugin
+        - apiVersion: 'v1'
+          group: 'route.openshift.io'
+          plural: 'routes'
+        # Add to view topology code decorators
+        - group: 'org.eclipse.che'
+          apiVersion: 'v2'
+          plural: 'checlusters'
+      serviceLocatorMethod:
+        type: multiTenant
+    techdocs:
+      builder: external
+      generator:
+        runIn: local
+      publisher:
+        type: awsS3
+    lighthouse:
+      baseUrl: temp
+
+    dynatrace:
+      baseUrl: temp
+    argocd:
+      appLocatorMethods:
+        - type: 'config'
+          instances:
+            - name: argoInstance1
+              url: temp
+              token: temp
+            - name: argoInstance2
+              url: temp
+              token: temp
+    enabled:
+      github: ${GITHUB_ENABLED}
+      kubernetes: ${K8S_ENABLED}
+      githubOrg: ${GITHUBORG_ENABLED}

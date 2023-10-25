@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "lib": ["es5", "dom"],
+      "types": ["cypress", "node"],
+      "skipLibCheck": true     /* Skip type checking all .d.ts files. */
+    },
+    "include": ["**/*.ts"]
+  }
