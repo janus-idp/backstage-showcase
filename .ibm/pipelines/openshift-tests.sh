@@ -171,7 +171,7 @@ add_helm_repos
 helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}
 
 echo "Waiting for backstage deployment..."
-sleep 60
+sleep 120
 
 echo "Display pods for verification..."
 oc get pods -n ${NAME_SPACE}
