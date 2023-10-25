@@ -1,4 +1,4 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
   defaultCommandTimeout: 40000,
@@ -16,7 +16,7 @@ export default defineConfig({
   e2e: {
     testIsolation: false,
     defaultCommandTimeout: 10000,
-    baseUrl: "https://PLACE_HOLDER",
-    specPattern: "cypress/e2e/**/*.spec.ts",
+    baseUrl: 'https://PLACE_HOLDER',
+    specPattern: 'cypress/e2e/**/*.spec.ts',
   },
 });
