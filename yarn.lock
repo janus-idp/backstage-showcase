@@ -2317,9 +2317,9 @@
     zod "^3.21.4"
 
 "@backstage/config-loader@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-1.5.1.tgz#c61de8ead70fc0997c51051536549565a65e5738"
-  integrity sha512-Qoc8mVZHgwwnPlBkPwBRlUXwIF6qqSkyPvuVqgkdcLyxp/hoxC9ZUyOlO5e4TYyuoBvNB4ZTWzUL3qAdaYDcsw==
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-1.5.2.tgz#2cd808c941553bbb957c443fba7441075184d132"
+  integrity sha512-yoN6UdzGeSU73A43FQMT2Rz2cJTnIy02bGvAnAFYvBXJHvn3WXlHAXxjeOvcm6KJfZImziVUO6Sujv1YM8WpKw==
   dependencies:
     "@backstage/cli-common" "^0.1.13"
     "@backstage/config" "^1.1.1"
@@ -5278,10 +5278,10 @@
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-common/-/backstage-plugin-ocm-common-2.2.1.tgz#c90fa64a61ccbbd45da1d76b03292d20278f62ec"
   integrity sha512-tWdzV4MdZEq06yZkEacZ21QtXr4FiHMHk/ml0hvCgBrb5YuWi0451LkZ6yNXy2sMTsXgqS4RgXVDTZNoi+gFSg==
 
-"@janus-idp/backstage-plugin-ocm@3.2.3":
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm/-/backstage-plugin-ocm-3.2.3.tgz#9ef391fec7760d9786c154e97a1c14349f51f8cb"
-  integrity sha512-OlVWKzhKIZ9TBpDEvwWrr5y4fhYErolFXgm74PJymJvTx3SrqkDKifEsnMEnHW+eSl6FesajDasGJ48+VJe3hQ==
+"@janus-idp/backstage-plugin-ocm@3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm/-/backstage-plugin-ocm-3.3.0.tgz#6c0ff34db92636418c8e031f0db82d11055e82bc"
+  integrity sha512-dTHfCPsrjn1MSNvwxLoHTJTfijQgI3o0Hut3Q4m3+WQheGno4NZ0c2sCkplJOYgMb4fifwCvcGb14FqlC4F2vA==
   dependencies:
     "@backstage/catalog-model" "^1.4.3"
     "@backstage/core-components" "^0.13.6"

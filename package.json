@@ -16,8 +16,6 @@
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
     "clean": "turbo run clean",
     "test": "turbo run test",
-    "test:e2e": "turbo run test:e2e",
-    "test:e2e-ci": "turbo run test:e2e-ci",
     "fix": "backstage-cli repo fix",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
@@ -26,7 +24,9 @@
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
     "changeset": "changeset",
-    "changeset:empty": "changeset --empty"
+    "changeset:empty": "changeset --empty",
+    "version:bump": "backstage-cli versions:bump --pattern @{backstage,roadiehq,immobiliarelabs,janus-idp}/*",
+    "version:all": "node ./scripts/update-backstage.mjs"
   },
   "workspaces": {
     "packages": [
@@ -55,9 +55,9 @@
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
-    "*": "yarn run prettier:fix",
-    "*.{jsx,ts,tsx,mjs,cjs}": "yarn run lint -- --concurrency=1 -- --fix",
-    "!(.eslintrc).js": "yarn run lint -- --concurrency=1 -- --fix"
+    "*": "turbo run prettier:fix --",
+    "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
+    "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
   },
   "packageManager": "yarn@1.22.19"
 }
