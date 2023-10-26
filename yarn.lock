@@ -2768,6 +2768,51 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
+"@backstage/plugin-bitbucket-cloud-common@^0.2.13":
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-bitbucket-cloud-common/-/plugin-bitbucket-cloud-common-0.2.13.tgz#74812ff231ce32f77fa6a17f2cdc9af5c2a4c767"
+  integrity sha512-gfjmMOKbeunqn3zutHxdIN/sanNd51LpnZCDRtZ0hlxhlICUaOUsImQMZLQPCLIN/B1Rhxc9uOBlV8tV1BR1yw==
+  dependencies:
+    "@backstage/integration" "^1.7.1"
+    cross-fetch "^3.1.5"
+
+"@backstage/plugin-catalog-backend-module-bitbucket-cloud@0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-bitbucket-cloud/-/plugin-catalog-backend-module-bitbucket-cloud-0.1.21.tgz#2fddb19162d458f02acde55892f96e0da958b3d2"
+  integrity sha512-vpLnklSr/t/lQi5tQI6MLzqsoYA64FPg1Pn2H2d3BdK4UYvs1XlKKFZp9fuvPDj17mEr09naiKi9Jw1wQRWBSQ==
+  dependencies:
+    "@backstage/backend-common" "^0.19.8"
+    "@backstage/backend-plugin-api" "^0.6.6"
+    "@backstage/backend-tasks" "^0.5.11"
+    "@backstage/catalog-client" "^1.4.5"
+    "@backstage/catalog-model" "^1.4.3"
+    "@backstage/config" "^1.1.1"
+    "@backstage/integration" "^1.7.1"
+    "@backstage/plugin-bitbucket-cloud-common" "^0.2.13"
+    "@backstage/plugin-catalog-common" "^1.0.17"
+    "@backstage/plugin-catalog-node" "^1.4.7"
+    "@backstage/plugin-events-node" "^0.2.15"
+    uuid "^8.0.0"
+    winston "^3.2.1"
+
+"@backstage/plugin-catalog-backend-module-bitbucket-server@0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-bitbucket-server/-/plugin-catalog-backend-module-bitbucket-server-0.1.19.tgz#2ea7846f51ced85eff5e25257414f07d74846ed1"
+  integrity sha512-z7AL56F4MXtIY91rSHYM+tMOMxF5B4j6hCvoqgk2dr0B1nsvPz533cA8fJghLLzNDtBqzygMVbr9i39aIpk/iQ==
+  dependencies:
+    "@backstage/backend-common" "^0.19.8"
+    "@backstage/backend-plugin-api" "^0.6.6"
+    "@backstage/backend-tasks" "^0.5.11"
+    "@backstage/catalog-model" "^1.4.3"
+    "@backstage/config" "^1.1.1"
+    "@backstage/errors" "^1.2.3"
+    "@backstage/integration" "^1.7.1"
+    "@backstage/plugin-catalog-node" "^1.4.7"
+    "@types/node-fetch" "^2.5.12"
+    node-fetch "^2.6.7"
+    uuid "^8.0.0"
+    winston "^3.2.1"
+
 "@backstage/plugin-catalog-backend-module-github-org@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-github-org/-/plugin-catalog-backend-module-github-org-0.1.0.tgz#c719e697b0eb5aa2781f80e7c23e5e66c65cffc4"
@@ -9992,7 +10037,7 @@
   dependencies:
     "@types/express" "*"
 
-"@types/node-fetch@^2.5.0", "@types/node-fetch@^2.5.7":
+"@types/node-fetch@^2.5.0", "@types/node-fetch@^2.5.12", "@types/node-fetch@^2.5.7":
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.6.7.tgz#a1abe2ce24228b58ad97f99480fdcf9bbc6ab16d"
   integrity sha512-lX17GZVpJ/fuCjguZ5b3TjEbSENxmEk1B2z02yoXSK9WMEWRivhdSY73wWMn6bpcCDAOh6qAdktpKHIlkDk2lg==

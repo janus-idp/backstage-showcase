@@ -188,3 +188,47 @@ plugins:
             credentials:
               accessKeyId: ${AWS_ACCESS_KEY_ID}
               secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud
+    disabled: true
+    pluginConfig:
+      enabled:
+        bitbucketCloud: true
+      # Uncomment the following to enable the Bitbucket Cloud catalog
+      # # https://backstage.io/docs/integrations/bitbucketCloud/discovery#configuration
+      # catalog:
+      #   providers:
+      #     bitbucketCloud:
+      #       yourProviderId: # identifies your ingested dataset
+      #         catalogPath: /catalog-info.yaml # default value
+      #         filters: # optional
+      #           projectKey: '^apis-.*$' # optional; RegExp
+      #           repoSlug: '^service-.*$' # optional; RegExp
+      #         schedule: # optional; same options as in TaskScheduleDefinition
+      #           # supports cron, ISO duration, "human duration" as used in code
+      #           frequency: { minutes: 30 }
+      #           # supports ISO duration, "human duration" as used in code
+      #           timeout: { minutes: 3 }
+      #         workspace: workspace-name
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
+    disabled: true
+    pluginConfig:
+      enabled:
+        bitbucketCloud: true
+      # Uncomment the following to enable the Bitbucket Server catalog
+      # # https://backstage.io/docs/integrations/bitbucketServer/discovery#configuration
+      # catalog:
+      #   providers:
+      #     bitbucketServer:
+      #       yourProviderId: # identifies your ingested dataset
+      #         host: 'bitbucket.mycompany.com'
+      #         catalogPath: /catalog-info.yaml # default value
+      #         filters: # optional
+      #           projectKey: '^apis-.*$' # optional; RegExp
+      #           repoSlug: '^service-.*$' # optional; RegExp
+      #         schedule: # optional; same options as in TaskScheduleDefinition
+      #           # supports cron, ISO duration, "human duration" as used in code
+      #           frequency: { minutes: 30 }
+      #           # supports ISO duration, "human duration" as used in code
+      #           timeout: { minutes: 3 }
