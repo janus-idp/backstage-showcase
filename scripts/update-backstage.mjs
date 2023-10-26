@@ -78,27 +78,6 @@ function updateDynamicPluginVersions() {
   process.chdir('../..');
 }
 
-function updateDynamicPluginLockfiles() {
-  // Change directory to the dynamic-plugins/wrappers folder
-  process.chdir('./dynamic-plugins/wrappers');
-
-  // Loop through all subdirectories and run yarn install
-  for (const dir of readdirSync('.', { withFileTypes: true })) {
-    if (!dir.isDirectory()) {
-      continue;
-    }
-
-    process.chdir(`${dir.name}/dist-dynamic`);
-    console.log(`Updating ${dir.name}/dist-dynamic lockfile...`);
-    execSync('yarn install', { stdio: 'inherit' });
-
-    process.chdir('../..');
-  }
-
-  // Change directory to the root of the project
-  process.chdir('../..');
-}
-
 async function getLatestBackstageVersion() {
   const res = await fetch(
     'https://api.github.com/repos/backstage/backstage/releases',
@@ -111,7 +90,13 @@ async function getLatestBackstageVersion() {
   return semver.maxSatisfying(filteredVersions, '*').substring(1);
 }
 
-// Run the yarn backstage-cli versions:bump command
+function updateBackstageVersionFile(version) {
+  const modifiedContent = `${JSON.stringify({ version }, null, 2)}\n`;
+
+  writeFileSync('backstage.json', modifiedContent, 'utf8');
+}
+
+console.log('Bumping version...');
 execSync('yarn run version:bump', { stdio: 'inherit' });
 
 console.log('Pinning all dependencies...');
@@ -120,37 +105,18 @@ pinDependencies();
 console.log('Updating lockfile...');
 execSync('yarn install', { stdio: 'inherit' });
 
-let dynamicPluginLockfilesUpdated = false;
-let failedAttempts = 0;
-while (!(dynamicPluginLockfilesUpdated || failedAttempts === 5)) {
-  console.log(dynamicPluginLockfilesUpdated, failedAttempts);
+console.log('Updating dynamic-plugins folder...');
+execSync('yarn run export-dynamic --no-cache -- -- --clean', {
+  stdio: 'inherit',
+});
 
-  console.log('Updating dynamic-plugins folder...');
-  try {
-    // Run export-dynamic to update the dynamic-plugins folder
-    execSync('yarn run export-dynamic --no-cache', { stdio: 'inherit' });
-    dynamicPluginLockfilesUpdated = true;
-  } catch {
-    failedAttempts++;
-
-    updateDynamicPluginLockfiles();
-  }
-}
-
-// Update the dynamic plugin versions
+console.log('Updating dynamic plugin versions...');
 updateDynamicPluginVersions();
 
-// Get the latest Backstage version
+console.log('Fetching latest Backstage version...');
 const latestVersion = await getLatestBackstageVersion();
 
-// Update the backstage.json file
-const modifiedContent = `${JSON.stringify(
-  { version: latestVersion },
-  null,
-  2,
-)}\n`;
-
 console.log(`Updating backstage.json to ${latestVersion}...`);
-writeFileSync('backstage.json', modifiedContent, 'utf8');
+updateBackstageVersionFile(latestVersion);
 
 console.log(`Successfully updated the Backstage Showcase to ${latestVersion}!`);

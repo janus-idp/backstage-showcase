@@ -2768,7 +2768,19 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-catalog-backend-module-github@0.4.4":
+"@backstage/plugin-catalog-backend-module-github-org@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-github-org/-/plugin-catalog-backend-module-github-org-0.1.0.tgz#c719e697b0eb5aa2781f80e7c23e5e66c65cffc4"
+  integrity sha512-VE2J1YU1C0zclwEE8b8vUfXVQKRvnENNvrHcdc7iXZc5DwDXUJ3C8zkIBjGvsg0yNK5iD1/asbkYJzAMxOoKiQ==
+  dependencies:
+    "@backstage/backend-common" "^0.19.8"
+    "@backstage/backend-plugin-api" "^0.6.6"
+    "@backstage/backend-tasks" "^0.5.11"
+    "@backstage/config" "^1.1.1"
+    "@backstage/plugin-catalog-backend-module-github" "^0.4.4"
+    "@backstage/plugin-catalog-node" "^1.4.7"
+
+"@backstage/plugin-catalog-backend-module-github@0.4.4", "@backstage/plugin-catalog-backend-module-github@^0.4.4":
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-github/-/plugin-catalog-backend-module-github-0.4.4.tgz#694c606a2c9cd9d6472c18e45c43de41e3cf065b"
   integrity sha512-t4pCU3LSXBxYSViXx/33aIz7nUZAy6C+QY2nosA2+WkNRMrerMhMjHT1zceo/DhxEjGONbqKOG10fhY9Jyhknw==
