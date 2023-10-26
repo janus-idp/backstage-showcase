@@ -39,6 +39,10 @@ jobs:
               return names;
             }
 
+            async function createEmptyChangeset(fileName) {
+              await fs.writeFile(fileName, "---\n---\n");
+            }
+
             async function createChangeset(fileName, packageBumps, packages) {
               let message = "";
               for (const [pkg, bump] of packageBumps) {
@@ -73,27 +77,32 @@ jobs:
               console.log("Not a renovate branch, skipping");
               return;
             }
+
             const diffOutput = await exec.getExecOutput("git diff --name-only HEAD~1");
             const diffFiles = diffOutput.stdout.split("\n");
             if (diffFiles.find((f) => f.startsWith(".changeset"))) {
               console.log("Changeset already exists, skipping");
               return;
             }
-            const files = diffFiles
-              .filter((file) => file !== "package.json") // skip root package.json
-              .filter((file) => file.includes("package.json"));
-            const packageNames = await getPackagesNames(files);
-            if (!packageNames.length) {
-              console.log("No package.json changes to published packages, skipping");
-              return;
-            }
+
             const { stdout: shortHash } = await exec.getExecOutput(
               "git rev-parse --short HEAD"
             );
             const fileName = `.changeset/renovate-${shortHash.trim()}.md`;
 
+            const files = diffFiles
+              .filter((file) => (file.startsWith("packages/") || file.startsWith("plugins/"))
+                              && file.includes("package.json"));
+            const packageNames = await getPackagesNames(files);
             const packageBumps = await getBumps(files);
-            await createChangeset(fileName, packageBumps, packageNames);
+
+            if (packageNames.length === 0 || packageBumps.size === 0) {
+              console.log("No package.json changes to published packages, skipping");
+              await createEmptyChangeset(fileName);
+            } else {
+              await createChangeset(fileName, packageBumps, packageNames);
+            }
+
             await exec.exec("git", ["add", fileName]);
             await exec.exec("git commit -C HEAD --amend --no-edit");
             await exec.exec("git push --force");
