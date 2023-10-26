@@ -99,10 +99,9 @@ jobs:
             if (packageNames.length === 0 || packageBumps.size === 0) {
               console.log("No package.json changes to published packages, skipping");
               await createEmptyChangeset(fileName);
-              return;
+            } else {
+              await createChangeset(fileName, packageBumps, packageNames);
             }
-
-            await createChangeset(fileName, packageBumps, packageNames);
 
             await exec.exec("git", ["add", fileName]);
             await exec.exec("git commit -C HEAD --amend --no-edit");
