@@ -33,7 +33,7 @@
     "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.2.0"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.3.0"
+    "@janus-idp/cli": "1.3.1"
   },
   "files": [
     "dist",

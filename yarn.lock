@@ -5267,10 +5267,10 @@
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-common/-/backstage-plugin-ocm-common-2.2.1.tgz#c90fa64a61ccbbd45da1d76b03292d20278f62ec"
   integrity sha512-tWdzV4MdZEq06yZkEacZ21QtXr4FiHMHk/ml0hvCgBrb5YuWi0451LkZ6yNXy2sMTsXgqS4RgXVDTZNoi+gFSg==
 
-"@janus-idp/backstage-plugin-ocm@3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm/-/backstage-plugin-ocm-3.3.0.tgz#6c0ff34db92636418c8e031f0db82d11055e82bc"
-  integrity sha512-dTHfCPsrjn1MSNvwxLoHTJTfijQgI3o0Hut3Q4m3+WQheGno4NZ0c2sCkplJOYgMb4fifwCvcGb14FqlC4F2vA==
+"@janus-idp/backstage-plugin-ocm@3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm/-/backstage-plugin-ocm-3.3.1.tgz#1d2794fe4005d260560bfb1ed0eff7ea49ced857"
+  integrity sha512-0XGx2VSGnJ//oU6ciAXcSyQM50OJIfaeM8NvKByXaqwvFB0eppMVzdMhUy/L1jYlFp1aNCo6oZPEf4d3U2GDCQ==
   dependencies:
     "@backstage/catalog-model" "^1.4.3"
     "@backstage/core-components" "^0.13.6"
@@ -5288,10 +5288,10 @@
     "@patternfly/react-icons" "^5.1.1"
     react-use "^17.4.0"
 
-"@janus-idp/backstage-plugin-quay@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-quay/-/backstage-plugin-quay-1.4.1.tgz#6498d21142e0a539a901611d990724e3e71a3aa2"
-  integrity sha512-qkk3i5Sa1dJflSebsR+3CJ6/NVKICkggqegax217s1KxSf6oCUM+XzGMtKEpALfa2yD7P5qZoZTmd1TQoRdHBw==
+"@janus-idp/backstage-plugin-quay@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-quay/-/backstage-plugin-quay-1.4.2.tgz#4051501d260d2c794e1cdb46e97784e63bcb296b"
+  integrity sha512-a6Xu5VTbgJ8qFN2inyper2L+KAwcFHjGfRwNdXt1NoldR419aJstxg5qgvWEkskMCez5+vjGwIzEghA3gfEzhQ==
   dependencies:
     "@backstage/catalog-model" "^1.4.3"
     "@backstage/core-components" "^0.13.6"
@@ -5304,10 +5304,10 @@
     "@material-ui/lab" "4.0.0-alpha.61"
     react-use "^17.4.0"
 
-"@janus-idp/backstage-plugin-tekton@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-tekton/-/backstage-plugin-tekton-3.0.0.tgz#4d2168a1df6375bc242da304c7b12000232a0a0a"
-  integrity sha512-/S6qAEjhHJuA0pS92JA1kiMimwG7N9sRnmhiz5aH8Gsalh8L5jv9WAvJAhY5MB6UJmTkDaLK+SRCWeNRhsayOw==
+"@janus-idp/backstage-plugin-tekton@3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-tekton/-/backstage-plugin-tekton-3.0.2.tgz#df1e066e0232f6e81ace3177e30a52709fa28902"
+  integrity sha512-y8LECkl8g1i/gNNbhNkADbQZyGEZNc1cI/jF+WOmhH9XRbZ6DrLzNZes2NephyxAk05q2QwqzjquJfrYUj+21w==
   dependencies:
     "@backstage/catalog-model" "^1.4.3"
     "@backstage/core-components" "^0.13.6"
@@ -5363,10 +5363,10 @@
     lodash "^4.17.21"
     react-use "^17.4.0"
 
-"@janus-idp/cli@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.3.0.tgz#adccc6828abd85517e9b67eab0d1c286bf1c500d"
-  integrity sha512-Cq0qZ5UqNqOCQhVMqNnKR4gd0zS6fnefQ7J6DDX0VkgjBxej3V7j2nJfSFVsLNNibSAvAAweNK7GL1mneFRGTw==
+"@janus-idp/cli@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.3.1.tgz#8272576a20ec88241c082d233f0a6d0e29cae77e"
+  integrity sha512-1GRfojww/cj3J0eNV3a6c7xE13f4HjqDb4ad0O2wirRfzY3aBvCl1/nCucmReYtpBI5TuQPmDL8O8S+7IixhBQ==
   dependencies:
     "@backstage/cli-common" "^0.1.13"
     "@backstage/cli-node" "^0.1.5"
@@ -6798,10 +6798,10 @@
     moment "^2.29.1"
     react-use "^17.2.4"
 
-"@roadiehq/backstage-plugin-datadog@2.1.16":
-  version "2.1.16"
-  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-datadog/-/backstage-plugin-datadog-2.1.16.tgz#235ce782a51b82f5bef9bbf35f7fd82ad020b6a0"
-  integrity sha512-6lkGhAQ61N21tmyq2HXVJIwDg9RsVNv1a00PTFJTO40BV4emIZIgW0eqK+qSyVJT+S4Q8aMlDUXYvEEvj1pfCw==
+"@roadiehq/backstage-plugin-datadog@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-datadog/-/backstage-plugin-datadog-2.2.0.tgz#f54dfd4588b85ceb2286b4f2131920ee49b52cd3"
+  integrity sha512-A+MIcG6ZmGI5ZCh1qmDmDnmL9EY8BUXMk2h4uMLOSEhkzxPitIVBaGWxAgW27Fi83NPRP1AYXLCXiuvvyIoGAg==
   dependencies:
     "@backstage/catalog-model" "^1.4.2"
     "@backstage/core-components" "^0.13.5"
