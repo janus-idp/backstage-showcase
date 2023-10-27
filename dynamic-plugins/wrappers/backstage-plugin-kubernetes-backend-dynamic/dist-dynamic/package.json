@@ -64,7 +64,7 @@
     "@backstage/catalog-client": "1.4.5",
     "@backstage/backend-common": "0.19.8",
     "@backstage/backend-plugin-api": "0.6.6",
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.4",
     "@backstage/catalog-model": "^1.4.3",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",

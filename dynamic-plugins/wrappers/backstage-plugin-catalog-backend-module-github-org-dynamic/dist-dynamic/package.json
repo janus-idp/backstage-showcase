@@ -35,7 +35,7 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.4",
     "@backstage/plugin-catalog-backend-module-github": "0.4.4"
   },
   "overrides": {
