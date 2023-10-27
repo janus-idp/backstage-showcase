@@ -52,12 +52,12 @@ data:
         # Other Proxies
         # customize developer hub instance
         '/developer-hub':
-          target: http://test-backstage-customization-provider-rhdh.backstage-os-2-eu-de-2-bx2-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud/
+          target: ${DH_TARGET_URL}
           changeOrigin: true
           # Change to "false" in case of using self hosted cluster with a self-signed certificate
           secure: true   
         '/developer-hub/tech-radar':
-          target: http://test-backstage-customization-provider-rhdh.backstage-os-2-eu-de-2-bx2-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud/tech-radar
+          target: ${DH_TECHRADAR_TARGET_URL}
           changeOrigin: true
           # Change to "false" in case of using self hosted cluster with a self-signed certificate
           secure: true
