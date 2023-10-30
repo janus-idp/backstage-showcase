@@ -1,9 +1,7 @@
 import { useSidebarOpenState } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
-import React from 'react';
-// FIXME: https://github.com/backstage/backstage/issues/20713
-// eslint-disable-next-line @backstage/no-undeclared-imports
 import { render } from '@testing-library/react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { SidebarLogo } from './SidebarLogo';
 
