@@ -1,30 +1,30 @@
-/*
- * Hi!
- *
- * Note that this is an EXAMPLE Backstage backend. Please check the README.
- *
- * Happy hacking!
- */
-
 import {
   CacheManager,
   DatabaseManager,
   HostDiscovery,
   ServerTokenManager,
+  ServiceBuilder,
   UrlReaders,
   createServiceBuilder,
+  createStatusCheckRouter,
   getRootLogger,
   loadBackendConfig,
   notFoundHandler,
   useHotMemoize,
-  createStatusCheckRouter,
-  ServiceBuilder,
 } from '@backstage/backend-common';
+import {
+  BackendPluginProvider,
+  LegacyPluginEnvironment as PluginEnvironment,
+  PluginManager,
+} from '@backstage/backend-plugin-manager';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
+import { DefaultEventBroker } from '@backstage/plugin-events-backend';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
-import Router from 'express-promise-router';
+import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
+import { RequestHandler, Router } from 'express';
+import { metricsHandler } from './metrics';
 import app from './plugins/app';
 import auth from './plugins/auth';
 import catalog from './plugins/catalog';
@@ -33,15 +33,6 @@ import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
-import { metricsHandler } from './metrics';
-import { RequestHandler } from 'express';
-import {
-  PluginManager,
-  BackendPluginProvider,
-  LegacyPluginEnvironment as PluginEnvironment,
-} from '@backstage/backend-plugin-manager';
-import { DefaultEventBroker } from '@backstage/plugin-events-backend';
-import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
 // in the upstream @backstage/backend-plugin-manager package.
@@ -68,7 +59,7 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
     tokenManager,
   });
 
-  root.info(`Created UrlReader ${reader}`);
+  root.info(`Created UrlReader ${JSON.stringify(reader)}`);
 
   return (plugin: string): PluginEnvironment => {
     const logger = root.child({ type: 'plugin', plugin });
@@ -95,9 +86,9 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
 type AddPluginBase = {
   isOptional?: boolean;
   plugin: string;
-  apiRouter: ReturnType<typeof Router>;
+  apiRouter: Router;
   createEnv: ReturnType<typeof makeCreateEnv>;
-  router: (env: PluginEnvironment) => Promise<ReturnType<typeof Router>>;
+  router: (env: PluginEnvironment) => Promise<Router>;
   options?: { path?: string };
 };
 
@@ -150,7 +141,7 @@ type AddRouterBase = {
   name: string;
   service: ServiceBuilder;
   root: string;
-  router: RequestHandler | ReturnType<typeof Router>;
+  router: RequestHandler | Router;
 };
 
 type AddRouterOptional = {

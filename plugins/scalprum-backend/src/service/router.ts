@@ -2,13 +2,12 @@ import {
   PluginEndpointDiscovery,
   errorHandler,
 } from '@backstage/backend-common';
-import { PluginManager } from '@backstage/backend-plugin-manager';
-import express from 'express';
-import Router from 'express-promise-router';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import * as url from 'url';
-import * as path from 'path';
+import { PluginManager } from '@backstage/backend-plugin-manager';
+import express, { Router } from 'express';
 import * as fs from 'fs';
+import * as path from 'path';
+import * as url from 'url';
 
 export interface RouterOptions {
   logger: LoggerService;
@@ -16,9 +15,7 @@ export interface RouterOptions {
   discovery: PluginEndpointDiscovery;
 }
 
-export async function createRouter(
-  options: RouterOptions,
-): Promise<express.Router> {
+export async function createRouter(options: RouterOptions): Promise<Router> {
   const { logger, pluginManager, discovery } = options;
 
   const router = Router();

@@ -51,6 +51,15 @@ plugins:
     pluginConfig:
       enabled:
         github: true
+      catalog:
+        providers:
+          github:
+            providerId:
+              organization: "${GITHUB_ORG}"
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+    pluginConfig:
+      enabled:
         githubOrg: true
       catalog:
         providers:
@@ -58,12 +67,6 @@ plugins:
             default:
               id: production
               orgUrl: "${GITHUB_ORG_URL}"
-
-          # Plugin: GitHub Discovery
-          # uncomment following lines and set GITHUB_ORG to enable GitHub Discovery
-          # github:
-          #   providerId:
-          #     organization: "${GITHUB_ORG}"
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
     pluginConfig:

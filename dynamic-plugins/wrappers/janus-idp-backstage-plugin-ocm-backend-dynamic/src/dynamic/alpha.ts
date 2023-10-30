@@ -22,7 +22,7 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
             catalog: catalogProcessingExtensionPoint,
             // TODO(davidfestal): This should be coreServices.rootConfig when de dependency to
             // backend-plugin-api is upgraded.
-            config: coreServices.config,
+            config: coreServices.rootConfig,
             logger: coreServices.logger,
             scheduler: coreServices.scheduler,
           },
