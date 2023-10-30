@@ -16,6 +16,10 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
+import './hooks';
+import installLogsCollector from 'cypress-terminal-report/src/installLogsCollector';
+
+installLogsCollector();
 /**
  * Adds custom command "cy.login" to the global "cy" object
  *
