@@ -1,15 +1,15 @@
 import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
+import {
   createRouter,
-  providers,
   defaultAuthProviderFactories,
   getDefaultOwnershipEntityRefs,
+  providers,
 } from '@backstage/plugin-auth-backend';
-import { Router } from 'express';
-import { PluginEnvironment } from '../types';
-import {
-  stringifyEntityRef,
-  DEFAULT_NAMESPACE,
-} from '@backstage/catalog-model';
+import type { Router } from 'express';
+import type { PluginEnvironment } from '../types';
 
 export default async function createPlugin(
   env: PluginEnvironment,

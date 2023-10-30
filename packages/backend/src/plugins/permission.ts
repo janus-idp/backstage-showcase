@@ -4,8 +4,8 @@ import {
   PolicyDecision,
 } from '@backstage/plugin-permission-common';
 import { PermissionPolicy } from '@backstage/plugin-permission-node';
-import { Router } from 'express';
-import { PluginEnvironment } from '../types';
+import type { Router } from 'express';
+import type { PluginEnvironment } from '../types';
 
 class DefaultPermissionPolicy implements PermissionPolicy {
   async handle(): Promise<PolicyDecision> {
