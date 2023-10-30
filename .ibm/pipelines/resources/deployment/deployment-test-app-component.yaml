@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  annotations:
+    app.openshift.io/vcs-uri: "https://github.com/janus-qe/test-bs-nodejs"
+    app.openshift.io/vcs-ref: main
+  labels:
+    backstage.io/kubernetes-id: developer-hub
+    app.openshift.io/runtime: perl    
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+        backstage.io/kubernetes-id: developer-hub
+    spec:
+      containers:
+      - name: ubuntu
+        image: ubuntu
+        command: 
+        - /bin/sh
+        args:
+        - -c
+        - "tail -f /dev/null"
