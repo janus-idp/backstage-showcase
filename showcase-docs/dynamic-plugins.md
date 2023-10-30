@@ -194,7 +194,7 @@ Examples of such a wrapper plugins can be found in the [Janus showcase repositor
 
 - So adding a dynamic plugin to the showcase is done by adding an entry to the `global.dynamic.plugins` list. Each entry has the following fields:
 
-  - `package`: a package specification of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
+  - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
   - `integrity`: (optional for local packages) An integrity checksum in the [form of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) for the specific package. Supported algorithms include `sha256`, `sha384` and `sha512`.
   - `pluginConfig`: an optional plugin-specific `app-config` yaml fragment.
   - `disabled`: disables the dynamic plugin if set to `true`. Default: `false`.
