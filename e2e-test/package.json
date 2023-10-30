@@ -1,0 +1,26 @@
+{
+  "name": "showcase-app",
+  "version": "1.0.0",
+  "description": "Showcase E2E test",
+  "main": "index.js",
+  "repository": "https://github.com/janus-idp/showcase-e2e",
+  "author": "janus-idp",
+  "license": "Apache-2.0",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:clearcache": "cypress cache clear",
+    "cypress:run": "yarn run lint && yarn cypress run --headless --browser chrome --spec 'cypress/e2e/*.spec.ts'",
+    "test:backstage-run": "yarn cypress:run",
+    "test:backstage-open": "yarn cypress:open",
+    "lint": "eslint cypress/e2e --ext .js,.ts"
+  },
+  "devDependencies": {
+    "@cypress/eslint-plugin-dev": "^5.3.2",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "cypress": "12.7.0",
+    "eslint": "^8.40.0",
+    "eslint-plugin-cypress": "^2.13.3",
+    "typescript": "^5.0.4"
+  }
+}
