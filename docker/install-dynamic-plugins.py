@@ -28,8 +28,10 @@ import binascii
 # It expects, as the only argument, the path to the root directory where
 # the dynamic plugins will be installed.
 #
-# Additionally The MAX_ENTRY_SIZE environment variable can be defined to set
+# Additionally, the MAX_ENTRY_SIZE environment variable can be defined to set
 # the maximum size of a file in the archive (default: 10MB).
+#
+# The SKIP_INTEGRITY_CHECK environment variable can be defined with ("true") to skip the integrity check of remote packages
 #
 # It expects the `dynamic-plugins.yaml` file to be present in the current directory and
 # to contain the list of plugins to install along with their optional configuration.
@@ -37,16 +39,18 @@ import binascii
 # The `dynamic-plugins.yaml` file must contain:
 #   - a `plugins` list of objects with the following properties:
 #     - `package`: the NPM package to install (either a package name or a path to a local package)
+#     - `integrity`: a string containing the integrity hash of the package (optional if package is local, as integrity check is not checked for local packages)
 #     - `pluginConfig`: an optional plugin-specific configuration fragment
 #     - `disabled`: an optional boolean to disable the plugin (`false` by default)
 #   - an optional `includes` list of yaml files to include, each file containing a list of plugins.
 #
 # The plugins listed in the included files will be included in the main list of considered plugins
-# and possibly overriden by the plugins already listed in the main `plugins` list.
+# and possibly overwritten by the plugins already listed in the main `plugins` list.
 #
 # For each enabled plugin mentioned in the main `plugins` list and the various included files,
 # the script will:
 #   - call `npm pack` to get the package archive and extract it in the dynamic plugins root directory
+#   - if the package comes from a remote registry, verify the integrity of the package with the given integrity hash
 #   - merge the plugin-specific configuration fragment in a global configuration file named `app-config.dynamic-plugins.yaml`
 #
 
