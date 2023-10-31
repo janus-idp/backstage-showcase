@@ -11,9 +11,6 @@ save_logs() {
 
     ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
     
-    # disabled redundant login and target
-    # ibmcloud login --apikey "${API_KEY}"
-    # ibmcloud target -g "${IBM_RESOURCE_GROUP}"  -r "${IBM_REGION}"
     CRN=$(ibmcloud resource service-instance ${IBM_COS} --output json | jq -r .[0].guid)
     ibmcloud cos config crn --crn "${CRN}"
     ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}.html" --file "/tmp/${LOGFILE}.html" --content-type "text/html; charset=UTF-8"
