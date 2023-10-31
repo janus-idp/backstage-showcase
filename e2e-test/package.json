@@ -21,6 +21,6 @@
     "cypress": "13.3.3",
     "eslint": "8.52.0",
     "eslint-plugin-cypress": "2.15.1",
-    "typescript": "5.0.4"
+    "typescript": "5.2.2"
   }
 }

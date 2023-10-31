@@ -38,7 +38,7 @@
     ]
   },
   "dependencies": {
-    "node-gyp": "9.4.0"
+    "node-gyp": "9.4.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
@@ -48,12 +48,12 @@
     "husky": "8.0.3",
     "lint-staged": "15.0.2",
     "prettier": "3.0.3",
-    "turbo": "1.10.15",
+    "turbo": "1.10.16",
     "typescript": "5.2.2"
   },
   "resolutions": {
-    "@types/react": "17.0.68",
-    "@types/react-dom": "17.0.21"
+    "@types/react": "17.0.69",
+    "@types/react-dom": "17.0.22"
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
