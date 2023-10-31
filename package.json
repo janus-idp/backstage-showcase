@@ -37,6 +37,9 @@
       "dynamic-plugins/wrappers/*"
     ]
   },
+  "dependencies": {
+    "node-gyp": "10.0.0"
+  },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
     "@changesets/cli": "2.26.2",
@@ -44,7 +47,6 @@
     "cross-var": "1.1.0",
     "husky": "8.0.3",
     "lint-staged": "15.0.2",
-    "node-gyp": "10.0.0",
     "prettier": "3.0.3",
     "turbo": "1.10.15",
     "typescript": "5.2.2"
