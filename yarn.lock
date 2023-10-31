@@ -5359,7 +5359,7 @@
     lodash "^4.17.21"
     react-use "^17.4.0"
 
-"@janus-idp/cli@1.3.1":
+"@janus-idp/cli@1.3.1", "@janus-idp/cli@^1.3.1":
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.3.1.tgz#8272576a20ec88241c082d233f0a6d0e29cae77e"
   integrity sha512-1GRfojww/cj3J0eNV3a6c7xE13f4HjqDb4ad0O2wirRfzY3aBvCl1/nCucmReYtpBI5TuQPmDL8O8S+7IixhBQ==
@@ -6571,6 +6571,16 @@
     lodash "^4.17.21"
     yup "^0.32.11"
 
+"@openshift/dynamic-plugin-sdk@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@openshift/dynamic-plugin-sdk/-/dynamic-plugin-sdk-4.0.0.tgz#9fe62be9a6e14a587f762e9a54782faf259786fa"
+  integrity sha512-OQsRqpRFz8IO6dZP6oKqdS7fLpdK25jxteevhussWFDd6RETNaLAG9GaSfvN0oigrzNIUTwH59kJx8PP8PrMug==
+  dependencies:
+    lodash "^4.17.21"
+    semver "^7.3.7"
+    uuid "^8.3.2"
+    yup "^0.32.11"
+
 "@opentelemetry/api@^1.0.1", "@opentelemetry/api@^1.3.0", "@opentelemetry/api@^1.4.0":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.6.0.tgz#de2c6823203d6f319511898bb5de7e70f5267e19"
@@ -7143,6 +7153,33 @@
   dependencies:
     "@sagold/json-pointer" "^5.1.1"
     ebnf "^1.9.1"
+
+"@scalprum/core@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.6.1.tgz#73cc67ef52b586dd83f164b9d8010682eacea0ea"
+  integrity sha512-sZ8T3AC402J6ilK9ufergLRTZ3jAnzhQLzF7xZE+5NFKSlHcphPMGVdtYt8NkYxuANsNNKTWw6DifOeWyBXiQw==
+  dependencies:
+    "@openshift/dynamic-plugin-sdk" "^4.0.0"
+
+"@scalprum/react-core@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.6.1.tgz#595a59964be16c5e13508e16c50530a4dedbd006"
+  integrity sha512-mnKKgxcIGwtNptmZzS9WYylN+/LeavBMSsYthLTwXTCT2sSGM4i69fMUJCCz/de2e7nlxux6ZbOGdi8VkEU6FQ==
+  dependencies:
+    "@openshift/dynamic-plugin-sdk" "^4.0.0"
+    "@scalprum/core" "^0.6.1"
+    lodash "^4.17.0"
+
+"@scalprum/react-test-utils@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-test-utils/-/react-test-utils-0.0.5.tgz#cbf1b7b6a9a100405a90ae4922af2b77cebfe98b"
+  integrity sha512-CqoL9V9Wcn9DM79O0BmqxmT0u10XheSikj2Up87oKX0U/uD/WH5Riau4G47QnYUW2VpBqybHPV+BGFHV1w8gcA==
+  dependencies:
+    "@openshift/dynamic-plugin-sdk" "^4.0.0"
+    "@scalprum/core" "^0.6.1"
+    "@scalprum/react-core" "^0.6.1"
+    webpack "^5.0.0"
+    whatwg-fetch "^3.6.0"
 
 "@segment/analytics-core@1.3.2":
   version "1.3.2"
@@ -19218,7 +19255,7 @@ lodash.zipobject@^4.1.3:
   resolved "https://registry.yarnpkg.com/lodash.zipobject/-/lodash.zipobject-4.1.3.tgz#b399f5aba8ff62a746f6979bf20b214f964dbef8"
   integrity sha512-A9SzX4hMKWS25MyalwcOnNoplyHbkNVsjidhTp8ru0Sj23wY9GWBKS8gAIGDSAqeWjIjvE4KBEl24XXAs+v4wQ==
 
-lodash@^4.15.0, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0:
+lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -26016,7 +26053,7 @@ webpack-sources@^3.2.3:
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-3.2.3.tgz#2d4daab8451fd4b240cc27055ff6a0c2ccea0cde"
   integrity sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==
 
-webpack@^5.70.0, webpack@^5.89.0:
+webpack@^5.0.0, webpack@^5.70.0, webpack@^5.89.0:
   version "5.89.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.89.0.tgz#56b8bf9a34356e93a6625770006490bf3a7f32dc"
   integrity sha512-qyfIC10pOr70V+jkmud8tMfajraGCZMBWJtrmuBymQKCrLTRejBI8STDp1MCyZu/QTdZSeacCQYpYNQVOzX5kw==
@@ -26073,6 +26110,11 @@ whatwg-encoding@^2.0.0:
   integrity sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==
   dependencies:
     iconv-lite "0.6.3"
+
+whatwg-fetch@^3.6.0:
+  version "3.6.19"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.19.tgz#caefd92ae630b91c07345537e67f8354db470973"
+  integrity sha512-d67JP4dHSbm2TrpFj8AbO8DnL1JXL5J9u0Kq2xW6d0TFDbCA3Muhdt8orXC22utleTVj7Prqt82baN6RBvnEgw==
 
 whatwg-mimetype@^2.3.0:
   version "2.3.0"
