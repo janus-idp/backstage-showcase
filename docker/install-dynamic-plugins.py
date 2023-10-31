@@ -107,7 +107,6 @@ def verify_package_integrity(plugin: dict, archive: str, working_directory: str)
     openssl_base64_process = subprocess.Popen(["openssl", "base64", "-A"], stdin=openssl_dgst_process.stdout, stdout=subprocess.PIPE)
 
     output, _ = openssl_base64_process.communicate()
-    print(output.decode('utf-8').strip())
     if hash_digest != output.decode('utf-8').strip():
       raise InstallException(f'{package}: The hash of the downloaded package {output.decode("utf-8").strip()} does not match the provided integrity hash {hash_digest} provided in the configuration file')
 
@@ -150,6 +149,7 @@ def main():
 
     if skipIntegrityCheck:
         print(f"SKIP_INTEGRITY_CHECK has been set to {skipIntegrityCheck}, skipping integrity check of packages")
+
     if 'includes' in content:
         includes = content['includes']
     else:
@@ -220,7 +220,7 @@ def main():
             package = os.path.join(os.getcwd(), package[2:])
         else:
           # If package is not local, then integrity check is mandatory
-          if not skipIntegrityCheck and not plugin['integrity']:
+          if not skipIntegrityCheck and not 'integrity' in plugin:
             raise InstallException(f"No integrity hash provided for Package {package}")
 
         print('\t==> Grabbing package archive through `npm pack`', flush=True)
@@ -230,7 +230,7 @@ def main():
 
         archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
 
-        if not package_is_local:
+        if not package_is_local and not skipIntegrityCheck:
           print('\t==> Verifying package integrity', flush=True)
           verify_package_integrity(plugin, archive, dynamicPluginsRoot)
 
