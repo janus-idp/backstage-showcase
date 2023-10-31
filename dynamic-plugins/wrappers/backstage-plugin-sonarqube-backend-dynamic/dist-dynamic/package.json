@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-sonarqube-backend-dynamic",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -42,11 +42,11 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.19.7",
-    "@backstage/backend-plugin-api": "^0.6.5",
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
-    "@backstage/config": "^1.1.0",
-    "@backstage/errors": "^1.2.2"
+    "@backstage/backend-common": "0.19.8",
+    "@backstage/backend-plugin-api": "0.6.6",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.5",
+    "@backstage/config": "^1.1.1",
+    "@backstage/errors": "^1.2.3"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

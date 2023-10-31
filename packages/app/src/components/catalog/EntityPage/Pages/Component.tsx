@@ -8,12 +8,12 @@ import {
   isComponentType,
 } from '@backstage/plugin-catalog';
 import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
-import { TektonPage } from '@janus-idp/backstage-plugin-tekton';
-import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
 import {
   EntityLighthouseContent,
   isLighthouseAvailable,
 } from '@backstage/plugin-lighthouse';
+import { TektonCI } from '@janus-idp/backstage-plugin-tekton';
+import { TopologyPage } from '@janus-idp/backstage-plugin-topology';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import {
@@ -70,7 +70,7 @@ const componentEntityPage = (componentType: 'service' | 'website') => (
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/tekton" title="Tekton">
-      <TektonPage />
+      <TektonCI />
     </EntityLayout.Route>
 
     <EntityLayout.Route

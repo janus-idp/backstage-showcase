@@ -43,10 +43,8 @@ If you found a bug in our showcase app, please submit an [issue](https://github.
 1. Run the following command
 
    ```console
-   yarn backstage-cli versions:bump --pattern '@{backstage,roadiehq,immobiliarelabs,janus-idp}/*'
+   yarn version:all
    ```
-
-2. Find and replace all `"^` with `"` filtered by `package.json` files.
 
 ### Enhancement Requests
 

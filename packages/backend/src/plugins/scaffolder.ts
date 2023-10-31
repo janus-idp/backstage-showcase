@@ -1,14 +1,14 @@
-import { CatalogClient } from '@backstage/catalog-client';
-import {
-  createBuiltinActions,
-  createRouter,
-} from '@backstage/plugin-scaffolder-backend';
-import { Router } from 'express';
-import { ScmIntegrations } from '@backstage/integration';
 import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
+import { CatalogClient } from '@backstage/catalog-client';
+import { ScmIntegrations } from '@backstage/integration';
+import {
+  createBuiltinActions,
+  createRouter,
+} from '@backstage/plugin-scaffolder-backend';
+import type { Router } from 'express';
 
 export default async function createPlugin(
   env: PluginEnvironment,
