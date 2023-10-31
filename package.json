@@ -37,14 +37,16 @@
       "dynamic-plugins/wrappers/*"
     ]
   },
+  "dependencies": {
+    "node-gyp": "9.4.0"
+  },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
     "@changesets/cli": "2.26.2",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
-    "lint-staged": "14.0.1",
-    "node-gyp": "9.4.0",
+    "lint-staged": "15.0.2",
     "prettier": "3.0.3",
     "turbo": "1.10.15",
     "typescript": "5.2.2"
