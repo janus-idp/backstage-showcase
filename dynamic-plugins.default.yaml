@@ -173,6 +173,12 @@ plugins:
             baseUrl: ${JENKINS_URL}
             username: ${JENKINS_USERNAME}
             apiKey: ${JENKINS_TOKEN}
+      proxy:
+        endpoints:
+          '/jenkins/api':
+            target: ${JENKINS_URL}
+            headers:
+              Authorization: ${JENKINS_TOKEN}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
     disabled: true
@@ -182,12 +188,24 @@ plugins:
       sonarqube:
         baseUrl: ${SONARQUBE_URL}
         apiKey: ${SONARQUBE_TOKEN}
+      proxy:
+        endpoints:
+          '/sonarqube':
+            # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
+            # target: https://sonarcloud.io/api
+            target: ${SONARQUBE_URL}/api
+            allowedMethods: ['GET']
+            auth: ${SONARQUBE_TOKEN}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
     disabled: true
     pluginConfig:
       enabled:
         techdocs: true
+      # Reference documentation http://backstage.io/docs/features/techdocs/configuration
+      # Note: After experimenting with basic setup, use CI/CD to generate docs
+      # and an external cloud storage when deploying TechDocs for production use-case.
+      # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
       techdocs:
         builder: ${TECHDOCS_BUILDER_TYPE}
         generator:
