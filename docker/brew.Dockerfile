@@ -20,7 +20,7 @@
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
-FROM registry.redhat.io/ubi9/nodejs-18:1 AS builder
+FROM registry.redhat.io/ubi9/nodejs-18:1 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -196,14 +196,14 @@ RUN microdnf update -y && \
     microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
 
 # Downstream only - copy from builder, not cleanup stage
-COPY --from=builder --chown=1001:1001 $CONTAINER_SOURCE/ ./
+COPY --from=build --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
 # Copy python script used to gather dynamic plugins
 COPY docker/install-dynamic-plugins.py ./
 RUN chmod a+r ./install-dynamic-plugins.py
 
 # Copy embedded dynamic plugins
-COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/dist ./dynamic-plugins/dist
+COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 RUN chmod -R a+r ./dynamic-plugins/
 
 # Copy embedded dynamic plugins to default dynamic plugins root
