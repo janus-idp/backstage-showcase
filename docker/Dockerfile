@@ -77,6 +77,7 @@ COPY --from=build $CONTAINER_SOURCE/yarn.lock \
      $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
      $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
      ./
+
 ENV TARBALL_PATH=.
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
     rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz

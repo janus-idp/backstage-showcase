@@ -19,8 +19,8 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-#@follow_tag(registry.redhat.io/ubi9/nodejs-18:1)
-FROM registry.redhat.io/ubi9/nodejs-18:1 AS build
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18:1-70.1697667811 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -102,10 +102,10 @@ RUN \
     ln -s /usr/include/node/common.gypi /usr/common.gypi; $YARN config set nodedir /usr; $YARN config set unsafe-perm true; \
     \
     # add yarn to path via symlink
-    ln -s $CONTAINER_SOURCE/$YARN /usr/local/bin/yarn; \
-    # echo $PATH; ls -la /usr/local/bin/yarn; whereis yarn;which yarn; yarn --version; \
-    \
-    # debug
+    ln -s $CONTAINER_SOURCE/$YARN /usr/local/bin/yarn
+
+# Downstream only - debug
+# RUN echo $PATH; ls -la /usr/local/bin/yarn; whereis yarn;which yarn; yarn --version; \
     # cat $CONTAINER_SOURCE/.npmrc || true; \
     # $YARN config list --verbose; npm config list; npm config list -l
 
@@ -147,6 +147,7 @@ RUN find dynamic-plugins -type f -not -name 'dist' -delete
 
 # Downstream only - files already exist, nothing to copy; next line for debugging only
 # RUN ls -l $CONTAINER_SOURCE/ $CONTAINER_SOURCE/packages/backend/dist/
+
 ENV TARBALL_PATH=./packages/backend/dist
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
     rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
@@ -161,8 +162,8 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-#@follow_tag(registry.redhat.io/ubi9/nodejs-18-minimal:1)
-FROM registry.redhat.io/ubi9/nodejs-18-minimal:1 AS runner
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697662866 AS runner
 USER 0
 
 # Env vars
@@ -195,7 +196,7 @@ RUN microdnf update -y && \
     popd >/dev/null; \
     microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
 
-# Downstream only - copy from builder, not cleanup stage
+# Downstream only - copy from build, not cleanup stage
 COPY --from=build --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
 # Copy python script used to gather dynamic plugins
