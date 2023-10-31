@@ -1,5 +1,117 @@
 # app
 
+## 2.0.0
+
+### Major Changes
+
+- 80376b4: Update backstage to [1.18.4](https://github.com/backstage/backstage/releases/tag/v1.18.4)
+
+### Minor Changes
+
+- 16d7322: Update Backstage to 1.19.x
+
+  <https://github.com/backstage/backstage/releases/tag/v1.19.0>
+
+- 6d93ba8: The [Nexus Repository Manager](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/nexus-repository-manager) plugin has been added with the <NexusRepositoryManagerPage /> in the Entity Page Image Registry tab.
+
+  Since the Nexus Repository Manager plugin requires a proxy endpoint, these changes are required to `app-config.yaml` if you want to add the Nexus Repository Manager plugin. Please read the [README](https://github.com/janus-idp/backstage-showcase/blob/main/README.md) and [Getting Started](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) for more details.
+
+  ```diff
+  proxy:
+    # Other proxy configurations...
+
+  + '/nexus-repository-manager':
+  +   target: ${NEXUS_REPOSITORY_MANAGER_URL}
+  +   headers:
+  +     X-Requested-With: 'XMLHttpRequest'
+  +     # Uncomment the following line to access a private Nexus Repository Manager using a token
+  +     # Authorization: 'Bearer <NEXUS_REPOSITORY_MANAGER_TOKEN>'
+  +   changeOrigin: true
+  +   # Change to "false" in case of using self hosted Nexus Repository Manager instance with a self-signed certificate
+  +   secure: ${NEXUS_REPOSITORY_MANAGER_SECURE}
+  ```
+
+- 68a2221: Dark theme support has been added to the showcase app.
+- fb319ee: Adds ability to configure branding icons and primary color
+- f61842d: Update backstage to [1.18.3](https://github.com/backstage/backstage/releases/tag/v1.18.0)
+- 620a9e8: Adds ability to configure header color and navigation indicator color
+
+### Patch Changes
+
+- 5dbf27f: Upgrade to backstage 1.19.6
+
+  <https://github.com/backstage/backstage/releases/tag/v1.19.6>
+
+- 6374999: Implemented Support for Custom Docker Image Labels in GitHub Actions Workflow:
+
+  Incorporated functionality to seamlessly manage custom labels for Docker images within the GitHub Actions workflow. The enhancements were made as follows:
+
+  1. **Enhanced Action Configuration (`action.yaml`):**
+     - Introduced the `imageLabels` parameter in the Docker build action configuration.
+     - The `imageLabels` parameter empowers users to define custom labels for Docker images during the build process.
+  2. **Improved Workflow Configuration (`nightly.yaml`):**
+     - Introduced the `imageLabels` parameter in the workflow configuration.
+     - Illustrative usage: Setting `imageLabels: quay.expires-after=14d` to specify a 14-day expiration for images.
+     - When executing the nightly workflow, the Docker image will be enriched with the designated labels.
+
+  **Usage Guide:**
+  To leverage the new `imageLabels` parameter, navigate to the workflow configuration (`nightly.yaml`) and modify the `imageLabels` parameter as needed:
+
+  ```yaml
+  jobs:
+    release:
+      ...
+      steps:
+        ...
+        - name: Publish
+          uses: ./.github/actions/docker-build
+          with:
+            ...
+            imageLabels: "quay.expires-after=14d" # modify this
+            push: true
+
+  ```
+
+- 758be24: Allow the `app.branding.iconLogo` configuration to configure the tab icon
+- 99c42b5: Fixed configuration for GitHub Auth plugin.
+
+  GitHub Auth now uses `AUTH_GITHUB_CLIENT_ID` and `AUTH_GITHUB_CLIENT_SECRET` variables.
+
+- dc1580d: Revert typography changes
+- 7188844: Updated dependency `@testing-library/user-event` to `14.5.1`.
+  Updated dependency `@types/supertest` to `2.0.14`.
+  Updated dependency `@types/mock-fs` to `4.13.2`.
+  Updated dependency `mock-fs` to `5.2.0`.
+  Updated dependency `supertest` to `6.3.3`.
+- b5ba124: Updated dependency `@mui/icons-material` to `5.14.14`.
+  Updated dependency `@mui/lab` to `5.0.0-alpha.149`.
+  Updated dependency `@mui/material` to `5.14.14`.
+  Updated dependency `react-router-dom` to `6.17.0`.
+  Updated dependency `@types/node` to `18.18.5`.
+  Updated dependency `@types/react` to `17.0.68`.
+  Updated dependency `better-sqlite3` to `8.7.0`.
+  Updated dependency `winston` to `3.11.0`.
+  Updated dependency `@types/express` to `4.17.19`.
+- af6f5a2: Updated dependency `@types/node` to `18.17.15`.
+- d47662e: Updated dependency `@mui/icons-material` to `5.14.9`.
+  Updated dependency `@mui/lab` to `5.0.0-alpha.144`.
+  Updated dependency `@mui/material` to `5.14.9`.
+  Updated dependency `react-router-dom` to `6.16.0`.
+  Updated dependency `@types/node` to `18.17.17`.
+- 6332c94: Updated dependency `@mui/icons-material` to `5.14.11`.
+  Updated dependency `@mui/lab` to `5.0.0-alpha.146`.
+  Updated dependency `@mui/material` to `5.14.11`.
+  Updated dependency `swr` to `2.2.4`.
+  Updated dependency `tss-react` to `4.9.2`.
+  Updated dependency `@types/node` to `18.18.0`.
+  Updated dependency `@types/react` to `17.0.66`.
+  Updated dependency `@types/react-dom` to `17.0.21`.
+  Updated dependency `@types/dockerode` to `3.3.20`.
+  Updated dependency `@types/express` to `4.17.18`.
+  Updated dependency `@types/express-serve-static-core` to `4.17.37`.
+- 7f5fddf: Add documentation for customizing the logo and themes of the showcase
+- 916a663: Prepare the showcase application for the switch of most plugins from static to dynamic loading.
+
 ## 1.0.1
 
 ### Patch Changes
