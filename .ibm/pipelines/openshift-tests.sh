@@ -193,7 +193,11 @@ export DISPLAY=:99
 (
     set -e
     echo Using PR container image: pr-${GIT_PR_NUMBER}
-yarn run cypress:run --config baseUrl="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+    yarn run cypress:run --config baseUrl="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+    # Store the exit code of the previous command
+    EXIT_CODE=$?  
+    # Exit the subshell with the same exit code
+    exit $EXIT_CODE  
 ) |& tee "/tmp/${LOGFILE}"
 
 RESULT=${PIPESTATUS[0]}
