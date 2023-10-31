@@ -120,6 +120,9 @@ RUN chmod a+r ./install-dynamic-plugins.py
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 RUN chmod -R a+r ./dynamic-plugins/
 
+COPY --from=build $CONTAINER_SOURCE/catalog-entities/ ./catalog-entities/
+RUN chmod -R a+r ./catalog-entities/
+
 # Copy embedded dynamic plugins to default dynamic plugins root
 RUN rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
