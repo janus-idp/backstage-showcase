@@ -26,7 +26,7 @@ save_logs() {
     fi
 
     cat <<EOF | pr-commenter -key-from-env-var ROBOT_KEY -application-id=${GITHUB_APP_PR_COMMENTER_ID} -pr-comment=${GIT_PR_NUMBER} -repository=${GITHUB_REPOSITORY_NAME} -org=${GITHUB_ORG_NAME}
-${NAME} on commit ${GIT_COMMIT} finished ${STATUS}.
+${NAME} on commit ${GIT_COMMIT} finished **${STATUS}**.
 View [test log](${BASE_URL}/${LOGFILE}.html)
 EOF
 }
