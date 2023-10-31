@@ -31,14 +31,14 @@ RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
   openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
   dnf update -y && dnf clean all
 
-# Env vars
-ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-
 # Downstream sources
 ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
 ENV EXTERNAL_SOURCE_NESTED=$EXTERNAL_SOURCE/distgit/containers/rhdh-hub
 # /remote-source/
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
+
+# Env vars
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
@@ -75,10 +75,11 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
 # fetch-retry-factor=2
 # strict-ssl=true
 # cafile="../../../registry-ca.pem"
+# NOTE: this is overridden to "/remote-source/registry-ca.pem" below
 # hadolint ignore=SC1091
 RUN \
     # debug
-    # ls -l $CONTAINER_SOURCE/cachito.env; \
+    # cat $CONTAINER_SOURCE/cachito.env; \
     # load envs
     source $CONTAINER_SOURCE/cachito.env; \
     \
@@ -88,10 +89,22 @@ RUN \
     # ls -la "${cert_path}"; \
     npm config set cafile "${cert_path}"; $YARN config set cafile "${cert_path}" -g; \
     \
+    # set longer timeouts
+    # npm config set fetch-retry-maxtimeout 6000000; \
+    # npm config set fetch-retry-mintimeout 1000000; \
+    $YARN config set network-timeout 600000 -g; \
+    # set cachito as default registry
+    $YARN config set registry $(npm config get registry) -g; \
+    \
     # debug
     # ls -l /usr/; \
     # set up node dir with common.gypi and unsafe-perms=true
-    ln -s /usr/include/node/common.gypi /usr/common.gypi; $YARN config set nodedir /usr; $YARN config set unsafe-perm true
+    ln -s /usr/include/node/common.gypi /usr/common.gypi; $YARN config set nodedir /usr; $YARN config set unsafe-perm true; \
+    \
+    # add yarn to path via symlink
+    ln -s $CONTAINER_SOURCE/$YARN /usr/local/bin/yarn; \
+    # echo $PATH; ls -la /usr/local/bin/yarn; whereis yarn;which yarn; yarn --version; \
+    \
     # debug
     # cat $CONTAINER_SOURCE/.npmrc || true; \
     # $YARN config list --verbose; npm config list; npm config list -l
@@ -108,17 +121,31 @@ RUN git config --global --add safe.directory ./
 # hadolint ignore=DL3059
 RUN $YARN build --filter=backend
 
+# Downstream only - Cachito configuration
+# replace external registry refs with cachito ones
+RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
+    for d in $(find . -name yarn.lock); do echo; echo "===== $d ====="; \
+      sed -i $d -r -e "s#(https://registry.yarnpkg.com|https://registry.npmjs.org)#${cachitoRegistry}#g"; \
+      grep resolved $d | head -1; echo "Total $(grep resolved $d | wc -l) resolution lines in $d"; \
+    done
+# debug - were the above changes successful?
+# RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
+#     for d in $(find . -name yarn.lock); do \
+#       found=$(grep -E "yarnpkg.com|npmjs.org" $d | head -1); \
+#       if [[ $found ]]; then echo;echo "$d : $found"; fi; \
+#     done; \
+#     echo "<=== Check for yarn.lock files that don't use cachito registry ==="
+
 # Build dynamic plugins
 RUN $YARN export-dynamic
 RUN $YARN copy-dynamic-plugins dist
 
-# Cleanup dynamic plugins sources
-# Downstream only
+# Downstream only - clean up dynamic plugins sources
 RUN find dynamic-plugins -type f -not -name 'dist' -delete
 
 # Stage 4 - Build the actual backend image and install production dependencies
 
-# Downstream only - files already exist, nothing to copy - debugging
+# Downstream only - files already exist, nothing to copy; next line for debugging only
 # RUN ls -l $CONTAINER_SOURCE/ $CONTAINER_SOURCE/packages/backend/dist/
 ENV TARBALL_PATH=./packages/backend/dist
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
@@ -127,6 +154,7 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 # Copy app-config files needed in runtime
 # Upstream only
 # COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
+# COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
@@ -179,7 +207,7 @@ COPY --from=builder $CONTAINER_SOURCE/dynamic-plugins/dist ./dynamic-plugins/dis
 RUN chmod -R a+r ./dynamic-plugins/
 
 # Copy embedded dynamic plugins to default dynamic plugins root
-RUN rm -f dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+RUN rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
