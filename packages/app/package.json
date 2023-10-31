@@ -59,9 +59,9 @@
     "@janus-idp/backstage-plugin-quay": "1.4.2",
     "@janus-idp/backstage-plugin-tekton": "3.0.2",
     "@janus-idp/backstage-plugin-topology": "1.15.9",
-    "@mui/icons-material": "5.14.14",
-    "@mui/lab": "5.0.0-alpha.149",
-    "@mui/material": "5.14.14",
+    "@mui/icons-material": "5.14.15",
+    "@mui/lab": "5.0.0-alpha.150",
+    "@mui/material": "5.14.15",
     "@roadiehq/backstage-plugin-argo-cd": "2.3.5",
     "@roadiehq/backstage-plugin-datadog": "2.2.0",
     "@roadiehq/backstage-plugin-github-insights": "2.3.21",
@@ -74,7 +74,7 @@
     "react-router-dom": "6.17.0",
     "react-use": "17.4.0",
     "swr": "2.2.4",
-    "tss-react": "4.9.2"
+    "tss-react": "4.9.3"
   },
   "devDependencies": {
     "@backstage/test-utils": "1.4.4",
@@ -83,9 +83,9 @@
     "@testing-library/react": "12.1.5",
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "14.5.1",
-    "@types/node": "18.18.5",
-    "@types/react": "17.0.68",
-    "@types/react-dom": "17.0.21"
+    "@types/node": "18.18.7",
+    "@types/react": "17.0.69",
+    "@types/react-dom": "17.0.22"
   },
   "browserslist": {
     "production": [

@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
-    "tar": "6.1.12"
+    "tar": "6.2.0"
   },
   "peerDependencies": {}
 }
