@@ -39,7 +39,7 @@
     "@backstage/plugin-search-backend-node": "1.2.10",
     "@internal/plugin-scalprum-backend": "*",
     "app": "*",
-    "better-sqlite3": "8.7.0",
+    "better-sqlite3": "9.0.0",
     "express": "4.18.2",
     "express-prom-bundle": "6.6.0",
     "isolated-vm": "4.6.0",
