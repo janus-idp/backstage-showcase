@@ -21,8 +21,9 @@ app:
         headerColor1: ${HEADER_DARK_COLOR_1}
         headerColor2: ${HEADER_DARK_COLOR_2}
         navigationIndicatorColor: ${NAV_INDICATOR_DARK_COLOR}
+
 organization:
-  name: My Org
+  name: ${ORGANIZATION_NAME}
 
 backend:
   # Required for authentication. This secret is shared by all backend plugins.

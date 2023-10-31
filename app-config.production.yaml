@@ -17,7 +17,8 @@ backend:
   baseUrl: http://localhost:7007
   # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
   # all interfaces, the most permissive setting. The right value depends on your specific deployment.
-  listen: ':7007'
+  listen:
+    port: 7007
 
   # config options: https://node-postgres.com/api/client
   database:
@@ -33,12 +34,3 @@ backend:
       ssl:
         ca: # if you have a CA file and want to verify it you can uncomment this section
           $file: /mnt/certs/ca.crt
-
-auth:
-  environment: production
-  providers:
-    github:
-      production:
-        clientId: ${GITHUB_APP_CLIENT_ID}
-        clientSecret: ${GITHUB_APP_CLIENT_SECRET}
-    oauth2Proxy: {}
