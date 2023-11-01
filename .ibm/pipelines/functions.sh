@@ -1,5 +1,6 @@
 # Save the logs from the file passed as parameter #1
 # and send a message to GitHub PR using parameter #2 as name of test
+#
 # Env vars:
 #  IBM_RESOURCE_GROUP: Resource group of the Cloud ObjectStorage
 #  IBM_COS: Cloud Object Storage containing the bucket on which to save logs
