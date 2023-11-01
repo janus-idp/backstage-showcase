@@ -49,4 +49,34 @@ export interface Config {
       };
     };
   };
+  /** @deepVisibility frontend */
+  dynamicPlugins: {
+    /** @deepVisibility frontend */
+    frontend: {
+      [key: string]: {
+        dynamicRoutes: ({
+          [key: string]: any;
+        } & {
+          path: string;
+          module: string;
+          importName: string;
+          menuItem: {
+            icon: string;
+            text: string;
+          };
+        })[];
+        routeBindings: {
+          bindTarget: string;
+          bindMap: {
+            [key: string]: string;
+          };
+        }[];
+        mountPoints: {
+          mountPoint: string;
+          module: string;
+          importName?: string;
+        }[];
+      };
+    };
+  };
 }
