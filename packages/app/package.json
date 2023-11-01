@@ -59,7 +59,7 @@
     "@janus-idp/backstage-plugin-quay": "1.4.2",
     "@janus-idp/backstage-plugin-tekton": "3.0.2",
     "@janus-idp/backstage-plugin-topology": "1.15.9",
-    "@mui/icons-material": "5.14.15",
+    "@mui/icons-material": "5.14.16",
     "@mui/lab": "5.0.0-alpha.150",
     "@mui/material": "5.14.15",
     "@roadiehq/backstage-plugin-argo-cd": "2.3.5",
