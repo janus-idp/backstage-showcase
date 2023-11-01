@@ -9,7 +9,6 @@ export default async function createPlugin(
     config: env.config,
     logger: env.logger,
     discovery: env.discovery,
-    database: env.database,
     identity: env.identity,
     permissions: env.permissions,
     tokenManager: env.tokenManager,
