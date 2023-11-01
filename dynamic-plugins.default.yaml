@@ -1,6 +1,5 @@
 plugins:
-  - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
-
+  # Group: Github
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
@@ -11,7 +10,6 @@ plugins:
           github:
             providerId:
               organization: "${GITHUB_ORG}"
-
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
     disabled: true
     pluginConfig:
@@ -23,7 +21,100 @@ plugins:
             default:
               id: production
               orgUrl: "${GITHUB_ORG_URL}"
+  - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-github-actions:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                module: GithubActionsPlugin
+                importName: EntityGithubActionsContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isGithubActionsAvailable
+  - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-github-issues:
+            mountPoints:
+              - mountPoint: entity.page.issues/cards
+                module: GithubIssuesPlugin
+                importName: GithubIssuesCard
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - hasAnnotation: github.com/project-slug
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-insights
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-github-insights:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: GithubInsightsPlugin
+                importName: EntityGithubInsightsComplianceCard
+                config:
+                  layout:
+                    gridRowEnd: "span 2"
+                    gridColumnStart: "span 4"
+                  if:
+                    allOf:
+                      - isGithubInsightsAvailable
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-github-pull-requests:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: GithubPullRequestsPlugin
+                importName: EntityGithubPullRequestsOverviewCard
+                config:
+                  layout:
+                    gridRow: "1 / span 2"
+                    gridColumn: "5 / span 4"
+                  if:
+                    allOf:
+                      - isGithubPullRequestsAvailable
+              - mountPoint: entity.page.pull-requests/cards
+                module: GithubPullRequestsPlugin
+                importName: EntityGithubPullRequestsContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isGithubPullRequestsAvailable
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-security-insights
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-security-insights:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: SecurityInsightsPlugin
+                importName: EntityDependabotAlertsCard
+                config:
+                  layout:
+                    gridRowEnd: "span 2"
+                    gridColumnStart: "span 4"
+                  if:
+                    allOf:
+                      - isSecurityInsightsAvailable
 
+  # Group: Gitlab
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
@@ -32,7 +123,50 @@ plugins:
       gitlab:
         host: ${GITLAB_HOST}
         token: ${GITLAB_TOKEN}
-
+  - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          immobiliarelabs.backstage-plugin-gitlab:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: GitlabPlugin
+                importName: EntityGitlabMergeRequestStatsCard
+                config:
+                  layout:
+                    gridRowEnd: "span 2"
+                    gridColumnStart: "span 4"
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+              - mountPoint: entity.page.ci/cards
+                module: GitlabPlugin
+                importName: EntityGitlabPipelinesTable
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+              - mountPoint: entity.page.issues/cards
+                module: GitlabPlugin
+                importName: EntityGitlabIssuesTable
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+              - mountPoint: entity.page.pull-requests/cards
+                module: GitlabPlugin
+                importName: EntityGitlabMergeRequestsTable
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isGitlabAvailable
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
     disabled: true
     pluginConfig:
@@ -41,25 +175,10 @@ plugins:
       catalog:
         providers:
           gitlab: {}
-
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
     disabled: true
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
-    disabled: true
-    pluginConfig:
-      enabled:
-        keycloak: true
-      catalog:
-        providers:
-          keycloakOrg:
-            default:
-              baseUrl: "${KEYCLOAK_BASE_URL}"
-              loginRealm: "${KEYCLOAK_LOGIN_REALM}"
-              realm: "${KEYCLOAK_REALM}"
-              clientId: "${KEYCLOAK_CLIENT_ID}"
-              clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
-
+  # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
     disabled: true
     pluginConfig:
@@ -89,33 +208,42 @@ plugins:
                 authProvider: 'serviceAccount'
                 skipTLSVerify: true
                 serviceAccountToken: ${K8S_CLUSTER_TOKEN}
-
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
     disabled: true
     pluginConfig:
-      enabled:
-        ocm: true
-      catalog:
-        providers:
-          ocm:
-            default:
-              name: "${OCM_HUB_NAME}"
-              url: "${OCM_HUB_URL}"
-              serviceAccountToken: "${moc_infra_token}"
-              owner: janus-authors
-
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-kubernetes:
+            mountPoints:
+              - mountPoint: entity.page.kubernetes/cards
+                module: KubernetesPlugin
+                importName: EntityKubernetesContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    anyOf:
+                      - hasAnnotation: backstage.io/kubernetes-id
+                      - hasAnnotation: backstage.io/kubernetes-namespace
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
     disabled: true
     pluginConfig:
-      enabled:
-        aap: true
-      catalog:
-        providers:
-          aap:
-            prod:
-              baseUrl: '${AAP_BASE_URL}'
-              authorization: "${AAP_AUTH_TOKEN}"
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-topology:
+            mountPoints:
+              - mountPoint: entity.page.topology/cards
+                module: TopologyPlugin
+                importName: TopologyPage
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    anyOf:
+                      - hasAnnotation: backstage.io/kubernetes-id
+                      - hasAnnotation: backstage.io/kubernetes-namespace
 
+  # Group: ArgoCD
   - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
     disabled: true
     pluginConfig:
@@ -133,7 +261,6 @@ plugins:
               - name: argoInstance2
                 url: "${ARGOCD_INSTANCE2_URL}"
                 token: "${ARGOCD_AUTH_TOKEN2}"
-
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
     disabled: true
     pluginConfig:
@@ -151,7 +278,33 @@ plugins:
               - name: argoInstance2
                 url: "${ARGOCD_INSTANCE2_URL}"
                 token: "${ARGOCD_AUTH_TOKEN2}"
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-argo-cd:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: ArgocdPlugin
+                importName: EntityArgoCDOverviewCard
+                config:
+                  layout:
+                    gridColumn: "1 / span 8"
+                  if:
+                    allOf:
+                      - isArgocdAvailable
+              - mountPoint: entity.page.cd/cards
+                module: ArgocdPlugin
+                importName: EntityArgoCDHistoryCard
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isArgocdAvailable
 
+  # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
@@ -161,7 +314,33 @@ plugins:
         host: dev.azure.com
         token: ${AZURE_TOKEN}
         organization: ${AZURE_ORG}
+  - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-azure-devops:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                module: AzureDevopsPlugin
+                importName: EntityAzurePipelinesContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isAzureDevOpsAvailable
+              - mountPoint: entity.page.pull-requests/cards
+                module: AzureDevopsPlugin
+                importName: EntityAzurePullRequestsContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isAzureDevOpsAvailable
 
+  # Group: Jenkins
   - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
     disabled: true
     pluginConfig:
@@ -173,7 +352,24 @@ plugins:
             baseUrl: ${JENKINS_URL}
             username: ${JENKINS_USERNAME}
             apiKey: ${JENKINS_TOKEN}
+  - package: ./dynamic-plugins/dist/backstage-plugin-jenkins
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-jenkins:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                module: JenkinsPlugin
+                importName: EntityJenkinsContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isJenkinsAvailable
 
+  # Group: SonarQube
   - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
     disabled: true
     pluginConfig:
@@ -182,6 +378,104 @@ plugins:
       sonarqube:
         baseUrl: ${SONARQUBE_URL}
         apiKey: ${SONARQUBE_TOKEN}
+  - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-sonarqube:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: SonarQubePlugin
+                importName: EntitySonarQubeCard
+                config:
+                  layout:
+                    gridColumnStart: "span 4"
+                    gridRowEnd: "span 2"
+                  if:
+                    allOf:
+                      - isSonarQubeAvailable
+
+  # Group: OCM
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+    disabled: true
+    pluginConfig:
+      enabled:
+        ocm: true
+      catalog:
+        providers:
+          ocm:
+            default:
+              name: "${OCM_HUB_NAME}"
+              url: "${OCM_HUB_URL}"
+              serviceAccountToken: "${moc_infra_token}"
+              owner: janus-authors
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-ocm:
+            dynamicRoutes:
+              - path: /ocm
+                module: OcmPlugin
+                importName: OcmPage
+                menuItem:
+                  icon: Storage
+                  text: Clusters
+            mountPoints:
+              - mountPoint: entity.page.overview/context
+                module: OcmPlugin
+                importName: ClusterContextProvider
+              - mountPoint: entity.page.overview/cards
+                module: OcmPlugin
+                importName: ClusterAvailableResourceCard
+                config:
+                  layout:
+                    gridRowStart: 1
+                    gridColumnStart: "span 1"
+                  if:
+                    anyOf:
+                    - isKind: resource
+                    - isType: kubernetes-cluster
+              - mountPoint: entity.page.overview/cards
+                importName: ClusterInfoCard
+                module: OcmPlugin
+                config:
+                  if:
+                    allOf:
+                    - isKind: resource
+                    - isType: kubernetes-cluster
+
+  # Standalone plugins
+  - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
+    disabled: true
+    pluginConfig:
+      enabled:
+        aap: true
+      catalog:
+        providers:
+          aap:
+            prod:
+              baseUrl: '${AAP_BASE_URL}'
+              authorization: "${AAP_AUTH_TOKEN}"
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+    disabled: true
+    pluginConfig:
+      enabled:
+        keycloak: true
+      catalog:
+        providers:
+          keycloakOrg:
+            default:
+              baseUrl: "${KEYCLOAK_BASE_URL}"
+              loginRealm: "${KEYCLOAK_LOGIN_REALM}"
+              realm: "${KEYCLOAK_REALM}"
+              clientId: "${KEYCLOAK_CLIENT_ID}"
+              clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
 
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
     disabled: true
@@ -202,3 +496,163 @@ plugins:
             credentials:
               accessKeyId: ${AWS_ACCESS_KEY_ID}
               secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-dynatrace:
+            mountPoints:
+              - mountPoint: entity.page.monitoring/cards
+                module: DynatracePlugin
+                importName: DynatraceTab
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isDynatraceAvailable
+
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-jira
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-jira:
+            mountPoints:
+              - mountPoint: entity.page.issues/cards
+                module: JiraPlugin
+                importName: EntityJiraOverviewCard
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isJiraAvailable
+
+  - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-datadog
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-datadog:
+            mountPoints:
+              - mountPoint: entity.page.monitoring/cards
+                module: DatadogPlugin
+                importName: EntityDatadogContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isDatadogAvailable
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-tekton:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                module: TektonPlugin
+                importName: TektonCI
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isTektonCIAvailable
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-quay:
+            mountPoints:
+              - mountPoint: entity.page.image-registry/cards
+                module: QuayPlugin
+                importName: QuayPage
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                    - isQuayAvailable
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-nexus-repository-manager
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-nexus-repository-manager:
+            mountPoints:
+              - mountPoint: entity.page.image-registry/cards
+                module: NexusRepositoryManagerPlugin
+                importName: NexusRepositoryManagerPage
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                    - isNexusRepositoryManagerAvailable
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-jfrog-artifactory:
+            mountPoints:
+              - mountPoint: entity.page.image-registry/cards
+                module: JfrogArtifactoryPlugin
+                importName: JfrogArtifactoryPage
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                    - isJfrogArtifactoryAvailable
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-pagerduty
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-pagerduty:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: PagerdutyPlugin
+                importName: EntityPagerDutyCard
+                config:
+                  layout:
+                    gridColumnEnd: "span 6"
+                  if:
+                    allOf:
+                      - isPluginApplicableToEntity
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-lighthouse:
+            dynamicRoutes:
+              - path: /lighthouse
+                module: LighthousePlugin
+                importName: LighthousePage
+                menuItem:
+                  icon: Assessment
+                  text: Lighthouse
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                module: LighthousePlugin
+                importName: EntityLastLighthouseAuditCard
+                config:
+                  layout:
+                    gridColumnEnd: "span 6"
+                  if:
+                    allOf:
+                      - isLighthouseAvailable

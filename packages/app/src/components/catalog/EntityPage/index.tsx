@@ -1,27 +1,345 @@
-import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
 import React from 'react';
-
 import {
-  componentPage,
-  defaultEntityPage,
-  apiPage,
-  groupPage,
-  userPage,
-  systemPage,
-  domainPage,
-  resourcePage,
-} from './Pages';
+  EntityApiDefinitionCard,
+  EntityConsumedApisCard,
+  EntityConsumingComponentsCard,
+  EntityHasApisCard,
+  EntityProvidedApisCard,
+  EntityProvidingComponentsCard,
+} from '@backstage/plugin-api-docs';
+import {
+  EntityAboutCard,
+  EntityDependsOnComponentsCard,
+  EntityDependsOnResourcesCard,
+  EntityHasComponentsCard,
+  EntityHasResourcesCard,
+  EntityHasSubcomponentsCard,
+  EntityHasSystemsCard,
+  EntityLayout,
+  EntityLinksCard,
+  EntityOrphanWarning,
+  EntityProcessingErrorsPanel,
+  EntityRelationWarning,
+  EntitySwitch,
+  hasCatalogProcessingErrors,
+  hasRelationWarnings,
+  isKind,
+  isOrphan,
+} from '@backstage/plugin-catalog';
+import tab from '../tab';
+import { hasLinks, isType } from '../utils';
+import {
+  Direction,
+  EntityCatalogGraphCard,
+} from '@backstage/plugin-catalog-graph';
+import {
+  EntityTechdocsContent,
+  isTechDocsAvailable,
+} from '@backstage/plugin-techdocs';
+import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
+import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
+import {
+  EntityGroupProfileCard,
+  EntityMembersListCard,
+  EntityOwnershipCard,
+  EntityUserProfileCard,
+} from '@backstage/plugin-org';
+import {
+  RELATION_API_CONSUMED_BY,
+  RELATION_API_PROVIDED_BY,
+  RELATION_CONSUMES_API,
+  RELATION_DEPENDENCY_OF,
+  RELATION_DEPENDS_ON,
+  RELATION_HAS_PART,
+  RELATION_PART_OF,
+  RELATION_PROVIDES_API,
+} from '@backstage/catalog-model';
+import Grid from '../Grid';
 
 export const entityPage = (
-  <EntitySwitch>
-    <EntitySwitch.Case if={isKind('component')} children={componentPage} />
-    <EntitySwitch.Case if={isKind('api')} children={apiPage} />
-    <EntitySwitch.Case if={isKind('group')} children={groupPage} />
-    <EntitySwitch.Case if={isKind('user')} children={userPage} />
-    <EntitySwitch.Case if={isKind('system')} children={systemPage} />
-    <EntitySwitch.Case if={isKind('domain')} children={domainPage} />
-    <EntitySwitch.Case if={isKind('resource')} children={resourcePage} />
+  <EntityLayout>
+    {tab({
+      path: '/',
+      title: 'Overview',
+      mountPoint: 'entity.page.overview',
+      children: (
+        <>
+          <EntitySwitch>
+            <EntitySwitch.Case if={isOrphan}>
+              <Grid item sx={{ gridColumn: '1 / -1' }}>
+                <EntityOrphanWarning />
+              </Grid>
+            </EntitySwitch.Case>
+          </EntitySwitch>
+          <EntitySwitch>
+            <EntitySwitch.Case if={hasRelationWarnings}>
+              <Grid item sx={{ gridColumn: '1 / -1' }}>
+                <EntityRelationWarning />
+              </Grid>
+            </EntitySwitch.Case>
+          </EntitySwitch>
+          <EntitySwitch>
+            <EntitySwitch.Case if={hasCatalogProcessingErrors}>
+              <Grid item sx={{ gridColumn: '1 / -1' }}>
+                <EntityProcessingErrorsPanel />
+              </Grid>
+            </EntitySwitch.Case>
+          </EntitySwitch>
+          <EntitySwitch>
+            <EntitySwitch.Case if={hasLinks}>
+              <Grid item sx={{ gridColumn: '1 / span 4' }}>
+                <EntityLinksCard />
+              </Grid>
+            </EntitySwitch.Case>
+          </EntitySwitch>
+          <Grid item sx={{ gridColumn: '1 / span 4' }}>
+            <EntityAboutCard />
+          </Grid>
+          <EntitySwitch>
+            <EntitySwitch.Case if={isKind('domain')}>
+              <Grid item sx={{ gridColumn: '5 / -1', gridRowEnd: 'span 4' }}>
+                <EntityCatalogGraphCard variant="gridItem" height={400} />
+              </Grid>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityHasSystemsCard variant="gridItem" />
+              </Grid>
+            </EntitySwitch.Case>
+            <EntitySwitch.Case if={isKind('group')}>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityGroupProfileCard variant="gridItem" />
+              </Grid>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityOwnershipCard variant="gridItem" />
+              </Grid>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityMembersListCard />
+              </Grid>
+            </EntitySwitch.Case>
+            <EntitySwitch.Case if={isKind('user')}>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityUserProfileCard variant="gridItem" />
+              </Grid>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityOwnershipCard variant="gridItem" />
+              </Grid>
+            </EntitySwitch.Case>
+            <EntitySwitch.Case if={isKind('api')}>
+              <Grid item sx={{ gridColumn: '5 / -1', gridRowEnd: 'span 4' }}>
+                <EntityCatalogGraphCard variant="gridItem" height={400} />
+              </Grid>
+              <Grid item sx={{ gridColumn: '1 / span 6' }}>
+                <EntityProvidingComponentsCard />
+              </Grid>
+              <Grid item sx={{ gridColumn: '7 / span 6' }}>
+                <EntityConsumingComponentsCard />
+              </Grid>
+            </EntitySwitch.Case>
+            <EntitySwitch.Case if={isKind('system')}>
+              <Grid item sx={{ gridColumn: '5 / -1', gridRowEnd: 'span 4' }}>
+                <EntityCatalogGraphCard variant="gridItem" height={400} />
+              </Grid>
+              <Grid item sx={{ gridColumn: '5 / -1' }}>
+                <EntityHasComponentsCard />
+              </Grid>
+              <Grid item sx={{ gridColumn: '1 / span 6' }}>
+                <EntityHasApisCard />
+              </Grid>
+              <Grid item sx={{ gridColumn: '7 / span 6' }}>
+                <EntityHasResourcesCard />
+              </Grid>
+            </EntitySwitch.Case>
+            <EntitySwitch.Case if={isKind('resource')}>
+              <Grid item sx={{ gridColumn: '5 / -1', gridRowEnd: 'span 4' }}>
+                <EntityCatalogGraphCard variant="gridItem" height={400} />
+              </Grid>
+            </EntitySwitch.Case>
+          </EntitySwitch>
+        </>
+      ),
+    })}
 
-    <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
-  </EntitySwitch>
+    {tab({
+      path: '/topology',
+      title: 'Topology',
+      mountPoint: 'entity.page.topology',
+    })}
+
+    {tab({
+      path: '/issues',
+      title: 'Issues',
+      mountPoint: 'entity.page.issues',
+    })}
+
+    {tab({
+      path: '/pr',
+      title: 'Pull/Merge Requests',
+      mountPoint: 'entity.page.pull-requests',
+    })}
+
+    {tab({
+      path: '/ci',
+      title: 'CI',
+      mountPoint: 'entity.page.ci',
+    })}
+
+    {tab({
+      path: '/cd',
+      title: 'CD',
+      mountPoint: 'entity.page.cd',
+    })}
+
+    {tab({
+      path: '/kubernetes',
+      title: 'Kubernetes',
+      mountPoint: 'entity.page.kubernetes',
+    })}
+
+    {tab({
+      path: '/tekton',
+      title: 'Tekton',
+      mountPoint: 'entity.page.tekton',
+    })}
+
+    {tab({
+      path: '/image-registry',
+      title: 'Image Registry',
+      mountPoint: 'entity.page.image-registry',
+    })}
+
+    {tab({
+      path: '/monitoring',
+      title: 'Monitoring',
+      mountPoint: 'entity.page.monitoring',
+    })}
+
+    {tab({
+      path: '/lighthouse',
+      title: 'Lighthouse',
+      mountPoint: 'entity.page.lighthouse',
+    })}
+
+    {tab({
+      path: '/api',
+      title: 'Api',
+      mountPoint: 'entity.page.api',
+      if: e => isType('service')(e) && isKind('component')(e),
+      children: (
+        <EntitySwitch>
+          <EntitySwitch.Case
+            if={e => isType('service')(e) && isKind('component')(e)}
+          >
+            <Grid item sx={{ gridColumn: '1 / 7' }}>
+              <EntityProvidedApisCard />
+            </Grid>
+            <Grid item sx={{ gridColumn: '7 / -1' }}>
+              <EntityConsumedApisCard />
+            </Grid>
+          </EntitySwitch.Case>
+        </EntitySwitch>
+      ),
+    })}
+
+    {tab({
+      path: '/dependencies',
+      title: 'Dependencies',
+      mountPoint: 'entity.page.dependencies',
+      if: isKind('component'),
+      children: (
+        <EntitySwitch>
+          <EntitySwitch.Case if={isKind('component')}>
+            <Grid item sx={{ gridRow: '1 / 6', gridColumn: '1 / 7' }}>
+              <EntityCatalogGraphCard
+                variant="gridItem"
+                direction={Direction.TOP_BOTTOM}
+                height={900}
+              />
+            </Grid>
+            <Grid item sx={{ gridColumn: '7 / -1' }}>
+              <EntityDependsOnComponentsCard variant="gridItem" />
+            </Grid>
+            <Grid item sx={{ gridColumn: '7 / -1' }}>
+              <EntityDependsOnResourcesCard variant="gridItem" />
+            </Grid>
+            <Grid item sx={{ gridColumn: '7 / -1' }}>
+              <EntityHasSubcomponentsCard variant="gridItem" />
+            </Grid>
+            <Grid item sx={{ gridColumn: '7 / -1' }}>
+              <EntityProvidedApisCard />
+            </Grid>
+            <Grid item sx={{ gridColumn: '7 / -1' }}>
+              <EntityConsumedApisCard />
+            </Grid>
+          </EntitySwitch.Case>
+        </EntitySwitch>
+      ),
+    })}
+
+    {tab({
+      path: '/docs',
+      title: 'Docs',
+      mountPoint: 'entity.page.docs',
+      if: isTechDocsAvailable,
+      children: (
+        <EntitySwitch>
+          <EntitySwitch.Case if={isTechDocsAvailable}>
+            <Grid item sx={{ gridColumn: '1 / -1' }}>
+              <EntityTechdocsContent>
+                <TechDocsAddons>
+                  <ReportIssue />
+                </TechDocsAddons>
+              </EntityTechdocsContent>
+            </Grid>
+          </EntitySwitch.Case>
+        </EntitySwitch>
+      ),
+    })}
+
+    {tab({
+      path: '/definition',
+      title: 'Definition',
+      mountPoint: 'entity.page.definition',
+      if: isKind('api'),
+      children: (
+        <EntitySwitch>
+          <EntitySwitch.Case if={isKind('api')}>
+            <Grid item sx={{ gridColumn: '1 / -1' }}>
+              <EntityApiDefinitionCard />
+            </Grid>
+          </EntitySwitch.Case>
+        </EntitySwitch>
+      ),
+    })}
+
+    {tab({
+      path: '/diagram',
+      title: 'Diagram',
+      mountPoint: 'entity.page.diagram',
+      if: isKind('system'),
+      children: (
+        <EntitySwitch>
+          <EntitySwitch.Case if={isKind('system')}>
+            <Grid item sx={{ gridColumn: '1 / -1' }}>
+              <EntityCatalogGraphCard
+                variant="gridItem"
+                direction={Direction.TOP_BOTTOM}
+                title="System Diagram"
+                height={700}
+                relations={[
+                  RELATION_PART_OF,
+                  RELATION_HAS_PART,
+                  RELATION_API_CONSUMED_BY,
+                  RELATION_API_PROVIDED_BY,
+                  RELATION_CONSUMES_API,
+                  RELATION_PROVIDES_API,
+                  RELATION_DEPENDENCY_OF,
+                  RELATION_DEPENDS_ON,
+                ]}
+                unidirectional={false}
+              />
+            </Grid>
+          </EntitySwitch.Case>
+        </EntitySwitch>
+      ),
+    })}
+  </EntityLayout>
 );
