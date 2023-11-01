@@ -7154,14 +7154,14 @@
     "@sagold/json-pointer" "^5.1.1"
     ebnf "^1.9.1"
 
-"@scalprum/core@^0.6.1":
+"@scalprum/core@0.6.1", "@scalprum/core@^0.6.1":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.6.1.tgz#73cc67ef52b586dd83f164b9d8010682eacea0ea"
   integrity sha512-sZ8T3AC402J6ilK9ufergLRTZ3jAnzhQLzF7xZE+5NFKSlHcphPMGVdtYt8NkYxuANsNNKTWw6DifOeWyBXiQw==
   dependencies:
     "@openshift/dynamic-plugin-sdk" "^4.0.0"
 
-"@scalprum/react-core@^0.6.1":
+"@scalprum/react-core@0.6.1", "@scalprum/react-core@^0.6.1":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.6.1.tgz#595a59964be16c5e13508e16c50530a4dedbd006"
   integrity sha512-mnKKgxcIGwtNptmZzS9WYylN+/LeavBMSsYthLTwXTCT2sSGM4i69fMUJCCz/de2e7nlxux6ZbOGdi8VkEU6FQ==
@@ -19255,7 +19255,7 @@ lodash.zipobject@^4.1.3:
   resolved "https://registry.yarnpkg.com/lodash.zipobject/-/lodash.zipobject-4.1.3.tgz#b399f5aba8ff62a746f6979bf20b214f964dbef8"
   integrity sha512-A9SzX4hMKWS25MyalwcOnNoplyHbkNVsjidhTp8ru0Sj23wY9GWBKS8gAIGDSAqeWjIjvE4KBEl24XXAs+v4wQ==
 
-lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0:
+lodash@4.17.21, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
