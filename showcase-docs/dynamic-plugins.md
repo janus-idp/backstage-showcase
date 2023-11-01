@@ -56,7 +56,7 @@ These recommended changes to the `package.json` are summarized below:
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.1.0
+    "@janus-idp/cli": "1.3.1"
   },
   ...
   "files": [
