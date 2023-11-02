@@ -1,46 +1,72 @@
 import {
-  DEFAULT_NAMESPACE,
+  createRouter,
+  providers,
+  defaultAuthProviderFactories,
+  ProviderFactories,
+} from '@backstage/plugin-auth-backend';
+import { Router } from 'express';
+import { PluginEnvironment } from '../types';
+import {
   stringifyEntityRef,
+  DEFAULT_NAMESPACE,
 } from '@backstage/catalog-model';
 import {
-  createRouter,
-  defaultAuthProviderFactories,
-  getDefaultOwnershipEntityRefs,
-  providers,
-} from '@backstage/plugin-auth-backend';
-import type { Router } from 'express';
-import type { PluginEnvironment } from '../types';
+  AuthProviderFactory,
+  AuthResolverContext,
+} from '@backstage/plugin-auth-node';
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
-  return await createRouter({
-    logger: env.logger,
-    config: env.config,
-    database: env.database,
-    discovery: env.discovery,
-    tokenManager: env.tokenManager,
-    providerFactories: {
-      ...defaultAuthProviderFactories,
+/**
+ * Function is responsible for signing in a user with the catalog user and
+ * creating an entity reference based on the provided name parameter.
+ * If the user exist in the catalog , it returns the signed-in user.
+ * If an error occurs, it issues a token with the user entity reference.
+ *
+ * @param name
+ * @param ctx
+ * @returns
+ */
+async function signInWithCatalogUserOptional(
+  name: string,
+  ctx: AuthResolverContext,
+) {
+  try {
+    const signedInUser = await ctx.signInWithCatalogUser({
+      entityRef: { name },
+    });
 
-      // This replaces the default GitHub auth provider with a customized one.
-      // The `signIn` option enables sign-in for this provider, using the
-      // identity resolution logic that's provided in the `resolver` callback.
-      //
-      // This particular resolver makes all users share a single "guest" identity.
-      // It should only be used for testing and trying out Backstage.
-      //
-      // If you want to use a production ready resolver you can switch to
-      // the one that is commented out below, it looks up a user entity in the
-      // catalog using the GitHub username of the authenticated user.
-      // That resolver requires you to have user entities populated in the catalog,
-      // for example using https://backstage.io/docs/integrations/github/org
-      //
-      // There are other resolvers to choose from, and you can also create
-      // your own, see the auth documentation for more details:
-      //
-      //   https://backstage.io/docs/auth/identity-resolver
-      github: providers.github.create({
+    return Promise.resolve(signedInUser);
+  } catch (e) {
+    const userEntityRef = stringifyEntityRef({
+      kind: 'User',
+      name: name,
+      namespace: DEFAULT_NAMESPACE,
+    });
+
+    return ctx.issueToken({
+      claims: {
+        sub: userEntityRef,
+        ent: [userEntityRef],
+      },
+    });
+  }
+}
+
+function getAuthProviderFactory(providerId: string): AuthProviderFactory {
+  switch (providerId) {
+    case `auth0`:
+      return providers.auth0.create({
+        signIn: {
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.id;
+            if (!userId) {
+              throw new Error(`Auth0 user profile does not contain an id`);
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
+          },
+        },
+      });
+    case 'github':
+      return providers.github.create({
         signIn: {
           async resolver({ result: { fullProfile } }, ctx) {
             const userId = fullProfile.username;
@@ -49,60 +75,70 @@ export default async function createPlugin(
                 `GitHub user profile does not contain a username`,
               );
             }
-
-            // Creates an entity
-            const userEntity = stringifyEntityRef({
-              kind: 'User',
-              name: userId,
-              namespace: DEFAULT_NAMESPACE,
-            });
-
-            const { entity } = await ctx.findCatalogUser({
-              entityRef: userEntity,
-            });
-
-            const ownership = getDefaultOwnershipEntityRefs(entity);
-
-            return ctx.issueToken({
-              claims: {
-                sub: userEntity,
-                ent: ownership,
-              },
-            });
+            return await signInWithCatalogUserOptional(userId, ctx);
           },
         },
-      }),
-      oauth2Proxy: providers.oauth2Proxy.create({
+      });
+    case 'google':
+      return providers.google.create({
+        signIn: {
+          resolver:
+            providers.google.resolvers.emailLocalPartMatchingUserEntityName(),
+        },
+      });
+    case `oauth2Proxy`:
+      return providers.oauth2Proxy.create({
         signIn: {
           async resolver({ result }, ctx) {
             const name = result.getHeader('x-forwarded-preferred-username');
             if (!name) {
               throw new Error('Request did not contain a user');
             }
-
-            try {
-              const signedInUser = await ctx.signInWithCatalogUser({
-                entityRef: { name },
-              });
-
-              return Promise.resolve(signedInUser);
-            } catch (e) {
-              const userEntityRef = stringifyEntityRef({
-                kind: 'User',
-                name: name,
-                namespace: DEFAULT_NAMESPACE,
-              });
-
-              return ctx.issueToken({
-                claims: {
-                  sub: userEntityRef,
-                  ent: [userEntityRef],
-                },
-              });
-            }
+            return await signInWithCatalogUserOptional(name, ctx);
           },
         },
-      }),
-    },
+      });
+    case `microsoft`:
+      return providers.microsoft.create({
+        signIn: {
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.id;
+            if (!userId) {
+              throw new Error(`Microsoft user profile does not contain an id`);
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
+          },
+        },
+      });
+    default:
+      throw new Error(`No auth provider found for ${providerId}`);
+  }
+}
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const providersConfig = env.config.getConfig('auth.providers');
+  const authFactories: ProviderFactories = {};
+  providersConfig.keys().forEach(providerId => {
+    const factory = getAuthProviderFactory(providerId);
+    authFactories[providerId] = factory;
+  });
+
+  const providerFactiories: ProviderFactories = {
+    ...defaultAuthProviderFactories,
+    ...authFactories,
+  };
+  env.logger.info(
+    `Enabled Provider Factories : ${JSON.stringify(providerFactiories)}`,
+  );
+
+  return await createRouter({
+    logger: env.logger,
+    config: env.config,
+    database: env.database,
+    discovery: env.discovery,
+    tokenManager: env.tokenManager,
+    providerFactories: providerFactiories,
   });
 }
