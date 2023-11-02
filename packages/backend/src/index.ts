@@ -206,14 +206,11 @@ async function main() {
     router: scaffolder,
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
-
   await addPlugin({
     plugin: 'permission',
-    config,
     apiRouter,
     createEnv,
     router: permission,
-    isOptional: true,
   });
 
   for (const plugin of pluginManager.backendPlugins()) {
@@ -252,12 +249,6 @@ async function main() {
     router: apiRouter,
   });
   await addRouter({
-    name: 'app',
-    service,
-    root: '',
-    router: await app(appEnv),
-  });
-  await addRouter({
     name: 'healthcheck',
     service,
     root: '',
@@ -272,7 +263,12 @@ async function main() {
     root: '',
     router: metricsHandler(),
   });
-
+  await addRouter({
+    name: 'app',
+    service,
+    root: '',
+    router: await app(appEnv),
+  });
   await service.start().catch(err => {
     console.log(err);
     process.exit(1);
