@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-70.1697547871 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-18:1-70.1697667811 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -30,13 +30,13 @@ RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
   openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
   dnf update -y && dnf clean all
 
-# Env vars
-ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-
 # Upstream sources
 ENV EXTERNAL_SOURCE=.
 ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
+
+# Env vars
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
@@ -45,7 +45,6 @@ RUN chmod +x $YARN
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
-
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
@@ -57,7 +56,6 @@ RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 3 - Build packages
 FROM deps AS build
-
 COPY $EXTERNAL_SOURCE_NESTED ./
 
 RUN git config --global --add safe.directory ./
@@ -76,10 +74,10 @@ FROM skeleton AS cleanup
 
 # Upstream only - copy the install dependencies from the build stage and context
 COPY --from=build $CONTAINER_SOURCE/yarn.lock \
-  $CONTAINER_SOURCE/package.json \
-  $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
-  $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
-  ./
+     $CONTAINER_SOURCE/package.json \
+     $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
+     $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
+     ./
 ENV TARBALL_PATH=.
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
   rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
@@ -94,7 +92,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697537911 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697662866 AS runner
 USER 0
 
 # Env vars
@@ -120,10 +118,10 @@ RUN chmod a+r ./install-dynamic-plugins.py
 
 # Copy embedded dynamic plugins
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-RUN chmod -R a+r ./dynamic-plugins/dist/
+RUN chmod -R a+r ./dynamic-plugins/
 
 # Copy embedded dynamic plugins to default dynamic plugins root
-RUN rm -f dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+RUN rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

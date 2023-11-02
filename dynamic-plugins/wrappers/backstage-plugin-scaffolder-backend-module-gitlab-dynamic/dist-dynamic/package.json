@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-scaffolder-backend-module-gitlab-dynamic",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -38,12 +38,12 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^0.6.5",
-    "@backstage/integration": "^1.7.0",
-    "@backstage/plugin-scaffolder-node": "^0.2.5",
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.5-janus.0",
-    "@backstage/config": "^1.1.0",
-    "@backstage/errors": "^1.2.2"
+    "@backstage/backend-plugin-api": "0.6.6",
+    "@backstage/integration": "1.7.1",
+    "@backstage/plugin-scaffolder-node": "0.2.7",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.5",
+    "@backstage/config": "^1.1.1",
+    "@backstage/errors": "^1.2.3"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

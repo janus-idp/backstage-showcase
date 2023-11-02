@@ -1,11 +1,11 @@
-import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
-import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
-import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
-import { Router } from 'express';
 import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-plugin-manager';
+import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
+import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
+import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
+import type { Router } from 'express';
 
 export default async function createPlugin(
   env: PluginEnvironment,

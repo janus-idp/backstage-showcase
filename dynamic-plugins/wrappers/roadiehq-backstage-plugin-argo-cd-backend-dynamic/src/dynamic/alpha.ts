@@ -1,9 +1,9 @@
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { loggerToWinstonLogger } from '@backstage/backend-common';
 import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
-import { loggerToWinstonLogger } from '@backstage/backend-common';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
 import { createRouter } from '@roadiehq/backstage-plugin-argo-cd-backend';
 
 export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
@@ -14,7 +14,7 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
       register(env) {
         env.registerInit({
           deps: {
-            config: coreServices.config,
+            config: coreServices.rootConfig,
             logger: coreServices.logger,
             http: coreServices.httpRouter,
           },
