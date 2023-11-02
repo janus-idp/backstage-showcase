@@ -173,12 +173,6 @@ plugins:
             baseUrl: ${JENKINS_URL}
             username: ${JENKINS_USERNAME}
             apiKey: ${JENKINS_TOKEN}
-      proxy:
-        endpoints:
-          '/jenkins/api':
-            target: ${JENKINS_URL}
-            headers:
-              Authorization: ${JENKINS_TOKEN}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
     disabled: true
@@ -188,14 +182,6 @@ plugins:
       sonarqube:
         baseUrl: ${SONARQUBE_URL}
         apiKey: ${SONARQUBE_TOKEN}
-      proxy:
-        endpoints:
-          '/sonarqube':
-            # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
-            # target: https://sonarcloud.io/api
-            target: ${SONARQUBE_URL}/api
-            allowedMethods: ['GET']
-            auth: ${SONARQUBE_TOKEN}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
     disabled: true
