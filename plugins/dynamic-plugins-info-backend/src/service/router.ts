@@ -3,8 +3,7 @@ import {
   PluginManager,
   BaseDynamicPlugin,
 } from '@backstage/backend-plugin-manager';
-import express from 'express';
-import Router from 'express-promise-router';
+import express, { Router } from 'express';
 import { Logger } from 'winston';
 
 export interface RouterOptions {
