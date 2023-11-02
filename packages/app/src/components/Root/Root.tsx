@@ -22,10 +22,35 @@ import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import * as MuiIcons from '@mui/icons-material';
+
+const useStyles = makeStyles()({
+  sidebarItem: {
+    textDecorationLine: 'none',
+    '&:hover': {
+      textDecorationLine: 'underline',
+    },
+  },
+});
+
+// Backstage does not expose the props object, pulling it from the component argument
+type SidebarItemProps = Parameters<typeof SidebarItem>[0];
+
+const SideBarItemWrapper = (props: SidebarItemProps) => {
+  const {
+    classes: { sidebarItem },
+  } = useStyles();
+  return (
+    <SidebarItem
+      {...props}
+      className={`${sidebarItem}${props.className ?? ''}`}
+    />
+  );
+};
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const { dynamicRoutes } = useContext(DynamicRootContext);
@@ -39,16 +64,28 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MenuIcon />}>
           {/* Global nav, not org-specific */}
-          <SidebarItem icon={HomeIcon as any} to="/" text="Home" />
-          <SidebarItem icon={AppsIcon as any} to="catalog" text="Catalog" />
-          <SidebarItem icon={ExtensionIcon as any} to="api-docs" text="APIs" />
-          <SidebarItem icon={LibraryBooks as any} to="docs" text="Docs" />
-          <SidebarItem
+          <SideBarItemWrapper icon={HomeIcon as any} to="/" text="Home" />
+          <SideBarItemWrapper
+            icon={AppsIcon as any}
+            to="catalog"
+            text="Catalog"
+          />
+          <SideBarItemWrapper
+            icon={ExtensionIcon as any}
+            to="api-docs"
+            text="APIs"
+          />
+          <SideBarItemWrapper
+            icon={LibraryBooks as any}
+            to="docs"
+            text="Docs"
+          />
+          <SideBarItemWrapper
             icon={SchoolIcon as any}
             to="learning-paths"
             text="Learning Paths"
           />
-          <SidebarItem
+          <SideBarItemWrapper
             icon={CreateComponentIcon as any}
             to="create"
             text="Create..."
@@ -56,12 +93,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
-            <SidebarItem
+            <SideBarItemWrapper
               icon={MapIcon as any}
               to="tech-radar"
               text="Tech Radar"
             />
-            <SidebarItem
+            <SideBarItemWrapper
               icon={AssessmentIcon as any}
               to="lighthouse"
               text="Lighthouse"
@@ -69,7 +106,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
             {dynamicRoutes.map(({ menuItem, path }) => {
               if (menuItem) {
                 return (
-                  <SidebarItem
+                  <SideBarItemWrapper
                     icon={(MuiIcons as any)[menuItem.icon] as any}
                     to={path}
                     text={menuItem.text}
