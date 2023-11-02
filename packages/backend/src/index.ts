@@ -206,14 +206,11 @@ async function main() {
     router: scaffolder,
   });
   await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
-
   await addPlugin({
     plugin: 'permission',
-    config,
     apiRouter,
     createEnv,
     router: permission,
-    isOptional: true,
   });
 
   for (const plugin of pluginManager.backendPlugins()) {
