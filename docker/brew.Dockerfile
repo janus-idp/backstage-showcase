@@ -140,8 +140,9 @@ RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachito
 RUN $YARN export-dynamic
 RUN $YARN copy-dynamic-plugins dist
 
-# Downstream only - clean up dynamic plugins sources
-RUN find dynamic-plugins -type f -not -name 'dist' -delete
+# Downstream only - clean up dynamic plugins sources:
+# Only keep the dist sub-folder in the dynamic-plugins folder
+RUN find dynamic-plugins -maxdepth 1 -mindepth 1 -type d -not -name dist -exec rm -Rf {} \;
 
 # Stage 4 - Build the actual backend image and install production dependencies
 
