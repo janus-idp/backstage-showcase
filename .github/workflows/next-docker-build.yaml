@@ -49,6 +49,6 @@ jobs:
           imageName: ${{ github.repository }}
           imageTags: |
             type=raw,value=next
-            type=sha
+            type=sha,prefix=next-
           imageLabels: quay.expires-after=14d
           push: true
