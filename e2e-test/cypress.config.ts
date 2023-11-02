@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress';
+import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter';
 
 export default defineConfig({
   defaultCommandTimeout: 40000,
@@ -18,5 +19,10 @@ export default defineConfig({
     defaultCommandTimeout: 10000,
     baseUrl: 'https://PLACE_HOLDER',
     specPattern: 'cypress/e2e/**/*.spec.ts',
+    setupNodeEvents(on) {
+      installLogsPrinter(on, {
+        printLogsToConsole: 'always',
+      });
+    },
   },
 });

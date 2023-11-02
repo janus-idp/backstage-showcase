@@ -9,7 +9,6 @@ function cleanup {
     rm -rf ~/tmpbin
 }
 
-# This will run the 'cleanup' function on exit, regardless of exit status:
 trap cleanup EXIT
 
 add_helm_repos() {
@@ -85,7 +84,11 @@ install_helm() {
 
 LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
 echo "Log file: ${LOGFILE}"
-# source ./.ibm/pipelines/functions.sh
+TEST_NAME="backstage-showcase Tests"
+
+source ./.ibm/pipelines/functions.sh
+
+skip_if_only
 
 # install ibmcloud
 install_ibmcloud
@@ -168,7 +171,13 @@ oc apply -f $DIR/resources/config_map/configmap-app-config-rhdh.yaml --namespace
 
 add_helm_repos
 
-helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}
+GIT_PR_RESPONSE=$(curl -s "https://api.github.com/repos/${GITHUB_ORG_NAME}/${GITHUB_REPOSITORY_NAME}/pulls/${GIT_PR_NUMBER}")
+LONG_SHA=$(echo "$GIT_PR_RESPONSE" | jq -r '.head.sha')
+SHORT_SHA=$(git rev-parse --short ${LONG_SHA})
+
+echo "Tag name with short SHA: pr-${GIT_PR_NUMBER}-${SHORT_SHA}"
+
+helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
 
 echo "Waiting for backstage deployment..."
 sleep 120
@@ -186,6 +195,16 @@ yarn install
 Xvfb :99 &
 export DISPLAY=:99
 
-yarn run cypress:run --config baseUrl="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+(
+    set -e
+    echo Using PR container image: pr-${GIT_PR_NUMBER}
+    yarn run cypress:run --config baseUrl="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+) |& tee "/tmp/${LOGFILE}"
+
+RESULT=${PIPESTATUS[0]}
 
 pkill Xvfb
+
+save_logs "${LOGFILE}" "${TEST_NAME}" ${RESULT}
+
+exit ${RESULT}
