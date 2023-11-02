@@ -21,4 +21,25 @@ export class Common {
       cy.get(item, { timeout }).should('not.exist');
     }
   }
+
+  static logintoGithub() {
+    cy.visit('https://github.com/login');
+    cy.get('#login_field').type(Cypress.env('GH_USER_ID'));
+    cy.get('#password').type(Cypress.env('GH_USER_PASS'), { log: false });
+    cy.get('[value="Sign in"]').click();
+    cy.get('#app_totp').type(this.getGitHub2FAOTP(), { log: false });
+    cy.get('button[aria-label="Open user account menu"]').should('be.visible');
+  }
+
+  static loginAsGithubUser() {
+    this.logintoGithub();
+    cy.visit('/');
+    UIhelper.clickButton('Sign In');
+  }
+
+  static getGitHub2FAOTP(): string {
+    const secret = Cypress.env('GH_2FA_SECRET');
+    const token = require('otplib').authenticator.generate(secret);
+    return token;
+  }
 }
