@@ -185,27 +185,29 @@ async function main() {
   const apiRouter = Router();
 
   // Scalprum frontend plugins provider
-  const scalprumEnv = useHotMemoize(module, () => createEnv('scalprum'));
-  apiRouter.use(
-    '/scalprum',
-    await scalprumRouter({
-      logger: scalprumEnv.logger,
-      pluginManager,
-      discovery: scalprumEnv.discovery,
-    }),
-  );
+  await addPlugin({
+    plugin: 'scalprum',
+    apiRouter,
+    createEnv,
+    router: env =>
+      scalprumRouter({
+        logger: env.logger,
+        pluginManager,
+        discovery: env.discovery,
+      }),
+  });
 
   // Dynamic plugins info provider
-  const dynamicPluginsInfoEnv = useHotMemoize(module, () =>
-    createEnv('dynamic-plugins-info'),
-  );
-  apiRouter.use(
-    '/dynamic-plugins-info',
-    await dynamicPluginsInfoRouter({
-      logger: dynamicPluginsInfoEnv.logger,
-      pluginManager,
-    }),
-  );
+  await addPlugin({
+    plugin: 'dynamic-plugins-info',
+    apiRouter,
+    createEnv,
+    router: env =>
+      dynamicPluginsInfoRouter({
+        logger: env.logger,
+        pluginManager,
+      }),
+  });
 
   // Required plugins
   await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
@@ -223,7 +225,21 @@ async function main() {
     plugin: 'permission',
     apiRouter,
     createEnv,
-    router: permission,
+    router: env =>
+      permission(env, {
+        getPluginIds: () => [
+          'catalog', // Add the other required static plugins here
+          ...(pluginManager
+            .backendPlugins()
+            .map(p => {
+              if (p.installer.kind !== 'legacy') {
+                return undefined;
+              }
+              return p.installer.router?.pluginID;
+            })
+            .filter(p => p !== undefined) as string[]),
+        ],
+      }),
   });
 
   for (const plugin of pluginManager.backendPlugins()) {
