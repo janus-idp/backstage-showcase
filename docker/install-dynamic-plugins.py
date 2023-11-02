@@ -216,12 +216,13 @@ def main():
         print('\n======= Installing dynamic plugin', package, flush=True)
 
         package_is_local = package.startswith('./')
+
+        # If package is not local, then integrity check is mandatory
+        if not package_is_local and not skipIntegrityCheck and not 'integrity' in plugin:
+          raise InstallException(f"No integrity hash provided for Package {package}")
+
         if package_is_local:
             package = os.path.join(os.getcwd(), package[2:])
-        else:
-          # If package is not local, then integrity check is mandatory
-          if not skipIntegrityCheck and not 'integrity' in plugin:
-            raise InstallException(f"No integrity hash provided for Package {package}")
 
         print('\t==> Grabbing package archive through `npm pack`', flush=True)
         completed = subprocess.run(['npm', 'pack', package], capture_output=True, cwd=dynamicPluginsRoot)
@@ -230,7 +231,7 @@ def main():
 
         archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
 
-        if not package_is_local and not skipIntegrityCheck:
+        if not (package_is_local or skipIntegrityCheck):
           print('\t==> Verifying package integrity', flush=True)
           verify_package_integrity(plugin, archive, dynamicPluginsRoot)
 
