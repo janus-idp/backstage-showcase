@@ -249,12 +249,6 @@ async function main() {
     router: apiRouter,
   });
   await addRouter({
-    name: 'app',
-    service,
-    root: '',
-    router: await app(appEnv),
-  });
-  await addRouter({
     name: 'healthcheck',
     service,
     root: '',
@@ -269,7 +263,12 @@ async function main() {
     root: '',
     router: metricsHandler(),
   });
-
+  await addRouter({
+    name: 'app',
+    service,
+    root: '',
+    router: await app(appEnv),
+  });
   await service.start().catch(err => {
     console.log(err);
     process.exit(1);
