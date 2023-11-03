@@ -60,8 +60,6 @@ dynamic-plugins-root/*
 dynamic-plugins/wrappers/*/dist-dynamic/src
 dynamic-plugins/imports/*/
 dynamic-plugins/*/dist-dynamic/src
-dynamic-plugins/wrappers/*/dist-dynamic/src
-dynamic-plugins/imports/*/
 
 #dev caches
 .webpack-cache
