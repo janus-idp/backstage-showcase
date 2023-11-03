@@ -7,17 +7,19 @@ const initializeRemotePlugins = async (
   scalprumConfig: AppsConfig,
   requiredModules: { scope: string; module: string }[],
 ): Promise<RemotePlugins> => {
-  await Promise.all(
+  await Promise.allSettled(
     requiredModules.map(({ scope, module }) =>
-      processManifest(scalprumConfig[scope].manifestLocation!, scope, module),
+      processManifest(scalprumConfig[scope]?.manifestLocation!, scope, module),
     ),
   );
-  const remotePlugins = await Promise.all(
+  let remotePlugins = await Promise.all(
     requiredModules.map(({ scope, module }) =>
       pluginStore
         .getExposedModule<{
           [importName: string]: React.ComponentType<{}>;
         }>(scope, module)
+        // silently fail if the module loading fails
+        .catch(() => undefined)
         .then(remoteModule => ({
           module,
           scope,
@@ -25,7 +27,12 @@ const initializeRemotePlugins = async (
         })),
     ),
   );
+  // remove all remote modules that are undefined
+  remotePlugins = remotePlugins.filter(({ remoteModule }) =>
+    Boolean(remoteModule),
+  );
   const scopedRegistry = remotePlugins.reduce<RemotePlugins>((acc, curr) => {
+    if (!curr.remoteModule) return acc;
     if (!acc[curr.scope]) {
       acc[curr.scope] = {};
     }
