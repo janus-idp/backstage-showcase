@@ -614,7 +614,7 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-cypress-terminal-report@^5.3.8:
+cypress-terminal-report@5.3.8:
   version "5.3.8"
   resolved "https://registry.yarnpkg.com/cypress-terminal-report/-/cypress-terminal-report-5.3.8.tgz#4b2bce438539aafa34e6311f821cbe03d919d1bb"
   integrity sha512-LVOKaud6yDjQW+WwBVwWIQ2KwbX2oWfF0cxosyg4DrJPGS/oaSP8ykQHuIo41t5uajX8q07f3geCQSKrohjEJA==
@@ -1536,7 +1536,7 @@ ospath@^1.2.2:
   resolved "https://registry.yarnpkg.com/ospath/-/ospath-1.2.2.tgz#1276639774a3f8ef2572f7fe4280e0ea4550c07b"
   integrity sha512-o6E5qJV5zkAbIDNhGSIlyOhScKXgQrSRMilfph0clDfM0nEnBOlKlH4sWDmG95BW/CvwNz0vmm7dJVtU2KlMiA==
 
-otplib@^12.0.1:
+otplib@12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/otplib/-/otplib-12.0.1.tgz#c1d3060ab7aadf041ed2960302f27095777d1f73"
   integrity sha512-xDGvUOQjop7RDgxTQ+o4pOol0/3xSZzawTiPKRrHnQWAy0WjhNs/5HdIDJCrqC4MBynmjXgULc6YfioaxZeFgg==
