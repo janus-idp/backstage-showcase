@@ -50,6 +50,7 @@ COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
@@ -77,10 +78,9 @@ COPY --from=build $CONTAINER_SOURCE/yarn.lock \
      $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
      $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
      ./
-
 ENV TARBALL_PATH=.
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
-    rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
+  rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
 
 # Copy app-config files needed in runtime
 # Upstream only

@@ -4,6 +4,7 @@
 **/node_modules
 plugins
 !plugins/scalprum-backend
+!plugins/dynamic-plugins-info-backend
 *.local.yaml
 coverage
 dist-types
