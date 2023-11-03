@@ -16130,7 +16130,7 @@ express-prom-bundle@6.6.0:
     on-finished "^2.3.0"
     url-value-parser "^2.0.0"
 
-express-promise-router@^4.1.0, express-promise-router@^4.1.1:
+express-promise-router@4.1.1, express-promise-router@^4.1.0, express-promise-router@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/express-promise-router/-/express-promise-router-4.1.1.tgz#8fac102060b9bcc868f84d34fbb12fd8fa494291"
   integrity sha512-Lkvcy/ZGrBhzkl3y7uYBHLMtLI4D6XQ2kiFg9dq7fbktBch5gjqJ0+KovX0cvCAvTJw92raWunRLM/OM+5l4fA==

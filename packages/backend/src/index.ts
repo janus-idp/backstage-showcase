@@ -23,6 +23,7 @@ import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
+import { createRouter as dynamicPluginsInfoRouter } from '@internal/plugin-dynamic-plugins-info-backend';
 import { RequestHandler, Router } from 'express';
 import { metricsHandler } from './metrics';
 import app from './plugins/app';
@@ -184,13 +185,25 @@ async function main() {
   const apiRouter = Router();
 
   // Scalprum frontend plugins provider
-  const scalprumEmv = useHotMemoize(module, () => createEnv('scalprum'));
+  const scalprumEnv = useHotMemoize(module, () => createEnv('scalprum'));
   apiRouter.use(
     '/scalprum',
     await scalprumRouter({
-      logger: scalprumEmv.logger,
+      logger: scalprumEnv.logger,
       pluginManager,
-      discovery: scalprumEmv.discovery,
+      discovery: scalprumEnv.discovery,
+    }),
+  );
+
+  // Dynamic plugins info provider
+  const dynamicPluginsInfoEnv = useHotMemoize(module, () =>
+    createEnv('dynamic-plugins-info'),
+  );
+  apiRouter.use(
+    '/dynamic-plugins-info',
+    await dynamicPluginsInfoRouter({
+      logger: dynamicPluginsInfoEnv.logger,
+      pluginManager,
     }),
   );
 
