@@ -23,6 +23,7 @@ import defaultAppComponents from './defaultAppComponents';
 import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import overrideBaseUrlConfigs from '../../utils/dynamicUI/overrideBaseUrlConfigs';
 import useAsync from 'react-use/lib/useAsync';
+import Loader from './Loader';
 
 const DynamicRoot = ({
   afterInit,
@@ -84,12 +85,19 @@ const DynamicRoot = ({
       });
     }
 
-    const providerMountPoints = mountPoints.map(
-      ({ module, importName, mountPoint, scope }) => ({
-        mountPoint,
-        Component: remotePlugins[scope][module][importName],
-      }),
-    );
+    const providerMountPoints = mountPoints.reduce<
+      { mountPoint: string; Component: React.ComponentType<{}> }[]
+    >((acc, { module, importName, mountPoint, scope }) => {
+      const Component = remotePlugins[scope]?.[module]?.[importName];
+      // Only add mount points that have a component
+      if (Component) {
+        acc.push({
+          mountPoint,
+          Component: remotePlugins[scope][module][importName],
+        });
+      }
+      return acc;
+    }, []);
 
     const mountPointComponents = providerMountPoints.reduce<{
       [mountPoint: string]: ScalprumMountPoint[];
@@ -123,12 +131,12 @@ const DynamicRoot = ({
   }, [initialized, components, initializeRemoteModules]);
 
   if (!initialized || !components) {
-    return null;
+    return <Loader />;
   }
 
   return (
     <DynamicRootContext.Provider value={components}>
-      {ChildComponent ? <ChildComponent /> : <div>Loading</div>}
+      {ChildComponent ? <ChildComponent /> : <Loader />}
     </DynamicRootContext.Provider>
   );
 };
@@ -141,7 +149,7 @@ const ScalprumRoot = ({
   apis: AnyApiFactory[];
   afterInit: () => Promise<{ default: React.ComponentType }>;
 }) => {
-  const { loading, error, value } = useAsync(async () => {
+  const { loading, value } = useAsync(async () => {
     const config = ConfigReader.fromConfigs(
       overrideBaseUrlConfigs(await defaultConfigLoader()),
     );
@@ -156,17 +164,13 @@ const ScalprumRoot = ({
     };
   });
 
-  if (loading || !value?.scalprumConfig) {
-    return null;
-  }
-
-  if (error) {
-    return <div>Error</div>;
+  if (loading) {
+    return <Loader />;
   }
 
   return (
     <ScalprumProvider
-      config={value.scalprumConfig}
+      config={value?.scalprumConfig ?? {}}
       pluginSDKOptions={{
         pluginLoaderOptions: {
           postProcessManifest: manifest => {
@@ -174,7 +178,9 @@ const ScalprumRoot = ({
               ...manifest,
               loadScripts: manifest.loadScripts.map(
                 script =>
-                  `${value.baseUrl}/api/scalprum/${manifest.name}/${script}`,
+                  `${value?.baseUrl ?? ''}/api/scalprum/${
+                    manifest.name
+                  }/${script}`,
               ),
             };
           },
@@ -183,7 +189,7 @@ const ScalprumRoot = ({
     >
       <DynamicRoot
         afterInit={afterInit}
-        scalprumConfig={value.scalprumConfig}
+        scalprumConfig={value?.scalprumConfig ?? {}}
         apis={apis}
       />
     </ScalprumProvider>
