@@ -22,6 +22,8 @@ import {
 } from '@backstage/core-components';
 import { auth0AuthApiRef, oidcAuthApiRef, samlAuthApiRef } from '../../api';
 
+const DEFAULT_PROVIDER = 'github';
+
 /**
  * Key:
  * string - Provider name.
@@ -149,9 +151,9 @@ export function SignInPage(props: SignInPageProps): React.JSX.Element {
   const configApi = useApi(configApiRef);
   const isDevEnv = configApi.getString('auth.environment') === 'development';
   const provider =
-    [...PROVIDERS.keys()].find(key => configApi.has(`auth.providers.${key}`)) ??
-    'github';
-  const providerConfig = PROVIDERS.get(provider)!;
+    configApi.getOptionalString('signInPage') ?? DEFAULT_PROVIDER;
+  const providerConfig =
+    PROVIDERS.get(provider) ?? PROVIDERS.get(DEFAULT_PROVIDER)!;
 
   if (typeof providerConfig === 'object') {
     const providers = isDevEnv
