@@ -46,7 +46,7 @@
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
-    "lint-staged": "15.0.2",
+    "lint-staged": "14.0.1",
     "prettier": "3.0.3",
     "turbo": "1.10.16",
     "typescript": "5.2.2"
