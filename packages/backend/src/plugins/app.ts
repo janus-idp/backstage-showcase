@@ -46,7 +46,7 @@ export default async function createPlugin(
       );
       res.sendFile(resolvePath(staticDir, injectedJSFile!), {
         headers: {
-          'cache-control': 'no-store, max-age=0',
+          'cache-control': 'no-cache',
         },
       });
     });
