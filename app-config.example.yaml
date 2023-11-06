@@ -10,9 +10,6 @@ organization:
   name: My Org
 
 backend:
-  auth:
-    keys:
-      - secret: temp
   baseUrl: http://localhost:7007
   listen:
     port: 7007
@@ -33,60 +30,17 @@ proxy:
   skipInvalidProxies: true
   endpoints: {}
 
-integrations:
-  github:
-    - host: github.com
-      # This is a GitHub App. You can find out how to generate this file, and more information
-      # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/github-apps
-      apps:
-        - appId: 1
-          webhookUrl: temp
-          clientId: temp
-          clientSecret: temp
-          webhookSecret: temp
-          privateKey: |
-            temp
-
-  bitbucketServer:
-    - host: bitbucket.com
-      apiBaseUrl: temp
-      username: temp
-      password: temp
-  gitlab:
-    - host: gitlab.com
-      token: temp
-
-argocd:
-  appLocatorMethods:
-    - type: 'config'
-      instances:
-        - name: argoInstance1
-          url: temp
-          token: temp
-        - name: argoInstance2
-          url: temp
-          token: temp
-
-auth:
-  environment: development
-  providers:
-    github:
-      development:
-        clientId: temp
-        clientSecret: temp
-
-techdocs:
-  builder: external
-  generator:
-    runIn: local
-  publisher:
-    type: awsS3
-
 lighthouse:
   baseUrl: temp
 
 dynatrace:
   baseUrl: temp
+
+techdocs:
+  builder: external
+
+auth:
+  environment: development
 
 catalog:
   import:
