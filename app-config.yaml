@@ -92,8 +92,8 @@ azureDevOps:
 # spectralLinter:
 #   openApiRulesetUrl: https://raw.githubusercontent.com/janus-api-idp/api-spec-prototype/main/.spectral.yaml
 spectralLinter:
-  asyncApiRulesetUrl: spectral:asyncapi
-  openApiRulesetUrl: spectral:oas
+  asyncApiRulesetUrl: https://github.com/janus-api-idp/api-spec-prototype/blob/main/.spectral.yaml
+  openApiRulesetUrl: https://github.com/janus-api-idp/api-spec-prototype/blob/main/.spectral.yaml
 
 proxy:
   endpoints:
