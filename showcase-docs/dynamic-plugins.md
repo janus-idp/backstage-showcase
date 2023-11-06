@@ -35,7 +35,7 @@ So there are some changes to be made to the plugin code, in order to make it com
 1. The plugin must:
 
 - import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@0.0.5-janus.0` package,
-- add the `@janus-idp/cli` dependency to use the `@janus-idp`,
+- add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
 
@@ -411,13 +411,13 @@ global:
 
 ### Frontend layout configuration
 
-Compared to the backend plugins, where their mount points are defined in code and consumed by the backend plugin manager, frontend plugins require additional configuration in the `app-config.yaml`. A pluggin missing this configuration is not loaded into the application and is not displayed.
+Compared to the backend plugins, where mount points are defined in code and consumed by the backend plugin manager, frontend plugins require additional configuration in the `app-config.yaml`. A plugin missing this configuration will not be loaded into the application and will not be displayed.
 
-Similarly to what you know from traditional Backstage instances, there are 3 types of functionality a dynamic frontend plugin can offer:
+Similarly to traditional Backstage instances, there are 3 types of functionality a dynamic frontend plugin can offer:
 
-- Full new page by declaring a completely new route in the app
-- Extend existing page via router `bind`ings
-- Using mount points within the application
+- Full new page that declares a completely new route in the app
+- Extension to existing page via router `bind`ings
+- Use of mount points within the application
 
 The overall configuration is as follows:
 
@@ -433,7 +433,7 @@ dynamicPlugins:
 
 #### Dynamic routes
 
-Traditionally [Backstage full page extensions](https://backstage.io/docs/plugins/composability/#using-extensions-in-an-app) are done within the `packages/app/src/App.tsx` file. It may look like this:
+Traditionally, [Backstage full page extensions](https://backstage.io/docs/plugins/composability/#using-extensions-in-an-app) are done within the `packages/app/src/App.tsx` file. It may look like this:
 
 ```tsx
 ...
@@ -453,9 +453,9 @@ Traditionally [Backstage full page extensions](https://backstage.io/docs/plugins
 ...
 ```
 
-This change is usually coupled with extension to the main sidebar navigation by editing `packages/app/src/components/Root/Root.tsx`.
+This change is usually coupled with an extension to the main sidebar navigation, achieved by editing `packages/app/src/components/Root/Root.tsx`.
 
-In dynamic plugins this mechanism has changed and users are no longer allowed to edit TSX files - instead they declare their desire to expose additional routes within dynamic plugin configuration:
+In dynamic plugins this mechanism has changed and users are no longer allowed to edit `.tsx` files. Instead they declare their desire to expose additional routes within dynamic plugin configuration:
 
 ```yaml
 # app-config.yaml
@@ -473,14 +473,14 @@ dynamicPlugins:
 
 Each plugin can expose multiple routes and each route is required to define its `path` and `importName` (if it differs from the default export).
 
-- `path` - Unique path in the app, cannot override existing routes with single exception: the `/` home route. Main home page can be replaced via dynamic plugins mechanism.
+- `path` - Unique path in the app. Cannot override existing routes with the exception of the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
 - `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` is a Material UI 4 icon name.
 
 #### Bind to existing plugins
 
-Another extension option Backstage offers is extension via [binding to the external routes](https://backstage.io/docs/plugins/composability/#binding-external-routes-in-the-app) of existing plugins. This is traditionally done via the `bindRoutes` interface as:
+Another extension option available to Backstage is to [bind to the external routes](https://backstage.io/docs/plugins/composability/#binding-external-routes-in-the-app) of existing plugins. This is traditionally done via the `bindRoutes` interface as:
 
 ```tsx
 createApp({
@@ -505,7 +505,7 @@ dynamicPlugins:
             headerLink: 'fooPlugin.routes.root'
 ```
 
-We currently support following bind targets:
+These are the available bind targets:
 
 - `remotePlugins.externalRoutes`
 - `catalogPlugin.externalRoutes`
@@ -518,9 +518,9 @@ This section aims to allow users dynamic extension of [Catalog Components](https
 
 Mount points are defined identifiers available across the applications. These points specifically allow users to extend existing pages with additional content.
 
-We currently recognize following mount points:
+The following mount points are available:
 
-| Mount point                  | Description                         | Content with all plugins disabled                              |
+| Mount point                  | Description                         | Visible even when no plugins are enabled                              |
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
 | `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
 | `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
@@ -541,7 +541,7 @@ We currently recognize following mount points:
 
 Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
 
-Each mount point exists in 2 variants that complement each other :
+Each mount point has 2 complementary variations:
 
 - `*/context` type that serves to create React contexts
 - `*/cards` type for regular React components
@@ -572,7 +572,7 @@ Each mount point supports additional configuration:
 - `props` - React props passed to the component. This is useful when you want to pass some additional data to the component.
 - `if` - Used only in `*/cards` type which renders visible content. This is passed to `<EntitySwitch.Case if={<here>}`.
 
-  We support following conditions:
+  The following conditions are available:
 
   - `allOf`: All conditions must be met
   - `anyOf`: At least one condition must be met
