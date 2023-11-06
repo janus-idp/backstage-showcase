@@ -51,6 +51,7 @@ COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 
 # Downstream only - debugging
 # COPY $REMOTE_SOURCES/ ./
@@ -64,9 +65,9 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/sca
 # Downstream only - Cachito configuration
 # see https://docs.engineering.redhat.com/pages/viewpage.action?pageId=228017926#UpstreamSources(Cachito,ContainerFirst)-CachitoIntegrationfornpm
 COPY $REMOTE_SOURCES/upstream1/cachito.env \
-     $REMOTE_SOURCES/upstream1/app/registry-ca.pem \
-     $REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh-hub/.npmrc \
-     ./
+  $REMOTE_SOURCES/upstream1/app/registry-ca.pem \
+  $REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh-hub/.npmrc \
+  ./
 # registry=https://cachito-nexus.engineering.redhat.com/repository/cachito-yarn-914335/
 # email=noreply@domain.local
 # always-auth=true
@@ -140,8 +141,9 @@ RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachito
 RUN $YARN export-dynamic
 RUN $YARN copy-dynamic-plugins dist
 
-# Downstream only - clean up dynamic plugins sources
-RUN find dynamic-plugins -type f -not -name 'dist' -delete
+# Downstream only - clean up dynamic plugins sources:
+# Only keep the dist sub-folder in the dynamic-plugins folder
+RUN find dynamic-plugins -maxdepth 1 -mindepth 1 -type d -not -name dist -exec rm -Rf {} \;
 
 # Stage 4 - Build the actual backend image and install production dependencies
 
@@ -150,7 +152,7 @@ RUN find dynamic-plugins -type f -not -name 'dist' -delete
 
 ENV TARBALL_PATH=./packages/backend/dist
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
-    rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
+  rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
 
 # Copy app-config files needed in runtime
 # Upstream only
@@ -177,24 +179,24 @@ WORKDIR $CONTAINER_SOURCE/
 # Downstream only - install techdocs dependencies using cachito sources
 COPY $REMOTE_SOURCES/upstream2 ./upstream2/
 RUN microdnf update -y && \
-    microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
-    ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
-    ln -s /usr/bin/pip3.11 /usr/bin/pip; \
-    # ls -la $CONTAINER_SOURCE/ $CONTAINER_SOURCE/upstream2/ $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
-    cat $CONTAINER_SOURCE/upstream2/cachito.env && \
-    # cachito.env contains path to cert:
-    # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
-    source $CONTAINER_SOURCE/upstream2/cachito.env && \
-    # fix ownership for pip install folder
-    mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
-    # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
-    pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
-        set -xe; \
-        python3.11 -V; pip3.11 -V; \
-        pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
-        pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
-    popd >/dev/null; \
-    microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
+  microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
+  ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
+  ln -s /usr/bin/pip3.11 /usr/bin/pip; \
+  # ls -la $CONTAINER_SOURCE/ $CONTAINER_SOURCE/upstream2/ $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
+  cat $CONTAINER_SOURCE/upstream2/cachito.env && \
+  # cachito.env contains path to cert:
+  # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
+  source $CONTAINER_SOURCE/upstream2/cachito.env && \
+  # fix ownership for pip install folder
+  mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
+  # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
+  pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
+  set -xe; \
+  python3.11 -V; pip3.11 -V; \
+  pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
+  pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
+  popd >/dev/null; \
+  microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
 
 # Downstream only - copy from build, not cleanup stage
 COPY --from=build --chown=1001:1001 $CONTAINER_SOURCE/ ./
