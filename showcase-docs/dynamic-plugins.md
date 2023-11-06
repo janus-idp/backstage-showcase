@@ -32,8 +32,8 @@ So there are some changes to be made to the plugin code, in order to make it com
 
 1. The plugin must:
 
-- import the `@backstage/backend-plugin-manager` package, as an alias to `@janus-idp/backend-plugin-manager@0.0.2-janus.1` package,
-- override the `@backspage/cli` dependency to use the provisional fork that supports a new, required `export-dynamic-plugin` command,
+- import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@0.0.5-janus.0` package,
+- add the `@janus-idp/cli` dependency to use the `@janus-idp` fork of the backstage CLI that supports a new, required `export-dynamic-plugin` command,
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
 
@@ -45,18 +45,18 @@ These recommended changes to the `package.json` are summarized below:
   ...
   "scripts": {
     ...
-    "export-dynamic": "backstage-cli package export-dynamic-plugin"
+    "export-dynamic": "janus-cli package export-dynamic-plugin"
     ...
   },
   ...
   "dependencies": {
     ...
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.1",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@v1.19.6",
     ...
   }
   ...
   "devDependencies": {
-    "@backstage/cli": "npm:@dfatwork-pkgs/backstage-cli@0.22.9-next.6"
+    "@janus-idp/cli": "1.3.1"
   },
   ...
   "files": [
@@ -130,7 +130,7 @@ The resulting package will be located in the `dist-dynamic` sub-folder of the pl
 
 This allows packing it with `npm pack`, or publishing it to an npm registry.
 
-The dynamic export mechanism identifies private, non-backstage dependencies, and sets the `bundleDependencies` field in the `package.json` file for them, so that the dynamic plugin plackage can be published as a self-contained package, along with its private dependencies bundled in a private `node_modules` folder.
+The dynamic export mechanism identifies private, non-backstage dependencies, and sets the `bundleDependencies` field in the `package.json` file for them, so that the dynamic plugin package can be published as a self-contained package, along with its private dependencies bundled in a private `node_modules` folder.
 
 Common backstage dependencies, expected to be in the backstage backend application, are not bundled in the dynamic plugin but rather changed as peer dependencies, so that they can be shared with the backstage backend application.
 
@@ -154,7 +154,7 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 - include the additions described above,
 - export it as a dynamic plugin.
 
-An example of such a wrapper plugin can be found in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main/plugins/scaffolder-backend-module-http-request-wrapped): it wraps the `@roadiehq/scaffolder-backend-module-http-request` package to make it compatible with the dynamic plugin support and, through the use of the `--embed-package` option in the [`export-dynamic` script](https://github.com/janus-idp/dynamic-backend-plugins-showcase/blob/d254c065764ab49289c2bcaad9fd996d49003f9d/plugins/scaffolder-backend-module-http-request-wrapped/package.json#L21), embeds the wrapped plugin code in the generated code and hoist its `@backstage` dependencies as peer dependencies in the resulting dynamic plugin.
+Examples of such a wrapper plugins can be found in the [Janus showcase repository](https://github.com/janus-idp/backstage-showcase/tree/main/dynamic-plugins/wrappers). For example, [roadiehq-scaffolder-backend-module-utils-dynamic](https://github.com/janus-idp/backstage-showcase/tree/main/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic) wraps the `@roadiehq/scaffolder-backend-module-utils` package to make it compatible with the dynamic plugin support. It then embeds the wrapped plugin code in the generated code and hoist its `@backstage` dependencies as peer dependencies in the resulting dynamic plugin through the use of the `--embed-package` option in the [`export-dynamic` script](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/package.json#L26).
 
 ## Installing a dynamic plugin package in the showcase
 
@@ -182,27 +182,60 @@ An example of such a wrapper plugin can be found in the [dynamic backend plugin 
 
 - Start the showcase application. During the initialization step it should have a log entry similar to the following:
 
-  ```
+  ```bash
   backstage info loaded dynamic backend plugin '@scope/some-plugin-dynamic' from 'file:///showacase-root/dynamic-plugins-root/scope-some-plugin-dynamic-0.0.1'
   ```
 
 ### Helm deployment
 
-- In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm values used during helm chart installation must be overriden by the values found [here](https://raw.githubusercontent.com/davidfestal/helm-backstage/a7a1cb42f5bffbb3f0668a3437b0366be9f819b8/charts/backstage/values.yaml)
+- In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm values used during helm chart installation must be overwritten by the values found [here](https://raw.githubusercontent.com/davidfestal/helm-backstage/01a60490114963796fd4a3052db060d6943c9867/charts/backstage/values.yaml)
 
-- These updated Helm values contain a new `global.dynamicPlugins` value, which by default is an empty list. This list must be updated to contain the list of dynamic plugins to be installed. A package can be specified either as a local path to the dynamic plugin `dist-dynamic` sub-folder, or as a package specification in an NPM repository.
+- These updated Helm values contain a new `global.dynamic` value, with 2 fields: `plugins` and `includes`. `plugins` contains the list of dynamic plugins to be installed, and by default is an empty list. A package can be specified either as a local path to the dynamic plugin `dist-dynamic/dist` sub-folder, or as a package specification in an NPM repository. `includes` contains a list of YAML files with the same syntax, of which `plugins` list will be included, and possibly overwritten by the `plugins` list of the main helm values. By default the `includes` fields contains the `dynamic-plugins.default.yaml` file, which contains all the dynamic plugins shipped with the showcase application, either enabled or disabled by default.
 
-- So adding a dynamic plugin to the showcase is done by adding an entry to the `global.dynamicPlugins` list, with the package specification of the dynamic plugin package to be installed, as well as an optional plugin-specific `app-config` yaml fragment. For 2 plugins, one of which requires specific app-config, the list would be as follows:
+- So adding a dynamic plugin to the showcase is done by adding an entry to the `global.dynamic.plugins` list. Each entry has the following fields:
+
+  - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
+  - `integrity`: (optional for local packages) An integrity checksum in the [form of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) for the specific package. Supported algorithms include `sha256`, `sha384` and `sha512`.
+  - `pluginConfig`: an optional plugin-specific `app-config` yaml fragment.
+  - `disabled`: disables the dynamic plugin if set to `true`. Default: `false`.
+
+- For 2 plugins from a local and remote source, with one requiring a specific app-config, the list would be as follows:
 
   ```yaml
   global:
-    dynamicPlugins:
-      - package: <a package-spec used by npm pack>
-      - package: <another package-spec used by npm pack>
-        pluginConfig:
-          some:
-            app-config:
-              package-specific-fragment: value
+    dynamic:
+      plugins:
+        - package: <a local package-spec used by npm pack>
+        - package: <a remote package-spec used by npm pack>
+          integrity: sha512-<some hash>
+          pluginConfig:
+            some:
+              app-config:
+                package-specific-fragment: value
+  ```
+
+- A plugin from an included file can be disabled with the following snippet:
+
+  ```yaml
+  global:
+    dynamic:
+      includes:
+        - dynamic-plugins.default.yaml
+      plugins:
+        - package: <some imported plugins listed in dynamic-plugins.default.yaml>
+          disabled: true
+  ```
+
+- A plugin disabled in an included file can be enabled with the following snippet:
+
+  ```yaml
+  global:
+    dynamic:
+      includes:
+        - dynamic-plugins.default.yaml
+      plugins:
+        - package: <some imported plugins listed in dynamic-plugins.custom.yaml>
+          disabled: false
   ```
 
 ### Example Dynamic plugins
@@ -212,21 +245,32 @@ you can use the example dynamic backend plugins described
 in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins),
 which have been pushed to NPMJS in the `dfatwork-pkgs` organization.
 
-In order to do this, just add the following dynamic plugins to the `global.dynamicPlugins` list in the helm chart values:
+In order to do this, just add the following dynamic plugins to the `global.dynamic.plugins` list in the helm chart values:
 
 ```yaml
 global:
-  dynamicPlugins:
-    - package: '@dfatwork-pkgs/scaffolder-backend-module-http-request-wrapped-dynamic'
-    - package: '@dfatwork-pkgs/plugin-events-backend-module-test-dynamic'
-    - package: '@dfatwork-pkgs/explore-backend-wrapped-dynamic'
-      pluginConfig:
-        proxy:
-          endpoints:
-            /explore-backend-completed:
-              target: 'http://localhost:7017'
-    - package: '@dfatwork-pkgs/search-backend-module-explore-wrapped-dynamic'
-    - package: '@dfatwork-pkgs/plugin-catalog-backend-module-test-dynamic'
+  dynamic:
+    plugins:
+      - package: '@dfatwork-pkgs/scaffolder-backend-module-http-request-wrapped-dynamic@4.0.9-0'
+        # Integrity can be found at https://registry.npmjs.org/@dfatwork-pkgs/scaffolder-backend-module-http-request-wrapped-dynamic
+        integrity: 'sha512-+YYESzHdg1hsk2XN+zrtXPnsQnfbzmWIvcOM0oQLS4hf8F4iGTtOXKjWnZsR/14/khGsPrzy0oq1ytJ1/4ORkQ=='
+      - package: '@dfatwork-pkgs/plugin-events-backend-module-test-dynamic@0.0.1'
+        # https://registry.npmjs.org/@dfatwork-pkgs/plugin-events-backend-module-test-dynamic
+        integrity: 'sha512-YaOmijWWWZqlNubQnpiaHwtZNlELzE2av2kkuzeLPg4YaupnaVTdXsR71d4uz6bfqA8QOYi9o4sJD4cJivE6jA=='
+      - package: '@dfatwork-pkgs/explore-backend-wrapped-dynamic@0.0.9-next.11'
+        # https://registry.npmjs.org/@dfatwork-pkgs/explore-backend-wrapped-dynamic
+        integrity: 'sha512-/qUxjSedxQ0dmYqMWsZ2+OLGeovaaigRRrX1aTOz0GJMwSjOAauUUD1bMs56VPX74qWL1rf3Xr4nViiKo8rlIA=='
+        pluginConfig:
+          proxy:
+            endpoints:
+              /explore-backend-completed:
+                target: 'http://localhost:7017'
+      - package: '@dfatwork-pkgs/search-backend-module-explore-wrapped-dynamic@0.1.3-next.1'
+        # https://registry.npmjs.org/@dfatwork-pkgs/search-backend-module-explore-wrapped-dynamic
+        integrity: 'sha512-mv6LS8UOve+eumoMCVypGcd7b/L36lH2z11tGKVrt+m65VzQI4FgAJr9kNCrjUZPMyh36KVGIjYqsu9+kgzH5A=='
+      - package: '@dfatwork-pkgs/plugin-catalog-backend-module-test-dynamic@0.0.0'
+        # https://registry.npmjs.org/@dfatwork-pkgs/plugin-catalog-backend-module-test-dynamic
+        integrity: 'sha512-YsrZMThxJk7cYJU9FtAcsTCx9lCChpytK254TfGb3iMAYQyVcZnr5AA/AU+hezFnXLsr6gj8PP7z/mCZieuuDA=='
 ```
 
 By adding those plugins one after the other, and waiting for a deployment restart after each change,

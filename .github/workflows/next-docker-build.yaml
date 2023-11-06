@@ -1,4 +1,4 @@
-# Copyright 2023 Janus Authors
+# Copyright 2023 The Janus IDP Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,6 +49,6 @@ jobs:
           imageName: ${{ github.repository }}
           imageTags: |
             type=raw,value=next
-            type=sha
+            type=sha,prefix=next-
           imageLabels: quay.expires-after=14d
           push: true

@@ -1,8 +1,11 @@
-import React from 'react';
 import { CodeSnippet, WarningPanel } from '@backstage/core-components';
+import React from 'react';
 
-export const fetcher = <T,>(...args: Parameters<typeof fetch>) =>
-  fetch(...args).then(r => r.json()) as Promise<T[]>;
+export const fetcher: <T>(...args: Parameters<typeof fetch>) => Promise<T[]> = <
+  T,
+>(
+  ...args: Parameters<typeof fetch>
+) => fetch(...args).then(r => r.json()) as Promise<T[]>;
 
 export const ErrorReport = ({
   title,

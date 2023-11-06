@@ -13,7 +13,7 @@ import {
   isGitlabAvailable,
 } from '@immobiliarelabs/backstage-plugin-gitlab';
 import {
-  LatestPipelineRun,
+  TektonCI,
   isTektonCIAvailable,
 } from '@janus-idp/backstage-plugin-tekton';
 import Grid from '@mui/material/Grid';
@@ -40,7 +40,7 @@ export const ciContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={isTektonCIAvailable}>
         <Grid item xs={12}>
-          <LatestPipelineRun linkTekton />
+          <TektonCI />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

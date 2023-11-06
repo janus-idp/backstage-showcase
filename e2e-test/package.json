@@ -1,0 +1,28 @@
+{
+  "name": "showcase-app",
+  "version": "1.0.0",
+  "description": "Backstage showcase test",
+  "main": "index.js",
+  "repository": "https://github.com/janus-idp/backstage-showcase",
+  "author": "janus-idp",
+  "license": "Apache-2.0",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:clearcache": "cypress cache clear",
+    "cypress:run": "yarn run lint && yarn cypress run --headless --browser chrome --spec 'cypress/e2e/*.spec.ts'",
+    "test:backstage-run": "yarn cypress:run",
+    "test:backstage-open": "yarn cypress:open",
+    "lint": "eslint cypress/e2e --ext .js,.ts"
+  },
+  "devDependencies": {
+    "@cypress/eslint-plugin-dev": "5.3.2",
+    "@typescript-eslint/eslint-plugin": "6.9.0",
+    "@typescript-eslint/parser": "6.9.0",
+    "cypress": "13.3.3",
+    "cypress-terminal-report": "5.3.8",
+    "eslint": "8.52.0",
+    "eslint-plugin-cypress": "2.15.1",
+    "otplib": "12.0.1",
+    "typescript": "5.2.2"
+  }
+}
