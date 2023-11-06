@@ -1,6 +1,7 @@
 import React, { createContext } from 'react';
 
 import { ScalprumComponentProps } from '@scalprum/react-core';
+import { Entity } from '@backstage/catalog-model';
 
 export type RouteBinding = {
   bindTarget: string;
@@ -24,7 +25,32 @@ export type DynamicRootContextValue = DynamicModuleEntry & {
   Component: React.ComponentType<any>;
 };
 
-export type ScalprumMountPoint = React.ComponentType<{}>;
+type ScalprumMountPointConfigBase = {
+  layout?: Record<string, string>;
+  props?: Record<string, any>;
+};
+
+export type ScalprumMountPointConfig = ScalprumMountPointConfigBase & {
+  if: (e: Entity) => boolean | Promise<boolean>;
+};
+
+export type ScalprumMountPointConfigRawIf = {
+  [key in 'allOf' | 'oneOf' | 'anyOf']?: (
+    | {
+        [key: string]: string | string[];
+      }
+    | Function
+  )[];
+};
+
+export type ScalprumMountPointConfigRaw = ScalprumMountPointConfigBase & {
+  if?: ScalprumMountPointConfigRawIf;
+};
+
+export type ScalprumMountPoint = {
+  component: React.ComponentType<{}>;
+  config?: ScalprumMountPointConfig;
+};
 
 export type RemotePlugins = {
   [scope: string]: {
