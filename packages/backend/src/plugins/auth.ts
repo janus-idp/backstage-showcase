@@ -79,11 +79,35 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
           },
         },
       });
+    case 'gitlab':
+      return providers.gitlab.create({
+        signIn: {
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.id;
+            if (!userId) {
+              throw new Error(`GitLab user profile does not contain a user id`);
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
+          },
+        },
+      });
     case 'google':
       return providers.google.create({
         signIn: {
           resolver:
             providers.google.resolvers.emailLocalPartMatchingUserEntityName(),
+        },
+      });
+    case 'gcp-iap':
+      return providers.gcpIap.create({
+        async authHandler({ iapToken }) {
+          return { profile: { email: iapToken.email } };
+        },
+        signIn: {
+          async resolver({ result: { iapToken } }, ctx) {
+            const id = iapToken.email.split('@')[0];
+            return await signInWithCatalogUserOptional(id, ctx);
+          },
         },
       });
     case `oauth2Proxy`:
@@ -96,6 +120,13 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             }
             return await signInWithCatalogUserOptional(name, ctx);
           },
+        },
+      });
+    case 'okta':
+      return providers.okta.create({
+        signIn: {
+          resolver:
+            providers.okta.resolvers.emailMatchingUserEntityAnnotation(),
         },
       });
     case `microsoft`:
