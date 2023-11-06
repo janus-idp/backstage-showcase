@@ -58,8 +58,8 @@ export interface Config {
           [key: string]: any;
         } & {
           path: string;
-          module: string;
-          importName: string;
+          module?: string;
+          importName?: string;
           menuItem: {
             icon: string;
             text: string;
@@ -73,8 +73,8 @@ export interface Config {
         }[];
         mountPoints: {
           mountPoint: string;
-          module: string;
-          importName: string;
+          module?: string;
+          importName?: string;
           config: {
             layout?: {
               [key: string]: string;

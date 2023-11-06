@@ -29,13 +29,14 @@ type DynamicRoute = {
 
 export type MountPoint = {
   mountPoint: string;
-  module: string;
+  module?: string;
   importName?: string;
 };
 
 type CustomProperties = {
   dynamicRoutes?: (DynamicModuleEntry & {
-    importName: string;
+    importName?: string;
+    module?: string;
     path: string;
   })[];
   routeBindings?: RouteBinding[];
@@ -104,6 +105,8 @@ async function extractDynamicConfig() {
             pluginSet.push(
               ...(customProperties.dynamicRoutes ?? []).map(route => ({
                 ...route,
+                module: route.module ?? 'PluginRoot',
+                importName: route.importName ?? 'default',
                 scope,
               })),
             );
@@ -131,6 +134,7 @@ async function extractDynamicConfig() {
             accMountPoints.push(
               ...(mountPoints ?? []).map(point => ({
                 ...point,
+                module: point.module ?? 'PluginRoot',
                 importName: point.importName ?? 'default',
                 scope,
               })),

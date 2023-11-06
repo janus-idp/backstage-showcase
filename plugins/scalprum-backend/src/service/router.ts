@@ -44,14 +44,6 @@ export async function createRouter(options: RouterOptions): Promise<Router> {
         return;
       }
 
-      const scalprumEntry = (pkg.manifest as any).scalprum;
-      if (!scalprumEntry || !scalprumEntry.name) {
-        logger.warn(
-          `Could not find scalprum entry for plugin ${plugin.name}@${plugin.version}`,
-        );
-        return;
-      }
-
       const pkgDistLocation: string = path.resolve(
         url.fileURLToPath(pkg.location),
         'dist-scalprum',
@@ -74,11 +66,15 @@ export async function createRouter(options: RouterOptions): Promise<Router> {
         return;
       }
 
-      router.use(`/${scalprumEntry.name}`, express.static(pkgDistLocation));
+      const pkgManifest = JSON.parse(
+        fs.readFileSync(pkgManifestLocation).toString(),
+      );
 
-      scalprumPlugins[scalprumEntry.name] = {
-        name: scalprumEntry.name,
-        manifestLocation: `${externalBaseUrl}/${scalprumEntry.name}/plugin-manifest.json`,
+      router.use(`/${pkgManifest.name}`, express.static(pkgDistLocation));
+
+      scalprumPlugins[pkgManifest.name] = {
+        name: pkgManifest.name,
+        manifestLocation: `${externalBaseUrl}/${pkgManifest.name}/plugin-manifest.json`,
       };
     });
 

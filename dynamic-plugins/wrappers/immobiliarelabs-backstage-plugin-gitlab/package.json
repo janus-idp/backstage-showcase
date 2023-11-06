@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
-    "@janus-idp/cli": "1.3.2"
+    "@janus-idp/cli": "1.3.3"
   },
   "files": [
     "dist",
@@ -33,7 +33,7 @@
   "scalprum": {
     "name": "immobiliarelabs.backstage-plugin-gitlab",
     "exposedModules": {
-      "GitlabPlugin": "./src/index.ts"
+      "PluginRoot": "./src/index.ts"
     }
   }
 }
