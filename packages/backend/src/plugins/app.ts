@@ -4,6 +4,7 @@ import type { PluginEnvironment } from '../types';
 import { resolvePackagePath } from '@backstage/backend-common';
 import { resolve as resolvePath } from 'path';
 import fs from 'fs-extra';
+import rateLimit from 'express-rate-limit';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -40,16 +41,23 @@ export default async function createPlugin(
       `Setting up static router for injected Javascript file ${injectedJSFile}`,
     );
 
-    enclosingRouter.get(`/static/${injectedJSFile}`, (_req, res) => {
-      env.logger.info(
-        `Serving in the injected Javascript file with caching disabled`,
-      );
-      res.sendFile(resolvePath(staticDir, injectedJSFile!), {
-        headers: {
-          'cache-control': 'no-cache',
-        },
-      });
-    });
+    enclosingRouter.get(
+      `/static/${injectedJSFile}`,
+      rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100, // limit each IP to 100 requests per windowMs
+      }),
+      (_req, res) => {
+        env.logger.info(
+          `Serving in the injected Javascript file with caching disabled`,
+        );
+        res.sendFile(resolvePath(staticDir, injectedJSFile!), {
+          headers: {
+            'cache-control': 'no-cache',
+          },
+        });
+      },
+    );
   }
 
   enclosingRouter.use(router);
