@@ -471,7 +471,7 @@ dynamicPlugins:
             text: Foo Plugin Page # menu item text
 ```
 
-Each plugin can expose multiple routes and each route is required to define it's `path` and `importName` (if it differs from the default export).
+Each plugin can expose multiple routes and each route is required to define its `path` and `importName` (if it differs from the default export).
 
 - `path` - Unique path in the app, cannot override existing routes with single exception: the `/` home route. Main home page can be replaced via dynamic plugins mechanism.
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
