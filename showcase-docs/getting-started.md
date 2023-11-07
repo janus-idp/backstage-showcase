@@ -157,6 +157,8 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
        signInPage: oidc
        ```
 
+     - To disable the guest login set `auth.environment` to `production`.
+
    - Setup the RBAC plugin
 
      - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
