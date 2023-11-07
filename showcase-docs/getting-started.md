@@ -147,6 +147,52 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
        - OAuth 2 Custom Proxy
        - OneLogin
 
+   - Setup the RBAC plugin
+
+     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
+
+       - Requires the use of an identity provider. This plugin will not work with guest accounts.
+
+     - Set `backend.auth.keys` to a generated base64 secret. This [URL](https://backstage.io/docs/auth/service-to-service-auth/#setup) has more information on setting up a key for service-to-service authentication.
+
+       ```yaml
+       backend:
+         auth:
+           keys:
+             - secret: ${BACKEND_SECRET}
+       ```
+
+     - Enable and configure policy admins. Replace USERNAME with the username you used to sign into Showcase.
+
+       ```yaml
+       permission:
+         enabled: true
+         rbac:
+           admin:
+             users:
+               - name: user:default/<USERNAME>
+       ```
+
+     - Add permission policies via file. Create a rbac policy csv at the root of the showcase repository named `rbac-policy.csv` and fill it with the information below. This example will grant read access to catalog entities for your user.
+
+       ```csv
+       p, role:default/team_a, catalog-entity, read, allow
+
+       g, user:default/<USERNAME>, role:default/team_a
+       ```
+
+     - Add the `rbac-policy.csv` to the config file.
+
+       ```yaml
+       permission:
+         enabled: true
+         rbac:
+           policies-csv-file: ../../rbac-policy.csv
+           admin:
+             users:
+               - name: user:default/<USERNAME>
+       ```
+
    - Setup the Nexus Repository Manager plugin
 
      - `${NEXUS_REPOSITORY_MANAGER_URL}`: The URL to the Nexus Repository Manager instance.
