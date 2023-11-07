@@ -88,10 +88,10 @@ azureDevOps:
   token: ${AZURE_TOKEN}
   organization: ${AZURE_ORG}
 
-# Plugin: Spectral
-# spectralLinter:
-#   asyncApiRulesetUrl: https://raw.githubusercontent.com/janus-api-idp/api-spec-prototype/main/.spectral.yaml
-#   openApiRulesetUrl: https://raw.githubusercontent.com/janus-api-idp/api-spec-prototype/main/.spectral.yaml
+Plugin: Spectral
+spectralLinter:
+  asyncApiRulesetUrl: https://raw.githubusercontent.com/janus-api-idp/api-spec-prototype/main/.spectral.yaml
+  openApiRulesetUrl: https://raw.githubusercontent.com/janus-api-idp/api-spec-prototype/main/.spectral.yaml
 
 proxy:
   endpoints:
