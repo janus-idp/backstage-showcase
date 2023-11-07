@@ -1,14 +1,14 @@
-import { useState, useCallback, useEffect } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
-import { janusBackstageCustomizeApiRef } from '../api';
+import { useCallback, useEffect, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
+import { customDataApiRef } from '../api';
 import { QuickAccessLinks } from '../types/types';
 
 export const useQuickAccess = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<QuickAccessLinks[]>();
   const [error, setError] = useState<any>();
-  const client = useApi(janusBackstageCustomizeApiRef);
+  const client = useApi(customDataApiRef);
   const {
     value,
     error: apiError,
