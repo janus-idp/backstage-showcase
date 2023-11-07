@@ -172,4 +172,3 @@ enabled:
 
 dynamicPlugins:
   rootDirectory: dynamic-plugins-root
-  frontend: {}

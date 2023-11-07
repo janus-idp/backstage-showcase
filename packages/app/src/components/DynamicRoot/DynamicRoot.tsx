@@ -15,8 +15,11 @@ import { ScalprumProvider, useScalprum } from '@scalprum/react-core';
 import DynamicRootContext, {
   DynamicRootContextValue,
   ScalprumMountPoint,
+  ScalprumMountPointConfig,
 } from './DynamicRootContext';
-import extractDynamicConfig from '../../utils/dynamicUI/extractDynamicConfig';
+import extractDynamicConfig, {
+  configIfToCallable,
+} from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 import defaultThemes from './defaultThemes';
 import defaultAppComponents from './defaultAppComponents';
@@ -86,14 +89,31 @@ const DynamicRoot = ({
     }
 
     const providerMountPoints = mountPoints.reduce<
-      { mountPoint: string; Component: React.ComponentType<{}> }[]
-    >((acc, { module, importName, mountPoint, scope }) => {
+      {
+        mountPoint: string;
+        Component: React.ComponentType<{}>;
+        config?: ScalprumMountPointConfig;
+      }[]
+    >((acc, { module, importName, mountPoint, scope, config }) => {
       const Component = remotePlugins[scope]?.[module]?.[importName];
       // Only add mount points that have a component
       if (Component) {
         acc.push({
           mountPoint,
           Component: remotePlugins[scope][module][importName],
+          config: {
+            ...config,
+            if: configIfToCallable(
+              Object.fromEntries(
+                Object.entries(config?.if || {}).map(([k, v]) => [
+                  k,
+                  v.map(c =>
+                    typeof c === 'string' ? remotePlugins[scope][module][c] : c,
+                  ),
+                ]),
+              ),
+            ),
+          },
         });
       }
       return acc;
@@ -105,7 +125,10 @@ const DynamicRoot = ({
       if (!acc[entry.mountPoint]) {
         acc[entry.mountPoint] = [];
       }
-      acc[entry.mountPoint].push(entry.Component);
+      acc[entry.mountPoint].push({
+        component: entry.Component,
+        config: entry.config,
+      });
       return acc;
     }, {});
     getScalprum().api.mountPoints = mountPointComponents;

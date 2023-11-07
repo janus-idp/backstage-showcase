@@ -15,11 +15,11 @@
     "tar": "6.2.0"
   },
   "peerDependencies": {
-    "@janus-idp/backstage-plugin-jfrog-artifactory": "1.2.1",
-    "@janus-idp/backstage-plugin-nexus-repository-manager": "1.4.1",
-    "@janus-idp/backstage-plugin-ocm": "3.3.2",
-    "@janus-idp/backstage-plugin-quay": "1.4.3",
-    "@janus-idp/backstage-plugin-tekton": "3.1.1",
-    "@janus-idp/backstage-plugin-topology": "1.16.1"
+    "@janus-idp/backstage-plugin-jfrog-artifactory": "1.2.3",
+    "@janus-idp/backstage-plugin-nexus-repository-manager": "1.4.3",
+    "@janus-idp/backstage-plugin-ocm": "3.3.3",
+    "@janus-idp/backstage-plugin-quay": "1.4.5",
+    "@janus-idp/backstage-plugin-tekton": "3.1.2",
+    "@janus-idp/backstage-plugin-topology": "1.16.3"
   }
 }
