@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": "18 || 20"
@@ -53,7 +53,8 @@
   },
   "resolutions": {
     "@types/react": "17.0.69",
-    "@types/react-dom": "17.0.22"
+    "@types/react-dom": "17.0.22",
+    "wrap-ansi": "7.0.0"
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
