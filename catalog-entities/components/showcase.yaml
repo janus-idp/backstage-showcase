@@ -22,7 +22,7 @@ metadata:
     backstage.io/techdocs-ref: url:https://github.com/janus-idp/backstage-showcase
     backstage.io/kubernetes-namespace: janus-idp-prod
     sonarqube.org/project-key: janus-idp_backstage-showcase
-    backstage.io/spectral-ruleset-url: https://github.com/janus-api-idp/api-spec-prototype/blob/main/.spectral.yaml
+    # backstage.io/spectral-ruleset-url: https://github.com/janus-api-idp/api-spec-prototype/blob/main/.spectral.yaml
 spec:
   type: website
   system: janus-idp
