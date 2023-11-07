@@ -11,5 +11,7 @@ Add the remaining Auth Providers to the showcase
 - Cloudflare Access
 - GitLab
 - Google IAP
+- OIDC
 - Okta
 - OneLogin
+- SAML

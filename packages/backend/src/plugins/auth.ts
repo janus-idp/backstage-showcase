@@ -183,6 +183,18 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
           },
         },
       });
+    case 'oidc':
+      return providers.oidc.create({
+        signIn: {
+          async resolver({ result: { userinfo } }, ctx) {
+            const userId = userinfo.sub;
+            if (!userId) {
+              throw new Error('OIDC user does not contain a subject');
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
+          },
+        },
+      });
     case 'okta':
       return providers.okta.create({
         signIn: {
@@ -214,6 +226,12 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             }
             return await signInWithCatalogUserOptional(userId, ctx);
           },
+        },
+      });
+    case 'saml':
+      return providers.saml.create({
+        signIn: {
+          resolver: providers.saml.resolvers.nameIdMatchingUserEntityName(),
         },
       });
     default:
