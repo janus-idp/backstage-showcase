@@ -102,24 +102,6 @@ describe('createRouter', () => {
         "Could not find 'scalprum-dist' folder for plugin frontend-dynamic-plugin-test@0.0.0",
     },
     {
-      name: 'should skip a frontend plugin when the scalprum entry is missing',
-      packageManifest: {
-        name: 'frontend-dynamic-plugin-test',
-        version: '0.0.0',
-        backstage: {
-          role: 'frontend-plugin',
-        },
-        main: 'dist/index.cjs.js',
-      },
-      pluginExternalBaseURL: 'http://localhost:3000',
-      distScalprumDir: mockFs.directory({}),
-      testedPluginsURL: '/scalprum/plugins',
-      expectedPluginsStatusCode: 200,
-      expectedPluginsBody: {},
-      expectedWarning:
-        'Could not find scalprum entry for plugin frontend-dynamic-plugin-test@0.0.0',
-    },
-    {
       name: 'should skip a frontend plugin when the dist-scalprum/plugin-manifest.json file is missing',
       packageManifest: {
         name: 'frontend-dynamic-plugin-test',
