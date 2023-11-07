@@ -53,6 +53,20 @@ async function signInWithCatalogUserOptional(
 
 function getAuthProviderFactory(providerId: string): AuthProviderFactory {
   switch (providerId) {
+    case 'atlassian':
+      return providers.atlassian.create({
+        signIn: {
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.username;
+            if (!userId) {
+              throw new Error(
+                'Atlassian user profile does not contain a username',
+              );
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
+          },
+        },
+      });
     case `auth0`:
       return providers.auth0.create({
         signIn: {
@@ -63,6 +77,48 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             }
             return await signInWithCatalogUserOptional(userId, ctx);
           },
+        },
+      });
+    case 'azure-easyauth':
+      return providers.easyAuth.create({
+        signIn: {
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.id;
+            if (!userId) {
+              throw new Error(
+                'Azure Easy Auth user profile does not contain an id',
+              );
+            }
+            return await ctx.signInWithCatalogUser({
+              annotations: {
+                'graph.microsoft.com/user-id': userId,
+              },
+            });
+          },
+        },
+      });
+    case 'bitbucket':
+      return providers.bitbucket.create({
+        signIn: {
+          resolver:
+            providers.bitbucket.resolvers.usernameMatchingUserEntityAnnotation(),
+        },
+      });
+    case 'bitbucketServer':
+      return providers.bitbucketServer.create({
+        signIn: {
+          resolver:
+            providers.bitbucketServer.resolvers.emailMatchingUserEntityProfileEmail(),
+        },
+      });
+    case 'cfaccess':
+      return providers.cfAccess.create({
+        async authHandler({ claims }) {
+          return { profile: { email: claims.email } };
+        },
+        signIn: {
+          resolver:
+            providers.cfAccess.resolvers.emailMatchingUserEntityProfileEmail(),
         },
       });
     case 'github':
@@ -85,7 +141,7 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
           async resolver({ result: { fullProfile } }, ctx) {
             const userId = fullProfile.id;
             if (!userId) {
-              throw new Error(`GitLab user profile does not contain a user id`);
+              throw new Error(`GitLab user profile does not contain an id`);
             }
             return await signInWithCatalogUserOptional(userId, ctx);
           },
@@ -105,8 +161,13 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
         },
         signIn: {
           async resolver({ result: { iapToken } }, ctx) {
-            const id = iapToken.email.split('@')[0];
-            return await signInWithCatalogUserOptional(id, ctx);
+            const userId = iapToken.email.split('@')[0];
+            if (!userId) {
+              throw new Error(
+                'Google IAP user profile does not contain an email',
+              );
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
           },
         },
       });
@@ -127,6 +188,20 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
         signIn: {
           resolver:
             providers.okta.resolvers.emailMatchingUserEntityAnnotation(),
+        },
+      });
+    case 'onelogin':
+      return providers.onelogin.create({
+        signIn: {
+          async resolver({ result: { fullProfile } }, ctx) {
+            const userId = fullProfile.id;
+            if (!userId) {
+              throw new Error(
+                `OneLogin user profile does not contain a user id`,
+              );
+            }
+            return await signInWithCatalogUserOptional(userId, ctx);
+          },
         },
       });
     case `microsoft`:
