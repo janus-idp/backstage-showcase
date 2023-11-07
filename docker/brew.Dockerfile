@@ -223,6 +223,9 @@ USER 1001
 # https://github.com/backstage/backstage/issues/20644
 ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 
+# To avoid running scripts when using `npm pack` to install dynamic plugins
+ENV NPM_CONFIG_ignore-scripts='true'
+
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here

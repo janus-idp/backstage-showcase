@@ -21,7 +21,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
-import AssessmentIcon from '@mui/icons-material/Assessment';
 import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
@@ -97,11 +96,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
               icon={MapIcon as any}
               to="tech-radar"
               text="Tech Radar"
-            />
-            <SideBarItemWrapper
-              icon={AssessmentIcon as any}
-              to="lighthouse"
-              text="Lighthouse"
             />
             {dynamicRoutes.map(({ menuItem, path }) => {
               if (menuItem) {
