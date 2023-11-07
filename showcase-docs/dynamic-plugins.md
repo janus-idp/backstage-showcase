@@ -520,7 +520,7 @@ Mount points are defined identifiers available across the applications. These po
 
 The following mount points are available:
 
-| Mount point                  | Description                         | Visible even when no plugins are enabled                              |
+| Mount point                  | Description                         | Visible even when no plugins are enabled                       |
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
 | `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
 | `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
