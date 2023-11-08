@@ -482,8 +482,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud
     disabled: true
     pluginConfig:
-      enabled:
-        bitbucketCloud: true
       # Uncomment the following to enable the Bitbucket Cloud catalog
       # # https://backstage.io/docs/integrations/bitbucketCloud/discovery#configuration
       # catalog:
@@ -504,8 +502,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
     disabled: true
     pluginConfig:
-      enabled:
-        bitbucketServer: true
       # Uncomment the following to enable the Bitbucket Server catalog
       # # https://backstage.io/docs/integrations/bitbucketServer/discovery#configuration
       # catalog:
