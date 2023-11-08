@@ -52,3 +52,7 @@ catalog:
     # Note: integrations.github[].apps must be correctly configured to read GitHub locations
     - type: file
       target: ../../catalog-entities/all.yaml
+
+dynamicPlugins:
+  rootDirectory: dynamic-plugins-root
+  frontend: {}
