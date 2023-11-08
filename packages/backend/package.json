@@ -12,7 +12,7 @@
     "start": "cross-env LEGACY_BACKEND_START=true backstage-cli package start --config ../../app-config.yaml --config ../../app-config.example.yaml",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test --coverage",
+    "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean"
   },
   "dependencies": {
