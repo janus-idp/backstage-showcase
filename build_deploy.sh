@@ -39,8 +39,7 @@
 # note that you might need to change the GOROOT below or install Go in the specified path.
 #
 
-#REPO="${QUAY_REPOSITORY:-janus-idp/redhat-backstage-build}"
-REPO="${QUAY_REPOSITORY:-sreaves/redhat-backstage-build}"
+REPO="${QUAY_REPOSITORY:-app-sre/redhat-backstage-build}"
 
 # The version should be the short hash from git. This is what the deployent process expects.
 VERSION="$(git log --pretty=format:'%h' -n 1)"
