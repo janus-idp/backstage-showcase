@@ -176,9 +176,5 @@ dynatrace:
 permission:
   enabled: ${PERMISSION_ENABLED}
 
-enabled:
-  permission: ${PERMISSION_ENABLED}
-  metrics: ${METRICS_ENABLED}
-
 dynamicPlugins:
   rootDirectory: dynamic-plugins-root
