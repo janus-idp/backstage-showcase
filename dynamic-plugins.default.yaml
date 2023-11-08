@@ -505,7 +505,7 @@ plugins:
     disabled: true
     pluginConfig:
       enabled:
-        bitbucketCloud: true
+        bitbucketServer: true
       # Uncomment the following to enable the Bitbucket Server catalog
       # # https://backstage.io/docs/integrations/bitbucketServer/discovery#configuration
       # catalog:
@@ -522,6 +522,7 @@ plugins:
       #           frequency: { minutes: 30 }
       #           # supports ISO duration, "human duration" as used in code
       #           timeout: { minutes: 3 }
+
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true
     pluginConfig:
