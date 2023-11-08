@@ -71,11 +71,14 @@ dynamicPlugins:
                 - hasAnnotation: backstage.io/kubernetes-id
                 - hasAnnotation: backstage.io/kubernetes-namespace
     backstage.plugin-lighthouse:
+      appIcons:
+        - name: lighthouse
+          importName: LighthouseIcon
       dynamicRoutes:
         - path: /lighthouse
           importName: LighthousePage
           menuItem:
-            icon: Assessment
+            icon: lighthouse
             text: Lighthouse
       mountPoints:
         - mountPoint: entity.page.overview/cards
@@ -173,11 +176,14 @@ dynamicPlugins:
               anyOf:
               - isNexusRepositoryManagerAvailable
     janus-idp.backstage-plugin-ocm:
+      appIcons:
+        - name: ocmIcon
+          importName: OcmIcon
       dynamicRoutes:
         - path: /ocm
           importName: OcmPage
           menuItem:
-            icon: Storage
+            icon: ocmIcon
             text: Clusters
       mountPoints:
         - mountPoint: entity.page.overview/context
