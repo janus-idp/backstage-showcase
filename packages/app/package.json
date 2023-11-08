@@ -10,7 +10,7 @@
     "start": "janus-cli package start",
     "build": "janus-cli package build",
     "clean": "backstage-cli package clean",
-    "test": "backstage-cli package test --coverage",
+    "test": "backstage-cli package test --passWithNoTests --coverage",
     "lint": "backstage-cli package lint"
   },
   "dependencies": {
