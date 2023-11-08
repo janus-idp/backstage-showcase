@@ -7,8 +7,9 @@
   "backstage": {
     "role": "backend"
   },
+  "//": "The extra configuration options in the start script are needed for local development",
   "scripts": {
-    "start": "cross-env LEGACY_BACKEND_START=true backstage-cli package start",
+    "start": "cross-env LEGACY_BACKEND_START=true backstage-cli package start --config ../../app-config.yaml --config ../../app-config.example.yaml",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --coverage",
@@ -27,6 +28,7 @@
     "@backstage/plugin-auth-node": "0.4.0",
     "@backstage/plugin-catalog-backend": "1.14.0",
     "@backstage/plugin-catalog-backend-module-openapi": "0.1.23",
+    "@internal/plugin-dynamic-plugins-info-backend": "0.1.0",
     "@backstage/plugin-events-backend": "0.2.15",
     "@backstage/plugin-events-node": "0.2.15",
     "@backstage/plugin-permission-backend": "0.5.29",
@@ -38,18 +40,23 @@
     "@backstage/plugin-search-backend-module-pg": "0.5.15",
     "@backstage/plugin-search-backend-node": "1.2.10",
     "@internal/plugin-scalprum-backend": "*",
+    "@janus-idp/backstage-plugin-rbac-backend": "1.6.1",
     "app": "*",
     "better-sqlite3": "9.0.0",
     "express": "4.18.2",
     "express-prom-bundle": "6.6.0",
+    "express-promise-router": "4.1.1",
     "isolated-vm": "4.6.0",
     "pg": "8.11.3",
     "prom-client": "15.0.0",
-    "winston": "3.11.0"
+    "winston": "3.11.0",
+    "fs-extra": "10.1.0",
+    "express-rate-limit": "7.1.3"
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
-    "@types/express": "4.17.19",
+    "@types/express": "4.17.20",
+    "@types/fs-extra": "9.0.11",
     "cross-env": "7.0.3"
   },
   "files": [

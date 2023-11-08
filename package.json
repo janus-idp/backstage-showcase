@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": "18 || 20"
@@ -37,6 +37,9 @@
       "dynamic-plugins/wrappers/*"
     ]
   },
+  "dependencies": {
+    "node-gyp": "9.4.1"
+  },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
     "@changesets/cli": "2.26.2",
@@ -44,14 +47,14 @@
     "cross-var": "1.1.0",
     "husky": "8.0.3",
     "lint-staged": "15.0.2",
-    "node-gyp": "9.4.0",
     "prettier": "3.0.3",
-    "turbo": "1.10.15",
+    "turbo": "1.10.16",
     "typescript": "5.2.2"
   },
   "resolutions": {
-    "@types/react": "17.0.68",
-    "@types/react-dom": "17.0.21"
+    "@types/react": "17.0.69",
+    "@types/react-dom": "17.0.22",
+    "wrap-ansi": "7.0.0"
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {

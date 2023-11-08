@@ -21,10 +21,12 @@ The dynamic plugin support is based on the [backend plugin manager package](http
 
 ## Preparing dynamic plugins for the showcase
 
+### Backend plugins
+
 The backstage showcase application is still using the legacy backend system.
 So to be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be completed code-wise, as well as rebuilt with a dedicated CLI command.
 
-### Required code changes
+#### Required code changes
 
 In the old backend system, the wiring of the plugin in the application must be done manually, based on instructions generally passed in the readme of the plugin. This is obviously not compatible with the dynamic plugin support, which requires the plugin to be wired automatically.
 
@@ -33,7 +35,7 @@ So there are some changes to be made to the plugin code, in order to make it com
 1. The plugin must:
 
 - import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@0.0.5-janus.0` package,
-- add the `@janus-idp/cli` dependency to use the `@janus-idp` fork of the backstage CLI that supports a new, required `export-dynamic-plugin` command,
+- add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
 
@@ -45,18 +47,18 @@ These recommended changes to the `package.json` are summarized below:
   ...
   "scripts": {
     ...
-    "export-dynamic": "backstage-cli package export-dynamic-plugin"
+    "export-dynamic": "janus-cli package export-dynamic-plugin"
     ...
   },
   ...
   "dependencies": {
     ...
-    "@backstage/backend-plugin-manager": "npm:janus-idp/backend-plugin-manager@0.0.5-janus.0",
+    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@v1.19.6",
     ...
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.1.0
+    "@janus-idp/cli": "1.3.3"
   },
   ...
   "files": [
@@ -118,7 +120,7 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
 export * from './dynamic/index';
 ```
 
-### Exporting the plugin as a dynamic plugin package
+#### Exporting the plugin as a dynamic plugin package
 
 Once the code changes are done, the plugin can be exported as a dynamic plugin package, using the `export-dynamic` script entry:
 
@@ -155,6 +157,88 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 - export it as a dynamic plugin.
 
 Examples of such a wrapper plugins can be found in the [Janus showcase repository](https://github.com/janus-idp/backstage-showcase/tree/main/dynamic-plugins/wrappers). For example, [roadiehq-scaffolder-backend-module-utils-dynamic](https://github.com/janus-idp/backstage-showcase/tree/main/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic) wraps the `@roadiehq/scaffolder-backend-module-utils` package to make it compatible with the dynamic plugin support. It then embeds the wrapped plugin code in the generated code and hoist its `@backstage` dependencies as peer dependencies in the resulting dynamic plugin through the use of the `--embed-package` option in the [`export-dynamic` script](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/package.json#L26).
+
+### Frontend plugins
+
+#### Required code changes
+
+The plugin must:
+
+- add the `@janus-idp/cli` dependency,
+- add the `export-dynamic` script entry,
+- add the following element to the package `files` list: `"dist-scalprum"`
+- optional: add `scalprum` section that declares exported module entrypoint and webpack package name
+
+These recommended changes to the `package.json` are summarized below:
+
+```json
+  ...
+  "scripts": {
+    ...
+    "export-dynamic": "janus-cli package export-dynamic-plugin"
+    ...
+  },
+  ...
+  "devDependencies": {
+    "@janus-idp/cli": "1.3.3"
+  },
+  ...
+  "files": [
+    ...
+    "dist-scalprum"
+  ]
+  ...
+```
+
+Our CLI can generate the default configuration for Scalprum on the fly. For generated defaults see logs when running `yarn export-dynamic`. We default to the following configuration:
+
+```json
+  ...
+  "scalprum": {
+    "name": "<package_name>",  // Webpack container name is the same as NPM package name without "@" symbol and "/" replaced with "."
+    "exposedModules": {
+      "PluginRoot": "./src/index.ts" // PluginRoot module name is the default, therefore it doesn't have to be explicitly specified later in the app-config.yaml file
+    }
+  },
+  ...
+```
+
+However if you want to customize Scalprum's behavior, you can do so by including additional section to the `package.json` under `scalprum` key:
+
+```json
+  ...
+  "scalprum": {
+    "name": "custom-package-name",
+    "exposedModules": {
+      "FooModuleName": "./src/foo.ts",
+      "BarModuleName": "./src/bar.ts",
+      ...
+      // You can export multiple modules here. Each module will be exposed as a separate entrypoint in the Webpack container.
+    }
+  },
+  ...
+```
+
+#### Exporting the plugin as a dynamic plugin package
+
+Once the code changes are done, the plugin can be exported as a dynamic plugin package, using the `export-dynamic` script entry:
+
+```bash
+yarn export-dynamic
+```
+
+The resulting assets will be located in the `dist-scalprum` sub-folder of the plugin folder.
+
+Since the `dist-scalprum` was added to the `files` array, a resulting NPM package (`npm pack` or `npm publish`) will support both static and dynamic plugin loading of the package.
+
+#### Wrapping a third-party plugin to add dynamic plugin support
+
+In order to add dynamic plugin support to a third-party plugin, without touching the third-party plugin source code, a wrapper plugin can be created that will:
+
+- install the third-party plugin as a dependency,
+- reexport the third-party plugin in `src/index.ts` via `export {default} from '<package_name>'`,
+- include the additions to the `package.json` described above,
+- export it as a dynamic plugin.
 
 ## Installing a dynamic plugin package in the showcase
 
@@ -196,7 +280,7 @@ Examples of such a wrapper plugins can be found in the [Janus showcase repositor
 
   - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
   - `integrity`: (optional for local packages) An integrity checksum in the [form of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) for the specific package. Supported algorithms include `sha256`, `sha384` and `sha512`.
-  - `pluginConfig`: an optional plugin-specific `app-config` yaml fragment.
+  - `pluginConfig`: an optional plugin-specific `app-config` yaml fragment. See [plugin configuration](#plugin-configuration) for more details.
   - `disabled`: disables the dynamic plugin if set to `true`. Default: `false`.
 
 - For 2 plugins from a local and remote source, with one requiring a specific app-config, the list would be as follows:
@@ -208,10 +292,7 @@ Examples of such a wrapper plugins can be found in the [Janus showcase repositor
         - package: <a local package-spec used by npm pack>
         - package: <a remote package-spec used by npm pack>
           integrity: sha512-<some hash>
-          pluginConfig:
-            some:
-              app-config:
-                package-specific-fragment: value
+          pluginConfig: ...
   ```
 
 - A plugin from an included file can be disabled with the following snippet:
@@ -313,3 +394,193 @@ upstream:
           registry=https://registry.npmjs.org/
           ...
 ```
+
+## Plugin configuration
+
+As hinted above, dynamic plugins may require additional configuration to be included into `app-config.yaml`. This can be done via the `pluginConfig` key for each plugin entry in the `global.dynamic.plugins` list. This is later aggregated into an `app-config.yaml` file and passed to the Backstage instance.
+
+```yaml
+# values.yaml
+global:
+  dynamic:
+    plugins:
+      - package: <packageName>
+        pluginConfig:
+          # app-config.yaml fragment
+```
+
+### Frontend layout configuration
+
+Compared to the backend plugins, where mount points are defined in code and consumed by the backend plugin manager, frontend plugins require additional configuration in the `app-config.yaml`. A plugin missing this configuration will not be loaded into the application and will not be displayed.
+
+Similarly to traditional Backstage instances, there are 3 types of functionality a dynamic frontend plugin can offer:
+
+- Full new page that declares a completely new route in the app
+- Extension to existing page via router `bind`ings
+- Use of mount points within the application
+
+The overall configuration is as follows:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      dynamicRoutes: ...
+      mountPoints: ...
+      routeBindings: ...
+```
+
+#### Dynamic routes
+
+Traditionally, [Backstage full page extensions](https://backstage.io/docs/plugins/composability/#using-extensions-in-an-app) are done within the `packages/app/src/App.tsx` file. It may look like this:
+
+```tsx
+...
+  <AppRouter>
+    <Root>
+      <FlatRoutes>
+        {/* Standard routes usually available in each Backstage instance */}
+        <Route path="/catalog" element={<CatalogIndexPage />} />
+        <Route path="/settings" element={<UserSettingsPage />} />
+        ...
+        {/* Additional routes defined by user */}
+        <Route path="/my-plugin" element={<FooPluginPage />} />
+        ...
+      </FlatRoutes>
+    </Root>
+  </AppRouter>
+...
+```
+
+This change is usually coupled with an extension to the main sidebar navigation, achieved by editing `packages/app/src/components/Root/Root.tsx`.
+
+In dynamic plugins this mechanism has changed and users are no longer allowed to edit `.tsx` files. Instead they declare their desire to expose additional routes within dynamic plugin configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      dynamicRoutes: # exposes full routes
+        - path: /my-plugin # unique path in the app, can override `/`
+          module: CustomModule # optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
+          importName: FooPluginPage # optional, actual component name that should be rendered
+          menuItem: # optional, allows you to populate main sidebar navigation
+            icon: Storage # MUI4 icon to render in the sidebar
+            text: Foo Plugin Page # menu item text
+```
+
+Each plugin can expose multiple routes and each route is required to define its `path` and `importName` (if it differs from the default export).
+
+- `path` - Unique path in the app. Cannot override existing routes with the exception of the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
+- `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+- `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
+- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` is a Material UI 4 icon name.
+
+#### Bind to existing plugins
+
+Another extension option available to Backstage is to [bind to the external routes](https://backstage.io/docs/plugins/composability/#binding-external-routes-in-the-app) of existing plugins. This is traditionally done via the `bindRoutes` interface as:
+
+```tsx
+createApp({
+  bindRoutes({ bind }) {
+    bind(barPlugin.externalRoutes, {
+      headerLink: fooPlugin.routes.root,
+    });
+  },
+});
+```
+
+Dynamic plugins offer similar functionality via `routeBindings` configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      routeBindings:
+        - bindTarget: 'barPlugin.externalRoutes' # One of the supported bind targets
+          bindMap: # Map of bindings, same as the `bind` function options argument in the example above
+            headerLink: 'fooPlugin.routes.root'
+```
+
+These are the available bind targets:
+
+- `remotePlugins.externalRoutes`
+- `catalogPlugin.externalRoutes`
+- `catalogImportPlugin.externalRoutes`
+- `techdocsPlugin.externalRoutes`
+
+#### Using mount points
+
+This section aims to allow users dynamic extension of [Catalog Components](https://backstage.io/docs/plugins/composability/#catalog-components), but can be used to extend additional views in the future as well.
+
+Mount points are defined identifiers available across the applications. These points specifically allow users to extend existing pages with additional content.
+
+The following mount points are available:
+
+| Mount point                  | Description                         | Visible even when no plugins are enabled                       |
+| ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
+| `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
+| `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
+| `entity.page.issues`         | Catalog entity "Issues" tab         | NO                                                             |
+| `entity.page.pull-requests`  | Catalog entity "Pull Requests" tab  | NO                                                             |
+| `entity.page.ci`             | Catalog entity "CI" tab             | NO                                                             |
+| `entity.page.cd`             | Catalog entity "CD" tab             | NO                                                             |
+| `entity.page.kubernetes`     | Catalog entity "Kubernetes" tab     | NO                                                             |
+| `entity.page.tekton`         | Catalog entity "Tekton" tab         | NO                                                             |
+| `entity.page.image-registry` | Catalog entity "Image Registry" tab | NO                                                             |
+| `entity.page.monitoring`     | Catalog entity "Monitoring" tab     | NO                                                             |
+| `entity.page.lighthouse`     | Catalog entity "Lighthouse" tab     | NO                                                             |
+| `entity.page.api`            | Catalog entity "API" tab            | YES for entity of `kind: Component` and `spec.type: 'service'` |
+| `entity.page.dependencies`   | Catalog entity "Dependencies" tab   | YES for entity of `kind: Component`                            |
+| `entity.page.docs`           | Catalog entity "Documentation" tab  | YES for entity that satisfies `isTechDocsAvailable`            |
+| `entity.page.definition`     | Catalog entity "Definitions" tab    | YES for entity of `kind: Api`                                  |
+| `entity.page.diagram`        | Catalog entity "Diagram" tab        | YES for entity of `kind: System`                               |
+
+Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
+
+Each mount point has 2 complementary variations:
+
+- `*/context` type that serves to create React contexts
+- `*/cards` type for regular React components
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      mountPoints: # optional, uses existing mount points
+        - mountPoint: <mountPointName>/[cards|context]
+          module: CustomModule # optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
+          importName: FooPluginPage # actual component name that should be rendered
+          config: # optional, allows you to pass additional configuration to the component
+            layout: {} # accepts MUI sx properties
+            if: # Set of conditions that must be met for the component to be rendered
+              allOf|anyOf|oneOf:
+                - isMyPluginAvailable # an imported function from the same `module` within the plugin returns boolean
+                - isKind: component # Check if the entity is of a specific kind
+                - isType: service # Check if the entity is of a specific type
+                - hasAnnotation: annotationKey # Check if the entity has a specific annotation key
+            props: {} # React props to pass to the component
+```
+
+Each mount point supports additional configuration:
+
+- `layout` - Used only in `*/cards` type which renders visible content. Allows you to pass MUI sx properties to the component. This is useful when you want to control the layout of the component. `entity.page.*` mount points are rendered as CSS grid, so SX property allows you to control the grid layout and exact positioning of the rendered component.
+- `props` - React props passed to the component. This is useful when you want to pass some additional data to the component.
+- `if` - Used only in `*/cards` type which renders visible content. This is passed to `<EntitySwitch.Case if={<here>}`.
+
+  The following conditions are available:
+
+  - `allOf`: All conditions must be met
+  - `anyOf`: At least one condition must be met
+  - `oneOf`: Only one condition must be met
+
+  Conditions can be:
+
+  - `isKind`: Accepts a string or a list of string with entity kinds. For example `isKind: component` will render the component only for entity of `kind: Component`.
+  - `isType`: Accepts a string or a list of string with entity types. For example `isType: service` will render the component only for entities of `spec.type: 'service'`.
+  - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
+  - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`

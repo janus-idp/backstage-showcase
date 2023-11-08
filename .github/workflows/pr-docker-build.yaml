@@ -24,7 +24,7 @@ on:
       - 'changeset-release/**'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.number || github.event.pull_request.head.ref }}
   cancel-in-progress: true
 
 env:
@@ -47,6 +47,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
+      - name: Get the last commit short SHA of the PR
+        run: |
+          SHORT_SHA=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+
       - name: Build and Push with Buildx
         uses: ./.github/actions/docker-build
         with:
@@ -56,6 +61,7 @@ jobs:
           imageName: ${{ github.repository }}
           imageTags: |
             type=ref,prefix=pr-,event=pr
+            type=ref,prefix=pr-,suffix=-${{ env.SHORT_SHA }},event=pr
           # to autodelete PR image tags, set an expiry date
           imageLabels: quay.expires-after=14d
           push: true
