@@ -286,7 +286,7 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 
 ### Helm deployment
 
-- In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm chart provides new values since version 2.10.1.
+- Starting from version 2.10.1, the helm chart for deploying the showcase application through [this helm chart](https://github.com/janus-idp/helm-backstage) introduces new values.
 
 - These new Helm values contain a new `global.dynamic` value, with 2 fields:
 
