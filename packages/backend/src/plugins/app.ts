@@ -14,17 +14,20 @@ export default async function createPlugin(
   const appDistDir = resolvePackagePath(appPackageName, 'dist');
   const staticDir = resolvePath(appDistDir, 'static');
 
-  const files = await fs.readdir(staticDir);
-  const jsFiles = files.filter(file => file.endsWith('.js'));
   let injectedJSFile: string | undefined = undefined;
 
-  for (const jsFile of jsFiles) {
-    const path = resolvePath(staticDir, jsFile);
+  if (await fs.pathExists(staticDir)) {
+    const files = await fs.readdir(staticDir);
+    const jsFiles = files.filter(file => file.endsWith('.js'));
 
-    const content = await fs.readFile(path, 'utf8');
-    if (content.includes('__APP_INJECTED_')) {
-      injectedJSFile = jsFile;
-      break;
+    for (const jsFile of jsFiles) {
+      const path = resolvePath(staticDir, jsFile);
+
+      const content = await fs.readFile(path, 'utf8');
+      if (content.includes('__APP_INJECTED_')) {
+        injectedJSFile = jsFile;
+        break;
+      }
     }
   }
 

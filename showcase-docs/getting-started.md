@@ -132,20 +132,78 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
      - To enable authentication in the Showcase, add the [respective config](https://backstage.io/docs/auth/) in your `app-config`. The Showcase supports the following providers:
 
-       - Auth0
-       - Atlassian
-       - Azure
-       - Azure Easy Auth
-       - Bitbucket
-       - Bitbucket Server
-       - Cloudflare Access
-       - GitHub
-       - GitLab
-       - Google
-       - Google IAP
-       - Okta
-       - OAuth 2 Custom Proxy
-       - OneLogin
+       - Auth0 - `auth0`
+       - Atlassian - `atlassian`
+       - Azure - `microsoft`
+       - Azure Easy Auth - `azure-easyauth`
+       - Bitbucket - `bitbucket`
+       - Bitbucket Server - `bitbucketServer`
+       - Cloudflare Access - `cfaccess`
+       - GitHub - `github`
+       - GitLab - `gitlab`
+       - Google - `google`
+       - Google IAP - `gcp-iap`
+       - OIDC - `oidc`
+       - Okta - `okta`
+       - OAuth 2 Custom Proxy - `oauth2Proxy`
+       - OneLogin - `onelogin`
+       - SAML - `saml`
+
+     - Add the corresponding authentication provider key as the value to `signInPage` in your `app-config`.
+
+       e.g.
+
+       ```yaml
+       signInPage: oidc
+       ```
+
+     - To disable the guest login set `auth.environment` to `production`.
+
+   - Setup the RBAC plugin
+
+     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
+
+       - Requires the use of an identity provider. This plugin will not work with guest accounts.
+
+     - Set `backend.auth.keys` to a generated base64 secret. This [URL](https://backstage.io/docs/auth/service-to-service-auth/#setup) has more information on setting up a key for service-to-service authentication.
+
+       ```yaml
+       backend:
+         auth:
+           keys:
+             - secret: ${BACKEND_SECRET}
+       ```
+
+     - Enable and configure policy admins. Replace USERNAME with the username you used to sign into Showcase.
+
+       ```yaml
+       permission:
+         enabled: true
+         rbac:
+           admin:
+             users:
+               - name: user:default/<USERNAME>
+       ```
+
+     - Add permission policies via file. Create a rbac policy csv at the root of the showcase repository named `rbac-policy.csv` and fill it with the information below. This example will grant read access to catalog entities for your user.
+
+       ```csv
+       p, role:default/team_a, catalog-entity, read, allow
+
+       g, user:default/<USERNAME>, role:default/team_a
+       ```
+
+     - Add the `rbac-policy.csv` to the config file.
+
+       ```yaml
+       permission:
+         enabled: true
+         rbac:
+           policies-csv-file: ../../rbac-policy.csv
+           admin:
+             users:
+               - name: user:default/<USERNAME>
+       ```
 
    - Setup the Nexus Repository Manager plugin
 
