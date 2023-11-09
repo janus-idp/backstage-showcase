@@ -47,9 +47,76 @@ You can then verify metrics are being captured by navigating to the Openshift Co
 
 ### Enabling Metrics Monitoring on Azure Kubernetes Service (AKS)
 
+To enable metrics monitoring for Backstage Showcase on Azure Kubernetes Service (AKS), you can use the [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview). The AKS cluster will need to have an associated [Azure Monitor workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-enable?tabs=azure-portal).
+
+One method is to configure the metrics scraping of your AKS cluster using the [Azure Monitor _metrics_ add-on](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration).
+
+The other method is to configure the Azure Monitor _monitoring_ add-on which also allows you to [send Prometheus metrics to the Log Analytics workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-logs). These metrics can then be queries using [Log Analytics queries](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query#prometheus-metrics).
+
+In both methods, we would want to configure the metrics scraping to utilize endpoints provided by Pod Annotations. To add annotations to the backstage pod, add the following to the Janus Helm chart `values.yaml`:
+
+```yaml title="values.yaml"
+upstream:
+  backstage:
+    # Other configurations above
+    podAnnotations:
+      # Other annotations above
+      prometheus.io/scrape: 'true'
+      prometheus.io/path: '/metrics'
+      prometheus.io/port: '7007'
+      prometheus.io/scheme: 'http'
+```
+
+For the _metrics_ add-on, you will need to configure one of the [ConfigMaps](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration#configmaps) in the `kube-system` namespace to scrape the metrics endpoint of the pod. In this doc, we will configure the recommended [`ama-metrics-prometheus-config-configmap.yaml`](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-prometheus-config-configmap.yaml).
+
+<details><summary>The following is an example of an ama-metrics-prometheus-config-configmap.yaml that can be used:</summary>
+
+```yaml title="ama-metrics-prometheus-config-configmap.yaml"
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ama-metrics-prometheus-config
+  namespace: kube-system
+data:
+  prometheus.yaml: |
+    global:
+      scrape_interval: 1m
+      scrape_timeout: 10s
+    scrape_configs:
+    - job_name: 'prometheus'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - <namespace-showcase-was-deployed-on>
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
+```
+
+</details>
+
 ## Logging
 
-Logging in backstage showcase is conducted using the [winston](https://github.com/winstonjs/winston) library. By default, logs of level `debug` are not logged. To enable debug logs, you will need to set the environment variable `LOG_LEVEL` to `debug` in your deployment via the helm chart `values.yaml` as follows:
+Logging in backstage showcase is conducted using the [winston](https://github.com/winstonjs/winston) library. By default, logs of level `debug` are not logged. To enable debug logs, you will need to set the environment variable `LOG_LEVEL` to `debug` in your deployment in the helm chart's `values.yaml` as follows:
 
 ```yaml title="values.yaml"
 upstream:
