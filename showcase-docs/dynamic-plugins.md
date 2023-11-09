@@ -1,11 +1,5 @@
 # Dynamic Plugins support
 
-## WARNING:
-
-**_This is a work in progress_**
-
-So this documentation, in its current form, is provisional and will be updated as next PRs related to this feature are merged.
-
 ## Overview
 
 This document describes how to enable the dynamic plugins feature in the Janus Backstage showcase application.
