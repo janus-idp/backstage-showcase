@@ -339,16 +339,15 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 
 ### Dynamic plugins included in the Showcase container image
 
-The showcase docker image contains a set of ready-to-use dynamic plugins, most of which are disabled by default, since they require some mandatory configuration.
-The list of those plugins can be found in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
+The showcase docker image comes pre-loaded with a selection of dynamic plugins, with most being initially deactivated due to the need for mandatory configuration. The complete list of these plugins is detailed in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
 
-At application start, for every plugin disabled by default, the log of the `install-dynamic-plugins` init container of the `backstage` Pod will contain a line like below:
+Upon application startup, for each plugin that is disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will display a line similar to the following:
 
 ```
 ======= Skipping disabled dynamic plugin ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
 ```
 
-Enabling this plugin is very easy: just add a package with the same name and override the `disabled` field in the helm chart values:
+To activate this plugin, simply add a package with the same name and adjust the `disabled` field in the helm chart values as shown below:
 
 ```diff
 global:
@@ -360,8 +359,7 @@ global:
 +        disabled: false
 ```
 
-The plugin default configuration is read from the `dynamic-plugins.default.yaml`, but
-you can still override it by adding a `pluginConfig` entry to the plugin configuration.
+While the plugin's default configuration is extracted from the `dynamic-plugins.default.yaml` file, you still have the option to override it by incorporating a `pluginConfig` entry into the plugin configuration.
 
 ### Example of external dynamic backend plugins
 
