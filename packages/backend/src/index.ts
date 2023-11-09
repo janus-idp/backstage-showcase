@@ -25,6 +25,7 @@ import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { createRouter as dynamicPluginsInfoRouter } from '@internal/plugin-dynamic-plugins-info-backend';
 import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 import { RequestHandler, Router } from 'express';
+import type { Logger } from 'winston';
 import { metricsHandler } from './metrics';
 import app from './plugins/app';
 import auth from './plugins/auth';
@@ -89,9 +90,11 @@ async function addPlugin(args: {
   apiRouter: Router;
   createEnv: ReturnType<typeof makeCreateEnv>;
   router: (env: PluginEnvironment) => Promise<Router>;
+  logger: Logger;
 }): Promise<void> {
-  const { plugin, apiRouter, createEnv, router } = args;
+  const { plugin, apiRouter, createEnv, router, logger } = args;
 
+  logger.info(`Adding plugin "${plugin}" to backend...`);
   const pluginEnv: PluginEnvironment = useHotMemoize(module, () =>
     createEnv(plugin),
   );
@@ -99,12 +102,15 @@ async function addPlugin(args: {
 }
 
 async function addRouter(args: {
+  name: string;
   service: ServiceBuilder;
   root: string;
   router: RequestHandler | Router;
+  logger: Logger;
 }): Promise<void> {
-  const { service, root, router } = args;
+  const { name, service, root, router, logger } = args;
 
+  logger.info(`Adding router "${name}" to backend...`);
   service.addRouter(root, router);
 }
 
@@ -137,6 +143,7 @@ async function main() {
         pluginManager,
         discovery: env.discovery,
       }),
+    logger,
   });
 
   // Dynamic plugins info provider
@@ -149,20 +156,52 @@ async function main() {
         logger: env.logger,
         pluginManager,
       }),
+    logger,
   });
 
   // Required core plugins
-  await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
-  await addPlugin({ plugin: 'auth', apiRouter, createEnv, router: auth });
-  await addPlugin({ plugin: 'catalog', apiRouter, createEnv, router: catalog });
-  await addPlugin({ plugin: 'search', apiRouter, createEnv, router: search });
+  await addPlugin({
+    plugin: 'proxy',
+    apiRouter,
+    createEnv,
+    router: proxy,
+    logger,
+  });
+  await addPlugin({
+    plugin: 'auth',
+    apiRouter,
+    createEnv,
+    router: auth,
+    logger,
+  });
+  await addPlugin({
+    plugin: 'catalog',
+    apiRouter,
+    createEnv,
+    router: catalog,
+    logger,
+  });
+  await addPlugin({
+    plugin: 'search',
+    apiRouter,
+    createEnv,
+    router: search,
+    logger,
+  });
   await addPlugin({
     plugin: 'scaffolder',
     apiRouter,
     createEnv,
     router: scaffolder,
+    logger,
   });
-  await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
+  await addPlugin({
+    plugin: 'events',
+    apiRouter,
+    createEnv,
+    router: events,
+    logger,
+  });
   await addPlugin({
     plugin: 'permission',
     apiRouter,
@@ -182,6 +221,7 @@ async function main() {
             .filter(p => p !== undefined) as string[]),
         ],
       }),
+    logger,
   });
 
   // Load dynamic plugins
@@ -194,6 +234,7 @@ async function main() {
           apiRouter,
           createEnv,
           router: pluginRouter.createPlugin,
+          logger,
         });
       }
     }
@@ -206,24 +247,32 @@ async function main() {
 
   // Required core routers
   await addRouter({
+    name: 'api',
     service,
     root: '/api',
     router: apiRouter,
+    logger,
   });
   await addRouter({
+    name: 'healthcheck',
     service,
     root: '',
     router: await createStatusCheckRouter(appEnv),
+    logger,
   });
   await addRouter({
+    name: 'metrics',
     service,
     root: '',
     router: metricsHandler(),
+    logger,
   });
   await addRouter({
+    name: 'app',
     service,
     root: '',
     router: await app(appEnv),
+    logger,
   });
 
   await service.start().catch(err => {

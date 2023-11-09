@@ -11,10 +11,6 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
     createPlugin: createRouter,
   },
   async catalog(builder, env) {
-    if (env.config.getOptionalBoolean('enabled.gitlab') || false) {
-      builder.addProcessor(new GitlabFillerProcessor(env.config));
-    } else {
-      env.logger.info('Gitlab plugin is disabled');
-    }
+    builder.addProcessor(new GitlabFillerProcessor(env.config));
   },
 };
