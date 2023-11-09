@@ -127,7 +127,7 @@ However, the underlying mechanism that discovers and loads dynamic backend plugi
 
 When the new backend system becomes generally adopted, and used in the janus Showcase, the dynamic backend plugins should then be based on the new backend system.
 
-So when implementing code changes to make a backend plugin dynamic, we **strongly recommend** to create the expected new backend system entrypoints (with `createBackendPlugin` or `createBackendModule`), in order to be prepared for the move to the new backend system.
+Therefore, we **strongly recommend** the creation of the expected new backend system entrypoints (with `createBackendPlugin` or `createBackendModule`) when implementing code changes to make a backend plugin dynamic, in order to be prepared for the move to the new backend system.
 
 You can find an example of such a dynamic plugin entrypoint based on the new backend system in the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/dynamic/alpha.ts#L14).
 
