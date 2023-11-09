@@ -1986,7 +1986,7 @@
     "@material-ui/core" "^4.12.2"
     "@material-ui/icons" "^4.9.1"
 
-"@backstage/backend-app-api@^0.5.5", "@backstage/backend-app-api@^0.5.6":
+"@backstage/backend-app-api@0.5.7", "@backstage/backend-app-api@^0.5.5", "@backstage/backend-app-api@^0.5.6":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@backstage/backend-app-api/-/backend-app-api-0.5.7.tgz#ebc52710ea0b125734abc3a4f3832280501ff44e"
   integrity sha512-dnuYyqHfQTNAo+mq0mmsRDRu0AA48ExSs0alPAt2EnP/m3rfJakxOYMneb9Cr+aWralIdb7KE0N6oPDBaFe3Xg==
@@ -2417,7 +2417,7 @@
     yn "^4.0.0"
     zod "^3.21.4"
 
-"@backstage/config-loader@^1.5.0", "@backstage/config-loader@^1.5.1":
+"@backstage/config-loader@1.5.2", "@backstage/config-loader@^1.5.0", "@backstage/config-loader@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-1.5.2.tgz#2cd808c941553bbb957c443fba7441075184d132"
   integrity sha512-yoN6UdzGeSU73A43FQMT2Rz2cJTnIy02bGvAnAFYvBXJHvn3WXlHAXxjeOvcm6KJfZImziVUO6Sujv1YM8WpKw==
@@ -5493,10 +5493,10 @@
   dependencies:
     "@backstage/plugin-permission-common" "^0.7.9"
 
-"@janus-idp/cli@1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.3.3.tgz#6269f389ba9780f3f2e4cffb407b52b059d9b527"
-  integrity sha512-m7lbKpDY6rwE4u/9Iy0yw55L2VZXsYdxj4buJxybzdM+mYNQC5mcAvQJt8lIFkdBApX1LIcTTblMI0U9WWoOiw==
+"@janus-idp/cli@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.4.0.tgz#b28801b68abce0e4c12249de3dd5d0267bd704bc"
+  integrity sha512-xa+IVdvw3zquhlRylnMEPse3zfSyvk9QzGZc42dcALvHmOrpiuRYFhYkT+tQFbBlMU+oASzvLpvu1KR8eFo/1w==
   dependencies:
     "@backstage/cli-common" "^0.1.13"
     "@backstage/cli-node" "^0.1.5"
@@ -5550,6 +5550,7 @@
     semver "^7.5.4"
     style-loader "^3.3.1"
     swc-loader "^0.2.3"
+    typescript-json-schema "^0.62.0"
     webpack "^5.89.0"
     webpack-dev-server "^4.15.1"
     yml-loader "^2.1.0"
@@ -5985,7 +5986,7 @@
     find-up "^4.1.0"
     fs-extra "^8.1.0"
 
-"@manypkg/get-packages@^1.1.3":
+"@manypkg/get-packages@1.1.3", "@manypkg/get-packages@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@manypkg/get-packages/-/get-packages-1.1.3.tgz#e184db9bba792fa4693de4658cfb1463ac2c9c47"
   integrity sha512-fo+QhuU3qE/2TQMQmbVMqaQ6EWbMhi4ABWP+O4AM1NqPBuy0OrApV5LO6BrrgnhtAHS2NH6RrVk9OL181tTi8A==
@@ -24884,6 +24885,20 @@ typescript-json-schema@^0.61.0:
   version "0.61.0"
   resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.61.0.tgz#6f09f249469b2a8bb642578de0801e1e1d22f969"
   integrity sha512-sYKnLJjvh9ljdSQkh91LM9PEzgzrgnYfvU226IauISFd+379VCti/VtAFXd00Z9euLkVffh5LRTAO8eamsxUlw==
+  dependencies:
+    "@types/json-schema" "^7.0.9"
+    "@types/node" "^16.9.2"
+    glob "^7.1.7"
+    path-equal "^1.2.5"
+    safe-stable-stringify "^2.2.0"
+    ts-node "^10.9.1"
+    typescript "~5.1.0"
+    yargs "^17.1.1"
+
+typescript-json-schema@^0.62.0:
+  version "0.62.0"
+  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.62.0.tgz#774b06b0c9d86d7f3580ea9136363a6eafae1470"
+  integrity sha512-qRO6pCgyjKJ230QYdOxDRpdQrBeeino4v5p2rYmSD72Jf4rD3O+cJcROv46sQukm46CLWoeusqvBgKpynEv25g==
   dependencies:
     "@types/json-schema" "^7.0.9"
     "@types/node" "^16.9.2"

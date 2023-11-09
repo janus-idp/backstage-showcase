@@ -8,10 +8,14 @@ import {
   createServiceBuilder,
   createStatusCheckRouter,
   getRootLogger,
-  loadBackendConfig,
   notFoundHandler,
   useHotMemoize,
+  createRootLogger,
 } from '@backstage/backend-common';
+import {
+  loadBackendConfig,
+  createConfigSecretEnumerator,
+} from '@backstage/backend-app-api';
 import {
   BackendPluginProvider,
   LegacyPluginEnvironment as PluginEnvironment,
@@ -19,6 +23,7 @@ import {
 } from '@backstage/backend-plugin-manager';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
+import * as winston from 'winston';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
@@ -34,6 +39,10 @@ import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
+import {
+  createDynamicPluginsConfigSecretEnumerator,
+  gatherDynamicPluginsSchemas,
+} from './schemas';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
 // in the upstream @backstage/backend-plugin-manager package.
@@ -41,6 +50,7 @@ import search from './plugins/search';
 // It should be removed as soon as the upstream package is fixed and released.
 // see https://github.com/janus-idp/backstage-showcase/pull/600
 import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
+import { WinstonLogger } from '@backstage/backend-app-api';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
@@ -166,18 +176,60 @@ async function addRouter(args: AddRouter | AddRouterOptional): Promise<void> {
   }
 }
 
+const redacter = WinstonLogger.redacter();
+
 async function main() {
-  const logger = getRootLogger();
-  const config = await loadBackendConfig({
-    argv: process.argv,
-    logger,
+  const logger = createRootLogger({
+    format: winston.format.combine(
+      redacter.format, // We use our own redacter here, in order to add additional secrets for dynamic plugins.
+      process.env.NODE_ENV === 'production'
+        ? winston.format.json()
+        : WinstonLogger.colorFormat(),
+    ),
   });
+
+  const { config } = await loadBackendConfig({
+    argv: process.argv,
+  });
+
   const pluginManager = await PluginManager.fromConfig(
     config,
     logger,
     undefined,
     new CommonJSModuleLoader(logger),
   );
+
+  const dynamicPluginsSchemas = await gatherDynamicPluginsSchemas(
+    pluginManager,
+    logger,
+  );
+
+  const secretEnumerator = {
+    staticApplication: await createConfigSecretEnumerator({ logger }),
+    dynamicPlugins: await createDynamicPluginsConfigSecretEnumerator(
+      dynamicPluginsSchemas,
+      logger,
+    ),
+  };
+
+  const addSecretsInRedacter = () => {
+    redacter.add([
+      ...secretEnumerator.staticApplication(config),
+      ...secretEnumerator.dynamicPlugins(config),
+    ]);
+  };
+  addSecretsInRedacter();
+  config.subscribe?.(() => {
+    addSecretsInRedacter();
+  });
+
+  const secrets = [...secretEnumerator.dynamicPlugins(config)];
+  if (secrets.length > 0) {
+    getRootLogger().info(
+      `The following secret related to dynamic plugin should be redacted: ${secrets[0]}`,
+    );
+  }
+
   const createEnv = makeCreateEnv(config, pluginManager);
 
   const appEnv = useHotMemoize(module, () => createEnv('app'));
@@ -298,7 +350,7 @@ async function main() {
     name: 'app',
     service,
     root: '',
-    router: await app(appEnv),
+    router: await app(appEnv, dynamicPluginsSchemas),
   });
   await service.start().catch(err => {
     console.log(err);
