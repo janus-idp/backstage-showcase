@@ -285,7 +285,7 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 
 - Starting from version 2.10.1, the [helm chart](https://github.com/janus-idp/helm-backstage) for deploying the showcase application introduces new values.
 
-- These new Helm values contain a new `global.dynamic` value, with 2 fields:
+- The updated Helm values introduce a new global.dynamic parameter, comprising two fields:
 
   -  `plugins`: contains the list of dynamic plugins to be installed, and by default is an empty list. A package can be specified either as a local path to the dynamic plugin `dist-dynamic/dist` sub-folder, or as a package specification in an NPM repository. 
   - `includes`: contains a list of YAML files with the same syntax, of which `plugins` list will be included, and possibly overwritten by the `plugins` list of the main helm values. By default, the `includes` fields contains the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, which contains all the dynamic plugins [shipped with the showcase application](#dynamic-plugins-included-in-the-showcase-container-image), either enabled or disabled by default.
