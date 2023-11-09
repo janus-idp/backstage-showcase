@@ -1,7 +1,7 @@
 import { UIhelper } from '../utils/UIhelper';
 import { HomePage } from '../support/pages/HomePage';
 import { Common } from '../utils/Common';
-import { gpts } from '../support/testData/gpts';
+// import { gpts } from '../support/testData/gpts';
 
 describe('Test with Guest Sign-in', () => {
   before(() => {

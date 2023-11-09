@@ -4,7 +4,7 @@ set -e
 
 # Variáveis globais
 LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
-TEST_NAME="Showcase e2e Tests"
+TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cleanup() {
@@ -85,10 +85,8 @@ apply_yaml_files() {
   # Update namespace and other configurations in YAML files
   local files=("$dir/resources/service_account/service-account-rhdh.yaml"
     "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml"
-    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml"
-    "$dir/resources/deployment/deployment-test-app-component.yaml"
-    "$dir/auth/secrets-rhdh-secrets.yaml")
-
+    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml")
+  
   for file in "${files[@]}"; do
     sed -i "s/namespace:.*/namespace: $NAME_SPACE/g" "$file"
   done
@@ -138,7 +136,7 @@ run_tests() {
 
   (
     set -e
-    echo "Using janus-idp/backstage-showcase:next image"
+    echo Using PR container image: pr-${GIT_PR_NUMBER}
     yarn run cypress:run --config baseUrl="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
   ) |& tee "/tmp/${LOGFILE}"
 
@@ -185,8 +183,13 @@ main() {
 
   add_helm_repos
 
-  # helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE}
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE}
+  GIT_PR_RESPONSE=$(curl -s "https://api.github.com/repos/${GITHUB_ORG_NAME}/${GITHUB_REPOSITORY_NAME}/pulls/${GIT_PR_NUMBER}")
+  LONG_SHA=$(echo "$GIT_PR_RESPONSE" | jq -r '.head.sha')
+  SHORT_SHA=$(git rev-parse --short ${LONG_SHA})
+
+  echo "Tag name with short SHA: pr-${GIT_PR_NUMBER}-${SHORT_SHA}"
+
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
 
   echo "Waiting for backstage deployment..."
   sleep 120
