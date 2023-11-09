@@ -198,6 +198,9 @@ RUN microdnf update -y && \
   popd >/dev/null; \
   microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
 
+# Downstream only - Make python3.11 the default python
+RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
 # Downstream only - copy from build, not cleanup stage
 COPY --from=build --chown=1001:1001 $CONTAINER_SOURCE/ ./
 
