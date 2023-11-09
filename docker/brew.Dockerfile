@@ -168,49 +168,40 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697662866 AS runner
 USER 0
 
-# Env vars
-ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-
-# Downstream sources
-ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
-
+ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/
 
 # Downstream only - install techdocs dependencies using cachito sources
-COPY $REMOTE_SOURCES/upstream2 ./upstream2/
+COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
 RUN microdnf update -y && \
   microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip; \
-  # ls -la $CONTAINER_SOURCE/ $CONTAINER_SOURCE/upstream2/ $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
-  cat $CONTAINER_SOURCE/upstream2/cachito.env && \
+  # ls -la $REMOTE_SOURCES_DIR/ $REMOTE_SOURCES_DIR/upstream2/ $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
+  # cat $REMOTE_SOURCES_DIR/upstream2/cachito.env && \
   # cachito.env contains path to cert:
   # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
-  source $CONTAINER_SOURCE/upstream2/cachito.env && \
+  source $REMOTE_SOURCES_DIR/upstream2/cachito.env && \
   # fix ownership for pip install folder
   mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
   # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
-  pushd $CONTAINER_SOURCE/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
+  pushd $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
   set -xe; \
   python3.11 -V; pip3.11 -V; \
   pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
   pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
   popd >/dev/null; \
-  microdnf clean all; rm -fr $CONTAINER_SOURCE/upstream2
+  microdnf clean all; rm -fr $REMOTE_SOURCES_DIR/upstream2
 
 # Downstream only - copy from build, not cleanup stage
-COPY --from=build --chown=1001:1001 $CONTAINER_SOURCE/ ./
+COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
+# Downstream only - copy embedded dynamic plugins from $REMOTE_SOURCES_DIR
+COPY --from=build $REMOTE_SOURCES_DIR/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
-# Copy python script used to gather dynamic plugins
+# Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py ./
-RUN chmod a+r ./install-dynamic-plugins.py
-
-# Copy embedded dynamic plugins
-COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-RUN chmod -R a+r ./dynamic-plugins/
-
-# Copy embedded dynamic plugins to default dynamic plugins root
-RUN rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
+  rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

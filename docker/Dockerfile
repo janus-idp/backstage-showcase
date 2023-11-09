@@ -95,12 +95,7 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697662866 AS runner
 USER 0
 
-# Env vars
-ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-
-# Upstream sources
 ENV CONTAINER_SOURCE=/opt/app-root/src
-
 WORKDIR $CONTAINER_SOURCE/
 
 # Upstream only - install techdocs dependencies (PyPI source tarballs not required)
@@ -111,17 +106,13 @@ RUN microdnf update -y && \
 
 # Upstream only - copy from cleanup stage
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
-
-# Copy python script used to gather dynamic plugins
-COPY docker/install-dynamic-plugins.py ./
-RUN chmod a+r ./install-dynamic-plugins.py
-
-# Copy embedded dynamic plugins
+# Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-RUN chmod -R a+r ./dynamic-plugins/
 
-# Copy embedded dynamic plugins to default dynamic plugins root
-RUN rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+# Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
+COPY docker/install-dynamic-plugins.py ./
+RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
+  rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
