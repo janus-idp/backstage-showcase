@@ -143,9 +143,9 @@ Common backstage dependencies, expected to be in the backstage backend applicati
 
 #### Publishing the dynamic backend plugin package to an NPM registry
 
-The dynamic plugin package, in the `dist-dynamic` sub-folder of the plugin folder, can be published to an NPM registry, using the basic `npm publish` command (since it is not part of any Yarn monorepo).
+The dynamic plugin package, located in the `dist-dynamic` sub-folder within the plugin directory, can be uploaded to an NPM registry using the standard `npm publish` command as it is not part of any Yarn monorepo.
 
-As already mentioned above, this published self-contained package will contain its private dependencies in an embedded `node_modules` folder, and will be ready for installation as a dynamic plugin package in the showcase application, as explained [below](#helm-deployment)
+As previously mentioned, this independently published package is self-contained and includes its own private dependencies in an enclosed `node_modules` folder. It is then prepared for installation as a dynamic plugin package in the showcase application, as elaborated further in the [Helm Deployment](#helm-deployment) section below.
 
 #### About embedding dependencies in the plugin package
 
