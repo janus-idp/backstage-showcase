@@ -125,7 +125,7 @@ export * from './dynamic/index';
 The new backend system is not yet used in the Showcase application.
 However, the underlying mechanism that discovers and loads dynamic backend plugins already supports both the new and old backend systems.
 
-When the new backend system would be generally adopted, and used in the janus Showcase as well, the dynamic backend plugins should be based on the new backend system.
+When the new backend system becomes generally adopted, and used in the janus Showcase, the dynamic backend plugins should then be based on the new backend system.
 
 So when implementing code changes to make a backend plugin dynamic, we **strongly recommend** to create the expected new backend system entrypoints (with `createBackendPlugin` or `createBackendModule`), in order to be prepared for the move to the new backend system.
 
