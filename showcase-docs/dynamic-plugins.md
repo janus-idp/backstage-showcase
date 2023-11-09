@@ -291,7 +291,11 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 
 - In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm chart provides new values since version 2.10.1.
 
-- These new Helm values contain a new `global.dynamic` value, with 2 fields: `plugins` and `includes`. `plugins` contains the list of dynamic plugins to be installed, and by default is an empty list. A package can be specified either as a local path to the dynamic plugin `dist-dynamic/dist` sub-folder, or as a package specification in an NPM repository. `includes` contains a list of YAML files with the same syntax, of which `plugins` list will be included, and possibly overwritten by the `plugins` list of the main helm values. By default the `includes` fields contains the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, which contains all the dynamic plugins [shipped with the showcase application](#dynamic-plugins-included-in-the-showcase-container-image), either enabled or disabled by default.
+- These new Helm values contain a new `global.dynamic` value, with 2 fields:
+
+  -  `plugins`: contains the list of dynamic plugins to be installed, and by default is an empty list. A package can be specified either as a local path to the dynamic plugin `dist-dynamic/dist` sub-folder, or as a package specification in an NPM repository. 
+  - `includes`: contains a list of YAML files with the same syntax, of which `plugins` list will be included, and possibly overwritten by the `plugins` list of the main helm values. By default, the `includes` fields contains the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, which contains all the dynamic plugins [shipped with the showcase application](#dynamic-plugins-included-in-the-showcase-container-image), either enabled or disabled by default.
+
 
 - So adding a dynamic plugin to the showcase is done by adding an entry to the `global.dynamic.plugins` list. Each entry has the following fields:
 
