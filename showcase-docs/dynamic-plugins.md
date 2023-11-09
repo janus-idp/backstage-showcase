@@ -529,7 +529,6 @@ The following mount points are available:
 | `entity.page.ci`             | Catalog entity "CI" tab             | NO                                                             |
 | `entity.page.cd`             | Catalog entity "CD" tab             | NO                                                             |
 | `entity.page.kubernetes`     | Catalog entity "Kubernetes" tab     | NO                                                             |
-| `entity.page.tekton`         | Catalog entity "Tekton" tab         | NO                                                             |
 | `entity.page.image-registry` | Catalog entity "Image Registry" tab | NO                                                             |
 | `entity.page.monitoring`     | Catalog entity "Monitoring" tab     | NO                                                             |
 | `entity.page.lighthouse`     | Catalog entity "Lighthouse" tab     | NO                                                             |
