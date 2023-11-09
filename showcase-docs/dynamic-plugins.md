@@ -123,7 +123,7 @@ export * from './dynamic/index';
 #### Note about the new backend system support
 
 The new backend system is not yet used in the Showcase application.
-However the underlying mechanism that discovers and loads dynamic backend plugins, already supports both the new and old backend systems.
+However, the underlying mechanism that discovers and loads dynamic backend plugins already supports both the new and old backend systems.
 
 When the new backend system would be generally adopted, and used in the janus Showcase as well, the dynamic backend plugins should be based on the new backend system.
 
