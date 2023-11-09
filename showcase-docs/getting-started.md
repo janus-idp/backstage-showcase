@@ -52,7 +52,6 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Enable plugins (All plugins have a default of `false`)
 
-     - `${METRICS_ENABLED}` Set to `true` to enable Prometheus metrics (metrics will be available on `http://localhost:7007/metrics`).
      - `${PERMISSION_ENABLED}` Set to `true` to enable RBAC (permission will be available on `http://localhost:7007/permission`).
 
    - Setup the Jira plugin
