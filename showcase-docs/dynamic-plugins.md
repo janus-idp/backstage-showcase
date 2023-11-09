@@ -363,7 +363,7 @@ While the plugin's default configuration is extracted from the `dynamic-plugins.
 
 ### Example of external dynamic backend plugins
 
-If you want to easily test installing dynamic backend plugins from a remote NPM registry,
+If you want to easily test the installation of dynamic backend plugins from a remote NPM registry,
 you can use the example dynamic backend plugins described
 in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins),
 which have been pushed to NPMJS for demonstration purposes.
