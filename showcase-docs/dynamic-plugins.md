@@ -119,14 +119,11 @@ export * from './dynamic/index';
 
 #### Note about the new backend system support
 
-The new backend system is not yet used in the Showcase application.
-However, the underlying mechanism that discovers and loads dynamic backend plugins already supports both the new and old backend systems.
+While the Showcase application has not yet integrated the new backend system, the underlying mechanism responsible for discovering and loading dynamic backend plugins is already compatible with both the new and old backend systems.
 
-When the new backend system becomes generally adopted, and used in the janus Showcase, the dynamic backend plugins should then be based on the new backend system.
+As the new backend system gains broader acceptance and is implemented in the Janus Showcase, it is advisable to adapt dynamic backend plugins to rely on this new system. Therefore, we **strongly recommend** creating the anticipated entry points for the new backend system (using `createBackendPlugin` or `createBackendModule`) when implementing code changes to enable a backend plugin's dynamic functionality. This proactive step ensures preparedness for the eventual transition to the new backend system.
 
-Therefore, we **strongly recommend** the creation of the expected new backend system entrypoints (with `createBackendPlugin` or `createBackendModule`) when implementing code changes to make a backend plugin dynamic, in order to be prepared for the move to the new backend system.
-
-You can find an example of such a dynamic plugin entrypoint based on the new backend system in the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/dynamic/alpha.ts#L14).
+For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/dynamic/alpha.ts#L14).
 
 #### Exporting the backend plugin as a dynamic plugin package
 
