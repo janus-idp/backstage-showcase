@@ -291,7 +291,7 @@ In order to add dynamic plugin support to a third-party plugin, without touching
   - `includes`: This field contains a roster of YAML files utilizing the same syntax. The `plugins` list from these files will be incorporated, and potentially overridden, by the `plugins` list in the primary helm values. The default configuration includes the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, which encompasses all the dynamic plugins [included in the showcase application container image](#dynamic-plugins-included-in-the-showcase-container-image), whether enabled or disabled by default.
 
 
-- Adding a dynamic plugin to the showcase is done by adding an entry to the `global.dynamic.plugins` list. Each entry has the following fields:
+- To include a dynamic plugin in the showcase, you can achieve this by appending an entry to the `global.dynamic.plugins` list. Each entry should contain the following fields:
 
   - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
   - `integrity`: (optional for local packages) An integrity checksum in the [form of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) for the specific package. Supported algorithms include `sha256`, `sha384` and `sha512`.
