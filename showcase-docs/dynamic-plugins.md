@@ -1,23 +1,14 @@
 # Dynamic Plugins support
 
-## WARNING:
-
-**_This is a work in progress_**
-
-So this documentation, in its current form, is provisional and will be updated as next PRs related to this feature are merged.
-
-Some referenced links and CLI tools may be come from temporary locations, provided in order to allow testing the base feature,
-until required changes are made to the related deployment helm templates and CLI tools.
-
 ## Overview
 
 This document describes how to enable the dynamic plugins feature in the Janus Backstage showcase application.
 
-For now only backend plugins are supported.
-
 ## How it works
 
 The dynamic plugin support is based on the [backend plugin manager package](https://github.com/backstage/backstage/tree/master/packages/backend-plugin-manager), which is a service that scans a configured root directory (`dynamicPlugins.rootDirectory` in the app config) for dynamic plugin packages, and loads them dynamically.
+
+While this package remains in an experimental phase and is a private package in the upstream backstage repository, it is primarily awaiting seamless integration with the new backend system before its APIs can be finalized and frozen. It is worth noting that it is already in use in the backstage showcase application, facilitated by a derivative package published in the `@janus-idp` NPM organization.
 
 ## Preparing dynamic plugins for the showcase
 
@@ -34,7 +25,7 @@ So there are some changes to be made to the plugin code, in order to make it com
 
 1. The plugin must:
 
-- import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@0.0.5-janus.0` package,
+- import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@v1.19.6` package,
 - add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
@@ -58,7 +49,7 @@ These recommended changes to the `package.json` are summarized below:
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.3.3"
+    "@janus-idp/cli": "1.4.0"
   },
   ...
   "files": [
@@ -120,7 +111,15 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
 export * from './dynamic/index';
 ```
 
-#### Exporting the plugin as a dynamic plugin package
+#### Note about the new backend system support
+
+While the Showcase application has not yet integrated the new backend system, the underlying mechanism responsible for discovering and loading dynamic backend plugins is already compatible with both the new and old backend systems.
+
+As the new backend system gains broader acceptance and is implemented in the Janus Showcase, it is advisable to adapt dynamic backend plugins to rely on this new system. Therefore, we **strongly recommend** creating the anticipated entry points for the new backend system (using `createBackendPlugin` or `createBackendModule`) when implementing code changes to enable a backend plugin's dynamic functionality. This proactive step ensures preparedness for the eventual transition to the new backend system.
+
+For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/dynamic/alpha.ts#L14).
+
+#### Exporting the backend plugin as a dynamic plugin package
 
 Once the code changes are done, the plugin can be exported as a dynamic plugin package, using the `export-dynamic` script entry:
 
@@ -135,6 +134,12 @@ This allows packing it with `npm pack`, or publishing it to an npm registry.
 The dynamic export mechanism identifies private, non-backstage dependencies, and sets the `bundleDependencies` field in the `package.json` file for them, so that the dynamic plugin package can be published as a self-contained package, along with its private dependencies bundled in a private `node_modules` folder.
 
 Common backstage dependencies, expected to be in the backstage backend application, are not bundled in the dynamic plugin but rather changed as peer dependencies, so that they can be shared with the backstage backend application.
+
+#### Publishing the dynamic backend plugin package to an NPM registry
+
+The dynamic plugin package, located in the `dist-dynamic` sub-folder within the plugin directory, can be uploaded to an NPM registry using the standard `npm publish` command as it is not part of any Yarn monorepo.
+
+As previously mentioned, this independently published package is self-contained and includes its own private dependencies in an enclosed `node_modules` folder. It is then prepared for installation as a dynamic plugin package in the showcase application, as elaborated further in the [Helm Deployment](#helm-deployment) section below.
 
 #### About embedding dependencies in the plugin package
 
@@ -272,11 +277,14 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 
 ### Helm deployment
 
-- In order to enable dynamic plugins support in the showcase application deployed through the [helm chart](https://github.com/janus-idp/helm-backstage), the helm values used during helm chart installation must be overwritten by the values found [here](https://raw.githubusercontent.com/davidfestal/helm-backstage/01a60490114963796fd4a3052db060d6943c9867/charts/backstage/values.yaml)
+- Starting from version 2.10.1, the [helm chart](https://github.com/janus-idp/helm-backstage) for deploying the showcase application introduces new values.
 
-- These updated Helm values contain a new `global.dynamic` value, with 2 fields: `plugins` and `includes`. `plugins` contains the list of dynamic plugins to be installed, and by default is an empty list. A package can be specified either as a local path to the dynamic plugin `dist-dynamic/dist` sub-folder, or as a package specification in an NPM repository. `includes` contains a list of YAML files with the same syntax, of which `plugins` list will be included, and possibly overwritten by the `plugins` list of the main helm values. By default the `includes` fields contains the `dynamic-plugins.default.yaml` file, which contains all the dynamic plugins shipped with the showcase application, either enabled or disabled by default.
+- The updated Helm values introduce a new `global.dynamic` parameter, comprising two fields:
 
-- So adding a dynamic plugin to the showcase is done by adding an entry to the `global.dynamic.plugins` list. Each entry has the following fields:
+  - `plugins`: This field encompasses the list of dynamic plugins slated for installation. By default, it is an empty list. A package can be specified either as a local relative path (starting with `./`) to the dynamic plugin's folder or as a package specification in an NPM repository.
+  - `includes`: This field contains a roster of YAML files utilizing the same syntax. The `plugins` list from these files will be incorporated, and potentially overridden, by the `plugins` list in the primary helm values. The default configuration includes the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, which encompasses all the dynamic plugins [included in the showcase application container image](#dynamic-plugins-included-in-the-showcase-container-image), whether enabled or disabled by default.
+
+- To include a dynamic plugin in the showcase, you can achieve this by appending an entry to the `global.dynamic.plugins` list. Each entry should contain the following fields:
 
   - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
   - `integrity`: (optional for local packages) An integrity checksum in the [form of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) for the specific package. Supported algorithms include `sha256`, `sha384` and `sha512`.
@@ -319,12 +327,36 @@ In order to add dynamic plugin support to a third-party plugin, without touching
           disabled: false
   ```
 
-### Example Dynamic plugins
+### Dynamic plugins included in the Showcase container image
 
-If you want to easily test the dynamic backend plugins support,
+The showcase docker image comes pre-loaded with a selection of dynamic plugins, with most being initially deactivated due to the need for mandatory configuration. The complete list of these plugins is detailed in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
+
+Upon application startup, for each plugin that is disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will display a line similar to the following:
+
+```
+======= Skipping disabled dynamic plugin ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+```
+
+To activate this plugin, simply add a package with the same name and adjust the `disabled` field in the helm chart values as shown below:
+
+```diff
+global:
+  dynamic:
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
++      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
++        disabled: false
+```
+
+While the plugin's default configuration is extracted from the `dynamic-plugins.default.yaml` file, you still have the option to override it by incorporating a `pluginConfig` entry into the plugin configuration.
+
+### Example of external dynamic backend plugins
+
+If you want to easily test the installation of dynamic backend plugins from a remote NPM registry,
 you can use the example dynamic backend plugins described
 in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins),
-which have been pushed to NPMJS in the `dfatwork-pkgs` organization.
+which have been pushed to NPMJS for demonstration purposes.
 
 In order to do this, just add the following dynamic plugins to the `global.dynamic.plugins` list in the helm chart values:
 
