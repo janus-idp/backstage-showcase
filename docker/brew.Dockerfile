@@ -193,6 +193,9 @@ RUN microdnf update -y && \
   popd >/dev/null; \
   microdnf clean all; rm -fr $REMOTE_SOURCES_DIR/upstream2
 
+# Downstream only - Make python3.11 the default python
+RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
 # Downstream only - copy from build, not cleanup stage
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
 # Downstream only - copy embedded dynamic plugins from $REMOTE_SOURCES_DIR

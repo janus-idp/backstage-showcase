@@ -16,10 +16,6 @@ name: CI
 
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'showcase-docs/**'
-      - '.changeset/**'
     branches-ignore:
       - 'changeset-release/**'
   # Allows you to run this workflow manually from the Actions tab
