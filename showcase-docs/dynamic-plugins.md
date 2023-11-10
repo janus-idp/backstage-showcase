@@ -450,6 +450,7 @@ Similarly to traditional Backstage instances, there are 3 types of functionality
 - Full new page that declares a completely new route in the app
 - Extension to existing page via router `bind`ings
 - Use of mount points within the application
+- Extend internal library of available icons
 
 The overall configuration is as follows:
 
@@ -461,7 +462,27 @@ dynamicPlugins:
       dynamicRoutes: ...
       mountPoints: ...
       routeBindings: ...
+      appIcons: ...
 ```
+
+#### Extend internal library of available icons
+
+Backstage offers an internal catalog of system icons available across the application. This is traditionally used within Catalog items as icons for links for example. Dynamic plugins also use this catalog when fetching icons for [dynamically configured routes with sidebar navigation menu entry](#dynamic-routes). Therefore if a plugin requires a custom icon to be used for menu item, this icon must be added to the internal icon catalog. This is done via `appIcons` configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      appIcons:
+        - name: fooIcon # unique icon name
+          module: CustomModule # optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
+          importName: FooIcon # optional, actual component name that should be rendered
+```
+
+- `name` - Unique name in the app's internal icon catalog.
+- `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+- `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
 
 #### Dynamic routes
 
@@ -499,7 +520,7 @@ dynamicPlugins:
           module: CustomModule # optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
           importName: FooPluginPage # optional, actual component name that should be rendered
           menuItem: # optional, allows you to populate main sidebar navigation
-            icon: Storage # MUI4 icon to render in the sidebar
+            icon: fooIcon # Backstage system icon
             text: Foo Plugin Page # menu item text
 ```
 
@@ -508,7 +529,7 @@ Each plugin can expose multiple routes and each route is required to define its 
 - `path` - Unique path in the app. Cannot override existing routes with the exception of the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
-- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` is a Material UI 4 icon name.
+- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
 
 #### Bind to existing plugins
 

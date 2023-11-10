@@ -54,24 +54,22 @@ export interface Config {
     /** @deepVisibility frontend */
     frontend?: {
       [key: string]: {
-        dynamicRoutes: ({
-          [key: string]: any;
-        } & {
+        dynamicRoutes?: {
           path: string;
           module?: string;
           importName?: string;
-          menuItem: {
+          menuItem?: {
             icon: string;
             text: string;
           };
-        })[];
+        }[];
         routeBindings?: {
           bindTarget: string;
           bindMap: {
             [key: string]: string;
           };
         }[];
-        mountPoints: {
+        mountPoints?: {
           mountPoint: string;
           module?: string;
           importName?: string;
@@ -107,6 +105,11 @@ export interface Config {
               )[];
             };
           };
+        }[];
+        appIcons?: {
+          module?: string;
+          importName?: string;
+          name: string;
         }[];
       };
     };
