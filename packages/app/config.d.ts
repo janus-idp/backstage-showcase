@@ -75,7 +75,11 @@ export interface Config {
           importName?: string;
           config: {
             layout?: {
-              [key: string]: string;
+              [key: string]:
+                | string
+                | {
+                    [key: string]: string;
+                  };
             };
             props?: {
               [key: string]: string;

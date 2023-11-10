@@ -229,6 +229,8 @@ async function main() {
       permission(env, {
         getPluginIds: () => [
           'catalog', // Add the other required static plugins here
+          'scaffolder',
+          'permission',
           ...(pluginManager
             .backendPlugins()
             .map(p => {

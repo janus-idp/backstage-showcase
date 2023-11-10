@@ -62,8 +62,10 @@ plugins:
                 importName: EntityGithubInsightsComplianceCard
                 config:
                   layout:
-                    gridRowEnd: "span 2"
-                    gridColumnStart: "span 4"
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isGithubInsightsAvailable
@@ -78,8 +80,10 @@ plugins:
                 importName: EntityGithubPullRequestsOverviewCard
                 config:
                   layout:
-                    gridRow: "1 / span 2"
-                    gridColumn: "5 / span 4"
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isGithubPullRequestsAvailable
@@ -102,8 +106,10 @@ plugins:
                 importName: EntityDependabotAlertsCard
                 config:
                   layout:
-                    gridRowEnd: "span 2"
-                    gridColumnStart: "span 4"
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isSecurityInsightsAvailable
@@ -128,8 +134,10 @@ plugins:
                 importName: EntityGitlabMergeRequestStatsCard
                 config:
                   layout:
-                    gridRowEnd: "span 2"
-                    gridColumnStart: "span 4"
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isGitlabAvailable
@@ -277,7 +285,9 @@ plugins:
                 importName: EntityArgoCDOverviewCard
                 config:
                   layout:
-                    gridColumn: "1 / span 8"
+                    gridColumnEnd:
+                      lg: "span 8"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isArgocdAvailable
@@ -372,8 +382,10 @@ plugins:
                 importName: EntitySonarQubeCard
                 config:
                   layout:
-                    gridColumnStart: "span 4"
-                    gridRowEnd: "span 2"
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isSonarQubeAvailable
@@ -414,15 +426,22 @@ plugins:
                 importName: ClusterAvailableResourceCard
                 config:
                   layout:
-                    gridRowStart: 1
-                    gridColumnStart: "span 1"
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
-                    anyOf:
+                    allOf:
                     - isKind: resource
                     - isType: kubernetes-cluster
               - mountPoint: entity.page.overview/cards
                 importName: ClusterInfoCard
                 config:
+                  layout:
+                    gridColumnEnd:
+                      lg: "span 4"
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                     - isKind: resource
@@ -621,7 +640,9 @@ plugins:
                 importName: EntityPagerDutyCard
                 config:
                   layout:
-                    gridColumnEnd: "span 6"
+                    gridColumnEnd:
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isPluginApplicableToEntity
@@ -646,7 +667,9 @@ plugins:
                 importName: EntityLastLighthouseAuditCard
                 config:
                   layout:
-                    gridColumnEnd: "span 6"
+                    gridColumnEnd:
+                      md: "span 6"
+                      xs: "span 12"
                   if:
                     allOf:
                       - isLighthouseAvailable
