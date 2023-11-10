@@ -150,6 +150,16 @@ dynamicPlugins:
             if:
               allOf:
                 - isGitlabAvailable
+    janus-idp.backstage-plugin-acr:
+      mountPoints:
+        - mountPoint: entity.page.image-registry/cards
+          importName: AcrPage
+          config:
+            layout:
+              gridColumn: 1 / -1
+            if:
+              anyOf:
+              - isAcrAvailable
     janus-idp.backstage-plugin-jfrog-artifactory:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards

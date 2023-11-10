@@ -336,12 +336,6 @@ export const entityPage = (
     })}
 
     {tab({
-      path: '/tekton',
-      title: 'Tekton',
-      mountPoint: 'entity.page.tekton',
-    })}
-
-    {tab({
       path: '/image-registry',
       title: 'Image Registry',
       mountPoint: 'entity.page.image-registry',
