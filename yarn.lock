@@ -5458,10 +5458,10 @@
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-common/-/backstage-plugin-ocm-common-2.2.1.tgz#c90fa64a61ccbbd45da1d76b03292d20278f62ec"
   integrity sha512-tWdzV4MdZEq06yZkEacZ21QtXr4FiHMHk/ml0hvCgBrb5YuWi0451LkZ6yNXy2sMTsXgqS4RgXVDTZNoi+gFSg==
 
-"@janus-idp/backstage-plugin-rbac-backend@1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-1.6.1.tgz#6a93aaf53a7f21111607bb9f27f7d5e76d9e5fed"
-  integrity sha512-pMYVfZCidqdmSlGXfObwWhtYfwYHrFbtJ+cOXWhHFYbImY8VO7tZTa47KvuUZf1TfrcAoEeOoEXwcK3jQu+3wg==
+"@janus-idp/backstage-plugin-rbac-backend@1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-1.6.2.tgz#86158141fc75ac478ef45f170aee482431ab7ab5"
+  integrity sha512-c7ua9jngSTdD5Ly8O4rLLhDyk8o+QjF5PK2mi8PY6icLbSuxc4b5drMadch6++I3mjkGtVmX+I9kUfSKVOlOZA==
   dependencies:
     "@backstage/backend-common" "^0.19.8"
     "@backstage/backend-plugin-api" "^0.5.4"
