@@ -20,7 +20,8 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin"
   },
   "dependencies": {
-    "@backstage/plugin-lighthouse": "0.4.10"
+    "@backstage/plugin-lighthouse": "0.4.10",
+    "@mui/icons-material": "5.14.16"
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
