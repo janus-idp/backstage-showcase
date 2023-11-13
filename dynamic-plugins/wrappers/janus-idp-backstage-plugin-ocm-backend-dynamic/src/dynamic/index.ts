@@ -14,11 +14,6 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
     builder.addEntityProvider(
       ManagedClusterProvider.fromConfig(env.config, {
         logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { hours: 1 },
-          timeout: { minutes: 15 },
-          initialDelay: { seconds: 15 },
-        }),
         scheduler: env.scheduler,
       }),
     );

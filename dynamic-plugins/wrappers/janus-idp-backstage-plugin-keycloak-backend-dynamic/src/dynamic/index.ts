@@ -8,11 +8,6 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
       KeycloakOrgEntityProvider.fromConfig(env.config, {
         id: 'development',
         logger: env.logger,
-        schedule: env.scheduler.createScheduledTaskRunner({
-          frequency: { hours: 1 },
-          timeout: { minutes: 50 },
-          initialDelay: { seconds: 15 },
-        }),
         scheduler: env.scheduler,
       }),
     );
