@@ -1,21 +1,62 @@
 global:
-  clusterRouterBase: >-
-    temp
-route:
-  enabled: true
-  host: '{{ .Values.global.host }}'
-  path: /
-  tls:
-    enabled: true
-    insecureEdgeTerminationPolicy: Redirect
-    termination: edge
-  wildcardPolicy: None
+  dynamic:
+    # -- Array of YAML files listing dynamic plugins to include with those listed in the `plugins` field.
+    # Relative paths are resolved from the working directory of the initContainer that will install the plugins (`/opt/app-root/src`).
+    includes:
+      # -- List of dynamic plugins included inside the `janus-idp/backstage-showcase` container image, some of which are disabled by default.
+      # This file ONLY works with the `janus-idp/backstage-showcase` container image.
+      - 'dynamic-plugins.default.yaml'
+
+    # -- List of dynamic plugins, possibly overriding the plugins listed in `includes` files.
+    # Every item defines the plugin `package` as a [NPM package spec](https://docs.npmjs.com/cli/v10/using-npm/package-spec),
+    # an optional `pluginConfig` with plugin-specific backstage configuration, and an optional `disabled` flag to disable/enable a plugin
+    # listed in `includes` files. It also includes an `integrity` field that is used to verify the plugin package [integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description).
+    plugins: []
+
+  # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
+  # -- Shorthand for users who do not want to specify a custom HOSTNAME. Used ONLY with the DEFAULT upstream.backstage.appConfig value and with OCP Route enabled.
+  clusterRouterBase: apps.example.com
+  # -- Custom hostname shorthand, overrides `global.clusterRouterBase`, `upstream.ingress.host`, `route.host`, and url values in `upstream.backstage.appConfig`
+  host: ''
+  # -- Enable service authentication within Backstage instance
+  auth:
+    # -- Backend service to service authentication
+    # <br /> Ref: https://backstage.io/docs/auth/service-to-service-auth/
+    backend:
+      # -- Enable backend service to service authentication, unless configured otherwise it generates a secret value
+      enabled: true
+      # -- Instead of generating a secret value, refer to existing secret
+      existingSecret: ''
+      # -- Instead of generating a secret value, use fo;lowing value
+      value: ''
+
+# -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)
+# @default -- Use Openshift compatible settings
 upstream:
+  nameOverride: backstage
   commonLabels:
     backstage.io/kubernetes-id: developer-hub
   backstage:
+    image:
+      debug: true
+      pullPolicy: Always
+      pullSecrets:
+        - rhdh-pull-secret
+      # using test image from https://quay.io/repository/janus-idp/backstage-showcase
+      registry: quay.io
+      repository: janus-idp/backstage-showcase
+      tag: next
+    command: []
+    # FIXME (tumido): USE POSTGRES_PASSWORD and POSTGRES_USER instead of POSTGRES_ADMIN_PASSWORD
+    # This is a hack. In {fedora,rhel}/postgresql images, regular user is forbidden
+    # from creating DBs in runtime. A single DB can be created ahead of time via
+    # POSTGRESQL_DATABASE env variable (in this case via
+    # upstream.postgresql.primary.extraEnvVars value), but this doesn't allow us to
+    # create multiple DBs. Since Backstage requires by default 5 different DBs, we
+    # can't accommodate that properly.
     appConfig:
       app:
+        # Please update to match host in case you don't want to configure hostname via `global.clusterRouterBase` or `global.host`.
         baseUrl: 'https://{{- include "janus-idp.hostname" . }}'
       backend:
         baseUrl: 'https://{{- include "janus-idp.hostname" . }}'
@@ -23,98 +64,135 @@ upstream:
           origin: 'https://{{- include "janus-idp.hostname" . }}'
         database:
           connection:
-            password: '${POSTGRESQL_ADMIN_PASSWORD}'
+            password: ${POSTGRESQL_ADMIN_PASSWORD}
             user: postgres
-    args:
-      - '--config'
-      - app-config.yaml
-      - '--config'
-      - app-config.example.yaml
-      - '--config'
-      - app-config.example.production.yaml
-    command:
-      - node
-      - packages/backend
-    containerPorts:
-      backend: 7007
-    extraAppConfig:
-      - configMapRef: app-config-rhdh
-        filename: app-config-rhdh.yaml
+        auth:
+          keys:
+            - secret: ${BACKEND_SECRET}
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /healthcheck
+        port: 7007
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 2
+      timeoutSeconds: 2
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /healthcheck
+        port: 7007
+        scheme: HTTP
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 2
     extraEnvVars:
-      - valueFrom:
+      - name: BACKEND_SECRET
+        valueFrom:
+          secretKeyRef:
+            key: backend-secret
+            name: '{{ include "janus-idp.backend-secret-name" $ }}'
+      - name: POSTGRESQL_ADMIN_PASSWORD
+        valueFrom:
           secretKeyRef:
             key: postgres-password
             name: '{{ .Release.Name }}-postgresql'
-        name: POSTGRESQL_ADMIN_PASSWORD
+
+    args:
+      # This additional `app-config`` file is generated by the initContainer below, and contains the merged configuration of installed dynamic plugins.
+      - '--config'
+      - dynamic-plugins-root/app-config.dynamic-plugins.yaml
+    extraVolumeMounts:
+      # The initContainer below will install dynamic plugins in this volume mount.
+      - name: dynamic-plugins-root
+        mountPath: /opt/app-root/src/dynamic-plugins-root
+    extraVolumes:
+      # -- Ephemeral volume that will contain the dynamic plugins installed by the initContainer below at start.
+      # To have more control on underlying storage, the [emptyDir](https://docs.openshift.com/container-platform/4.13/storage/understanding-ephemeral-storage.html)
+      # could be changed to a [generic ephemeral volume](https://docs.openshift.com/container-platform/4.13/storage/generic-ephemeral-vols.html#generic-ephemeral-vols-procedure_generic-ephemeral-volumes).
+      - name: dynamic-plugins-root
+        emptyDir: {}
+
+      # Volume that will expose the `dynamic-plugins.yaml` file from the `dynamic-plugins` config map.
+      # The `dynamic-plugins` config map is created by the helm chart from the content of the `global.dynamic` field.
+      - name: dynamic-plugins
+        configMap:
+          defaultMode: 420
+          name: dynamic-plugins
+          optional: true
+      # Optional volume that allows exposing the `.npmrc` file (through a `dynamic-plugins-npmrc` secret)
+      # to be used when running `npm pack` during the dynamic plugins installation by the initContainer.
+      - name: dynamic-plugins-npmrc
+        secret:
+          defaultMode: 420
+          optional: true
+          secretName: dynamic-plugins-npmrc
+    initContainers:
+      - name: install-dynamic-plugins
+        # -- Image used by the initContainer to install dynamic plugins into the `dynamic-plugins-root` volume mount.
+        # It could be replaced by a custom image based on this one.
+        # @default -- `quay.io/janus-idp/backstage-showcase:latest`
+        image: '{{ include "backstage.image" . }}'
+        command:
+          - python
+          - install-dynamic-plugins.py
+          - /dynamic-plugins-root
+        env:
+          - name: NPM_CONFIG_USERCONFIG
+            value: /opt/app-root/src/.npmrc.dynamic-plugins
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /dynamic-plugins-root
+            name: dynamic-plugins-root
+          - mountPath: /opt/app-root/src/dynamic-plugins.yaml
+            name: dynamic-plugins
+            readOnly: true
+            subPath: dynamic-plugins.yaml
+          - mountPath: /opt/app-root/src/.npmrc.dynamic-plugins
+            name: dynamic-plugins-npmrc
+            readOnly: true
+            subPath: .npmrc
+        workingDir: /opt/app-root/src
+    installDir: /opt/app-root/src
+    podAnnotations:
+      checksum/dynamic-plugins: >-
+        {{- include "common.tplvalues.render" ( dict "value"
+        .Values.global.dynamic "context" $) | sha256sum }}
+    extraAppConfig:
+      - configMapRef: app-config-rhdh
+        filename: app-config-rhdh.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
-    image:
-      debug: true
-      pullPolicy: Always
-      pullSecrets:
-        - rhdh-pull-secret
-      
-      # using test image from https://quay.io/repository/janus-idp/backstage-showcase
-      registry: quay.io
-      repository: janus-idp/backstage-showcase
-      tag: 'next'
-    installDir: /app
-    replicas: 1
-  clusterDomain: cluster.local
-  diagnosticMode:
-    args:
-      - infinity
-    command:
-      - sleep
-    enabled: false
-  ingress:
-    enabled: false
-    host: '{{ .Values.global.host }}'
-    tls:
-      enabled: false
-  metrics:
-    serviceMonitor:
-      enabled: false
-      path: /metrics
-  nameOverride: backstage
-  networkPolicy:
-    enabled: false
   postgresql:
+    enabled: true
+    postgresqlDataDir: /var/lib/pgsql/data/userdata
+    image:
+      registry: quay.io
+      repository: fedora/postgresql-15
+      tag: latest
     auth:
       secretKeys:
         adminPasswordKey: postgres-password
         userPasswordKey: password
-    enabled: true
-    image:
-      registry: registry.redhat.io
-      repository: rhel9/postgresql-15
-      tag: latest
-    postgresqlDataDir: /var/lib/pgsql/data/userdata
     primary:
+      securityContext:
+        enabled: false
+      podSecurityContext:
+        enabled: false
       containerSecurityContext:
         enabled: false
+      persistence:
+        enabled: true
+        size: 1Gi
+        mountPath: /var/lib/pgsql/data
       extraEnvVars:
         - name: POSTGRESQL_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               key: postgres-password
               name: '{{ .Release.Name }}-postgresql'
-      persistence:
-        enabled: true
-        mountPath: /var/lib/pgsql/data
-        size: 1Gi
-      podSecurityContext:
-        enabled: false
-      securityContext:
-        enabled: false
-  service:
-    externalTrafficPolicy: Cluster
-    ports:
-      backend: 7007
-      name: http-backend
-      targetPort: backend
-    sessionAffinity: None
-    type: ClusterIP
-  serviceAccount:
-    automountServiceAccountToken: true
-    create: false
+  ingress:
+    host: '{{ .Values.global.host }}'
