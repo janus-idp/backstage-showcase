@@ -1,21 +1,21 @@
 import {
+  createConfigSecretEnumerator,
+  loadBackendConfig,
+} from '@backstage/backend-app-api';
+import {
   CacheManager,
   DatabaseManager,
   HostDiscovery,
   ServerTokenManager,
   ServiceBuilder,
   UrlReaders,
+  createRootLogger,
   createServiceBuilder,
   createStatusCheckRouter,
   getRootLogger,
   notFoundHandler,
   useHotMemoize,
-  createRootLogger,
 } from '@backstage/backend-common';
-import {
-  loadBackendConfig,
-  createConfigSecretEnumerator,
-} from '@backstage/backend-app-api';
 import {
   BackendPluginProvider,
   LegacyPluginEnvironment as PluginEnvironment,
@@ -23,13 +23,13 @@ import {
 } from '@backstage/backend-plugin-manager';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
-import * as winston from 'winston';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
 import { DefaultEventBroker } from '@backstage/plugin-events-backend';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
-import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 import { createRouter as dynamicPluginsInfoRouter } from '@internal/plugin-dynamic-plugins-info-backend';
+import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 import { RequestHandler, Router } from 'express';
+import * as winston from 'winston';
 import { metricsHandler } from './metrics';
 import app from './plugins/app';
 import auth from './plugins/auth';
@@ -49,8 +49,8 @@ import {
 //
 // It should be removed as soon as the upstream package is fixed and released.
 // see https://github.com/janus-idp/backstage-showcase/pull/600
-import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 import { WinstonLogger } from '@backstage/backend-app-api';
+import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
@@ -70,7 +70,8 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
     tokenManager,
   });
 
-  root.info(`Created UrlReader ${JSON.stringify(reader)}`);
+  // UrlReader has a toString method
+  root.info(`Created UrlReader ${reader}`); // NOSONAR
 
   return (plugin: string): PluginEnvironment => {
     const logger = root.child({ type: 'plugin', plugin });
