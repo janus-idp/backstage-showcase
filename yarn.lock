@@ -5458,10 +5458,10 @@
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-ocm-common/-/backstage-plugin-ocm-common-2.2.1.tgz#c90fa64a61ccbbd45da1d76b03292d20278f62ec"
   integrity sha512-tWdzV4MdZEq06yZkEacZ21QtXr4FiHMHk/ml0hvCgBrb5YuWi0451LkZ6yNXy2sMTsXgqS4RgXVDTZNoi+gFSg==
 
-"@janus-idp/backstage-plugin-rbac-backend@1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-1.6.2.tgz#86158141fc75ac478ef45f170aee482431ab7ab5"
-  integrity sha512-c7ua9jngSTdD5Ly8O4rLLhDyk8o+QjF5PK2mi8PY6icLbSuxc4b5drMadch6++I3mjkGtVmX+I9kUfSKVOlOZA==
+"@janus-idp/backstage-plugin-rbac-backend@1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-1.6.3.tgz#9b122bd73c73d8860591334a6c1aba8a6a1d7013"
+  integrity sha512-gNRivayVv00dxaNGKXTZ+6aK1NQkN+bbsCN5YAW7QD3zn/E7t8G9dcElV5SQ1Rnq/KGIAJQSI47lAVZ/jN0jJw==
   dependencies:
     "@backstage/backend-common" "^0.19.8"
     "@backstage/backend-plugin-api" "^0.5.4"
@@ -5479,7 +5479,7 @@
     casbin "^5.27.1"
     express "^4.18.2"
     express-promise-router "^4.1.1"
-    knex "2.4.2"
+    knex "^2.0.0"
     lodash "^4.17.21"
     qs "^6.11.2"
     typeorm-adapter "^1.6.1"
@@ -18615,26 +18615,6 @@ kleur@^4.0.3, kleur@^4.1.5:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
   integrity sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==
 
-knex@2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-2.4.2.tgz#a34a289d38406dc19a0447a78eeaf2d16ebedd61"
-  integrity sha512-tMI1M7a+xwHhPxjbl/H9K1kHX+VncEYcvCx5K00M16bWvpYPKAZd6QrCu68PtHAdIZNQPWZn0GVhqVBEthGWCg==
-  dependencies:
-    colorette "2.0.19"
-    commander "^9.1.0"
-    debug "4.3.4"
-    escalade "^3.1.1"
-    esm "^3.2.25"
-    get-package-type "^0.1.0"
-    getopts "2.3.0"
-    interpret "^2.2.0"
-    lodash "^4.17.21"
-    pg-connection-string "2.5.0"
-    rechoir "^0.8.0"
-    resolve-from "^5.0.0"
-    tarn "^3.0.2"
-    tildify "2.0.0"
-
 knex@^2.0.0, knex@^2.3.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/knex/-/knex-2.5.1.tgz#a6c6b449866cf4229f070c17411f23871ba52ef9"
@@ -21110,11 +21090,6 @@ pg-cloudflare@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/pg-cloudflare/-/pg-cloudflare-1.1.1.tgz#e6d5833015b170e23ae819e8c5d7eaedb472ca98"
   integrity sha512-xWPagP/4B6BgFO+EKz3JONXv3YDgvkbVrGw2mTo3D6tVDQRh1e7cqVGvyR3BE+eQgAvx1XhW/iEASj4/jCWl3Q==
-
-pg-connection-string@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.5.0.tgz#538cadd0f7e603fc09a12590f3b8a452c2c0cf34"
-  integrity sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==
 
 pg-connection-string@2.6.1:
   version "2.6.1"
