@@ -29,7 +29,7 @@ import binascii
 # the dynamic plugins will be installed.
 #
 # Additionally, the MAX_ENTRY_SIZE environment variable can be defined to set
-# the maximum size of a file in the archive (default: 10MB).
+# the maximum size of a file in the archive (default: 20MB).
 #
 # The SKIP_INTEGRITY_CHECK environment variable can be defined with ("true") to skip the integrity check of remote packages
 #
@@ -112,7 +112,7 @@ def verify_package_integrity(plugin: dict, archive: str, working_directory: str)
 
 def main():
     dynamicPluginsRoot = sys.argv[1]
-    maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
+    maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 20000000))
     skipIntegrityCheck = os.environ.get("SKIP_INTEGRITY_CHECK", "").lower() == "true"
 
     dynamicPluginsFile = 'dynamic-plugins.yaml'
