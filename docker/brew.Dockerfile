@@ -202,8 +202,9 @@ COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
 COPY --from=build $REMOTE_SOURCES_DIR/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
-COPY docker/install-dynamic-plugins.py ./
+COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
+  chmod -R a+rx ./install-dynamic-plugins.sh; \
   rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.

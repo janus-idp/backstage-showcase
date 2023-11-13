@@ -48,14 +48,14 @@ export type ScalprumMountPointConfigRaw = ScalprumMountPointConfigBase & {
 };
 
 export type ScalprumMountPoint = {
-  component: React.ComponentType<{}>;
+  Component: React.ComponentType<{}>;
   config?: ScalprumMountPointConfig;
 };
 
 export type RemotePlugins = {
   [scope: string]: {
     [module: string]: {
-      [importName: string]: React.ComponentType<{}>;
+      [importName: string]: React.ComponentType<{}> | ((...args: any[]) => any);
     };
   };
 };

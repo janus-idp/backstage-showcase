@@ -18,6 +18,7 @@ import DynamicRootContext, {
   ScalprumMountPointConfig,
 } from './DynamicRootContext';
 import extractDynamicConfig, {
+  DynamicRoute,
   configIfToCallable,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
@@ -53,7 +54,6 @@ const DynamicRoot = ({
     | undefined
   >();
   const { initialized, pluginStore } = useScalprum();
-  // console.log({ DEFAULT_PROXY_PATH })
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
@@ -66,6 +66,10 @@ const DynamicRoot = ({
         module,
       })),
       ...dynamicRoutes.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...appIcons.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -84,10 +88,22 @@ const DynamicRoot = ({
           bindAppRoutes(bind, remotePlugins, routeBindings);
         },
         icons: Object.fromEntries(
-          appIcons.map(({ scope, module, importName, name }) => [
-            name,
-            remotePlugins[scope][module][importName],
-          ]),
+          appIcons.reduce<[string, React.ComponentType<{}>][]>(
+            (acc, { scope, module, importName, name }) => {
+              const Component = remotePlugins[scope]?.[module]?.[importName];
+
+              if (Component) {
+                acc.push([name, Component as React.ComponentType<{}>]);
+              } else {
+                // eslint-disable-next-line no-console
+                console.warn(
+                  `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring appIcon: ${name}`,
+                );
+              }
+              return acc;
+            },
+            [],
+          ),
         ),
         themes: defaultThemes,
         components: defaultAppComponents,
@@ -104,23 +120,40 @@ const DynamicRoot = ({
       const Component = remotePlugins[scope]?.[module]?.[importName];
       // Only add mount points that have a component
       if (Component) {
+        const ifCondition = configIfToCallable(
+          Object.fromEntries(
+            Object.entries(config?.if || {}).map(([k, v]) => [
+              k,
+              v.map(c => {
+                if (typeof c === 'string') {
+                  const remoteFunc = remotePlugins[scope]?.[module]?.[c];
+                  if (remoteFunc === undefined) {
+                    // eslint-disable-next-line no-console
+                    console.warn(
+                      `Plugin ${scope} is not configured properly: ${module}.${c} not found, ignoring .config.if for mountPoint: "${mountPoint}"`,
+                    );
+                  }
+                  return remoteFunc || {};
+                }
+                return c || {};
+              }),
+            ]),
+          ),
+        );
+
         acc.push({
           mountPoint,
-          Component: remotePlugins[scope][module][importName],
+          Component: Component as React.ComponentType<{}>,
           config: {
             ...config,
-            if: configIfToCallable(
-              Object.fromEntries(
-                Object.entries(config?.if || {}).map(([k, v]) => [
-                  k,
-                  v.map(c =>
-                    typeof c === 'string' ? remotePlugins[scope][module][c] : c,
-                  ),
-                ]),
-              ),
-            ),
+            if: ifCondition,
           },
         });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring mountPoint: "${mountPoint}"`,
+        );
       }
       return acc;
     }, []);
@@ -132,22 +165,42 @@ const DynamicRoot = ({
         acc[entry.mountPoint] = [];
       }
       acc[entry.mountPoint].push({
-        component: entry.Component,
+        Component: entry.Component,
         config: entry.config,
       });
       return acc;
     }, {});
+
     getScalprum().api.mountPoints = mountPointComponents;
-    const dynamicRoutesComponents = dynamicRoutes.map(route => ({
-      ...route,
-      Component: remotePlugins[route.scope][route.module][route.importName],
-    }));
+
+    const dynamicRoutesComponents = dynamicRoutes.reduce<
+      (DynamicRoute & {
+        Component: React.ComponentType<{}>;
+      })[]
+    >((acc, route) => {
+      const Component =
+        remotePlugins[route.scope]?.[route.module]?.[route.importName];
+      if (Component) {
+        acc.push({
+          ...route,
+          Component: Component as React.ComponentType<{}>,
+        });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${route.scope} is not configured properly: ${route.module}.${route.importName} not found, ignoring dynamicRoute: "${route.path}"`,
+        );
+      }
+      return acc;
+    }, []);
+
     setComponents({
       AppProvider: app.current.getProvider(),
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
       mountPoints: mountPointComponents,
     });
+
     afterInit().then(({ default: Component }) => {
       setChildComponent(() => Component);
     });
