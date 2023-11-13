@@ -38,6 +38,7 @@ const bindAppRoutes = (
     catalogPlugin,
     catalogImportPlugin,
     techdocsPlugin,
+    scaffolderPlugin,
   };
   // binds from remote
   routeBindings.forEach(({ bindTarget, bindMap }) => {

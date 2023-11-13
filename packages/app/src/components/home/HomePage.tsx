@@ -111,7 +111,7 @@ export const HomePage = () => {
               }}
               placeholder="Search"
             />
-            <Grid container xs={12}>
+            <Grid container>
               <Grid item xs={12} md={7}>
                 <QuickAccess />
               </Grid>

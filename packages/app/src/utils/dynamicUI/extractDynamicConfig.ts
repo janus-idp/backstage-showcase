@@ -21,7 +21,7 @@ type AppConfig = {
   };
 };
 
-type DynamicRoute = {
+export type DynamicRoute = {
   scope: string;
   module: string;
   importName: string;
@@ -55,7 +55,7 @@ type CustomProperties = {
   appIcons?: AppIcon[];
 };
 
-const conditionsArrayMapper = (
+export const conditionsArrayMapper = (
   condition:
     | {
         [key: string]: string | string[];
