@@ -268,7 +268,7 @@ def main():
                 if not realpath.startswith(directoryRealpath):
                   raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
 
-                file.extract(member, path=directory)
+                file.extract(member, path=directory, filter='tar')
             else:
               if member.type == tarfile.CHRTYPE:
                   type_str = "character device"
