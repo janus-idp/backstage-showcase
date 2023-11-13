@@ -31,13 +31,13 @@ const tab = ({
     }
   >
     {getMountPointData<React.ComponentType>(`${mountPoint}/context`).reduce(
-      (acc, { component: Component }) => (
+      (acc, { Component }) => (
         <Component>{acc}</Component>
       ),
       <Grid container>
         {children}
         {getMountPointData<React.ComponentType>(`${mountPoint}/cards`).map(
-          ({ component: Component, config }) => (
+          ({ Component, config }) => (
             <EntitySwitch key={`${Component.displayName}`}>
               <EntitySwitch.Case if={config.if}>
                 <Box sx={config.layout}>

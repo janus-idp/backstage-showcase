@@ -18,8 +18,11 @@ const initializeRemotePlugins = async (
         .getExposedModule<{
           [importName: string]: React.ComponentType<{}>;
         }>(scope, module)
-        // silently fail if the module loading fails
-        .catch(() => undefined)
+        .catch(() => {
+          // eslint-disable-next-line no-console
+          console.error(`Failed to load plugin ${scope}`);
+          return undefined;
+        })
         .then(remoteModule => ({
           module,
           scope,
