@@ -57,7 +57,7 @@ const DynamicRoot = ({
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
-    const { dynamicRoutes, mountPoints, routeBindings } =
+    const { dynamicRoutes, mountPoints, routeBindings, appIcons } =
       await extractDynamicConfig();
 
     const requiredModules = [
@@ -83,6 +83,12 @@ const DynamicRoot = ({
         bindRoutes({ bind }) {
           bindAppRoutes(bind, remotePlugins, routeBindings);
         },
+        icons: Object.fromEntries(
+          appIcons.map(({ scope, module, importName, name }) => [
+            name,
+            remotePlugins[scope][module][importName],
+          ]),
+        ),
         themes: defaultThemes,
         components: defaultAppComponents,
       });
