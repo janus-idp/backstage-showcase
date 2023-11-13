@@ -1,11 +1,11 @@
 import {
   createConfigSecretEnumerator,
   loadBackendConfig,
+  HostDiscovery,
 } from '@backstage/backend-app-api';
 import {
   CacheManager,
   DatabaseManager,
-  HostDiscovery,
   ServerTokenManager,
   ServiceBuilder,
   UrlReaders,
