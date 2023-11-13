@@ -17,7 +17,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import HomeIcon from '@mui/icons-material/Home';
 import LibraryBooks from '@mui/icons-material/LibraryBooks';
-import MenuIcon from '@mui/icons-material/Menu';
+import MuiMenuIcon from '@mui/icons-material/Menu';
 import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
@@ -25,7 +25,7 @@ import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
-import * as MuiIcons from '@mui/icons-material';
+import { useApp } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -51,6 +51,13 @@ const SideBarItemWrapper = (props: SidebarItemProps) => {
   );
 };
 
+const MenuIcon = ({ icon }: { icon: string }) => {
+  const app = useApp();
+
+  const Icon = app.getSystemIcon(icon) || (() => null);
+  return <Icon />;
+};
+
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const { dynamicRoutes } = useContext(DynamicRootContext);
   return (
@@ -61,7 +68,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           <SidebarSearchModal />
         </SidebarGroup>
         <SidebarDivider />
-        <SidebarGroup label="Menu" icon={<MenuIcon />}>
+        <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
           <SideBarItemWrapper icon={HomeIcon as any} to="/" text="Home" />
           <SideBarItemWrapper
@@ -101,7 +108,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
               if (menuItem) {
                 return (
                   <SideBarItemWrapper
-                    icon={(MuiIcons as any)[menuItem.icon] as any}
+                    icon={() => <MenuIcon icon={menuItem.icon} />}
                     to={path}
                     text={menuItem.text}
                   />
