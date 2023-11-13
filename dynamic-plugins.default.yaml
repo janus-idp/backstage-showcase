@@ -426,6 +426,72 @@ plugins:
                     - isKind: resource
                     - isType: kubernetes-cluster
 
+  # Techdocs
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+    disabled: true
+    pluginConfig:
+      # Reference documentation http://backstage.io/docs/features/techdocs/configuration
+      # Note: After experimenting with basic setup, use CI/CD to generate docs
+      # and an external cloud storage when deploying TechDocs for production use-case.
+      # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
+      techdocs:
+        builder: ${TECHDOCS_BUILDER_TYPE}
+        generator:
+          runIn: ${TECHDOCS_GENERATOR_TYPE}
+        publisher:
+          type: ${TECHDOCS_PUBLISHER_TYPE}
+          awsS3:
+            bucketName: ${BUCKET_NAME}
+            region: ${BUCKET_REGION_VAULT}
+            endpoint: ${BUCKET_URL}
+            s3ForcePathStyle: true
+            credentials:
+              accessKeyId: ${AWS_ACCESS_KEY_ID}
+              secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-techdocs:
+            routeBindings:
+              targets:
+                - importName: techdocsPlugin
+              bindings:
+                - bindTarget: catalogPlugin.externalRoutes
+                  bindMap:
+                    viewTechDoc: techdocsPlugin.routes.docRoot
+                - bindTarget: scaffolderPlugin.externalRoutes
+                  bindMap:
+                    viewTechDoc: techdocsPlugin.routes.docRoot
+            dynamicRoutes:
+              - path: /docs
+                importName: TechDocsIndexPage
+                menuItem:
+                  icon: docs
+                  text: Docs
+              - path: /docs/:namespace/:kind/:name/*
+                importName: TechDocsReaderPage
+            mountPoints:
+              - mountPoint: entity.page.docs/cards
+                importName: EntityTechdocsContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isTechDocsAvailable
+              - mountPoint: search.page.results
+                importName: TechDocsSearchResultListItem
+              - mountPoint: search.page.filters
+                importName: TechdocsSearchFilter
+              - mountPoint: search.page.types
+                importName: techdocsSearchType
+                config:
+                  props:
+                    name: Documentation
+                    icon: docs
+
   # Standalone plugins
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
@@ -451,28 +517,6 @@ plugins:
               realm: "${KEYCLOAK_REALM}"
               clientId: "${KEYCLOAK_CLIENT_ID}"
               clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
-
-  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
-    disabled: true
-    pluginConfig:
-      # Reference documentation http://backstage.io/docs/features/techdocs/configuration
-      # Note: After experimenting with basic setup, use CI/CD to generate docs
-      # and an external cloud storage when deploying TechDocs for production use-case.
-      # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
-      techdocs:
-        builder: ${TECHDOCS_BUILDER_TYPE}
-        generator:
-          runIn: ${TECHDOCS_GENERATOR_TYPE}
-        publisher:
-          type: ${TECHDOCS_PUBLISHER_TYPE}
-          awsS3:
-            bucketName: ${BUCKET_NAME}
-            region: ${BUCKET_REGION_VAULT}
-            endpoint: ${BUCKET_URL}
-            s3ForcePathStyle: true
-            credentials:
-              accessKeyId: ${AWS_ACCESS_KEY_ID}
-              secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true

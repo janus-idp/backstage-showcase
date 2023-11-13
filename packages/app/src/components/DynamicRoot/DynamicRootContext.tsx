@@ -24,6 +24,7 @@ export type DynamicRootContextValue = DynamicModuleEntry & {
   path: string;
   menuItem?: MenuItem;
   Component: React.ComponentType<any>;
+  staticJSXContent?: React.ReactNode;
 };
 
 type ScalprumMountPointConfigBase = {
@@ -51,6 +52,7 @@ export type ScalprumMountPointConfigRaw = ScalprumMountPointConfigBase & {
 export type ScalprumMountPoint = {
   Component: React.ComponentType<{}>;
   config?: ScalprumMountPointConfig;
+  staticJSXContent?: React.ReactNode;
 };
 
 export type RemotePlugins = {
@@ -59,7 +61,11 @@ export type RemotePlugins = {
       [importName: string]:
         | React.ComponentType<{}>
         | ((...args: any[]) => any)
-        | BackstagePlugin<{}>;
+        | BackstagePlugin<{}>
+        | {
+            element: React.ComponentType<{}>;
+            staticJSXContent: React.ReactNode;
+          };
     };
   };
 };

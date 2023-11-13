@@ -16,7 +16,6 @@ import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
 import AppsIcon from '@mui/icons-material/Apps';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import HomeIcon from '@mui/icons-material/Home';
-import LibraryBooks from '@mui/icons-material/LibraryBooks';
 import MuiMenuIcon from '@mui/icons-material/Menu';
 import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
@@ -51,7 +50,7 @@ const SideBarItemWrapper = (props: SidebarItemProps) => {
   );
 };
 
-const MenuIcon = ({ icon }: { icon: string }) => {
+export const MenuIcon = ({ icon }: { icon: string }) => {
   const app = useApp();
 
   const Icon = app.getSystemIcon(icon) || (() => null);
@@ -80,11 +79,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
             icon={ExtensionIcon as any}
             to="api-docs"
             text="APIs"
-          />
-          <SideBarItemWrapper
-            icon={LibraryBooks as any}
-            to="docs"
-            text="Docs"
           />
           <SideBarItemWrapper
             icon={SchoolIcon as any}

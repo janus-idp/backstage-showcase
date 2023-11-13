@@ -10,12 +10,6 @@ import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
-import {
-  TechDocsIndexPage,
-  TechDocsReaderPage,
-} from '@backstage/plugin-techdocs';
-import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
-import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import React, { useContext } from 'react';
 import { Route } from 'react-router-dom';
@@ -48,15 +42,6 @@ const AppBase = () => {
             >
               {entityPage}
             </Route>
-            <Route path="/docs" element={<TechDocsIndexPage />} />
-            <Route
-              path="/docs/:namespace/:kind/:name/*"
-              element={<TechDocsReaderPage />}
-            >
-              <TechDocsAddons>
-                <ReportIssue />
-              </TechDocsAddons>
-            </Route>
             <Route
               path="/create"
               element={
@@ -84,13 +69,17 @@ const AppBase = () => {
             <Route path="/settings" element={<UserSettingsPage />} />
             <Route path="/catalog-graph" element={<CatalogGraphPage />} />
             <Route path="/learning-paths" element={<LearningPaths />} />
-            {dynamicRoutes.map(({ Component, path, ...props }) => (
-              <Route
-                key={path}
-                path={path}
-                element={<Component {...props} />}
-              />
-            ))}
+            {dynamicRoutes.map(
+              ({ Component, staticJSXContent, path, ...props }) => (
+                <Route
+                  key={path}
+                  path={path}
+                  element={<Component {...props} />}
+                >
+                  {staticJSXContent}
+                </Route>
+              ),
+            )}
           </FlatRoutes>
         </Root>
       </AppRouter>
