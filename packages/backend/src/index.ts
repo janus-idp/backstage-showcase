@@ -29,7 +29,6 @@ import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { createRouter as dynamicPluginsInfoRouter } from '@internal/plugin-dynamic-plugins-info-backend';
 import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 import { RequestHandler, Router } from 'express';
-import type { Logger } from 'winston';
 import * as winston from 'winston';
 import { metricsHandler } from './metrics';
 import app from './plugins/app';
@@ -71,7 +70,8 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
     tokenManager,
   });
 
-  root.info(`Created UrlReader ${JSON.stringify(reader)}`);
+  // UrlReader has a toString method
+  root.info(`Created UrlReader ${reader}`); // NOSONAR
 
   return (plugin: string): PluginEnvironment => {
     const logger = root.child({ type: 'plugin', plugin });
@@ -100,7 +100,7 @@ async function addPlugin(args: {
   apiRouter: Router;
   createEnv: ReturnType<typeof makeCreateEnv>;
   router: (env: PluginEnvironment) => Promise<Router>;
-  logger: Logger;
+  logger: winston.Logger;
 }): Promise<void> {
   const { plugin, apiRouter, createEnv, router, logger } = args;
 
@@ -116,7 +116,7 @@ async function addRouter(args: {
   service: ServiceBuilder;
   root: string;
   router: RequestHandler | Router;
-  logger: Logger;
+  logger: winston.Logger;
 }): Promise<void> {
   const { name, service, root, router, logger } = args;
 
