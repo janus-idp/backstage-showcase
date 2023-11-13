@@ -1,14 +1,18 @@
 import {
+  createConfigSecretEnumerator,
+  loadBackendConfig,
+} from '@backstage/backend-app-api';
+import {
   CacheManager,
   DatabaseManager,
   HostDiscovery,
   ServerTokenManager,
   ServiceBuilder,
   UrlReaders,
+  createRootLogger,
   createServiceBuilder,
   createStatusCheckRouter,
   getRootLogger,
-  loadBackendConfig,
   notFoundHandler,
   useHotMemoize,
 } from '@backstage/backend-common';
@@ -26,6 +30,7 @@ import { createRouter as dynamicPluginsInfoRouter } from '@internal/plugin-dynam
 import { createRouter as scalprumRouter } from '@internal/plugin-scalprum-backend';
 import { RequestHandler, Router } from 'express';
 import type { Logger } from 'winston';
+import * as winston from 'winston';
 import { metricsHandler } from './metrics';
 import app from './plugins/app';
 import auth from './plugins/auth';
@@ -35,12 +40,17 @@ import permission from './plugins/permission';
 import proxy from './plugins/proxy';
 import scaffolder from './plugins/scaffolder';
 import search from './plugins/search';
+import {
+  createDynamicPluginsConfigSecretEnumerator,
+  gatherDynamicPluginsSchemas,
+} from './schemas';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
 // in the upstream @backstage/backend-plugin-manager package.
 //
 // It should be removed as soon as the upstream package is fixed and released.
 // see https://github.com/janus-idp/backstage-showcase/pull/600
+import { WinstonLogger } from '@backstage/backend-app-api';
 import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
@@ -114,18 +124,60 @@ async function addRouter(args: {
   service.addRouter(root, router);
 }
 
+const redacter = WinstonLogger.redacter();
+
 async function main() {
-  const logger = getRootLogger();
-  const config = await loadBackendConfig({
-    argv: process.argv,
-    logger,
+  const logger = createRootLogger({
+    format: winston.format.combine(
+      redacter.format, // We use our own redacter here, in order to add additional secrets for dynamic plugins.
+      process.env.NODE_ENV === 'production'
+        ? winston.format.json()
+        : WinstonLogger.colorFormat(),
+    ),
   });
+
+  const { config } = await loadBackendConfig({
+    argv: process.argv,
+  });
+
   const pluginManager = await PluginManager.fromConfig(
     config,
     logger,
     undefined,
     new CommonJSModuleLoader(logger),
   );
+
+  const dynamicPluginsSchemas = await gatherDynamicPluginsSchemas(
+    pluginManager,
+    logger,
+  );
+
+  const secretEnumerator = {
+    staticApplication: await createConfigSecretEnumerator({ logger }),
+    dynamicPlugins: await createDynamicPluginsConfigSecretEnumerator(
+      dynamicPluginsSchemas,
+      logger,
+    ),
+  };
+
+  const addSecretsInRedacter = () => {
+    redacter.add([
+      ...secretEnumerator.staticApplication(config),
+      ...secretEnumerator.dynamicPlugins(config),
+    ]);
+  };
+  addSecretsInRedacter();
+  config.subscribe?.(() => {
+    addSecretsInRedacter();
+  });
+
+  const secrets = [...secretEnumerator.dynamicPlugins(config)];
+  if (secrets.length > 0) {
+    getRootLogger().info(
+      `The following secret related to dynamic plugin should be redacted: ${secrets[0]}`,
+    );
+  }
+
   const createEnv = makeCreateEnv(config, pluginManager);
 
   const appEnv = useHotMemoize(module, () => createEnv('app'));
@@ -210,6 +262,8 @@ async function main() {
       permission(env, {
         getPluginIds: () => [
           'catalog', // Add the other required static plugins here
+          'scaffolder',
+          'permission',
           ...(pluginManager
             .backendPlugins()
             .map(p => {
@@ -271,7 +325,7 @@ async function main() {
     name: 'app',
     service,
     root: '',
-    router: await app(appEnv),
+    router: await app(appEnv, dynamicPluginsSchemas),
     logger,
   });
 

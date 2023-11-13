@@ -3,6 +3,7 @@ import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import { EntityLayout, EntitySwitch } from '@backstage/plugin-catalog';
 import Grid from '../Grid';
 import { Entity } from '@backstage/catalog-model';
+import Box from '@mui/material/Box';
 
 export type TabProps = {
   path: string;
@@ -30,18 +31,18 @@ const tab = ({
     }
   >
     {getMountPointData<React.ComponentType>(`${mountPoint}/context`).reduce(
-      (acc, { component: Component }) => (
+      (acc, { Component }) => (
         <Component>{acc}</Component>
       ),
       <Grid container>
         {children}
         {getMountPointData<React.ComponentType>(`${mountPoint}/cards`).map(
-          ({ component: Component, config }) => (
+          ({ Component, config }) => (
             <EntitySwitch key={`${Component.displayName}`}>
               <EntitySwitch.Case if={config.if}>
-                <div style={config.layout}>
+                <Box sx={config.layout}>
                   <Component {...config.props} />
-                </div>
+                </Box>
               </EntitySwitch.Case>
             </EntitySwitch>
           ),
