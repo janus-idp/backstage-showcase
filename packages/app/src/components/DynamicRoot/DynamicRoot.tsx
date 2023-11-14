@@ -7,7 +7,7 @@ import {
   ConfigReader,
   defaultConfigLoader,
 } from '@backstage/core-app-api';
-import { AnyApiFactory } from '@backstage/core-plugin-api';
+import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
 
 import { AppsConfig, getScalprum } from '@scalprum/core';
 import { ScalprumProvider, useScalprum } from '@scalprum/react-core';
@@ -57,10 +57,19 @@ const DynamicRoot = ({
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
-    const { dynamicRoutes, mountPoints, routeBindings, appIcons } =
-      await extractDynamicConfig();
+    const {
+      dynamicRoutes,
+      mountPoints,
+      routeBindings,
+      appIcons,
+      routeBindingTargets,
+    } = await extractDynamicConfig();
 
     const requiredModules = [
+      ...routeBindingTargets.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
       ...mountPoints.map(({ module, scope }) => ({
         scope,
         module,
@@ -80,12 +89,30 @@ const DynamicRoot = ({
       scalprumConfig,
       requiredModules,
     );
+    const resolvedRouteBindingTargets = Object.fromEntries(
+      routeBindingTargets.reduce<[string, BackstagePlugin<{}>][]>(
+        (acc, { name, importName, scope, module }) => {
+          const plugin = remotePlugins[scope]?.[module]?.[importName];
+
+          if (plugin) {
+            acc.push([name, plugin as BackstagePlugin<{}>]);
+          } else {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring routeBindings target: ${name}`,
+            );
+          }
+          return acc;
+        },
+        [],
+      ),
+    );
 
     if (!app.current) {
       app.current = createApp({
         apis,
         bindRoutes({ bind }) {
-          bindAppRoutes(bind, remotePlugins, routeBindings);
+          bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
         icons: Object.fromEntries(
           appIcons.reduce<[string, React.ComponentType<{}>][]>(

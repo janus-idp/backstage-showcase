@@ -44,13 +44,23 @@ type AppIcon = {
   importName: string;
 };
 
+type BindingTarget = {
+  scope: string;
+  name: string;
+  module: string;
+  importName: string;
+};
+
 type CustomProperties = {
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
     module?: string;
     path: string;
   })[];
-  routeBindings?: RouteBinding[];
+  routeBindings?: {
+    targets: BindingTarget[];
+    bindings: RouteBinding[];
+  };
   mountPoints?: MountPoint[];
   appIcons?: AppIcon[];
 };
@@ -99,6 +109,7 @@ async function extractDynamicConfig() {
   const appsConfig = await defaultConfigLoader();
   const dynamicConfig = (appsConfig as AppConfig[]).reduce<{
     routeBindings: RouteBinding[];
+    routeBindingTargets: BindingTarget[];
     dynamicRoutes: DynamicRoute[];
     appIcons: AppIcon[];
     mountPoints: MountPoint[];
@@ -124,7 +135,24 @@ async function extractDynamicConfig() {
           ...Object.entries(data.dynamicPlugins.frontend).reduce<
             RouteBinding[]
           >((pluginSet, [_, customProperties]) => {
-            pluginSet.push(...(customProperties.routeBindings ?? []));
+            pluginSet.push(...(customProperties.routeBindings?.bindings ?? []));
+            return pluginSet;
+          }, []),
+        );
+        acc.routeBindingTargets.push(
+          ...Object.entries(data.dynamicPlugins.frontend).reduce<
+            BindingTarget[]
+          >((pluginSet, [scope, customProperties]) => {
+            pluginSet.push(
+              ...(customProperties.routeBindings?.targets ?? []).map(
+                target => ({
+                  ...target,
+                  module: target.module ?? 'PluginRoot',
+                  name: target.name ?? target.importName,
+                  scope,
+                }),
+              ),
+            );
             return pluginSet;
           }, []),
         );
@@ -165,8 +193,20 @@ async function extractDynamicConfig() {
       }
       return acc;
     },
-    { routeBindings: [], dynamicRoutes: [], mountPoints: [], appIcons: [] },
-  ) || { routeBindings: [], dynamicRoutes: [], mountPoints: [], appIcons: [] }; // fallback to empty arrays
+    {
+      routeBindings: [],
+      dynamicRoutes: [],
+      mountPoints: [],
+      appIcons: [],
+      routeBindingTargets: [],
+    },
+  ) || {
+    routeBindings: [],
+    dynamicRoutes: [],
+    mountPoints: [],
+    appIcons: [],
+    routeBindingTargets: [],
+  }; // fallback to empty arrays
 
   return dynamicConfig;
 }

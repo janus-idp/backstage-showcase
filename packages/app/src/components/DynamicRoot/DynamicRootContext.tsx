@@ -2,6 +2,7 @@ import React, { createContext } from 'react';
 
 import { ScalprumComponentProps } from '@scalprum/react-core';
 import { Entity } from '@backstage/catalog-model';
+import { BackstagePlugin } from '@backstage/core-plugin-api';
 
 export type RouteBinding = {
   bindTarget: string;
@@ -55,7 +56,10 @@ export type ScalprumMountPoint = {
 export type RemotePlugins = {
   [scope: string]: {
     [module: string]: {
-      [importName: string]: React.ComponentType<{}> | ((...args: any[]) => any);
+      [importName: string]:
+        | React.ComponentType<{}>
+        | ((...args: any[]) => any)
+        | BackstagePlugin<{}>;
     };
   };
 };
