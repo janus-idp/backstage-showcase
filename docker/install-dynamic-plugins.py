@@ -254,7 +254,7 @@ def main():
                     raise InstallException('Zip bomb detected in ' + member.name)
 
                 member.name = member.name.removeprefix('package/')
-                file.extract(member, path=directory)
+                file.extract(member, path=directory, filter='tar')
             elif member.isdir():
                 print('\t\tSkipping directory entry', member.name, flush=True)
             elif member.islnk() or member.issym():
