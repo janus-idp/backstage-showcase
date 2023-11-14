@@ -5,8 +5,15 @@ import { waitFor, within } from '@testing-library/dom';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 import * as useAsync from 'react-use/lib/useAsync';
 import DynamicRootContext from './DynamicRootContext';
-import { useApp } from '@backstage/core-plugin-api';
+import {
+  createExternalRouteRef,
+  createPlugin,
+  createRouteRef,
+  useApp,
+} from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
+import * as appDefaults from '@backstage/app-defaults';
+import { AppRouteBinder } from '@backstage/core-app-api';
 
 const DynamicRoot = React.lazy(() => import('./DynamicRoot'));
 
@@ -84,6 +91,11 @@ jest.mock('react-use/lib/useAsync', () => ({
   __esModule: true,
 }));
 
+jest.mock('@backstage/app-defaults', () => ({
+  ...jest.requireActual('@backstage/app-defaults'),
+  __esModule: true,
+}));
+
 const mockInitializeRemotePlugins = jest.fn() as jest.MockedFunction<
   typeof initializeRemotePlugins
 >;
@@ -121,6 +133,16 @@ describe('DynamicRoot', () => {
       'foo.bar': {
         PluginRoot: {
           default: React.Fragment,
+          fooPlugin: createPlugin({
+            id: 'fooPlugin',
+            routes: { bar: createRouteRef({ id: 'bar' }) },
+          }),
+          fooPluginTarget: createPlugin({
+            id: 'fooPluginTarget',
+            externalRoutes: {
+              barTarget: createExternalRouteRef({ id: 'bar' }),
+            },
+          }),
           FooComponent: React.Fragment,
           isFooConditionTrue: () => true,
           isFooConditionFalse: () => false,
@@ -463,6 +485,112 @@ describe('DynamicRoot', () => {
       ).toThrow();
       expect(consoleSpy).toHaveBeenCalledWith(
         'Plugin doesnt.exist is not configured properly: PluginRoot.default not found, ignoring appIcon: fooIcon',
+      );
+    });
+  });
+
+  it('should bind routes on routeBindings target', async () => {
+    const mockCreateApp = jest.spyOn(appDefaults, 'createApp');
+
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        routeBindings: {
+          targets: [
+            { importName: 'fooPluginTarget' },
+            { importName: 'fooPlugin' },
+          ],
+          bindings: [
+            {
+              bindTarget: 'fooPluginTarget.externalRoutes',
+              bindMap: { barTarget: 'fooPlugin.routes.bar' },
+            },
+          ],
+        },
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(mockCreateApp).toHaveBeenCalled();
+      const bindResult: Record<string, any> = {};
+      const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
+        bindResult.externalRoutes = externalRoutes;
+        bindResult.targetRoutes = targetRoutes;
+      };
+      mockCreateApp.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
+      expect(bindResult).toEqual({
+        externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
+        targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
+      });
+    });
+  });
+
+  it('should bind routes on routeBindings target with a custom name', async () => {
+    const mockCreateApp = jest.spyOn(appDefaults, 'createApp');
+
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        routeBindings: {
+          targets: [
+            {
+              importName: 'fooPluginTarget',
+              name: 'fooPluginTargetWithCustomName',
+            },
+            { importName: 'fooPlugin' },
+          ],
+          bindings: [
+            {
+              bindTarget: 'fooPluginTargetWithCustomName.externalRoutes',
+              bindMap: { barTarget: 'fooPlugin.routes.bar' },
+            },
+          ],
+        },
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(mockCreateApp).toHaveBeenCalled();
+      const bindResult: Record<string, any> = {};
+      const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
+        bindResult.externalRoutes = externalRoutes;
+        bindResult.targetRoutes = targetRoutes;
+      };
+      mockCreateApp.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
+      expect(bindResult).toEqual({
+        externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
+        targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
+      });
+    });
+  });
+
+  it('should not bind routes on routeBindings target with nonexistent importName', async () => {
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        routeBindings: {
+          targets: [
+            {
+              importName: 'barPlugin',
+            },
+            { importName: 'fooPlugin' },
+          ],
+          bindings: [
+            {
+              bindTarget: 'barPlugin.externalRoutes',
+              bindMap: { barTarget: 'fooPlugin.routes.bar' },
+            },
+          ],
+        },
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Plugin foo.bar is not configured properly: PluginRoot.barPlugin not found, ignoring routeBindings target: barPlugin',
       );
     });
   });
