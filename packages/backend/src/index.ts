@@ -95,86 +95,33 @@ function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   };
 }
 
-type AddPluginBase = {
-  isOptional?: boolean;
+async function addPlugin(args: {
   plugin: string;
   apiRouter: Router;
   createEnv: ReturnType<typeof makeCreateEnv>;
   router: (env: PluginEnvironment) => Promise<Router>;
-  options?: { path?: string };
-};
+  logger: winston.Logger;
+}): Promise<void> {
+  const { plugin, apiRouter, createEnv, router, logger } = args;
 
-type AddPlugin = {
-  isOptional?: false;
-} & AddPluginBase;
-
-type OptionalPluginOptions = {
-  key?: string;
-  path?: string;
-};
-
-type AddOptionalPlugin = {
-  isOptional: true;
-  config: Config;
-  options?: OptionalPluginOptions;
-} & AddPluginBase;
-
-const OPTIONAL_DYNAMIC_PLUGINS: { [key: string]: OptionalPluginOptions } = {
-  techdocs: {},
-  argocd: {},
-  sonarqube: {},
-  kubernetes: {},
-  'azure-devops': { key: 'enabled.azureDevOps' },
-  jenkins: {},
-  ocm: {},
-  gitlab: {},
-} as const satisfies { [key: string]: OptionalPluginOptions };
-
-async function addPlugin(args: AddPlugin | AddOptionalPlugin): Promise<void> {
-  const { isOptional, plugin, apiRouter, createEnv, router, options } = args;
-
-  const isPluginEnabled =
-    !isOptional ||
-    args.config.getOptionalBoolean(options?.key ?? `enabled.${plugin}`) ||
-    false;
-  if (isPluginEnabled) {
-    const pluginEnv: PluginEnvironment = useHotMemoize(module, () =>
-      createEnv(plugin),
-    );
-    apiRouter.use(options?.path ?? `/${plugin}`, await router(pluginEnv));
-    console.log(`Using backend plugin ${plugin}...`);
-  } else if (isOptional) {
-    console.log(`Backend plugin ${plugin} is disabled`);
-  }
+  logger.info(`Adding plugin "${plugin}" to backend...`);
+  const pluginEnv: PluginEnvironment = useHotMemoize(module, () =>
+    createEnv(plugin),
+  );
+  apiRouter.use(`/${plugin}`, await router(pluginEnv));
 }
 
-type AddRouterBase = {
-  isOptional?: boolean;
+async function addRouter(args: {
   name: string;
   service: ServiceBuilder;
   root: string;
   router: RequestHandler | Router;
-};
+  logger: winston.Logger;
+}): Promise<void> {
+  const { name, service, root, router, logger } = args;
 
-type AddRouterOptional = {
-  isOptional: true;
-  config: Config;
-} & AddRouterBase;
-
-type AddRouter = {
-  isOptional?: false;
-} & AddRouterBase;
-
-async function addRouter(args: AddRouter | AddRouterOptional): Promise<void> {
-  const { isOptional, name, service, root, router } = args;
-
-  const isRouterEnabled =
-    !isOptional || args.config.getOptionalBoolean(`enabled.${name}`) || false;
-
-  if (isRouterEnabled) {
-    console.log(`Adding router ${name} to backend...`);
-    service.addRouter(root, router);
-  }
+  logger.info(`Adding router "${name}" to backend...`);
+  service.addRouter(root, router);
 }
 
 const redacter = WinstonLogger.redacter();
@@ -248,6 +195,7 @@ async function main() {
         pluginManager,
         discovery: env.discovery,
       }),
+    logger,
   });
 
   // Dynamic plugins info provider
@@ -260,20 +208,52 @@ async function main() {
         logger: env.logger,
         pluginManager,
       }),
+    logger,
   });
 
-  // Required plugins
-  await addPlugin({ plugin: 'proxy', apiRouter, createEnv, router: proxy });
-  await addPlugin({ plugin: 'auth', apiRouter, createEnv, router: auth });
-  await addPlugin({ plugin: 'catalog', apiRouter, createEnv, router: catalog });
-  await addPlugin({ plugin: 'search', apiRouter, createEnv, router: search });
+  // Required core plugins
+  await addPlugin({
+    plugin: 'proxy',
+    apiRouter,
+    createEnv,
+    router: proxy,
+    logger,
+  });
+  await addPlugin({
+    plugin: 'auth',
+    apiRouter,
+    createEnv,
+    router: auth,
+    logger,
+  });
+  await addPlugin({
+    plugin: 'catalog',
+    apiRouter,
+    createEnv,
+    router: catalog,
+    logger,
+  });
+  await addPlugin({
+    plugin: 'search',
+    apiRouter,
+    createEnv,
+    router: search,
+    logger,
+  });
   await addPlugin({
     plugin: 'scaffolder',
     apiRouter,
     createEnv,
     router: scaffolder,
+    logger,
   });
-  await addPlugin({ plugin: 'events', apiRouter, createEnv, router: events });
+  await addPlugin({
+    plugin: 'events',
+    apiRouter,
+    createEnv,
+    router: events,
+    logger,
+  });
   await addPlugin({
     plugin: 'permission',
     apiRouter,
@@ -295,26 +275,20 @@ async function main() {
             .filter(p => p !== undefined) as string[]),
         ],
       }),
+    logger,
   });
 
+  // Load dynamic plugins
   for (const plugin of pluginManager.backendPlugins()) {
     if (plugin.installer.kind === 'legacy') {
       const pluginRouter = plugin.installer.router;
       if (pluginRouter !== undefined) {
-        let optionals = {};
-        if (pluginRouter.pluginID in OPTIONAL_DYNAMIC_PLUGINS) {
-          optionals = {
-            isOptional: true,
-            config: config,
-            options: OPTIONAL_DYNAMIC_PLUGINS[pluginRouter.pluginID],
-          };
-        }
         await addPlugin({
           plugin: pluginRouter.pluginID,
           apiRouter,
           createEnv,
           router: pluginRouter.createPlugin,
-          ...optionals,
+          logger,
         });
       }
     }
@@ -325,34 +299,36 @@ async function main() {
 
   const service = createServiceBuilder(module).loadConfig(config);
 
-  // Required routers
+  // Required core routers
   await addRouter({
     name: 'api',
     service,
     root: '/api',
     router: apiRouter,
+    logger,
   });
   await addRouter({
     name: 'healthcheck',
     service,
     root: '',
     router: await createStatusCheckRouter(appEnv),
+    logger,
   });
-
-  // Optional routers
   await addRouter({
     name: 'metrics',
-    config,
     service,
     root: '',
     router: metricsHandler(),
+    logger,
   });
   await addRouter({
     name: 'app',
     service,
     root: '',
     router: await app(appEnv, dynamicPluginsSchemas),
+    logger,
   });
+
   await service.start().catch(err => {
     console.log(err);
     process.exit(1);
