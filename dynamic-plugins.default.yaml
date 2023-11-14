@@ -3,8 +3,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        github: true
       catalog:
         providers:
           github:
@@ -13,8 +11,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        githubOrg: true
       catalog:
         providers:
           githubOrg:
@@ -118,8 +114,6 @@ plugins:
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        gitlab: true
       gitlab:
         host: ${GITLAB_HOST}
         token: ${GITLAB_TOKEN}
@@ -168,8 +162,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        gitlab: true
       catalog:
         providers:
           gitlab: {}
@@ -180,8 +172,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        kubernetes: true
       kubernetes:
         customResources:
           - group: 'tekton.dev'
@@ -244,8 +234,6 @@ plugins:
   - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        argocd: true
       argocd:
         username: "${ARGOCD_USERNAME}"
         password: "${ARGOCD_PASSWORD}"
@@ -261,8 +249,6 @@ plugins:
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        argocd: true
       argocd:
         username: "${ARGOCD_USERNAME}"
         password: "${ARGOCD_PASSWORD}"
@@ -305,8 +291,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        azureDevOps: true
       azureDevOps:
         host: dev.azure.com
         token: ${AZURE_TOKEN}
@@ -339,8 +323,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        jenkins: true
       jenkins:
         instances:
           - name: default
@@ -367,8 +349,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        sonarqube: true
       sonarqube:
         baseUrl: ${SONARQUBE_URL}
         apiKey: ${SONARQUBE_TOKEN}
@@ -395,8 +375,6 @@ plugins:
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        ocm: true
       catalog:
         providers:
           ocm:
@@ -454,8 +432,6 @@ plugins:
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        aap: true
       catalog:
         providers:
           aap:
@@ -466,8 +442,6 @@ plugins:
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        keycloak: true
       catalog:
         providers:
           keycloakOrg:
@@ -481,8 +455,6 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
     disabled: true
     pluginConfig:
-      enabled:
-        techdocs: true
       # Reference documentation http://backstage.io/docs/features/techdocs/configuration
       # Note: After experimenting with basic setup, use CI/CD to generate docs
       # and an external cloud storage when deploying TechDocs for production use-case.
