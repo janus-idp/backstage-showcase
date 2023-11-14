@@ -553,17 +553,31 @@ dynamicPlugins:
   frontend:
     <package_name>: # same as `scalprum.name` key in plugin's `package.json`
       routeBindings:
-        - bindTarget: 'barPlugin.externalRoutes' # One of the supported bind targets
-          bindMap: # Map of bindings, same as the `bind` function options argument in the example above
-            headerLink: 'fooPlugin.routes.root'
+        targets: # Declare a new bind target
+          - name: barPlugin # Optional, defaults to importName. Explicit name of the plugin that exposes the bind target
+            importName: barPlugin # Required. Explicit import name that reference a BackstagePlugin<{}> implementation.
+            module: CustomModule # Optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
+        bindings:
+          - bindTarget: 'barPlugin.externalRoutes' # Required. One of the supported or imported bind targets
+            bindMap: # Required. Map of bindings, same as the `bind` function options argument in the example above
+              headerLink: 'fooPlugin.routes.root'
 ```
 
-These are the available bind targets:
+This configuration allows you to bind to existing plugins and their routes as well as declare new targets sourced from dynamic plugins:
 
-- `remotePlugins.externalRoutes`
-- `catalogPlugin.externalRoutes`
-- `catalogImportPlugin.externalRoutes`
-- `techdocsPlugin.externalRoutes`
+1. Define new targets:
+   `routeBindings.targets` allow you to define new targets. It accepts a list of targets where:
+   - `importName` is required and has to resolve to a `BackstagePlugin<{}>` implementation
+   - `name` is an optional argument which sets the name of the target. If not provided, `importName` is used instead.
+   - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+2. Declare bindings:
+   - `bindTarget` - Required. One of the supported or imported bind targets. This value can refer to any of the new dynamically added targets or available static targets:
+     - `catalogPlugin.externalRoutes`
+     - `catalogImportPlugin.externalRoutes`
+     - `techdocsPlugin.externalRoutes`
+     - `scaffolderPlugin.externalRoutes`
+
+- `bindMap`: Required. Map of bindings, same as the `bind` function options argument in the traditional Backstage example above
 
 #### Using mount points
 

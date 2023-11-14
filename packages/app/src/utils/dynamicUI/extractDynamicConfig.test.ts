@@ -155,6 +155,7 @@ describe('extractDynamicConfig', () => {
         dynamicRoutes: [],
         mountPoints: [],
         appIcons: [],
+        routeBindingTargets: [],
       },
     ],
     [
@@ -165,6 +166,7 @@ describe('extractDynamicConfig', () => {
         dynamicRoutes: [],
         mountPoints: [],
         appIcons: [],
+        routeBindingTargets: [],
       },
     ],
     [
@@ -175,6 +177,7 @@ describe('extractDynamicConfig', () => {
         dynamicRoutes: [],
         mountPoints: [],
         appIcons: [],
+        routeBindingTargets: [],
       },
     ],
   ])('returns empty data when %s', async (_, source, output) => {
@@ -467,6 +470,7 @@ describe('extractDynamicConfig', () => {
     const config = await extractDynamicConfig();
     expect(config).toEqual({
       routeBindings: [],
+      routeBindingTargets: [],
       dynamicRoutes: [],
       mountPoints: [],
       appIcons: [],

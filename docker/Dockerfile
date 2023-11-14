@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-70.1697667811 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-18:1-80 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -92,7 +92,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697662866 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-85 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -110,8 +110,9 @@ COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
-COPY docker/install-dynamic-plugins.py ./
+COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
+  chmod -R a+rx ./install-dynamic-plugins.sh; \
   rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
