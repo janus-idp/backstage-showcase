@@ -54,7 +54,7 @@
   "resolutions": {
     "@types/react": "17.0.69",
     "@types/react-dom": "17.0.22",
-    "wrap-ansi": "7.0.0"
+    "wrap-ansi": "9.0.0"
   },
   "jest": {
     "testTimeout": 20000
