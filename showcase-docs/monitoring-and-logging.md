@@ -69,10 +69,66 @@ upstream:
 
 #### Metrics Add-on
 
+<details>
+<summary>For the <i>metrics</i> add-on, we will need to add/modify the <code>ama-metrics-prometheus-config</code> Config Map in the <code>kube-system</code> namespace of the AKS cluster. For more information on how to configure this refer to the <a href=https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration#configure-custom-prometheus-scrape-jobs>official Azure docs</a>. Please replace the values of namespace with the namespace you deployed into:</summary>
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ama-metrics-prometheus-config
+  namespace: kube-system
+data:
+  prometheus.yaml: |
+    global:
+      scrape_interval: 1m
+      scrape_timeout: 10s
+    scrape_configs:
+    - job_name: 'backstage-metrics'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - <your-namespace>
+      scrape_interval: 30s
+      scheme: http
+      metrics_path: /metrics
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+          : $1:$2
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
+      metric_relabel_configs:
+      - source_labels: [__name__]
+        action: keep
+        regex: '.*' # Keep all the custom metrics from backstage
+    # Other Scrape Jobs Below
+```
+
+</details>
+
+To view the metrics, you can create a Grafana instance, [connect it to the Azure Monitor workspace](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/tutorial-logs-dashboards-with-grafana#connect-grafana-to-azure-monitor) and view the metrics with PromQL.
+
 #### Monitoring Add-on
 
 <details>
-<summary>For the _monitoring_ add-on, we will need to add the a modified instance of <a href=https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml>this ConfigMap</a> to the `kube-system` namespace of the AKS cluster. Please replace the values of namespace with the namespace you deployed into:</summary>
+<summary>For the <i>monitoring</i> add-on, we will need to add the a modified instance of <a href=https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml>this ConfigMap</a> to the <code>kube-system</code> namespace of the AKS cluster. For more information refer to the <a href=https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-logs?tabs=cluster-wide>official Azure docs</a>. Please replace the values of namespace with the namespace you deployed into:</summary>
 
 ```yaml
 kind: ConfigMap
@@ -289,7 +345,7 @@ data:
 
 To view the metrics, you can create a Grafana instance, [connect it to the Azure Monitor workspace](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/tutorial-logs-dashboards-with-grafana#connect-grafana-to-azure-monitor) and view the metrics with PromQL.
 
-Alternatively, you can use [Log Analytics]() to query the metrics. You can query the metrics using the following query, to only get metrics from the Backstage instance:
+Alternatively, you can use [Log Analytics](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query#prometheus-metrics) to query the metrics. The following is an example query to get metrics from the Backstage instance:
 
 ```kql
 let custom_metrics = "custom-metric-name";
