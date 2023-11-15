@@ -20,6 +20,8 @@ if (devMode && !fs.existsSync(dynamicPluginsRoot)) {
 }
 
 const cleanMode = process.argv.includes('--clean', 2);
+const noInstall = process.argv.includes('--no-install', 2);
+const installOnly = process.argv.includes('--install-only', 2);
 
 for (const dep in packageJson.peerDependencies) {
   if (
@@ -48,16 +50,27 @@ for (const dep in packageJson.peerDependencies) {
   }
   fs.mkdirSync(directory, { recursive: true });
 
-  // BEGIN-NOSCAN
-  // This is a dev tool. We don't care about security here.
-  // In addition, the tar package filter insecure entries by default
-  // (see default value for 'preservePaths').
-  tar.x({
-    file: archive,
-    cwd: directory,
-    strip: 1,
-    sync: true,
-  });
+  if (!installOnly) {
+    console.log(
+      `Extracting: ${dep}@${packageJson.peerDependencies[dep]} to ${directory}`,
+    );
+
+    // BEGIN-NOSCAN
+    // This is a dev tool. We don't care about security here.
+    // In addition, the tar package filter insecure entries by default
+    // (see default value for 'preservePaths').
+    tar.x({
+      file: archive,
+      cwd: directory,
+      strip: 1,
+      sync: true,
+    });
+  } else {
+    console.log(
+      `Skipping extraction of : ${dep}@${packageJson.peerDependencies[dep]} since --install-only was passed`,
+    );
+  }
+
   // END-NOSCAN
   fs.rmSync(archive);
 
@@ -85,16 +98,19 @@ for (const dep in packageJson.peerDependencies) {
       );
       continue;
     }
-    console.log(
-      `Installing dependencies for: ${pkgJson.name}-dynamic@${pkgJson.version}`,
-    );
 
-    // BEGIN-NOSCAN
-    // This is a dev tool. We assume the right yarn is on the PATH.
-    exec('yarn install --production --frozen-lockfile', {
-      cwd: distDynamicDir,
-    });
-    // END-NOSCAN
+    if (!noInstall) {
+      console.log(
+        `Installing dependencies for: ${pkgJson.name}-dynamic@${pkgJson.version}`,
+      );
+
+      // BEGIN-NOSCAN
+      // This is a dev tool. We assume the right yarn is on the PATH.
+      exec('yarn install --production --frozen-lockfile', {
+        cwd: distDynamicDir,
+      });
+      // END-NOSCAN
+    }
   }
 
   if (devMode) {

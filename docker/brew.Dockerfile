@@ -122,6 +122,11 @@ RUN git config --global --add safe.directory ./
 # hadolint ignore=DL3059
 RUN $YARN build --filter=backend
 
+# The special case for imports here is because we need the
+# yarn.lock files of the imported packages to be present
+# so that they can be modified by the cachitoRegistry replacement
+RUN $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install
+
 # Downstream only - Cachito configuration
 # replace external registry refs with cachito ones
 RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
@@ -129,17 +134,22 @@ RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachito
       sed -i $d -r -e "s#(https://registry.yarnpkg.com|https://registry.npmjs.org)#${cachitoRegistry}#g"; \
       grep resolved $d | head -1; echo "Total $(grep resolved $d | wc -l) resolution lines in $d"; \
     done
-# debug - were the above changes successful?
-# RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
-#     for d in $(find . -name yarn.lock); do \
-#       found=$(grep -E "yarnpkg.com|npmjs.org" $d | head -1); \
-#       if [[ $found ]]; then echo;echo "$d : $found"; fi; \
-#     done; \
-#     echo "<=== Check for yarn.lock files that don't use cachito registry ==="
 
 # Build dynamic plugins
-RUN $YARN export-dynamic
+#
+# The special case for imports here is because we already
+# imported the packages above. We only need to apply the
+# `yarn install` on the `dist-dynamic` sub-folder (for backend plugins).
+RUN $YARN --cwd ./dynamic-plugins/imports install-dynamic
+RUN $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/*
 RUN $YARN copy-dynamic-plugins dist
+
+RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
+    for d in $(find . -name yarn.lock); do \
+      found=$(grep -E "yarnpkg.com|npmjs.org" $d | head -1); \
+      if [[ $found ]]; then echo;echo "$d : $found"; fi; \
+    done; \
+    echo "<=== Check for yarn.lock files that don't use cachito registry ==="
 
 # Downstream only - clean up dynamic plugins sources:
 # Only keep the dist sub-folder in the dynamic-plugins folder
