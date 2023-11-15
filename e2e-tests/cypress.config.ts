@@ -17,12 +17,32 @@ export default defineConfig({
   e2e: {
     testIsolation: false,
     defaultCommandTimeout: 10000,
-    baseUrl: 'https://PLACE_HOLDER',
+    baseUrl:
+      'https://rhdb-developer-hub-skhileri-rhdh-v02.backstage-qe-eu-de-2-bx2-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud/',
     specPattern: 'cypress/e2e/**/*.spec.ts',
-    setupNodeEvents(on) {
+
+    setupNodeEvents(on, config) {
+      const defaultValues: { [key: string]: string | boolean } = {
+        GH_USER_ID: 'rhdh-qe',
+        GH_USER_PASS: '',
+        GH_2FA_SECRET: '',
+        GH_RHDH_QE_USER_TOKEN: '',
+        KEYCLOAK_URL: '',
+        KEYCLOAK_REALM: '',
+        KEYCLOAK_CLIENT_ID: '',
+        KEYCLOAK_CLIENT_SECRET: '',
+      };
+
+      for (const key in defaultValues) {
+        if (!config.env[key]) {
+          config.env[key] = defaultValues[key];
+        }
+      }
+
       installLogsPrinter(on, {
         printLogsToConsole: 'always',
       });
+      return config;
     },
   },
 });

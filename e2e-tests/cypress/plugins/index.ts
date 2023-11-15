@@ -1,4 +1,7 @@
 /// <reference types="cypress" />
+import installLogsPrinter from 'cypress-terminal-report/src/installLogsPrinter';
+import installLogsCollector from 'cypress-terminal-report/src/installLogsCollector';
+
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -16,9 +19,9 @@
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = (on, config) => {
+module.exports = on => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  require('cypress-terminal-report/src/installLogsPrinter')(on);
-  require('cypress-terminal-report/src/installLogsCollector')();
+  installLogsPrinter(on);
+  installLogsCollector();
 };

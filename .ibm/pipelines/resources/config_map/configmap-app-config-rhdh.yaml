@@ -68,6 +68,13 @@ data:
           default:
             id: development
             orgUrl: '${GITHUB_ORG_URL}'
+        keycloakOrg:
+          default:
+            baseUrl: ${KEYCLOAK_URL}
+            loginRealm: ${KEYCLOAK_REALM}
+            realm: ${KEYCLOAK_REALM}
+            clientId: ${KEYCLOAK_CLIENT_ID}
+            clientSecret: ${KEYCLOAK_CLIENT_SECRET}
       import:
         entityFilename: catalog-info.yaml
         # pullRequestBranchName: rhdh-integration
@@ -79,8 +86,6 @@ data:
           target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
         - type: url
           target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
-        - type: url
-          target: https://github.com/janus-qe/test-bs-nodejs/blob/main/catalog-info.yaml
 
     kubernetes:
       clusterLocatorMethods:
@@ -132,3 +137,4 @@ data:
             - name: argoInstance2
               url: temp
               token: temp
+      keycloak: true

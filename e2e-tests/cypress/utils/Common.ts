@@ -1,11 +1,11 @@
 import { waitsObjs } from '../support/pageObjects/global-obj';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { UIhelper } from './UIhelper';
+import { authenticator } from 'otplib';
 
 export class Common {
   static loginAsGuest() {
     cy.visit('/');
-    UIhelper.verifyHeading('Red Hat Developer Hub');
     UIhelper.verifyHeading('Select a sign-in method');
     UIhelper.clickButton('Enter');
   }
@@ -37,9 +37,13 @@ export class Common {
     UIhelper.clickButton('Sign In');
   }
 
+  static clickOnGHloginPopup() {
+    UIhelper.clickButton('Log in');
+    UIhelper.getButton('Log in', { timeout: 100000 }).should('not.exist');
+  }
+
   static getGitHub2FAOTP(): string {
     const secret = Cypress.env('GH_2FA_SECRET');
-    const token = require('otplib').authenticator.generate(secret);
-    return token;
+    return authenticator.generate(secret);
   }
 }

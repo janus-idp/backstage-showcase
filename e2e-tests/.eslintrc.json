@@ -1,9 +1,11 @@
 {
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
+
   "plugins": ["cypress", "@typescript-eslint"],
+  "rules": {
+    "cypress/unsafe-to-chain-command": "off",
+    "@typescript-eslint/no-explicit-any": "off"
+  },
   "env": {
     "cypress/globals": true
   },

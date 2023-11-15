@@ -85,7 +85,9 @@ apply_yaml_files() {
   # Update namespace and other configurations in YAML files
   local files=("$dir/resources/service_account/service-account-rhdh.yaml"
     "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml"
-    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml")
+    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml"
+    "$dir/resources/deployment/deployment-test-app-component.yaml"
+    "$dir/auth/secrets-rhdh-secrets.yaml")
   
   for file in "${files[@]}"; do
     sed -i "s/namespace:.*/namespace: $NAME_SPACE/g" "$file"
