@@ -65,7 +65,7 @@ RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 # hadolint ignore=DL3059,DL4006,SC2086
 RUN $YARN build --filter=backend && \
 
-  # Build dynamic plugins: consistency with downstream
+  # Build dynamic plugins: split commands for consistency with downstream
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
   $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
