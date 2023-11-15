@@ -62,16 +62,15 @@ RUN git config --global --add safe.directory ./
 # Upstream only
 RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
-# hadolint ignore=DL3059
-RUN $YARN build --filter=backend
+# hadolint ignore=DL3059,DL4006,SC2086
+RUN $YARN build --filter=backend && \
 
-# Build dynamic plugins
-# The special case for imports here is for consistency with downstream
-# though for upstream it wouldn't be necessary
-RUN $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install
-RUN $YARN --cwd ./dynamic-plugins/imports install-dynamic
-RUN $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/*
-RUN $YARN copy-dynamic-plugins dist
+  # Build dynamic plugins: split commands for consistency with downstream
+  $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
+  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
+  $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
+  $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
+  $YARN copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
 FROM skeleton AS cleanup
@@ -103,6 +102,7 @@ ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/
 
 # Upstream only - install techdocs dependencies (PyPI source tarballs not required)
+# hadolint ignore=DL3041,DL3042
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
   pip3 install mkdocs-techdocs-core==1.2.3 && \

@@ -77,7 +77,7 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
 # strict-ssl=true
 # cafile="../../../registry-ca.pem"
 # NOTE: this is overridden to "/remote-source/registry-ca.pem" below
-# hadolint ignore=SC1091
+# hadolint ignore=SC1091,SC2046
 RUN \
     # debug
     # cat $CONTAINER_SOURCE/cachito.env; \
@@ -119,31 +119,24 @@ RUN git config --global --add safe.directory ./
 # Upstream only
 # RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
-# hadolint ignore=DL3059
-RUN $YARN build --filter=backend
+# hadolint ignore=DL3059,DL4006,SC2086
+RUN $YARN build --filter=backend && \
 
-# The special case for imports here is because we need the
-# yarn.lock files of the imported packages to be present
-# so that they can be modified by the cachitoRegistry replacement
-RUN $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install
-
-# Downstream only - Cachito configuration
-# replace external registry refs with cachito ones
-RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
+  # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
+  $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
+  # Downstream only - replace registry refs with cachito ones
+  cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
     for d in $(find . -name yarn.lock); do echo; echo "===== $d ====="; \
       sed -i $d -r -e "s#(https://registry.yarnpkg.com|https://registry.npmjs.org)#${cachitoRegistry}#g"; \
       grep resolved $d | head -1; echo "Total $(grep resolved $d | wc -l) resolution lines in $d"; \
-    done
+    done; \
+  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
+  $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
+  $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
+  $YARN copy-dynamic-plugins dist
 
-# Build dynamic plugins
-#
-# The special case for imports here is because we already
-# imported the packages above. We only need to apply the
-# `yarn install` on the `dist-dynamic` sub-folder (for backend plugins).
-RUN $YARN --cwd ./dynamic-plugins/imports install-dynamic
-RUN $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/*
-RUN $YARN copy-dynamic-plugins dist
-
+# Downstream only - debug
+# hadolint ignore=SC3010,DL4006
 RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
     for d in $(find . -name yarn.lock); do \
       found=$(grep -E "yarnpkg.com|npmjs.org" $d | head -1); \
@@ -183,6 +176,7 @@ WORKDIR $CONTAINER_SOURCE/
 
 # Downstream only - install techdocs dependencies using cachito sources
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
+# hadolint ignore=DL3013,DL3041,SC2086
 RUN microdnf update -y && \
   microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
