@@ -66,7 +66,11 @@ RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 RUN $YARN build --filter=backend
 
 # Build dynamic plugins
-RUN $YARN export-dynamic
+# The special case for imports here is for consistency with downstream
+# though for upstream it wouldn't be necessary
+RUN $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install
+RUN $YARN --cwd ./dynamic-plugins/imports install-dynamic
+RUN $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/*
 RUN $YARN copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
