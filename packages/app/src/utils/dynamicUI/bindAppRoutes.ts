@@ -4,7 +4,6 @@ import { catalogPlugin } from '@backstage/plugin-catalog';
 import { catalogImportPlugin } from '@backstage/plugin-catalog-import';
 import { orgPlugin } from '@backstage/plugin-org';
 import { scaffolderPlugin } from '@backstage/plugin-scaffolder';
-import { techdocsPlugin } from '@backstage/plugin-techdocs';
 import get from 'lodash/get';
 import { RouteBinding } from '../../components/DynamicRoot/DynamicRootContext';
 import { BackstagePlugin } from '@backstage/core-plugin-api';
@@ -17,7 +16,6 @@ const bindAppRoutes = (
   // Static bindings
   bind(catalogPlugin.externalRoutes, {
     createComponent: scaffolderPlugin.routes.root,
-    viewTechDoc: techdocsPlugin.routes.docRoot,
     createFromTemplate: scaffolderPlugin.routes.selectedTemplate,
   });
   bind(apiDocsPlugin.externalRoutes, {
@@ -25,7 +23,6 @@ const bindAppRoutes = (
   });
   bind(scaffolderPlugin.externalRoutes, {
     registerComponent: catalogImportPlugin.routes.importPage,
-    viewTechDoc: techdocsPlugin.routes.docRoot,
   });
   bind(orgPlugin.externalRoutes, {
     catalogIndex: catalogPlugin.routes.catalogIndex,
@@ -35,9 +32,9 @@ const bindAppRoutes = (
     ...routeBindingTargets,
     catalogPlugin,
     catalogImportPlugin,
-    techdocsPlugin,
     scaffolderPlugin,
   };
+
   // binds from remote
   routeBindings.forEach(({ bindTarget, bindMap }) => {
     const externalRoutes = get(availableBindPlugins, bindTarget);

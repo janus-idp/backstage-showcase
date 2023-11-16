@@ -33,12 +33,21 @@ const MockPage = () => {
       <div data-testid="dynamicRoutes">
         {dynamicRoutes
           .filter(r => Boolean(r.Component))
-          .map(r => r.path)
+          .map(
+            r => `${r.path}${r.staticJSXContent ? ' (with static JSX)' : ''}`,
+          )
           .join(', ')}
       </div>
       <div data-testid="mountPoints">
         {Object.entries(mountPoints)
-          .map(([k, v]) => `${k}: ${v.length}`)
+          .map(
+            ([k, v]) =>
+              `${k}: ${v.length}${
+                v.filter(c => Boolean(c.staticJSXContent)).length
+                  ? ' (with static JSX)'
+                  : ''
+              }`,
+          )
           .join(', ')}
       </div>
       <div data-testid="mountPointsIfs">
@@ -146,6 +155,10 @@ describe('DynamicRoot', () => {
           FooComponent: React.Fragment,
           isFooConditionTrue: () => true,
           isFooConditionFalse: () => false,
+          FooComponentWithStaticJSX: {
+            element: ({ children }) => <>{children}</>,
+            staticJSXContent: <div />,
+          },
         },
       },
     });
@@ -236,6 +249,26 @@ describe('DynamicRoot', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'Plugin foo.bar is not configured properly: BarPlugin.default not found, ignoring dynamicRoute: "/foo"',
       );
+    });
+  });
+
+  it('should render with one dynamicRoute with staticJSXContent', async () => {
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        dynamicRoutes: [
+          { path: '/foo', importName: 'FooComponentWithStaticJSX' },
+        ],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(
+        within(rendered.getByTestId('dynamicRoutes')).getByText(
+          '/foo (with static JSX)',
+        ),
+      ).toBeInTheDocument();
     });
   });
 
@@ -438,6 +471,29 @@ describe('DynamicRoot', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'Plugin doesnt.exist is not configured properly: BarPlugin.default not found, ignoring mountPoint: "a.b.c/cards"',
       );
+    });
+  });
+
+  it('should render with one mountPoint with staticJSXContent', async () => {
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        mountPoints: [
+          {
+            mountPoint: 'a.b.c/cards',
+            importName: 'FooComponentWithStaticJSX',
+          },
+        ],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(
+        within(rendered.getByTestId('mountPoints')).getByText(
+          'a.b.c/cards: 1 (with static JSX)',
+        ),
+      ).toBeInTheDocument();
     });
   });
 

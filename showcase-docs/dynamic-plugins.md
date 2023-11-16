@@ -49,7 +49,7 @@ These recommended changes to the `package.json` are summarized below:
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.4.0"
+    "@janus-idp/cli": "1.4.2"
   },
   ...
   "files": [
@@ -185,7 +185,7 @@ These recommended changes to the `package.json` are summarized below:
   },
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.4.0"
+    "@janus-idp/cli": "1.4.2"
   },
   ...
   "files": [
@@ -223,6 +223,25 @@ However if you want to customize Scalprum's behavior, you can do so by including
   },
   ...
 ```
+
+Dynamic plugins may also need to adopt to specific Backstage needs like static JSX children for mountpoints and dynamic routes. These changes are strictly optional and exported symbols are incompatible with static plugins:
+
+1. To include static JSX as element children with your dynamically imported component, please define an additional export as follows and use that as your dynamic plugin `importName`:
+
+   ```tsx
+   // Used by a static plugin
+   export const EntityTechdocsContent = () => {...}
+
+   // Used by a dynamic plugin
+   export const DynamicEntityTechdocsContent = {
+     element: EntityTechdocsContent,
+     staticJSXContent: (
+       <TechDocsAddons>
+         <ReportIssue />
+       </TechDocsAddons>
+     ),
+   };
+   ```
 
 #### Exporting the plugin as a dynamic plugin package
 
@@ -332,10 +351,6 @@ In order to add dynamic plugin support to a third-party plugin, without touching
 The showcase docker image comes pre-loaded with a selection of dynamic plugins, with most being initially deactivated due to the need for mandatory configuration. The complete list of these plugins is detailed in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
 
 Upon application startup, for each plugin that is disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will display a line similar to the following:
-
-```
-======= Skipping disabled dynamic plugin ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
-```
 
 To activate this plugin, simply add a package with the same name and adjust the `disabled` field in the helm chart values as shown below:
 
@@ -604,6 +619,9 @@ The following mount points are available:
 | `entity.page.docs`           | Catalog entity "Documentation" tab  | YES for entity that satisfies `isTechDocsAvailable`            |
 | `entity.page.definition`     | Catalog entity "Definitions" tab    | YES for entity of `kind: Api`                                  |
 | `entity.page.diagram`        | Catalog entity "Diagram" tab        | YES for entity of `kind: System`                               |
+| `search.page.types`          | Search result type                  | YES, default catalog search type is available                  |
+| `search.page.filters`        | Search filters                      | YES, default catalog kind and lifecycle filters are visible    |
+| `search.page.results`        | Search results content              | YES, default catalog search is present                         |
 
 Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
 

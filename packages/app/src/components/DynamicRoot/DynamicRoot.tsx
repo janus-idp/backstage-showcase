@@ -142,6 +142,7 @@ const DynamicRoot = ({
         mountPoint: string;
         Component: React.ComponentType<{}>;
         config?: ScalprumMountPointConfig;
+        staticJSXContent?: React.ReactNode;
       }[]
     >((acc, { module, importName, mountPoint, scope, config }) => {
       const Component = remotePlugins[scope]?.[module]?.[importName];
@@ -170,7 +171,14 @@ const DynamicRoot = ({
 
         acc.push({
           mountPoint,
-          Component: Component as React.ComponentType<{}>,
+          Component:
+            typeof Component === 'object' && 'element' in Component
+              ? (Component.element as React.ComponentType<{}>)
+              : (Component as React.ComponentType<{}>),
+          staticJSXContent:
+            typeof Component === 'object' && 'staticJSXContent' in Component
+              ? (Component.staticJSXContent as React.ReactNode)
+              : null,
           config: {
             ...config,
             if: ifCondition,
@@ -193,6 +201,7 @@ const DynamicRoot = ({
       }
       acc[entry.mountPoint].push({
         Component: entry.Component,
+        staticJSXContent: entry.staticJSXContent,
         config: entry.config,
       });
       return acc;
@@ -203,6 +212,7 @@ const DynamicRoot = ({
     const dynamicRoutesComponents = dynamicRoutes.reduce<
       (DynamicRoute & {
         Component: React.ComponentType<{}>;
+        staticJSXContent?: React.ReactNode;
       })[]
     >((acc, route) => {
       const Component =
@@ -210,7 +220,14 @@ const DynamicRoot = ({
       if (Component) {
         acc.push({
           ...route,
-          Component: Component as React.ComponentType<{}>,
+          Component:
+            typeof Component === 'object' && 'element' in Component
+              ? (Component.element as React.ComponentType<{}>)
+              : (Component as React.ComponentType<{}>),
+          staticJSXContent:
+            typeof Component === 'object' && 'staticJSXContent' in Component
+              ? (Component.staticJSXContent as React.ReactNode)
+              : null,
         });
       } else {
         // eslint-disable-next-line no-console
