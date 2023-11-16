@@ -70,7 +70,7 @@ const AppBase = () => {
             <Route path="/catalog-graph" element={<CatalogGraphPage />} />
             <Route path="/learning-paths" element={<LearningPaths />} />
             {dynamicRoutes.map(
-              ({ Component, staticJSXContent, path, ...props }) => (
+              ({ Component, staticJSXContent, path, config: { props } }) => (
                 <Route
                   key={path}
                   path={path}

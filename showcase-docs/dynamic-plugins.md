@@ -466,6 +466,7 @@ Similarly to traditional Backstage instances, there are 3 types of functionality
 - Extension to existing page via router `bind`ings
 - Use of mount points within the application
 - Extend internal library of available icons
+- Provide additional Utility APIs or replace existing ones
 
 The overall configuration is as follows:
 
@@ -478,6 +479,7 @@ dynamicPlugins:
       mountPoints: ...
       routeBindings: ...
       appIcons: ...
+      apiFactories: ...
 ```
 
 #### Extend internal library of available icons
@@ -537,6 +539,8 @@ dynamicPlugins:
           menuItem: # optional, allows you to populate main sidebar navigation
             icon: fooIcon # Backstage system icon
             text: Foo Plugin Page # menu item text
+          config:
+            props: ... # optional, React props to pass to the component
 ```
 
 Each plugin can expose multiple routes and each route is required to define its `path` and `importName` (if it differs from the default export).
@@ -545,6 +549,7 @@ Each plugin can expose multiple routes and each route is required to define its 
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
 - `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
+- `config.props` - Optional. Additionally you can pass React props to the component.
 
 #### Bind to existing plugins
 
@@ -625,7 +630,7 @@ The following mount points are available:
 
 Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
 
-Each mount point has 2 complementary variations:
+Each `entity.page.*` mount point has 2 complementary variations:
 
 - `*/context` type that serves to create React contexts
 - `*/cards` type for regular React components
@@ -668,3 +673,28 @@ Each mount point supports additional configuration:
   - `isType`: Accepts a string or a list of string with entity types. For example `isType: service` will render the component only for entities of `spec.type: 'service'`.
   - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
   - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`
+
+#### Provide additional Utility APIs
+
+Backstage offers an Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
+
+- Core APIs, which are always present in any Backstage application
+- Custom plugin-made API that can be already self contained within any plugin (including dynamic plugins)
+- [App API implementations and overrides](https://backstage.io/docs/api/utility-apis/#app-apis) which needs to be added separately.
+
+Dynamic plugins provides you with a way to utilize the App API concept via `apiFactories` configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      apiFactories:
+        - importName: BarApi # Optional, explicit import name that reference a AnyApiFactory<{}> implementation. Defaults to default export.
+          module: CustomModule # Optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
+```
+
+Each plugin can expose multiple API Factories and each factory is required to define its `importName` (if it differs from the default export).
+
+- `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
+- `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
