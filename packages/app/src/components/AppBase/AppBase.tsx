@@ -9,7 +9,6 @@ import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
-import { TechRadarPage } from '@backstage/plugin-tech-radar';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import React, { useContext } from 'react';
 import { Route } from 'react-router-dom';
@@ -51,10 +50,6 @@ const AppBase = () => {
               }
             />
             <Route path="/api-docs" element={<ApiExplorerPage />} />
-            <Route
-              path="/tech-radar"
-              element={<TechRadarPage width={1500} height={800} id="default" />}
-            />
             <Route
               path="/catalog-import"
               element={

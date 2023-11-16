@@ -34,7 +34,6 @@
     "@backstage/plugin-scaffolder": "1.15.1",
     "@backstage/plugin-search": "1.4.1",
     "@backstage/plugin-search-react": "1.7.1",
-    "@backstage/plugin-tech-radar": "0.6.9",
     "@backstage/plugin-user-settings": "0.7.11",
     "@backstage/theme": "0.4.3",
     "@emotion/react": "11.11.1",
