@@ -13,7 +13,6 @@ import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
-import { techRadarApiRef } from '@backstage/plugin-tech-radar';
 import { SegmentAnalytics } from '@janus-idp/backstage-plugin-analytics-provider-segment';
 import {
   auth0AuthApiRef,
@@ -24,7 +23,6 @@ import {
   CustomDataApiClient,
   customDataApiRef,
 } from './api/CustomDataApiClient';
-import { CustomTechRadar } from './lib/CustomTechRadar';
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -47,13 +45,6 @@ export const apis: AnyApiFactory[] = [
     },
     factory: ({ discoveryApi, configApi }) =>
       new CustomDataApiClient({ discoveryApi, configApi }),
-  }),
-  createApiFactory({
-    api: techRadarApiRef,
-    deps: {
-      customDataApi: customDataApiRef,
-    },
-    factory: ({ customDataApi }) => new CustomTechRadar({ customDataApi }),
   }),
   // OIDC
   createApiFactory({

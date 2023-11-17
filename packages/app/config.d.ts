@@ -62,6 +62,11 @@ export interface Config {
             icon: string;
             text: string;
           };
+          config: {
+            props?: {
+              [key: string]: string;
+            };
+          };
         }[];
         routeBindings?: {
           targets?: {
@@ -117,6 +122,10 @@ export interface Config {
           module?: string;
           importName?: string;
           name: string;
+        }[];
+        apiFactories?: {
+          module?: string;
+          importName?: string;
         }[];
       };
     };

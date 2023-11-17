@@ -1,29 +1,21 @@
 import {
-  ConfigApi,
-  createApiRef,
-  DiscoveryApi,
-} from '@backstage/core-plugin-api';
-import { QuickAccessLinks } from '../types/types';
+  RadarEntry,
+  TechRadarApi,
+  type TechRadarLoaderResponse,
+} from '@backstage/plugin-tech-radar';
+import { ConfigApi, DiscoveryApi } from '@backstage/core-plugin-api';
+import defaultResponse from '../data/data-default.json';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';
 
-export interface CustomDataApi {
-  getHomeDataJson(): Promise<QuickAccessLinks[]>;
-}
-
-export const customDataApiRef = createApiRef<CustomDataApi>({
-  id: 'app.developer-hub.service',
-});
-
-export type Options = {
+type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
 };
 
-export class CustomDataApiClient implements CustomDataApi {
+export class CustomTechRadar implements TechRadarApi {
   private readonly discoveryApi: DiscoveryApi;
   private readonly configApi: ConfigApi;
-
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
     this.configApi = options.configApi;
@@ -47,10 +39,28 @@ export class CustomDataApiClient implements CustomDataApi {
     }
     return await response.json();
   }
-
-  async getHomeDataJson() {
+  async load(): Promise<TechRadarLoaderResponse> {
+    let data;
     const proxyUrl = await this.getBaseUrl();
-    const data = await this.fetcher(`${proxyUrl}`);
-    return data;
+    try {
+      data = await this.fetcher(`${proxyUrl}/tech-radar`);
+    } catch (e) {
+      data = defaultResponse;
+      // eslint-disable-next-line no-console
+      console.log(
+        'Tech Radar: Custom data source not defined, using default example data',
+      );
+    }
+
+    return {
+      ...data,
+      entries: data.entries.map((entry: RadarEntry) => ({
+        ...entry,
+        timeline: entry.timeline.map(timeline => ({
+          ...timeline,
+          date: new Date(timeline.date),
+        })),
+      })),
+    };
   }
 }

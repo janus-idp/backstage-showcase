@@ -690,3 +690,25 @@ plugins:
                   if:
                     allOf:
                       - isLighthouseAvailable
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-tech-radar:
+            apiFactories:
+              - importName: TechRadarApi
+            appIcons:
+              - name: techRadar
+                importName: TechRadarIcon
+            dynamicRoutes:
+              - path: /tech-radar
+                importName: TechRadarPage
+                menuItem:
+                  icon: techRadar
+                  text: Tech Radar
+                config:
+                  props:
+                    width: 1500
+                    height: 800
