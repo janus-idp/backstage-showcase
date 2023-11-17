@@ -712,3 +712,15 @@ plugins:
                   props:
                     width: 1500
                     height: 800
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-analytics-provider-segment:
+            apiFactories:
+              - importName: SegmentAnalyticsApi
+      app:
+        analytics:
+          segment:
+            writeKey: ${SEGMENT_WRITE_KEY}
