@@ -17,7 +17,6 @@ import AppsIcon from '@mui/icons-material/Apps';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import HomeIcon from '@mui/icons-material/Home';
 import MuiMenuIcon from '@mui/icons-material/Menu';
-import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from 'tss-react/mui';
@@ -93,11 +92,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
-            <SideBarItemWrapper
-              icon={MapIcon as any}
-              to="tech-radar"
-              text="Tech Radar"
-            />
             {dynamicRoutes.map(({ menuItem, path }) => {
               if (menuItem) {
                 return (
