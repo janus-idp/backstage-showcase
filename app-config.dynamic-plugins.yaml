@@ -393,3 +393,6 @@ dynamicPlugins:
             props:
               width: 1500
               height: 800
+    janus-idp.backstage-plugin-analytics-provider-segment:
+      apiFactories:
+        - importName: SegmentAnalyticsApi
