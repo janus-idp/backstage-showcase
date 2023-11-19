@@ -33,12 +33,6 @@ import {
   EntityCatalogGraphCard,
 } from '@backstage/plugin-catalog-graph';
 import {
-  EntityTechdocsContent,
-  isTechDocsAvailable,
-} from '@backstage/plugin-techdocs';
-import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
-import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
-import {
   EntityGroupProfileCard,
   EntityMembersListCard,
   EntityOwnershipCard,
@@ -478,20 +472,6 @@ export const entityPage = (
       path: '/docs',
       title: 'Docs',
       mountPoint: 'entity.page.docs',
-      if: isTechDocsAvailable,
-      children: (
-        <EntitySwitch>
-          <EntitySwitch.Case if={isTechDocsAvailable}>
-            <Grid item sx={{ gridColumn: '1 / -1' }}>
-              <EntityTechdocsContent>
-                <TechDocsAddons>
-                  <ReportIssue />
-                </TechDocsAddons>
-              </EntityTechdocsContent>
-            </Grid>
-          </EntitySwitch.Case>
-        </EntitySwitch>
-      ),
     })}
 
     {tab({

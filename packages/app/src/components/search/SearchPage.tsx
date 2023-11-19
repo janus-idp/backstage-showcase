@@ -3,29 +3,18 @@ import Paper from '@mui/material/Paper';
 import React from 'react';
 
 import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
-import {
-  CATALOG_FILTER_EXISTS,
-  catalogApiRef,
-} from '@backstage/plugin-catalog-react';
-import { TechDocsSearchResultListItem } from '@backstage/plugin-techdocs';
 
-import {
-  CatalogIcon,
-  Content,
-  DocsIcon,
-  Header,
-  Page,
-} from '@backstage/core-components';
-import { useApi } from '@backstage/core-plugin-api';
+import { CatalogIcon, Content, Header, Page } from '@backstage/core-components';
 import { SearchType } from '@backstage/plugin-search';
 import {
   SearchBar,
   SearchFilter,
   SearchPagination,
   SearchResult,
-  useSearch,
 } from '@backstage/plugin-search-react';
 import { makeStyles } from 'tss-react/mui';
+import getMountPointData from '../../utils/dynamicUI/getMountPointData';
+import { MenuIcon } from '../Root/Root';
 
 const useStyles = makeStyles()(theme => ({
   searchBar: {
@@ -35,12 +24,10 @@ const useStyles = makeStyles()(theme => ({
   },
   filters: {
     padding: theme.spacing(2),
+    gap: theme.spacing(2.5),
     marginTop: theme.spacing(2),
-  },
-  filter: {
-    '& + &': {
-      marginTop: theme.spacing(2.5),
-    },
+    display: 'flex',
+    flexDirection: 'column',
   },
   notchedOutline: {
     borderStyle: 'none!important',
@@ -49,8 +36,6 @@ const useStyles = makeStyles()(theme => ({
 
 export const SearchPage = () => {
   const { classes } = useStyles();
-  const { types } = useSearch();
-  const catalogApi = useApi(catalogApiRef);
 
   return (
     <Page themeId="home">
@@ -78,54 +63,62 @@ export const SearchPage = () => {
                   name: 'Software Catalog',
                   icon: <CatalogIcon />,
                 },
-                {
-                  value: 'techdocs',
-                  name: 'Documentation',
-                  icon: <DocsIcon />,
-                },
+                ...getMountPointData<
+                  (
+                    name: string,
+                    icon: React.ReactElement,
+                  ) => {
+                    name: string;
+                    icon: React.ReactElement;
+                    value: string;
+                  }
+                >('search.page.types').map(
+                  ({ Component: getSearchType, config: { props } }) =>
+                    getSearchType(
+                      props?.name || '',
+                      <MenuIcon icon={props?.icon || ''} />,
+                    ),
+                ),
               ]}
             />
             <Paper className={classes.filters}>
-              {types.includes('techdocs') && (
-                <SearchFilter.Select
-                  className={classes.filter}
-                  label="Entity"
-                  name="name"
-                  values={async () => {
-                    // Return a list of entities which are documented.
-                    const { items } = await catalogApi.getEntities({
-                      fields: ['metadata.name'],
-                      filter: {
-                        'metadata.annotations.backstage.io/techdocs-ref':
-                          CATALOG_FILTER_EXISTS,
-                      },
-                    });
-
-                    const names = items.map(entity => entity.metadata.name);
-                    names.sort();
-                    return names;
-                  }}
-                />
-              )}
               <SearchFilter.Select
-                className={classes.filter}
                 label="Kind"
                 name="kind"
                 values={['Component', 'Template']}
               />
               <SearchFilter.Checkbox
-                className={classes.filter}
                 label="Lifecycle"
                 name="lifecycle"
                 values={['experimental', 'production']}
               />
+              {...getMountPointData<React.ComponentType>(
+                'search.page.filters',
+              ).map(({ Component, config }, idx) => {
+                return (
+                  <Component key={`search_filter_${idx}`} {...config.props} />
+                );
+              })}
             </Paper>
           </Grid>
           <Grid item xs={9}>
             <SearchPagination />
             <SearchResult>
               <CatalogSearchResultListItem icon={<CatalogIcon />} />
-              <TechDocsSearchResultListItem icon={<DocsIcon />} />
+              {getMountPointData<React.ComponentType>(
+                'search.page.results',
+              ).map(({ Component, config }, idx) => {
+                const ComponentWithIcon = Component as React.FunctionComponent<{
+                  icon: React.ReactElement;
+                }>;
+                return (
+                  <ComponentWithIcon
+                    {...config.props}
+                    key={`search_results_${idx}`}
+                    icon={<MenuIcon icon={config.props?.icon || ''} />}
+                  />
+                );
+              })}
             </SearchResult>
           </Grid>
         </Grid>

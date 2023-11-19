@@ -18,7 +18,6 @@ import DynamicRootContext, {
   ScalprumMountPointConfig,
 } from './DynamicRootContext';
 import extractDynamicConfig, {
-  DynamicRoute,
   configIfToCallable,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
@@ -31,7 +30,7 @@ import Loader from './Loader';
 
 const DynamicRoot = ({
   afterInit,
-  apis,
+  apis: staticApis,
   scalprumConfig,
 }: {
   // Static APIs
@@ -63,6 +62,7 @@ const DynamicRoot = ({
       routeBindings,
       appIcons,
       routeBindingTargets,
+      apiFactories,
     } = await extractDynamicConfig();
 
     const requiredModules = [
@@ -79,6 +79,10 @@ const DynamicRoot = ({
         module,
       })),
       ...appIcons.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...apiFactories.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -108,30 +112,49 @@ const DynamicRoot = ({
       ),
     );
 
+    const icons = Object.fromEntries(
+      appIcons.reduce<[string, React.ComponentType<{}>][]>(
+        (acc, { scope, module, importName, name }) => {
+          const Component = remotePlugins[scope]?.[module]?.[importName];
+
+          if (Component) {
+            acc.push([name, Component as React.ComponentType<{}>]);
+          } else {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring appIcon: ${name}`,
+            );
+          }
+          return acc;
+        },
+        [],
+      ),
+    );
+
+    const remoteApis = apiFactories.reduce<AnyApiFactory[]>(
+      (acc, { scope, module, importName }) => {
+        const apiFactory = remotePlugins[scope]?.[module]?.[importName];
+
+        if (apiFactory) {
+          acc.push(apiFactory as AnyApiFactory);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring apiFactory: ${importName}`,
+          );
+        }
+        return acc;
+      },
+      [],
+    );
+
     if (!app.current) {
       app.current = createApp({
-        apis,
+        apis: [...staticApis, ...remoteApis],
         bindRoutes({ bind }) {
           bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
-        icons: Object.fromEntries(
-          appIcons.reduce<[string, React.ComponentType<{}>][]>(
-            (acc, { scope, module, importName, name }) => {
-              const Component = remotePlugins[scope]?.[module]?.[importName];
-
-              if (Component) {
-                acc.push([name, Component as React.ComponentType<{}>]);
-              } else {
-                // eslint-disable-next-line no-console
-                console.warn(
-                  `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring appIcon: ${name}`,
-                );
-              }
-              return acc;
-            },
-            [],
-          ),
-        ),
+        icons,
         themes: defaultThemes,
         components: defaultAppComponents,
       });
@@ -142,6 +165,7 @@ const DynamicRoot = ({
         mountPoint: string;
         Component: React.ComponentType<{}>;
         config?: ScalprumMountPointConfig;
+        staticJSXContent?: React.ReactNode;
       }[]
     >((acc, { module, importName, mountPoint, scope, config }) => {
       const Component = remotePlugins[scope]?.[module]?.[importName];
@@ -170,7 +194,14 @@ const DynamicRoot = ({
 
         acc.push({
           mountPoint,
-          Component: Component as React.ComponentType<{}>,
+          Component:
+            typeof Component === 'object' && 'element' in Component
+              ? (Component.element as React.ComponentType<{}>)
+              : (Component as React.ComponentType<{}>),
+          staticJSXContent:
+            typeof Component === 'object' && 'staticJSXContent' in Component
+              ? (Component.staticJSXContent as React.ReactNode)
+              : null,
           config: {
             ...config,
             if: ifCondition,
@@ -193,6 +224,7 @@ const DynamicRoot = ({
       }
       acc[entry.mountPoint].push({
         Component: entry.Component,
+        staticJSXContent: entry.staticJSXContent,
         config: entry.config,
       });
       return acc;
@@ -201,16 +233,22 @@ const DynamicRoot = ({
     getScalprum().api.mountPoints = mountPointComponents;
 
     const dynamicRoutesComponents = dynamicRoutes.reduce<
-      (DynamicRoute & {
-        Component: React.ComponentType<{}>;
-      })[]
+      DynamicRootContextValue[]
     >((acc, route) => {
       const Component =
         remotePlugins[route.scope]?.[route.module]?.[route.importName];
       if (Component) {
         acc.push({
           ...route,
-          Component: Component as React.ComponentType<{}>,
+          Component:
+            typeof Component === 'object' && 'element' in Component
+              ? (Component.element as React.ComponentType<{}>)
+              : (Component as React.ComponentType<{}>),
+          staticJSXContent:
+            typeof Component === 'object' && 'staticJSXContent' in Component
+              ? (Component.staticJSXContent as React.ReactNode)
+              : null,
+          config: route.config ?? {},
         });
       } else {
         // eslint-disable-next-line no-console
@@ -231,7 +269,7 @@ const DynamicRoot = ({
     afterInit().then(({ default: Component }) => {
       setChildComponent(() => Component);
     });
-  }, [pluginStore, scalprumConfig, apis, afterInit]);
+  }, [pluginStore, scalprumConfig, staticApis, afterInit]);
 
   useEffect(() => {
     if (initialized && !components) {

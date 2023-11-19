@@ -3,14 +3,12 @@ import {
   createApiRef,
   DiscoveryApi,
 } from '@backstage/core-plugin-api';
-import { TechRadarLoaderResponse } from '@backstage/plugin-tech-radar';
 import { QuickAccessLinks } from '../types/types';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';
 
 export interface CustomDataApi {
   getHomeDataJson(): Promise<QuickAccessLinks[]>;
-  getTechRadarDataJson(): Promise<TechRadarLoaderResponse>;
 }
 
 export const customDataApiRef = createApiRef<CustomDataApi>({
@@ -53,12 +51,6 @@ export class CustomDataApiClient implements CustomDataApi {
   async getHomeDataJson() {
     const proxyUrl = await this.getBaseUrl();
     const data = await this.fetcher(`${proxyUrl}`);
-    return data;
-  }
-
-  async getTechRadarDataJson() {
-    const proxyUrl = await this.getBaseUrl();
-    const data = await this.fetcher(`${proxyUrl}/tech-radar`);
     return data;
   }
 }
