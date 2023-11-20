@@ -192,8 +192,8 @@ RUN microdnf update -y && \
   pushd $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
   set -xe; \
   python3.11 -V; pip3.11 -V; \
-  pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
-  pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
+  pip3.11 install --no-cache-dir --upgrade pip setuptools pyyaml; \
+  pip3.11 install --no-cache-dir -r requirements.txt -r requirements-build.txt; mkdocs --version; \
   popd >/dev/null; \
   microdnf clean all; rm -fr $REMOTE_SOURCES_DIR/upstream2
 
