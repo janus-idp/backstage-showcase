@@ -5,14 +5,20 @@ import { resolvePackagePath } from '@backstage/backend-common';
 import { resolve as resolvePath } from 'path';
 import fs from 'fs-extra';
 import rateLimit from 'express-rate-limit';
+import { completeFrontendSchemas } from '../schemas';
 
 export default async function createPlugin(
   env: PluginEnvironment,
+  dynamicPluginsSchemas: { value: any; path: string }[],
 ): Promise<Router> {
   const appPackageName = 'app';
 
   const appDistDir = resolvePackagePath(appPackageName, 'dist');
   const staticDir = resolvePath(appDistDir, 'static');
+
+  if (await fs.pathExists(appDistDir)) {
+    await completeFrontendSchemas(dynamicPluginsSchemas, appDistDir);
+  }
 
   let injectedJSFile: string | undefined = undefined;
 

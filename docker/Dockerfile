@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-70.1697667811 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-18:1-80 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -62,12 +62,15 @@ RUN git config --global --add safe.directory ./
 # Upstream only
 RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
-# hadolint ignore=DL3059
-RUN $YARN build --filter=backend
+# hadolint ignore=DL3059,DL4006,SC2086
+RUN $YARN build --filter=backend && \
 
-# Build dynamic plugins
-RUN $YARN export-dynamic
-RUN $YARN copy-dynamic-plugins dist
+  # Build dynamic plugins: split commands for consistency with downstream
+  $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
+  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
+  $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
+  $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
+  $YARN copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
 FROM skeleton AS cleanup
@@ -92,18 +95,14 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-74.1697662866 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-85 AS runner
 USER 0
 
-# Env vars
-ENV YARN=./.yarn/releases/yarn-1.22.19.cjs
-
-# Upstream sources
 ENV CONTAINER_SOURCE=/opt/app-root/src
-
 WORKDIR $CONTAINER_SOURCE/
 
 # Upstream only - install techdocs dependencies (PyPI source tarballs not required)
+# hadolint ignore=DL3041,DL3042
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
   pip3 install mkdocs-techdocs-core==1.2.3 && \
@@ -111,17 +110,14 @@ RUN microdnf update -y && \
 
 # Upstream only - copy from cleanup stage
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
-
-# Copy python script used to gather dynamic plugins
-COPY docker/install-dynamic-plugins.py ./
-RUN chmod a+r ./install-dynamic-plugins.py
-
-# Copy embedded dynamic plugins
+# Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-RUN chmod -R a+r ./dynamic-plugins/
 
-# Copy embedded dynamic plugins to default dynamic plugins root
-RUN rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+# Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
+COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
+RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
+  chmod -R a+rx ./install-dynamic-plugins.sh; \
+  rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

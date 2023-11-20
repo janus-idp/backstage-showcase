@@ -4,6 +4,7 @@ import { isKind } from '@backstage/plugin-catalog';
 import { hasAnnotation, isType } from '../../components/catalog/utils';
 import {
   DynamicModuleEntry,
+  MenuItem,
   RouteBinding,
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
@@ -25,12 +26,38 @@ type DynamicRoute = {
   module: string;
   importName: string;
   path: string;
+  menuItem?: MenuItem;
+  config?: {
+    props?: Record<string, any>;
+  };
 };
 
-export type MountPoint = {
+type MountPoint = {
+  scope: string;
   mountPoint: string;
-  module?: string;
-  importName?: string;
+  module: string;
+  importName: string;
+  config?: ScalprumMountPointConfigRaw;
+};
+
+type AppIcon = {
+  scope: string;
+  name: string;
+  module: string;
+  importName: string;
+};
+
+type BindingTarget = {
+  scope: string;
+  name: string;
+  module: string;
+  importName: string;
+};
+
+type ApiFactory = {
+  scope: string;
+  module: string;
+  importName: string;
 };
 
 type CustomProperties = {
@@ -39,11 +66,16 @@ type CustomProperties = {
     module?: string;
     path: string;
   })[];
-  routeBindings?: RouteBinding[];
+  routeBindings?: {
+    targets: BindingTarget[];
+    bindings: RouteBinding[];
+  };
   mountPoints?: MountPoint[];
+  appIcons?: AppIcon[];
+  apiFactories?: ApiFactory[];
 };
 
-const conditionsArrayMapper = (
+export const conditionsArrayMapper = (
   condition:
     | {
         [key: string]: string | string[];
@@ -87,14 +119,11 @@ async function extractDynamicConfig() {
   const appsConfig = await defaultConfigLoader();
   const dynamicConfig = (appsConfig as AppConfig[]).reduce<{
     routeBindings: RouteBinding[];
+    routeBindingTargets: BindingTarget[];
     dynamicRoutes: DynamicRoute[];
-    mountPoints: {
-      scope: string;
-      module: string;
-      importName: string;
-      mountPoint: string;
-      config?: ScalprumMountPointConfigRaw;
-    }[];
+    appIcons: AppIcon[];
+    mountPoints: MountPoint[];
+    apiFactories: ApiFactory[];
   }>(
     (acc, { data }) => {
       if (data?.dynamicPlugins?.frontend) {
@@ -117,36 +146,96 @@ async function extractDynamicConfig() {
           ...Object.entries(data.dynamicPlugins.frontend).reduce<
             RouteBinding[]
           >((pluginSet, [_, customProperties]) => {
-            pluginSet.push(...(customProperties.routeBindings ?? []));
+            pluginSet.push(...(customProperties.routeBindings?.bindings ?? []));
+            return pluginSet;
+          }, []),
+        );
+        acc.routeBindingTargets.push(
+          ...Object.entries(data.dynamicPlugins.frontend).reduce<
+            BindingTarget[]
+          >((pluginSet, [scope, customProperties]) => {
+            pluginSet.push(
+              ...(customProperties.routeBindings?.targets ?? []).map(
+                target => ({
+                  ...target,
+                  module: target.module ?? 'PluginRoot',
+                  name: target.name ?? target.importName,
+                  scope,
+                }),
+              ),
+            );
             return pluginSet;
           }, []),
         );
 
         acc.mountPoints.push(
-          ...Object.entries(data.dynamicPlugins.frontend).reduce<
-            {
-              scope: string;
-              module: string;
-              importName: string;
-              mountPoint: string;
-            }[]
-          >((accMountPoints, [scope, { mountPoints }]) => {
-            accMountPoints.push(
-              ...(mountPoints ?? []).map(point => ({
-                ...point,
-                module: point.module ?? 'PluginRoot',
-                importName: point.importName ?? 'default',
-                scope,
-              })),
-            );
-            return accMountPoints;
-          }, []),
+          ...Object.entries(data.dynamicPlugins.frontend).reduce<MountPoint[]>(
+            (accMountPoints, [scope, { mountPoints }]) => {
+              accMountPoints.push(
+                ...(mountPoints ?? []).map(point => ({
+                  ...point,
+                  module: point.module ?? 'PluginRoot',
+                  importName: point.importName ?? 'default',
+                  scope,
+                })),
+              );
+              return accMountPoints;
+            },
+            [],
+          ),
+        );
+
+        acc.appIcons.push(
+          ...Object.entries(data.dynamicPlugins.frontend).reduce<AppIcon[]>(
+            (accAppIcons, [scope, { appIcons }]) => {
+              accAppIcons.push(
+                ...(appIcons ?? []).map(icon => ({
+                  ...icon,
+                  module: icon.module ?? 'PluginRoot',
+                  importName: icon.importName ?? 'default',
+                  scope,
+                })),
+              );
+              return accAppIcons;
+            },
+            [],
+          ),
+        );
+
+        acc.apiFactories.push(
+          ...Object.entries(data.dynamicPlugins.frontend).reduce<ApiFactory[]>(
+            (accApiFactories, [scope, { apiFactories }]) => {
+              accApiFactories.push(
+                ...(apiFactories ?? []).map(api => ({
+                  module: api.module ?? 'PluginRoot',
+                  importName: api.importName ?? 'default',
+                  scope,
+                })),
+              );
+              return accApiFactories;
+            },
+            [],
+          ),
         );
       }
       return acc;
     },
-    { routeBindings: [], dynamicRoutes: [], mountPoints: [] },
-  ) || { routeBindings: [], dynamicRoutes: [], mountPoints: [] }; // fallback to empty arrays
+    {
+      routeBindings: [],
+      dynamicRoutes: [],
+      mountPoints: [],
+      appIcons: [],
+      routeBindingTargets: [],
+      apiFactories: [],
+    },
+  ) || {
+    routeBindings: [],
+    dynamicRoutes: [],
+    mountPoints: [],
+    appIcons: [],
+    routeBindingTargets: [],
+    apiFactories: [],
+  }; // fallback to empty arrays
 
   return dynamicConfig;
 }

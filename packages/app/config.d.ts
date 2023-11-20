@@ -54,30 +54,44 @@ export interface Config {
     /** @deepVisibility frontend */
     frontend?: {
       [key: string]: {
-        dynamicRoutes: ({
-          [key: string]: any;
-        } & {
+        dynamicRoutes?: {
           path: string;
           module?: string;
           importName?: string;
-          menuItem: {
+          menuItem?: {
             icon: string;
             text: string;
           };
-        })[];
-        routeBindings?: {
-          bindTarget: string;
-          bindMap: {
-            [key: string]: string;
+          config: {
+            props?: {
+              [key: string]: string;
+            };
           };
         }[];
-        mountPoints: {
+        routeBindings?: {
+          targets?: {
+            module?: string;
+            importName: string;
+            name?: string;
+          }[];
+          bindings?: {
+            bindTarget: string;
+            bindMap: {
+              [key: string]: string;
+            };
+          }[];
+        };
+        mountPoints?: {
           mountPoint: string;
           module?: string;
           importName?: string;
           config: {
             layout?: {
-              [key: string]: string;
+              [key: string]:
+                | string
+                | {
+                    [key: string]: string;
+                  };
             };
             props?: {
               [key: string]: string;
@@ -103,6 +117,15 @@ export interface Config {
               )[];
             };
           };
+        }[];
+        appIcons?: {
+          module?: string;
+          importName?: string;
+          name: string;
+        }[];
+        apiFactories?: {
+          module?: string;
+          importName?: string;
         }[];
       };
     };

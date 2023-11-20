@@ -112,7 +112,7 @@ const PROVIDERS = new Map<string, SignInProviderConfig | string>([
     'oidc',
     {
       id: 'oidc-auth-provider',
-      title: 'Auth0',
+      title: 'OIDC',
       message: 'Sign in using OIDC',
       apiRef: oidcAuthApiRef,
     },

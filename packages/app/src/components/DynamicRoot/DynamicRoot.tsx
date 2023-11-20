@@ -7,7 +7,7 @@ import {
   ConfigReader,
   defaultConfigLoader,
 } from '@backstage/core-app-api';
-import { AnyApiFactory } from '@backstage/core-plugin-api';
+import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
 
 import { AppsConfig, getScalprum } from '@scalprum/core';
 import { ScalprumProvider, useScalprum } from '@scalprum/react-core';
@@ -30,7 +30,7 @@ import Loader from './Loader';
 
 const DynamicRoot = ({
   afterInit,
-  apis,
+  apis: staticApis,
   scalprumConfig,
 }: {
   // Static APIs
@@ -53,19 +53,36 @@ const DynamicRoot = ({
     | undefined
   >();
   const { initialized, pluginStore } = useScalprum();
-  // console.log({ DEFAULT_PROXY_PATH })
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
-    const { dynamicRoutes, mountPoints, routeBindings } =
-      await extractDynamicConfig();
+    const {
+      dynamicRoutes,
+      mountPoints,
+      routeBindings,
+      appIcons,
+      routeBindingTargets,
+      apiFactories,
+    } = await extractDynamicConfig();
 
     const requiredModules = [
+      ...routeBindingTargets.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
       ...mountPoints.map(({ module, scope }) => ({
         scope,
         module,
       })),
       ...dynamicRoutes.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...appIcons.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...apiFactories.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -76,13 +93,68 @@ const DynamicRoot = ({
       scalprumConfig,
       requiredModules,
     );
+    const resolvedRouteBindingTargets = Object.fromEntries(
+      routeBindingTargets.reduce<[string, BackstagePlugin<{}>][]>(
+        (acc, { name, importName, scope, module }) => {
+          const plugin = remotePlugins[scope]?.[module]?.[importName];
+
+          if (plugin) {
+            acc.push([name, plugin as BackstagePlugin<{}>]);
+          } else {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring routeBindings target: ${name}`,
+            );
+          }
+          return acc;
+        },
+        [],
+      ),
+    );
+
+    const icons = Object.fromEntries(
+      appIcons.reduce<[string, React.ComponentType<{}>][]>(
+        (acc, { scope, module, importName, name }) => {
+          const Component = remotePlugins[scope]?.[module]?.[importName];
+
+          if (Component) {
+            acc.push([name, Component as React.ComponentType<{}>]);
+          } else {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring appIcon: ${name}`,
+            );
+          }
+          return acc;
+        },
+        [],
+      ),
+    );
+
+    const remoteApis = apiFactories.reduce<AnyApiFactory[]>(
+      (acc, { scope, module, importName }) => {
+        const apiFactory = remotePlugins[scope]?.[module]?.[importName];
+
+        if (apiFactory) {
+          acc.push(apiFactory as AnyApiFactory);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring apiFactory: ${importName}`,
+          );
+        }
+        return acc;
+      },
+      [],
+    );
 
     if (!app.current) {
       app.current = createApp({
-        apis,
+        apis: [...staticApis, ...remoteApis],
         bindRoutes({ bind }) {
-          bindAppRoutes(bind, remotePlugins, routeBindings);
+          bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
+        icons,
         themes: defaultThemes,
         components: defaultAppComponents,
       });
@@ -93,28 +165,53 @@ const DynamicRoot = ({
         mountPoint: string;
         Component: React.ComponentType<{}>;
         config?: ScalprumMountPointConfig;
+        staticJSXContent?: React.ReactNode;
       }[]
     >((acc, { module, importName, mountPoint, scope, config }) => {
       const Component = remotePlugins[scope]?.[module]?.[importName];
       // Only add mount points that have a component
       if (Component) {
+        const ifCondition = configIfToCallable(
+          Object.fromEntries(
+            Object.entries(config?.if || {}).map(([k, v]) => [
+              k,
+              v.map(c => {
+                if (typeof c === 'string') {
+                  const remoteFunc = remotePlugins[scope]?.[module]?.[c];
+                  if (remoteFunc === undefined) {
+                    // eslint-disable-next-line no-console
+                    console.warn(
+                      `Plugin ${scope} is not configured properly: ${module}.${c} not found, ignoring .config.if for mountPoint: "${mountPoint}"`,
+                    );
+                  }
+                  return remoteFunc || {};
+                }
+                return c || {};
+              }),
+            ]),
+          ),
+        );
+
         acc.push({
           mountPoint,
-          Component: remotePlugins[scope][module][importName],
+          Component:
+            typeof Component === 'object' && 'element' in Component
+              ? (Component.element as React.ComponentType<{}>)
+              : (Component as React.ComponentType<{}>),
+          staticJSXContent:
+            typeof Component === 'object' && 'staticJSXContent' in Component
+              ? (Component.staticJSXContent as React.ReactNode)
+              : null,
           config: {
             ...config,
-            if: configIfToCallable(
-              Object.fromEntries(
-                Object.entries(config?.if || {}).map(([k, v]) => [
-                  k,
-                  v.map(c =>
-                    typeof c === 'string' ? remotePlugins[scope][module][c] : c,
-                  ),
-                ]),
-              ),
-            ),
+            if: ifCondition,
           },
         });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring mountPoint: "${mountPoint}"`,
+        );
       }
       return acc;
     }, []);
@@ -126,26 +223,53 @@ const DynamicRoot = ({
         acc[entry.mountPoint] = [];
       }
       acc[entry.mountPoint].push({
-        component: entry.Component,
+        Component: entry.Component,
+        staticJSXContent: entry.staticJSXContent,
         config: entry.config,
       });
       return acc;
     }, {});
+
     getScalprum().api.mountPoints = mountPointComponents;
-    const dynamicRoutesComponents = dynamicRoutes.map(route => ({
-      ...route,
-      Component: remotePlugins[route.scope][route.module][route.importName],
-    }));
+
+    const dynamicRoutesComponents = dynamicRoutes.reduce<
+      DynamicRootContextValue[]
+    >((acc, route) => {
+      const Component =
+        remotePlugins[route.scope]?.[route.module]?.[route.importName];
+      if (Component) {
+        acc.push({
+          ...route,
+          Component:
+            typeof Component === 'object' && 'element' in Component
+              ? (Component.element as React.ComponentType<{}>)
+              : (Component as React.ComponentType<{}>),
+          staticJSXContent:
+            typeof Component === 'object' && 'staticJSXContent' in Component
+              ? (Component.staticJSXContent as React.ReactNode)
+              : null,
+          config: route.config ?? {},
+        });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${route.scope} is not configured properly: ${route.module}.${route.importName} not found, ignoring dynamicRoute: "${route.path}"`,
+        );
+      }
+      return acc;
+    }, []);
+
     setComponents({
       AppProvider: app.current.getProvider(),
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
       mountPoints: mountPointComponents,
     });
+
     afterInit().then(({ default: Component }) => {
       setChildComponent(() => Component);
     });
-  }, [pluginStore, scalprumConfig, apis, afterInit]);
+  }, [pluginStore, scalprumConfig, staticApis, afterInit]);
 
   useEffect(() => {
     if (initialized && !components) {

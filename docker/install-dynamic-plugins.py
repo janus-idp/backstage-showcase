@@ -29,7 +29,7 @@ import binascii
 # the dynamic plugins will be installed.
 #
 # Additionally, the MAX_ENTRY_SIZE environment variable can be defined to set
-# the maximum size of a file in the archive (default: 10MB).
+# the maximum size of a file in the archive (default: 20MB).
 #
 # The SKIP_INTEGRITY_CHECK environment variable can be defined with ("true") to skip the integrity check of remote packages
 #
@@ -112,7 +112,7 @@ def verify_package_integrity(plugin: dict, archive: str, working_directory: str)
 
 def main():
     dynamicPluginsRoot = sys.argv[1]
-    maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 10000000))
+    maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 20000000))
     skipIntegrityCheck = os.environ.get("SKIP_INTEGRITY_CHECK", "").lower() == "true"
 
     dynamicPluginsFile = 'dynamic-plugins.yaml'
@@ -254,7 +254,7 @@ def main():
                     raise InstallException('Zip bomb detected in ' + member.name)
 
                 member.name = member.name.removeprefix('package/')
-                file.extract(member, path=directory)
+                file.extract(member, path=directory, filter='tar')
             elif member.isdir():
                 print('\t\tSkipping directory entry', member.name, flush=True)
             elif member.islnk() or member.issym():
@@ -268,7 +268,7 @@ def main():
                 if not realpath.startswith(directoryRealpath):
                   raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
 
-                file.extract(member, path=directory)
+                file.extract(member, path=directory, filter='tar')
             else:
               if member.type == tarfile.CHRTYPE:
                   type_str = "character device"

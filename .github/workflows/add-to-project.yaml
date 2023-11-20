@@ -10,3 +10,15 @@ jobs:
     with:
       project_id: 2
     secrets: inherit
+
+  # add post-FF label to every new issue, to track issues discovered after FF
+  # This is temporary and it will be removed after the release
+  add-post-ff-label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - run: |
+          gh issue --repo ${{github.repository}} edit ${{github.event.issue.number}} --add-label "post-FF"
+        env:
+          GH_TOKEN: ${{ github.token }}
