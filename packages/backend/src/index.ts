@@ -1,9 +1,4 @@
 import {
-  createConfigSecretEnumerator,
-  loadBackendConfig,
-  HostDiscovery,
-} from '@backstage/backend-app-api';
-import {
   CacheManager,
   DatabaseManager,
   ServerTokenManager,
@@ -16,6 +11,11 @@ import {
   notFoundHandler,
   useHotMemoize,
 } from '@backstage/backend-common';
+import {
+  createConfigSecretEnumerator,
+  loadBackendConfig,
+  HostDiscovery,
+} from '@backstage/backend-app-api';
 import {
   BackendPluginProvider,
   LegacyPluginEnvironment as PluginEnvironment,
