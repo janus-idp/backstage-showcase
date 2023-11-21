@@ -494,6 +494,7 @@ plugins:
 
   # Standalone plugins
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
     disabled: true
