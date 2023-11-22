@@ -7,10 +7,6 @@ data:
   app-config-rhdh.yaml: |
     app:
       title: Red Hat Developer Hub
-      analytics:
-        segment:
-          testMode: true
-          writeKey: temp
     backend:
       auth:
         keys:
