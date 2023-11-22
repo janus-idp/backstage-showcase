@@ -52,7 +52,6 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Enable plugins (All plugins have a default of `false`)
 
-     - `${METRICS_ENABLED}` Set to `true` to enable Prometheus metrics (metrics will be available on `http://localhost:7007/metrics`).
      - `${PERMISSION_ENABLED}` Set to `true` to enable RBAC (permission will be available on `http://localhost:7007/permission`).
 
    - Setup the Jira plugin
@@ -233,7 +232,3 @@ COMING SOON
 ## Deploying with ArgoCD
 
 COMING SOON
-
-## Openshift Logging Integration
-
-[Openshift Logging](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.13/html/logging/index) can be used to monitor Backstage logs. The only requirement is to correctly filter logs in Kibana. A possible filter is using the field `kubernetes.container_name` with operator `is` and value `backstage-backend`.
