@@ -78,13 +78,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
      - `${JENKINS_URL}` with the URL where your Jenkins instance can be accessed
      - `${JENKINS_USERNAME}` with the name of the user to be accessed through the API
-     - `${JENKINS_TOKEN}` with the API token to be used for the given user
-
-   - Setup the Segment plugin
-
-     - `${SEGMENT_WRITE_KEY}`: Segment write key
-     - `${SEGMENT_MASK_IP}`: prevents IP addresses to be sent if true
-     - `${SEGMENT_TEST_MODE}`: prevents data from being sent if true
+     - `${JENKINS_TOKEN}` with the API token to be used
 
    - Setup the PagerDuty plugin
 
