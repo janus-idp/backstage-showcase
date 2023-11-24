@@ -495,6 +495,24 @@ plugins:
   # Standalone plugins
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow
+    disabled: true
+    pluginConfig:
+      servicenow:
+        # The base url of the ServiceNow instance.
+        baseUrl: ${SERVICENOW_BASE_URL}
+        # The username to use for authentication.
+        username: ${SERVICENOW_USERNAME}
+        # The password to use for authentication.
+        password: ${SERVICENOW_PASSWORD}
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube
+    disabled: true
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
     disabled: true
     pluginConfig:
@@ -504,6 +522,16 @@ plugins:
             prod:
               baseUrl: '${AAP_BASE_URL}'
               authorization: "${AAP_AUTH_TOKEN}"
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-3scale-backend
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          threeScaleApiEntity:
+            default:
+              baseUrl: '${3SCALE_BASE_URL}'
+              accessToken: '${3SCALE_ACCESS_TOKEN}'
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
     disabled: true
