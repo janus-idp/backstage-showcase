@@ -19,6 +19,7 @@
     "@janus-idp/backstage-plugin-3scale-backend": "1.3.6",
     "@janus-idp/backstage-plugin-aap-backend": "1.4.4",
     "@janus-idp/backstage-plugin-acr": "1.2.4",
+    "@janus-idp/backstage-plugin-analytics-provider-segment": "1.2.0",
     "@janus-idp/backstage-plugin-jfrog-artifactory": "1.2.4",
     "@janus-idp/backstage-plugin-keycloak-backend": "1.7.6",
     "@janus-idp/backstage-plugin-nexus-repository-manager": "1.4.4",
