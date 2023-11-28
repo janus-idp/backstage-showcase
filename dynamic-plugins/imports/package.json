@@ -30,7 +30,7 @@
     "@janus-idp/backstage-plugin-topology": "1.16.4",
     "@janus-idp/backstage-scaffolder-backend-module-quay": "1.2.1",
     "@janus-idp/backstage-scaffolder-backend-module-regex": "1.2.1",
-    "@janus-idp/backstage-scaffolder-backend-module-servicenow": "1.2.1",
+    "@janus-idp/backstage-scaffolder-backend-module-servicenow": "1.2.3",
     "@janus-idp/backstage-scaffolder-backend-module-sonarqube": "1.2.1"
   }
 }
