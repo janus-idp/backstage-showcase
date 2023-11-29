@@ -162,6 +162,9 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 # COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
 # COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
+# Downstream only - fix for https://issues.redhat.com/browse/RHIDP-728
+WORKDIR /opt/app-root/src/
+
 # Install production dependencies
 # hadolint ignore=DL3059
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
