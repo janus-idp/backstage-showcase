@@ -211,6 +211,10 @@ RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
   chmod -R a+rx ./install-dynamic-plugins.sh; \
   rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
 
+# Downstream only - fix for https://issues.redhat.com/browse/RHIDP-728
+RUN mkdir /opt/app-root/src/.npm
+RUN chown -R 1001:1001 /opt/app-root/src/.npm
+
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
 RUN fix-permissions ./
