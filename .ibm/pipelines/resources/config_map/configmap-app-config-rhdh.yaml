@@ -137,4 +137,8 @@ data:
             - name: argoInstance2
               url: temp
               token: temp
+    enabled:
+      github: ${GITHUB_ENABLED}
+      kubernetes: ${K8S_ENABLED}
+      githubOrg: ${GITHUBORG_ENABLED}
       keycloak: true

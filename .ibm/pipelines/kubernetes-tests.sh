@@ -87,7 +87,7 @@ BACKSTAGE_URL="http://localhost:7007"
 BACKSTAGE_URL_RESPONSE=$(curl -Is "$BACKSTAGE_URL" | head -n 1)
 echo "$BACKSTAGE_URL_RESPONSE"
 
-cd $WORKING_DIR/e2e-test
+cd $WORKING_DIR/e2e-tests
 yarn install
 
 Xvfb :99 &

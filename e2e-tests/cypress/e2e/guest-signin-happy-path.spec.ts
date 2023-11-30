@@ -10,7 +10,6 @@ describe('Guest Signin Happy path', () => {
 
   it('Verify the Homepage renders with Search Bar, Quick Access and Starred Entities', () => {
     UIhelper.verifyHeading('Welcome back!');
-    // HomePage.verifyQuickSearchBar("subhashkhileri");
     UIhelper.openSidebar('Home');
     HomePage.verifyQuickAccess('Developer Tools', 'Podman Desktop');
   });

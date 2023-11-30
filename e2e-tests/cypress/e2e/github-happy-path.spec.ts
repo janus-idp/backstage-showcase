@@ -86,7 +86,9 @@ describe('GitHub Happy path', () => {
     BackstageShowcase.getGithubOpenIssues().then(openIssues => {
       cy.contains(`All repositories (${openIssues.length} Issues)*`);
       openIssues.slice(0, 5).forEach(issue => {
-        cy.contains(issue.title).should('be.visible');
+        cy.contains(issue.title.replace(/\s+/g, ' '))
+          .scrollIntoView()
+          .should('be.visible');
       });
     });
   });
@@ -115,8 +117,7 @@ describe('GitHub Happy path', () => {
       BackstageShowcase.clickNextPage();
       BackstageShowcase.verifyPRRows(allPRs, 5, 10);
 
-      const lastPagePRs = Math.floor(allPRs.length / 5) * 5;
-
+      const lastPagePRs = Math.floor((allPRs.length - 1) / 5) * 5;
       BackstageShowcase.clickLastPage();
       BackstageShowcase.verifyPRRows(allPRs, lastPagePRs, allPRs.length);
 

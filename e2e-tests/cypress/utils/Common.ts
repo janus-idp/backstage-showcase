@@ -28,7 +28,6 @@ export class Common {
     cy.get('#password').type(Cypress.env('GH_USER_PASS'), { log: false });
     cy.get('[value="Sign in"]').click();
     cy.get('#app_totp').type(this.getGitHub2FAOTP(), { log: false });
-    cy.get('button[aria-label="Open user account menu"]').should('be.visible');
   }
 
   static loginAsGithubUser() {

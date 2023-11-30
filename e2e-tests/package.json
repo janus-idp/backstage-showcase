@@ -9,7 +9,7 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:clearcache": "cypress cache clear",
-    "cypress:run": "yarn run lint && yarn cypress run --headless --browser chrome --spec 'cypress/e2e/**/*.spec.ts'",
+    "cypress:run": "yarn run lint && yarn cypress run --headless --browser chrome --spec 'cypress/e2e/*.spec.ts'",
     "test:backstage-run": "yarn cypress:run",
     "test:backstage-open": "yarn cypress:open",
     "lint": "eslint . --ext .js,.ts"

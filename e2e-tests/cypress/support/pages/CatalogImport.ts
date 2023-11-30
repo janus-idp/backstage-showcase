@@ -50,7 +50,7 @@ export class BackstageShowcase {
     cy.contains(allPRs[rows - 1].title)
       .scrollIntoView()
       .should('be.visible');
-    cy.contains(allPRs[rows].title).should('not.exist');
+    cy.contains('a', `#${allPRs[rows].number}`).should('not.exist');
     cy.get(BackstageShowcasePO.tableRows).should('have.length', rows);
   }
 
@@ -66,7 +66,7 @@ export class BackstageShowcase {
   }
 
   static verifyPRStatisticsRendered() {
-    cy.contains('tr', /Average Size Of PR(\d+).*lines/g).should('be.visible');
+    cy.contains('tr', /Average Size Of PR\d+ lines/g).should('be.visible');
   }
 
   static verifyAboutCardIsDisplayed() {

@@ -17,8 +17,7 @@ export default defineConfig({
   e2e: {
     testIsolation: false,
     defaultCommandTimeout: 10000,
-    baseUrl:
-      'https://rhdb-developer-hub-skhileri-rhdh-v02.backstage-qe-eu-de-2-bx2-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud/',
+    baseUrl: 'https://PLACE_HOLDER',
     specPattern: 'cypress/e2e/**/*.spec.ts',
 
     setupNodeEvents(on, config) {
