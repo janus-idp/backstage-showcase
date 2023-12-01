@@ -45,7 +45,7 @@ const AppBase = () => {
               path="/create"
               element={
                 <ScaffolderPage
-                  headerOptions={{ title: 'Golden Path Templates' }}
+                  headerOptions={{ title: 'Software Templates' }}
                 />
               }
             />
