@@ -45,7 +45,7 @@
     "@internal/plugin-scalprum-backend": "*",
     "@janus-idp/backstage-plugin-rbac-backend": "1.6.3",
     "app": "*",
-    "better-sqlite3": "9.0.0",
+    "better-sqlite3": "9.1.1",
     "express": "4.18.2",
     "express-prom-bundle": "6.6.0",
     "express-promise-router": "4.1.1",
