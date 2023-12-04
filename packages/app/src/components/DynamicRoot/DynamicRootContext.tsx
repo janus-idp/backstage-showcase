@@ -2,7 +2,7 @@ import React, { createContext } from 'react';
 
 import { ScalprumComponentProps } from '@scalprum/react-core';
 import { Entity } from '@backstage/catalog-model';
-import { BackstagePlugin } from '@backstage/core-plugin-api';
+import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
 
 export type RouteBinding = {
   bindTarget: string;
@@ -24,6 +24,10 @@ export type DynamicRootContextValue = DynamicModuleEntry & {
   path: string;
   menuItem?: MenuItem;
   Component: React.ComponentType<any>;
+  staticJSXContent?: React.ReactNode;
+  config: {
+    props?: Record<string, any>;
+  };
 };
 
 type ScalprumMountPointConfigBase = {
@@ -51,6 +55,7 @@ export type ScalprumMountPointConfigRaw = ScalprumMountPointConfigBase & {
 export type ScalprumMountPoint = {
   Component: React.ComponentType<{}>;
   config?: ScalprumMountPointConfig;
+  staticJSXContent?: React.ReactNode;
 };
 
 export type RemotePlugins = {
@@ -59,7 +64,12 @@ export type RemotePlugins = {
       [importName: string]:
         | React.ComponentType<{}>
         | ((...args: any[]) => any)
-        | BackstagePlugin<{}>;
+        | BackstagePlugin<{}>
+        | {
+            element: React.ComponentType<{}>;
+            staticJSXContent: React.ReactNode;
+          }
+        | AnyApiFactory;
     };
   };
 };

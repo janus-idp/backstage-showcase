@@ -6,6 +6,8 @@ import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugi
 import * as useAsync from 'react-use/lib/useAsync';
 import DynamicRootContext from './DynamicRootContext';
 import {
+  createApiFactory,
+  createApiRef,
   createExternalRouteRef,
   createPlugin,
   createRouteRef,
@@ -33,12 +35,21 @@ const MockPage = () => {
       <div data-testid="dynamicRoutes">
         {dynamicRoutes
           .filter(r => Boolean(r.Component))
-          .map(r => r.path)
+          .map(
+            r => `${r.path}${r.staticJSXContent ? ' (with static JSX)' : ''}`,
+          )
           .join(', ')}
       </div>
       <div data-testid="mountPoints">
         {Object.entries(mountPoints)
-          .map(([k, v]) => `${k}: ${v.length}`)
+          .map(
+            ([k, v]) =>
+              `${k}: ${v.length}${
+                v.filter(c => Boolean(c.staticJSXContent)).length
+                  ? ' (with static JSX)'
+                  : ''
+              }`,
+          )
           .join(', ')}
       </div>
       <div data-testid="mountPointsIfs">
@@ -143,9 +154,20 @@ describe('DynamicRoot', () => {
               barTarget: createExternalRouteRef({ id: 'bar' }),
             },
           }),
+          fooPluginApi: createApiFactory({
+            api: createApiRef<{}>({
+              id: 'plugin.foo.service',
+            }),
+            deps: {},
+            factory: () => ({}),
+          }),
           FooComponent: React.Fragment,
           isFooConditionTrue: () => true,
           isFooConditionFalse: () => false,
+          FooComponentWithStaticJSX: {
+            element: ({ children }) => <>{children}</>,
+            staticJSXContent: <div />,
+          },
         },
       },
     });
@@ -236,6 +258,26 @@ describe('DynamicRoot', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'Plugin foo.bar is not configured properly: BarPlugin.default not found, ignoring dynamicRoute: "/foo"',
       );
+    });
+  });
+
+  it('should render with one dynamicRoute with staticJSXContent', async () => {
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        dynamicRoutes: [
+          { path: '/foo', importName: 'FooComponentWithStaticJSX' },
+        ],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(
+        within(rendered.getByTestId('dynamicRoutes')).getByText(
+          '/foo (with static JSX)',
+        ),
+      ).toBeInTheDocument();
     });
   });
 
@@ -441,6 +483,29 @@ describe('DynamicRoot', () => {
     });
   });
 
+  it('should render with one mountPoint with staticJSXContent', async () => {
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        mountPoints: [
+          {
+            mountPoint: 'a.b.c/cards',
+            importName: 'FooComponentWithStaticJSX',
+          },
+        ],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(
+        within(rendered.getByTestId('mountPoints')).getByText(
+          'a.b.c/cards: 1 (with static JSX)',
+        ),
+      ).toBeInTheDocument();
+    });
+  });
+
   it('should render with one appIcon', async () => {
     process.env = mockProcessEnv({
       'foo.bar': { appIcons: [{ name: 'fooIcon' }] },
@@ -490,8 +555,7 @@ describe('DynamicRoot', () => {
   });
 
   it('should bind routes on routeBindings target', async () => {
-    const mockCreateApp = jest.spyOn(appDefaults, 'createApp');
-
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
     process.env = mockProcessEnv({
       'foo.bar': {
         routeBindings: {
@@ -512,23 +576,23 @@ describe('DynamicRoot', () => {
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(mockCreateApp).toHaveBeenCalled();
+      expect(createAppSpy).toHaveBeenCalled();
       const bindResult: Record<string, any> = {};
       const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
         bindResult.externalRoutes = externalRoutes;
         bindResult.targetRoutes = targetRoutes;
       };
-      mockCreateApp.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
+      createAppSpy.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
       expect(bindResult).toEqual({
         externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
         targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
       });
     });
+    createAppSpy.mockRestore();
   });
 
   it('should bind routes on routeBindings target with a custom name', async () => {
-    const mockCreateApp = jest.spyOn(appDefaults, 'createApp');
-
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
     process.env = mockProcessEnv({
       'foo.bar': {
         routeBindings: {
@@ -552,18 +616,19 @@ describe('DynamicRoot', () => {
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(mockCreateApp).toHaveBeenCalled();
+      expect(createAppSpy).toHaveBeenCalled();
       const bindResult: Record<string, any> = {};
       const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
         bindResult.externalRoutes = externalRoutes;
         bindResult.targetRoutes = targetRoutes;
       };
-      mockCreateApp.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
+      createAppSpy.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
       expect(bindResult).toEqual({
         externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
         targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
       });
     });
+    createAppSpy.mockRestore();
   });
 
   it('should not bind routes on routeBindings target with nonexistent importName', async () => {
@@ -593,5 +658,63 @@ describe('DynamicRoot', () => {
         'Plugin foo.bar is not configured properly: PluginRoot.barPlugin not found, ignoring routeBindings target: barPlugin',
       );
     });
+  });
+
+  it('should add custom ApiFactory', async () => {
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        apiFactories: [{ importName: 'fooPluginApi' }],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(createAppSpy).toHaveBeenCalled();
+
+      const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
+      expect(resolvedApis.length).toEqual(1);
+      expect(resolvedApis[0].api.id).toEqual('plugin.foo.service');
+    });
+    createAppSpy.mockRestore();
+  });
+
+  it('should not add custom ApiFactory with nonexistent importName', async () => {
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        apiFactories: [{ importName: 'barPluginApi' }],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(createAppSpy).toHaveBeenCalled();
+
+      const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
+      expect(resolvedApis.length).toEqual(0);
+    });
+    createAppSpy.mockRestore();
+  });
+
+  it('should not add custom ApiFactory with nonexistent module', async () => {
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
+    process.env = mockProcessEnv({
+      'foo.bar': {
+        apiFactories: [{ importName: 'fooPluginApi', module: 'BarPlugin' }],
+      },
+    });
+    const rendered = await renderWithEffects(<MockApp />);
+    await waitFor(async () => {
+      expect(rendered.baseElement).toBeInTheDocument();
+      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+      expect(createAppSpy).toHaveBeenCalled();
+
+      const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
+      expect(resolvedApis.length).toEqual(0);
+    });
+    createAppSpy.mockRestore();
   });
 });

@@ -16,9 +16,7 @@ import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
 import AppsIcon from '@mui/icons-material/Apps';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import HomeIcon from '@mui/icons-material/Home';
-import LibraryBooks from '@mui/icons-material/LibraryBooks';
 import MuiMenuIcon from '@mui/icons-material/Menu';
-import MapIcon from '@mui/icons-material/MyLocation';
 import SchoolIcon from '@mui/icons-material/School';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from 'tss-react/mui';
@@ -51,7 +49,7 @@ const SideBarItemWrapper = (props: SidebarItemProps) => {
   );
 };
 
-const MenuIcon = ({ icon }: { icon: string }) => {
+export const MenuIcon = ({ icon }: { icon: string }) => {
   const app = useApp();
 
   const Icon = app.getSystemIcon(icon) || (() => null);
@@ -82,11 +80,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
             text="APIs"
           />
           <SideBarItemWrapper
-            icon={LibraryBooks as any}
-            to="docs"
-            text="Docs"
-          />
-          <SideBarItemWrapper
             icon={SchoolIcon as any}
             to="learning-paths"
             text="Learning Paths"
@@ -99,11 +92,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
-            <SideBarItemWrapper
-              icon={MapIcon as any}
-              to="tech-radar"
-              text="Tech Radar"
-            />
             {dynamicRoutes.map(({ menuItem, path }) => {
               if (menuItem) {
                 return (

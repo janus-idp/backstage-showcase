@@ -147,43 +147,23 @@ describe('configIfToCallable', () => {
 
 describe('extractDynamicConfig', () => {
   it.each([
-    [
-      'config is empty',
-      {},
-      {
-        routeBindings: [],
-        dynamicRoutes: [],
-        mountPoints: [],
-        appIcons: [],
-        routeBindingTargets: [],
-      },
-    ],
-    [
-      'no dynamic plugins are defined',
-      { dynamicPlugins: {} },
-      {
-        routeBindings: [],
-        dynamicRoutes: [],
-        mountPoints: [],
-        appIcons: [],
-        routeBindingTargets: [],
-      },
-    ],
+    ['config is empty', {}],
+    ['no dynamic plugins are defined', { dynamicPlugins: {} }],
     [
       'no frontend dynamic plugins are defined',
       { dynamicPlugins: { frontend: {} } },
-      {
-        routeBindings: [],
-        dynamicRoutes: [],
-        mountPoints: [],
-        appIcons: [],
-        routeBindingTargets: [],
-      },
     ],
-  ])('returns empty data when %s', async (_, source, output) => {
+  ])('returns empty data when %s', async (_, source) => {
     mockedDefaultConfigLoader.mockResolvedValue([source] as AppConfig[]);
     const config = await extractDynamicConfig();
-    expect(config).toEqual(output);
+    expect(config).toEqual({
+      routeBindings: [],
+      dynamicRoutes: [],
+      mountPoints: [],
+      appIcons: [],
+      routeBindingTargets: [],
+      apiFactories: [],
+    });
   });
 
   it.each([
@@ -474,6 +454,7 @@ describe('extractDynamicConfig', () => {
       dynamicRoutes: [],
       mountPoints: [],
       appIcons: [],
+      apiFactories: [],
       ...output,
     });
   });

@@ -1,12 +1,6 @@
 app:
   title: Janus IDP Backstage Showcase
   baseUrl: http://localhost:3000
-  # Plugin: Segment
-  analytics:
-    segment:
-      writeKey: ${SEGMENT_WRITE_KEY}
-      maskIP: ${SEGMENT_MASK_IP} # prevents IP addresses from being sent if true
-      testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
   branding:
     fullLogo: ${BASE64_EMBEDDED_FULL_LOGO}
     iconLogo: ${BASE64_EMBEDDED_ICON_LOGO}

@@ -21,15 +21,18 @@ type AppConfig = {
   };
 };
 
-export type DynamicRoute = {
+type DynamicRoute = {
   scope: string;
   module: string;
   importName: string;
   path: string;
   menuItem?: MenuItem;
+  config?: {
+    props?: Record<string, any>;
+  };
 };
 
-export type MountPoint = {
+type MountPoint = {
   scope: string;
   mountPoint: string;
   module: string;
@@ -51,6 +54,12 @@ type BindingTarget = {
   importName: string;
 };
 
+type ApiFactory = {
+  scope: string;
+  module: string;
+  importName: string;
+};
+
 type CustomProperties = {
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
@@ -63,6 +72,7 @@ type CustomProperties = {
   };
   mountPoints?: MountPoint[];
   appIcons?: AppIcon[];
+  apiFactories?: ApiFactory[];
 };
 
 export const conditionsArrayMapper = (
@@ -113,6 +123,7 @@ async function extractDynamicConfig() {
     dynamicRoutes: DynamicRoute[];
     appIcons: AppIcon[];
     mountPoints: MountPoint[];
+    apiFactories: ApiFactory[];
   }>(
     (acc, { data }) => {
       if (data?.dynamicPlugins?.frontend) {
@@ -190,6 +201,22 @@ async function extractDynamicConfig() {
             [],
           ),
         );
+
+        acc.apiFactories.push(
+          ...Object.entries(data.dynamicPlugins.frontend).reduce<ApiFactory[]>(
+            (accApiFactories, [scope, { apiFactories }]) => {
+              accApiFactories.push(
+                ...(apiFactories ?? []).map(api => ({
+                  module: api.module ?? 'PluginRoot',
+                  importName: api.importName ?? 'default',
+                  scope,
+                })),
+              );
+              return accApiFactories;
+            },
+            [],
+          ),
+        );
       }
       return acc;
     },
@@ -199,6 +226,7 @@ async function extractDynamicConfig() {
       mountPoints: [],
       appIcons: [],
       routeBindingTargets: [],
+      apiFactories: [],
     },
   ) || {
     routeBindings: [],
@@ -206,6 +234,7 @@ async function extractDynamicConfig() {
     mountPoints: [],
     appIcons: [],
     routeBindingTargets: [],
+    apiFactories: [],
   }; // fallback to empty arrays
 
   return dynamicConfig;

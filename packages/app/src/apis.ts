@@ -1,11 +1,9 @@
 import { OAuth2 } from '@backstage/core-app-api';
 import {
   AnyApiFactory,
-  analyticsApiRef,
   configApiRef,
   createApiFactory,
   discoveryApiRef,
-  identityApiRef,
   oauthRequestApiRef,
 } from '@backstage/core-plugin-api';
 import {
@@ -13,8 +11,6 @@ import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
-import { techRadarApiRef } from '@backstage/plugin-tech-radar';
-import { SegmentAnalytics } from '@janus-idp/backstage-plugin-analytics-provider-segment';
 import {
   auth0AuthApiRef,
   oidcAuthApiRef,
@@ -24,7 +20,6 @@ import {
   CustomDataApiClient,
   customDataApiRef,
 } from './api/CustomDataApiClient';
-import { CustomTechRadar } from './lib/CustomTechRadar';
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -34,12 +29,6 @@ export const apis: AnyApiFactory[] = [
   }),
   ScmAuth.createDefaultApiFactory(),
   createApiFactory({
-    api: analyticsApiRef,
-    deps: { configApi: configApiRef, identityApi: identityApiRef },
-    factory: ({ configApi, identityApi }) =>
-      SegmentAnalytics.fromConfig(configApi, identityApi),
-  }),
-  createApiFactory({
     api: customDataApiRef,
     deps: {
       discoveryApi: discoveryApiRef,
@@ -47,13 +36,6 @@ export const apis: AnyApiFactory[] = [
     },
     factory: ({ discoveryApi, configApi }) =>
       new CustomDataApiClient({ discoveryApi, configApi }),
-  }),
-  createApiFactory({
-    api: techRadarApiRef,
-    deps: {
-      customDataApi: customDataApiRef,
-    },
-    factory: ({ customDataApi }) => new CustomTechRadar({ customDataApi }),
   }),
   // OIDC
   createApiFactory({

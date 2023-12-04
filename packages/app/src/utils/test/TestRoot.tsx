@@ -10,7 +10,6 @@ import { orgPlugin } from '@backstage/plugin-org';
 import { apis } from '../../apis';
 import DynamicRootContext from '../../components/DynamicRoot/DynamicRootContext';
 import { scaffolderPlugin } from '@backstage/plugin-scaffolder';
-import { techdocsPlugin } from '@backstage/plugin-techdocs';
 
 const TestRoot = ({ children }: PropsWithChildren<{}>) => {
   const { current } = useRef<BackstageApp>(
@@ -20,7 +19,6 @@ const TestRoot = ({ children }: PropsWithChildren<{}>) => {
         // Static bindings
         bind(catalogPlugin.externalRoutes, {
           createComponent: scaffolderPlugin.routes.root,
-          viewTechDoc: techdocsPlugin.routes.docRoot,
           createFromTemplate: scaffolderPlugin.routes.selectedTemplate,
         });
         bind(apiDocsPlugin.externalRoutes, {
@@ -28,7 +26,6 @@ const TestRoot = ({ children }: PropsWithChildren<{}>) => {
         });
         bind(scaffolderPlugin.externalRoutes, {
           registerComponent: catalogImportPlugin.routes.importPage,
-          viewTechDoc: techdocsPlugin.routes.docRoot,
         });
         bind(orgPlugin.externalRoutes, {
           catalogIndex: catalogPlugin.routes.catalogIndex,

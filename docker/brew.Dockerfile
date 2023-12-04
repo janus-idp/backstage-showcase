@@ -77,7 +77,7 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
 # strict-ssl=true
 # cafile="../../../registry-ca.pem"
 # NOTE: this is overridden to "/remote-source/registry-ca.pem" below
-# hadolint ignore=SC1091
+# hadolint ignore=SC1091,SC2046
 RUN \
     # debug
     # cat $CONTAINER_SOURCE/cachito.env; \
@@ -119,27 +119,30 @@ RUN git config --global --add safe.directory ./
 # Upstream only
 # RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
-# hadolint ignore=DL3059
-RUN $YARN build --filter=backend
+# hadolint ignore=DL3059,DL4006,SC2086
+RUN $YARN build --filter=backend && \
 
-# Downstream only - Cachito configuration
-# replace external registry refs with cachito ones
-RUN cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
+  # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
+  $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
+  # Downstream only - replace registry refs with cachito ones
+  cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
     for d in $(find . -name yarn.lock); do echo; echo "===== $d ====="; \
       sed -i $d -r -e "s#(https://registry.yarnpkg.com|https://registry.npmjs.org)#${cachitoRegistry}#g"; \
       grep resolved $d | head -1; echo "Total $(grep resolved $d | wc -l) resolution lines in $d"; \
-    done
-# debug - were the above changes successful?
-# RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
-#     for d in $(find . -name yarn.lock); do \
-#       found=$(grep -E "yarnpkg.com|npmjs.org" $d | head -1); \
-#       if [[ $found ]]; then echo;echo "$d : $found"; fi; \
-#     done; \
-#     echo "<=== Check for yarn.lock files that don't use cachito registry ==="
+    done; \
+  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
+  $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
+  $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
+  $YARN copy-dynamic-plugins dist
 
-# Build dynamic plugins
-RUN $YARN export-dynamic
-RUN $YARN copy-dynamic-plugins dist
+# Downstream only - debug
+# hadolint ignore=SC3010,DL4006
+RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
+    for d in $(find . -name yarn.lock); do \
+      found=$(grep -E "yarnpkg.com|npmjs.org" $d | head -1); \
+      if [[ $found ]]; then echo;echo "$d : $found"; fi; \
+    done; \
+    echo "<=== Check for yarn.lock files that don't use cachito registry ==="
 
 # Downstream only - clean up dynamic plugins sources:
 # Only keep the dist sub-folder in the dynamic-plugins folder
@@ -173,6 +176,7 @@ WORKDIR $CONTAINER_SOURCE/
 
 # Downstream only - install techdocs dependencies using cachito sources
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
+# hadolint ignore=DL3013,DL3041,SC2086
 RUN microdnf update -y && \
   microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
@@ -188,8 +192,8 @@ RUN microdnf update -y && \
   pushd $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
   set -xe; \
   python3.11 -V; pip3.11 -V; \
-  pip3.11 install --user --no-cache-dir --upgrade pip setuptools pyyaml; \
-  pip3.11 install --user --no-cache-dir -r requirements.txt -r requirements-build.txt; \
+  pip3.11 install --no-cache-dir --upgrade pip setuptools pyyaml; \
+  pip3.11 install --no-cache-dir -r requirements.txt -r requirements-build.txt; mkdocs --version; \
   popd >/dev/null; \
   microdnf clean all; rm -fr $REMOTE_SOURCES_DIR/upstream2
 
@@ -206,6 +210,10 @@ COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
   chmod -R a+rx ./install-dynamic-plugins.sh; \
   rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+
+# Downstream only - fix for https://issues.redhat.com/browse/RHIDP-728
+RUN mkdir /opt/app-root/src/.npm
+RUN chown -R 1001:1001 /opt/app-root/src/.npm
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

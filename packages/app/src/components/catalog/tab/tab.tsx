@@ -36,17 +36,17 @@ const tab = ({
       ),
       <Grid container>
         {children}
-        {getMountPointData<React.ComponentType>(`${mountPoint}/cards`).map(
-          ({ Component, config }) => (
-            <EntitySwitch key={`${Component.displayName}`}>
-              <EntitySwitch.Case if={config.if}>
-                <Box sx={config.layout}>
-                  <Component {...config.props} />
-                </Box>
-              </EntitySwitch.Case>
-            </EntitySwitch>
-          ),
-        )}
+        {getMountPointData<React.ComponentType, React.ReactNode>(
+          `${mountPoint}/cards`,
+        ).map(({ Component, config, staticJSXContent }) => (
+          <EntitySwitch key={`${Component.displayName}`}>
+            <EntitySwitch.Case if={config.if}>
+              <Box sx={config.layout}>
+                <Component {...config.props}>{staticJSXContent}</Component>
+              </Box>
+            </EntitySwitch.Case>
+          </EntitySwitch>
+        ))}
       </Grid>,
     )}
   </EntityLayout.Route>
