@@ -23,7 +23,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-sonarqube-backend"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-sonarqube-backend --override-interop default"
   },
   "dependencies": {
     "@backstage/backend-common": "0.19.8",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
-    "@janus-idp/cli": "1.4.3"
+    "@janus-idp/cli": "1.4.7"
   },
   "files": [
     "dist",

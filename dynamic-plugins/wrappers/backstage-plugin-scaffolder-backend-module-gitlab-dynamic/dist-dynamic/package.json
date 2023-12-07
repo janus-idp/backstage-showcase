@@ -26,7 +26,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-gitlab"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-gitlab --override-interop default:zod"
   },
   "dependencies": {
     "@gitbeaker/node": "^35.8.0",
