@@ -19,10 +19,29 @@ export default defineConfig({
     defaultCommandTimeout: 10000,
     baseUrl: 'https://PLACE_HOLDER',
     specPattern: 'cypress/e2e/**/*.spec.ts',
-    setupNodeEvents(on) {
+
+    setupNodeEvents(on, config) {
+      const defaultValues: { [key: string]: string | boolean } = {
+        GH_USER_ID: 'rhdh-qe',
+        GH_USER_PASS: '',
+        GH_2FA_SECRET: '',
+        GH_RHDH_QE_USER_TOKEN: '',
+        KEYCLOAK_URL: '',
+        KEYCLOAK_REALM: '',
+        KEYCLOAK_CLIENT_ID: '',
+        KEYCLOAK_CLIENT_SECRET: '',
+      };
+
+      for (const key in defaultValues) {
+        if (!config.env[key]) {
+          config.env[key] = defaultValues[key];
+        }
+      }
+
       installLogsPrinter(on, {
         printLogsToConsole: 'always',
       });
+      return config;
     },
   },
 });

@@ -11,7 +11,91 @@ global:
     # Every item defines the plugin `package` as a [NPM package spec](https://docs.npmjs.com/cli/v10/using-npm/package-spec),
     # an optional `pluginConfig` with plugin-specific backstage configuration, and an optional `disabled` flag to disable/enable a plugin
     # listed in `includes` files. It also includes an `integrity` field that is used to verify the plugin package [integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description).
-    plugins: []
+    plugins:
+        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+          disabled: false
+          pluginConfig:
+            catalog:
+              providers:
+                github:
+                  my-test-org:
+                    organization: janus-qe
+                    catalogPath: '/catalog-info.yaml' # string
+                    filters:
+                      branch: 'main' # string
+                      repository: '.*' # Regex
+                    schedule:
+                      frequency:
+                        minutes: 1
+                      timeout: 
+                        minutes: 1
+                      initialDelay:
+                        seconds: 15
+        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+          disabled: false
+          pluginConfig:
+            catalog:
+              providers:
+                githubOrg:
+                  default:
+                    id: development
+                    orgUrl: "${GITHUB_ORG_URL}"
+        - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
+          disabled: false
+          pluginConfig:
+            dynamicPlugins:
+              frontend:
+                backstage.plugin-github-issues:
+                  mountPoints:
+                    - mountPoint: entity.page.issues/cards
+                      importName: GithubIssuesCard
+                      config:
+                        layout:
+                          gridColumn: "1 / -1"
+                        if:
+                          allOf:
+                            - hasAnnotation: github.com/project-slug
+        - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
+          disabled: false
+          pluginConfig:
+            dynamicPlugins:
+              frontend:
+                roadiehq.backstage-plugin-github-pull-requests:
+                  mountPoints:
+                    - mountPoint: entity.page.overview/cards
+                      importName: EntityGithubPullRequestsOverviewCard
+                      config:
+                        layout:
+                          gridColumnEnd:
+                            lg: "span 4"
+                            md: "span 6"
+                            xs: "span 12"
+                        if:
+                          allOf:
+                            - isGithubPullRequestsAvailable
+                    - mountPoint: entity.page.pull-requests/cards
+                      importName: EntityGithubPullRequestsContent
+                      config:
+                        layout:
+                          gridColumn: "1 / -1"
+                        if:
+                          allOf:
+                            - isGithubPullRequestsAvailable
+        - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+          disabled: false
+          pluginConfig:
+            dynamicPlugins:
+              frontend:
+                backstage.plugin-github-actions:
+                  mountPoints:
+                    - mountPoint: entity.page.ci/cards
+                      importName: EntityGithubActionsContent
+                      config:
+                        layout:
+                          gridColumn: "1 / -1"
+                        if:
+                          allOf:
+                            - isGithubActionsAvailable
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
   # -- Shorthand for users who do not want to specify a custom HOSTNAME. Used ONLY with the DEFAULT upstream.backstage.appConfig value and with OCP Route enabled.
