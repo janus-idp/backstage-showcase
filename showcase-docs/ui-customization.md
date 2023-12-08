@@ -1,4 +1,9 @@
-# Customizing the look of your showcase instance
+---
+title: UI Customization
+custom_edit_url: https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/ui-customization.md
+tags:
+  - Customization
+---
 
 To customize the look of your showcase instance, you can edit the `app-config.yaml` file in the root of this repository. The customizations used to configure the app are loaded by the backstage app at startup, with certain values being queried by the app at runtime.
 

@@ -1,4 +1,10 @@
-# Setting up Metrics Monitoring and Logging for Backstage Showcase
+---
+title: Metrics Monitoring and Logging
+custom_edit_url: https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/metrics-monitoring-and-logging.md
+tags:
+  - Metrics Monitoring
+  - Logging
+---
 
 The Backstage Showcase provides a `/metrics` endpoint that provides Prometheus metrics about your backstage application. This endpoint can be used to monitor your backstage instance using Prometheus and Grafana.
 

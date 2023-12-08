@@ -1,4 +1,9 @@
-# Dynamic Plugins support
+---
+title: Dynamic Plugins
+custom_edit_url: https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/dynamic-plugins.md
+tags:
+  - Dynamic Plugins
+---
 
 ## Overview
 
@@ -25,91 +30,91 @@ So there are some changes to be made to the plugin code, in order to make it com
 
 1. The plugin must:
 
-- import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@v1.19.6` package,
-- add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
-- add the `export-dynamic` script entry,
-- add the following elements to the package `files` list:
+   - import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@v1.19.6` package,
+   - add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
+   - add the `export-dynamic` script entry,
+   - add the following elements to the package `files` list:
 
-  `"dist-dynamic/*.*", "dist-dynamic/dist/**", "dist-dynamic/alpha/*"`
+     `"dist-dynamic/*.*", "dist-dynamic/dist/**", "dist-dynamic/alpha/*"`
 
-These recommended changes to the `package.json` are summarized below:
+   These recommended changes to the `package.json` are summarized below:
 
-```json
-  ...
-  "scripts": {
-    ...
-    "export-dynamic": "janus-cli package export-dynamic-plugin"
-    ...
-  },
-  ...
-  "dependencies": {
-    ...
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@v1.19.6",
-    ...
-  }
-  ...
-  "devDependencies": {
-    "@janus-idp/cli": "1.4.3"
-  },
-  ...
-  "files": [
-    ...
-    "dist-dynamic/*.*",
-    "dist-dynamic/dist/**",
-    "dist-dynamic/alpha/*"
-  ],
-```
+   ```json
+   ...
+   "scripts": {
+     ...
+     "export-dynamic": "janus-cli package export-dynamic-plugin"
+     ...
+   },
+   ...
+   "dependencies": {
+     ...
+     "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@v1.19.6",
+     ...
+   }
+   ...
+   "devDependencies": {
+     "@janus-idp/cli": "1.4.3"
+   },
+   ...
+   "files": [
+     ...
+     "dist-dynamic/*.*",
+     "dist-dynamic/dist/**",
+     "dist-dynamic/alpha/*"
+   ],
+   ```
 
 2. A `src/dynamic/index.ts` file must be added, and must export a named entry point (`dynamicPluginInstaller`) of a specific type (`BackendDynamicPluginInstaller`) that will contain the code of the plugin wiring:
 
-```ts
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+   ```ts
+   import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
 
-export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
-  kind: 'legacy',
+   export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
+     kind: 'legacy',
 
-  // Contributions of the plugin to the application.
-  // Here optional fields allow embedding the code which is usually described in the plugin readme for manual addition.
-  // If a contribution is not used, the field should be omitted.
+     // Contributions of the plugin to the application.
+     // Here optional fields allow embedding the code which is usually described in the plugin readme for manual addition.
+     // If a contribution is not used, the field should be omitted.
 
-  router: {
-    pluginID: 'router plugin ID, used as REST endpoint suffix',
-    createPlugin(env) {
-      // Return a promise to your router.
-      return Promise.reject(new Error('Not implemented'));
-    },
-  },
+     router: {
+       pluginID: 'router plugin ID, used as REST endpoint suffix',
+       createPlugin(env) {
+         // Return a promise to your router.
+         return Promise.reject(new Error('Not implemented'));
+       },
+     },
 
-  events(eventsBackend, env) {
-    // Do something with the events backend (add subscribers or publishers)
-    // and return a list of HttpPostIngressOptions that will be
-    // registered with the http event endpoint.
-    return [];
-  },
+     events(eventsBackend, env) {
+       // Do something with the events backend (add subscribers or publishers)
+       // and return a list of HttpPostIngressOptions that will be
+       // registered with the http event endpoint.
+       return [];
+     },
 
-  catalog(builder, env) {
-    // Add catalog contributions, such as
-    // entity providers or location analyzers.
-  },
+     catalog(builder, env) {
+       // Add catalog contributions, such as
+       // entity providers or location analyzers.
+     },
 
-  scaffolder(env) {
-    // Return an array of scaffolder actions (TemplateAction)
-    // that will be registered with the scaffolder.
-    return [];
-  },
+     scaffolder(env) {
+       // Return an array of scaffolder actions (TemplateAction)
+       // that will be registered with the scaffolder.
+       return [];
+     },
 
-  search(indexBuilder, schedule, env) {
-    // Add search contributions, such as
-    // collators and decorators.
-  },
-};
-```
+     search(indexBuilder, schedule, env) {
+       // Add search contributions, such as
+       // collators and decorators.
+     },
+   };
+   ```
 
 3. The `dynamicPluginInstaller` entry point must be exported in the main `src/index.ts` file:
 
-```ts
-export * from './dynamic/index';
-```
+   ```ts
+   export * from './dynamic/index';
+   ```
 
 #### Note about the new backend system support
 
@@ -352,7 +357,7 @@ The showcase docker image comes pre-loaded with a selection of dynamic plugins, 
 
 Upon application startup, for each plugin that is disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will display a line similar to the following:
 
-```
+```console
 ======= Skipping disabled dynamic plugin ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
 ```
 

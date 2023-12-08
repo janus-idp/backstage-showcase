@@ -1,4 +1,9 @@
-# Getting Started running Backstage Showcase
+---
+title: Getting Started
+custom_edit_url: https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md
+tags:
+  - Getting Started
+---
 
 There are several different methods for running the Backstage Showcase app today. We currently have support for running the application locally, using a helm chart to deploy to a cluster, and manifests for deployment using ArgoCD.
 
@@ -19,7 +24,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
 4. Start the application using `yarn start`
 
-5. Navigate to <http://localhost:3000>
+5. Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Running Locally with the Optional Plugins
 
@@ -48,7 +53,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Set your Organization Name
 
-     - ${ORGANIZATION_NAME}: organization name
+     - `${ORGANIZATION_NAME}`: organization name
 
    - Enable plugins (All plugins have a default of `false`)
 
@@ -217,7 +222,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
 6. Start the application using `yarn start`
 
-7. Navigate to <http://localhost:3000>
+7. Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Running with Helm
 

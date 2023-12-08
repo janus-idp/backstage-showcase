@@ -1,8 +1,13 @@
-**WARNING**
+---
+title: Helm Chart
+custom_edit_url: https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/helm-chart.md
+tags:
+  - Helm Chart
+---
 
+:::warning
 This documentation is currently out of date
-
-# Setting up to use the Helm Chart
+:::
 
 The Helm Chart that this project is currently using is the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. For more information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
 
@@ -69,7 +74,7 @@ This guide will have a focus deploying to an OpenShift cluster as that is the ma
    oc port-forward -n backstage svc/backstage 7007:7007
    ```
 
-   1. The app can be accessed at <http://localhost:7007>
+   1. The app can be accessed at [http://localhost:7007](http://localhost:7007)
 
 ## Additional Resources
 
