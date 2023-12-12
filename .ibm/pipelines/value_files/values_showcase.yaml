@@ -33,69 +33,49 @@ global:
                         seconds: 15
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
           disabled: false
-          pluginConfig:
-            catalog:
-              providers:
-                githubOrg:
-                  default:
-                    id: development
-                    orgUrl: "${GITHUB_ORG_URL}"
         - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
           disabled: false
-          pluginConfig:
-            dynamicPlugins:
-              frontend:
-                backstage.plugin-github-issues:
-                  mountPoints:
-                    - mountPoint: entity.page.issues/cards
-                      importName: GithubIssuesCard
-                      config:
-                        layout:
-                          gridColumn: "1 / -1"
-                        if:
-                          allOf:
-                            - hasAnnotation: github.com/project-slug
         - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
           disabled: false
-          pluginConfig:
-            dynamicPlugins:
-              frontend:
-                roadiehq.backstage-plugin-github-pull-requests:
-                  mountPoints:
-                    - mountPoint: entity.page.overview/cards
-                      importName: EntityGithubPullRequestsOverviewCard
-                      config:
-                        layout:
-                          gridColumnEnd:
-                            lg: "span 4"
-                            md: "span 6"
-                            xs: "span 12"
-                        if:
-                          allOf:
-                            - isGithubPullRequestsAvailable
-                    - mountPoint: entity.page.pull-requests/cards
-                      importName: EntityGithubPullRequestsContent
-                      config:
-                        layout:
-                          gridColumn: "1 / -1"
-                        if:
-                          allOf:
-                            - isGithubPullRequestsAvailable
         - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
           disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+          disabled: false
           pluginConfig:
-            dynamicPlugins:
-              frontend:
-                backstage.plugin-github-actions:
-                  mountPoints:
-                    - mountPoint: entity.page.ci/cards
-                      importName: EntityGithubActionsContent
-                      config:
-                        layout:
-                          gridColumn: "1 / -1"
-                        if:
-                          allOf:
-                            - isGithubActionsAvailable
+            kubernetes:
+              clusterLocatorMethods:
+                - clusters:
+                  - authProvider: serviceAccount
+                    name: ${K8S_CLUSTER_NAME}
+                    serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
+                    url: ${K8S_CLUSTER_API_SERVER_URL}
+                  type: config
+              customResources:
+                # Add for tekton
+                - apiVersion: 'v1beta1'
+                  group: 'tekton.dev'
+                  plural: 'pipelines'
+                - apiVersion: v1beta1
+                  group: tekton.dev
+                  plural: pipelineruns
+                - apiVersion: v1beta1
+                  group: tekton.dev
+                  plural: taskruns
+                # Add for topology plugin
+                - apiVersion: 'v1'
+                  group: 'route.openshift.io'
+                  plural: 'routes'
+                # Add to view topology code decorators
+                - group: 'org.eclipse.che'
+                  apiVersion: 'v2'
+                  plural: 'checlusters'
+              serviceLocatorMethod:
+                type: multiTenant
+
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
   # -- Shorthand for users who do not want to specify a custom HOSTNAME. Used ONLY with the DEFAULT upstream.backstage.appConfig value and with OCP Route enabled.

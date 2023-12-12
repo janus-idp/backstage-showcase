@@ -59,18 +59,6 @@ data:
           secure: true
 
     catalog:
-      providers:
-        githubOrg:
-          default:
-            id: development
-            orgUrl: '${GITHUB_ORG_URL}'
-        keycloakOrg:
-          default:
-            baseUrl: ${KEYCLOAK_URL}
-            loginRealm: ${KEYCLOAK_REALM}
-            realm: ${KEYCLOAK_REALM}
-            clientId: ${KEYCLOAK_CLIENT_ID}
-            clientSecret: ${KEYCLOAK_CLIENT_SECRET}
       import:
         entityFilename: catalog-info.yaml
         # pullRequestBranchName: rhdh-integration
@@ -83,35 +71,6 @@ data:
         - type: url
           target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
 
-    kubernetes:
-      clusterLocatorMethods:
-        - clusters:
-          - authProvider: serviceAccount
-            name: ${K8S_CLUSTER_NAME}
-            serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
-            url: ${K8S_CLUSTER_API_SERVER_URL}
-          type: config
-      customResources:
-        # Add for tekton
-        - apiVersion: 'v1beta1'
-          group: 'tekton.dev'
-          plural: 'pipelines'
-        - apiVersion: v1beta1
-          group: tekton.dev
-          plural: pipelineruns
-        - apiVersion: v1beta1
-          group: tekton.dev
-          plural: taskruns
-        # Add for topology plugin
-        - apiVersion: 'v1'
-          group: 'route.openshift.io'
-          plural: 'routes'
-        # Add to view topology code decorators
-        - group: 'org.eclipse.che'
-          apiVersion: 'v2'
-          plural: 'checlusters'
-      serviceLocatorMethod:
-        type: multiTenant
     techdocs:
       builder: external
       generator:
@@ -133,8 +92,4 @@ data:
             - name: argoInstance2
               url: temp
               token: temp
-    enabled:
-      github: ${GITHUB_ENABLED}
-      kubernetes: ${K8S_ENABLED}
-      githubOrg: ${GITHUBORG_ENABLED}
-      keycloak: true
+
