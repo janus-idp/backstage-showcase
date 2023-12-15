@@ -26,7 +26,7 @@ export default defineConfig({
         GH_USER_PASS: '',
         GH_2FA_SECRET: '',
         GH_RHDH_QE_USER_TOKEN: '',
-        KEYCLOAK_URL: '',
+        KEYCLOAK_BASE_URL: '',
         KEYCLOAK_REALM: '',
         KEYCLOAK_CLIENT_ID: '',
         KEYCLOAK_CLIENT_SECRET: '',

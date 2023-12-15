@@ -18,7 +18,7 @@ Add the environments needed in our as Base64 encoded values and using secure pro
 To replace the values into secrets-rhdh-secrets.yaml we need to create the replace function using
 [openshift-tests.sh](.ibm/pipelines/openshift-tests.sh) script. For example:
 
-`sed -i "s|KEYCLOAK_URL:.*|KEYCLOAK_URL: $KEYCLOAK_URL|g" $DIR/auth/secrets-rhdh-secrets.yaml
+`sed -i "s|KEYCLOAK_BASE_URL:.*|KEYCLOAK_BASE_URL: $KEYCLOAK_BASE_URL|g" $DIR/auth/secrets-rhdh-secrets.yaml
 `
 
 ### Environment Variables into Cypress tests

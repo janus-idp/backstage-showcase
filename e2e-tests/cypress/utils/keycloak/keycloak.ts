@@ -8,7 +8,7 @@ class Keycloak {
   private readonly clientSecret: string;
 
   constructor() {
-    this.baseURL = Cypress.env('KEYCLOAK_URL');
+    this.baseURL = Cypress.env('KEYCLOAK_BASE_URL');
     this.realm = Cypress.env('KEYCLOAK_REALM');
     this.clientSecret = Cypress.env('KEYCLOAK_CLIENT_SECRET');
     this.clientId = Cypress.env('KEYCLOAK_CLIENT_ID');
