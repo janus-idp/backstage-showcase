@@ -27,7 +27,7 @@
     "@backstage/config": "1.1.1",
     "@backstage/integration": "1.7.1",
     "@backstage/plugin-app-backend": "0.3.54",
-    "@backstage/plugin-auth-backend": "0.19.4",
+    "@backstage/plugin-auth-backend": "0.20.1",
     "@backstage/plugin-auth-node": "0.4.0",
     "@backstage/plugin-catalog-backend": "1.14.0",
     "@backstage/plugin-catalog-backend-module-openapi": "0.1.23",
