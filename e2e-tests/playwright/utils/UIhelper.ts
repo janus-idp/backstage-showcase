@@ -38,23 +38,6 @@ export class UIhelper {
       await button.click();
     }
   }
-
-  async getButton(
-    label: string,
-    options: { timeout: number } = { timeout: 40000 },
-  ) {
-    const selector = `${UIhelperPO.MuiButtonLabel}`;
-    await this.page.waitForSelector(selector, { timeout: options.timeout });
-    return this.page.locator(selector).filter({ hasText: label });
-  }
-
-  async isHeaderTitleExists(label: string): Promise<boolean> {
-    const headerTitle = await this.page
-      .locator(`h2[data-testid="header-title"]`)
-      .textContent();
-    return headerTitle === label;
-  }
-
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
@@ -99,7 +82,9 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    await this.page.click(`nav a:has-text("${navBarText}")`);
+    const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
+    await navLink.waitFor({ state: 'visible' });
+    await navLink.click();
   }
 
   async selectMuiBox(label: string, value: string) {
@@ -140,9 +125,9 @@ export class UIhelper {
   }
 
   async verifyHeading(heading: string) {
-    const headingLocator = await this.page
+    const headingLocator = this.page
       .locator(`h1, h2, h3, h4, h5, h6`)
-      .filter({ hasText: heading })
+      .filter({hasText: heading})
       .first();
     await headingLocator.waitFor();
     await expect(headingLocator).toBeVisible();
@@ -220,4 +205,20 @@ export class UIhelper {
     await locator.scrollIntoViewIfNeeded();
     await expect(locator).toBeVisible();
   }
+
+  async verifyTableHeadingAndRows(texts: string[]) {
+    for (const column of texts) {
+      const columnSelector = `table th:has-text("${column}")`;
+      //check if  columnSelector has at least one element or more
+      const columnCount = await this.page.locator(columnSelector).count();
+      expect(columnCount).toBeGreaterThan(0);
+    }
+
+    // Checks if the table has at least one row with data
+    // Excludes rows that have cells spanning multiple columns, such as "No data available" messages
+    const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
+    const rowCount = await this.page.locator(rowSelector).count();
+    expect(rowCount).toBeGreaterThan(0);
+  }
+
 }

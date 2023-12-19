@@ -42,6 +42,10 @@ global:
           disabled: false
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
           disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+          disabled: false
         - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
           disabled: false
           pluginConfig:
