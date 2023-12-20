@@ -75,6 +75,21 @@ global:
                   plural: 'checlusters'
               serviceLocatorMethod:
                 type: multiTenant
+        # Enable OCM plugins.
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+          disabled: false
+          pluginConfig: 
+            catalog: 
+              providers: 
+                ocm: 
+                  default: 
+                    name: testCluster # Can be any arbitrary name supported by kubernetes
+                    url: ${OCM_CLUSTER_URL}
+                    serviceAccountToken: ${OCM_CLUSTER_TOKEN}
+                    skipTLSVerify: true
+                    owner: janus-authors
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+          disabled: false
 
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
