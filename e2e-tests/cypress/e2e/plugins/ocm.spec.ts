@@ -18,7 +18,7 @@ describe('Test OCM plugin', () => {
     Common.loginAsGuest();
   });
 
-  it('Navigate to Clusters and Verify OCM clustes', () => {
+  it('Navigate to Clusters and Verify OCM Clusters', () => {
     UIhelper.openSidebar('Clusters');
     UIhelper.verifyRowsInTable([
       clusterDetails.clusterName,
