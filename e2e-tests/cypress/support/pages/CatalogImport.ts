@@ -14,11 +14,11 @@ export class CatalogImport {
 
 export class BackstageShowcase {
   static getGithubOpenIssues() {
-    return APIHelper.githubRequest('GET', githubAPIEndpoints.issues('open'))
-      .its('body')
-      .then(body => {
-        return body.filter((issue: any) => !issue.pull_request);
-      });
+    return APIHelper.getGithubPaginatedRequest(
+      githubAPIEndpoints.issues('open'),
+    ).then(body => {
+      return body.filter((issue: any) => !issue.pull_request);
+    });
   }
 
   static getGithubPRs(state: 'open' | 'closed' | 'all', paginated = false) {
