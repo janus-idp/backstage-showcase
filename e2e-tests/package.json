@@ -9,7 +9,8 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:clearcache": "cypress cache clear",
-    "cypress:run": "yarn run lint && yarn cypress run --headless --browser chrome --spec 'cypress/e2e/**/*.spec.ts'",
+    "cypress:run": "yarn clean && yarn run lint && yarn cypress run --headless --browser chrome --spec 'cypress/e2e/**/*.spec.ts'",
+    "clean": "rimraf cypress/results && rimraf cypress/screenshots && rimraf cypress/videos",
     "test:backstage-run": "yarn cypress:run",
     "test:backstage-open": "yarn cypress:open",
     "lint": "eslint . --ext .js,.ts"
@@ -24,5 +25,8 @@
     "eslint-plugin-cypress": "^2.13.3",
     "otplib": "^12.0.1",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "rimraf": "^5.0.5"
   }
 }

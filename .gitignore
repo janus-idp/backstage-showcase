@@ -52,7 +52,9 @@ site
 
 # Cypress
 **/cypress/downloads
+**/cypress/results
 **/cypress/screenshots
+**/cypress/videos
 
 # Dynamic plugins root content
 dynamic-plugins-root/*

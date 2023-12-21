@@ -14,6 +14,10 @@ export default defineConfig({
   video: true,
   videoUploadOnPasses: true,
   screenshotOnRunFailure: true,
+  reporter: 'junit',
+  reporterOptions: {
+    mochaFile: 'e2e-tests/cypress/results/junit/junit-[hash].xml',
+  },
   e2e: {
     testIsolation: false,
     defaultCommandTimeout: 10000,
