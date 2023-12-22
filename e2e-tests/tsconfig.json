@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es5", "dom"],
+    "target": "es2020",
+    "lib": ["es2020", "dom"],
     "types": ["cypress", "cypress-terminal-report", "node"],
     "esModuleInterop": true,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "module": "ESNext",
+    "moduleResolution": "node"
   },
   "include": ["**/*.ts"]
 }

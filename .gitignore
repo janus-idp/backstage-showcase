@@ -63,3 +63,5 @@ dynamic-plugins/*/dist-dynamic/src
 
 #dev caches
 .webpack-cache
+.idea/
+.idea/

@@ -88,7 +88,7 @@ apply_yaml_files() {
     "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml"
     "$dir/resources/deployment/deployment-test-app-component.yaml"
     "$dir/auth/secrets-rhdh-secrets.yaml")
-  
+
   for file in "${files[@]}"; do
     sed -i "s/namespace:.*/namespace: $NAME_SPACE/g" "$file"
   done
@@ -132,6 +132,7 @@ apply_yaml_files() {
 run_tests() {
   cd $DIR/../../e2e-tests
   yarn install
+  yarn playwright install
 
   Xvfb :99 &
   export DISPLAY=:99
@@ -139,7 +140,9 @@ run_tests() {
   (
     set -e
     echo Using PR container image: pr-${GIT_PR_NUMBER}-${SHORT_SHA}
-    yarn run cypress:run --config baseUrl="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+    export BASE_URL="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+    echo "$BASE_URL"
+    yarn test
   ) |& tee "/tmp/${LOGFILE}"
 
   RESULT=${PIPESTATUS[0]}

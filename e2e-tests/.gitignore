@@ -52,6 +52,15 @@ site
 
 .turbo
 
-# Cypress
-**/cypress/downloads
-**/cypress/screenshots
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# IntelliJ
+.idea
