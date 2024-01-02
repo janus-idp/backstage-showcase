@@ -32,18 +32,19 @@ EOF
 save_junit() {
     JUNIT_RESULTS_LOCATION="./cypress/results/junit"
 
-    declare -a JUNIT_FILES
+    declare -a JUNIT_FILES_ARRAY
 
     CRN=$(ibmcloud resource service-instance ${IBM_COS} --output json | jq -r .[0].guid)
     ibmcloud cos config crn --crn "${CRN}"
 
     for JUNIT_FILE in "$JUNIT_RESULTS_LOCATION"/*; do
         FILE_NAME=$(basename "$JUNIT_FILE")
-        ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${FILE_NAME}" --file "${JUNIT_FILE}" --content-type "text/xml; charset=UTF-8"
-        JUNIT_FILES+=("$FILE_NAME")
+        FILE_PATH=$(readlink "$JUNIT_FILE")
+        ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${FILE_NAME}" --file "${FILE_PATH}" --content-type "text/xml; charset=UTF-8"
+        JUNIT_FILES_ARRAY+=("$FILE_NAME")
     done
 
-    JSON_FILES=$(printf '%s\n' "${JUNIT_FILES[@]}" | jq -c -R . | jq -s .)
+    JSON_FILES=$(printf '%s\n' "${JUNIT_FILES_ARRAY[@]}" | jq -c -R . | jq -s .)
 
     curl -X POST "${WEBHOOK_URL}" -H "Content-Type: application/json" -d "{\"junit-files\": $JSON_FILES}"
 }
