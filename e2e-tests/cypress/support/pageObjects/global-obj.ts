@@ -9,4 +9,5 @@ export const UIhelperPO = {
   MuiTableCell: 'td[class*="MuiTableCell-root"]',
   MuiTableRow: 'tr[class*="MuiTableRow-root"]',
   tabs: '[role="tab"]',
+  MuiCardHeader: 'div[class*="MuiCardHeader-root"]',
 };

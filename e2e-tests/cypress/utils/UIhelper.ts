@@ -69,6 +69,20 @@ export class UIhelper {
     });
   }
 
+  static verifyRowInTableByUniqueText(
+    uniqueRowText: string | RegExp,
+    cellTexts: string[],
+  ) {
+    cy.contains(UIhelperPO.MuiTableCell, uniqueRowText)
+      .parent()
+      .scrollIntoView()
+      .within(() => {
+        cellTexts.forEach(cellText => {
+          cy.contains(UIhelperPO.MuiTableCell, cellText).should('be.visible');
+        });
+      });
+  }
+
   static verifyHeading(heading: string) {
     cy.contains('h1, h2, h3, h4, h5, h6', new RegExp(`^\\s*${heading}\\s*$`))
       .scrollIntoView()
@@ -83,5 +97,12 @@ export class UIhelper {
     texts.forEach(text => {
       cy.contains(UIhelperPO.MuiTableCell, text).should('be.visible');
     });
+  }
+
+  static getMuiCard(title: string) {
+    return cy
+      .contains(UIhelperPO.MuiCardHeader, title)
+      .parent()
+      .scrollIntoView();
   }
 }
