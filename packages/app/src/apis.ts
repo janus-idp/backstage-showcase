@@ -1,11 +1,9 @@
 import { OAuth2 } from '@backstage/core-app-api';
 import {
   AnyApiFactory,
-  analyticsApiRef,
   configApiRef,
   createApiFactory,
   discoveryApiRef,
-  identityApiRef,
   oauthRequestApiRef,
 } from '@backstage/core-plugin-api';
 import {
@@ -13,7 +11,6 @@ import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
-import { SegmentAnalytics } from '@janus-idp/backstage-plugin-analytics-provider-segment';
 import {
   auth0AuthApiRef,
   oidcAuthApiRef,
@@ -31,12 +28,6 @@ export const apis: AnyApiFactory[] = [
     factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
   }),
   ScmAuth.createDefaultApiFactory(),
-  createApiFactory({
-    api: analyticsApiRef,
-    deps: { configApi: configApiRef, identityApi: identityApiRef },
-    factory: ({ configApi, identityApi }) =>
-      SegmentAnalytics.fromConfig(configApi, identityApi),
-  }),
   createApiFactory({
     api: customDataApiRef,
     deps: {
