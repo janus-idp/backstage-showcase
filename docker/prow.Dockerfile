@@ -24,7 +24,9 @@ USER 0
 # hadolint ignore=DL3041
 RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
   # already installed or installed as deps:
-  openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging && \
+  openssl openssl-devel ca-certificates make cmake cpp gcc gcc-c++ zlib zlib-devel brotli brotli-devel python3 nodejs-packaging \
+    # required by ci-operator
+    git && \
   dnf update -y && dnf clean all
 
 
@@ -42,6 +44,10 @@ COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 RUN chmod +x $YARN
 
 RUN $YARN install --frozen-lockfile --network-timeout 600000
+
+# https://docs.ci.openshift.org/docs/architecture/ci-operator/#build-root-image
+RUN mkdir -p /go
+RUN chown -R 1001 /go
 
 # Switch to nodejs user
 USER 1001
