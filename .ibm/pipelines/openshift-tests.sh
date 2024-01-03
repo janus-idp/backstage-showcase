@@ -85,7 +85,9 @@ apply_yaml_files() {
   # Update namespace and other configurations in YAML files
   local files=("$dir/resources/service_account/service-account-rhdh.yaml"
     "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml"
-    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml")
+    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml"
+    "$dir/resources/deployment/deployment-test-app-component.yaml"
+    "$dir/auth/secrets-rhdh-secrets.yaml")
   
   for file in "${files[@]}"; do
     sed -i "s/namespace:.*/namespace: $NAME_SPACE/g" "$file"
@@ -94,7 +96,7 @@ apply_yaml_files() {
   # Add additional configurations
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: $K8S_PLUGIN_ANNOTATION/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_URL KEYCLOAK_REALM KEYCLOAK_CLIENT_SECRET KEYCLOAK_CLIENT_ID; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN; do
     sed -i "s/$key:.*/$key: ${!key}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -128,7 +130,7 @@ apply_yaml_files() {
 }
 
 run_tests() {
-  cd $DIR/../../e2e-test
+  cd $DIR/../../e2e-tests
   yarn install
 
   Xvfb :99 &
