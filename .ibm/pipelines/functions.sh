@@ -34,6 +34,8 @@ save_junit() {
     set -x
     JUNIT_RESULTS_LOCATION="$(pwd)/cypress/results/junit"
 
+    ls $JUNIT_RESULTS_LOCATION
+
     declare -a JUNIT_FILES_ARRAY
 
     CRN=$(ibmcloud resource service-instance ${IBM_COS} --output json | jq -r .[0].guid)
