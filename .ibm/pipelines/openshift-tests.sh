@@ -147,6 +147,7 @@ run_tests() {
   pkill Xvfb
 
   save_logs "${LOGFILE}" "${TEST_NAME}" ${RESULT}
+  echo "run_tests -> save_junit"
   save_junit
 
   exit ${RESULT}

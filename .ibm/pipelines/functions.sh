@@ -30,6 +30,7 @@ EOF
 }
 
 save_junit() {
+    echo "inside save_junit"
     JUNIT_RESULTS_LOCATION="./cypress/results/junit"
 
     declare -a JUNIT_FILES_ARRAY
@@ -42,10 +43,12 @@ save_junit() {
         FILE_PATH=$(readlink "$JUNIT_FILE")
         ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${FILE_NAME}" --file "${FILE_PATH}" --content-type "text/xml; charset=UTF-8"
         JUNIT_FILES_ARRAY+=("$FILE_NAME")
+        echo "FILE_NAME=${FILE_NAME}"
+        echo "FILE_PATH=${FILE_NAME}"
     done
 
     JSON_FILES=$(printf '%s\n' "${JUNIT_FILES_ARRAY[@]}" | jq -c -R . | jq -s .)
-
+    echo "JSON_FILES=${JSON_FILES}"
     curl -X POST "${WEBHOOK_URL}" -H "Content-Type: application/json" -d "{\"junit-files\": $JSON_FILES}"
 }
 
