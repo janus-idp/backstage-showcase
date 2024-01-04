@@ -32,7 +32,7 @@ EOF
 save_junit() {
     pwd
     set -x
-    JUNIT_RESULTS_LOCATION="./cypress/results/junit"
+    JUNIT_RESULTS_LOCATION="$(pwd)/cypress/results/junit"
 
     declare -a JUNIT_FILES_ARRAY
 
