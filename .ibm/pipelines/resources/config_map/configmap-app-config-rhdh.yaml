@@ -51,12 +51,7 @@ data:
           target: ${DH_TARGET_URL}
           changeOrigin: true
           # Change to "false" in case of using self hosted cluster with a self-signed certificate
-          secure: true
-        '/developer-hub/tech-radar':
-          target: ${DH_TECHRADAR_TARGET_URL}
-          changeOrigin: true
-          # Change to "false" in case of using self hosted cluster with a self-signed certificate
-          secure: true
+          secure: false
 
     catalog:
       import:
