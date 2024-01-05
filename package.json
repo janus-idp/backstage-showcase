@@ -54,8 +54,8 @@
     "undici": "5.26.5"
   },
   "resolutions": {
-    "@types/react": "17.0.69",
-    "@types/react-dom": "17.0.22"
+    "@types/react": "18.2.46",
+    "@types/react-dom": "18.2.18"
   },
   "jest": {
     "testTimeout": 20000
