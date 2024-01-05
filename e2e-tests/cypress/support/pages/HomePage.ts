@@ -10,9 +10,16 @@ export class HomePage {
     UIhelper.verifyLink(text);
   }
 
-  static verifyQuickAccess(section: string, quickAccessItem: string) {
-    cy.contains(HomePagePO.MuiAccordion, section)
-      .contains('a div[class*="MuiListItemText-root"]', quickAccessItem)
-      .should('be.visible');
+  static verifyQuickAccess(
+    section: string,
+    quickAccessItem: string,
+    expand = false,
+  ) {
+    cy.contains(HomePagePO.MuiAccordion, section).within($section => {
+      if (expand) cy.wrap($section).click();
+      cy.contains('a div[class*="MuiListItemText-root"]', quickAccessItem)
+        .scrollIntoView({ duration: 1000 })
+        .should('be.visible');
+    });
   }
 }
