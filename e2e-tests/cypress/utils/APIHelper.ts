@@ -21,7 +21,11 @@ export class APIHelper {
     return cy.request(options);
   }
 
-  static getGithubPaginatedRequest(url: string, pageNo = 1, response = []) {
+  static getGithubPaginatedRequest(
+    url: string,
+    pageNo = 1,
+    response = [],
+  ): any {
     return APIHelper.githubRequest('GET', `${url}&page=${pageNo}`)
       .its('body')
       .then(body => {
