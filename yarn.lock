@@ -8446,10 +8446,10 @@
     "@testing-library/dom" "^8.0.0"
     "@types/react-dom" "<18.0.0"
 
-"@testing-library/user-event@14.5.1":
-  version "14.5.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.5.1.tgz#27337d72046d5236b32fd977edee3f74c71d332f"
-  integrity sha512-UCcUKrUYGj7ClomOo2SpNVvx4/fkd/2BbIHDCle8A0ax+P3bU7yJwDBDrS6ZwdTMARWTGODX1hEsCcO+7beJjg==
+"@testing-library/user-event@14.5.2":
+  version "14.5.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.5.2.tgz#db7257d727c891905947bd1c1a99da20e03c2ebd"
+  integrity sha512-YAh82Wh4TIrxYLmfGcixwD18oIjyC1pFQC2Y01F2lzV2HTMiYrI0nze0FD0ocB//CKS/7jIUgae+adPqxK5yCQ==
 
 "@tokenizer/token@^0.3.0":
   version "0.3.0"
@@ -8928,10 +8928,10 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.4.tgz#81f886786411c45bba3f33e781ab48bd56bfca2e"
   integrity sha512-Kfe/D3hxHTusnPNRbycJE1N77WHDsdS4AjUYIzlDzhDrS47NrwuL3YW4VITxwR7KCVpzwgy4Rbj829KSSQmwXQ==
 
-"@types/mock-fs@4.13.3":
-  version "4.13.3"
-  resolved "https://registry.yarnpkg.com/@types/mock-fs/-/mock-fs-4.13.3.tgz#57a53413bd27bca41509053b105430eaf6bf1cce"
-  integrity sha512-PeXnRqMVBkVjHNCxu1wzPBi9cv5uWVl6535XD11NXt8pasJXh2MHxWvJs6d7eyt/V6BGgHZ4O3LF71CVMdMasA==
+"@types/mock-fs@4.13.4":
+  version "4.13.4"
+  resolved "https://registry.yarnpkg.com/@types/mock-fs/-/mock-fs-4.13.4.tgz#e73edb4b4889d44d23f1ea02d6eebe50aa30b09a"
+  integrity sha512-mXmM0o6lULPI8z3XNnQCpL0BGxPwx1Ul1wXYEPBGl4efShyxW2Rln0JOPEWGyZaYZMM6OVXM/15zUuFMY52ljg==
   dependencies:
     "@types/node" "*"
 
@@ -9225,10 +9225,10 @@
     "@types/cookiejar" "*"
     "@types/node" "*"
 
-"@types/supertest@2.0.15":
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.15.tgz#3d032865048c84c6a3bbbf1f949145b917d2ff65"
-  integrity sha512-jUCZZ/TMcpGzoSaed9Gjr8HCf3HehExdibyw3OHHEL1als1KmyzcOZZH4MjbObI8TkWsEr7bc7gsW0WTDni+qQ==
+"@types/supertest@2.0.16":
+  version "2.0.16"
+  resolved "https://registry.yarnpkg.com/@types/supertest/-/supertest-2.0.16.tgz#7a1294edebecb960d957bbe9b26002a2b7f21cd7"
+  integrity sha512-6c2ogktZ06tr2ENoZivgm7YnprnhYE4ZoXGMY+oA7IuAf17M8FWvujXZGmxLv8y0PTyts4x5A+erSwVUFA8XSg==
   dependencies:
     "@types/superagent" "*"
 
