@@ -90,6 +90,9 @@ global:
                     owner: janus-authors
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
           disabled: false
+        # Enable tech-radar plugin.
+        - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+          disabled: false
 
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
