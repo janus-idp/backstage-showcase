@@ -5425,10 +5425,10 @@
   dependencies:
     "@backstage/plugin-permission-common" "^0.7.9"
 
-"@janus-idp/cli@1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.4.3.tgz#feb000b2b139fbd3f812149720ad2eaf190c1478"
-  integrity sha512-hg3xhu52KRcvV1SJW6QR7NEtM/1sF/4ORw4R3ElUaXtPqSZoMRfWawHE5PNlyhAh3x/vYOjygMNUSPjI4/o+Ow==
+"@janus-idp/cli@1.4.7":
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.4.7.tgz#2f013d68f768bc3d5b930c9527e032a1dd90c379"
+  integrity sha512-7lnmkTvcxT/iFXE3or5exgQ3CXd+VR9gJtCAXzjcFfpf8LfTQ4SgS7xRiijaQSZJacg/JSpRoIxuIH0sOHAvvw==
   dependencies:
     "@backstage/cli-common" "^0.1.13"
     "@backstage/cli-node" "^0.1.5"

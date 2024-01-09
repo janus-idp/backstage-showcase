@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
-    "@janus-idp/cli": "1.4.3"
+    "@janus-idp/cli": "1.4.7"
   },
   "files": [
     "dist",
