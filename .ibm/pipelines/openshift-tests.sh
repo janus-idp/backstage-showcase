@@ -146,6 +146,11 @@ run_tests() {
 
   pkill Xvfb
 
+  set -x
+  pwd
+  ls
+  ls $DIR/../../e2e-tests/cypress/results/junit
+
   save_logs "${LOGFILE}" "${TEST_NAME}" ${RESULT}
   save_junit
 
