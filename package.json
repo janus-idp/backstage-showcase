@@ -38,7 +38,7 @@
     ]
   },
   "dependencies": {
-    "node-gyp": "9.4.1"
+    "node-gyp": "10.0.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
