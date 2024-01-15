@@ -24,9 +24,7 @@ const noInstall = process.argv.includes('--no-install', 2);
 const installOnly = process.argv.includes('--install-only', 2);
 
 for (const dep in packageJson.peerDependencies) {
-  if (
-    !Object.prototype.hasOwnProperty.call(packageJson.peerDependencies, dep)
-  ) {
+  if (!Object.hasOwn(packageJson.peerDependencies, dep)) {
     continue;
   }
 
@@ -41,7 +39,7 @@ for (const dep in packageJson.peerDependencies) {
     .trim();
   // END-NOSCAN
 
-  directory = dep.replace(/^@/, '').replace(/\//, '-');
+  const directory = dep.replace(/^@/, '').replace(/\//, '-');
   if (cleanMode) {
     console.log(
       `Deleting previous package directory for: ${dep}@${packageJson.peerDependencies[dep]}`,
@@ -77,7 +75,7 @@ for (const dep in packageJson.peerDependencies) {
   const pkgJson = require(
     fs.realpathSync(path.join(directory, 'package.json')),
   );
-  if (!pkgJson.backstage || !pkgJson.backstage.role) {
+  if (!pkgJson?.backstage?.role) {
     console.error(
       `Package '${directory}' is missing 'backstage.role' attribute.`,
     );

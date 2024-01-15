@@ -49,7 +49,7 @@ These recommended changes to the `package.json` are summarized below:
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.4.3"
+    "@janus-idp/cli": "^1.4.7"
   },
   ...
   "files": [
@@ -185,7 +185,7 @@ These recommended changes to the `package.json` are summarized below:
   },
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.4.3"
+    "@janus-idp/cli": "^1.4.7"
   },
   ...
   "files": [
