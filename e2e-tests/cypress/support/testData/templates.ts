@@ -1,4 +1,4 @@
-export const gpts = [
+export const templates = [
   'Add ArgoCD to an existing project',
   'Ansible Job Template',
   'Create a .NET Frontend application in Azure DevOps with a CI pipeline',
