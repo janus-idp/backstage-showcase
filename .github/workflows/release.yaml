@@ -29,8 +29,9 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Install Dependencies
+      - name: Install global tools and yarn dependencies
         run: |
+          time npm i -g node-gyp@^9.4.1 turbo prettier
           yarn install --frozen-lockfile
 
       - name: Create Release Pull Request
