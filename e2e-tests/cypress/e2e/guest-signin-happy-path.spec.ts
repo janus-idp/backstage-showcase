@@ -1,7 +1,7 @@
 import { UIhelper } from '../utils/UIhelper';
 import { HomePage } from '../support/pages/HomePage';
 import { Common } from '../utils/Common';
-import { gpts } from '../support/testData/gpts';
+import { templates } from '../support/testData/templates';
 
 describe('Guest Signin Happy path', () => {
   before(() => {
@@ -26,11 +26,11 @@ describe('Guest Signin Happy path', () => {
     UIhelper.verifyRowsInTable(['subhashkhileri', 'josephca', 'gustavolira']);
   });
 
-  it('Verify all 12 GPTs appear in the Create page', () => {
+  it('Verify all 12 Software Templates appear in the Create page', () => {
     UIhelper.openSidebar('Create...');
-    UIhelper.verifyHeading('Golden Path Templates');
+    UIhelper.verifyHeading('Software Templates');
 
-    gpts.forEach(gpt => {
+    templates.forEach(gpt => {
       UIhelper.verifyHeading(gpt);
     });
   });
