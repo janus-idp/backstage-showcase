@@ -76,6 +76,9 @@ export async function createRouter(options: RouterOptions): Promise<Router> {
         name: pkgManifest.name,
         manifestLocation: `${externalBaseUrl}/${pkgManifest.name}/plugin-manifest.json`,
       };
+      logger.info(
+        `Loaded dynamic frontend plugin '${plugin.name}' from '${pkg.location}' `,
+      );
     });
 
   router.get('/plugins', (_, response) => {
