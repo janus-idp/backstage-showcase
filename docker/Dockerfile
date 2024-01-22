@@ -105,7 +105,7 @@ WORKDIR $CONTAINER_SOURCE/
 # hadolint ignore=DL3041,DL3042
 RUN microdnf update -y && \
   microdnf install -y python3 python3-pip && \
-  pip3 install mkdocs-techdocs-core==1.2.3 && \
+  pip3 install mkdocs-techdocs-core~=1.2 && \
   microdnf clean all
 
 # Upstream only - copy from cleanup stage
