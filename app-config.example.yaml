@@ -43,7 +43,7 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, Group, Resource, Location, Template, API]
+    - allow: [Component, System, Group, Resource, Location, Template, API, User]
   locations:
     # Note: integrations.github[].apps must be correctly configured to read GitHub locations
     - type: file
