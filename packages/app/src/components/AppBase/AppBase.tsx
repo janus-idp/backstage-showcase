@@ -12,12 +12,12 @@ import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import React, { useContext } from 'react';
 import { Route } from 'react-router-dom';
+import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { Root } from '../Root';
 import { entityPage } from '../catalog/EntityPage';
 import { HomePage } from '../home/HomePage';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
-import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 
 const AppBase = () => {
   const { AppProvider, AppRouter, dynamicRoutes } =
@@ -34,7 +34,7 @@ const AppBase = () => {
                 <HomePage />
               </Route>
             )}
-            <Route path="/catalog" element={<CatalogIndexPage />} />
+            <Route path="/catalog" element={<CatalogIndexPage pagination />} />
             <Route
               path="/catalog/:namespace/:kind/:name"
               element={<CatalogEntityPage />}

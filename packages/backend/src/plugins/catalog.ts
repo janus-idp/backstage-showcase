@@ -4,7 +4,7 @@ import {
 } from '@backstage/backend-dynamic-feature-service';
 import { CatalogBuilder } from '@backstage/plugin-catalog-backend';
 import { jsonSchemaRefPlaceholderResolver } from '@backstage/plugin-catalog-backend-module-openapi';
-import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
+import { ScaffolderEntitiesProcessor } from '@backstage/plugin-catalog-backend-module-scaffolder-entity-model';
 import type { Router } from 'express';
 
 export default async function createPlugin(

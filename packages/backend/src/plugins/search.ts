@@ -3,7 +3,7 @@ import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-dynamic-feature-service';
-import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
+import { DefaultCatalogCollatorFactory } from '@backstage/plugin-search-backend-module-catalog';
 import { createRouter } from '@backstage/plugin-search-backend';
 import {
   IndexBuilder,
