@@ -1,9 +1,9 @@
+import { Entity } from '@backstage/catalog-model';
+import { EntityLayout, EntitySwitch } from '@backstage/plugin-catalog';
+import Box from '@mui/material/Box';
 import React from 'react';
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
-import { EntityLayout, EntitySwitch } from '@backstage/plugin-catalog';
 import Grid from '../Grid';
-import { Entity } from '@backstage/catalog-model';
-import Box from '@mui/material/Box';
 
 export type TabProps = {
   path: string;
@@ -30,23 +30,28 @@ const tab = ({
         .some(c => c(e))
     }
   >
-    {getMountPointData<React.ComponentType>(`${mountPoint}/context`).reduce(
+    {getMountPointData<React.ComponentType<React.PropsWithChildren>>(
+      `${mountPoint}/context`,
+    ).reduce(
       (acc, { Component }) => (
         <Component>{acc}</Component>
       ),
       <Grid container>
         {children}
-        {getMountPointData<React.ComponentType, React.ReactNode>(
-          `${mountPoint}/cards`,
-        ).map(({ Component, config, staticJSXContent }) => (
-          <EntitySwitch key={`${Component.displayName}`}>
-            <EntitySwitch.Case if={config.if}>
-              <Box sx={config.layout}>
-                <Component {...config.props}>{staticJSXContent}</Component>
-              </Box>
-            </EntitySwitch.Case>
-          </EntitySwitch>
-        ))}
+        {getMountPointData<
+          React.ComponentType<React.PropsWithChildren>,
+          React.ReactNode
+        >(`${mountPoint}/cards`).map(
+          ({ Component, config, staticJSXContent }) => (
+            <EntitySwitch key={`${Component.displayName}`}>
+              <EntitySwitch.Case if={config.if}>
+                <Box sx={config.layout}>
+                  <Component {...config.props}>{staticJSXContent}</Component>
+                </Box>
+              </EntitySwitch.Case>
+            </EntitySwitch>
+          ),
+        )}
       </Grid>,
     )}
   </EntityLayout.Route>
