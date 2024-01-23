@@ -1,4 +1,4 @@
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 import { createArgoCdResources } from '@roadiehq/scaffolder-backend-argocd';
 
 export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {

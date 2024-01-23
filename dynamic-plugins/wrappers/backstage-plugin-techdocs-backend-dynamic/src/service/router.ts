@@ -6,7 +6,7 @@ import {
   Publisher,
 } from '@backstage/plugin-techdocs-backend';
 import Docker from 'dockerode';
-import { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-plugin-manager';
+import { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-dynamic-feature-service';
 
 export async function buildRouter(
   env: Pick<

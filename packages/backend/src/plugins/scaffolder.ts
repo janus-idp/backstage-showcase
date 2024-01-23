@@ -1,7 +1,7 @@
 import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
-} from '@backstage/backend-plugin-manager';
+} from '@backstage/backend-dynamic-feature-service';
 import { CatalogClient } from '@backstage/catalog-client';
 import { ScmIntegrations } from '@backstage/integration';
 import {

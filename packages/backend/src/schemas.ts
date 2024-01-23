@@ -1,4 +1,4 @@
-import { PluginManager } from '@backstage/backend-plugin-manager';
+import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
 import { Logger } from 'winston';
 import fs from 'fs-extra';
 import * as path from 'path';
@@ -8,12 +8,12 @@ import type { Config } from '@backstage/config';
 import { loadConfigSchema } from '@backstage/config-loader';
 
 export async function gatherDynamicPluginsSchemas(
-  pluginManager: PluginManager,
+  pluginManager: DynamicPluginManager,
   logger: Logger,
 ): Promise<{ value: any; path: string }[]> {
   const allSchemas: { value: any; path: string }[] = [];
 
-  for (const plugin of pluginManager.plugins) {
+  for (const plugin of pluginManager.plugins()) {
     const pluginPackage = pluginManager.availablePackages.find(
       pkg =>
         pkg.manifest.name === plugin.name &&

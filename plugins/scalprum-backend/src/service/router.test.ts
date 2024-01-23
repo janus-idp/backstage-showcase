@@ -4,10 +4,10 @@ import url from 'url';
 import path from 'path';
 import { createRouter } from './router';
 import {
-  PluginManager,
+  DynamicPluginManager,
   ScannedPluginManifest,
   ScannedPluginPackage,
-} from '@backstage/backend-plugin-manager';
+} from '@backstage/backend-dynamic-feature-service';
 import mockFs from 'mock-fs';
 import { randomUUID } from 'crypto';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -149,13 +149,13 @@ describe('createRouter', () => {
       child: jest.fn(),
     };
 
-    const pluginManager = new (PluginManager as any)(logger, [plugin], {
+    const pluginManager = new (DynamicPluginManager as any)(logger, [plugin], {
       logger,
       async bootstrap(_: string, __: string[]): Promise<void> {},
       load: async (packagePath: string) =>
         await import(/* webpackIgnore: true */ packagePath),
     });
-    pluginManager.plugins.push(...(await pluginManager.loadPlugins()));
+    pluginManager._plugins.push(...(await pluginManager.loadPlugins()));
 
     const getBaseUrl = jest.fn().mockReturnValue('should-not-be-used');
     const getExternalBaseUrl = jest

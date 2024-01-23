@@ -4,14 +4,14 @@ import request from 'supertest';
 import { plugins } from '../../__fixtures__/data';
 import { expectedList } from '../../__fixtures__/expected_result';
 import { createRouter } from './router';
-import { PluginManager } from '@backstage/backend-plugin-manager';
+import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
 
 describe('createRouter', () => {
   let app: express.Express;
 
   beforeAll(async () => {
-    const pluginManager = new (PluginManager as any)();
-    pluginManager.plugins = plugins;
+    const pluginManager = new (DynamicPluginManager as any)();
+    pluginManager._plugins = plugins;
 
     const router = await createRouter({
       logger: getVoidLogger(),

@@ -19,8 +19,8 @@ import {
 import {
   BackendPluginProvider,
   LegacyPluginEnvironment as PluginEnvironment,
-  PluginManager,
-} from '@backstage/backend-plugin-manager';
+  DynamicPluginManager,
+} from '@backstage/backend-dynamic-feature-service';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
 import { DefaultIdentityClient } from '@backstage/plugin-auth-node';
@@ -45,7 +45,7 @@ import {
 } from './schemas';
 
 // TODO(davidfestal): The following import is a temporary workaround for a bug
-// in the upstream @backstage/backend-plugin-manager package.
+// in the upstream @backstage/backend-dynamic-feature-service package.
 //
 // It should be removed as soon as the upstream package is fixed and released.
 // see https://github.com/janus-idp/backstage-showcase/pull/600
@@ -140,12 +140,11 @@ async function main() {
     argv: process.argv,
   });
 
-  const pluginManager = await PluginManager.fromConfig(
+  const pluginManager = await DynamicPluginManager.create({
     config,
     logger,
-    undefined,
-    new CommonJSModuleLoader(logger),
-  );
+    moduleLoader: new CommonJSModuleLoader(logger),
+  });
 
   const dynamicPluginsSchemas = await gatherDynamicPluginsSchemas(
     pluginManager,

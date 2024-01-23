@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ModuleLoader } from '@backstage/backend-plugin-manager';
+import { ModuleLoader } from '@backstage/backend-dynamic-feature-service';
 
 import path from 'path';
 import { Logger } from 'winston';

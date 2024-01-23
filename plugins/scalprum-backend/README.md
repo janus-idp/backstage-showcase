@@ -2,7 +2,7 @@
 
 Welcome to the scalprum backend plugin!
 
-This plugin depends on the `backend-plugin-manager` and
+This plugin depends on the `backend-dynamic-feature-service` and
 provides access to the scalprum manifest, as well as plugin assets,
 of every dynamic frontend plugin installed in the dynamic plugins root folder.
 

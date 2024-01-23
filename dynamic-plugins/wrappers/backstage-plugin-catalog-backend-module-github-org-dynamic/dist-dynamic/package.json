@@ -26,7 +26,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github --override-interop default"
   },
   "dependencies": {
     "@octokit/graphql": "^5.0.0",
@@ -44,7 +44,7 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.5",
+    "@backstage/backend-dynamic-feature-service": "0.1.0",
     "@backstage/backend-common": "^0.19.8",
     "@backstage/backend-plugin-api": "^0.6.6",
     "@backstage/backend-tasks": "^0.5.11",

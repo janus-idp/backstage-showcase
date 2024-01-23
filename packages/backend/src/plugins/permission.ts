@@ -1,5 +1,5 @@
 import type { Router } from 'express';
-import type { PluginEnvironment } from '../types';
+import type { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-dynamic-feature-service';
 import {
   PolicyBuilder,
   PluginIdProvider,
