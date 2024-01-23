@@ -1,7 +1,8 @@
 import {
+  HostDiscovery,
+  WinstonLogger,
   createConfigSecretEnumerator,
   loadBackendConfig,
-  HostDiscovery,
 } from '@backstage/backend-app-api';
 import {
   CacheManager,
@@ -18,8 +19,8 @@ import {
 } from '@backstage/backend-common';
 import {
   BackendPluginProvider,
-  LegacyPluginEnvironment as PluginEnvironment,
   DynamicPluginManager,
+  LegacyPluginEnvironment as PluginEnvironment,
 } from '@backstage/backend-dynamic-feature-service';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
@@ -43,8 +44,6 @@ import {
   createDynamicPluginsConfigSecretEnumerator,
   gatherDynamicPluginsSchemas,
 } from './schemas';
-
-import { WinstonLogger } from '@backstage/backend-app-api';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
