@@ -29,8 +29,11 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-gitlab --override-interop default"
   },
   "dependencies": {
+    "@gitbeaker/core": "^35.8.0",
     "@gitbeaker/node": "^35.8.0",
-    "zod": "^3.21.4"
+    "@gitbeaker/rest": "^39.25.0",
+    "yaml": "^2.0.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {},
   "files": [
@@ -38,10 +41,11 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "0.6.6",
-    "@backstage/integration": "1.7.1",
-    "@backstage/plugin-scaffolder-node": "0.2.7",
+    "@backstage/backend-plugin-api": "0.6.9",
+    "@backstage/integration": "1.8.0",
+    "@backstage/plugin-scaffolder-node": "0.2.10",
     "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-common": "^0.20.1",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3"
   },
