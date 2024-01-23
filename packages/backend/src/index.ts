@@ -44,13 +44,7 @@ import {
   gatherDynamicPluginsSchemas,
 } from './schemas';
 
-// TODO(davidfestal): The following import is a temporary workaround for a bug
-// in the upstream @backstage/backend-dynamic-feature-service package.
-//
-// It should be removed as soon as the upstream package is fixed and released.
-// see https://github.com/janus-idp/backstage-showcase/pull/600
 import { WinstonLogger } from '@backstage/backend-app-api';
-import { CommonJSModuleLoader } from './loader/CommonJSModuleLoader';
 
 function makeCreateEnv(config: Config, pluginProvider: BackendPluginProvider) {
   const root = getRootLogger();
@@ -143,7 +137,6 @@ async function main() {
   const pluginManager = await DynamicPluginManager.create({
     config,
     logger,
-    moduleLoader: new CommonJSModuleLoader(logger),
   });
 
   const dynamicPluginsSchemas = await gatherDynamicPluginsSchemas(
