@@ -3580,24 +3580,6 @@
     qs "^6.10.1"
     react-use "^17.2.4"
 
-"@backstage/plugin-pagerduty@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-pagerduty/-/plugin-pagerduty-0.7.1.tgz#2a463e9a51ac837a3970a721fd1ede74b19847b3"
-  integrity sha512-+Z5CLwLRFNoMZBhRl2Gz4ngERTC8IONM41A5RySRtlan+qvumJKtazMEd7L6qNRkj0Vy0hMjTC5ftbsQzb7uIg==
-  dependencies:
-    "@backstage/catalog-model" "^1.4.3"
-    "@backstage/core-components" "^0.13.10"
-    "@backstage/core-plugin-api" "^1.8.2"
-    "@backstage/errors" "^1.2.3"
-    "@backstage/plugin-catalog-react" "^1.9.3"
-    "@backstage/plugin-home-react" "^0.1.7"
-    "@material-ui/core" "^4.12.2"
-    "@material-ui/icons" "^4.9.1"
-    "@material-ui/lab" "4.0.0-alpha.61"
-    "@types/react" "^16.13.1 || ^17.0.0"
-    luxon "^3.0.0"
-    react-use "^17.2.4"
-
 "@backstage/plugin-permission-backend@0.5.32", "@backstage/plugin-permission-backend@^0.5.29":
   version "0.5.32"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-backend/-/plugin-permission-backend-0.5.32.tgz#a448270bab15aa7b736d4d405ece01064ba5b679"
@@ -7201,6 +7183,25 @@
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.6.0.tgz#de2c6823203d6f319511898bb5de7e70f5267e19"
   integrity sha512-OWlrQAnWn9577PhVgqjUvMr1pg57Bc4jv0iL4w0PRuOSRvq67rvHW9Ie/dZVMvCzhSCB+UxhcY/PmCmFj33Q+g==
+
+"@pagerduty/backstage-plugin@0.7.4":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@pagerduty/backstage-plugin/-/backstage-plugin-0.7.4.tgz#a8c847843c73ea512acdef993d1c9853d50f3a3e"
+  integrity sha512-uPWM5R04MkZNPQyRGIgeh7yUuzg90IegoF29NuToviIYFxJpBlNgWTbjMJKXIoc4oKao1cp/fcZ9jHGPw0SJdg==
+  dependencies:
+    "@backstage/catalog-model" "^1.4.3"
+    "@backstage/core-components" "^0.13.8"
+    "@backstage/core-plugin-api" "^1.8.0"
+    "@backstage/errors" "^1.2.3"
+    "@backstage/plugin-catalog-react" "^1.9.1"
+    "@backstage/plugin-home-react" "^0.1.5"
+    "@backstage/theme" "^0.4.4"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.61"
+    classnames "^2.2.6"
+    luxon "^3.4.1"
+    react-use "^17.2.4"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.7":
   version "0.5.11"
@@ -19258,6 +19259,11 @@ luxon@^3.0.0, luxon@^3.0.1, luxon@^3.3.0, luxon@^3.4.3:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.3.tgz#8ddf0358a9492267ffec6a13675fbaab5551315d"
   integrity sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==
+
+luxon@^3.4.1:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.4.tgz#cf20dc27dc532ba41a169c43fdcc0063601577af"
+  integrity sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==
 
 luxon@~3.3.0:
   version "3.3.0"

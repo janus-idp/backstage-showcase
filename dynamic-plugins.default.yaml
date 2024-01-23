@@ -679,7 +679,7 @@ plugins:
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-pagerduty:
+          pagerduty.backstage-plugin:
             mountPoints:
               - mountPoint: entity.page.overview/cards
                 importName: EntityPagerDutyCard
