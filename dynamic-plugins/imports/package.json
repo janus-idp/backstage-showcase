@@ -33,6 +33,8 @@
     "@janus-idp/backstage-scaffolder-backend-module-quay": "1.3.0",
     "@janus-idp/backstage-scaffolder-backend-module-regex": "1.3.0",
     "@janus-idp/backstage-scaffolder-backend-module-servicenow": "1.3.0",
-    "@janus-idp/backstage-scaffolder-backend-module-sonarqube": "1.3.0"
+    "@janus-idp/backstage-scaffolder-backend-module-sonarqube": "1.3.0",
+    "@janus-idp/plugin-notifications-backend-dynamic": "1.2.0",
+    "@janus-idp/plugin-notifications": "1.1.6"
   }
 }

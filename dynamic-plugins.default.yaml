@@ -118,6 +118,26 @@ plugins:
                   if:
                     allOf:
                       - isSecurityInsightsAvailable
+  # Group: Notifications
+  - package: ./dynamic-plugins/dist/janus-idp-plugin-notifications
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-notifications:
+            appIcons:
+              - name: notificationsIcon
+                module: NotificationsPlugin
+                importName: NotificationsActiveIcon
+            dynamicRoutes:
+              - path: /notifications
+                importName: NotificationsPage
+                module: NotificationsPlugin
+                menuItem:
+                  icon: notificationsIcon
+                  text: Notifications
+  - package: ./dynamic-plugins/dist/janus-idp-plugin-notifications-backend-dynamic
+    disabled: true
 
   # Group: Gitlab
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
