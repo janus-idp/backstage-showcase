@@ -1,6 +1,9 @@
 import fetch from 'node-fetch';
 import User from './user';
 import Group from './group';
+import { expect, Page } from '@playwright/test';
+import { UIhelper } from '../UIhelper';
+import { CatalogUsersPO } from '../../support/pageObjects/catalog/catalog-users-obj';
 
 interface AuthResponse {
   access_token: string;
@@ -66,6 +69,29 @@ class Keycloak {
     if (response.status !== 200)
       throw new Error('Failed to get groups of user');
     return response.json() as Promise<Group[]>;
+  }
+
+  async checkUserDetails(
+    page: Page,
+    keycloakUser: User,
+    token: string,
+    uiHelper: UIhelper,
+    keycloak: Keycloak,
+  ) {
+    await CatalogUsersPO.visitUserPage(page, keycloakUser.username);
+    const emailLink = await CatalogUsersPO.getEmailLink(page);
+    await expect(emailLink).toBeVisible();
+    await uiHelper.verifyDivHasText(
+      `${keycloakUser.firstName} ${keycloakUser.lastName}`,
+    );
+
+    const groups = await keycloak.getGroupsOfUser(token, keycloakUser.id);
+    for (const group of groups) {
+      const groupLink = await CatalogUsersPO.getGroupLink(page, group.name);
+      await expect(groupLink).toBeVisible();
+    }
+
+    await CatalogUsersPO.visitBaseURL(page);
   }
 }
 
