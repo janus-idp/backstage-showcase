@@ -20,7 +20,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin"
   },
   "dependencies": {
-    "@backstage/plugin-dynatrace": "7.0.5"
+    "@backstage/plugin-dynatrace": "8.0.3"
   },
   "devDependencies": {
     "@backstage/cli": "0.23.1",
