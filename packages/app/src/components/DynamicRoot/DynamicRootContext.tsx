@@ -1,8 +1,8 @@
 import React, { createContext } from 'react';
 
-import { ScalprumComponentProps } from '@scalprum/react-core';
 import { Entity } from '@backstage/catalog-model';
 import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
+import { ScalprumComponentProps } from '@scalprum/react-core';
 
 export type RouteBinding = {
   bindTarget: string;
@@ -53,7 +53,7 @@ export type ScalprumMountPointConfigRaw = ScalprumMountPointConfigBase & {
 };
 
 export type ScalprumMountPoint = {
-  Component: React.ComponentType<{}>;
+  Component: React.ComponentType<React.PropsWithChildren>;
   config?: ScalprumMountPointConfig;
   staticJSXContent?: React.ReactNode;
 };
@@ -62,11 +62,11 @@ export type RemotePlugins = {
   [scope: string]: {
     [module: string]: {
       [importName: string]:
-        | React.ComponentType<{}>
+        | React.ComponentType<React.PropsWithChildren>
         | ((...args: any[]) => any)
         | BackstagePlugin<{}>
         | {
-            element: React.ComponentType<{}>;
+            element: React.ComponentType<React.PropsWithChildren>;
             staticJSXContent: React.ReactNode;
           }
         | AnyApiFactory;
@@ -75,8 +75,8 @@ export type RemotePlugins = {
 };
 
 const DynamicRootContext = createContext<{
-  AppProvider: React.ComponentType;
-  AppRouter: React.ComponentType;
+  AppProvider: React.ComponentType<React.PropsWithChildren>;
+  AppRouter: React.ComponentType<React.PropsWithChildren>;
   dynamicRoutes: DynamicRootContextValue[];
   mountPoints: {
     [mountPoint: string]: ScalprumMountPoint[];

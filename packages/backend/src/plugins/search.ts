@@ -2,8 +2,8 @@ import { useHotCleanup } from '@backstage/backend-common';
 import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
-} from '@backstage/backend-plugin-manager';
-import { DefaultCatalogCollatorFactory } from '@backstage/plugin-catalog-backend';
+} from '@backstage/backend-dynamic-feature-service';
+import { DefaultCatalogCollatorFactory } from '@backstage/plugin-search-backend-module-catalog';
 import { createRouter } from '@backstage/plugin-search-backend';
 import {
   IndexBuilder,

@@ -26,7 +26,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-gitlab"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-gitlab --override-interop default"
   },
   "dependencies": {
     "lodash": "^4.17.21",
@@ -40,14 +40,14 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "0.19.8",
-    "@backstage/backend-plugin-api": "0.6.6",
-    "@backstage/plugin-catalog-node": "1.4.7",
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.5",
-    "@backstage/backend-tasks": "^0.5.11",
+    "@backstage/backend-common": "0.20.1",
+    "@backstage/backend-plugin-api": "0.6.9",
+    "@backstage/plugin-catalog-node": "1.6.1",
+    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-tasks": "^0.5.14",
     "@backstage/catalog-model": "^1.4.3",
     "@backstage/config": "^1.1.1",
-    "@backstage/integration": "^1.7.1"
+    "@backstage/integration": "^1.8.0"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

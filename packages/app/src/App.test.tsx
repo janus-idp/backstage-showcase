@@ -1,9 +1,8 @@
-import React from 'react';
-import { renderWithEffects } from '@backstage/test-utils';
 import { removeScalprum } from '@scalprum/core';
 import { mockPluginData } from '@scalprum/react-test-utils';
+import { render, waitFor } from '@testing-library/react';
+import React from 'react';
 import TestRoot from './utils/test/TestRoot';
-import { waitFor } from '@testing-library/dom';
 
 const AppBase = React.lazy(() => import('./components/AppBase'));
 
@@ -27,7 +26,7 @@ describe('App', () => {
       ] as any,
     };
 
-    const rendered = await renderWithEffects(
+    const rendered = render(
       <TestScalprumProvider>
         <TestRoot>
           <React.Suspense fallback={null}>
@@ -36,6 +35,7 @@ describe('App', () => {
         </TestRoot>
       </TestScalprumProvider>,
     );
-    await waitFor(async () => expect(rendered.baseElement).toBeInTheDocument());
+
+    await waitFor(() => expect(rendered.baseElement).toBeInTheDocument());
   }, 100000);
 });

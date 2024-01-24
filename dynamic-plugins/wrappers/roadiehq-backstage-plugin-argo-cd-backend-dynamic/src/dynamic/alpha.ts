@@ -3,7 +3,7 @@ import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 import { createRouter } from '@roadiehq/backstage-plugin-argo-cd-backend';
 
 export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {

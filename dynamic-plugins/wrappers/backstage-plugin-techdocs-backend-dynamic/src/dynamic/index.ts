@@ -1,4 +1,4 @@
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 import { DefaultTechDocsCollatorFactory } from '@backstage/plugin-search-backend-module-techdocs';
 import { buildRouter } from '../service/router';
 

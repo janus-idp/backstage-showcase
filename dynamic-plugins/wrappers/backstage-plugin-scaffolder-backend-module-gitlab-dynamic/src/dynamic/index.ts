@@ -1,4 +1,4 @@
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 import { ScmIntegrations } from '@backstage/integration';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 

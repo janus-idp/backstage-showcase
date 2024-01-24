@@ -17,7 +17,7 @@
 import {
   LegacyBackendPluginInstaller,
   LegacyPluginEnvironment,
-} from '@backstage/backend-plugin-manager';
+} from '@backstage/backend-dynamic-feature-service';
 import {
   EventsBackend,
   HttpPostIngressEventPublisher,
