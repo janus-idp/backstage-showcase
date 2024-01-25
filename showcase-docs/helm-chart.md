@@ -1,21 +1,20 @@
-**WARNING**
+# WARNING
 
-This documentation is currently out of date
+This documentation is currently out of date - please refer to https://github.com/backstage/charts/tree/main/charts/backstage or submit a PR!
 
-# Setting up to use the Helm Chart
+This projects uses the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. 
 
-The Helm Chart that this project is currently using is the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. For more information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
+For more information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
 
 ## Getting Started
 
-Ensure that you have Helm installed on your local machine, you can find out more information on the [Helm website](https://helm.sh/docs/intro/install/).
+Ensure that you have a current version of [Helm installed on your local machine](https://github.com/backstage/charts/tree/main/charts/backstage#prerequisites). 
+
+To install, see the [Helm website](https://helm.sh/docs/intro/install/).
 
 Next is to add the Backstage Helm Chart and its dependent repository.
 
-```shell
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo add backstage https://backstage.github.io/charts
-```
+See [Backstage Helm Chart README](https://github.com/backstage/charts/tree/main/charts/backstage#tldr)
 
 ## Deploying to a Kubernetes cluster
 
@@ -75,7 +74,8 @@ This guide will have a focus deploying to an OpenShift cluster as that is the ma
 
 For more information on the Helm Chart consult the [official Backstage Helm Chart](https://github.com/backstage/charts).
 
-Here are also two blogs focused on deploying Backstage using the Helm Chart.
+Here some blogs focused on deploying Backstage using the Helm Chart.
 
-- [Getting Started with the Backstage Helm Chart (Part 1)](https://janus-idp.io/blog/getting-started-with-the-backstage-helm-chart-part-1)
-- [Exploring the Flexibility of the Backstage Helm Chart (Part 2)](https://janus-idp.io/blog/exploring-the-flexibility-of-the-backstage-helm-chart-part-2)
+- [Getting Started with the Backstage Helm Chart](https://janus-idp.io/blog/2023/01/15/getting-started-with-the-backstage-helm-chart)
+- [Exploring the Flexibility of the Backstage Helm Chart](https://janus-idp.io/blog/2023/01/25/exploring-the-flexibility-of-the-backstage-helm-chart)
+- [Deploying Backstage onto OpenShift Using the Backstage Helm Chart)](https://janus-idp.io/blog/2023/02/17/deploying-backstage-onto-openshift-using-helm)
