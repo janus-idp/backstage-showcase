@@ -330,6 +330,12 @@ export const entityPage = (
     })}
 
     {tab({
+      path: '/kiali',
+      title: 'Kiali',
+      mountPoint: 'entity.page.kiali',
+    })}
+
+    {tab({
       path: '/image-registry',
       title: 'Image Registry',
       mountPoint: 'entity.page.image-registry',

@@ -58,7 +58,7 @@ dynamicPlugins:
               gridColumn: "1 / -1"
             if:
               allOf:
-                - isJenkinsAvailable
+                - isJenkinsAvailable    
     backstage.plugin-kubernetes:
       mountPoints:
         - mountPoint: entity.page.kubernetes/cards
@@ -172,7 +172,24 @@ dynamicPlugins:
               gridColumn: 1 / -1
             if:
               anyOf:
-              - isJfrogArtifactoryAvailable
+              - isJfrogArtifactoryAvailable              
+    janus-idp.backstage-plugin-kiali:
+      appIcons:
+        - name: kialiIcon
+          importName: KialiIcon
+      dynamicRoutes:
+        - path: /kiali
+          importName: KialiPage
+          menuItem:
+            icon: kialiIcon
+            text: Kiali
+      mountPoints:
+        - config:
+            if:
+              anyOf:
+                - hasAnnotation: backstage.io/kubernetes-namespace
+          importName: EntityKialiContent
+          mountPoint: entity.page.kiali/cards          
     janus-idp.backstage-plugin-nexus-repository-manager:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards

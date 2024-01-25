@@ -592,6 +592,39 @@ plugins:
                 timeout:
                   minutes: 50
 
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-kiali
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-kiali:
+            appIcons:
+              - name: kialiIcon
+                importName: KialiIcon
+            dynamicRoutes:
+              - path: /kiali
+                importName: KialiPage
+                menuItem:
+                  icon: kialiIcon
+                  text: Kiali
+            mountPoints:
+              - config:
+                  if:
+                    anyOf:
+                      - hasAnnotation: backstage.io/kubernetes-namespace
+                importName: EntityKialiContent
+                mountPoint: entity.page.kiali/cards
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-kiali-backend-dynamic
+    disabled: false
+    pluginConfig:
+      catalog:
+        providers:
+          kiali:
+            url: '${KIALI_ENDPOINT}'
+            serviceAccountToken: '${KIALI_SERVICE_ACCOUNT_TOKEN}'
+            skipTLSVerify: true
+
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true

@@ -23,6 +23,8 @@
     "@janus-idp/backstage-plugin-dynamic-plugins-info": "1.0.2",
     "@janus-idp/backstage-plugin-jfrog-artifactory": "1.2.28",
     "@janus-idp/backstage-plugin-keycloak-backend": "1.8.6",
+    "@janus-idp/backstage-plugin-kiali": "1.14.1",
+    "@janus-idp/backstage-plugin-kiali-backend": "1.10.1",
     "@janus-idp/backstage-plugin-nexus-repository-manager": "1.4.28",
     "@janus-idp/backstage-plugin-ocm": "3.7.5",
     "@janus-idp/backstage-plugin-ocm-backend": "3.5.7",
