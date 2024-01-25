@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@backstage/plugin-lighthouse": "0.4.14",
-    "@mui/icons-material": "5.14.16"
+    "@mui/icons-material": "5.15.6"
   },
   "devDependencies": {
     "@backstage/cli": "0.25.1",
