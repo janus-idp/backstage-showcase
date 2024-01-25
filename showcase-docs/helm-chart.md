@@ -74,7 +74,7 @@ This guide will have a focus deploying to an OpenShift cluster as that is the ma
 
 For more information on the Helm Chart consult the [official Backstage Helm Chart](https://github.com/backstage/charts).
 
-Here some blogs focused on deploying Backstage using the Helm Chart.
+Here are some blogs focused on deploying Backstage using the Helm Chart.
 
 - [Getting Started with the Backstage Helm Chart](https://janus-idp.io/blog/2023/01/15/getting-started-with-the-backstage-helm-chart)
 - [Exploring the Flexibility of the Backstage Helm Chart](https://janus-idp.io/blog/2023/01/25/exploring-the-flexibility-of-the-backstage-helm-chart)
