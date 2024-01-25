@@ -2,13 +2,13 @@
 
 This documentation is currently out of date - please refer to https://github.com/backstage/charts/tree/main/charts/backstage or submit a PR!
 
-This projects uses the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster. 
+This projects uses the Backstage Helm Chart. This Helm Chart is used to simplify the process of deploying the Backstage Showcase app to a Kubernetes cluster.
 
 For more information on the Backstage Helm Chart consult the [official documentation](https://github.com/backstage/charts).
 
 ## Getting Started
 
-Ensure that you have a current version of [Helm installed on your local machine](https://github.com/backstage/charts/tree/main/charts/backstage#prerequisites). 
+Ensure that you have a current version of [Helm installed on your local machine](https://github.com/backstage/charts/tree/main/charts/backstage#prerequisites).
 
 To install, see the [Helm website](https://helm.sh/docs/intro/install/).
 
