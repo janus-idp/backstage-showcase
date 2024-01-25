@@ -104,7 +104,7 @@ mkdocs-monorepo-plugin==1.1.0
     # via
     #   -r requirements-build.in
     #   mkdocs-techdocs-core
-mkdocs-techdocs-core @ https://github.com/backstage/mkdocs-techdocs-core/archive/bbdab44e0d3aecfdc4e77b14c72b57791d4902b2.zip#cachito_hash=sha256:40421a5f43b11fd9ea9f92e107f91089b6bfa326967ad497666ab5a451fcf136
+mkdocs-techdocs-core @ https://github.com/backstage/mkdocs-techdocs-core/archive/bbdab44e0d3aecfdc4e77b14c72b57791d4902b2.zip
     # via -r requirements-build.in
 packaging==23.2
     # via
@@ -120,7 +120,7 @@ pathspec==0.11.2
     #   -r requirements-build.in
     #   hatchling
     #   mkdocs
-plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/17d348bfaa9112cdd2130e6410ce3a50224db3cf.zip#cachito_hash=sha256:221cc4972c75ba911cad4a56df07f61771c20077f8cbc8966181e30cabf68de1
+plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/17d348bfaa9112cdd2130e6410ce3a50224db3cf.zip
     # via
     #   -r requirements-build.in
     #   mkdocs-techdocs-core
@@ -207,7 +207,7 @@ wheel==0.41.2
     # via -r requirements-build.in
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==23.2.1
+pip==23.3
     # via -r requirements-build.in
 setuptools==68.2.2
     # via
