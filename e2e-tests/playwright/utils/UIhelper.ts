@@ -132,7 +132,18 @@ export class UIhelper {
       const cellLocator = this.page
         .locator(UIhelperPO.MuiTableCell)
         .filter({ hasText: text });
-      await expect(cellLocator).toBeVisible();
+      const count = await cellLocator.count();
+
+      if (count === 0) {
+        throw new Error(
+          `Expected at least one cell with text matching ${text}, but none were found.`,
+        );
+      }
+
+      // Checks if all matching cells are visible.
+      for (let i = 0; i < count; i++) {
+        await expect(cellLocator.nth(i)).toBeVisible();
+      }
     }
   }
 

@@ -20,11 +20,3 @@ To replace the values into secrets-rhdh-secrets.yaml we need to create the repla
 
 `sed -i "s|KEYCLOAK_BASE_URL:.*|KEYCLOAK_BASE_URL: $KEYCLOAK_BASE_URL|g" $DIR/auth/secrets-rhdh-secrets.yaml
 `
-
-### Environment Variables into Cypress tests
-
-To use environment variables into Cypress tests we need to set the envs
-in our pipeline (don't encode the values as Base64) starting with CYPRESS* prefix, and them we can get the value
-in our tests using Cypress.env() function. Pay attention that we don't need CYPRESS*
-prefix in our tests.
-For more information see [Cypress documentation](https://docs.cypress.io/guides/guides/environment-variables#Option-3-CYPRESS_)
