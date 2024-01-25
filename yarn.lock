@@ -7953,15 +7953,7 @@
     "@sagold/json-pointer" "^5.1.1"
     ebnf "^1.9.1"
 
-"@scalprum/core@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.7.0.tgz#9775a9c87a6afafbd9a0bb41c6d22df0a6524e2c"
-  integrity sha512-zvrPXexI+bxHGFY/teuwPI5yjnOuiq8uT+RDsrm3gnpr1AqZQVUiGdskl1ON/ci5lSs1kNadmXceF1BTKlicwg==
-  dependencies:
-    "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    tslib "^2.6.2"
-
-"@scalprum/core@^0.6.5", "@scalprum/core@^0.6.6":
+"@scalprum/core@0.6.6", "@scalprum/core@^0.6.5", "@scalprum/core@^0.6.6":
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.6.6.tgz#1ed8a1c0c5a3af88f2de21258b0ab234ba67b112"
   integrity sha512-Paj2Ok50LD7oTKK5av5xgaB3mZyAzHthlhlTv2rPXnMGaAhY3VryOYQttzUMIfojm+EByrKp30hdZ+WbTW70oQ==
@@ -7969,13 +7961,13 @@
     "@openshift/dynamic-plugin-sdk" "^4.0.0"
     tslib "^2.6.2"
 
-"@scalprum/react-core@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.7.0.tgz#656e9fac7166161d237699ba083812cd1f19763e"
-  integrity sha512-vi1THIHlm8VezAvOhPrDyyP4qDoRITQgpbwAyAXvak0ZbUilc4Pk0y8IoZ2qh0ymh1C7GGxGy5CEBjsX9bY0/g==
+"@scalprum/react-core@0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.6.6.tgz#f4243726874be1e2a977c865d4d3d3a97c559417"
+  integrity sha512-FAdqaSZKjyqw0lxzHysHN87YaUYf0JQgQpndPaurCCjWwRfAlGLA95HYgf0CIqlCesYVmXijLg9/jnCiHSNr5g==
   dependencies:
-    "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    "@scalprum/core" "^0.6.6"
+    "@openshift/dynamic-plugin-sdk" "^4.0.0"
+    "@scalprum/core" "^0.6.5"
     lodash "^4.17.0"
 
 "@scalprum/react-core@^0.6.7":
@@ -10136,10 +10128,19 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@18.2.48", "@types/react@^16.13.1 || ^17.0.0":
+"@types/react@*", "@types/react@18.2.48":
   version "18.2.48"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.48.tgz#11df5664642d0bd879c1f58bc1d37205b064e8f1"
   integrity sha512-qboRCl6Ie70DQQG9hhNREz81jqC1cs9EVNcjQ1AU+jH6NFfSAhVVbrrY/+nSF+Bsk4AOwm9Qa61InvMCyV+H3w==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16.13.1 || ^17.0.0":
+  version "17.0.75"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.75.tgz#cffbc76840a12fcadaf5a3cf14878bb06efcf73d"
+  integrity sha512-MSA+NzEzXnQKrqpO63CYqNstFjsESgvJAdAyyJ1n6ZQq/GLgf6nOfIKwk+Twuz0L1N6xPe+qz5xRCJrbhMaLsw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
