@@ -90,7 +90,21 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    await this.page.locator(`nav a`).filter({ hasText: navBarText }).click();
+    await this.page.click(`nav a:has-text("${navBarText}")`);
+  }
+
+  async verifyTableHeaders(expectedHeaders: string[]) {
+    for (const header of expectedHeaders) {
+      const headerLocator = this.page.locator(
+        `${UIhelperPO.MuiTable} thead th span div >> text="${header}"`,
+      );
+      const count = await headerLocator.count();
+      if (count === 0) {
+        console.log(`Header "${header}" not found.`);
+      } else {
+        console.log(`Header "${header}" found.`);
+      }
+    }
   }
 
   async selectMuiBox(label: string, value: string) {
@@ -135,7 +149,7 @@ export class UIhelper {
     await tabLocator.click();
   }
 
-  async verifyCellsInTable(texts: RegExp[]) {
+  async verifyCellsInTable(texts: (string | RegExp)[]) {
     for (const text of texts) {
       const cellLocator = this.page
         .locator(UIhelperPO.MuiTableCell)

@@ -20,14 +20,11 @@ global:
                 github:
                   my-test-org:
                     organization: janus-qe
-                    catalogPath: '/catalog-info.yaml' # string
-                    filters:
-                      branch: 'main' # string
-                      repository: '.*' # Regex
+                    catalogPath: '/catalog-info.yaml'
                     schedule:
                       frequency:
                         minutes: 1
-                      timeout: 
+                      timeout:
                         minutes: 1
                       initialDelay:
                         seconds: 15
@@ -80,11 +77,11 @@ global:
         # Enable OCM plugins.
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
           disabled: false
-          pluginConfig: 
-            catalog: 
-              providers: 
-                ocm: 
-                  default: 
+          pluginConfig:
+            catalog:
+              providers:
+                ocm:
+                  default:
                     name: testCluster # Can be any arbitrary name supported by kubernetes
                     url: ${OCM_CLUSTER_URL}
                     serviceAccountToken: ${OCM_CLUSTER_TOKEN}

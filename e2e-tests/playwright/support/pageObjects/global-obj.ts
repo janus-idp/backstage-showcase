@@ -10,6 +10,8 @@ export const UIhelperPO = {
   MuiTableRow: 'tr[class*="MuiTableRow-root"]',
   MuiCard: cardHeading =>
     `//div[contains(@class,'MuiCardHeader-root') and descendant::*[text()='${cardHeading}']]/..`,
+  MuiTable: 'table.MuiTable-root',
+  MuiCardHeader: 'div[class*="MuiCardHeader-root"]',
   tabs: '[role="tab"]',
   rowByText: (text: string) => `tr:has(:text-is("${text}"))`,
 };
