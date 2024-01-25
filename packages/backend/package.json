@@ -9,7 +9,7 @@
   },
   "//": "The extra configuration options in the start script are needed for local development",
   "scripts": {
-    "start": "cross-env LEGACY_BACKEND_START=true backstage-cli package start",
+    "start": "cross-env backstage-cli package start",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
@@ -55,7 +55,7 @@
     "express-promise-router": "4.1.1",
     "express-rate-limit": "7.1.5",
     "fs-extra": "11.2.0",
-    "isolated-vm": "4.7.2",
+    "isolated-vm": "4.6.0",
     "lodash": "4.17.21",
     "pg": "8.11.3",
     "prom-client": "15.1.0",

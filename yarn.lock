@@ -2162,7 +2162,7 @@
     winston "^3.2.1"
     winston-transport "^4.5.0"
 
-"@backstage/backend-common@0.19.9", "@backstage/backend-common@^0.19.9":
+"@backstage/backend-common@0.19.9", "@backstage/backend-common@^0.19.4", "@backstage/backend-common@^0.19.9":
   version "0.19.9"
   resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.19.9.tgz#30146662f595720b7231249bfa350ecf17a5a73a"
   integrity sha512-xaVEMnr3BNokABwPzPdwR4X5RLwbLlKsuT9g9KAuGurckBwgjSe2to75p1SjP75yKtp54PpqsIh64NKWZ9vqNg==
@@ -2778,7 +2778,7 @@
     typescript-json-schema "^0.62.0"
     yaml "^2.0.0"
 
-"@backstage/config@1.1.1", "@backstage/config@^1.1.1":
+"@backstage/config@1.1.1", "@backstage/config@^1.0.8", "@backstage/config@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@backstage/config/-/config-1.1.1.tgz#824ef3d74b391579060d5646fa1f45fcd553ce02"
   integrity sha512-H+xZbIVvstrkVnfxZFH6JB3Gb5qUIb8DjHOakHUlDX7xEIXjQnaM3Kf85RtnHu0uYpFIpB29i8FI68Y/uLeqyw==
@@ -2930,7 +2930,7 @@
     "@types/react" "^16.13.1 || ^17.0.0"
     history "^5.0.0"
 
-"@backstage/errors@^1.2.3":
+"@backstage/errors@^1.2.1", "@backstage/errors@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@backstage/errors/-/errors-1.2.3.tgz#6418d3ece63b13d14e32d44ec4db0f8866b0b1c9"
   integrity sha512-3YtYRKLNeRaSCzKSikNFoemesacDoEY0UwZAq7lnzCCpiCpSCfg7UA4y7wfjadFFU9Pd6nckUg2BzOk9keL15w==
@@ -18194,7 +18194,14 @@ isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
-isolated-vm@4.7.2, isolated-vm@^4.5.0:
+isolated-vm@4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-4.6.0.tgz#41a487c1aeeca2a3930ab520029db3b06c6c45aa"
+  integrity sha512-MEnfC/54q5PED3VJ9UJYJPOlU6mYFHS3ivR9E8yeNNBEFRFUNBnY0xO4Rj3D/SOtFKPNmsQp9NWUYSKZqAoZiA==
+  dependencies:
+    prebuild-install "^7.1.1"
+
+isolated-vm@^4.5.0:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-4.7.2.tgz#5670d5cce1d92004f9b825bec5b0b11fc7501b65"
   integrity sha512-JVEs5gzWObzZK5+OlBplCdYSpokMcdhLSs/xWYYxmYWVfOOFF4oZJsYh7E/FmfX8e7gMioXMpMMeEyX1afuKrg==

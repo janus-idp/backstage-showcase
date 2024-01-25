@@ -1,0 +1,84 @@
+import {
+  createBackendModule,
+  createServiceRef,
+  createServiceFactory,
+} from '@backstage/backend-plugin-api';
+import { pluginIDProviderExtensionPoint } from './rbacNode';
+import { PluginIdProvider } from '@janus-idp/backstage-plugin-rbac-backend';
+import {
+  DynamicPluginManager,
+  dynamicPluginsServiceRef,
+} from '@backstage/backend-dynamic-feature-service';
+
+const pluginIDProviderServiceRef = createServiceRef<PluginIdProvider>({
+  id: 'pluginIDProvider',
+  scope: 'root',
+});
+
+/*
+// When (if ?) the BackendFeatureRegistrationObserver addition is accected / merged upstream,
+// theh the following commented code would be the right one.
+
+class PluginIdProviderImpl extends BackendFeatureRegistrationObserver implements PluginIdProvider {
+  private pluginIDs: string[] = [];
+
+  getPluginIds = ():string[] => {
+    console.log(this.pluginIDs)
+    return this.pluginIDs;
+  }
+
+  setFeatures(features: BackendFeatureRegistration[]): void {
+    this.pluginIDs = features.filter(f => f.type === 'plugin').map(f => f.pluginId);
+    console.log(this.pluginIDs)
+  }
+}
+*/
+
+export const pluginIDProviderService = createServiceFactory({
+  service: pluginIDProviderServiceRef,
+  deps: {
+    dynamicPlugins: dynamicPluginsServiceRef, // to remove when the above commented code would be used
+  },
+  factory({ dynamicPlugins }) {
+    const backendPluginIds = (
+      dynamicPlugins as DynamicPluginManager
+    ).availablePackages
+      .filter(p => {
+        return p.manifest?.backstage?.role === 'backend-plugin';
+      })
+      .map(p => {
+        const removedPrefix = p.manifest.name.replace(
+          /(^@[^\/]*\/plugin-|^[^@/]*-plugin-)/,
+          '',
+        );
+        const removedSuffix = removedPrefix.replace(/-backend-dynamic$/, '');
+        return removedSuffix;
+      });
+
+    return {
+      getPluginIds: () => {
+        return ['catalog', 'scaffolder', 'permission', ...backendPluginIds];
+      },
+    };
+
+    // return new PluginIdProviderImpl()
+  },
+});
+
+export const rbacDynamicPluginsProvider = createBackendModule({
+  pluginId: 'permission',
+  moduleId: 'rbac.dynamic-plugin-ids',
+  register(reg) {
+    reg.registerInit({
+      deps: {
+        pluginIDProvider: pluginIDProviderServiceRef,
+        pluginProviderIDExtension: pluginIDProviderExtensionPoint,
+      },
+      async init({ pluginIDProvider, pluginProviderIDExtension }) {
+        pluginProviderIDExtension.addPluginIDProvider({
+          getPluginIds: pluginIDProvider.getPluginIds,
+        });
+      },
+    });
+  },
+});

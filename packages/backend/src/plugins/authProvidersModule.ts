@@ -1,11 +1,8 @@
 import {
-  createRouter,
   providers,
   defaultAuthProviderFactories,
   ProviderFactories,
 } from '@backstage/plugin-auth-backend';
-import { Router } from 'express';
-import type { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-dynamic-feature-service';
 import {
   stringifyEntityRef,
   DEFAULT_NAMESPACE,
@@ -13,7 +10,12 @@ import {
 import {
   AuthProviderFactory,
   AuthResolverContext,
+  authProvidersExtensionPoint,
 } from '@backstage/plugin-auth-node';
+import {
+  coreServices,
+  createBackendModule,
+} from '@backstage/backend-plugin-api';
 
 /**
  * Function is responsible for signing in a user with the catalog user and
@@ -239,30 +241,39 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
   }
 }
 
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
-  const providersConfig = env.config.getConfig('auth.providers');
-  const authFactories: ProviderFactories = {};
-  providersConfig.keys().forEach(providerId => {
-    const factory = getAuthProviderFactory(providerId);
-    authFactories[providerId] = factory;
-  });
+const authProvidersModule = createBackendModule({
+  pluginId: 'auth',
+  moduleId: 'auth.providers',
+  register(reg) {
+    reg.registerInit({
+      deps: {
+        config: coreServices.rootConfig,
+        authProviders: authProvidersExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ config, authProviders, logger }) {
+        const providersConfig = config.getConfig('auth.providers');
+        const authFactories: ProviderFactories = {};
+        providersConfig.keys().forEach(providerId => {
+          const factory = getAuthProviderFactory(providerId);
+          authFactories[providerId] = factory;
+        });
 
-  const providerFactiories: ProviderFactories = {
-    ...defaultAuthProviderFactories,
-    ...authFactories,
-  };
-  env.logger.info(
-    `Enabled Provider Factories : ${JSON.stringify(providerFactiories)}`,
-  );
+        const providerFactories: ProviderFactories = {
+          ...defaultAuthProviderFactories,
+          ...authFactories,
+        };
 
-  return await createRouter({
-    logger: env.logger,
-    config: env.config,
-    database: env.database,
-    discovery: env.discovery,
-    tokenManager: env.tokenManager,
-    providerFactories: providerFactiories,
-  });
-}
+        logger.info(
+          `Enabled Provider Factories : ${JSON.stringify(providerFactories)}`,
+        );
+
+        Object.entries(providerFactories).forEach(([providerId, factory]) => {
+          authProviders.registerProvider({ providerId, factory });
+        });
+      },
+    });
+  },
+});
+
+export default authProvidersModule;
