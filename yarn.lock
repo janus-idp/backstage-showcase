@@ -7953,15 +7953,7 @@
     "@sagold/json-pointer" "^5.1.1"
     ebnf "^1.9.1"
 
-"@scalprum/core@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.7.0.tgz#9775a9c87a6afafbd9a0bb41c6d22df0a6524e2c"
-  integrity sha512-zvrPXexI+bxHGFY/teuwPI5yjnOuiq8uT+RDsrm3gnpr1AqZQVUiGdskl1ON/ci5lSs1kNadmXceF1BTKlicwg==
-  dependencies:
-    "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    tslib "^2.6.2"
-
-"@scalprum/core@^0.6.5", "@scalprum/core@^0.6.6":
+"@scalprum/core@0.6.6", "@scalprum/core@^0.6.5", "@scalprum/core@^0.6.6":
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.6.6.tgz#1ed8a1c0c5a3af88f2de21258b0ab234ba67b112"
   integrity sha512-Paj2Ok50LD7oTKK5av5xgaB3mZyAzHthlhlTv2rPXnMGaAhY3VryOYQttzUMIfojm+EByrKp30hdZ+WbTW70oQ==
@@ -7969,13 +7961,13 @@
     "@openshift/dynamic-plugin-sdk" "^4.0.0"
     tslib "^2.6.2"
 
-"@scalprum/react-core@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.7.0.tgz#656e9fac7166161d237699ba083812cd1f19763e"
-  integrity sha512-vi1THIHlm8VezAvOhPrDyyP4qDoRITQgpbwAyAXvak0ZbUilc4Pk0y8IoZ2qh0ymh1C7GGxGy5CEBjsX9bY0/g==
+"@scalprum/react-core@0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.6.6.tgz#f4243726874be1e2a977c865d4d3d3a97c559417"
+  integrity sha512-FAdqaSZKjyqw0lxzHysHN87YaUYf0JQgQpndPaurCCjWwRfAlGLA95HYgf0CIqlCesYVmXijLg9/jnCiHSNr5g==
   dependencies:
-    "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    "@scalprum/core" "^0.6.6"
+    "@openshift/dynamic-plugin-sdk" "^4.0.0"
+    "@scalprum/core" "^0.6.5"
     lodash "^4.17.0"
 
 "@scalprum/react-core@^0.6.7":
@@ -9439,10 +9431,10 @@
     lz-string "^1.5.0"
     pretty-format "^27.0.2"
 
-"@testing-library/jest-dom@6.2.1":
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-6.2.1.tgz#0beba7515caad06de8733e1dd5a040fe34ad212d"
-  integrity sha512-Nuy/uFFDe9h/2jwoUuMKgoxvgkUv4S9jI9bARj6dGUKJ3euRhg8JFi5sciYbrayoxkadEOZednRT9+vo6LvvxQ==
+"@testing-library/jest-dom@6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-6.3.0.tgz#e8d308e0c0e91d882340cbbfdea0e4daa7987d36"
+  integrity sha512-hJVIrkFizEQxoWsGBlycTcQhrpoCH4DhXfrnHFFXgkx3Xdm15zycsq5Ep+vpw4W8S0NJa8cxDHcuJib+1tEbhg==
   dependencies:
     "@adobe/css-tools" "^4.3.2"
     "@babel/runtime" "^7.9.2"
@@ -10136,10 +10128,19 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@18.2.48", "@types/react@^16.13.1 || ^17.0.0":
+"@types/react@*", "@types/react@18.2.48":
   version "18.2.48"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.48.tgz#11df5664642d0bd879c1f58bc1d37205b064e8f1"
   integrity sha512-qboRCl6Ie70DQQG9hhNREz81jqC1cs9EVNcjQ1AU+jH6NFfSAhVVbrrY/+nSF+Bsk4AOwm9Qa61InvMCyV+H3w==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16.13.1 || ^17.0.0":
+  version "17.0.75"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.75.tgz#cffbc76840a12fcadaf5a3cf14878bb06efcf73d"
+  integrity sha512-MSA+NzEzXnQKrqpO63CYqNstFjsESgvJAdAyyJ1n6ZQq/GLgf6nOfIKwk+Twuz0L1N6xPe+qz5xRCJrbhMaLsw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -24498,7 +24499,7 @@ sucrase@^3.20.2:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-superagent@^8.0.5:
+superagent@^8.1.2:
   version "8.1.2"
   resolved "https://registry.yarnpkg.com/superagent/-/superagent-8.1.2.tgz#03cb7da3ec8b32472c9d20f6c2a57c7f3765f30b"
   integrity sha512-6WTxW1EB6yCxV5VFOIPQruWGHqc3yI7hEmZK6h+pyk69Lk/Ut7rLUY6W/ONF2MjBuGjvmMiIpsrVJ2vjrHlslA==
@@ -24514,13 +24515,13 @@ superagent@^8.0.5:
     qs "^6.11.0"
     semver "^7.3.8"
 
-supertest@6.3.3:
-  version "6.3.3"
-  resolved "https://registry.yarnpkg.com/supertest/-/supertest-6.3.3.tgz#42f4da199fee656106fd422c094cf6c9578141db"
-  integrity sha512-EMCG6G8gDu5qEqRQ3JjjPs6+FYT1a7Hv5ApHvtSghmOFJYtsU5S+pSb6Y2EUeCEY3CmEL3mmQ8YWlPOzQomabA==
+supertest@6.3.4:
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/supertest/-/supertest-6.3.4.tgz#2145c250570c2ea5d337db3552dbfb78a2286218"
+  integrity sha512-erY3HFDG0dPnhw4U+udPfrzXa4xhSG+n4rxfRuZWCUvjFWwKl+OxWf/7zk50s84/fAAs7vf5QAb9uRa0cCykxw==
   dependencies:
     methods "^1.1.2"
-    superagent "^8.0.5"
+    superagent "^8.1.2"
 
 supports-color@^2.0.0:
   version "2.0.0"

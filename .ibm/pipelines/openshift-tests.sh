@@ -140,8 +140,6 @@ run_tests() {
   (
     set -e
     echo Using PR container image: pr-${GIT_PR_NUMBER}-${SHORT_SHA}
-    export BASE_URL="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
-    echo "$BASE_URL"
     yarn test
   ) |& tee "/tmp/${LOGFILE}"
 
@@ -157,7 +155,11 @@ run_tests() {
 check_backstage_running() {
   # Check if Backstage is up and running
   BACKSTAGE_URL_RESPONSE=$(curl -Is "https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}" | head -n 1)
+
   echo "$BACKSTAGE_URL_RESPONSE"
+  export BASE_URL="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+  echo "######## BASE URL ########"
+  echo "$BASE_URL"
 }
 
 main() {
@@ -203,6 +205,7 @@ main() {
   oc get pods -n ${NAME_SPACE}
 
   check_backstage_running
+
 
   run_tests
 }
