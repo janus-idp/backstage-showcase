@@ -12,10 +12,10 @@
     "minimumReleaseAge": "1 day"
   },
   "pip_requirements": {
-    "fileMatch": ["**/requirements-*.in","**/requirements-*.txt"],
+    "fileMatch": ["requirements*"],
     "postUpgradeTasks": {
       "commands": ["./.rhdh/docker/cachito_hash.sh"],
-      "fileFilters": ["**/requirements-*.in","**/requirements-*.txt"],
+      "fileFilters": ["**/requirements*"],
       "executionMode": "update"
     }
   
