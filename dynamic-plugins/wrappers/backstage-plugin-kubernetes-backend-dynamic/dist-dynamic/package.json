@@ -11,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin"
   },
   "exports": {
     ".": {
@@ -26,7 +26,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-kubernetes-backend --override-interop default"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-kubernetes-backend --embed-package @backstage/plugin-kubernetes-node --override-interop default"
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.0.0",
@@ -61,10 +61,9 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/catalog-client": "1.6.0-next.1",
-    "@backstage/backend-common": "0.21.0-next.1",
-    "@backstage/backend-plugin-api": "0.6.10-next.1",
-    "@backstage/backend-dynamic-feature-service": "0.1.1-next.1",
+    "@backstage/backend-common": "^0.21.0-next.1",
+    "@backstage/backend-plugin-api": "^0.6.10-next.1",
+    "@backstage/catalog-client": "^1.6.0-next.1",
     "@backstage/catalog-model": "^1.4.4-next.0",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",

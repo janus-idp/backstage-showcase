@@ -22,12 +22,12 @@
     query-string "^7.0.0"
     xcase "^2.0.1"
 
-"@gitbeaker/core@^39.34.2":
-  version "39.34.2"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-39.34.2.tgz#c9b7d9af51b6adee79428efde8dce3fc4de9c855"
-  integrity sha512-Vs1BKnEMnHltq1nMuBKxust1E+JUroDVKLy87ElLgvjAkH726mEVJCFnNC2/o2Ru7Et2qqhFN+PlUeYzzAbU2w==
+"@gitbeaker/core@^39.33.0":
+  version "39.33.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-39.33.0.tgz#f502a37c88814740f1e251e6ebfd739d9dec0efe"
+  integrity sha512-Lygl9s7/fNh5VRwbgJ7fBDaSpgAJV43WQeT9N7G1AaJB9UOGAdzMSZINrYhQDRwSB2H4/VA+DTmW1mI/I8R3Gg==
   dependencies:
-    "@gitbeaker/requester-utils" "^39.34.2"
+    "@gitbeaker/requester-utils" "^39.33.0"
     qs "^6.11.2"
     xcase "^2.0.1"
 
@@ -51,10 +51,10 @@
     qs "^6.10.1"
     xcase "^2.0.1"
 
-"@gitbeaker/requester-utils@^39.34.2":
-  version "39.34.2"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-39.34.2.tgz#295cbb7cdf460988f438cb3bb956ce4c0f92655c"
-  integrity sha512-ToCwNKQe/+uHjB2kPTXY72SvbAyjsPABb9T1EiMGuVahk6rWdhtVZIM659rGuqdJGTqQ4y18wk0A+w6D3Z2lCQ==
+"@gitbeaker/requester-utils@^39.33.0":
+  version "39.33.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-39.33.0.tgz#227f0741648029e3999ab5a1ba5bf375249b019f"
+  integrity sha512-/A+mAxtFGjXZ+YJo8xmVw1TudocVlOkEsx+3XMEi6vpg/KRcFLgj4XxJsYhtuZy37jxyOginKDw2XwmveGYl8A==
   dependencies:
     picomatch-browser "^2.2.6"
     qs "^6.11.2"
@@ -62,12 +62,12 @@
     xcase "^2.0.1"
 
 "@gitbeaker/rest@^39.25.0":
-  version "39.34.2"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.34.2.tgz#4048a6da3d66b9a9f99d7f61437ed59b71286213"
-  integrity sha512-MT4Vue1ltvsR7Nug18A6DIk+u+gu64+b0Un/R2XIsLB7eSAX8Pm/sQnYxsjHksroZJVlyGHiGsaxbllX75Pntg==
+  version "39.33.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.33.0.tgz#8935c536c3e817c826bb19f5802eda6f1a3e7975"
+  integrity sha512-TReCL5WHJui+EQRZbHYN03BHTvOfXsPnEWx86DnZD2hCsKy3v5Rmc0FoWWk1PVhmEYQkXO3SUARp9GSg+DdGDQ==
   dependencies:
-    "@gitbeaker/core" "^39.34.2"
-    "@gitbeaker/requester-utils" "^39.34.2"
+    "@gitbeaker/core" "^39.33.0"
+    "@gitbeaker/requester-utils" "^39.33.0"
 
 "@sindresorhus/is@^4.0.0":
   version "4.6.0"
@@ -119,9 +119,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "20.11.16"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.16.tgz#4411f79411514eb8e2926f036c86c9f0e4ec6708"
-  integrity sha512-gKb0enTmRCzXSSUJDq6/sPcqrfCv2mkkG6Jt/clpn5eiCbKTY+SgZUxo+p8ZKMof5dCp9vHQUAB7wOUTod22wQ==
+  version "20.11.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.7.tgz#cb49aedd758c978c30806d0c38b520ed2a3df6e0"
+  integrity sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==
   dependencies:
     undici-types "~5.26.4"
 

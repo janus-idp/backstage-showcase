@@ -11,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -38,7 +38,6 @@
   "files": [
     "dist",
     "dist-dynamic/*.*",
-    "dist-dynamic/dist/**",
-    "dist-dynamic/alpha/*"
+    "dist-dynamic/dist/**"
   ]
 }

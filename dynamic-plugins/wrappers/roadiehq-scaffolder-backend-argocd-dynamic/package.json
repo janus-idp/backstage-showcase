@@ -39,7 +39,6 @@
   "files": [
     "dist",
     "dist-dynamic/*.*",
-    "dist-dynamic/dist/**",
-    "dist-dynamic/alpha/*"
+    "dist-dynamic/dist/**"
   ]
 }

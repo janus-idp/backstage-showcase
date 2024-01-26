@@ -11,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin"
   },
   "exports": {
     ".": {
