@@ -4,17 +4,17 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements-build.txt --strip-extras requirements-build.in
 #
-babel==2.13.0
+babel==2.14.0
     # via
     #   -r requirements-build.in
     #   mkdocs-material
 calver==2022.6.26
     # via -r requirements-build.in
-certifi==2023.7.22
+certifi==2023.11.17
     # via
     #   -r requirements-build.in
     #   requests
-charset-normalizer==3.3.0
+charset-normalizer==3.3.2
     # via
     #   -r requirements-build.in
     #   requests
@@ -26,7 +26,7 @@ colorama==0.4.6
     # via
     #   -r requirements-build.in
     #   mkdocs-material
-cython==0.29.36
+cython==0.29.37
     # via -r requirements-build.in
 editables==0.5
     # via
@@ -40,17 +40,17 @@ ghp-import==2.1.0
     #   mkdocs
 hatch-nodejs-version==0.3.2
     # via -r requirements-build.in
-hatch-requirements-txt==0.4.0
+hatch-requirements-txt==0.4.1
     # via -r requirements-build.in
-hatch-vcs==0.3.0
+hatch-vcs==0.4.0
     # via -r requirements-build.in
-hatchling==1.18.0
+hatchling==1.21.1
     # via
     #   -r requirements-build.in
     #   hatch-nodejs-version
     #   hatch-requirements-txt
     #   hatch-vcs
-idna==3.4
+idna==3.6
     # via
     #   -r requirements-build.in
     #   requests
@@ -73,7 +73,7 @@ markdown-inline-graphviz-extension==1.1.2
     # via
     #   -r requirements-build.in
     #   mkdocs-techdocs-core
-markupsafe==2.1.3
+markupsafe==2.1.4
     # via
     #   -r requirements-build.in
     #   jinja2
@@ -115,7 +115,7 @@ packaging==23.2
     #   setuptools-scm
 paginate==0.5.6
     # via mkdocs-material
-pathspec==0.11.2
+pathspec==0.12.1
     # via
     #   -r requirements-build.in
     #   hatchling
@@ -128,7 +128,7 @@ platformdirs==3.11.0
     # via
     #   -r requirements-build.in
     #   mkdocs
-pluggy==1.3.0
+pluggy==1.4.0
     # via
     #   -r requirements-build.in
     #   hatchling
@@ -146,7 +146,7 @@ python-dateutil==2.8.2
     # via
     #   -r requirements-build.in
     #   ghp-import
-python-slugify==8.0.1
+python-slugify==8.0.2
     # via
     #   -r requirements-build.in
     #   mkdocs-monorepo-plugin
@@ -160,7 +160,7 @@ pyyaml-env-tag==0.1
     # via
     #   -r requirements-build.in
     #   mkdocs
-regex==2023.10.3
+regex==2023.12.25
     # via
     #   -r requirements-build.in
     #   mkdocs-material
@@ -187,15 +187,15 @@ tomli==2.0.1
     #   -r requirements-build.in
     #   hatchling
     #   setuptools-scm
-trove-classifiers==2023.9.19
+trove-classifiers==2023.11.29
     # via
     #   -r requirements-build.in
     #   hatchling
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via
     #   -r requirements-build.in
     #   setuptools-scm
-urllib3==2.0.7
+urllib3==2.1.0
     # via
     #   -r requirements-build.in
     #   requests
@@ -203,11 +203,11 @@ watchdog==3.0.0
     # via
     #   -r requirements-build.in
     #   mkdocs
-wheel==0.41.2
+wheel==0.42.0
     # via -r requirements-build.in
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==23.3
+pip==23.3.2
     # via -r requirements-build.in
 setuptools==68.2.2
     # via
