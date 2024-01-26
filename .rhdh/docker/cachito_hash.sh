@@ -1,7 +1,14 @@
 #!/bin/bash
-
+#
+# Copyright (c) 2023 Red Hat, Inc.
+# This program and the accompanying materials are made
+# available under the terms of the Eclipse Public License 2.0
+# which is available at https://www.eclipse.org/legal/epl-2.0/
+#
 # see README.requirements.md -- this is used to regenerate the sha256 sums in the .in and .txt files
 
+SCRIPT_DIR=$(cd "$(dirname "$0")" || exit; pwd)
+pushd "$SCRIPT_DIR" >/dev/null || exit
 # update the sha256: values in requirements.in and requirements-build.in files 
 for file in requirements.in requirements-build.in; do
     echo "Update $file ..."
@@ -25,5 +32,4 @@ for file in requirements.in requirements-build.in; do
         done
     done
 done
-
-
+popd >/dev/null || exit

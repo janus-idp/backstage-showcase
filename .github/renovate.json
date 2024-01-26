@@ -11,6 +11,9 @@
   "npm": {
     "minimumReleaseAge": "1 day"
   },
+  "pip_requirements": {
+    "fileMatch": ["requirements.*\\.in"]
+  },
   "packageRules": [
     {
       "matchPackagePatterns": [
