@@ -2,21 +2,18 @@ import { InfoCard as BSInfoCard } from '@backstage/core-components';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import React from 'react';
-import rhdhSettings from '../../rhdh.json';
+import buildMetadata from '../../build-metadata.json';
 
 export const infoCard = (
-  <BSInfoCard title="Backstage Metadata">
+  <BSInfoCard title={buildMetadata.title}>
     <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <Typography variant="subtitle1" gutterBottom>
-          RHDH Version: {rhdhSettings.rhdhVersion}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="subtitle1">
-          Backstage Version: {rhdhSettings.backstageVersion}
-        </Typography>
-      </Grid>
+      {buildMetadata.card.map(text => (
+        <Grid item xs={12} key={text}>
+          <Typography variant="subtitle1" gutterBottom>
+            {text}
+          </Typography>
+        </Grid>
+      ))}
     </Grid>
   </BSInfoCard>
 );
