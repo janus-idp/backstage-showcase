@@ -20,11 +20,12 @@
         "^@backstage/",
         "^@janus-idp/",
         "^@immobiliarelabs/",
-        "^@roadiehq/"
+        "^@roadiehq/",
+        "^@pagerduty/"
       ],
       "groupName": ["Backstage packages"],
       "dependencyDashboardApproval": true
     }
   ],
-  "ignorePaths": ["**/dist-dynamic/**"]
+  "ignorePaths": ["**/dynamic-plugins/**"]
 }
