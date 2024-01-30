@@ -23,8 +23,6 @@
     "prettier:fix": "prettier --ignore-unknown --write .",
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
-    "changeset": "changeset",
-    "changeset:empty": "changeset --empty",
     "version:bump": "backstage-cli versions:bump --pattern @{backstage,roadiehq,immobiliarelabs,janus-idp}/*",
     "version:all": "node ./scripts/update-backstage.mjs"
   },
@@ -42,7 +40,6 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.25.1",
-    "@changesets/cli": "2.27.1",
     "@smithy/util-utf8": "2.1.1",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
