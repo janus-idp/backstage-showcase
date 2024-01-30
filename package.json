@@ -25,7 +25,7 @@
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
-    "version:bump": "backstage-cli versions:bump --pattern @{backstage,roadiehq,immobiliarelabs,janus-idp}/*",
+    "version:bump": "backstage-cli versions:bump --pattern @{backstage,roadiehq,immobiliarelabs,janus-idp,pagerduty}/*",
     "version:all": "node ./scripts/update-backstage.mjs"
   },
   "workspaces": {
