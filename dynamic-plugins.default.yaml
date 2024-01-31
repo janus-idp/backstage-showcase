@@ -554,16 +554,7 @@ plugins:
         providers:
           bitbucketCloud:
             yourProviderId: # identifies your ingested dataset
-              catalogPath: /catalog-info.yaml # default value
-              filters: # optional
-                projectKey: '^apis-.*$' # optional; RegExp
-                repoSlug: '^service-.*$' # optional; RegExp
-              schedule: # optional; same options as in TaskScheduleDefinition
-                # supports cron, ISO duration, "human duration" as used in code
-                frequency: { minutes: 30 }
-                # supports ISO duration, "human duration" as used in code
-                timeout: { minutes: 3 }
-              workspace: workspace-name
+              workspace: ${BITBUCKET_WORKSPACE}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
     disabled: true
@@ -573,16 +564,7 @@ plugins:
         providers:
           bitbucketServer:
             yourProviderId: # identifies your ingested dataset
-              host: 'bitbucket.mycompany.com'
-              catalogPath: /catalog-info.yaml # default value
-              filters: # optional
-                projectKey: '^apis-.*$' # optional; RegExp
-                repoSlug: '^service-.*$' # optional; RegExp
-              schedule: # optional; same options as in TaskScheduleDefinition
-                # supports cron, ISO duration, "human duration" as used in code
-                frequency: { minutes: 30 }
-                # supports ISO duration, "human duration" as used in code
-                timeout: { minutes: 3 }
+              host: ${BITBUCKET_HOST}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true
