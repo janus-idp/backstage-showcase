@@ -27,5 +27,5 @@
       "dependencyDashboardApproval": true
     }
   ],
-  "ignorePaths": ["**/dynamic-plugins/**"]
+  "ignorePaths": ["**/dist-dynamic/**"]
 }
