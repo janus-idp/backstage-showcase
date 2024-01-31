@@ -3074,10 +3074,10 @@
     "@backstage/plugin-catalog-node" "^1.6.1"
     "@backstage/plugin-scaffolder-common" "^1.4.5"
 
-"@backstage/plugin-catalog-backend@1.16.1", "@backstage/plugin-catalog-backend@^1.16.1":
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-1.16.1.tgz#9c47fe00ea6f23306315c24324ec18859401c32c"
-  integrity sha512-XCNvlOuozV69SkzQ+m7/td8Ojya1cm6V5tbCbmfgv+c5PivznS/l/iWJXhYJOJ8jQzQ6QVKQfMhr+yrofxjEWA==
+"@backstage/plugin-catalog-backend@1.16.2", "@backstage/plugin-catalog-backend@^1.16.1":
+  version "1.16.2"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-1.16.2.tgz#fe4765d02d4cd8e17d3705bee5ecdbb7a03e5018"
+  integrity sha512-aTTztezyaW1y1NaaWIZ++QANn4bCFFl0DUA/4JUW14A6hQJR8F3h+V/XRaM5kkkG8F2arzowwbfTREKiDU8Ezw==
   dependencies:
     "@backstage/backend-common" "^0.20.1"
     "@backstage/backend-openapi-utils" "^0.1.2"
@@ -5704,10 +5704,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@janus-idp/backstage-plugin-rbac-backend@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-2.1.1.tgz#c99c6aabba422abf04368cae2db26a9bafc19141"
-  integrity sha512-2LD0ZL2cnUXkkIE2oseeIeg6iyckQZGrDatIAWcNU1Y/0YAFiIyAjQ8mxIbza/MTZF4Dw8+E4Y7bRCdURGYClw==
+"@janus-idp/backstage-plugin-rbac-backend@2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-2.1.2.tgz#c664d60ed4aa360ce8869a22ae15b681c865de9f"
+  integrity sha512-fhepsmRY3ogCwxCSgbhSnQfcBOJFdHOC9Wd41e/AU1KIqHMMfuzWiNozu9VblPHHnjsWxrHjVUOKTRgArdzrRw==
   dependencies:
     "@backstage/backend-common" "^0.19.8"
     "@backstage/backend-plugin-api" "^0.5.4"
@@ -5739,10 +5739,10 @@
   dependencies:
     "@backstage/plugin-permission-common" "^0.7.9"
 
-"@janus-idp/cli@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.5.0.tgz#9fa22dccdb9e29d275fad29f3e662b8d489f2ce7"
-  integrity sha512-hmQF5UBomUbR2Hqgzzwk+NTXs4bUfJccs9wU0dl8yQYQpbNoJpxDIjqpslGla9Dap9uLlOGbNqW7GFXJGo9Owg==
+"@janus-idp/cli@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.6.0.tgz#e9446db9892bf5a7262a0d9316e3e9591262cc79"
+  integrity sha512-c1a+xQhPqbOG3gXMhMLxWKxYUX4XpVfBAPKg/N8uJbKzuJMmi5wrYoh/Y5Kq7KiQoTSurtCokhBYpL0Au+AQfw==
   dependencies:
     "@backstage/cli-common" "^0.1.13"
     "@backstage/cli-node" "^0.1.5"
@@ -7210,10 +7210,10 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.6.0.tgz#de2c6823203d6f319511898bb5de7e70f5267e19"
   integrity sha512-OWlrQAnWn9577PhVgqjUvMr1pg57Bc4jv0iL4w0PRuOSRvq67rvHW9Ie/dZVMvCzhSCB+UxhcY/PmCmFj33Q+g==
 
-"@pagerduty/backstage-plugin@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@pagerduty/backstage-plugin/-/backstage-plugin-0.7.4.tgz#a8c847843c73ea512acdef993d1c9853d50f3a3e"
-  integrity sha512-uPWM5R04MkZNPQyRGIgeh7yUuzg90IegoF29NuToviIYFxJpBlNgWTbjMJKXIoc4oKao1cp/fcZ9jHGPw0SJdg==
+"@pagerduty/backstage-plugin@0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@pagerduty/backstage-plugin/-/backstage-plugin-0.8.2.tgz#91e3933e17692aef3e1bd9321e6905b58a9c21bb"
+  integrity sha512-rZiwcP1ZG69Y59NKkOMGn3SRsXBEkCAVd7gZF7DjAPv+s+T6vdlw3fbPBllKtcfjjRTi6S8awjFJ4w35mtztrw==
   dependencies:
     "@backstage/catalog-model" "^1.4.3"
     "@backstage/core-components" "^0.13.8"

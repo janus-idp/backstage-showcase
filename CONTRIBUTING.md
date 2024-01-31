@@ -43,7 +43,7 @@ If you found a bug in our showcase app, please submit an [issue](https://github.
 1. Run the following command
 
    ```console
-   yarn version:all
+   yarn versions:all
    ```
 
 ### Enhancement Requests

@@ -20,7 +20,8 @@
         "^@backstage/",
         "^@janus-idp/",
         "^@immobiliarelabs/",
-        "^@roadiehq/"
+        "^@roadiehq/",
+        "^@pagerduty/"
       ],
       "groupName": ["Backstage packages"],
       "dependencyDashboardApproval": true
