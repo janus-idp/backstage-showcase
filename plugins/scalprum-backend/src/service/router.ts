@@ -3,7 +3,7 @@ import {
   errorHandler,
 } from '@backstage/backend-common';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { PluginManager } from '@backstage/backend-plugin-manager';
+import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
 import express, { Router } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,7 +11,7 @@ import * as url from 'url';
 
 export interface RouterOptions {
   logger: LoggerService;
-  pluginManager: PluginManager;
+  pluginManager: DynamicPluginManager;
   discovery: PluginEndpointDiscovery;
 }
 
@@ -23,7 +23,7 @@ export async function createRouter(options: RouterOptions): Promise<Router> {
   const externalBaseUrl = await discovery.getExternalBaseUrl('scalprum');
 
   const availablePackages = pluginManager.availablePackages;
-  const plugins = pluginManager.plugins;
+  const plugins = pluginManager.plugins();
 
   const scalprumPlugins: {
     [key: string]: { name: string; manifestLocation: string };
@@ -76,6 +76,9 @@ export async function createRouter(options: RouterOptions): Promise<Router> {
         name: pkgManifest.name,
         manifestLocation: `${externalBaseUrl}/${pkgManifest.name}/plugin-manifest.json`,
       };
+      logger.info(
+        `Loaded dynamic frontend plugin '${plugin.name}' from '${pkg.location}' `,
+      );
     });
 
   router.get('/plugins', (_, response) => {

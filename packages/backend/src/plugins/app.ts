@@ -1,6 +1,6 @@
 import { createRouter } from '@backstage/plugin-app-backend';
 import { Router } from 'express';
-import type { PluginEnvironment } from '../types';
+import type { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-dynamic-feature-service';
 import { resolvePackagePath } from '@backstage/backend-common';
 import { resolve as resolvePath } from 'path';
 import fs from 'fs-extra';

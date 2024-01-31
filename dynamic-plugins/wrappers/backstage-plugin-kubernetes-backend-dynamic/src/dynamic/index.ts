@@ -1,7 +1,7 @@
 import {
   BackendDynamicPluginInstaller,
   LegacyPluginEnvironment as PluginEnvironment,
-} from '@backstage/backend-plugin-manager';
+} from '@backstage/backend-dynamic-feature-service';
 import { KubernetesBuilder } from '@backstage/plugin-kubernetes-backend';
 import { CatalogClient } from '@backstage/catalog-client';
 

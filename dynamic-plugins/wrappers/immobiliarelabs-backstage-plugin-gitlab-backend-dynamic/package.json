@@ -1,6 +1,6 @@
 {
   "name": "immobiliarelabs-backstage-plugin-gitlab-backend",
-  "version": "6.2.0",
+  "version": "6.4.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -23,18 +23,18 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default"
   },
   "dependencies": {
-    "@backstage/backend-common": "0.19.8",
-    "@backstage/backend-plugin-api": "0.6.6",
-    "@backstage/plugin-catalog-node": "1.4.7",
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.5",
-    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.2.0"
+    "@backstage/backend-common": "0.19.9",
+    "@backstage/backend-plugin-api": "0.6.9",
+    "@backstage/plugin-catalog-node": "1.6.1",
+    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.4.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.23.1",
-    "@janus-idp/cli": "1.4.3"
+    "@backstage/cli": "0.25.1",
+    "@janus-idp/cli": "1.6.0"
   },
   "files": [
     "dist",

@@ -2,7 +2,7 @@
 
 Welcome to the dynamic-plugins-info backend plugin!
 
-This plugin depends on the `backend-plugin-manager` and lists all the dynamic plugins installed in the dynamic plugins root folder.
+This plugin depends on the `backend-dynamic-feature-service` and lists all the dynamic plugins installed in the dynamic plugins root folder.
 
 ## Getting started
 

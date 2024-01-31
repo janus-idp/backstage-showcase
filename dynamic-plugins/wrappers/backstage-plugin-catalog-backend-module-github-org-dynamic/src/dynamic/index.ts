@@ -1,4 +1,4 @@
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 import { GithubOrgEntityProvider } from '@backstage/plugin-catalog-backend-module-github';
 
 export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {

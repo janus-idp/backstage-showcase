@@ -6,7 +6,7 @@ This document describes how to enable the dynamic plugins feature in the Janus B
 
 ## How it works
 
-The dynamic plugin support is based on the [backend plugin manager package](https://github.com/backstage/backstage/tree/master/packages/backend-plugin-manager), which is a service that scans a configured root directory (`dynamicPlugins.rootDirectory` in the app config) for dynamic plugin packages, and loads them dynamically.
+The dynamic plugin support is based on the [backend plugin manager package](https://github.com/backstage/backstage/tree/master/packages/backend-dynamic-feature-service), which is a service that scans a configured root directory (`dynamicPlugins.rootDirectory` in the app config) for dynamic plugin packages, and loads them dynamically.
 
 While this package remains in an experimental phase and is a private package in the upstream backstage repository, it is primarily awaiting seamless integration with the new backend system before its APIs can be finalized and frozen. It is worth noting that it is already in use in the backstage showcase application, facilitated by a derivative package published in the `@janus-idp` NPM organization.
 
@@ -25,7 +25,7 @@ So there are some changes to be made to the plugin code, in order to make it com
 
 1. The plugin must:
 
-- import the `@backstage/backend-plugin-manager` package, as an alias to `janus-idp/backend-plugin-manager@v1.19.6` package,
+- import the `@backstage/backend-dynamic-feature-service` package,
 - add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
@@ -44,12 +44,12 @@ These recommended changes to the `package.json` are summarized below:
   ...
   "dependencies": {
     ...
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@v1.19.6",
+    "@backstage/backend-dynamic-feature-service": "0.1.0",
     ...
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.4.3"
+    "@janus-idp/cli": "^1.4.7"
   },
   ...
   "files": [
@@ -60,10 +60,10 @@ These recommended changes to the `package.json` are summarized below:
   ],
 ```
 
-2. A `src/dynamic/index.ts` file must be added, and must export a named entry point (`dynamicPluginInstaller`) of a specific type (`BackendDynamicPluginInstaller`) that will contain the code of the plugin wiring:
+1. A `src/dynamic/index.ts` file must be added, and must export a named entry point (`dynamicPluginInstaller`) of a specific type (`BackendDynamicPluginInstaller`) that will contain the code of the plugin wiring:
 
 ```ts
-import { BackendDynamicPluginInstaller } from '@backstage/backend-plugin-manager';
+import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 
 export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
   kind: 'legacy',
@@ -105,7 +105,7 @@ export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
 };
 ```
 
-3. The `dynamicPluginInstaller` entry point must be exported in the main `src/index.ts` file:
+1. The `dynamicPluginInstaller` entry point must be exported in the main `src/index.ts` file:
 
 ```ts
 export * from './dynamic/index';
@@ -153,12 +153,12 @@ This merges the code of the specified dependencies in the generated dynamic plug
 
 This is useful when wrapping a third-party plugin to make it compatible with the dynamic plugin support, as explained in the next section.
 
-#### Wrapping a third-party plugin to add dynamic plugin support
+#### Wrapping a third-party backend plugin to add dynamic plugin support
 
-In order to add dynamic plugin support to a third-party plugin, without touching the third-party plugin source code, a wrapper plugin can be created that will:
+In order to add dynamic plugin support to a third-party backend plugin, without touching the third-party plugin source code, a wrapper plugin can be created that will:
 
-- import the third-party plugin,
-- include the additions described above,
+- import the third-party plugin as a dependency.
+- include the additions to the `package.json` and `src/dynamic/index.ts` file as described above.
 - export it as a dynamic plugin.
 
 Examples of such a wrapper plugins can be found in the [Janus showcase repository](https://github.com/janus-idp/backstage-showcase/tree/main/dynamic-plugins/wrappers). For example, [roadiehq-scaffolder-backend-module-utils-dynamic](https://github.com/janus-idp/backstage-showcase/tree/main/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic) wraps the `@roadiehq/scaffolder-backend-module-utils` package to make it compatible with the dynamic plugin support. It then embeds the wrapped plugin code in the generated code and hoist its `@backstage` dependencies as peer dependencies in the resulting dynamic plugin through the use of the `--embed-package` option in the [`export-dynamic` script](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/package.json#L26).
@@ -185,7 +185,7 @@ These recommended changes to the `package.json` are summarized below:
   },
   ...
   "devDependencies": {
-    "@janus-idp/cli": "1.4.3"
+    "@janus-idp/cli": "^1.4.7"
   },
   ...
   "files": [
@@ -224,24 +224,24 @@ However if you want to customize Scalprum's behavior, you can do so by including
   ...
 ```
 
-Dynamic plugins may also need to adopt to specific Backstage needs like static JSX children for mountpoints and dynamic routes. These changes are strictly optional and exported symbols are incompatible with static plugins:
+Dynamic plugins may also need to adopt to specific Backstage needs like static JSX children for mountpoints and dynamic routes. These changes are strictly optional and exported symbols are incompatible with static plugins.
 
-1. To include static JSX as element children with your dynamically imported component, please define an additional export as follows and use that as your dynamic plugin `importName`:
+To include static JSX as element children with your dynamically imported component, please define an additional export as follows and use that as your dynamic plugin `importName`:
 
-   ```tsx
-   // Used by a static plugin
-   export const EntityTechdocsContent = () => {...}
+```tsx
+// Used by a static plugin
+export const EntityTechdocsContent = () => {...}
 
-   // Used by a dynamic plugin
-   export const DynamicEntityTechdocsContent = {
-     element: EntityTechdocsContent,
-     staticJSXContent: (
-       <TechDocsAddons>
-         <ReportIssue />
-       </TechDocsAddons>
-     ),
-   };
-   ```
+// Used by a dynamic plugin
+export const DynamicEntityTechdocsContent = {
+  element: EntityTechdocsContent,
+  staticJSXContent: (
+    <TechDocsAddons>
+      <ReportIssue />
+    </TechDocsAddons>
+  ),
+};
+```
 
 #### Exporting the plugin as a dynamic plugin package
 
@@ -255,9 +255,9 @@ The resulting assets will be located in the `dist-scalprum` sub-folder of the pl
 
 Since the `dist-scalprum` was added to the `files` array, a resulting NPM package (`npm pack` or `npm publish`) will support both static and dynamic plugin loading of the package.
 
-#### Wrapping a third-party plugin to add dynamic plugin support
+#### Wrapping a third-party frontend plugin to add dynamic plugin support
 
-In order to add dynamic plugin support to a third-party plugin, without touching the third-party plugin source code, a wrapper plugin can be created that will:
+In order to add dynamic plugin support to a third-party front plugin, without touching the third-party plugin source code, a wrapper plugin can be created that will:
 
 - install the third-party plugin as a dependency,
 - reexport the third-party plugin in `src/index.ts` via `export {default} from '<package_name>'`,
@@ -352,6 +352,10 @@ The showcase docker image comes pre-loaded with a selection of dynamic plugins, 
 
 Upon application startup, for each plugin that is disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will display a line similar to the following:
 
+```
+======= Skipping disabled dynamic plugin ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+```
+
 To activate this plugin, simply add a package with the same name and adjust the `disabled` field in the helm chart values as shown below:
 
 ```diff
@@ -364,7 +368,9 @@ global:
 +        disabled: false
 ```
 
-While the plugin's default configuration is extracted from the `dynamic-plugins.default.yaml` file, you still have the option to override it by incorporating a `pluginConfig` entry into the plugin configuration.
+While the plugin's default configuration is extracted from the `dynamic-plugins.default.yaml` file, you still have the option to replace it by incorporating a `pluginConfig` entry into the plugin configuration.
+
+Note: Usually the plugin's default configuration references environment variables. You should make sure to set these variables in the helm chart values.
 
 ### Example of external dynamic backend plugins
 

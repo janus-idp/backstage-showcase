@@ -5,7 +5,7 @@ import {
   ProviderFactories,
 } from '@backstage/plugin-auth-backend';
 import { Router } from 'express';
-import { PluginEnvironment } from '../types';
+import type { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-dynamic-feature-service';
 import {
   stringifyEntityRef,
   DEFAULT_NAMESPACE,

@@ -7,8 +7,8 @@ export type QuickAccessLinks = {
 };
 
 export type ThemeColors = {
-  primaryColor?: string | undefined;
-  headerColor1?: string | undefined;
-  headerColor2?: string | undefined;
-  navigationIndicatorColor?: string | undefined;
+  primaryColor?: string;
+  headerColor1?: string;
+  headerColor2?: string;
+  navigationIndicatorColor?: string;
 };

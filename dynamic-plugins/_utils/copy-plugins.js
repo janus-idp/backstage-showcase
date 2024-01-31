@@ -42,7 +42,7 @@ for (const directory of [...imports, ...wrappers]) {
     continue;
   }
   const pkgJson = require(fs.realpathSync(pkgJsonPath));
-  if (!pkgJson || !pkgJson.name) {
+  if (!pkgJson?.name) {
     console.error(
       `Package '${directory}' is missing 'package.json' or 'name' attribute.`,
     );

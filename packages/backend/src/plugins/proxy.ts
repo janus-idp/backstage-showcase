@@ -1,6 +1,6 @@
 import { createRouter } from '@backstage/plugin-proxy-backend';
 import type { Router } from 'express';
-import type { PluginEnvironment } from '../types';
+import type { LegacyPluginEnvironment as PluginEnvironment } from '@backstage/backend-dynamic-feature-service';
 
 export default async function createPlugin(
   env: PluginEnvironment,

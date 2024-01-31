@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-catalog-backend-module-github-org-dynamic",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -26,7 +26,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github --override-interop default"
   },
   "dependencies": {
     "@octokit/graphql": "^5.0.0",
@@ -44,18 +44,18 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-manager": "npm:@janus-idp/backend-plugin-manager@0.0.2-janus.5",
-    "@backstage/backend-common": "^0.19.8",
-    "@backstage/backend-plugin-api": "^0.6.6",
-    "@backstage/backend-tasks": "^0.5.11",
-    "@backstage/catalog-client": "^1.4.5",
+    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-common": "^0.20.1",
+    "@backstage/backend-plugin-api": "^0.6.9",
+    "@backstage/backend-tasks": "^0.5.14",
+    "@backstage/catalog-client": "^1.5.2",
     "@backstage/catalog-model": "^1.4.3",
     "@backstage/config": "^1.1.1",
-    "@backstage/integration": "^1.7.1",
-    "@backstage/plugin-catalog-backend": "^1.14.0",
-    "@backstage/plugin-catalog-common": "^1.0.17",
-    "@backstage/plugin-catalog-node": "^1.4.7",
-    "@backstage/plugin-events-node": "^0.2.15"
+    "@backstage/integration": "^1.8.0",
+    "@backstage/plugin-catalog-backend": "^1.16.1",
+    "@backstage/plugin-catalog-common": "^1.0.20",
+    "@backstage/plugin-catalog-node": "^1.6.1",
+    "@backstage/plugin-events-node": "^0.2.18"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

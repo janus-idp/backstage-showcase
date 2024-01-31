@@ -91,7 +91,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isLighthouseAvailable
-    backstage.plugin-pagerduty:
+    pagerduty.backstage-plugin:
       mountPoints:
         - mountPoint: entity.page.overview/cards
           importName: EntityPagerDutyCard
@@ -393,3 +393,6 @@ dynamicPlugins:
             props:
               width: 1500
               height: 800
+    janus-idp.backstage-plugin-analytics-provider-segment:
+      apiFactories:
+        - importName: SegmentAnalyticsApi
