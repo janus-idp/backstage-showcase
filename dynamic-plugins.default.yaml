@@ -553,7 +553,7 @@ plugins:
       catalog:
         providers:
           bitbucketCloud:
-            yourProviderId: # identifies your ingested dataset
+            default: # identifies your ingested dataset
               workspace: ${BITBUCKET_WORKSPACE}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
@@ -563,7 +563,7 @@ plugins:
       catalog:
         providers:
           bitbucketServer:
-            yourProviderId: # identifies your ingested dataset
+            default: # identifies your ingested dataset
               host: ${BITBUCKET_HOST}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
