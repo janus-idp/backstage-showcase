@@ -121,7 +121,7 @@ function updateBackstageVersionFile(version) {
 }
 
 console.log('Bumping version...');
-execSync('yarn run version:bump', { stdio: 'inherit' });
+execSync('yarn run versions:bump', { stdio: 'inherit' });
 
 console.log('Pinning all dependencies...');
 pinDependencies();

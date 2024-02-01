@@ -564,6 +564,26 @@ plugins:
               clientId: "${KEYCLOAK_CLIENT_ID}"
               clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud
+    disabled: true
+    pluginConfig:
+      # https://backstage.io/docs/integrations/bitbucketCloud/discovery#configuration
+      catalog:
+        providers:
+          bitbucketCloud:
+            default: # identifies your ingested dataset
+              workspace: ${BITBUCKET_WORKSPACE}
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
+    disabled: true
+    pluginConfig:
+      # https://backstage.io/docs/integrations/bitbucketServer/discovery#configuration
+      catalog:
+        providers:
+          bitbucketServer:
+            default: # identifies your ingested dataset
+              host: ${BITBUCKET_HOST}
+
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true
     pluginConfig:
