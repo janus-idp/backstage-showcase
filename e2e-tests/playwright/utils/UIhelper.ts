@@ -56,16 +56,33 @@ export class UIhelper {
     await this.page.locator(`a`).filter({ hasText: linkText }).click();
   }
 
-  async verifyLink(linkText: string, options?: { contains?: boolean }) {
-    let linkLocator;
-    if (options?.contains) {
-      linkLocator = this.page.locator(`a >> text=${linkText}`);
-    } else {
-      linkLocator = this.page.locator(`a >> text=/^\\s*${linkText}\\s*$/i`);
-    }
+  async verifyLink(
+    linkText: string,
+    options: {
+      exact?: boolean;
+      notVisible?: boolean;
+    } = {
+      exact: true,
+      notVisible: false,
+    },
+  ) {
+    const linkLocator = this.page
+      .locator('a')
+      .getByText(linkText, { exact: options.exact })
+      .first();
 
-    await linkLocator.scrollIntoViewIfNeeded();
-    await expect(linkLocator).toBeVisible();
+    if (options?.notVisible) {
+      await expect(linkLocator).not.toBeVisible();
+    } else {
+      await linkLocator.scrollIntoViewIfNeeded();
+      await expect(linkLocator).toBeVisible();
+    }
+  }
+
+  async verifyText(text: string | RegExp, exact: boolean = true) {
+    const element = this.page.getByText(text, { exact: exact }).first();
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
   }
 
   async waitForSideBarVisible() {
@@ -83,11 +100,16 @@ export class UIhelper {
     await this.page.click(optionSelector);
   }
 
-  async verifyRowsInTable(rowTexts: string[]) {
+  async verifyRowsInTable(
+    rowTexts: string[] | RegExp[],
+    exact: boolean = true,
+  ) {
     for (const rowText of rowTexts) {
-      const rowLocator = this.page.locator(
-        `xpath=//tr[child::td//*[text()='${rowText}']]`,
-      );
+      const rowLocator = this.page
+        .locator(`xpath=//tr//td`)
+        .getByText(rowText, { exact: exact })
+        .first();
+      await rowLocator.scrollIntoViewIfNeeded();
       await rowLocator.waitFor({ state: 'visible' });
       await expect(rowLocator).toBeVisible();
     }

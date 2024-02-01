@@ -1,6 +1,7 @@
 import { test, expect, Page, firefox, chromium } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common } from '../utils/Common';
+import { resources } from '../support/testData/resources';
 import {
   BackstageShowcase,
   CatalogImport,
@@ -15,16 +16,6 @@ test.describe.serial('GitHub Happy path', () => {
 
   const component =
     'https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml';
-
-  const resources = [
-    'Janus-IDP Authors',
-    'Janus-IDP',
-    'ArgoCD',
-    'GitHub Showcase repository',
-    'KeyCloak',
-    'S3 Object bucket storage',
-    'PostgreSQL cluster',
-  ];
 
   test.beforeAll(async ({ browserName }) => {
     const browserType = browserName === 'firefox' ? firefox : chromium;
@@ -87,7 +78,7 @@ test.describe.serial('GitHub Happy path', () => {
     await uiHelper.selectMuiBox('Kind', 'Component');
     await uiHelper.clickLink('Backstage Showcase');
     await common.clickOnGHloginPopup();
-    await uiHelper.verifyLink('Janus Website', { contains: true });
+    await uiHelper.verifyLink('Janus Website', { exact: false });
     await backstageShowcase.verifyPRStatisticsRendered();
     await backstageShowcase.verifyAboutCardIsDisplayed();
   });
@@ -100,26 +91,21 @@ test.describe.serial('GitHub Happy path', () => {
     await expect(page.locator(`text=${issuesCountText}`)).toBeVisible();
 
     for (const issue of openIssues.slice(0, 5)) {
-      const issueSelector = `text=${issue.title.replace(/\s+/g, ' ')}`;
-      const issueElement = page.locator(issueSelector);
-      await issueElement.scrollIntoViewIfNeeded();
-      await expect(issueElement).toBeVisible();
+      await uiHelper.verifyText(issue.title.replace(/\s+/g, ' '));
     }
   });
 
   test('Verify that the Pull/Merge Requests tab renders the 5 most recently updated Open Pull Requests', async () => {
     await uiHelper.clickTab('Pull/Merge Requests');
     const openPRs = await BackstageShowcase.getGithubPRs('open');
-    backstageShowcase.verifyPRRows(openPRs, 0, 5);
+    await backstageShowcase.verifyPRRows(openPRs, 0, 5);
   });
 
   test('Click on the CLOSED filter and verify that the 5 most recently updated Closed PRs are rendered (same with ALL)', async () => {
     await uiHelper.clickButton('CLOSED', { force: true });
     const closedPRs = await BackstageShowcase.getGithubPRs('closed');
-
-    for (const closedPR of closedPRs.slice(0, 5)) {
-      await expect(page.locator(`text=${closedPR.title}`)).toBeVisible();
-    }
+    await common.waitForLoad();
+    await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
 
   test('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
@@ -131,6 +117,7 @@ test.describe.serial('GitHub Happy path', () => {
     await backstageShowcase.clickNextPage();
     await backstageShowcase.verifyPRRows(allPRs, 5, 10);
 
+    // Calculate the starting index of the first PR on the last page, 5 PRs per page.
     const lastPagePRs = Math.floor((allPRs.length - 1) / 5) * 5;
     await backstageShowcase.clickLastPage();
     await backstageShowcase.verifyPRRows(allPRs, lastPagePRs, allPRs.length);
@@ -154,7 +141,7 @@ test.describe.serial('GitHub Happy path', () => {
     const workflowRuns = await backstageShowcase.getWorkflowRuns();
 
     for (const workflowRun of workflowRuns.slice(0, 5)) {
-      await expect(page.locator(`text=${workflowRun.id}`)).toBeVisible();
+      await uiHelper.verifyText(workflowRun.id);
     }
   });
 

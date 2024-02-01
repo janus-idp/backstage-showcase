@@ -22,9 +22,11 @@ export class CatalogImport {
 
 export class BackstageShowcase {
   private readonly page: Page;
+  private uiHelper: UIhelper;
 
   constructor(page: Page) {
     this.page = page;
+    this.uiHelper = new UIhelper(page);
   }
 
   async getGithubOpenIssues() {
@@ -63,14 +65,8 @@ export class BackstageShowcase {
   }
   async verifyPRRowsPerPage(rows, allPRs) {
     await this.selectRowsPerPage(rows);
-    const rowElement = this.page.locator(`text=${allPRs[rows - 1].title}`);
-    await rowElement.scrollIntoViewIfNeeded();
-    await expect(rowElement).toBeVisible();
-
-    const nonExistentElement = this.page.locator(
-      `a:text("#${allPRs[rows].number}")`,
-    );
-    await expect(nonExistentElement).not.toBeVisible();
+    await this.uiHelper.verifyText(allPRs[rows - 1].title);
+    await this.uiHelper.verifyLink(allPRs[rows].number, { notVisible: true });
 
     const tableRows = this.page.locator(BackstageShowcasePO.tableRows);
     await expect(tableRows).toHaveCount(rows);
@@ -92,9 +88,7 @@ export class BackstageShowcase {
 
   async verifyPRStatisticsRendered() {
     const regex = /Average Size Of PR\d+ lines/;
-    const stats = this.page.locator('tr').filter({ hasText: regex });
-    await stats.waitFor();
-    expect(stats).toBeVisible();
+    await this.uiHelper.verifyText(regex);
   }
 
   async verifyAboutCardIsDisplayed() {
@@ -110,9 +104,7 @@ export class BackstageShowcase {
 
   async verifyPRRows(allPRs: any[], startRow: number, lastRow: number) {
     for (let i = startRow; i < lastRow; i++) {
-      await expect(
-        this.page.locator(`td:has-text("${allPRs[i].title}")`).first(),
-      ).toBeVisible();
+      await this.uiHelper.verifyRowsInTable([allPRs[i].title], false);
     }
   }
 }
