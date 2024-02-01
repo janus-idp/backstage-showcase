@@ -426,6 +426,33 @@ plugins:
                     - isKind: resource
                     - isType: kubernetes-cluster
 
+  # Group: Orchestrator
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-orchestrator
+    disabled: true
+    pluginConfig:      
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-orchestrator:
+            appIcons:
+              - name: orchestratorIcon
+                module: OrchestratorPlugin
+                importName: OrchestratorIcon
+            dynamicRoutes:
+              - path: /orchestrator
+                importName: OrchestratorPage
+                module: OrchestratorPlugin
+                menuItem:
+                  icon: orchestratorIcon
+                  text: Orchestrator                  
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-orchestrator-backend-dynamic
+    disabled: true
+    pluginConfig:
+      orchestrator:
+        dataIndexService:
+          url: http://sonataflow-platform-data-index-service.sonataflow-infra
+        editor:
+          path: https://sandbox.kie.org/swf-chrome-extension/0.32.0
+
   # Techdocs
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
     disabled: true
