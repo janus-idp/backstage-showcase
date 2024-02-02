@@ -91,27 +91,12 @@ export class UIhelper {
   }
 
   async verifyHeading(heading: string) {
-    await this.page.waitForSelector(`h1, h2, h3, h4, h5, h6`, {
-      timeout: 99999,
-    });
-    const headingLocator = this.page
+    const headingLocator = await this.page
       .locator(`h1, h2, h3, h4, h5, h6`)
-      .filter({ hasText: heading });
-
-    // Check if at least one matching element is visible
-    const count = await headingLocator.count();
-    let isVisible = false;
-    for (let i = 0; i < count; i++) {
-      if (await headingLocator.nth(i).isVisible()) {
-        isVisible = true;
-        break; // Exit the loop if any visible element is found
-      }
-    }
-    // Assert that at least one element is visible, else the test will fail
-    expect(
-      isVisible,
-      `No heading containing "${heading}" is visible.`,
-    ).toBeTruthy();
+      .filter({ hasText: heading })
+      .first();
+    await headingLocator.waitFor();
+    await expect(headingLocator).toBeVisible();
   }
 
   async waitForH4Title(text: string) {
@@ -152,20 +137,17 @@ export class UIhelper {
   }
 
   async verifyRowInTableByUniqueText(
-    uniqueRowText: string | RegExp,
-    cellTexts: string[],
+    uniqueRowText: string,
+    cellTexts: string[] | RegExp[],
   ) {
-    const uniqueCell = this.page
-      .locator(UIhelperPO.MuiTableCell)
-      .locator(`text=${uniqueRowText}`);
-    await uniqueCell.scrollIntoViewIfNeeded();
-    const row = uniqueCell.locator('xpath=ancestor::tr');
-
+    const row = this.page.locator(
+      `xpath=//tr[child::td[text()='${uniqueRowText}']]`,
+    );
+    row.waitFor();
     for (const cellText of cellTexts) {
-      const cell = row
-        .locator(UIhelperPO.MuiTableCell)
-        .locator(`text=${cellText}`);
-      await expect(cell).toBeVisible();
+      await expect(
+        row.locator('td').filter({ hasText: cellText }).first(),
+      ).toBeVisible();
     }
   }
 
