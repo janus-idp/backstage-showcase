@@ -15,7 +15,7 @@ When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm 
 
 ### Enabling Metrics Monitoring on Openshift
 
-To enable metrics on Openshift, you will need to modify the `values.yaml` of the [Janus Helm chart](https://github.com/redhat-developer/rhdh-chart/blob/main/charts/backstage/values.yaml)
+To enable metrics on Openshift, you will need to modify the `values.yaml` of the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart/blob/main/charts/backstage/values.yaml)
 
 To obtain the `values.yaml`, you can run the following command:
 
