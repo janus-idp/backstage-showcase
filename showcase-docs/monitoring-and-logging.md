@@ -9,7 +9,7 @@ When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm 
 - Kubernetes 1.19+
 - Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure
-- The [Janus Helm chart repositories](https://github.com/redhat-developer/rhdh-chart#installing-from-the-chart-repository) have been added
+- The [RHDH Helm chart repositories](https://github.com/redhat-developer/rhdh-chart#installing-from-the-chart-repository) have been added
 
 ## Metrics Monitoring
 
