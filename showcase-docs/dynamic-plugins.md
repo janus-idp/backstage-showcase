@@ -298,6 +298,8 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 
 - Starting from version 2.10.1, the [helm chart](https://github.com/redhat-developer/rhdh-chart) for deploying the showcase application introduces new values.
 
+Note: 2.12 is the last version released from https://github.com/janus-idp/helm-backstage, with 2.13 being the start of the releases from https://github.com/redhat-developer/rhdh-chart
+
 - The updated Helm values introduce a new `global.dynamic` parameter, comprising two fields:
 
   - `plugins`: This field encompasses the list of dynamic plugins slated for installation. By default, it is an empty list. A package can be specified either as a local relative path (starting with `./`) to the dynamic plugin's folder or as a package specification in an NPM repository.
