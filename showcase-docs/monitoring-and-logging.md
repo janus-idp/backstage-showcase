@@ -2,20 +2,20 @@
 
 The Backstage Showcase provides a `/metrics` endpoint that provides Prometheus metrics about your backstage application. This endpoint can be used to monitor your backstage instance using Prometheus and Grafana.
 
-When deploying Backstage Showcase onto a kubernetes cluster with the [Janus Helm chart](https://github.com/janus-idp/helm-backstage), monitoring and logging for your Janus instance can be configured using the following steps.
+When deploying Backstage Showcase onto a kubernetes cluster with the [Janus Helm chart](https://github.com/redhat-developer/rhdh-chart), monitoring and logging for your Janus instance can be configured using the following steps.
 
 ## Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure
-- The [Janus Helm chart repositories](https://github.com/janus-idp/helm-backstage#installing-from-the-chart-repository) have been added
+- The [Janus Helm chart repositories](https://github.com/redhat-developer/rhdh-chart#installing-from-the-chart-repository) have been added
 
 ## Metrics Monitoring
 
 ### Enabling Metrics Monitoring on Openshift
 
-To enable metrics on Openshift, you will need to modify the `values.yaml` of the [Janus Helm chart](https://github.com/janus-idp/helm-backstage/blob/main/charts/backstage/values.yaml)
+To enable metrics on Openshift, you will need to modify the `values.yaml` of the [Janus Helm chart](https://github.com/redhat-developer/rhdh-chart/blob/main/charts/backstage/values.yaml)
 
 To obtain the `values.yaml`, you can run the following command:
 

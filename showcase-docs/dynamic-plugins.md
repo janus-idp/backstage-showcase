@@ -296,7 +296,7 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 
 ### Helm deployment
 
-- Starting from version 2.10.1, the [helm chart](https://github.com/janus-idp/helm-backstage) for deploying the showcase application introduces new values.
+- Starting from version 2.10.1, the [helm chart](https://github.com/redhat-developer/rhdh-chart) for deploying the showcase application introduces new values.
 
 - The updated Helm values introduce a new `global.dynamic` parameter, comprising two fields:
 
