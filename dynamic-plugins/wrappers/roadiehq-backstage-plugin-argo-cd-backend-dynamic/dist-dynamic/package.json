@@ -43,8 +43,8 @@
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-common": "0.19.9",
-    "@backstage/backend-plugin-api": "0.6.9",
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-plugin-api": "0.6.10-next.1",
+    "@backstage/backend-dynamic-feature-service": "0.1.1-next.1",
     "@backstage/catalog-client": "^1.4.6",
     "@backstage/config": "^1.1.1"
   },

@@ -44,9 +44,9 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "0.6.9",
-    "@backstage/plugin-scaffolder-node": "0.2.10",
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-plugin-api": "0.6.10-next.1",
+    "@backstage/plugin-scaffolder-node": "0.2.8",
+    "@backstage/backend-dynamic-feature-service": "0.1.1-next.1",
     "@backstage/backend-common": "^0.19.9",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",
