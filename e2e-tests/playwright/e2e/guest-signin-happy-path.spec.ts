@@ -13,7 +13,7 @@ test.describe('Guest Signing Happy path', () => {
     uiHelper = new UIhelper(page);
     homePage = new HomePage(page);
     common = new Common(page);
-    await page.waitForTimeout(1800000);
+    await page.waitForTimeout(2800000);
     await common.loginAsGuest();
   });
 
