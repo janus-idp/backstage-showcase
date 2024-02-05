@@ -280,7 +280,7 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 - Copy the dynamic plugin package to the `dynamic-plugins-root` folder with the following commands:
 
   ```bash
-  pkg=<local dist-dynamic sub-folder or remote package name of the dynamic plugin package>
+  pkg=<local dist-dynamic sub-folder or external package name of the dynamic plugin package>
   archive=$(npm pack $pkg)
   tar -xzf "$archive" && rm "$archive"
   mv package $(echo $archive | sed -e 's:\.tgz$::')
@@ -298,33 +298,40 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 
 - Starting from version 2.10.1, the [helm chart](https://github.com/redhat-developer/rhdh-chart) for deploying the showcase application introduces new values.
 
-Note: 2.12 is the last version released from https://github.com/janus-idp/helm-backstage, with 2.13 being the start of the releases from https://github.com/redhat-developer/rhdh-chart
+Note: 2.12 is the last version released from <https://github.com/janus-idp/helm-backstage>, with 2.13 being the start of the releases from <https://github.com/redhat-developer/rhdh-chart>
 
-- The updated Helm values introduce a new `global.dynamic` parameter, comprising two fields:
+- The updated Helm values introduces a new parameter named global.dynamic, consisting of two fields:
 
-  - `plugins`: This field encompasses the list of dynamic plugins slated for installation. By default, it is an empty list. A package can be specified either as a local relative path (starting with `./`) to the dynamic plugin's folder or as a package specification in an NPM repository.
-  - `includes`: This field contains a roster of YAML files utilizing the same syntax. The `plugins` list from these files will be incorporated, and potentially overridden, by the `plugins` list in the primary helm values. The default configuration includes the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, which encompasses all the dynamic plugins [included in the showcase application container image](#dynamic-plugins-included-in-the-showcase-container-image), whether enabled or disabled by default.
+  - `plugins`: This field defines the dynamic plugins intended for installation. By default, the list is empty. A package can be designated either as a local relative path (beginning with `./`) to the dynamic plugin's folder for a local installation or as a package specification in an NPM repository for an external installation.
+  - `includes`: This field comprises a collection of YAML files employing the same syntax. The `plugins` list from these files will be merged into, and may potentially override, the `plugins` list in the main Helm values. The default configuration involves the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, encompassing all the dynamic plugins [included in the showcase application container image](#dynamic-plugins-included-in-the-showcase-container-image), whether they are enabled or disabled by default.
 
-- To include a dynamic plugin in the showcase, you can achieve this by appending an entry to the `global.dynamic.plugins` list. Each entry should contain the following fields:
+- To incorporate a dynamic plugin into the showcase, add an entry to the `global.dynamic.plugins` list. Each entry should include the following fields:
 
-  - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) of the dynamic plugin package to be installed (can be from a local path or an NPM repository)
-  - `integrity`: (optional for local packages) An integrity checksum in the [form of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) for the specific package. Supported algorithms include `sha256`, `sha384` and `sha512`.
-  - `pluginConfig`: an optional plugin-specific `app-config` yaml fragment. See [plugin configuration](#plugin-configuration) for more details.
-  - `disabled`: disables the dynamic plugin if set to `true`. Default: `false`.
+  - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) indicating the dynamic plugin package to install (can be from a local path or an NPM repository).
+  - `integrity`: (required for external packages) An integrity checksum in the [format of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) specific to the package. Supported algorithms include `sha256`, `sha384`, and `sha512`.
 
-- For 2 plugins from a local and remote source, with one requiring a specific app-config, the list would be as follows:
+    You can easily obtain the integrity checksum using the following command:
+
+    ```console
+    npm view <package name>@<version> dist.integrity
+    ```
+
+  - `pluginConfig`: an optional plugin-specific `app-config` YAML fragment. Refer to [plugin configuration](#plugin-configuration) for more details.
+  - `disabled`: if set to `true`, disables the dynamic plugin. Default: `false`.
+
+- To include two plugins, one from a local source and another from an external source, where the latter requires a specific app-config, the configuration would be as follows:
 
   ```yaml
   global:
     dynamic:
       plugins:
-        - package: <a local package-spec used by npm pack>
-        - package: <a remote package-spec used by npm pack>
+        - package: <local package-spec used by npm pack>
+        - package: <external package-spec used by npm pack>
           integrity: sha512-<some hash>
           pluginConfig: ...
   ```
 
-- A plugin from an included file can be disabled with the following snippet:
+- To disable a plugin from an included file, use the following snippet:
 
   ```yaml
   global:
@@ -336,7 +343,7 @@ Note: 2.12 is the last version released from https://github.com/janus-idp/helm-b
           disabled: true
   ```
 
-- A plugin disabled in an included file can be enabled with the following snippet:
+- To enable a plugin that is disabled in an included file, use the following snippet:
 
   ```yaml
   global:
@@ -350,15 +357,15 @@ Note: 2.12 is the last version released from https://github.com/janus-idp/helm-b
 
 ### Dynamic plugins included in the Showcase container image
 
-The showcase docker image comes pre-loaded with a selection of dynamic plugins, with most being initially deactivated due to the need for mandatory configuration. The complete list of these plugins is detailed in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
+The showcase Docker image is pre-loaded with a variety of dynamic plugins, the majority of which are initially deactivated due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
 
-Upon application startup, for each plugin that is disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will display a line similar to the following:
+Upon the application startup, for each plugin disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will exhibit a line similar to the following:
 
-```
+```console
 ======= Skipping disabled dynamic plugin ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
 ```
 
-To activate this plugin, simply add a package with the same name and adjust the `disabled` field in the helm chart values as shown below:
+To activate this plugin, simply add a package with the same name and adjust the `disabled` field in the Helm chart values as illustrated below:
 
 ```diff
 global:
@@ -370,18 +377,15 @@ global:
 +        disabled: false
 ```
 
-While the plugin's default configuration is extracted from the `dynamic-plugins.default.yaml` file, you still have the option to replace it by incorporating a `pluginConfig` entry into the plugin configuration.
+While the plugin's default configuration is derived from the `dynamic-plugins.default.yaml` file, you still have the option to override it by incorporating a `pluginConfig` entry into the plugin configuration.
 
-Note: Usually the plugin's default configuration references environment variables. You should make sure to set these variables in the helm chart values.
+Note: The plugin's default configuration typically references environment variables, and it is essential to ensure that these variables are set in the Helm chart values.
 
 ### Example of external dynamic backend plugins
 
-If you want to easily test the installation of dynamic backend plugins from a remote NPM registry,
-you can use the example dynamic backend plugins described
-in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins),
-which have been pushed to NPMJS for demonstration purposes.
+If you wish to easily test the installation of dynamic backend plugins from an external NPM registry, you can utilize the example dynamic backend plugins outlined in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins), which have been published to NPMJS for demonstration purposes.
 
-In order to do this, just add the following dynamic plugins to the `global.dynamic.plugins` list in the helm chart values:
+To achieve this, simply include the following dynamic plugins in the `global.dynamic.plugins` list within the Helm chart values:
 
 ```yaml
 global:
@@ -409,19 +413,11 @@ global:
         integrity: 'sha512-YsrZMThxJk7cYJU9FtAcsTCx9lCChpytK254TfGb3iMAYQyVcZnr5AA/AU+hezFnXLsr6gj8PP7z/mCZieuuDA=='
 ```
 
-By adding those plugins one after the other, and waiting for a deployment restart after each change,
-you should be able to follow the steps described in the related
-[Proposed Demo Path](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#proposed-demo-path).
+By sequentially adding these plugins and allowing for a deployment restart after each change, you should be able to follow the steps outlined in the associated [Proposed Demo Path](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#proposed-demo-path).
 
 ### Using a custom NPM registry
 
-Since dynamic plugin packages are grabbed through `npm pack`,
-it is possible to configure the NPM registry URL, as well as
-the authentication information, using a `.npmrc` file.
-
-In order to add a `.npmrc` when using the helm chart,
-just create a secret, named `dynamic-plugins-npmrc`,
-with the following content:
+To configure the NPM registry URL and authentication information for dynamic plugin packages obtained through `npm pack`, you can utilize a `.npmrc` file. When using the Helm chart, you can add this file by creating a secret named `dynamic-plugins-npmrc` with the following content:
 
 ```yaml
 apiVersion: v1
@@ -435,7 +431,7 @@ stringData:
     //<registry-url>:_authToken=<auth-token>
 ```
 
-This can also be done from the helm chart values directly, by adding the following lines to the `upstream.extraDeploy` value:
+Alternatively, you can achieve the same from the Helm chart values directly by incorporating the following lines into the `upstream.extraDeploy` value:
 
 ```yaml
 upstream:
@@ -449,6 +445,12 @@ upstream:
           registry=https://registry.npmjs.org/
           ...
 ```
+
+This allows for seamless configuration of the NPM registry URL and authentication details for dynamic plugin packages during the deployment process.
+
+### Air Gapped Environment
+
+To install external plugins in an air gapped environment, set up a custom NPM registry and consult the [Using a custom NPM registry](#using-a-custom-npm-registry) section for guidance.
 
 ## Plugin configuration
 
