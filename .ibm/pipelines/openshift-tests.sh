@@ -19,7 +19,7 @@ trap cleanup EXIT
 add_helm_repos() {
   helm version
 
-  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "janus-idp=https://janus-idp.github.io/helm-backstage" "${HELM_REPO_NAME}=${HELM_REPO_URL}")
+  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "rhdh-chart=https://redhat-developer.github.io/rhdh-chart")
 
   for repo in "${repos[@]}"; do
     key="${repo%%=*}"
@@ -196,7 +196,7 @@ main() {
 
   echo "Tag name with short SHA: pr-${GIT_PR_NUMBER}-${SHORT_SHA}"
 
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/redhat-developer-hub --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
 
   echo "Waiting for backstage deployment..."
   sleep 500
