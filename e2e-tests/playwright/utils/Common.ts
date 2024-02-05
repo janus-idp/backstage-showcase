@@ -2,6 +2,7 @@ import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
 import { Page } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
+import { waitsObjs } from '../support/pageObjects/global-obj';
 
 export class Common {
   page: Page;
@@ -17,6 +18,15 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
     await this.uiHelper.clickButton('Enter');
     await this.uiHelper.waitForSideBarVisible();
+  }
+
+  async waitForLoad(timeout = 120000) {
+    for (const item of Object.values(waitsObjs)) {
+      await this.page.waitForSelector(item, {
+        state: 'hidden',
+        timeout: timeout,
+      });
+    }
   }
 
   async signOut() {
@@ -36,8 +46,18 @@ export class Common {
 
   async loginAsGithubUser() {
     await this.logintoGithub();
-    await this.page.goto('/');
+    await this.page.goto(process.env.BASE_URL);
     await this.uiHelper.clickButton('Sign In');
+
+    this.page.once('popup', async popup => {
+      const locator = popup.locator('#js-oauth-authorize-btn');
+      if (await locator.isVisible()) {
+        await popup.locator('body').click();
+        await locator.waitFor();
+        await locator.click();
+      }
+    });
+
     await this.uiHelper.waitForSideBarVisible();
   }
 
