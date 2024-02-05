@@ -50,10 +50,9 @@ export class Common {
     await this.uiHelper.clickButton('Sign In');
 
     this.page.once('popup', async popup => {
-      await popup.locator('body').click();
-
       const locator = popup.locator('#js-oauth-authorize-btn');
       if (await locator.isVisible()) {
+        await popup.locator('body').click();
         await locator.waitFor();
         await locator.click();
       }

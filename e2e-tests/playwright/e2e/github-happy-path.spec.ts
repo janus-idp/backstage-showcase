@@ -33,9 +33,7 @@ test.describe.serial('GitHub Happy path', () => {
     await uiHelper.openSidebar('Settings');
     await expect(page).toHaveURL(process.env.BASE_URL + '/settings');
     await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
-    await uiHelper.verifyHeading(
-      `User Entity: user:default/${process.env.GH_USER_ID}`,
-    );
+    await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
   });
 
   test('Register an existing component', async () => {
@@ -47,12 +45,15 @@ test.describe.serial('GitHub Happy path', () => {
   });
 
   test('Verify that the following components were ingested into the Catalog', async () => {
+    await uiHelper.openSidebar('Catalog');
+    await uiHelper.selectMuiBox('Kind', 'Group');
+    await uiHelper.verifyComponentInCatalog('Group', ['Janus-IDP Authors']);
+
     await uiHelper.verifyComponentInCatalog('API', ['Petstore']);
     await uiHelper.verifyComponentInCatalog('Component', [
       'Backstage Showcase',
     ]);
-    await uiHelper.verifyComponentInCatalog('Group', ['Janus-IDP Authors']);
-    await uiHelper.verifyRowsInTable(['Janus-IDP Authors']);
+
     await uiHelper.selectMuiBox('Kind', 'Resource');
     await uiHelper.verifyRowsInTable([
       'ArgoCD',
@@ -62,16 +63,15 @@ test.describe.serial('GitHub Happy path', () => {
       'S3 Object bucket storage',
     ]);
 
-    await uiHelper.selectMuiBox('Kind', 'System');
-    await uiHelper.verifyRowsInTable(['Janus-IDP']);
-
     await uiHelper.selectMuiBox('Kind', 'User');
     await uiHelper.verifyRowsInTable([
-      'subhashkhileri',
-      'josephca',
-      'gustavolira',
+      'Subhash Khileri',
+      'Joseph Kim',
+      'Gustavo Lira e Silva',
       'rhdh-qe',
     ]);
+    await uiHelper.selectMuiBox('Kind', 'System');
+    await uiHelper.verifyRowsInTable(['Janus-IDP']);
   });
 
   test('Click login on the login popup and verify that Overview tab renders', async () => {

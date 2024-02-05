@@ -106,11 +106,11 @@ export class UIhelper {
   ) {
     for (const rowText of rowTexts) {
       const rowLocator = this.page
-        .locator(`xpath=//tr//td`)
+        .locator(`tr>td`)
         .getByText(rowText, { exact: exact })
         .first();
-      await rowLocator.scrollIntoViewIfNeeded();
       await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }
   }
