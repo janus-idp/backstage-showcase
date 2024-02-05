@@ -530,8 +530,8 @@ plugins:
         providers:
           threeScaleApiEntity:
             default:
-              baseUrl: '${3SCALE_BASE_URL}'
-              accessToken: '${3SCALE_ACCESS_TOKEN}'
+              baseUrl: '${_3SCALE_BASE_URL}'
+              accessToken: '${_3SCALE_ACCESS_TOKEN}'
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
     disabled: true
