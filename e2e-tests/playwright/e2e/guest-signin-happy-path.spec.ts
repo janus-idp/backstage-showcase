@@ -34,9 +34,10 @@ test.describe('Guest Signing Happy path', () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'user');
     await uiHelper.verifyRowsInTable([
-      'subhashkhileri',
-      'josephca',
-      'gustavolira',
+      'Subhash Khileri',
+      'Joseph Kim',
+      'Gustavo Lira e Silva',
+      'rhdh-qe',
     ]);
   });
 
@@ -54,7 +55,7 @@ test.describe('Guest Signing Happy path', () => {
   test('Verify Profile is Guest in the Settings page', async () => {
     await uiHelper.openSidebar('Settings');
     await uiHelper.verifyHeading('Guest');
-    await uiHelper.verifyHeading('User Entity: user:default/guest');
+    await uiHelper.verifyHeading('User Entity: guest');
   });
 
   test('Sign Out and Verify that you return to the Sign-in page', async () => {

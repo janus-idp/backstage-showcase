@@ -20,11 +20,13 @@ export class UIhelper {
 
   async clickButton(label: string, options?: { force?: boolean }) {
     const selector = `${UIhelperPO.buttonLabel}:has-text("${label}")`;
-    await this.page.waitForSelector(selector);
+    const button = this.page.locator(selector);
+    await button.waitFor({ state: 'visible' });
+
     if (options?.force) {
-      await this.page.click(selector, { force: true });
+      await button.click({ force: true });
     } else {
-      await this.page.click(selector);
+      await button.click();
     }
   }
 
@@ -54,16 +56,33 @@ export class UIhelper {
     await this.page.locator(`a`).filter({ hasText: linkText }).click();
   }
 
-  async verifyLink(linkText: string, options?: { contains?: boolean }) {
-    let linkLocator;
-    if (options?.contains) {
-      linkLocator = this.page.locator(`a >> text=${linkText}`);
-    } else {
-      linkLocator = this.page.locator(`a >> text=/^\\s*${linkText}\\s*$/i`);
-    }
+  async verifyLink(
+    linkText: string,
+    options: {
+      exact?: boolean;
+      notVisible?: boolean;
+    } = {
+      exact: true,
+      notVisible: false,
+    },
+  ) {
+    const linkLocator = this.page
+      .locator('a')
+      .getByText(linkText, { exact: options.exact })
+      .first();
 
-    await linkLocator.scrollIntoViewIfNeeded();
-    await expect(linkLocator).toBeVisible();
+    if (options?.notVisible) {
+      await expect(linkLocator).not.toBeVisible();
+    } else {
+      await linkLocator.scrollIntoViewIfNeeded();
+      await expect(linkLocator).toBeVisible();
+    }
+  }
+
+  async verifyText(text: string | RegExp, exact: boolean = true) {
+    const element = this.page.getByText(text, { exact: exact }).first();
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
   }
 
   async waitForSideBarVisible() {
@@ -81,11 +100,17 @@ export class UIhelper {
     await this.page.click(optionSelector);
   }
 
-  async verifyRowsInTable(rowTexts: string[]) {
+  async verifyRowsInTable(
+    rowTexts: string[] | RegExp[],
+    exact: boolean = true,
+  ) {
     for (const rowText of rowTexts) {
       const rowLocator = this.page
-        .locator(UIhelperPO.MuiTableRow)
-        .filter({ hasText: rowText });
+        .locator(`tr>td`)
+        .getByText(rowText, { exact: exact })
+        .first();
+      await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }
   }
@@ -106,9 +131,7 @@ export class UIhelper {
   }
 
   async clickTab(tabName: string) {
-    const tabLocator = this.page
-      .locator(UIhelperPO.tabs)
-      .filter({ hasText: tabName });
+    const tabLocator = this.page.locator(`text="${tabName}"`);
     await tabLocator.click();
   }
 

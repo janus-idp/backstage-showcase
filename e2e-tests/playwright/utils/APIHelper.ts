@@ -1,9 +1,4 @@
-import fetch, { RequestInit, Response } from 'node-fetch';
-
-interface GithubItem {
-  id: number;
-  name: string;
-}
+import { request, APIResponse } from '@playwright/test';
 
 export class APIHelper {
   private static githubAPIVersion = '2022-11-28';
@@ -11,9 +6,10 @@ export class APIHelper {
   static async githubRequest(
     method: string,
     url: string,
-    body?: any,
-  ): Promise<Response> {
-    const options: RequestInit = {
+    body?: string | object,
+  ): Promise<APIResponse> {
+    const context = await request.newContext();
+    const options = {
       method: method,
       headers: {
         Accept: 'application/vnd.github+json',
@@ -21,33 +17,25 @@ export class APIHelper {
         'X-GitHub-Api-Version': this.githubAPIVersion,
       },
     };
+
     if (body) {
-      options.body = JSON.stringify(body);
-      options.headers['Content-Type'] = 'application/json';
-    }
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      options['data'] = body;
     }
 
+    const response = await context.fetch(url, options);
     return response;
   }
 
-  static async getGithubPaginatedRequest(
-    url: string,
-    pageNo = 1,
-    responseAccumulator = [],
-  ): Promise<any[]> {
+  static async getGithubPaginatedRequest(url, pageNo = 1, response = []) {
     const fullUrl = `${url}&page=${pageNo}`;
-    const res = await this.githubRequest('GET', fullUrl);
-    const body = (await res.json()) as GithubItem[];
+    const result = await this.githubRequest('GET', fullUrl);
+    const body = await result.json();
 
-    if (!body.length) {
-      return responseAccumulator;
+    if (body.length === 0) {
+      return response;
     }
 
-    responseAccumulator = responseAccumulator.concat(body);
-    return this.getGithubPaginatedRequest(url, pageNo + 1, responseAccumulator);
+    response = [...response, ...body];
+    return await this.getGithubPaginatedRequest(url, pageNo + 1, response);
   }
 }

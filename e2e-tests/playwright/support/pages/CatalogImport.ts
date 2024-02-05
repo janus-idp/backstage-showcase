@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import { BackstageShowcasePO, CatalogImportPO } from '../pageObjects/page-obj';
 import { APIHelper } from '../../utils/APIHelper';
@@ -22,18 +22,18 @@ export class CatalogImport {
 
 export class BackstageShowcase {
   private readonly page: Page;
+  private uiHelper: UIhelper;
 
   constructor(page: Page) {
     this.page = page;
+    this.uiHelper = new UIhelper(page);
   }
 
   async getGithubOpenIssues() {
-    const response = await APIHelper.githubRequest(
-      'GET',
+    const rep = await APIHelper.getGithubPaginatedRequest(
       githubAPIEndpoints.issues('open'),
     );
-    const body = await response.json();
-    return body.filter((issue: any) => !issue.pull_request);
+    return rep.filter((issue: any) => !issue.pull_request);
   }
 
   static async getGithubPRs(
@@ -56,31 +56,20 @@ export class BackstageShowcase {
     await this.page.click(BackstageShowcasePO.tablePreviousPage);
   }
 
-  async clickLastPage(e) {
+  async clickLastPage() {
     await this.page.click(BackstageShowcasePO.tableLastPage);
   }
 
   async clickFirstPage() {
     await this.page.click(BackstageShowcasePO.tableFirstPage);
   }
-
-  async verifyPRRowsPerPage(rows: number, allPRs: any[]) {
+  async verifyPRRowsPerPage(rows, allPRs) {
     await this.selectRowsPerPage(rows);
-    const rowsCount = await this.page
-      .locator(BackstageShowcasePO.tableRows)
-      .count();
-    if (rowsCount !== rows) {
-      throw new Error(`Expected row count to be ${rows}, but got ${rowsCount}`);
-    }
-    await this.page.locator(`text=${allPRs[rows - 1].title}`).isVisible();
-    const numberExists = await this.page
-      .locator(`text=#${allPRs[rows].number}`)
-      .isVisible();
-    if (numberExists) {
-      throw new Error(
-        `Element with number ${allPRs[rows].number} should not exist`,
-      );
-    }
+    await this.uiHelper.verifyText(allPRs[rows - 1].title);
+    await this.uiHelper.verifyLink(allPRs[rows].number, { notVisible: true });
+
+    const tableRows = this.page.locator(BackstageShowcasePO.tableRows);
+    await expect(tableRows).toHaveCount(rows);
   }
 
   async selectRowsPerPage(rows: number) {
@@ -88,15 +77,18 @@ export class BackstageShowcase {
     await this.page.click(`ul[role="listbox"] li[data-value="${rows}"]`);
   }
 
+  async getWorkflowRuns() {
+    const response = await APIHelper.githubRequest(
+      'GET',
+      githubAPIEndpoints.workflowRuns,
+    );
+    const responseBody = await response.json();
+    return responseBody.workflow_runs;
+  }
+
   async verifyPRStatisticsRendered() {
     const regex = /Average Size Of PR\d+ lines/;
-    const statsVisible = await this.page
-      .locator('tr')
-      .filter({ hasText: regex })
-      .isVisible();
-    if (!statsVisible) {
-      throw new Error('PR statistics are not rendered');
-    }
+    await this.uiHelper.verifyText(regex);
   }
 
   async verifyAboutCardIsDisplayed() {
@@ -107,6 +99,12 @@ export class BackstageShowcase {
       .isVisible();
     if (!isLinkVisible) {
       throw new Error('About card is not displayed');
+    }
+  }
+
+  async verifyPRRows(allPRs: any[], startRow: number, lastRow: number) {
+    for (let i = startRow; i < lastRow; i++) {
+      await this.uiHelper.verifyRowsInTable([allPRs[i].title], false);
     }
   }
 }
