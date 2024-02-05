@@ -22,12 +22,12 @@
     query-string "^7.0.0"
     xcase "^2.0.1"
 
-"@gitbeaker/core@^39.32.0":
-  version "39.32.0"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-39.32.0.tgz#6c4239643efc833a806fae4ed4e6f89a10572d1d"
-  integrity sha512-dvpmnh7s0bwaYwkyA9bwdspzOO17sr6kpfaTSg57qCsR63DbKtvFo5FThBzcpOOM+ZWhVyoqBrgWVzA8KsaDGg==
+"@gitbeaker/core@^39.34.0":
+  version "39.34.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-39.34.0.tgz#ea5724688ddd4814a0ce399a72c8a4e9b16bd89d"
+  integrity sha512-2DHxkmF+IYFv6zLOJ5sy1PGrGXSDGKUJj7l6c5BXfmKVS9kgAfaqslZsdonh3wVtyEClEUPHez2Gq6vI/r35bg==
   dependencies:
-    "@gitbeaker/requester-utils" "^39.32.0"
+    "@gitbeaker/requester-utils" "^39.34.0"
     qs "^6.11.2"
     xcase "^2.0.1"
 
@@ -51,10 +51,10 @@
     qs "^6.10.1"
     xcase "^2.0.1"
 
-"@gitbeaker/requester-utils@^39.32.0":
-  version "39.32.0"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-39.32.0.tgz#694d8305cdabaaa100a03b16d16cf3ddef62b3a6"
-  integrity sha512-L9CcQEXh0r9NrVxg0rbxShBEjWGitrHODligR4O022pMrUrLokNgjEsoEwLT5cLPZjCy/htdQ8+jkVdJXNfABA==
+"@gitbeaker/requester-utils@^39.34.0":
+  version "39.34.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-39.34.0.tgz#ee91cc220fa8af537be1b6bd23432252d6347dca"
+  integrity sha512-82XEPAlYwC475I4vjj/SKM50ptdvMCuX5aeW4XE3eYnjc2rNh/mLDbgGRu2P4wzb2x+yHxY6W8NpcfZ39Ek2wQ==
   dependencies:
     picomatch-browser "^2.2.6"
     qs "^6.11.2"
@@ -62,12 +62,12 @@
     xcase "^2.0.1"
 
 "@gitbeaker/rest@^39.25.0":
-  version "39.32.0"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.32.0.tgz#c2f8a0ab5ce6acba8e4171ec7c659922e882ec82"
-  integrity sha512-kyla6YcXFkno3RKWJyRPCSd2qglwqv7DdBNxqBbhX03AhfGEMZJlYMjFkPxfwMtvZ8HawMFYJ124gVJzRbaQXg==
+  version "39.34.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.34.0.tgz#cd2b16c5a8e79b80e70cd780de907b939c5d7e4b"
+  integrity sha512-9EDO4HVAjaRjU6K0h2B7cPpv2gGY9fxO+a2p4gxbQo30ikKOeQFE0UtU2QLnztin8WPcB0S8sOOoMVGBWhxb0Q==
   dependencies:
-    "@gitbeaker/core" "^39.32.0"
-    "@gitbeaker/requester-utils" "^39.32.0"
+    "@gitbeaker/core" "^39.34.0"
+    "@gitbeaker/requester-utils" "^39.34.0"
 
 "@sindresorhus/is@^4.0.0":
   version "4.6.0"
@@ -119,9 +119,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "20.11.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.5.tgz#be10c622ca7fcaa3cf226cf80166abc31389d86e"
-  integrity sha512-g557vgQjUUfN76MZAN/dt1z3dzcUsimuysco0KeluHgrPdJXkP/XdAURgyO2W9fZWHRtRBiVKzKn8vyOAwlG+w==
+  version "20.11.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.10.tgz#6c3de8974d65c362f82ee29db6b5adf4205462f9"
+  integrity sha512-rZEfe/hJSGYmdfX9tvcPMYeYPW2sNl50nsw4jZmRcaG0HIAb0WYEpsB05GOb53vjqpyE9GUhlDQ4jLSoB5q9kg==
   dependencies:
     undici-types "~5.26.4"
 
@@ -425,9 +425,9 @@ quick-lru@^5.1.1:
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
 rate-limiter-flexible@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-4.0.0.tgz#4754706216f0b442e7527b1367e42b7682145010"
-  integrity sha512-SkA18LEPqJJKHixi6E7tzBKTXbj9gu5wPyfTykPVRZR5JGSw0dMCjtZsjlfuabVY940pu28Wu87NZN4FhztnyQ==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-4.0.1.tgz#79b0ce111abe9c5da41d6fddf7cca93cedd3a8fc"
+  integrity sha512-2/dGHpDFpeA0+755oUkW+EKyklqLS9lu0go9pDsbhqQjZcxfRyJ6LA4JI0+HAdZ2bemD/oOjUeZQB2lCZqXQfQ==
 
 resolve-alpn@^1.0.0:
   version "1.2.1"
