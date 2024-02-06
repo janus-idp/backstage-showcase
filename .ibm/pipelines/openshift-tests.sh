@@ -164,7 +164,7 @@ check_backstage_running() {
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
-    local http_status=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
+    local http_status=$(curl -I -s "$url" | grep HTTP | awk '{print $2}')
 
     # Check if the status code is 200
     if [[ $http_status -eq 200 ]]; then
@@ -179,7 +179,7 @@ check_backstage_running() {
     fi
   done
 
-  echo "Failed to reach Backstage after $max_attempts attempts."
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts."
   return 1
 }
 
