@@ -7472,10 +7472,10 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@roadiehq/backstage-plugin-argo-cd@2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-argo-cd/-/backstage-plugin-argo-cd-2.5.1.tgz#e234d81fc4cc55633330ab174b617c9671bf8dfb"
-  integrity sha512-R2NyZ0EGOn5vu5XD8ia+PYPs0DbX1U/qjODoROfWVTPQbqQj3ogsxXfDFU3Zitx0IQHAPFAcRBcCWmd89fvujw==
+"@roadiehq/backstage-plugin-argo-cd@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-argo-cd/-/backstage-plugin-argo-cd-2.4.1.tgz#5b874e690bb9f37e2462433f93151821ce33b1f6"
+  integrity sha512-9S8+DXP01/2pPCaK9+tvdBl5+5MquPisR1KptFh+sr0088VtfPZqUv7gAT/WykzgDca/oLXhMh9dLXJWd0S7Nw==
   dependencies:
     "@backstage/catalog-model" "^1.4.3"
     "@backstage/core-components" "^0.13.8"
