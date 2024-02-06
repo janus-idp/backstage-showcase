@@ -153,13 +153,34 @@ run_tests() {
 }
 
 check_backstage_running() {
-  # Check if Backstage is up and running
-  BACKSTAGE_URL_RESPONSE=$(curl -Is "https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}" | head -n 1)
+  local url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+  
+  # Maximum number of attempts to check URL
+  local max_attempts=30
+  # Time in seconds to wait
+  local wait_seconds=30
 
-  echo "$BACKSTAGE_URL_RESPONSE"
-  export BASE_URL="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
-  echo "######## BASE URL ########"
-  echo "$BASE_URL"
+  echo "Checking if Backstage is up and running at $url"
+
+  for ((i=1; i<=max_attempts; i++)); do
+    # Get the status code
+    local http_status=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
+
+    # Check if the status code is 200
+    if [[ $http_status -eq 200 ]]; then
+      echo "Backstage is up and running!"
+      export BASE_URL=$url
+      echo "######## BASE URL ########"
+      echo "$BASE_URL"
+      return 0
+    else
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
+      sleep $wait_seconds
+    fi
+  done
+
+  echo "Failed to reach Backstage after $max_attempts attempts."
+  return 1
 }
 
 main() {
@@ -196,16 +217,18 @@ main() {
 
   echo "Tag name with short SHA: pr-${GIT_PR_NUMBER}-${SHORT_SHA}"
 
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/redhat-developer-hub --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
 
-  echo "Waiting for backstage deployment..."
-  sleep 500
+  check_backstage_running
+  backstage_status=$?
 
   echo "Display pods for verification..."
   oc get pods -n ${NAME_SPACE}
 
-  check_backstage_running
-
+  if [ $backstage_status -ne 0 ]; then
+    echo "Backstage is not running. Exiting..."
+    exit 1
+  fi
 
   run_tests
 }
