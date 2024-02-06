@@ -300,10 +300,10 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 
 Note: 2.12 is the last version released from <https://github.com/janus-idp/helm-backstage>, with 2.13 being the start of the releases from <https://github.com/redhat-developer/rhdh-chart>
 
-- The updated Helm values introduces a new parameter named global.dynamic, consisting of two fields:
+- The updated Helm values introduces a new parameter named `global.dynamic`, consisting of two fields:
 
-  - `plugins`: This field defines the dynamic plugins intended for installation. By default, the list is empty. A package can be designated either as a local relative path (beginning with `./`) to the dynamic plugin's folder for a local installation or as a package specification in an NPM repository for an external installation.
-  - `includes`: This field comprises a collection of YAML files employing the same syntax. The `plugins` list from these files will be merged into, and may potentially override, the `plugins` list in the main Helm values. The default configuration involves the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, encompassing all the dynamic plugins [included in the showcase application container image](#dynamic-plugins-included-in-the-showcase-container-image), whether they are enabled or disabled by default.
+  - `plugins`: the dynamic plugins intended for installation. By default, the list is empty. A package can be designated either as a local relative path (beginning with `./`) to the dynamic plugin's folder for a local installation or as a package specification in an NPM repository for an external installation.
+  - `includes`: a list of YAML files utilizing the same syntax. The `includes` file's `plugins` list will be combined with and potentially replaced by the `plugins` list in the main Helm values. The default configuration includes the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file, encompassing all the dynamic plugins [included in the showcase application container image](#dynamic-plugins-included-in-the-showcase-container-image), whether they are disabled or enabled.
 
 - To incorporate a dynamic plugin into the showcase, add an entry to the `global.dynamic.plugins` list. Each entry should include the following fields:
 
@@ -357,7 +357,7 @@ Note: 2.12 is the last version released from <https://github.com/janus-idp/helm-
 
 ### Dynamic plugins included in the Showcase container image
 
-The showcase Docker image is pre-loaded with a variety of dynamic plugins, the majority of which are initially deactivated due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
+The showcase container image is pre-loaded with a variety of dynamic plugins, the majority of which are initially disabled due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
 
 Upon the application startup, for each plugin disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will exhibit a line similar to the following:
 
@@ -377,7 +377,7 @@ global:
 +        disabled: false
 ```
 
-While the plugin's default configuration is derived from the `dynamic-plugins.default.yaml` file, you still have the option to override it by incorporating a `pluginConfig` entry into the plugin configuration.
+While the plugin's default configuration comes from the `dynamic-plugins.default.yaml` file, you still have the option to replace it by incorporating a `pluginConfig` entry into the plugin configuration.
 
 Note: The plugin's default configuration typically references environment variables, and it is essential to ensure that these variables are set in the Helm chart values.
 
