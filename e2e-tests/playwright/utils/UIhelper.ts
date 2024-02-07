@@ -160,32 +160,36 @@ export class UIhelper {
   }
 
   async verifyRowInTableByUniqueText(
-    uniqueRowText: string | RegExp,
-    cellTexts: string[],
+    uniqueRowText: string,
+    cellTexts: string[] | RegExp[],
   ) {
-    const uniqueCell = this.page
-      .locator(UIhelperPO.MuiTableCell)
-      .locator(`text=${uniqueRowText}`);
-    await uniqueCell.scrollIntoViewIfNeeded();
-    const row = uniqueCell.locator('xpath=ancestor::tr');
-
+    const row = this.page.locator(
+      `xpath=//tr[descendant::td//*[text()='${uniqueRowText}']]`,
+    );
+    row.waitFor();
     for (const cellText of cellTexts) {
-      const cell = row
-        .locator(UIhelperPO.MuiTableCell)
-        .locator(`text=${cellText}`);
-      await expect(cell).toBeVisible();
+      await expect(
+        row.locator('td').filter({ hasText: cellText }).first(),
+      ).toBeVisible();
     }
   }
 
-  async getMuiCard(title: string) {
-    const cardHeader = this.page
-      .locator(UIhelperPO.MuiCardHeader)
-      .locator(`text=${title}`);
-    const card = cardHeader.locator(
-      'xpath=ancestor::div[contains(@class, "MuiCard-root")]',
-    );
-    await card.scrollIntoViewIfNeeded();
+  async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
+    const link = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first();
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+  }
 
-    return card;
+  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+    const locator = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .getByText(text, { exact: exact })
+      .first();
+    await locator.scrollIntoViewIfNeeded();
+    await expect(locator).toBeVisible();
   }
 }
