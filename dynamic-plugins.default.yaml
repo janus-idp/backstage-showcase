@@ -586,7 +586,7 @@ plugins:
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-ocm:
+          janus-idp.backstage-plugin-kiali:
             appIcons:
               - name: kialiIcon
                 importName: KialiIcon
@@ -605,14 +605,14 @@ plugins:
                 mountPoint: entity.page.kiali/cards
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-kiali-backend-dynamic
-      disabled: false
-      pluginConfig:
-        catalog:
-          providers:
-            kiali:
-              url: '${KIALI_BASE_URL}'
-              serviceAccountToken: '${KIALI_SERVICE_ACCOUNT_TOKEN}'
-              skipTLSVerify: true
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          kiali:
+            url: '${KIALI_ENDPOINT}'
+            serviceAccountToken: '${KIALI_SERVICE_ACCOUNT_TOKEN}'
+            skipTLSVerify: true
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud
     disabled: true
