@@ -28,7 +28,9 @@ export const AdminPage = () => {
   const { mountPoints } = useContext(DynamicRootContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [parent, selectedTab] = pathname.slice(1, pathname.length).split('/');
+  const [parent, selectedTab, ...rest] = pathname
+    .slice(1, pathname.length)
+    .split('/');
   const availableTabs = tabs.filter(({ id }) => {
     return typeof mountPoints[`admin.page.${id}/cards`] !== 'undefined';
   });
@@ -63,23 +65,43 @@ export const AdminPage = () => {
     // doing anything else
     return <></>;
   }
+  const hasPageLayout = selectedTab === 'rbac' && rest.length > 0;
   const selectedIndex = availableTabs.findIndex(tab => tab.id === selectedTab);
   const tabContent = (
     mountPoints[`admin.page.${selectedTab}/context`] || []
   ).reduce(
     (acc, { Component }) => <Component>{acc}</Component>,
-    <Grid container>
-      {(mountPoints[`admin.page.${selectedTab}/cards`] || []).map(
-        ({ Component, config = {}, staticJSXContent }) => {
-          return (
-            <Box key={`${Component.name}`} sx={config.layout}>
-              <Component {...config.props}>{staticJSXContent}</Component>
-            </Box>
-          );
-        },
+    <>
+      {hasPageLayout ? (
+        <>
+          {(mountPoints[`admin.page.${selectedTab}/cards`] || []).map(
+            ({ Component, config = {}, staticJSXContent }) => {
+              return (
+                <Component key={`${Component.name}`} {...config.props}>
+                  {staticJSXContent}
+                </Component>
+              );
+            },
+          )}
+        </>
+      ) : (
+        <Grid container>
+          {(mountPoints[`admin.page.${selectedTab}/cards`] || []).map(
+            ({ Component, config = {}, staticJSXContent }) => {
+              return (
+                <Box key={`${Component.name}`} sx={config.layout}>
+                  <Component {...config.props}>{staticJSXContent}</Component>
+                </Box>
+              );
+            },
+          )}
+        </Grid>
       )}
-    </Grid>,
+    </>,
   );
+  if (hasPageLayout) {
+    return <>{tabContent}</>;
+  }
   return (
     <Page themeId="theme">
       <Header title="Administration" />

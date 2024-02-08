@@ -522,17 +522,20 @@ plugins:
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-rbac:
-            appIcons:
-              - name: AdminPanelSettingsOutlinedIcon
+            mountPoints:
+              - mountPoint: admin.page.rbac/cards
                 module: RbacPlugin
-                importName: AdminPanelSettingsOutlinedIcon
-            dynamicRoutes:
-              - path: /rbac
                 importName: RbacPage
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                    width: 100vw
+                  props:
+                    useHeader: false
+            dynamicRoutes:
+              - path: /admin/rbac
                 module: RbacPlugin
-                menuItem:
-                  icon: AdminPanelSettingsOutlinedIcon
-                  text: Administration
+                importName: RbacPage
   
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true
