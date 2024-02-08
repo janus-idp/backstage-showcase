@@ -7,7 +7,7 @@ import {
 import {
   rbacDynamicPluginsProvider,
   pluginIDProviderService,
-} from './plugins/rbacDynamicPluginsModule';
+} from './modules/rbacDynamicPluginsModule';
 import { metricsHandler } from './metrics';
 import { statusCheckHandler } from '@backstage/backend-common';
 import { RequestHandler } from 'express';
@@ -73,12 +73,12 @@ backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
 // TODO: We should test it more deeply. The structure is not exactly the same as the old backend implementation
 backend.add(import('@backstage/plugin-events-backend/alpha'));
 
-backend.add(import('./plugins/rbacPlugin'));
+backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
 backend.add(pluginIDProviderService);
 backend.add(rbacDynamicPluginsProvider);
 
 backend.add(import('@backstage/plugin-auth-backend'));
-backend.add(import('./plugins/authProvidersModule'));
+backend.add(import('./modules/authProvidersModule'));
 
 backend.add(import('@internal/plugin-dynamic-plugins-info-backend'));
 backend.add(import('@internal/plugin-scalprum-backend'));

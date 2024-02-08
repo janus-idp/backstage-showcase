@@ -3,7 +3,7 @@ import {
   createServiceRef,
   createServiceFactory,
 } from '@backstage/backend-plugin-api';
-import { pluginIDProviderExtensionPoint } from './rbacNode';
+import { pluginIdProviderExtensionPoint } from '@janus-idp/backstage-plugin-rbac-node';
 import { PluginIdProvider } from '@janus-idp/backstage-plugin-rbac-backend';
 import {
   DynamicPluginManager,
@@ -72,10 +72,10 @@ export const rbacDynamicPluginsProvider = createBackendModule({
     reg.registerInit({
       deps: {
         pluginIDProvider: pluginIDProviderServiceRef,
-        pluginProviderIDExtension: pluginIDProviderExtensionPoint,
+        pluginProviderIDExtension: pluginIdProviderExtensionPoint,
       },
       async init({ pluginIDProvider, pluginProviderIDExtension }) {
-        pluginProviderIDExtension.addPluginIDProvider({
+        pluginProviderIDExtension.addPluginIdProvider({
           getPluginIds: pluginIDProvider.getPluginIds,
         });
       },
