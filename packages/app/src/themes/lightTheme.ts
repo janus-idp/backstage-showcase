@@ -25,5 +25,5 @@ export const customLightTheme = (themeColors: ThemeColors) =>
     },
     defaultPageTheme: 'home',
     pageTheme: pageTheme(themeColors),
-    components,
+    components: components('light'),
   });

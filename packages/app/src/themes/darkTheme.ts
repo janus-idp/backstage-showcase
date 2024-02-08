@@ -25,5 +25,5 @@ export const customDarkTheme = (themeColors: ThemeColors) =>
     },
     defaultPageTheme: 'home',
     pageTheme: pageTheme(themeColors),
-    components,
+    components: components('dark'),
   });
