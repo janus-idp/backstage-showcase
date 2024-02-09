@@ -10,4 +10,5 @@ export const UIhelperPO = {
   MuiTableRow: 'tr[class*="MuiTableRow-root"]',
   MuiCardHeader: 'div[class*="MuiCardHeader-root"]',
   tabs: '[role="tab"]',
+  rowByText: (text: string) => `tr:has(td:text-is("${text}"))`,
 };
