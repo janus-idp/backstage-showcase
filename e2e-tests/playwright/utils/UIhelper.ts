@@ -160,20 +160,15 @@ export class UIhelper {
   }
 
   async verifyRowInTableByUniqueText(
-    uniqueRowText: string | RegExp,
-    cellTexts: string[],
+    uniqueRowText: string,
+    cellTexts: string[] | RegExp[],
   ) {
-    const uniqueCell = this.page
-      .locator(UIhelperPO.MuiTableCell)
-      .locator(`text=${uniqueRowText}`);
-    await uniqueCell.scrollIntoViewIfNeeded();
-    const row = uniqueCell.locator('xpath=ancestor::tr');
-
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
     for (const cellText of cellTexts) {
-      const cell = row
-        .locator(UIhelperPO.MuiTableCell)
-        .locator(`text=${cellText}`);
-      await expect(cell).toBeVisible();
+      await expect(
+        row.locator('td').filter({ hasText: cellText }).first(),
+      ).toBeVisible();
     }
   }
 
