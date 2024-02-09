@@ -2,25 +2,30 @@
 
 The Backstage Showcase provides a `/metrics` endpoint that provides Prometheus metrics about your backstage application. This endpoint can be used to monitor your backstage instance using Prometheus and Grafana.
 
-When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart), monitoring and logging for your RHDH instance can be configured using the following steps.
+When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart) or the [RHDH Operator](https://github.com/janus-idp/operator), monitoring and logging for your RHDH instance can be configured using the following steps.
 
 ## Prerequisites
 
 - Kubernetes 1.19+
-- Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure
-- The [RHDH Helm chart repositories](https://github.com/redhat-developer/rhdh-chart#installing-from-the-chart-repository) have been added
+- If using the Helm Chart
+  - Helm 3.2.0+
+  - The [RHDH Helm chart repositories](https://github.com/redhat-developer/rhdh-chart#installing-from-the-chart-repository)
 
 ## Metrics Monitoring
 
 ### Enabling Metrics Monitoring on Openshift
 
-To enable metrics on Openshift, you will need to modify the `values.yaml` of the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart/blob/main/charts/backstage/values.yaml)
+To enable metrics monitoring on OpenShift, we need to create a `ServiceMonitor` resource in the OpenShift cluster that will be used by Prometheus to scrape metrics from your Backstage instance. For the metrics to be ingested by the built-in Prometheus instances in Openshift, please ensure you enabled [monitoring for user-defined projects](https://docs.openshift.com/container-platform/latest/monitoring/enabling-monitoring-for-user-defined-projects.html).
+
+#### Helm deployment
+
+To enable metrics on Openshift when deploying with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart), you will need to modify the [`values.yaml`](https://github.com/redhat-developer/rhdh-chart/blob/main/charts/backstage/values.yaml) of the Chart.
 
 To obtain the `values.yaml`, you can run the following command:
 
 ```bash
-helm show values janus-idp/backstage > values.yaml
+helm show values redhat-developer/backstage > values.yaml
 ```
 
 Then, you will need to modify the `values.yaml` to enable metrics monitoring by adding the following configurations:
@@ -37,13 +42,46 @@ upstream:
 Then you can deploy the Janus Helm chart with the modified `values.yaml`:
 
 ```bash
-helm upgrade -i <release_name> janus-idp/backstage -f values.yaml
+helm upgrade -i <release_name> redhat-developer/backstage -f values.yaml
 ```
-
-This will create a `ServiceMonitor` resource in your Openshift cluster that will be used by Prometheus to scrape metrics from your Backstage instance. For the metrics to be ingested by the built-in Prometheus instances in Openshift, please ensure you enabled [monitoring for user-defined projects](https://docs.openshift.com/container-platform/latest/monitoring/enabling-monitoring-for-user-defined-projects.html)
 
 You can then verify metrics are being captured by navigating to the Openshift Console. Go to `Developer` Mode, change to the namespace the showcase is deployed on, selecting `Observe` and navigating to the `Metrics` tab. Here you can create PromQL queries to query the metrics being captured by Prometheus.
 ![Openshift Metrics](./images/openshift-metrics.png)
+
+#### Operator-backed deployment
+
+At the moment, the operator does not support creating OpenShift `ServiceMonitor` instances out of the box.
+
+However, you can manually create a `ServiceMonitor` resource for your operator-backed Backstage instance; and it will be used by Prometheus to scrape metrics from your Backstage instance. To do so, please adjust and run the following commands using either `oc` or `kubectl`:
+
+```bash
+# make sure to update CR_NAME value accordingly
+$ CR_NAME=my-rhdh
+$ MY_PROJECT=my-project
+$ cat <<EOF > /tmp/${CR_NAME}.ServiceMonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ${CR_NAME}
+  namespace: ${MY_PROJECT}
+  labels:
+    app.kubernetes.io/instance: ${CR_NAME}
+    app.kubernetes.io/name: backstage
+spec:
+  namespaceSelector:
+    matchNames:
+      - ${MY_PROJECT}
+  selector:
+    matchLabels:
+      janus-idp.io/app: backstage-${CR_NAME}
+  endpoints:
+  - port: http-backend
+    path: '/metrics'
+EOF
+$ oc apply -f /tmp/${CR_NAME}.ServiceMonitor.yaml
+```
+
+Similar to the instructions above for a Helm-based deployment, you can then verify metrics are being captured by navigating to the Openshift Console. Go to `Developer` Mode, change to the namespace the showcase is deployed on, selecting `Observe` and navigating to the `Metrics` tab.
 
 ### Enabling Metrics Monitoring on Azure Kubernetes Service (AKS)
 
