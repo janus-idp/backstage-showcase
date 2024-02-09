@@ -106,3 +106,29 @@ app:
 
 ![Example Light Mode Sidebar Indicator](images/example-sidebar-indicator-light.png)
 ![Example Dark Mode Sidebar Indicator](images/example-sidebar-indicator-dark.png)
+
+## Customizing Support button content
+
+To customize the Support button content, provide your support team links and icons to the `app.support` field of the `app-config.yaml` file.
+
+Example configurations:
+
+```
+app:
+  support:
+    url: https://github.com/backstage/backstage/issues        # Used as contact support link on common ErrorPage
+    items:                                                    # Used by common SupportButton component
+      - title: Issues
+        icon: github
+        links:
+          - url: https://github.com/backstage/backstage/issues
+            title: GitHub Issues
+      - title: Red Hat Developer Hub
+        icon: chat
+        links:
+          - url: https://discord.gg/backstage-687207715902193673
+            title: '#forum-rhdh'
+```
+
+![Example Support Not Configured](images/support-not-configured.png)
+![Example Support Configured](images/example-support-button.png)
