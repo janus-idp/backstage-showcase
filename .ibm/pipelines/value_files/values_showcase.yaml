@@ -122,7 +122,6 @@ upstream:
     backstage.io/kubernetes-id: developer-hub
   backstage:
     image:
-      debug: true
       pullPolicy: Always
       pullSecrets:
         - rhdh-pull-secret

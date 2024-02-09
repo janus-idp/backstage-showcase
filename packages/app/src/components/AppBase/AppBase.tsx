@@ -15,6 +15,7 @@ import { Route } from 'react-router-dom';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { Root } from '../Root';
 import { settingsPage } from '../UserSettings/SettingsPages';
+import { AdminPage } from '../admin/AdminPage';
 import { entityPage } from '../catalog/EntityPage';
 import { HomePage } from '../home/HomePage';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
@@ -67,6 +68,16 @@ const AppBase = () => {
             </Route>
             <Route path="/catalog-graph" element={<CatalogGraphPage />} />
             <Route path="/learning-paths" element={<LearningPaths />} />
+            <Route path="/admin" element={<AdminPage />} />
+            {dynamicRoutes
+              .filter(({ path }) => path.startsWith('/admin'))
+              .map(({ path }) => (
+                <Route
+                  key={`admin-path-${path}`}
+                  path={path}
+                  element={<AdminPage />}
+                />
+              ))}
             {dynamicRoutes.map(
               ({ Component, staticJSXContent, path, config: { props } }) => (
                 <Route
