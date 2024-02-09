@@ -130,5 +130,7 @@ app:
             title: '#forum-rhdh'
 ```
 
-![Example Support Not Configured](images/support-not-configured.png)
-![Example Support Configured](images/example-support-button.png)
+<img src="images/example-support-button.png" alt="Example Support Configured" width="285">
+
+If support is not configured, it would look as below.
+<img src="images/support-not-configured.png" alt="Example Support Not Configured" width="285">
