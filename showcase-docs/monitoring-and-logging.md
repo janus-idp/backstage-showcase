@@ -91,7 +91,11 @@ One method is to configure the metrics scraping of your AKS cluster using the [A
 
 The other method is to configure the Azure Monitor _monitoring_ add-on which also allows you to [send Prometheus metrics to the Log Analytics workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-logs). These metrics can then be queried using [Log Analytics queries](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query#prometheus-metrics) as well as be visible in a Grafana instance.
 
-In both methods, we can configure the metrics scraping to scrap from pods based on pod Annotations. To add annotations to the backstage pod, add the following to the Janus Helm chart `values.yaml`:
+In both methods, we can configure the metrics scraping to scrap from pods based on pod Annotations. Follow the steps below depending on how the Backstage Showcase application is deployed.
+
+#### Helm deployment
+
+To add annotations to the backstage pod, add the following to the Janus Helm chart `values.yaml`:
 
 ```yaml title="values.yaml"
 upstream:
@@ -103,6 +107,65 @@ upstream:
       prometheus.io/path: '/metrics'
       prometheus.io/port: '7007'
       prometheus.io/scheme: 'http'
+```
+
+#### Operator-backed deployment
+
+For an operator-backed deployment, you will need to first create your Custom Resource, then manually add the annotations to the Backstage Pod created by the Operator.
+
+Using `oc` or `kubectl`, you can run the following command:
+
+```bash
+# make sure to update CR_NAME value accordingly
+$ CR_NAME=my-rhdh
+$ oc annotate pods \
+    --selector janus-idp.io/app="backstage-${CR_NAME}" \
+    prometheus.io/scrape='true' \
+    prometheus.io/path='/metrics' \
+    prometheus.io/port='7007' \
+    prometheus.io/scheme='http'
+```
+
+**NOTE**: Please note that these annotations might be lost if the pod has to be recreated by the operator. In this case, you can either add the annotations again or, as an administrator of the operator, change its default configuration.
+To have something persistent, if you have access to the namespace where the operator is running (usually `rhdh-operator`, `openshift-operators`, or `backstage-system`), you can do the following, using either `oc` or `kubectl`:
+
+1. Edit the default configuration of the operator:
+
+```bash
+# make sure to update OPERATOR_NS accordingly
+$ OPERATOR_NS=rhdh-operator
+$ oc edit configmap backstage-default-config -n "${OPERATOR_NS}"
+```
+
+2. Find the `deployment.yaml` key in the ConfigMap, and add the annotations to the `spec.template.metadata.annotations` field, like so:
+
+```yaml
+deployment.yaml: |-
+  apiVersion: apps/v1
+  kind: Deployment
+  # --- truncated ---
+  spec:
+    template:
+      # --- truncated ---
+      metadata:
+        labels:
+          janus-idp.io/app:  # placeholder for 'backstage-<cr-name>'
+        # --- truncated ---
+        annotations:
+          prometheus.io/scrape: 'true'
+          prometheus.io/path: '/metrics'
+          prometheus.io/port: '7007'
+          prometheus.io/scheme: 'http'
+  # --- truncated ---
+```
+
+3. Save
+4. If you already have existing resources created by the operator from existing Custom Resources, you might need to force the operator to recreate the pods, by deleting the corresponding Deployment. For example:
+
+```bash
+# make sure to update CR_NAME value accordingly
+$ CR_NAME=my-rhdh
+$ oc delete deployment --selector app.kubernetes.io/instance="${CR_NAME}"
 ```
 
 #### Metrics Add-on
