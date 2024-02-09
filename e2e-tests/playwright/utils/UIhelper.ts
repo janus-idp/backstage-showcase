@@ -163,10 +163,8 @@ export class UIhelper {
     uniqueRowText: string,
     cellTexts: string[] | RegExp[],
   ) {
-    const row = this.page.locator(
-      `xpath=//tr[descendant::td//*[text()='${uniqueRowText}']]`,
-    );
-    row.waitFor();
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
     for (const cellText of cellTexts) {
       await expect(
         row.locator('td').filter({ hasText: cellText }).first(),
