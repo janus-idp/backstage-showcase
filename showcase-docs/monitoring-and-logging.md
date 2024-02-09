@@ -195,7 +195,11 @@ InsightsMetrics
 
 ## Logging
 
-Logging in backstage showcase is conducted using the [winston](https://github.com/winstonjs/winston) library. By default, logs of level `debug` are not logged. To enable debug logs, you will need to set the environment variable `LOG_LEVEL` to `debug` in your deployment in the helm chart's `values.yaml` as follows:
+Logging in backstage showcase is conducted using the [winston](https://github.com/winstonjs/winston) library. By default, logs of level `debug` are not logged. To enable debug logs, you will need to set the environment variable `LOG_LEVEL` to `debug` in your deployment.
+
+### Helm deployment
+
+You can set the logging level by adding the environment variable in your Helm chart's `values.yaml`, as follows:
 
 ```yaml title="values.yaml"
 upstream:
@@ -204,6 +208,20 @@ upstream:
     extraEnvVars:
       - name: LOG_LEVEL
         value: debug
+```
+
+### Operator-backed deployment
+
+You can set the logging level by adding the environment variable in your Custom Resource, like so:
+
+```yaml title="env var in Custom Resource"
+spec:
+  # Other fields omitted
+  application:
+    extraEnvs:
+      envs:
+        - name: LOG_LEVEL
+          value: debug
 ```
 
 ### Openshift Logging Integration
