@@ -320,7 +320,7 @@ const ScalprumRoot = ({
       config={value?.scalprumConfig ?? {}}
       pluginSDKOptions={{
         pluginLoaderOptions: {
-          postProcessManifest: manifest => {
+          transformPluginManifest: manifest => {
             return {
               ...manifest,
               loadScripts: manifest.loadScripts.map(
