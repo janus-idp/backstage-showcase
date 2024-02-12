@@ -116,21 +116,22 @@ Example configurations:
 ```
 app:
   support:
-    url: https://github.com/backstage/backstage/issues        # Used as contact support link on common ErrorPage
-    items:                                                    # Used by common SupportButton component
+    url: https://github.com/janus-idp/backstage-showcase/issues # Used as contact support link on common ErrorPage
+    items:                                                      # Used by common SupportButton component
       - title: Issues
         icon: github
         links:
-          - url: https://github.com/backstage/backstage/issues
+          - url: https://github.com/janus-idp/backstage-showcase/issues
             title: GitHub Issues
-      - title: Red Hat Developer Hub
+      - title: Join the community
         icon: chat
         links:
-          - url: https://discord.gg/backstage-687207715902193673
-            title: '#forum-rhdh'
+          - url: https://janus-idp.io/community/
+            title: Janus Community
 ```
 
 <img src="images/example-support-button.png" alt="Example Support Configured" width="285">
 
 If support is not configured, it would look as below.
+
 <img src="images/support-not-configured.png" alt="Example Support Not Configured" width="285">
