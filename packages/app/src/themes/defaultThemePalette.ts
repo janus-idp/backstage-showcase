@@ -6,8 +6,8 @@ export const defaultThemePalette = (mode: string) => {
         mainHover: '#73BCF7', // text button hover color
         contrastText: '#FFF', // button text color
         dark: '#0066CC', // button hover background color
-        disabledBackground: '#444548',
-        disabled: '#AAABAC',
+        disabledBackground: '#444548', // contained button disabled background color
+        disabled: '#AAABAC', // contained button disabled text color
       },
     };
   }
