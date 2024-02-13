@@ -1,8 +1,12 @@
 import { rootHttpRouterServiceFactory } from '@backstage/backend-app-api';
 import { createBackend } from '@backstage/backend-defaults';
+import { PackageRoles } from '@backstage/cli-node';
 import {
   dynamicPluginsFeatureDiscoveryServiceFactory,
   dynamicPluginsServiceFactory,
+  dynamicPluginsSchemasServiceFactory,
+  dynamicPluginsFrontendSchemas,
+  dynamicPluginsRootLoggerServiceFactory,
 } from '@backstage/backend-dynamic-feature-service';
 import {
   rbacDynamicPluginsProvider,
@@ -11,6 +15,7 @@ import {
 import { metricsHandler } from './metrics';
 import { statusCheckHandler } from '@backstage/backend-common';
 import { RequestHandler } from 'express';
+import * as path from 'path';
 
 const backend = createBackend();
 
@@ -39,11 +44,12 @@ backend.add(
 );
 backend.add(dynamicPluginsFeatureDiscoveryServiceFactory()); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
 backend.add(dynamicPluginsServiceFactory());
-/*
 backend.add(
-  schemaDiscoveryServiceFactory({
+  dynamicPluginsSchemasServiceFactory({
     schemaLocator(pluginPackage) {
-      const platform = getPlatform(pluginPackage.manifest)
+      const platform = PackageRoles.getRoleInfo(
+        pluginPackage.manifest.backstage.role,
+      ).platform;
       return path.join(
         platform === 'node' ? 'dist' : 'dist-scalprum',
         'configSchema.json',
@@ -51,7 +57,9 @@ backend.add(
     },
   }),
 );
-*/
+backend.add(dynamicPluginsFrontendSchemas());
+backend.add(dynamicPluginsRootLoggerServiceFactory());
+
 backend.add(import('@backstage/plugin-app-backend/alpha'));
 backend.add(
   import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
