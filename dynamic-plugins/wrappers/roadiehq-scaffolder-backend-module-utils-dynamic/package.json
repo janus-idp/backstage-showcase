@@ -26,12 +26,12 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-utils --override-interop default"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "0.6.10-next.1",
-    "@backstage/plugin-scaffolder-node": "0.2.8",
+    "@backstage/backend-plugin-api": "^0.6.10-next.3",
+    "@backstage/plugin-scaffolder-node": "^0.2.8",
     "@roadiehq/scaffolder-backend-module-utils": "1.13.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2-next.1",
+    "@backstage/cli": "^0.25.2-next.3",
     "@janus-idp/cli": "1.7.1"
   },
   "files": [

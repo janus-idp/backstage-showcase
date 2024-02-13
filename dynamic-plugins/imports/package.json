@@ -12,7 +12,7 @@
     "lint": "backstage-cli package lint"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2-next.1",
+    "@backstage/cli": "^0.25.2-next.3",
     "tar": "6.2.0"
   },
   "peerDependencies": {

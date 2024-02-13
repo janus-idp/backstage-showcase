@@ -23,7 +23,7 @@
     "@immobiliarelabs/backstage-plugin-gitlab": "6.4.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2-next.1",
+    "@backstage/cli": "^0.25.2-next.3",
     "@janus-idp/cli": "1.7.1"
   },
   "files": [
