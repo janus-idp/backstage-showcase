@@ -24,7 +24,7 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
           textTransform: 'none',
         },
         containedPrimary: {
-          backgroundColor: themePalette.primary.constainedButtonBackground,
+          backgroundColor: themePalette.primary.containedButtonBackground,
           color: themePalette.primary.contrastText,
           boxShadow: 'none',
           '&:hover': {

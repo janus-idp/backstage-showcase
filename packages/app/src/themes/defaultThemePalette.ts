@@ -3,7 +3,7 @@ export const defaultThemePalette = (mode: string) => {
     return {
       primary: {
         main: '#1FA7F8', // text button color, button background color
-        constainedButtonBackground: '#0066CC', // contained button background color
+        containedButtonBackground: '#0066CC', // contained button background color
         textHover: '#73BCF7', // text button hover color
         contrastText: '#FFF', // contained button text color
         dark: '#004080', // contained button hover background color
