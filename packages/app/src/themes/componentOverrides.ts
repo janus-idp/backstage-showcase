@@ -24,7 +24,7 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
           textTransform: 'none',
         },
         containedPrimary: {
-          backgroundColor: themePalette.primary.main,
+          backgroundColor: themePalette.primary.constainedButtonBackground,
           color: themePalette.primary.contrastText,
           boxShadow: 'none',
           '&:hover': {
@@ -59,7 +59,7 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
         text: {
           color: themePalette.primary.main,
           '&:hover': {
-            color: themePalette.primary.mainHover,
+            color: themePalette.primary.textHover,
             backgroundColor: 'transparent',
           },
         },
@@ -67,7 +67,7 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
           color: themePalette.primary.main,
           textTransform: 'none',
           '&:hover': {
-            color: themePalette.primary.mainHover,
+            color: themePalette.primary.textHover,
             textTransform: 'none',
             backgroundColor: 'transparent',
           },
