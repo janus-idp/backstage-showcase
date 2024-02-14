@@ -252,32 +252,18 @@ dynamicPlugins:
               anyOf:
                 - hasAnnotation: backstage.io/kubernetes-id
                 - hasAnnotation: backstage.io/kubernetes-namespace
-    janus-idp.backstage-plugin-dynamic-plugins-info:
-      dynamicRoutes:
-        - path: /admin/plugins
-          importName: DynamicPluginsInfo
-      mountPoints:
-        - mountPoint: admin.page.plugins/cards
-          importName: DynamicPluginsInfo
-          config:
-            layout:
-              gridColumn: "1 / -1"
-              width: 100vw
     janus-idp.backstage-plugin-rbac:
+      appIcons:
+        - name: AdminPanelSettingsOutlinedIcon
+          module: RbacPlugin
+          importName: AdminPanelSettingsOutlinedIcon
       dynamicRoutes:
-        - path: /admin/rbac
-          module: RbacPlugin
+        - path: /rbac
           importName: RbacPage
-      mountPoints:
-        - mountPoint: admin.page.rbac/cards
           module: RbacPlugin
-          importName: RbacPage
-          config:
-            layout:
-              gridColumn: "1 / -1"
-              width: 100vw
-            props:
-              useHeader: false
+          menuItem:
+            icon: AdminPanelSettingsOutlinedIcon
+            text: Administration
     roadiehq.backstage-plugin-argo-cd:
       mountPoints:
         - mountPoint: entity.page.overview/cards
