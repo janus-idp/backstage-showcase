@@ -23,7 +23,7 @@
     "test": "backstage-cli package test --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-bitbucket-cloud"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-bitbucket-cloud --embed-package @backstage/plugin-bitbucket-cloud-common"
   },
   "dependencies": {
     "@backstage/plugin-catalog-backend-module-bitbucket-cloud": "^0.1.25-next.3"
