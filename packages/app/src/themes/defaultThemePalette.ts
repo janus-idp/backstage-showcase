@@ -15,7 +15,7 @@ export const defaultThemePalette = (mode: string) => {
   return {
     primary: {
       main: '#0066CC',
-      constainedButtonBackground: '#0066CC',
+      containedButtonBackground: '#0066CC',
       mainHover: '#004080',
       contrastText: '#FFF',
       dark: '#004080',

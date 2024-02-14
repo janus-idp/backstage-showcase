@@ -1,0 +1,10 @@
+p, role:default/team_a, catalog-entity, read, allow
+
+g, user:default/ciiay, role:default/team_a
+
+p, role:default/team_a, catalog-entity, read, allow
+p, role:default/team_a, catalog.entity.create, create, allow
+p, role:default/team_a, catalog.location.create, create, allow
+p, role:default/team_a, catalog.location.read, read, allow
+
+p, role:default/team_a, policy-entity, create, allow
