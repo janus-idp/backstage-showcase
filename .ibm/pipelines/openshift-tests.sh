@@ -139,7 +139,7 @@ run_tests() {
 
   (
     set -e
-    echo Using PR container image: pr-${GIT_PR_NUMBER}-${SHORT_SHA}
+    echo Using PR container image: ${TAG_NAME}
     yarn test
   ) |& tee "/tmp/${LOGFILE}"
 
@@ -215,9 +215,9 @@ main() {
   LONG_SHA=$(echo "$GIT_PR_RESPONSE" | jq -r '.head.sha')
   SHORT_SHA=$(git rev-parse --short ${LONG_SHA})
 
-  echo "Tag name with short SHA: pr-${GIT_PR_NUMBER}-${SHORT_SHA}"
+  echo "Tag name with short SHA: ${TAG_NAME}"
 
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
   check_backstage_running
   backstage_status=$?
