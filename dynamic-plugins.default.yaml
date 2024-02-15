@@ -1,5 +1,6 @@
 plugins:
   # Group: Github
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
@@ -119,6 +120,7 @@ plugins:
                       - isSecurityInsightsAvailable
 
   # Group: Gitlab
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
@@ -173,8 +175,6 @@ plugins:
       catalog:
         providers:
           gitlab: {}
-  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
-    disabled: true
 
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
@@ -296,6 +296,7 @@ plugins:
                       - isArgocdAvailable
 
   # Group: Azure Devops
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
@@ -501,6 +502,9 @@ plugins:
                     icon: docs
 
   # Standalone plugins
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
+
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
@@ -599,6 +603,7 @@ plugins:
                 timeout:
                   minutes: 50
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true
     pluginConfig:
@@ -616,6 +621,7 @@ plugins:
                 timeout:
                   minutes: 3
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic
     disabled: true
     pluginConfig:

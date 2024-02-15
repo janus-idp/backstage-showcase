@@ -1,6 +1,11 @@
 ---
-'backstage-plugin-catalog-backend-module-github-org': patch
 'backstage-plugin-scaffolder-backend-module-gitlab': patch
+'backstage-plugin-scaffolder-backend-module-github': patch
+'backstage-plugin-scaffolder-backend-module-azure': patch
+'backstage-plugin-scaffolder-backend-module-gerrit': patch
+'backstage-plugin-scaffolder-backend-module-bitbucket-cloud': patch
+'backstage-plugin-scaffolder-backend-module-bitbucket-server': patch
+'backstage-plugin-catalog-backend-module-github-org': patch
 'immobiliarelabs-backstage-plugin-gitlab-backend': patch
 'backstage-plugin-catalog-backend-module-github': patch
 'backstage-plugin-catalog-backend-module-gitlab': patch
