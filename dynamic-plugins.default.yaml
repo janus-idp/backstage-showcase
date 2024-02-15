@@ -17,6 +17,14 @@ plugins:
             id: production
             githubUrl: "${GITHUB_URL}"
             orgs: [ "${GITHUB_ORG}" ]
+            schedule:
+              frequency:
+                minutes: 60
+              initialDelay:
+                seconds: 15
+              timeout:
+                minutes: 15
+
   - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
     disabled: true
     pluginConfig:
@@ -536,7 +544,7 @@ plugins:
               - path: /admin/rbac
                 module: RbacPlugin
                 importName: RbacPage
-  
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true
     pluginConfig:
@@ -583,6 +591,13 @@ plugins:
               realm: "${KEYCLOAK_REALM}"
               clientId: "${KEYCLOAK_CLIENT_ID}"
               clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
+              schedule:
+                frequency:
+                  minutes: 60
+                initialDelay:
+                  seconds: 15
+                timeout:
+                  minutes: 50
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true
@@ -593,6 +608,13 @@ plugins:
           bitbucketCloud:
             default: # identifies your ingested dataset
               workspace: ${BITBUCKET_WORKSPACE}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic
     disabled: true
@@ -603,6 +625,13 @@ plugins:
           bitbucketServer:
             default: # identifies your ingested dataset
               host: ${BITBUCKET_HOST}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
 
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true
