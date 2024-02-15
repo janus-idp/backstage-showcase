@@ -32,7 +32,7 @@
     "@backstage/plugin-techdocs-backend": "1.9.2",
     "@backstage/plugin-techdocs-node": "1.11.1",
     "@backstage/plugin-search-backend-module-techdocs": "0.1.13",
-    "dockerode": "3.3.5"
+    "dockerode": "4.0.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.25.1",
