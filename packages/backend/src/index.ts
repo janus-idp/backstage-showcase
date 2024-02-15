@@ -22,7 +22,7 @@ const backend = createBackend();
 backend.add(
   rootHttpRouterServiceFactory({
     configure(context) {
-      let healthCheckHandler: RequestHandler | undefined = undefined;
+      let healthCheckHandler: RequestHandler | undefined;
 
       const { app, routes, middleware } = context;
       app.use(middleware.helmet());
