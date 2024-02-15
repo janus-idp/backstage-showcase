@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-sonarqube-backend-dynamic",
-  "version": "0.2.11",
+  "version": "0.2.12-next.3",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -42,9 +42,8 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "0.20.1",
-    "@backstage/backend-plugin-api": "0.6.9",
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-common": "^0.21.0-next.3",
+    "@backstage/backend-plugin-api": "^0.6.10-next.3",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3"
   },
