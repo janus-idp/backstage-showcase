@@ -17,7 +17,7 @@ const pluginIDProviderServiceRef = createServiceRef<PluginIdProvider>({
 
 /*
 // When (if ?) the BackendFeatureRegistrationObserver addition is accected / merged upstream,
-// theh the following commented code would be the right one.
+// the the following commented code would be the right one.
 
 class PluginIdProviderImpl extends BackendFeatureRegistrationObserver implements PluginIdProvider {
   private pluginIDs: string[] = [];
