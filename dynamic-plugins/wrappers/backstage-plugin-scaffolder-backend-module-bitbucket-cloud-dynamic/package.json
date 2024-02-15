@@ -26,10 +26,10 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-bitbucket-cloud --override-interop default"
   },
   "dependencies": {
-    "@backstage/plugin-scaffolder-backend-module-bitbucket-cloud": "^0.1.0-next.1"
+    "@backstage/plugin-scaffolder-backend-module-bitbucket-cloud": "0.1.0-next.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.25.2-next.3",
+    "@backstage/cli": "0.25.2-next.3",
     "@janus-idp/cli": "1.7.1"
   },
   "files": [
