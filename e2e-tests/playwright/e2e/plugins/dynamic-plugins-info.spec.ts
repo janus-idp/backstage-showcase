@@ -18,7 +18,10 @@ test.describe('dynamic-plugins-info backend plugin', () => {
           resPlugin.platform === plugin.platform,
       );
 
-      expect(isPluginIncluded).toBeTruthy();
+      expect(
+        isPluginIncluded,
+        `Plugin not found: ${JSON.stringify(plugin)}`,
+      ).toBeTruthy();
     }
   });
 });

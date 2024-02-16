@@ -18,13 +18,14 @@ let page: Page;
 test.describe.serial('Test OCM plugin', () => {
   let uiHelper: UIhelper;
   let clusters: Clusters;
+  let common: Common;
 
   test.beforeAll(async ({ browserName }) => {
     const browserType = browserName === 'firefox' ? firefox : chromium;
     const browser = await browserType.launch();
     page = await browser.newPage();
 
-    const common = new Common(page);
+    common = new Common(page);
     uiHelper = new UIhelper(page);
     clusters = new Clusters(page);
 
@@ -54,6 +55,7 @@ test.describe.serial('Test OCM plugin', () => {
 
   test('Navigate to Catalog > resources and verify cluster', async () => {
     await uiHelper.openSidebar('Catalog');
+    await common.waitForLoad();
     await uiHelper.selectMuiBox('Kind', 'Resource');
     await uiHelper.verifyRowsInTable([clusterDetails.clusterName]);
     await uiHelper.clickLink(clusterDetails.clusterName);
