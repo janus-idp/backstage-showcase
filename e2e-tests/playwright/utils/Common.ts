@@ -70,9 +70,10 @@ export class Common {
         await popup.waitForTimeout(3000);
         await locator.waitFor({ state: 'visible' });
         await locator.click({ force: true });
+        await popup.waitForTimeout(3000);
         await popup
           .getByRole('button', { name: /Continue|Weiter/ })
-          .click({ timeout: 120000 });
+          .click({ timeout: 60000 });
         resolve();
       });
     });
