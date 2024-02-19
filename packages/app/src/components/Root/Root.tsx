@@ -29,9 +29,6 @@ import { IconComponent, useApp } from '@backstage/core-plugin-api';
 const useStyles = makeStyles()({
   sidebarItem: {
     textDecorationLine: 'none',
-    '&:hover': {
-      textDecorationLine: 'underline',
-    },
   },
 });
 
