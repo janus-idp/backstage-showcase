@@ -11,13 +11,17 @@
   "npm": {
     "minimumReleaseAge": "1 day"
   },
+  "pip_requirements": {
+    "fileMatch": ["requirements.*\\.in"]
+  },
   "packageRules": [
     {
       "matchPackagePatterns": [
         "^@backstage/",
         "^@janus-idp/",
         "^@immobiliarelabs/",
-        "^@roadiehq/"
+        "^@roadiehq/",
+        "^@pagerduty/"
       ],
       "groupName": ["Backstage packages"],
       "dependencyDashboardApproval": true

@@ -1,4 +1,3 @@
-import { getVoidLogger } from '@backstage/backend-common';
 import express from 'express';
 import request from 'supertest';
 import { plugins } from '../../__fixtures__/data';
@@ -14,8 +13,7 @@ describe('createRouter', () => {
     pluginManager._plugins = plugins;
 
     const router = await createRouter({
-      logger: getVoidLogger(),
-      pluginManager,
+      pluginProvider: pluginManager,
     });
 
     app = express();

@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-kubernetes-backend-dynamic",
-  "version": "0.13.0",
+  "version": "0.15.0-next.3",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin"
   },
   "exports": {
     ".": {
@@ -26,7 +26,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-kubernetes-backend --override-interop default"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-kubernetes-backend --embed-package @backstage/plugin-kubernetes-node --override-interop default"
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.0.0",
@@ -61,19 +61,17 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/catalog-client": "1.5.2",
-    "@backstage/backend-common": "0.20.1",
-    "@backstage/backend-plugin-api": "0.6.9",
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
-    "@backstage/catalog-model": "^1.4.3",
+    "@backstage/backend-common": "^0.21.0-next.3",
+    "@backstage/backend-plugin-api": "^0.6.10-next.3",
+    "@backstage/catalog-client": "^1.6.0-next.1",
+    "@backstage/catalog-model": "^1.4.4-next.0",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",
-    "@backstage/integration-aws-node": "^0.1.8",
-    "@backstage/plugin-auth-node": "^0.4.3",
-    "@backstage/plugin-catalog-node": "^1.6.1",
-    "@backstage/plugin-kubernetes-node": "^0.1.3",
+    "@backstage/integration-aws-node": "^0.1.9-next.0",
+    "@backstage/plugin-auth-node": "^0.4.4-next.3",
+    "@backstage/plugin-catalog-node": "^1.6.2-next.3",
     "@backstage/plugin-permission-common": "^0.7.12",
-    "@backstage/plugin-permission-node": "^0.7.20",
+    "@backstage/plugin-permission-node": "^0.7.21-next.3",
     "@backstage/types": "^1.1.1"
   },
   "overrides": {

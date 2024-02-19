@@ -2,25 +2,30 @@
 
 The Backstage Showcase provides a `/metrics` endpoint that provides Prometheus metrics about your backstage application. This endpoint can be used to monitor your backstage instance using Prometheus and Grafana.
 
-When deploying Backstage Showcase onto a kubernetes cluster with the [Janus Helm chart](https://github.com/janus-idp/helm-backstage), monitoring and logging for your Janus instance can be configured using the following steps.
+When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart) or the [RHDH Operator](https://github.com/janus-idp/operator), monitoring and logging for your RHDH instance can be configured using the following steps.
 
 ## Prerequisites
 
 - Kubernetes 1.19+
-- Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure
-- The [Janus Helm chart repositories](https://github.com/janus-idp/helm-backstage#installing-from-the-chart-repository) have been added
+- If using the Helm Chart
+  - Helm 3.2.0+
+  - The [RHDH Helm chart repositories](https://github.com/redhat-developer/rhdh-chart#installing-from-the-chart-repository)
 
 ## Metrics Monitoring
 
 ### Enabling Metrics Monitoring on Openshift
 
-To enable metrics on Openshift, you will need to modify the `values.yaml` of the [Janus Helm chart](https://github.com/janus-idp/helm-backstage/blob/main/charts/backstage/values.yaml)
+To enable metrics monitoring on OpenShift, we need to create a `ServiceMonitor` resource in the OpenShift cluster that will be used by Prometheus to scrape metrics from your Backstage instance. For the metrics to be ingested by the built-in Prometheus instances in Openshift, please ensure you enabled [monitoring for user-defined projects](https://docs.openshift.com/container-platform/latest/monitoring/enabling-monitoring-for-user-defined-projects.html).
+
+#### Helm deployment
+
+To enable metrics on Openshift when deploying with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart), you will need to modify the [`values.yaml`](https://github.com/redhat-developer/rhdh-chart/blob/main/charts/backstage/values.yaml) of the Chart.
 
 To obtain the `values.yaml`, you can run the following command:
 
 ```bash
-helm show values janus-idp/backstage > values.yaml
+helm show values redhat-developer/backstage > values.yaml
 ```
 
 Then, you will need to modify the `values.yaml` to enable metrics monitoring by adding the following configurations:
@@ -37,13 +42,46 @@ upstream:
 Then you can deploy the Janus Helm chart with the modified `values.yaml`:
 
 ```bash
-helm upgrade -i <release_name> janus-idp/backstage -f values.yaml
+helm upgrade -i <release_name> redhat-developer/backstage -f values.yaml
 ```
-
-This will create a `ServiceMonitor` resource in your Openshift cluster that will be used by Prometheus to scrape metrics from your Backstage instance. For the metrics to be ingested by the built-in Prometheus instances in Openshift, please ensure you enabled [monitoring for user-defined projects](https://docs.openshift.com/container-platform/latest/monitoring/enabling-monitoring-for-user-defined-projects.html)
 
 You can then verify metrics are being captured by navigating to the Openshift Console. Go to `Developer` Mode, change to the namespace the showcase is deployed on, selecting `Observe` and navigating to the `Metrics` tab. Here you can create PromQL queries to query the metrics being captured by Prometheus.
 ![Openshift Metrics](./images/openshift-metrics.png)
+
+#### Operator-backed deployment
+
+At the moment, the operator does not support creating OpenShift `ServiceMonitor` instances out of the box.
+
+However, you can manually create a `ServiceMonitor` resource for your operator-backed Backstage instance; and it will be used by Prometheus to scrape metrics from your Backstage instance. To do so, please adjust and run the following commands using either `oc` or `kubectl`:
+
+```bash
+# make sure to update CR_NAME value accordingly
+$ CR_NAME=my-rhdh
+$ MY_PROJECT=my-project
+$ cat <<EOF > /tmp/${CR_NAME}.ServiceMonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ${CR_NAME}
+  namespace: ${MY_PROJECT}
+  labels:
+    app.kubernetes.io/instance: ${CR_NAME}
+    app.kubernetes.io/name: backstage
+spec:
+  namespaceSelector:
+    matchNames:
+      - ${MY_PROJECT}
+  selector:
+    matchLabels:
+      janus-idp.io/app: backstage-${CR_NAME}
+  endpoints:
+  - port: http-backend
+    path: '/metrics'
+EOF
+$ oc apply -f /tmp/${CR_NAME}.ServiceMonitor.yaml
+```
+
+Similar to the instructions above for a Helm-based deployment, you can then verify metrics are being captured by navigating to the Openshift Console. Go to `Developer` Mode, change to the namespace the showcase is deployed on, selecting `Observe` and navigating to the `Metrics` tab.
 
 ### Enabling Metrics Monitoring on Azure Kubernetes Service (AKS)
 
@@ -53,7 +91,11 @@ One method is to configure the metrics scraping of your AKS cluster using the [A
 
 The other method is to configure the Azure Monitor _monitoring_ add-on which also allows you to [send Prometheus metrics to the Log Analytics workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-logs). These metrics can then be queried using [Log Analytics queries](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query#prometheus-metrics) as well as be visible in a Grafana instance.
 
-In both methods, we can configure the metrics scraping to scrap from pods based on pod Annotations. To add annotations to the backstage pod, add the following to the Janus Helm chart `values.yaml`:
+In both methods, we can configure the metrics scraping to scrap from pods based on pod Annotations. Follow the steps below depending on how the Backstage Showcase application is deployed.
+
+#### Helm deployment
+
+To add annotations to the backstage pod, add the following to the Janus Helm chart `values.yaml`:
 
 ```yaml title="values.yaml"
 upstream:
@@ -65,6 +107,65 @@ upstream:
       prometheus.io/path: '/metrics'
       prometheus.io/port: '7007'
       prometheus.io/scheme: 'http'
+```
+
+#### Operator-backed deployment
+
+For an operator-backed deployment, you will need to first create your Custom Resource, then manually add the annotations to the Backstage Pod created by the Operator.
+
+Using `oc` or `kubectl`, you can run the following command:
+
+```bash
+# make sure to update CR_NAME value accordingly
+$ CR_NAME=my-rhdh
+$ oc annotate pods \
+    --selector janus-idp.io/app="backstage-${CR_NAME}" \
+    prometheus.io/scrape='true' \
+    prometheus.io/path='/metrics' \
+    prometheus.io/port='7007' \
+    prometheus.io/scheme='http'
+```
+
+**NOTE**: Please note that these annotations might be lost if the pod has to be recreated by the operator. In this case, you can either add the annotations again or, as an administrator of the operator, change its default configuration.
+To have something persistent, if you have access to the namespace where the operator is running (usually `rhdh-operator`, `openshift-operators`, or `backstage-system`), you can do the following, using either `oc` or `kubectl`:
+
+1. Edit the default configuration of the operator:
+
+```bash
+# make sure to update OPERATOR_NS accordingly
+$ OPERATOR_NS=rhdh-operator
+$ oc edit configmap backstage-default-config -n "${OPERATOR_NS}"
+```
+
+2. Find the `deployment.yaml` key in the ConfigMap, and add the annotations to the `spec.template.metadata.annotations` field, like so:
+
+```yaml
+deployment.yaml: |-
+  apiVersion: apps/v1
+  kind: Deployment
+  # --- truncated ---
+  spec:
+    template:
+      # --- truncated ---
+      metadata:
+        labels:
+          janus-idp.io/app:  # placeholder for 'backstage-<cr-name>'
+        # --- truncated ---
+        annotations:
+          prometheus.io/scrape: 'true'
+          prometheus.io/path: '/metrics'
+          prometheus.io/port: '7007'
+          prometheus.io/scheme: 'http'
+  # --- truncated ---
+```
+
+3. Save
+4. If you already have existing resources created by the operator from existing Custom Resources, you might need to force the operator to recreate the pods, by deleting the corresponding Deployment. For example:
+
+```bash
+# make sure to update CR_NAME value accordingly
+$ CR_NAME=my-rhdh
+$ oc delete deployment --selector app.kubernetes.io/instance="${CR_NAME}"
 ```
 
 #### Metrics Add-on
@@ -94,7 +195,11 @@ InsightsMetrics
 
 ## Logging
 
-Logging in backstage showcase is conducted using the [winston](https://github.com/winstonjs/winston) library. By default, logs of level `debug` are not logged. To enable debug logs, you will need to set the environment variable `LOG_LEVEL` to `debug` in your deployment in the helm chart's `values.yaml` as follows:
+Logging in backstage showcase is conducted using the [winston](https://github.com/winstonjs/winston) library. By default, logs of level `debug` are not logged. To enable debug logs, you will need to set the environment variable `LOG_LEVEL` to `debug` in your deployment.
+
+### Helm deployment
+
+You can set the logging level by adding the environment variable in your Helm chart's `values.yaml`, as follows:
 
 ```yaml title="values.yaml"
 upstream:
@@ -103,6 +208,20 @@ upstream:
     extraEnvVars:
       - name: LOG_LEVEL
         value: debug
+```
+
+### Operator-backed deployment
+
+You can set the logging level by adding the environment variable in your Custom Resource, like so:
+
+```yaml title="env var in Custom Resource"
+spec:
+  # Other fields omitted
+  application:
+    extraEnvs:
+      envs:
+        - name: LOG_LEVEL
+          value: debug
 ```
 
 ### Openshift Logging Integration
