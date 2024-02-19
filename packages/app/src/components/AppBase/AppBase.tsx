@@ -20,6 +20,7 @@ import { entityPage } from '../catalog/EntityPage';
 import { HomePage } from '../home/HomePage';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
+import { NotificationsPage } from '@janus-idp/plugin-notifications';
 
 const AppBase = () => {
   const { AppProvider, AppRouter, dynamicRoutes } =
@@ -69,6 +70,7 @@ const AppBase = () => {
             <Route path="/catalog-graph" element={<CatalogGraphPage />} />
             <Route path="/learning-paths" element={<LearningPaths />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             {dynamicRoutes
               .filter(({ path }) => path.startsWith('/admin'))
               .map(({ path }) => (

@@ -25,6 +25,10 @@ import React, { PropsWithChildren, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { IconComponent, useApp } from '@backstage/core-plugin-api';
+import {
+  NotificationsActiveIcon,
+  NotificationsSidebarItem,
+} from '@janus-idp/plugin-notifications';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -109,6 +113,13 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
+
+        <SidebarItem
+          icon={NotificationsActiveIcon}
+          to="notifications"
+          text="Static Notifications"
+        />
+
         {Object.keys(mountPoints).some(scope =>
           scope.startsWith('admin.page'),
         ) ? (
