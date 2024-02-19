@@ -61,6 +61,23 @@ export class Common {
     await this.uiHelper.waitForSideBarVisible();
   }
 
+  async googleSignIn(email: string) {
+    await new Promise<void>(resolve => {
+      this.page.once('popup', async popup => {
+        const locator = popup
+          .getByRole('link', { name: email, exact: false })
+          .first();
+        await popup.waitForTimeout(3000);
+        await locator.waitFor({ state: 'visible' });
+        await locator.click({ force: true });
+        await popup
+          .getByRole('button', { name: /Continue|Weiter/ })
+          .click({ timeout: 120000 });
+        resolve();
+      });
+    });
+  }
+
   async clickOnGHloginPopup() {
     await this.uiHelper.clickButton('Log in');
     await this.page.waitForSelector(this.uiHelper.getButtonSelector('Log in'), {
