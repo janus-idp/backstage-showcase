@@ -19,16 +19,35 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
       styleOverrides: redhatFont,
     },
     MuiButton: {
+      defaultProps: {
+        disableRipple: true,
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
+          border: '0',
+          borderRadius: '3px',
+        },
+        contained: {
+          boxShadow: 'none',
+          '&:hover': {
+            border: '0',
+            boxShadow: 'none',
+          },
+          '&:-webkit-any-link:focus-visible': {
+            outlineOffset: '0',
+          },
         },
         containedPrimary: {
           backgroundColor: themePalette.primary.containedButtonBackground,
           color: themePalette.primary.contrastText,
-          boxShadow: 'none',
           '&:hover': {
-            boxShadow: 'none',
+            backgroundColor: themePalette.primary.dark,
+            color: themePalette.primary.contrastText,
+          },
+          '&:focus-visible': {
+            boxShadow: `inset 0 0 0 1px ${themePalette.primary.focusVisibleBorder}`,
+            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
             backgroundColor: themePalette.primary.dark,
             color: themePalette.primary.contrastText,
           },
@@ -37,23 +56,63 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
             backgroundColor: themePalette.primary.disabledBackground,
           },
         },
-        outlined: {
-          color: themePalette.primary.main,
-          borderColor: themePalette.primary.main,
-          boxShadow: 'none',
+        containedSecondary: {
+          backgroundColor: themePalette.secondary.containedButtonBackground,
+          color: themePalette.secondary.contrastText,
           '&:hover': {
-            boxShadow: `inset 0 0 0 1px ${themePalette.primary.main}`,
+            backgroundColor: themePalette.secondary.dark,
+            color: themePalette.secondary.contrastText,
+          },
+          '&:focus-visible': {
+            boxShadow: `inset 0 0 0 1px ${themePalette.secondary.focusVisibleBorder}`,
+            outline: `${themePalette.secondary.focusVisibleBorder} solid 1px`,
+            backgroundColor: themePalette.secondary.dark,
+            color: themePalette.secondary.contrastText,
+          },
+          '&:disabled': {
+            color: themePalette.secondary.disabled,
+            backgroundColor: themePalette.secondary.disabledBackground,
+          },
+        },
+        outlined: {
+          border: '0',
+          boxShadow: `inset 0 0 0 1px ${themePalette.primary.main}`,
+          '&:hover': {
+            border: '0',
+            boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
             backgroundColor: 'transparent',
+          },
+          '&:focus-visible': {
+            boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
+            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
           },
         },
         outlinedPrimary: {
           color: themePalette.primary.main,
-          borderColor: themePalette.primary.main,
-          boxShadow: 'none',
+          boxShadow: `inset 0 0 0 1px ${themePalette.primary.main}`,
+          border: '0',
           '&:hover': {
-            borderColor: themePalette.primary.main,
-            boxShadow: `inset 0 0 0 1px ${themePalette.primary.main}`,
+            border: '0',
+            boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
             backgroundColor: 'transparent',
+          },
+          '&:focus-visible': {
+            boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
+            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
+          },
+        },
+        outlinedSecondary: {
+          color: themePalette.secondary.main,
+          boxShadow: `inset 0 0 0 1px ${themePalette.secondary.main}`,
+          border: '0',
+          '&:hover': {
+            border: '0',
+            boxShadow: `inset 0 0 0 2px ${themePalette.secondary.main}`,
+            backgroundColor: 'transparent',
+          },
+          '&:focus-visible': {
+            boxShadow: `inset 0 0 0 2px ${themePalette.secondary.main}`,
+            outline: `${themePalette.secondary.focusVisibleBorder} solid 1px`,
           },
         },
         text: {
@@ -62,13 +121,22 @@ export const components = (mode: string): UnifiedThemeOptions['components'] => {
             color: themePalette.primary.textHover,
             backgroundColor: 'transparent',
           },
+          '&:focus-visible': {
+            boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
+            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
+          },
         },
         textPrimary: {
           color: themePalette.primary.main,
-          textTransform: 'none',
           '&:hover': {
             color: themePalette.primary.textHover,
-            textTransform: 'none',
+            backgroundColor: 'transparent',
+          },
+        },
+        textSecondary: {
+          color: themePalette.secondary.main,
+          '&:hover': {
+            color: themePalette.secondary.textHover,
             backgroundColor: 'transparent',
           },
         },
