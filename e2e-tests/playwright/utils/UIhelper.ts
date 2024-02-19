@@ -98,12 +98,8 @@ export class UIhelper {
       const headerLocator = this.page.locator(
         `${UIhelperPO.MuiTable} thead th span div >> text="${header}"`,
       );
-      const count = await headerLocator.count();
-      if (count === 0) {
-        console.log(`Header "${header}" not found.`);
-      } else {
-        console.log(`Header "${header}" found.`);
-      }
+      const isVisible = await headerLocator.isVisible();
+      expect(isVisible).toBeTruthy();
     }
   }
 
