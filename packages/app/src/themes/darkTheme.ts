@@ -15,15 +15,15 @@ export const customDarkTheme = (themeColors: ThemeColors) =>
       }),
       navigation: {
         background: '#0f1214',
-        indicator: themeColors.navigationIndicatorColor || '#009596',
+        indicator: themeColors.navigationIndicatorColor || '#0066CC',
         color: '#ffffff',
         selectedColor: '#ffffff',
         navItem: {
-          hoverBackground: '#030303',
+          hoverBackground: '#3c3f42',
         },
       },
     },
     defaultPageTheme: 'home',
     pageTheme: pageTheme(themeColors),
-    components: components('dark'),
+    components: components(themeColors, 'dark'),
   });

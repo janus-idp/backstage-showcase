@@ -15,15 +15,19 @@ export const customLightTheme = (themeColors: ThemeColors) =>
       }),
       navigation: {
         background: '#222427',
-        indicator: themeColors.navigationIndicatorColor || '#009596',
+        indicator: themeColors.navigationIndicatorColor || '#0066CC',
         color: '#ffffff',
         selectedColor: '#ffffff',
         navItem: {
-          hoverBackground: '#4f5255',
+          hoverBackground: '#3c3f42',
         },
+      },
+      text: {
+        primary: '#151515',
+        secondary: '#757575',
       },
     },
     defaultPageTheme: 'home',
     pageTheme: pageTheme(themeColors),
-    components: components('light'),
+    components: components(themeColors, 'light'),
   });
