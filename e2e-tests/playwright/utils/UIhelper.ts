@@ -172,15 +172,22 @@ export class UIhelper {
     }
   }
 
-  async getMuiCard(title: string) {
-    const cardHeader = this.page
-      .locator(UIhelperPO.MuiCardHeader)
-      .locator(`text=${title}`);
-    const card = cardHeader.locator(
-      'xpath=ancestor::div[contains(@class, "MuiCard-root")]',
-    );
-    await card.scrollIntoViewIfNeeded();
+  async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
+    const link = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first();
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+  }
 
-    return card;
+  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+    const locator = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .getByText(text, { exact: exact })
+      .first();
+    await locator.scrollIntoViewIfNeeded();
+    await expect(locator).toBeVisible();
   }
 }

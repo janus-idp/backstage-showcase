@@ -8,7 +8,8 @@ export const UIhelperPO = {
   MuiBoxLabel: 'div[class*="MuiBox-root"] label',
   MuiTableCell: 'td[class*="MuiTableCell-root"]',
   MuiTableRow: 'tr[class*="MuiTableRow-root"]',
-  MuiCardHeader: 'div[class*="MuiCardHeader-root"]',
+  MuiCard: cardHeading =>
+    `//div[contains(@class,'MuiCardHeader-root') and descendant::*[text()='${cardHeading}']]/..`,
   tabs: '[role="tab"]',
-  rowByText: (text: string) => `tr:has(td:text-is("${text}"))`,
+  rowByText: (text: string) => `tr:has(:text-is("${text}"))`,
 };

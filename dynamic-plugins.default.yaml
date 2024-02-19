@@ -1,5 +1,6 @@
 plugins:
   # Group: Github
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
@@ -14,9 +15,17 @@ plugins:
       catalog:
         providers:
           githubOrg:
-            default:
-              id: production
-              orgUrl: "${GITHUB_ORG_URL}"
+            id: production
+            githubUrl: "${GITHUB_URL}"
+            orgs: [ "${GITHUB_ORG}" ]
+            schedule:
+              frequency:
+                minutes: 60
+              initialDelay:
+                seconds: 15
+              timeout:
+                minutes: 15
+
   - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
     disabled: true
     pluginConfig:
@@ -111,6 +120,7 @@ plugins:
                       - isSecurityInsightsAvailable
 
   # Group: Gitlab
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
@@ -165,8 +175,6 @@ plugins:
       catalog:
         providers:
           gitlab: {}
-  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
-    disabled: true
 
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
@@ -288,6 +296,7 @@ plugins:
                       - isArgocdAvailable
 
   # Group: Azure Devops
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
@@ -493,12 +502,15 @@ plugins:
                     icon: docs
 
   # Standalone plugins
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
+
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
-    
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-dynamic-plugins-info
     disabled: true
     pluginConfig:
@@ -516,7 +528,7 @@ plugins:
                     gridColumn: "1 / -1"
                     width: 100vw
 
-  - package: ./dynamic-plugins/dist/janus-idp-plugin-rbac
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
     disabled: true
     pluginConfig:
       dynamicPlugins:
@@ -536,7 +548,7 @@ plugins:
               - path: /admin/rbac
                 module: RbacPlugin
                 importName: RbacPage
-  
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true
     pluginConfig:
@@ -583,8 +595,16 @@ plugins:
               realm: "${KEYCLOAK_REALM}"
               clientId: "${KEYCLOAK_CLIENT_ID}"
               clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
+              schedule:
+                frequency:
+                  minutes: 60
+                initialDelay:
+                  seconds: 15
+                timeout:
+                  minutes: 50
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true
     pluginConfig:
       # https://backstage.io/docs/integrations/bitbucketCloud/discovery#configuration
@@ -593,8 +613,16 @@ plugins:
           bitbucketCloud:
             default: # identifies your ingested dataset
               workspace: ${BITBUCKET_WORKSPACE}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic
     disabled: true
     pluginConfig:
       # https://backstage.io/docs/integrations/bitbucketServer/discovery#configuration
@@ -603,6 +631,13 @@ plugins:
           bitbucketServer:
             default: # identifies your ingested dataset
               host: ${BITBUCKET_HOST}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
 
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true
@@ -732,7 +767,7 @@ plugins:
                     anyOf:
                     - isJfrogArtifactoryAvailable
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-pagerduty
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
     disabled: true
     pluginConfig:
       dynamicPlugins:
