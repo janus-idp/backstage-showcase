@@ -22,7 +22,7 @@ export const plugins = [
   {
     name: 'backstage-plugin-kubernetes-backend-dynamic',
     platform: 'node',
-    role: 'backend-plugin-module',
+    role: 'backend-plugin',
   },
   {
     name: 'roadiehq-scaffolder-backend-module-utils-dynamic',

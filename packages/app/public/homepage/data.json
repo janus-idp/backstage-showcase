@@ -58,12 +58,12 @@
       {
         "iconUrl": "/homepage/icons/argo-icon-color.svg",
         "label": "ArgoCD",
-        "url": "https://openshift-gitops-server-openshift-gitops.apps.janus.djpe.p1.openshiftapps.com/"
+        "url": "https://argoproj.github.io/cd/"
       },
       {
         "iconUrl": "/homepage/icons/sonarqube.svg",
         "label": "SonarQube",
-        "url": "https://sonarqube.apps.janus.djpe.p1.openshiftapps.com/"
+        "url": "https://www.sonarsource.com/open-source-editions/"
       },
       {
         "iconUrl": "/homepage/icons/quay.svg",
@@ -79,7 +79,7 @@
       {
         "iconUrl": "/homepage/icons/icons8/openshift.png",
         "label": "OpenShift",
-        "url": "https://console-openshift-console.apps.janus.djpe.p1.openshiftapps.com/"
+        "url": "https://docs.openshift.com/"
       }
     ]
   },
@@ -88,8 +88,8 @@
     "links": [
       {
         "iconUrl": "/homepage/icons/icons8/system-task.png",
-        "label": "Grafana (Coming Soon)",
-        "url": ""
+        "label": "Grafana",
+        "url": "https://grafana.com/"
       }
     ]
   },
@@ -99,12 +99,12 @@
       {
         "iconUrl": "/homepage/icons/icons8/security-checked.png",
         "label": "GitHub Security",
-        "url": "https://github.com/orgs/janus-idp"
+        "url": "https://docs.github.com/en/code-security"
       },
       {
         "iconUrl": "/homepage/icons/keycloak.svg",
         "label": "Keycloak",
-        "url": "https://keycloak.apps.janus.djpe.p1.openshiftapps.com/"
+        "url": "https://www.keycloak.org/"
       }
     ]
   }
