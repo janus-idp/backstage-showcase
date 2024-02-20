@@ -613,23 +613,23 @@
     tslib "^2.2.0"
 
 "@azure/msal-browser@^3.5.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-3.9.0.tgz#86dc08f93ebc4876d6af811cdb17a81c5bc97c7c"
-  integrity sha512-Ts+Q3fw9u92koCkk+oZgL6lhwDrwWSyXBcKdsKJko1Ra7ZzDl0z7pod+1g+v4Qbt8l1YqSX4wXbXs5sWUv0VWw==
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-3.10.0.tgz#8925659e8d1a4bd21e389cca4683eb52658c778e"
+  integrity sha512-mnmi8dCXVNZI+AGRq0jKQ3YiodlIC4W9npr6FCB9WN6NQT+6rq+cIlxgUb//BjLyzKsnYo+i4LROGeMyU+6v1A==
   dependencies:
-    "@azure/msal-common" "14.7.0"
+    "@azure/msal-common" "14.7.1"
 
-"@azure/msal-common@14.7.0":
-  version "14.7.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-14.7.0.tgz#29e6f6ae9cb4c32dc4eeba13c3eb59078c4fb487"
-  integrity sha512-WexujW5jKWib7xtIxR7fEVyd5xcA3FNwenELy2HO4YC/ivTFdsEcDhtpKQuRUHqXRwxoqBblyZzTAhBm4v6fHA==
+"@azure/msal-common@14.7.1":
+  version "14.7.1"
+  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-14.7.1.tgz#b13443fbacc87ce2019a91e81a6582ea73847c75"
+  integrity sha512-v96btzjM7KrAu4NSEdOkhQSTGOuNUIIsUdB8wlyB9cdgl5KqEKnTonHUZ8+khvZ6Ap542FCErbnTyDWl8lZ2rA==
 
 "@azure/msal-node@^2.5.1":
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/@azure/msal-node/-/msal-node-2.6.3.tgz#16a74b207099fe982f686367bc34ffb9f1d5e790"
-  integrity sha512-ojjJqUwb297T5Tcln4PbJANFEqRXfbQXcyOrtdr1HQYIo+dSuCT/o0nG6bFVihf6fcNykDwJLCQPVXzTkx/oGg==
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/@azure/msal-node/-/msal-node-2.6.4.tgz#457bd86a52461178ab2d1ba3d9d6705d95b2186e"
+  integrity sha512-nNvEPx009/80UATCToF+29NZYocn01uKrB91xtFr7bSqkqO1PuQGXRyYwryWRztUrYZ1YsSbw9A+LmwOhpVvcg==
   dependencies:
-    "@azure/msal-common" "14.7.0"
+    "@azure/msal-common" "14.7.1"
     jsonwebtoken "^9.0.0"
     uuid "^8.3.0"
 
@@ -2012,10 +2012,10 @@ fresh@0.5.2:
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==
 
-fs-extra@10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.1.0.tgz#02873cfbc4084dde127eaa5f9905eef2325d1abf"
-  integrity sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==
+fs-extra@^11.2.0:
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-11.2.0.tgz#e70e17dfad64232287d01929399e0ea7c86b0e5b"
+  integrity sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==
   dependencies:
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
@@ -2145,9 +2145,9 @@ has-property-descriptors@^1.0.1:
     es-define-property "^1.0.0"
 
 has-proto@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/has-proto/-/has-proto-1.0.1.tgz#1885c1305538958aff469fef37937c22795408e0"
-  integrity sha512-7qE+iP+O+bgF9clE5+UoBFzE65mlBiVj3tKCrlNQ0Ogwm0BjpT/gK4SlLYDMybDh5I3TCTKnPPa0oMG7JDYrhg==
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/has-proto/-/has-proto-1.0.3.tgz#b31ddfe9b0e6e9914536a6ab286426d0214f77fd"
+  integrity sha512-SJ1amZAJUiZS+PhsVLf5tGydlaVB8EdFpaSO4gmiUKUOxk8qzn5AIy4ZeJUmh22znIdk/uMAUT2pl3FxzVUH+Q==
 
 has-symbols@^1.0.3:
   version "1.0.3"
