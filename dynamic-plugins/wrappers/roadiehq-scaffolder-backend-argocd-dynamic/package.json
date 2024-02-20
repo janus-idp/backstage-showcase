@@ -33,7 +33,7 @@
     "@roadiehq/scaffolder-backend-argocd": "1.1.19"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2-next.3",
+    "@backstage/cli": "0.25.2",
     "@janus-idp/cli": "1.7.1"
   },
   "files": [
