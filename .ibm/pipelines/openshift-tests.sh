@@ -160,7 +160,7 @@ check_backstage_running() {
   # Time in seconds to wait
   local wait_seconds=30
 
-  echo "Checking if Backstage is up and running at $url"
+  echo "Checking if Backstage is up and running at $url" > "/tmp/${LOGFILE}"
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
@@ -174,12 +174,14 @@ check_backstage_running() {
       echo "$BASE_URL"
       return 0
     else
-      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" >> "/tmp/${LOGFILE}"
       sleep $wait_seconds
     fi
   done
 
-  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts."
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." >> "/tmp/${LOGFILE}"
+  save_logs "${LOGFILE}" "${TEST_NAME}" 1
+
   return 1
 }
 
