@@ -1,1 +1,1 @@
-export * from './dynamic/index';
+export { scaffolderBackendModuleUtils as default } from './plugin';

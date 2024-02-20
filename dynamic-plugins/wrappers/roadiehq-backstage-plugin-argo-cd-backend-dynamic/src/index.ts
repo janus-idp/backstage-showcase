@@ -1,1 +1,1 @@
-export * from './dynamic/index';
+export { argocdPlugin as default } from './plugin';

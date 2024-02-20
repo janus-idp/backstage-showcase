@@ -1,7 +1,7 @@
 /* eslint-disable */
 import glob from 'glob';
 import { execSync } from 'node:child_process';
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import semver from 'semver';
@@ -45,31 +45,55 @@ function updateDynamicPluginVersions() {
     const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
     const name = packageJson.name;
 
-    // Extract the list of keys from the "dependencies" object
-    const deps = Object.keys(packageJson.dependencies);
+    // Extract the list from the "dependencies" object
+    const deps = Object.entries(packageJson.dependencies);
 
     // Loop over each key in the "dependencies" object
-    for (const dep of deps) {
+    for (const [depName, depVersion] of deps) {
       // Replace "@" with "" and "/" with "-"
-      const depName = dep.replace(/^@/, '').replace(/\//g, '-');
+      const modifiedDepName = depName.replace(/^@/, '').replace(/\//g, '-');
 
       // Check if the modified dependency name matches the "name" value
-      if (depName === name) {
-        // Extract the version of the matched dependency
-        const version = packageJson.dependencies[dep];
-
-        console.log(`Updating ${name} to ${version}...`);
+      if (modifiedDepName === name) {
+        console.log(`Updating ${name} to ${depVersion}...`);
 
         // Update the value of the "version" key in package.json
-        packageJson.version = version;
+        packageJson.version = depVersion;
+      }
 
-        const modifiedContent = `${JSON.stringify(packageJson, null, 2)}\n`;
+      // Update hoisted dependency version if incorrect
+      if (existsSync('./dist-dynamic/package.json')) {
+        const distDynamicPackageJson = JSON.parse(
+          readFileSync('./dist-dynamic/package.json', 'utf8'),
+        );
 
-        writeFileSync('package.json', modifiedContent, 'utf8');
+        const distDynamicDeps = Object.entries(
+          distDynamicPackageJson.peerDependencies,
+        );
 
-        break;
+        const newDeps = deps.reduce((prev, [depName, depVersion]) => {
+          const distDynamicDep = distDynamicDeps.find(
+            ([distDynamicDepName]) => distDynamicDepName === depName,
+          );
+
+          if (distDynamicDep) {
+            const [, distDynamicDepVersion] = distDynamicDep;
+
+            prev[depName] = distDynamicDepVersion;
+          } else {
+            prev[depName] = depVersion;
+          }
+
+          return prev;
+        }, {});
+
+        packageJson.dependencies = newDeps;
       }
     }
+
+    const modifiedContent = `${JSON.stringify(packageJson, null, 2)}\n`;
+
+    writeFileSync('package.json', modifiedContent, 'utf8');
 
     process.chdir('..');
   }
@@ -97,10 +121,13 @@ function updateBackstageVersionFile(version) {
 }
 
 console.log('Bumping version...');
-execSync('yarn run version:bump', { stdio: 'inherit' });
+execSync('yarn run versions:bump', { stdio: 'inherit' });
 
 console.log('Pinning all dependencies...');
 pinDependencies();
+
+console.log('Updating dynamic plugin versions...');
+updateDynamicPluginVersions();
 
 console.log('Updating lockfile...');
 execSync('yarn install', { stdio: 'inherit' });
@@ -109,9 +136,6 @@ console.log('Updating dynamic-plugins folder...');
 execSync('yarn run export-dynamic --no-cache -- -- --clean', {
   stdio: 'inherit',
 });
-
-console.log('Updating dynamic plugin versions...');
-updateDynamicPluginVersions();
 
 console.log('Fetching latest Backstage version...');
 const latestVersion = await getLatestBackstageVersion();

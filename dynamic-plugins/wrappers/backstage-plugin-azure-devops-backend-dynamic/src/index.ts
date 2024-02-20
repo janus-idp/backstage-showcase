@@ -1,1 +1,1 @@
-export * from './dynamic/index';
+export { default } from '@backstage/plugin-azure-devops-backend';

@@ -20,11 +20,13 @@ export class UIhelper {
 
   async clickButton(label: string, options?: { force?: boolean }) {
     const selector = `${UIhelperPO.buttonLabel}:has-text("${label}")`;
-    await this.page.waitForSelector(selector);
+    const button = this.page.locator(selector);
+    await button.waitFor({ state: 'visible' });
+
     if (options?.force) {
-      await this.page.click(selector, { force: true });
+      await button.click({ force: true });
     } else {
-      await this.page.click(selector);
+      await button.click();
     }
   }
 
@@ -54,16 +56,33 @@ export class UIhelper {
     await this.page.locator(`a`).filter({ hasText: linkText }).click();
   }
 
-  async verifyLink(linkText: string, options?: { contains?: boolean }) {
-    let linkLocator;
-    if (options?.contains) {
-      linkLocator = this.page.locator(`a >> text=${linkText}`);
-    } else {
-      linkLocator = this.page.locator(`a >> text=/^\\s*${linkText}\\s*$/i`);
-    }
+  async verifyLink(
+    linkText: string,
+    options: {
+      exact?: boolean;
+      notVisible?: boolean;
+    } = {
+      exact: true,
+      notVisible: false,
+    },
+  ) {
+    const linkLocator = this.page
+      .locator('a')
+      .getByText(linkText, { exact: options.exact })
+      .first();
 
-    await linkLocator.scrollIntoViewIfNeeded();
-    await expect(linkLocator).toBeVisible();
+    if (options?.notVisible) {
+      await expect(linkLocator).not.toBeVisible();
+    } else {
+      await linkLocator.scrollIntoViewIfNeeded();
+      await expect(linkLocator).toBeVisible();
+    }
+  }
+
+  async verifyText(text: string | RegExp, exact: boolean = true) {
+    const element = this.page.getByText(text, { exact: exact }).first();
+    await element.scrollIntoViewIfNeeded();
+    await expect(element).toBeVisible();
   }
 
   async waitForSideBarVisible() {
@@ -81,37 +100,28 @@ export class UIhelper {
     await this.page.click(optionSelector);
   }
 
-  async verifyRowsInTable(rowTexts: string[]) {
+  async verifyRowsInTable(
+    rowTexts: string[] | RegExp[],
+    exact: boolean = true,
+  ) {
     for (const rowText of rowTexts) {
       const rowLocator = this.page
-        .locator(UIhelperPO.MuiTableRow)
-        .filter({ hasText: rowText });
+        .locator(`tr>td`)
+        .getByText(rowText, { exact: exact })
+        .first();
+      await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }
   }
 
   async verifyHeading(heading: string) {
-    await this.page.waitForSelector(`h1, h2, h3, h4, h5, h6`, {
-      timeout: 99999,
-    });
-    const headingLocator = this.page
+    const headingLocator = await this.page
       .locator(`h1, h2, h3, h4, h5, h6`)
-      .filter({ hasText: heading });
-
-    // Check if at least one matching element is visible
-    const count = await headingLocator.count();
-    let isVisible = false;
-    for (let i = 0; i < count; i++) {
-      if (await headingLocator.nth(i).isVisible()) {
-        isVisible = true;
-        break; // Exit the loop if any visible element is found
-      }
-    }
-    // Assert that at least one element is visible, else the test will fail
-    expect(
-      isVisible,
-      `No heading containing "${heading}" is visible.`,
-    ).toBeTruthy();
+      .filter({ hasText: heading })
+      .first();
+    await headingLocator.waitFor();
+    await expect(headingLocator).toBeVisible();
   }
 
   async waitForH4Title(text: string) {
@@ -121,9 +131,7 @@ export class UIhelper {
   }
 
   async clickTab(tabName: string) {
-    const tabLocator = this.page
-      .locator(UIhelperPO.tabs)
-      .filter({ hasText: tabName });
+    const tabLocator = this.page.locator(`text="${tabName}"`);
     await tabLocator.click();
   }
 
@@ -152,32 +160,34 @@ export class UIhelper {
   }
 
   async verifyRowInTableByUniqueText(
-    uniqueRowText: string | RegExp,
-    cellTexts: string[],
+    uniqueRowText: string,
+    cellTexts: string[] | RegExp[],
   ) {
-    const uniqueCell = this.page
-      .locator(UIhelperPO.MuiTableCell)
-      .locator(`text=${uniqueRowText}`);
-    await uniqueCell.scrollIntoViewIfNeeded();
-    const row = uniqueCell.locator('xpath=ancestor::tr');
-
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
     for (const cellText of cellTexts) {
-      const cell = row
-        .locator(UIhelperPO.MuiTableCell)
-        .locator(`text=${cellText}`);
-      await expect(cell).toBeVisible();
+      await expect(
+        row.locator('td').filter({ hasText: cellText }).first(),
+      ).toBeVisible();
     }
   }
 
-  async getMuiCard(title: string) {
-    const cardHeader = this.page
-      .locator(UIhelperPO.MuiCardHeader)
-      .locator(`text=${title}`);
-    const card = cardHeader.locator(
-      'xpath=ancestor::div[contains(@class, "MuiCard-root")]',
-    );
-    await card.scrollIntoViewIfNeeded();
+  async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
+    const link = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first();
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+  }
 
-    return card;
+  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+    const locator = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .getByText(text, { exact: exact })
+      .first();
+    await locator.scrollIntoViewIfNeeded();
+    await expect(locator).toBeVisible();
   }
 }

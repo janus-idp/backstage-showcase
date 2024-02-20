@@ -13,6 +13,7 @@ import {
   UserSettingsSignInAvatar,
 } from '@backstage/plugin-user-settings';
 import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import AppsIcon from '@mui/icons-material/Apps';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import HomeIcon from '@mui/icons-material/Home';
@@ -23,14 +24,11 @@ import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
-import { useApp } from '@backstage/core-plugin-api';
+import { IconComponent, useApp } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles()({
   sidebarItem: {
     textDecorationLine: 'none',
-    '&:hover': {
-      textDecorationLine: 'underline',
-    },
   },
 });
 
@@ -57,7 +55,7 @@ export const MenuIcon = ({ icon }: { icon: string }) => {
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const { dynamicRoutes } = useContext(DynamicRootContext);
+  const { dynamicRoutes, mountPoints } = useContext(DynamicRootContext);
   return (
     <SidebarPage>
       <Sidebar>
@@ -70,22 +68,22 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {/* Global nav, not org-specific */}
           <SideBarItemWrapper icon={HomeIcon as any} to="/" text="Home" />
           <SideBarItemWrapper
-            icon={AppsIcon as any}
+            icon={AppsIcon as IconComponent}
             to="catalog"
             text="Catalog"
           />
           <SideBarItemWrapper
-            icon={ExtensionIcon as any}
+            icon={ExtensionIcon as IconComponent}
             to="api-docs"
             text="APIs"
           />
           <SideBarItemWrapper
-            icon={SchoolIcon as any}
+            icon={SchoolIcon as IconComponent}
             to="learning-paths"
             text="Learning Paths"
           />
           <SideBarItemWrapper
-            icon={CreateComponentIcon as any}
+            icon={CreateComponentIcon as IconComponent}
             to="create"
             text="Create..."
           />
@@ -108,6 +106,17 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
+        {Object.keys(mountPoints).some(scope =>
+          scope.startsWith('admin.page'),
+        ) ? (
+          <SideBarItemWrapper
+            icon={AdminPanelSettingsOutlinedIcon as IconComponent}
+            to="/admin"
+            text="Administration"
+          />
+        ) : (
+          <></>
+        )}
         <SidebarGroup
           label="Settings"
           icon={<UserSettingsSignInAvatar />}

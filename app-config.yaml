@@ -151,7 +151,7 @@ catalog:
       target: https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml
 
     - type: url
-      target: https://github.com/janus-idp/software-templates/blob/main/showcase-templates.yaml
+      target: https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/templates.yaml
 
 # Plugin: PagerDuty
 pagerduty:
