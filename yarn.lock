@@ -3138,10 +3138,33 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-auth-node@0.4.5", "@backstage/plugin-auth-node@^0.4.4", "@backstage/plugin-auth-node@^0.4.4-next.3", "@backstage/plugin-auth-node@^0.4.5":
+"@backstage/plugin-auth-node@0.4.5", "@backstage/plugin-auth-node@^0.4.5":
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-node/-/plugin-auth-node-0.4.5.tgz#b48fcce866c91c953ab3cbb9301a28e0dc9dc527"
   integrity sha512-hu7GO6yDZURpXoeOt/DgJqDnhYQ3h1UnGLDr7VhHuIfAcwrTj8Onrb+HbmrdwAUSXguHZzM8pyPeBA+dU/jOjA==
+  dependencies:
+    "@backstage/backend-common" "^0.21.0"
+    "@backstage/backend-plugin-api" "^0.6.10"
+    "@backstage/catalog-client" "^1.6.0"
+    "@backstage/catalog-model" "^1.4.4"
+    "@backstage/config" "^1.1.1"
+    "@backstage/errors" "^1.2.3"
+    "@backstage/types" "^1.1.1"
+    "@types/express" "*"
+    "@types/passport" "^1.0.3"
+    express "^4.17.1"
+    jose "^4.6.0"
+    lodash "^4.17.21"
+    node-fetch "^2.6.7"
+    passport "^0.7.0"
+    winston "^3.2.1"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.21.4"
+
+"@backstage/plugin-auth-node@^0.4.4", "@backstage/plugin-auth-node@^0.4.4-next.3":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-node/-/plugin-auth-node-0.4.4.tgz#7ef0253e2f4b11f52bf081a611bfff87de537d71"
+  integrity sha512-+V4Ka5eQs2k/mI6Ktecjq7LVU/XQy3qiBmp36/jsNnvuVrL6Q41AcpOUD8O+CqnntUR/KlMfczea9FnWtFhiqA==
   dependencies:
     "@backstage/backend-common" "^0.21.0"
     "@backstage/backend-plugin-api" "^0.6.10"
