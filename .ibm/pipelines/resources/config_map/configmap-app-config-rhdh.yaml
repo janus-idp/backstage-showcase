@@ -76,14 +76,6 @@ data:
         - type: url
           target: https://github.com/janus-qe/acr-catalog/blob/main/catalog-info.yaml
 
-    techdocs:
-      builder: external
-      generator:
-        runIn: local
-      publisher:
-        type: awsS3
-    lighthouse:
-      baseUrl: temp
 
     dynatrace:
       baseUrl: temp
