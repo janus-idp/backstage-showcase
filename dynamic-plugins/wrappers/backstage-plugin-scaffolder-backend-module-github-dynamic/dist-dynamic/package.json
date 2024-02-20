@@ -29,7 +29,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-github --override-interop default"
   },
   "dependencies": {
-    "@octokit/webhooks": "^10.0.0",
+    "@octokit/webhooks": "^12.1.2",
     "libsodium-wrappers": "^0.7.11",
     "octokit": "^3.0.0",
     "octokit-plugin-create-pull-request": "^3.10.0",
