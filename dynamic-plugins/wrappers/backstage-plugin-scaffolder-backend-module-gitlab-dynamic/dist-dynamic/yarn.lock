@@ -22,12 +22,12 @@
     query-string "^7.0.0"
     xcase "^2.0.1"
 
-"@gitbeaker/core@^39.34.2":
-  version "39.34.2"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-39.34.2.tgz#c9b7d9af51b6adee79428efde8dce3fc4de9c855"
-  integrity sha512-Vs1BKnEMnHltq1nMuBKxust1E+JUroDVKLy87ElLgvjAkH726mEVJCFnNC2/o2Ru7Et2qqhFN+PlUeYzzAbU2w==
+"@gitbeaker/core@^39.34.3":
+  version "39.34.3"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-39.34.3.tgz#94fafc92507f1e17aba2b299bf47e4af7e53f74b"
+  integrity sha512-/3qBXme2MjO38QU2F/MYGon9a4wHKrgtwNzdHHdjpbYJ2/wOGNgbEWSZcibcFkiWVgAjbPXdYqC5sY8hcwGO1w==
   dependencies:
-    "@gitbeaker/requester-utils" "^39.34.2"
+    "@gitbeaker/requester-utils" "^39.34.3"
     qs "^6.11.2"
     xcase "^2.0.1"
 
@@ -51,10 +51,10 @@
     qs "^6.10.1"
     xcase "^2.0.1"
 
-"@gitbeaker/requester-utils@^39.34.2":
-  version "39.34.2"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-39.34.2.tgz#295cbb7cdf460988f438cb3bb956ce4c0f92655c"
-  integrity sha512-ToCwNKQe/+uHjB2kPTXY72SvbAyjsPABb9T1EiMGuVahk6rWdhtVZIM659rGuqdJGTqQ4y18wk0A+w6D3Z2lCQ==
+"@gitbeaker/requester-utils@^39.34.3":
+  version "39.34.3"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-39.34.3.tgz#a790626123901be9ca5765e5add9e2f9c6185370"
+  integrity sha512-nMnTkTo4UixHPwPYsYIjp8UdKrmSw3TjvRESexliAeNNq4/LVeyVUyRqBUa1ZI8MXt1nPPnPX3wh8s7rqlm7uA==
   dependencies:
     picomatch-browser "^2.2.6"
     qs "^6.11.2"
@@ -62,12 +62,12 @@
     xcase "^2.0.1"
 
 "@gitbeaker/rest@^39.25.0":
-  version "39.34.2"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.34.2.tgz#4048a6da3d66b9a9f99d7f61437ed59b71286213"
-  integrity sha512-MT4Vue1ltvsR7Nug18A6DIk+u+gu64+b0Un/R2XIsLB7eSAX8Pm/sQnYxsjHksroZJVlyGHiGsaxbllX75Pntg==
+  version "39.34.3"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.34.3.tgz#3e3582766e45d5591353e8c4445e345460665ea1"
+  integrity sha512-SuceThS6WhJtqNNcKmW8j0yUU7aXA4k5a29OWcd6bn7peQ3MXlIpbfvLLRnmuUaYUuxHLnUzZhAfuxaNf4DVtQ==
   dependencies:
-    "@gitbeaker/core" "^39.34.2"
-    "@gitbeaker/requester-utils" "^39.34.2"
+    "@gitbeaker/core" "^39.34.3"
+    "@gitbeaker/requester-utils" "^39.34.3"
 
 "@sindresorhus/is@^4.0.0":
   version "4.6.0"
