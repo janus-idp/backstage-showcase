@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   Content,
   ErrorPage,
@@ -10,13 +10,10 @@ import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+import { usePermission } from '@backstage/plugin-permission-react';
 
-const tabs = [
-  {
-    id: 'rbac',
-    label: 'RBAC',
-    tabProps: { to: '/admin/rbac', component: Link },
-  },
+const initialTabs = [
   {
     id: 'plugins',
     label: 'Plugins',
@@ -25,6 +22,24 @@ const tabs = [
 ];
 
 export const AdminPage = () => {
+  const [tabs, setTabs] = useState([...initialTabs]);
+  const { loading: loadingPermission, allowed: canDisplayRBACTab } =
+    usePermission({
+      permission: policyEntityReadPermission,
+      resourceRef: policyEntityReadPermission.resourceType,
+    });
+  useEffect(() => {
+    if (canDisplayRBACTab && !loadingPermission) {
+      setTabs(prevTabs => [
+        ...prevTabs,
+        {
+          id: 'rbac',
+          label: 'RBAC',
+          tabProps: { to: '/admin/rbac', component: Link },
+        },
+      ]);
+    }
+  }, [canDisplayRBACTab, loadingPermission]);
   const { mountPoints } = useContext(DynamicRootContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
