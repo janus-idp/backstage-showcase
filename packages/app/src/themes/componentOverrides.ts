@@ -21,11 +21,14 @@ export const components = (
     BackstageHeaderTabs: {
       styleOverrides: {
         tabsWrapper: {
-          paddingLeft: '0px',
+          paddingLeft: '0',
         },
         defaultTab: {
           textTransform: 'none',
           fontSize: '0.875rem',
+          '&:hover': {
+            boxShadow: '0 -3px #b8bbbe inset',
+          },
         },
       },
     },
@@ -50,13 +53,11 @@ export const components = (
       },
       styleOverrides: {
         root: {
+          textTransform: 'none',
           minWidth: 'initial !important',
-          '&:hover': {
-            boxShadow: '0 -3px #b8bbbe inset',
+          '&.Mui-disabled': {
+            backgroundColor: '#d2d2d2',
           },
-        },
-        disabled: {
-          backgroundColor: '#6a6e73',
         },
       },
     },
