@@ -128,7 +128,7 @@ const mockProcessEnv = (dynamicPluginsConfig: { [key: string]: any }) => ({
 
 const consoleSpy = jest.spyOn(console, 'warn');
 
-describe('AdminPage', () => {
+describe('AdminTabs', () => {
   beforeEach(() => {
     removeScalprum();
     mockInitializeRemotePlugins.mockResolvedValue({
