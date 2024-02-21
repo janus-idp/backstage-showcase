@@ -175,7 +175,7 @@ check_backstage_running() {
       echo "$BASE_URL"
       return 0
     else
-      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" >> "/tmp/${LOGFILE}"
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" | tee -a "/tmp/${LOGFILE}"
       sleep $wait_seconds
     fi
   done
