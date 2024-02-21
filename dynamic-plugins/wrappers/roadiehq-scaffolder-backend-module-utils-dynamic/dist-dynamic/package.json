@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-scaffolder-backend-module-utils-dynamic",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -33,10 +33,10 @@
     "cross-fetch": "^3.1.4",
     "detect-indent": "^6.1.0",
     "fs-extra": "^10.0.0",
-    "js-yaml": "^4.0.0",
     "jsonata": "^1.8.6",
     "lodash": "^4.17.21",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {},
   "files": [
