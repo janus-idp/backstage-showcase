@@ -42,6 +42,7 @@ export class Common {
     await this.page.fill('#password', process.env.GH_USER_PASS);
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP());
+    await this.page.waitForLoadState('networkidle');
   }
 
   async loginAsGithubUser() {
@@ -49,16 +50,39 @@ export class Common {
     await this.page.goto(process.env.BASE_URL);
     await this.uiHelper.clickButton('Sign In');
 
-    this.page.once('popup', async popup => {
-      const locator = popup.locator('#js-oauth-authorize-btn');
-      if (await locator.isVisible()) {
-        await popup.locator('body').click();
-        await locator.waitFor();
-        await locator.click();
-      }
+    await new Promise<void>(resolve => {
+      this.page.once('popup', async popup => {
+        await popup.waitForLoadState();
+        const locator = popup.locator('#js-oauth-authorize-btn');
+        if (await locator.isVisible()) {
+          await popup.locator('body').click();
+          await locator.waitFor();
+          await locator.click();
+        }
+        resolve();
+      });
     });
 
     await this.uiHelper.waitForSideBarVisible();
+  }
+
+  async googleSignIn(email: string) {
+    await new Promise<void>(resolve => {
+      this.page.once('popup', async popup => {
+        await popup.waitForLoadState();
+        const locator = popup
+          .getByRole('link', { name: email, exact: false })
+          .first();
+        await popup.waitForTimeout(3000);
+        await locator.waitFor({ state: 'visible' });
+        await locator.click({ force: true });
+        await popup.waitForTimeout(3000);
+        await popup
+          .getByRole('button', { name: /Continue|Weiter/ })
+          .click({ timeout: 60000 });
+        resolve();
+      });
+    });
   }
 
   async clickOnGHloginPopup() {
