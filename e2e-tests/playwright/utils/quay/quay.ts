@@ -1,10 +1,12 @@
 export class ImageRegistry {
   static getAllCellsIdentifier() {
-    const tagText = /pr/;
+    //create a regex to verify if the string contains pr on it
+
+    const tagText = /pr/i;
     const lastModifiedDate = new RegExp(
       /^[A-Za-z]{3} \d{1,2}, \d{4}, \d{1,2}:\d{2} (AM|PM)$/,
     );
-    const size = /MB/;
+    const size = /(GB|MB)/;
     const expires =
       '^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{1,2}:\\d{2}:\\d{2} [\\+\\-]\\d{4}$';
     const expiresRegex = new RegExp(expires);

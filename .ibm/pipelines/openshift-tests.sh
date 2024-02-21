@@ -2,7 +2,6 @@
 
 set -e
 
-# Variáveis globais
 LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
 TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -155,7 +154,7 @@ run_tests() {
 
 check_backstage_running() {
   local url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
-  
+
   # Maximum number of attempts to check URL
   local max_attempts=30
   # Time in seconds to wait
