@@ -437,28 +437,18 @@ plugins:
 
   # Techdocs
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
-    disabled: true
     pluginConfig:
       # Reference documentation http://backstage.io/docs/features/techdocs/configuration
       # Note: After experimenting with basic setup, use CI/CD to generate docs
       # and an external cloud storage when deploying TechDocs for production use-case.
       # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
       techdocs:
-        builder: ${TECHDOCS_BUILDER_TYPE}
+        builder: local
         generator:
-          runIn: ${TECHDOCS_GENERATOR_TYPE}
+          runIn: local
         publisher:
-          type: ${TECHDOCS_PUBLISHER_TYPE}
-          awsS3:
-            bucketName: ${BUCKET_NAME}
-            region: ${BUCKET_REGION_VAULT}
-            endpoint: ${BUCKET_URL}
-            s3ForcePathStyle: true
-            credentials:
-              accessKeyId: ${AWS_ACCESS_KEY_ID}
-              secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+          type: local
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
-    disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:

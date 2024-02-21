@@ -84,14 +84,6 @@ data:
           rules:
             - allow: [User]
 
-    techdocs:
-      builder: external
-      generator:
-        runIn: local
-      publisher:
-        type: awsS3
-    lighthouse:
-      baseUrl: temp
 
     dynatrace:
       baseUrl: temp
