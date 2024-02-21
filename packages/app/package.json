@@ -38,6 +38,7 @@
     "@backstage/theme": "0.5.1",
     "@emotion/react": "11.11.3",
     "@emotion/styled": "11.11.0",
+    "@janus-idp/backstage-plugin-rbac-common": "1.2.1",
     "@mui/icons-material": "5.15.6",
     "@mui/lab": "5.0.0-alpha.162",
     "@mui/material": "5.15.6",
