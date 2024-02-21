@@ -2,7 +2,6 @@
 
 set -e
 
-# Variáveis globais
 LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
 TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,7 +9,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cleanup() {
   echo "Cleaning up before exiting"
   helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
-  oc delete namespace ${NAME_SPACE}
+  # leave the namespace for debugging purpose. A new PR will refresh the namespace anyways.
+  # oc delete namespace ${NAME_SPACE}
   rm -rf ~/tmpbin
 }
 
@@ -154,13 +154,13 @@ run_tests() {
 
 check_backstage_running() {
   local url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
-  
+
   # Maximum number of attempts to check URL
   local max_attempts=30
   # Time in seconds to wait
   local wait_seconds=30
 
-  echo "Checking if Backstage is up and running at $url"
+  echo "Checking if Backstage is up and running at $url" | tee "/tmp/${LOGFILE}"
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
@@ -174,12 +174,14 @@ check_backstage_running() {
       echo "$BASE_URL"
       return 0
     else
-      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" | tee -a "/tmp/${LOGFILE}"
       sleep $wait_seconds
     fi
   done
 
-  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts."
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." | tee -a "/tmp/${LOGFILE}"
+  save_logs "${LOGFILE}" "${TEST_NAME}" 1
+
   return 1
 }
 
