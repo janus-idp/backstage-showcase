@@ -161,7 +161,7 @@ check_backstage_running() {
   # Time in seconds to wait
   local wait_seconds=30
 
-  echo "Checking if Backstage is up and running at $url" > "/tmp/${LOGFILE}"
+  echo "Checking if Backstage is up and running at $url" | tee "/tmp/${LOGFILE}"
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
@@ -180,7 +180,7 @@ check_backstage_running() {
     fi
   done
 
-  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." >> "/tmp/${LOGFILE}"
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." | tee -a "/tmp/${LOGFILE}"
   save_logs "${LOGFILE}" "${TEST_NAME}" 1
 
   return 1
