@@ -186,7 +186,7 @@ check_backstage_running() {
 }
 
 main() {
-  echo "Test Log file 1: ${LOGFILE}"
+  echo "Log file: ${LOGFILE}"
 
   source ./.ibm/pipelines/functions.sh
   skip_if_only
