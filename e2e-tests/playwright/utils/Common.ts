@@ -49,12 +49,22 @@ export class Common {
     await this.logintoGithub();
     await this.page.goto(process.env.BASE_URL);
     await this.uiHelper.clickButton('Sign In');
+    await this.checkAndReauthorizeGithubApp();
+    await this.uiHelper.waitForSideBarVisible();
+  }
 
+  async checkAndReauthorizeGithubApp() {
     await new Promise<void>(resolve => {
       this.page.once('popup', async popup => {
         await popup.waitForLoadState();
+
+        // Check for popup closure for up to 10 seconds before proceeding
+        for (let attempts = 0; attempts < 10 && !popup.isClosed(); attempts++) {
+          await this.page.waitForTimeout(1000); // Using page here because if the popup closes automatically, it throws an error during the wait
+        }
+
         const locator = popup.locator('#js-oauth-authorize-btn');
-        if (await locator.isVisible()) {
+        if (!popup.isClosed() && (await locator.isVisible())) {
           await popup.locator('body').click();
           await locator.waitFor();
           await locator.click();
@@ -62,10 +72,7 @@ export class Common {
         resolve();
       });
     });
-
-    await this.uiHelper.waitForSideBarVisible();
   }
-
   async googleSignIn(email: string) {
     await new Promise<void>(resolve => {
       this.page.once('popup', async popup => {
@@ -87,6 +94,7 @@ export class Common {
 
   async clickOnGHloginPopup() {
     await this.uiHelper.clickButton('Log in');
+    await this.checkAndReauthorizeGithubApp();
     await this.page.waitForSelector(this.uiHelper.getButtonSelector('Log in'), {
       state: 'hidden',
       timeout: 100000,

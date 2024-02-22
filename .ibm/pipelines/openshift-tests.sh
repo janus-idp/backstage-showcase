@@ -8,8 +8,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cleanup() {
   echo "Cleaning up before exiting"
-  helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
   # leave the namespace for debugging purpose. A new PR will refresh the namespace anyways.
+  # helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
   # oc delete namespace ${NAME_SPACE}
   rm -rf ~/tmpbin
 }
