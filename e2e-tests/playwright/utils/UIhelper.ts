@@ -93,13 +93,18 @@ export class UIhelper {
     await this.page.click(`nav a:has-text("${navBarText}")`);
   }
 
-  async verifyTableHeaders(expectedHeaders: string[]) {
-    for (const header of expectedHeaders) {
-      const headerLocator = this.page.locator(
-        `${UIhelperPO.MuiTable} thead th span div >> text="${header}"`,
-      );
-      const isVisible = await headerLocator.isVisible();
-      expect(isVisible).toBeTruthy();
+  async verifyColumnHeading(
+    rowTexts: string[] | RegExp[],
+    exact: boolean = true,
+  ) {
+    for (const rowText of rowTexts) {
+      const rowLocator = this.page
+        .locator(`tr>th`)
+        .getByText(rowText, { exact: exact })
+        .first();
+      await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.scrollIntoViewIfNeeded();
+      await expect(rowLocator).toBeVisible();
     }
   }
 

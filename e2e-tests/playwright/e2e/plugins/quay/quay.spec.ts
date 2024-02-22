@@ -19,7 +19,7 @@ test.describe('Test Quay.io plugin', () => {
     await uiHelper.clickTab('Image Registry');
 
     const allGridColumnsText = ImageRegistry.getAllGridColumnsText();
-    await uiHelper.verifyTableHeaders(allGridColumnsText);
+    await uiHelper.verifyColumnHeading(allGridColumnsText);
     await uiHelper.verifyHeading(`Quay repository: ${QUAY_REPOSITORY}`);
 
     const allCellsIdentifier = ImageRegistry.getAllCellsIdentifier();
