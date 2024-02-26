@@ -18,3 +18,8 @@ data:
     p, role:default/rbac_admin, catalog.entity.create, create, allow
     p, role:default/rbac_admin, catalog.location.create, create, allow
     p, role:default/rbac_admin, catalog.location.read, read, allow
+
+    p, user:default/guest, catalog-entity.read, read, allow
+    p, user:default/guest, catalog.entity.create, create, allow
+    p, user:default/guest, catalog.location.create, create, allow
+    p, user:default/guest, catalog.location.read, read, allow
