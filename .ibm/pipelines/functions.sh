@@ -31,6 +31,12 @@ EOF
 
 skip_if_only() {
     echo "Checking if tests need to be executed..."
+    
+    if [[ ${MANUAL_TEST,,} == "true" ]]; then
+        echo "\$MANUAL_TEST is true."
+        return
+    fi
+    
     NAMES=$(git diff --merge-base --name-only 1.1.x)
     for change in ${NAMES}; do
         skip $change
