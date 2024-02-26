@@ -33,7 +33,7 @@ skip_if_only() {
     echo "Checking if tests need to be executed..."
     
     if [[ ${SKIP_TEST,,} == "false" ]]; then
-        echo "\$SKIP_TEST is false => Force running tests."
+        echo "\$SKIP_TEST is false =>  Force running tests."
         return
     fi
     
