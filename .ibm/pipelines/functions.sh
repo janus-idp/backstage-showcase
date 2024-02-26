@@ -32,8 +32,8 @@ EOF
 skip_if_only() {
     echo "Checking if tests need to be executed..."
     
-    if [[ ${MANUAL_TEST,,} == "true" ]]; then
-        echo "\$MANUAL_TEST is true."
+    if [[ ${SKIP_TEST,,} == "false" ]]; then
+        echo "\$SKIP_TEST is false => Force running tests."
         return
     fi
     
