@@ -121,16 +121,29 @@ function updateBackstageVersionFile(version) {
 }
 
 function updateBuildMetadata(backstageVersion) {
-  const buildMetadataPath = join(process.cwd(), 'packages', 'app', 'src', 'build-metadata.json');
+  const buildMetadataPath = join(
+    process.cwd(),
+    'packages',
+    'app',
+    'src',
+    'build-metadata.json',
+  );
   const buildMetadata = JSON.parse(readFileSync(buildMetadataPath, 'utf8'));
 
   const rootPackageJson = JSON.parse(readFileSync('package.json', 'utf8'));
   const rhdhVersion = rootPackageJson.version;
 
-  const card = [`RHDH Version: ${rhdhVersion}`, `Backstage Version: ${backstageVersion}`];
-  buildMetadata.card = card
+  const card = [
+    `RHDH Version: ${rhdhVersion}`,
+    `Backstage Version: ${backstageVersion}`,
+  ];
+  buildMetadata.card = card;
 
-  writeFileSync(buildMetadataPath, JSON.stringify(buildMetadata, null, 2), 'utf8');
+  writeFileSync(
+    buildMetadataPath,
+    JSON.stringify(buildMetadata, null, 2),
+    'utf8',
+  );
 }
 
 console.log('Bumping version...');
@@ -151,12 +164,14 @@ execSync('yarn run export-dynamic --no-cache -- -- --clean', {
 });
 
 console.log('Fetching latest Backstage version...');
-const latestVersion = await getLatestBackstageVersion();
+const backstageVersion = await getLatestBackstageVersion();
 
-console.log(`Updating backstage.json to ${latestVersion}...`);
-updateBackstageVersionFile(latestVersion);
+console.log(`Updating backstage.json to ${backstageVersion}...`);
+updateBackstageVersionFile(backstageVersion);
 
 console.log('Updating build metadata...');
-updateBuildMetadata(latestVersion);
+updateBuildMetadata(backstageVersion);
 
-console.log(`Successfully updated the Backstage Showcase to ${latestVersion}!`);
+console.log(
+  `Successfully updated the Backstage Showcase to ${backstageVersion}!`,
+);
