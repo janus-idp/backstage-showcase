@@ -172,3 +172,5 @@ permission:
 
 dynamicPlugins:
   rootDirectory: dynamic-plugins-root
+
+# test comment
