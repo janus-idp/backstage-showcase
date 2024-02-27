@@ -1,0 +1,20 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: rbac-policy
+data:
+  rbac-policy.csv: |
+    p, role:default/guests, catalog.entity.create, create, allow
+    p, role:default/team_a, catalog-entity, read, allow
+    g, user:xyz/user, role:xyz/team_a
+
+    p, role:xyz/team_a, catalog-entity, read, allow
+    p, role:xyz/team_a, catalog.entity.create, create, allow
+    p, role:xyz/team_a, catalog.location.create, create, allow
+    p, role:xyz/team_a, catalog.location.read, read, allow
+
+    p, role:default/rbac_admin, kubernetes.proxy, use, allow
+    p, role:default/rbac_admin, catalog-entity, read, allow
+    p, role:default/rbac_admin, catalog.entity.create, create, allow
+    p, role:default/rbac_admin, catalog.location.create, create, allow
+    p, role:default/rbac_admin, catalog.location.read, read, allow
