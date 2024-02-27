@@ -48,7 +48,7 @@
     "prettier": "3.1.1",
     "turbo": "1.11.3",
     "typescript": "5.3.3",
-    "undici": "5.28.2"
+    "undici": "5.28.3"
   },
   "resolutions": {
     "@types/react": "18.2.48",
