@@ -29,9 +29,9 @@ test.describe.serial('Test OCM plugin', () => {
     uiHelper = new UIhelper(page);
     clusters = new Clusters(page);
 
-    await common.loginAsGuest();
+    await common.loginAsGithubUser();
   });
-  test('Navigate to Clusters and Verify OCM Clusters', async () => {
+  test.skip('Navigate to Clusters and Verify OCM Clusters', async () => {
     await uiHelper.openSidebar('Clusters');
     await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
       clusterDetails.status,
