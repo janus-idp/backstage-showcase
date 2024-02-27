@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-jenkins-backend-dynamic",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -43,16 +43,16 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.0",
-    "@backstage/backend-plugin-api": "^0.6.10",
+    "@backstage/backend-common": "^0.21.2",
+    "@backstage/backend-plugin-api": "^0.6.12",
     "@backstage/catalog-client": "^1.6.0",
     "@backstage/catalog-model": "^1.4.4",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-auth-node": "^0.4.4",
-    "@backstage/plugin-catalog-node": "^1.7.0",
+    "@backstage/plugin-auth-node": "^0.4.7",
+    "@backstage/plugin-catalog-node": "^1.7.2",
     "@backstage/plugin-permission-common": "^0.7.12",
-    "@backstage/plugin-permission-node": "^0.7.21",
+    "@backstage/plugin-permission-node": "^0.7.23",
     "@backstage/plugin-catalog-common": "^1.0.21"
   },
   "overrides": {
