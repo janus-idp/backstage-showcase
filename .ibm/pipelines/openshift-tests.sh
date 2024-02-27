@@ -213,7 +213,7 @@ main() {
 
   add_helm_repos
 
-  echo "Tag name : ${TAG_NAME}"
+  echo "Tag name: ${TAG_NAME}"
 
   helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
