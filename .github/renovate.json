@@ -7,6 +7,12 @@
     "group:linters",
     "group:test"
   ],
+  "js": {
+    "managerBranchPrefix": "js-"
+  },
+  "python": {
+    "managerBranchPrefix": "python-"
+  },
   "labels": ["kind/dependency upgrade"],
   "npm": {
     "minimumReleaseAge": "1 day"
