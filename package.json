@@ -44,13 +44,13 @@
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
-    "ip": "^1.1.9",
+    "ip": "1.1.9",
     "lint-staged": "15.2.0",
     "prettier": "3.1.1",
     "sanitize-html": "2.12.1",
     "turbo": "1.11.3",
     "typescript": "5.3.3",
-    "undici": "^5.28.3"
+    "undici": "5.28.3"
   },
   "resolutions": {
     "@types/react": "18.2.48",
