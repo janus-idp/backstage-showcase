@@ -31,7 +31,13 @@ EOF
 
 skip_if_only() {
     echo "Checking if tests need to be executed..."
-    NAMES=$(git diff --merge-base --name-only main)
+    
+    if [[ ${SKIP_TEST,,} == "false" ]]; then
+        echo "\$SKIP_TEST is false =>  Force running tests."
+        return
+    fi
+    
+    NAMES=$(git diff --merge-base --name-only 1.1.x)
     for change in ${NAMES}; do
         skip $change
         if [[ $? == 0 ]]; then
