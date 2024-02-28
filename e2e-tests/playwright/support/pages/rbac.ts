@@ -69,7 +69,9 @@ export class Roles {
       timeout: 100000,
     });
     await this.uiHelper.optionSelector('catalog');
-    await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0));
+    await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
+      timeout: 100000,
+    });
     await this.uiHelper.optionSelector('catalog-entity');
     await this.page.uncheck(RoleFormPO.selectPolicy(0, 1, 'Delete'));
 

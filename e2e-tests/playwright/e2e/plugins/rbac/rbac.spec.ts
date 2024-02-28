@@ -63,7 +63,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickLink('RBAC');
   });
 
-  test.skip('Create and edit a role from the roles list page', async () => {
+  test('Create and edit a role from the roles list page', async () => {
     await rolesHelper.createRole('test-role');
     await page.click(RoleListPO.editRole('role:default/test-role'));
     await uiHelper.verifyHeading('Edit Role');
@@ -87,7 +87,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test.skip('Edit users and groups and update policies of a role from the overview page', async () => {
+  test('Edit users and groups and update policies of a role from the overview page', async () => {
     await rolesHelper.createRole('test-role1');
     await uiHelper.clickLink('role:default/test-role1');
 
@@ -127,5 +127,21 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
   });
   test.afterAll(async () => {
     await page.close();
+  });
+});
+
+test.describe('Test RBAC plugin as a guest user', () => {
+  test.beforeEach(async ({ page }) => {
+    const common = new Common(page);
+    await common.loginAsGuest();
+  });
+
+  test('Check if Administration side nav is present with no RBAC tab', async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    await uiHelper.openSidebar('Administration');
+    const tabLocator = page.locator(`text="RBAC"`);
+    expect(tabLocator).not.toBeVisible();
   });
 });
