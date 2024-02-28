@@ -842,8 +842,8 @@ plugins:
                   props:
                     width: 1500
                     height: 800
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
-    disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
@@ -854,5 +854,5 @@ plugins:
         analytics:
           segment:
             writeKey: ${SEGMENT_WRITE_KEY}
-            maskIP: ${SEGMENT_MASK_IP} # prevents IP addresses from being sent if true
+            maskIP: true # prevents IP addresses from being sent if true
             testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true

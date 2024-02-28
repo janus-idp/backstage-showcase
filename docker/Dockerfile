@@ -146,6 +146,10 @@ ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 # To avoid running scripts when using `npm pack` to install dynamic plugins
 ENV NPM_CONFIG_ignore-scripts='true'
 
+# Segment key for development
+ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
+ENV SEGMENT_TEST_MODE=false
+
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
