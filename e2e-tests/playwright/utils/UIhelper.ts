@@ -18,9 +18,18 @@ export class UIhelper {
     await this.page.waitForSelector('h2[data-testid="header-title"]');
   }
 
-  async clickButton(label: string, options?: { force?: boolean }) {
-    const selector = `${UIhelperPO.buttonLabel}:has-text("${label}")`;
-    const button = this.page.locator(selector);
+  async clickButton(
+    label: string,
+    options: { exact?: boolean; force?: boolean } = {
+      exact: true,
+      force: false,
+    },
+  ) {
+    const selector = `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
+    const button = this.page
+      .locator(selector)
+      .getByText(label, { exact: options.exact })
+      .first();
     await button.waitFor({ state: 'visible' });
 
     if (options?.force) {
@@ -34,7 +43,7 @@ export class UIhelper {
     label: string,
     options: { timeout: number } = { timeout: 40000 },
   ) {
-    const selector = `${UIhelperPO.buttonLabel}`;
+    const selector = `${UIhelperPO.MuiButtonLabel}`;
     await this.page.waitForSelector(selector, { timeout: options.timeout });
     return this.page.locator(selector).filter({ hasText: label });
   }
@@ -79,7 +88,7 @@ export class UIhelper {
     }
   }
 
-  async verifyText(text: string | RegExp, exact: boolean = true) {
+  async verifyText(text: string | RegExp, exact = true) {
     const element = this.page.getByText(text, { exact: exact }).first();
     await element.scrollIntoViewIfNeeded();
     await expect(element).toBeVisible();
@@ -93,13 +102,17 @@ export class UIhelper {
     await this.page.click(`nav a:has-text("${navBarText}")`);
   }
 
-  async verifyColumnHeading(
-    rowTexts: string[] | RegExp[],
-    exact: boolean = true,
-  ) {
+  async selectMuiBox(label: string, value: string) {
+    await this.page.click(`div[aria-label="${label}"]`);
+    const optionSelector = `li[role="option"]:has-text("${value}")`;
+    await this.page.waitForSelector(optionSelector);
+    await this.page.click(optionSelector);
+  }
+
+  async verifyRowsInTable(rowTexts: string[] | RegExp[], exact = true) {
     for (const rowText of rowTexts) {
       const rowLocator = this.page
-        .locator(`tr>th`)
+        .locator(`tr>td`)
         .getByText(rowText, { exact: exact })
         .first();
       await rowLocator.waitFor({ state: 'visible' });
@@ -108,20 +121,10 @@ export class UIhelper {
     }
   }
 
-  async selectMuiBox(label: string, value: string) {
-    await this.page.click(`div[aria-label="${label}"]`);
-    const optionSelector = `li[role="option"]:has-text("${value}")`;
-    await this.page.waitForSelector(optionSelector);
-    await this.page.click(optionSelector);
-  }
-
-  async verifyRowsInTable(
-    rowTexts: string[] | RegExp[],
-    exact: boolean = true,
-  ) {
+  async verifyColumnHeading(rowTexts: string[] | RegExp[], exact = true) {
     for (const rowText of rowTexts) {
       const rowLocator = this.page
-        .locator(`tr>td`)
+        .locator(`tr>th`)
         .getByText(rowText, { exact: exact })
         .first();
       await rowLocator.waitFor({ state: 'visible' });
@@ -170,8 +173,14 @@ export class UIhelper {
     }
   }
 
+  async optionSelector(value: string) {
+    const optionSelector = `li[role="option"]:has-text("${value}")`;
+    await this.page.waitForSelector(optionSelector);
+    await this.page.click(optionSelector);
+  }
+
   getButtonSelector(label: string): string {
-    return `span[class^="MuiButton-label"]:has-text("${label}")`;
+    return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
   }
 
   async verifyRowInTableByUniqueText(

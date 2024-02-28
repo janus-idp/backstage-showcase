@@ -15,7 +15,7 @@ test.describe('Test ACR plugin', () => {
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGuest();
+    await common.loginAsGithubUser();
   });
 
   test('Verify ACR Images are visible', async () => {

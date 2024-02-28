@@ -6,6 +6,7 @@ import {
   BackstageShowcase,
   CatalogImport,
 } from '../support/pages/CatalogImport';
+import { templates } from '../support/testData/templates';
 
 let page: Page;
 test.describe.serial('GitHub Happy path', () => {
@@ -72,6 +73,17 @@ test.describe.serial('GitHub Happy path', () => {
     ]);
     await uiHelper.selectMuiBox('Kind', 'System');
     await uiHelper.verifyRowsInTable(['Janus-IDP']);
+  });
+
+  test('Verify all 12 Software Templates appear in the Create page', async () => {
+    await uiHelper.openSidebar('Create...');
+    await uiHelper.verifyHeading('Templates');
+    await uiHelper.waitForHeaderTitle();
+
+    for (const template of templates) {
+      await uiHelper.waitForH4Title(template);
+      await uiHelper.verifyHeading(template);
+    }
   });
 
   test('Click login on the login popup and verify that Overview tab renders', async () => {

@@ -83,6 +83,10 @@ data:
           target: https://github.com/janus-qe/rhdh-test/blob/main/user.yml
           rules:
             - allow: [User]
+        - type: url
+          target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+          rules:
+            - allow: [User, Group]
 
 
     dynatrace:
@@ -97,4 +101,11 @@ data:
             - name: argoInstance2
               url: temp
               token: temp
+    permission:
+      enabled: true
+      rbac:
+        policies-csv-file: './rbac/rbac-policy.csv'
+        admin:
+          users:
+            - name: user:default/rhdh-qe 
 
