@@ -26,7 +26,7 @@ colorama==0.4.6
     # via
     #   -r requirements.in
     #   mkdocs-material
-cython==0.29.37
+cython==3.0.8
     # via -r requirements.in
 editables==0.5
     # via
