@@ -3,7 +3,7 @@ import { UIhelper } from '../../../utils/UIhelper';
 import { Common } from '../../../utils/Common';
 import { ImageRegistry } from '../../../utils/quay/quay';
 
-test.describe.skip('Test Quay.io plugin', () => {
+test.describe('Test Quay.io plugin', () => {
   const QUAY_REPOSITORY = 'janus-idp/backstage-showcase';
 
   test.beforeEach(async ({ page }) => {
@@ -15,11 +15,11 @@ test.describe.skip('Test Quay.io plugin', () => {
     const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
-    await uiHelper.clickLink('Backstage Showcase');
+    await uiHelper.clickLink('backstage-janus');
     await uiHelper.clickTab('Image Registry');
 
     const allGridColumnsText = ImageRegistry.getAllGridColumnsText();
-    await uiHelper.verifyRowsInTable(allGridColumnsText);
+    await uiHelper.verifyColumnHeading(allGridColumnsText);
     await uiHelper.verifyHeading(`Quay repository: ${QUAY_REPOSITORY}`);
 
     const allCellsIdentifier = ImageRegistry.getAllCellsIdentifier();

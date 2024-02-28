@@ -1,1 +1,1 @@
-export * from './dynamic/index';
+export { catalogModuleBitbucketCloudEntityProvider as default } from './module';

@@ -1,5 +1,6 @@
 plugins:
   # Group: Github
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
@@ -14,9 +15,17 @@ plugins:
       catalog:
         providers:
           githubOrg:
-            default:
-              id: production
-              orgUrl: "${GITHUB_ORG_URL}"
+            id: production
+            githubUrl: "${GITHUB_URL}"
+            orgs: [ "${GITHUB_ORG}" ]
+            schedule:
+              frequency:
+                minutes: 60
+              initialDelay:
+                seconds: 15
+              timeout:
+                minutes: 15
+
   - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
     disabled: true
     pluginConfig:
@@ -111,6 +120,7 @@ plugins:
                       - isSecurityInsightsAvailable
 
   # Group: Gitlab
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
@@ -165,8 +175,6 @@ plugins:
       catalog:
         providers:
           gitlab: {}
-  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
-    disabled: true
 
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
@@ -288,6 +296,7 @@ plugins:
                       - isArgocdAvailable
 
   # Group: Azure Devops
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
@@ -428,28 +437,18 @@ plugins:
 
   # Techdocs
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
-    disabled: true
     pluginConfig:
       # Reference documentation http://backstage.io/docs/features/techdocs/configuration
       # Note: After experimenting with basic setup, use CI/CD to generate docs
       # and an external cloud storage when deploying TechDocs for production use-case.
       # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
       techdocs:
-        builder: ${TECHDOCS_BUILDER_TYPE}
+        builder: local
         generator:
-          runIn: ${TECHDOCS_GENERATOR_TYPE}
+          runIn: local
         publisher:
-          type: ${TECHDOCS_PUBLISHER_TYPE}
-          awsS3:
-            bucketName: ${BUCKET_NAME}
-            region: ${BUCKET_REGION_VAULT}
-            endpoint: ${BUCKET_URL}
-            s3ForcePathStyle: true
-            credentials:
-              accessKeyId: ${AWS_ACCESS_KEY_ID}
-              secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+          type: local
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
-    disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
@@ -493,30 +492,53 @@ plugins:
                     icon: docs
 
   # Standalone plugins
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
+
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
 
-  - package: ./dynamic-plugins/dist/janus-idp-plugin-rbac
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-dynamic-plugins-info
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-dynamic-plugins-info:
+            dynamicRoutes:
+              - path: /admin/plugins
+                importName: DynamicPluginsInfo
+            mountPoints:
+              - mountPoint: admin.page.plugins/cards
+                importName: DynamicPluginsInfo
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                    width: 100vw
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-rbac:
-            appIcons:
-              - name: AdminPanelSettingsOutlinedIcon
+            mountPoints:
+              - mountPoint: admin.page.rbac/cards
                 module: RbacPlugin
-                importName: AdminPanelSettingsOutlinedIcon
-            dynamicRoutes:
-              - path: /rbac
                 importName: RbacPage
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                    width: 100vw
+                  props:
+                    useHeader: false
+            dynamicRoutes:
+              - path: /admin/rbac
                 module: RbacPlugin
-                menuItem:
-                  icon: AdminPanelSettingsOutlinedIcon
-                  text: Administration
-  
+                importName: RbacPage
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true
     pluginConfig:
@@ -548,8 +570,8 @@ plugins:
         providers:
           threeScaleApiEntity:
             default:
-              baseUrl: '${_3SCALE_BASE_URL}'
-              accessToken: '${_3SCALE_ACCESS_TOKEN}'
+              baseUrl: '${THREESCALE_BASE_URL}'
+              accessToken: '${THREESCALE_ACCESS_TOKEN}'
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
     disabled: true
@@ -563,8 +585,16 @@ plugins:
               realm: "${KEYCLOAK_REALM}"
               clientId: "${KEYCLOAK_CLIENT_ID}"
               clientSecret: "${KEYCLOAK_CLIENT_SECRET}"
+              schedule:
+                frequency:
+                  minutes: 60
+                initialDelay:
+                  seconds: 15
+                timeout:
+                  minutes: 50
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true
     pluginConfig:
       # https://backstage.io/docs/integrations/bitbucketCloud/discovery#configuration
@@ -573,8 +603,16 @@ plugins:
           bitbucketCloud:
             default: # identifies your ingested dataset
               workspace: ${BITBUCKET_WORKSPACE}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server
+  - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic
     disabled: true
     pluginConfig:
       # https://backstage.io/docs/integrations/bitbucketServer/discovery#configuration
@@ -583,6 +621,13 @@ plugins:
           bitbucketServer:
             default: # identifies your ingested dataset
               host: ${BITBUCKET_HOST}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
 
   - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
     disabled: true
@@ -712,7 +757,7 @@ plugins:
                     anyOf:
                     - isJfrogArtifactoryAvailable
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-pagerduty
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
     disabled: true
     pluginConfig:
       dynamicPlugins:

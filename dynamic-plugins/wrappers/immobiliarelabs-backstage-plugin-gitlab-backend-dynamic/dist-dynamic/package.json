@@ -11,7 +11,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin"
   },
   "exports": {
     ".": {
@@ -43,10 +43,9 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "0.19.9",
-    "@backstage/backend-plugin-api": "0.6.9",
-    "@backstage/plugin-catalog-node": "1.6.1",
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-dynamic-feature-service": "0.2.0",
+    "@backstage/backend-common": "^0.19.9",
+    "@backstage/backend-plugin-api": "^0.6.7",
     "@backstage/config": "^1.1.1",
     "@backstage/integration": "^1.7.0"
   },

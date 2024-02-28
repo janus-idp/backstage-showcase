@@ -58,7 +58,3 @@ jobs:
 
       - name: CI
         run: yarn run ci
-
-      - name: Check Changeset
-        run: |
-          yarn changeset status --since=origin/main

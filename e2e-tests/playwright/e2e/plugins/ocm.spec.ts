@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { Page, chromium, firefox, test } from '@playwright/test';
 import { Common } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import { Clusters } from '../../support/pages/Clusters';
@@ -11,24 +11,33 @@ const clusterDetails = {
   platform: 'IBM',
   cpuCores: '12',
   memorySize: '47 Gi',
-  ocVersion: '4.13.23',
+  ocVersion: /^\d+\.\d+\.\d+$/,
 };
 
-test.describe.skip('Test OCM plugin', () => {
-  test.beforeEach(async ({ page }) => {
-    const common = new Common(page);
-    await common.loginAsGuest();
+let page: Page;
+test.describe.serial('Test OCM plugin', () => {
+  let uiHelper: UIhelper;
+  let clusters: Clusters;
+  let common: Common;
+
+  test.beforeAll(async ({ browserName }) => {
+    const browserType = browserName === 'firefox' ? firefox : chromium;
+    const browser = await browserType.launch();
+    page = await browser.newPage();
+
+    common = new Common(page);
+    uiHelper = new UIhelper(page);
+    clusters = new Clusters(page);
+
+    await common.loginAsGithubUser();
   });
-
-  test('Navigate to Clusters and Verify OCM Clusters', async ({ page }) => {
-    const uiHelper = new UIhelper(page);
-    const clusters = new Clusters(page);
-
+  test.skip('Navigate to Clusters and Verify OCM Clusters', async () => {
     await uiHelper.openSidebar('Clusters');
-    await uiHelper.verifyRowsInTable([
-      clusterDetails.clusterName,
+    await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
       clusterDetails.status,
       clusterDetails.platform,
+    ]);
+    await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
       clusterDetails.ocVersion,
     ]);
     await uiHelper.clickLink(clusterDetails.clusterName);
@@ -44,13 +53,9 @@ test.describe.skip('Test OCM plugin', () => {
     );
   });
 
-  test('Navigate to Catalog > resources and verify cluster', async ({
-    page,
-  }) => {
-    const uiHelper = new UIhelper(page);
-    const clusters = new Clusters(page);
-
+  test('Navigate to Catalog > resources and verify cluster', async () => {
     await uiHelper.openSidebar('Catalog');
+    await common.waitForLoad();
     await uiHelper.selectMuiBox('Kind', 'Resource');
     await uiHelper.verifyRowsInTable([clusterDetails.clusterName]);
     await uiHelper.clickLink(clusterDetails.clusterName);

@@ -18,9 +18,18 @@ export class UIhelper {
     await this.page.waitForSelector('h2[data-testid="header-title"]');
   }
 
-  async clickButton(label: string, options?: { force?: boolean }) {
-    const selector = `${UIhelperPO.buttonLabel}:has-text("${label}")`;
-    const button = this.page.locator(selector);
+  async clickButton(
+    label: string,
+    options: { exact?: boolean; force?: boolean } = {
+      exact: true,
+      force: false,
+    },
+  ) {
+    const selector = `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
+    const button = this.page
+      .locator(selector)
+      .getByText(label, { exact: options.exact })
+      .first();
     await button.waitFor({ state: 'visible' });
 
     if (options?.force) {
@@ -34,7 +43,7 @@ export class UIhelper {
     label: string,
     options: { timeout: number } = { timeout: 40000 },
   ) {
-    const selector = `${UIhelperPO.buttonLabel}`;
+    const selector = `${UIhelperPO.MuiButtonLabel}`;
     await this.page.waitForSelector(selector, { timeout: options.timeout });
     return this.page.locator(selector).filter({ hasText: label });
   }
@@ -90,7 +99,7 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    await this.page.locator(`nav a`).filter({ hasText: navBarText }).click();
+    await this.page.click(`nav a:has-text("${navBarText}")`);
   }
 
   async selectMuiBox(label: string, value: string) {
@@ -107,6 +116,21 @@ export class UIhelper {
     for (const rowText of rowTexts) {
       const rowLocator = this.page
         .locator(`tr>td`)
+        .getByText(rowText, { exact: exact })
+        .first();
+      await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.scrollIntoViewIfNeeded();
+      await expect(rowLocator).toBeVisible();
+    }
+  }
+
+  async verifyColumnHeading(
+    rowTexts: string[] | RegExp[],
+    exact: boolean = true,
+  ) {
+    for (const rowText of rowTexts) {
+      const rowLocator = this.page
+        .locator(`tr>th`)
         .getByText(rowText, { exact: exact })
         .first();
       await rowLocator.waitFor({ state: 'visible' });
@@ -135,7 +159,7 @@ export class UIhelper {
     await tabLocator.click();
   }
 
-  async verifyCellsInTable(texts: RegExp[]) {
+  async verifyCellsInTable(texts: (string | RegExp)[]) {
     for (const text of texts) {
       const cellLocator = this.page
         .locator(UIhelperPO.MuiTableCell)
@@ -155,37 +179,45 @@ export class UIhelper {
     }
   }
 
+  async optionSelector(value: string) {
+    const optionSelector = `li[role="option"]:has-text("${value}")`;
+    await this.page.waitForSelector(optionSelector);
+    await this.page.click(optionSelector);
+  }
+
   getButtonSelector(label: string): string {
-    return `span[class^="MuiButton-label"]:has-text("${label}")`;
+    return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
   }
 
   async verifyRowInTableByUniqueText(
-    uniqueRowText: string | RegExp,
-    cellTexts: string[],
+    uniqueRowText: string,
+    cellTexts: string[] | RegExp[],
   ) {
-    const uniqueCell = this.page
-      .locator(UIhelperPO.MuiTableCell)
-      .locator(`text=${uniqueRowText}`);
-    await uniqueCell.scrollIntoViewIfNeeded();
-    const row = uniqueCell.locator('xpath=ancestor::tr');
-
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
     for (const cellText of cellTexts) {
-      const cell = row
-        .locator(UIhelperPO.MuiTableCell)
-        .locator(`text=${cellText}`);
-      await expect(cell).toBeVisible();
+      await expect(
+        row.locator('td').filter({ hasText: cellText }).first(),
+      ).toBeVisible();
     }
   }
 
-  async getMuiCard(title: string) {
-    const cardHeader = this.page
-      .locator(UIhelperPO.MuiCardHeader)
-      .locator(`text=${title}`);
-    const card = cardHeader.locator(
-      'xpath=ancestor::div[contains(@class, "MuiCard-root")]',
-    );
-    await card.scrollIntoViewIfNeeded();
+  async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
+    const link = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first();
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+  }
 
-    return card;
+  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+    const locator = this.page
+      .locator(UIhelperPO.MuiCard(cardHeading))
+      .getByText(text, { exact: exact })
+      .first();
+    await locator.scrollIntoViewIfNeeded();
+    await expect(locator).toBeVisible();
   }
 }

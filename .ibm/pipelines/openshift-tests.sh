@@ -2,15 +2,15 @@
 
 set -e
 
-# Variáveis globais
 LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
 TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cleanup() {
   echo "Cleaning up before exiting"
-  helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
-  oc delete namespace ${NAME_SPACE}
+  # leave the namespace for debugging purpose. A new PR will refresh the namespace anyways.
+  # helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
+  # oc delete namespace ${NAME_SPACE}
   rm -rf ~/tmpbin
 }
 
@@ -19,7 +19,7 @@ trap cleanup EXIT
 add_helm_repos() {
   helm version
 
-  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "janus-idp=https://janus-idp.github.io/helm-backstage" "${HELM_REPO_NAME}=${HELM_REPO_URL}")
+  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "rhdh-chart=https://redhat-developer.github.io/rhdh-chart")
 
   for repo in "${repos[@]}"; do
     key="${repo%%=*}"
@@ -96,7 +96,7 @@ apply_yaml_files() {
   # Add additional configurations
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: $K8S_PLUGIN_ANNOTATION/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
     sed -i "s/$key:.*/$key: ${!key}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -127,6 +127,7 @@ apply_yaml_files() {
   # re-apply with the updated cluster service account token
   oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${NAME_SPACE}
   oc apply -f $dir/resources/config_map/configmap-app-config-rhdh.yaml --namespace=${NAME_SPACE}
+  oc apply -f $dir/resources/config_map/configmap-rbac-policy-rhdh.yaml --namespace=${NAME_SPACE}
 }
 
 run_tests() {
@@ -139,7 +140,7 @@ run_tests() {
 
   (
     set -e
-    echo Using PR container image: pr-${GIT_PR_NUMBER}-${SHORT_SHA}
+    echo Using PR container image: ${TAG_NAME}
     yarn test
   ) |& tee "/tmp/${LOGFILE}"
 
@@ -153,13 +154,36 @@ run_tests() {
 }
 
 check_backstage_running() {
-  # Check if Backstage is up and running
-  BACKSTAGE_URL_RESPONSE=$(curl -Is "https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}" | head -n 1)
+  local url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
 
-  echo "$BACKSTAGE_URL_RESPONSE"
-  export BASE_URL="https://${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
-  echo "######## BASE URL ########"
-  echo "$BASE_URL"
+  # Maximum number of attempts to check URL
+  local max_attempts=30
+  # Time in seconds to wait
+  local wait_seconds=30
+
+  echo "Checking if Backstage is up and running at $url" | tee "/tmp/${LOGFILE}"
+
+  for ((i=1; i<=max_attempts; i++)); do
+    # Get the status code
+    local http_status=$(curl -I -s "$url" | grep HTTP | awk '{print $2}')
+
+    # Check if the status code is 200
+    if [[ $http_status -eq 200 ]]; then
+      echo "Backstage is up and running!"
+      export BASE_URL=$url
+      echo "######## BASE URL ########"
+      echo "$BASE_URL"
+      return 0
+    else
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" | tee -a "/tmp/${LOGFILE}"
+      sleep $wait_seconds
+    fi
+  done
+
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." | tee -a "/tmp/${LOGFILE}"
+  save_logs "${LOGFILE}" "${TEST_NAME}" 1
+
+  return 1
 }
 
 main() {
@@ -190,22 +214,20 @@ main() {
 
   add_helm_repos
 
-  GIT_PR_RESPONSE=$(curl -s "https://api.github.com/repos/${GITHUB_ORG_NAME}/${GITHUB_REPOSITORY_NAME}/pulls/${GIT_PR_NUMBER}")
-  LONG_SHA=$(echo "$GIT_PR_RESPONSE" | jq -r '.head.sha')
-  SHORT_SHA=$(git rev-parse --short ${LONG_SHA})
+  echo "Tag name : ${TAG_NAME}"
 
-  echo "Tag name with short SHA: pr-${GIT_PR_NUMBER}-${SHORT_SHA}"
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=pr-${GIT_PR_NUMBER}-${SHORT_SHA}
-
-  echo "Waiting for backstage deployment..."
-  sleep 500
+  check_backstage_running
+  backstage_status=$?
 
   echo "Display pods for verification..."
   oc get pods -n ${NAME_SPACE}
 
-  check_backstage_running
-
+  if [ $backstage_status -ne 0 ]; then
+    echo "Backstage is not running. Exiting..."
+    exit 1
+  fi
 
   run_tests
 }
