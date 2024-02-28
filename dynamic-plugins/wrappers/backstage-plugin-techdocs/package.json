@@ -28,7 +28,7 @@
     "@backstage/plugin-techdocs-react": "1.1.16"
   },
   "peerDependencies": {
-    "react": "16.13.1 || ^17.0.0"
+    "react": "16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.25.2",
