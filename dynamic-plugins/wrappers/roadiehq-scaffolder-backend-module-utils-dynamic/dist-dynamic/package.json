@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-scaffolder-backend-module-utils-dynamic",
-  "version": "1.13.2",
+  "version": "1.13.5",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -44,12 +44,12 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "0.6.10-next.3",
-    "@backstage/plugin-scaffolder-node": "0.2.8",
-    "@backstage/backend-common": "^0.19.9",
+    "@backstage/backend-plugin-api": "0.6.10",
+    "@backstage/plugin-scaffolder-node": "0.3.2",
+    "@backstage/backend-common": "^0.21.2",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-scaffolder-backend": "^1.19.1"
+    "@backstage/plugin-scaffolder-backend": "^1.19.2"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

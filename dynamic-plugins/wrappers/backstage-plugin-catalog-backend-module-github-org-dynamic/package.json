@@ -30,7 +30,7 @@
     "@backstage/plugin-catalog-backend-module-github": "0.5.2"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.7.3"
+    "@janus-idp/cli": "1.7.4"
   },
   "files": [
     "dist",
