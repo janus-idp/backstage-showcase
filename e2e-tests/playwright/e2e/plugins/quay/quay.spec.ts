@@ -8,7 +8,7 @@ test.describe('Test Quay.io plugin', () => {
 
   test.beforeEach(async ({ page }) => {
     const common = new Common(page);
-    await common.loginAsGuest();
+    await common.loginAsGithubUser();
   });
 
   test('Check if Image Registry is present', async ({ page }) => {

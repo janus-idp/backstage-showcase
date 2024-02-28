@@ -9,7 +9,7 @@ test.describe.serial('TechDocs', () => {
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGuest();
+    await common.loginAsGithubUser();
   });
 
   test('Verify that TechDocs is visible in sidebar', async () => {

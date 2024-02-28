@@ -127,6 +127,7 @@ apply_yaml_files() {
   # re-apply with the updated cluster service account token
   oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${NAME_SPACE}
   oc apply -f $dir/resources/config_map/configmap-app-config-rhdh.yaml --namespace=${NAME_SPACE}
+  oc apply -f $dir/resources/config_map/configmap-rbac-policy-rhdh.yaml --namespace=${NAME_SPACE}
 }
 
 run_tests() {
@@ -213,11 +214,7 @@ main() {
 
   add_helm_repos
 
-  GIT_PR_RESPONSE=$(curl -s "https://api.github.com/repos/${GITHUB_ORG_NAME}/${GITHUB_REPOSITORY_NAME}/pulls/${GIT_PR_NUMBER}")
-  LONG_SHA=$(echo "$GIT_PR_RESPONSE" | jq -r '.head.sha')
-  SHORT_SHA=$(git rev-parse --short ${LONG_SHA})
-
-  echo "Tag name with short SHA: ${TAG_NAME}"
+  echo "Tag name : ${TAG_NAME}"
 
   helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
