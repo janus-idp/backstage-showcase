@@ -13,7 +13,7 @@ https://github.com/mikitex70/plantuml-markdown/archive/17d348bfaa9112cdd2130e641
 
 babel
 calver==2022.6.26
-certifi==2023.11.17
+certifi==2024.2.2
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
