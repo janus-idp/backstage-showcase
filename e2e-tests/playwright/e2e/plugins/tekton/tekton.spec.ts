@@ -37,7 +37,7 @@ test.describe('Test Tekton plugin', () => {
     await tekton.ensurePipelineRunsTableIsNotEmpty();
   });
 
-  test.skip('Check if modal is opened after click on the pipeline stage', async () => {
+  test('Check if modal is opened after click on the pipeline stage', async () => {
     await tekton.goToBackstageJanusProject();
     await tekton.clickOnExpandRowFromPipelineRunsTable();
     await tekton.openModalEchoHelloWorld();

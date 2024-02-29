@@ -102,10 +102,10 @@ data:
               url: temp
               token: temp
     permission:
-      enabled: true
+      enabled: false # Disabling the permission until we can use RBAC to test the pages using login as Guest.
       rbac:
         policies-csv-file: './rbac/rbac-policy.csv'
         admin:
           users:
-            - name: user:default/rhdh-qe 
+            - name: user:default/rhdh-qe
 

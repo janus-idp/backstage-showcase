@@ -53,7 +53,7 @@ global:
               clusterLocatorMethods:
                 - clusters:
                   - authProvider: serviceAccount
-                    name: ${K8S_CLUSTER_NAME}
+                    name: 'my-cluster'
                     serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
                     url: ${K8S_CLUSTER_API_SERVER_URL}
                   type: config
@@ -99,7 +99,7 @@ global:
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
           disabled: false
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
-          disabled: false
+          disabled: true
 
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
@@ -206,7 +206,7 @@ upstream:
       - name: dynamic-plugins-root
         emptyDir: {}
       - name: rbac-policy
-        configMap: 
+        configMap:
           defaultMode: 420
           name: rbac-policy
 

@@ -127,7 +127,7 @@ export class UIhelper {
   async verifyHeading(heading: string) {
     const headingLocator = this.page
       .locator(`h1, h2, h3, h4, h5, h6`)
-      .filter({hasText: heading})
+      .filter({ hasText: heading })
       .first();
     await headingLocator.waitFor();
     await expect(headingLocator).toBeVisible();
@@ -220,5 +220,4 @@ export class UIhelper {
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toBeGreaterThan(0);
   }
-
 }

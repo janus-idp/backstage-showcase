@@ -170,7 +170,7 @@ check_backstage_running() {
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
-    local http_status=$(curl -I -s "$url" | grep HTTP | awk '{print $2}')
+    local http_status=$(curl --insecure -I -s "$url" | grep HTTP | awk '{print $2}')
 
     # Check if the status code is 200
     if [[ $http_status -eq 200 ]]; then
@@ -228,13 +228,11 @@ main() {
   oc login --token=${K8S_CLUSTER_TOKEN} --server=${K8S_CLUSTER_URL}
 
   API_SERVER_URL=$(oc whoami --show-server)
-  CLUSTER_NAME=$(oc get clusterversion -o jsonpath='{.items[0].spec.clusterID}')
   K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
-
 
   # Encode in Base64
   ENCODED_API_SERVER_URL=$(echo "$API_SERVER_URL" | base64)
-  ENCODED_CLUSTER_NAME=$(echo "$CLUSTER_NAME" | base64)
+  ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
   configure_namespace
   installPipelinesOperator $DIR
