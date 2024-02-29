@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-scaffolder-backend-argocd-dynamic",
-  "version": "1.1.22",
+  "version": "1.1.23",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -47,8 +47,8 @@
     "@backstage/plugin-scaffolder-node": "0.3.2",
     "@backstage/backend-dynamic-feature-service": "0.2.0",
     "@backstage/config": "^1.1.1",
-    "@backstage/plugin-scaffolder-backend": "^1.19.2",
-    "@backstage/catalog-client": "^1.5.1"
+    "@backstage/plugin-scaffolder-backend": "^1.21.2",
+    "@backstage/catalog-client": "^1.6.0"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
