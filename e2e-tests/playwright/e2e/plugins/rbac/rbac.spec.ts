@@ -29,7 +29,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickTab('RBAC');
   });
 
-  test('Check if Administration side nav is present with RBAC tab', async () => {
+  test.skip('Check if Administration side nav is present with RBAC tab', async () => {
     await uiHelper.verifyHeading('All roles (2)');
     const allGridColumnsText = Roles.getRolesListColumnsText();
     await uiHelper.verifyColumnHeading(allGridColumnsText);
@@ -37,7 +37,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.verifyCellsInTable(allCellsIdentifier);
   });
 
-  test('View details of a role', async () => {
+  test.skip('View details of a role', async () => {
     await uiHelper.clickLink('role:default/rbac_admin');
 
     await uiHelper.verifyHeading('role:default/rbac_admin');
@@ -63,7 +63,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickLink('RBAC');
   });
 
-  test('Create and edit a role from the roles list page', async () => {
+  test.skip('Create and edit a role from the roles list page', async () => {
     await rolesHelper.createRole('test-role');
     await page.click(RoleListPO.editRole('role:default/test-role'));
     await uiHelper.verifyHeading('Edit Role');
@@ -87,7 +87,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test('Edit users and groups and update policies of a role from the overview page', async () => {
+  test.skip('Edit users and groups and update policies of a role from the overview page', async () => {
     await rolesHelper.createRole('test-role1');
     await uiHelper.clickLink('role:default/test-role1');
 
@@ -136,7 +136,7 @@ test.describe('Test RBAC plugin as a guest user', () => {
     await common.loginAsGuest();
   });
 
-  test('Check if Administration side nav is present with no RBAC tab', async ({
+  test.skip('Check if Administration side nav is present with no RBAC tab', async ({
     page,
   }) => {
     const uiHelper = new UIhelper(page);

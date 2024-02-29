@@ -93,7 +93,6 @@ apply_yaml_files() {
     sed -i "s/namespace:.*/namespace: $NAME_SPACE/g" "$file"
   done
 
-  # Add additional configurations
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: $K8S_PLUGIN_ANNOTATION/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
@@ -111,13 +110,14 @@ apply_yaml_files() {
   oc apply -f $dir/resources/cluster_role/cluster-role-ocm.yaml
   oc apply -f $dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml
 
-  # obtain K8S_CLUSTER_NAME, K8S_CLUSTER_API_SERVER_URL and add them to secrets-rhdh-secrets.yaml
-  # K8S_SERVICE_ACCOUNT_TOKEN will be replaced
+  # obtain K8S_SERVICE_ACCOUNT_TOKEN, K8S_CLUSTER_NAME, K8S_CLUSTER_API_SERVER_URL and add them to secrets-rhdh-secrets.yaml
   oc get secret rhdh-k8s-plugin-secret -o yaml >$dir/auth/service-account-rhdh-token.yaml
 
   TOKEN=$(grep 'token:' $dir/auth/service-account-rhdh-token.yaml | awk '{print $2}')
 
   sed -i "s/K8S_SERVICE_ACCOUNT_TOKEN:.*/K8S_SERVICE_ACCOUNT_TOKEN: $TOKEN/g" $dir/auth/secrets-rhdh-secrets.yaml
+  sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: $ENCODED_API_SERVER_URL/g" $dir/auth/secrets-rhdh-secrets.yaml
+  sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: $ENCODED_CLUSTER_NAME/g" $dir/auth/secrets-rhdh-secrets.yaml
 
   # Cleanup temp file
   rm $dir/auth/service-account-rhdh-token.yaml
@@ -128,6 +128,11 @@ apply_yaml_files() {
   oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${NAME_SPACE}
   oc apply -f $dir/resources/config_map/configmap-app-config-rhdh.yaml --namespace=${NAME_SPACE}
   oc apply -f $dir/resources/config_map/configmap-rbac-policy-rhdh.yaml --namespace=${NAME_SPACE}
+
+  # pipelines (required for tekton)
+  sleep 20 # wait for Pipeline Operator to be ready
+  oc apply -f "$dir"/resources/pipeline-run/hello-world-pipeline.yaml
+  oc apply -f "$dir"/resources/pipeline-run/hello-world-pipeline-run.yaml
 }
 
 run_tests() {
@@ -165,7 +170,7 @@ check_backstage_running() {
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
-    local http_status=$(curl -I -s "$url" | grep HTTP | awk '{print $2}')
+    local http_status=$(curl --insecure -I -s "$url" | grep HTTP | awk '{print $2}')
 
     # Check if the status code is 200
     if [[ $http_status -eq 200 ]]; then
@@ -184,6 +189,22 @@ check_backstage_running() {
   save_logs "${LOGFILE}" "${TEST_NAME}" 1
 
   return 1
+}
+
+# Required for tekton plugin
+# Red Hat OpenShift Pipelines is a cloud-native continuous integration and delivery (CI/CD)
+# Solution for building pipelines using Tekton.
+installPipelinesOperator() {
+  local dir=$1
+  DISPLAY_NAME="Red Hat OpenShift Pipelines"
+
+  if oc get csv -n "openshift-operators" | grep -q "$DISPLAY_NAME"; then
+    echo "Red Hat OpenShift Pipelines operator is already installed."
+  else
+    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
+    oc apply -f "$dir"/resources/pipeline-run/pipelines-operator.yaml
+  fi
+
 }
 
 main() {
@@ -206,12 +227,18 @@ main() {
   oc version --client
   oc login --token=${K8S_CLUSTER_TOKEN} --server=${K8S_CLUSTER_URL}
 
-  configure_namespace
-  install_helm
+  API_SERVER_URL=$(oc whoami --show-server)
+  K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
 
+  # Encode in Base64
+  ENCODED_API_SERVER_URL=$(echo "$API_SERVER_URL" | base64)
+  ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
+
+  configure_namespace
+  installPipelinesOperator $DIR
+  install_helm
   cd $DIR
   apply_yaml_files $DIR
-
   add_helm_repos
 
   echo "Tag name : ${TAG_NAME}"

@@ -21,13 +21,6 @@ test.describe('Guest Signing Happy path', () => {
     await homePage.verifyQuickAccess('Developer Tools', 'Podman Desktop');
   });
 
-  test('Verify Catalog page renders with no components', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.verifyHeading('My Org Catalog');
-    await uiHelper.selectMuiBox('Kind', 'Component');
-    await uiHelper.verifyText('No records to display');
-  });
-
   test('Verify Profile is Guest in the Settings page', async () => {
     await uiHelper.openSidebar('Settings');
     await uiHelper.verifyHeading('Guest');

@@ -2,14 +2,14 @@ import { test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common } from '../utils/Common';
 
-test.describe.serial('TechDocs', () => {
+test.describe('TechDocs', () => {
   let common: Common;
   let uiHelper: UIhelper;
 
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
 
   test('Verify that TechDocs is visible in sidebar', async () => {

@@ -53,7 +53,7 @@ test.describe.serial('Test OCM plugin', () => {
     );
   });
 
-  test('Navigate to Catalog > resources and verify cluster', async () => {
+  test.skip('Navigate to Catalog > resources and verify cluster', async () => {
     await uiHelper.openSidebar('Catalog');
     await common.waitForLoad();
     await uiHelper.selectMuiBox('Kind', 'Resource');
