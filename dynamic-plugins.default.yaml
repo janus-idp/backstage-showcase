@@ -850,6 +850,12 @@ plugins:
           janus-idp.backstage-plugin-analytics-provider-segment:
             apiFactories:
               - importName: SegmentAnalyticsApi
+      backend:
+        csp:
+          script-src:
+            - '''self'''
+            - '''unsafe-eval'''
+            - 'https://cdn.segment.com'
       app:
         analytics:
           segment:
