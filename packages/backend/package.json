@@ -51,7 +51,7 @@
     "@janus-idp/backstage-plugin-rbac-node": "1.0.2",
     "@manypkg/get-packages": "2.2.0",
     "app": "*",
-    "better-sqlite3": "9.3.0",
+    "better-sqlite3": "9.4.1",
     "express": "4.18.2",
     "express-prom-bundle": "6.6.0",
     "express-promise-router": "4.1.1",
