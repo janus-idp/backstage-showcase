@@ -177,7 +177,10 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
       return providers.oauth2Proxy.create({
         signIn: {
           async resolver({ result }, ctx) {
-            const name = result.getHeader('x-forwarded-preferred-username');
+            const name = process.env.OAUTH_USER_HEADER
+              ? result.getHeader(process.env.OAUTH_USER_HEADER)
+              : result.getHeader('x-forwarded-preferred-username') ||
+                result.getHeader('x-forwarded-user');
             if (!name) {
               throw new Error('Request did not contain a user');
             }
