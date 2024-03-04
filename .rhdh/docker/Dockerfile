@@ -68,10 +68,10 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
   $REMOTE_SOURCES/upstream1/app/registry-ca.pem \
   $REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh-hub/.npmrc \
   ./
-# registry=https://cachito-nexus.engineering.redhat.com/repository/cachito-yarn-914335/
+# registry=https://cachito-nexus.engineering.redhat.com/repository/cachito-yarn-814335/
 # email=noreply@domain.local
 # always-auth=true
-# //cachito-nexus.engineering.redhat.com/repository/cachito-yarn-914335/:_auth=Y2FjaGl0by15YXJuLTkxNDMzNTo2OWZjM2Q1NDVhMTA5ZGU1OGJmM2E5ZTliYg==
+# //cachito-nexus.engineering.redhat.com/repository/cachito-yarn-814335/:_auth=SHA-goes-here==
 # fetch-retries=5
 # fetch-retry-factor=2
 # strict-ssl=true
