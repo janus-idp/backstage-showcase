@@ -26,7 +26,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-argocd --embed-package @roadiehq/backstage-plugin-argo-cd-backend --override-interop default"
   },
   "dependencies": {
-    "@backstage/backend-common": "0.21.2",
+    "@backstage/backend-common": "0.21.3",
     "@backstage/backend-plugin-api": "0.6.10",
     "@backstage/plugin-scaffolder-node": "0.3.2",
     "@backstage/backend-dynamic-feature-service": "0.2.0",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.25.2",
-    "@janus-idp/cli": "1.7.4"
+    "@janus-idp/cli": "1.7.5"
   },
   "files": [
     "dist",
