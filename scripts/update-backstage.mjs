@@ -173,7 +173,7 @@ console.log('Updating build metadata...');
 updateBuildMetadata(backstageVersion);
 
 console.log('Running Prettier...');
-execSync('yarn run prettier:fix', { stdio: 'inherit' });
+execSync('prettier --ignore-unknown --write ./packages', { stdio: 'inherit' });
 
 console.log(
   `Successfully updated the Backstage Showcase to ${backstageVersion}!`,
