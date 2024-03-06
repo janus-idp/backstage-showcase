@@ -215,6 +215,7 @@ main() {
 
   configure_namespace
   install_helm
+  
   uninstall_helmchart
 
   cd $DIR
