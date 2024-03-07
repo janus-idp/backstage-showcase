@@ -502,7 +502,6 @@ plugins:
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-dynamic-plugins-info
-    disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
