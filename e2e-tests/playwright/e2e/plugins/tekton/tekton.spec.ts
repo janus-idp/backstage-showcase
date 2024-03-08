@@ -9,7 +9,7 @@ import { Tekton } from '../../../utils/tekton/tekton';
 // Pre-req: A kubernetes cluster containing pipeline and pipelinerun resources labeled with backstage.io/kubernetes-id: developer-hub
 // Pre-req: A catalog entity with the matching backstage.io/kubernetes-id: developer-hub annotation as well as the janus-idp.io/tekton : <BACKSTAGE_ENTITY_NAME> annotation
 
-test.describe.skip('Test Tekton plugin', () => {
+test.describe('Test Tekton plugin', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let tekton: Tekton;

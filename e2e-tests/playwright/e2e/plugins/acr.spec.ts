@@ -3,7 +3,7 @@ import { UIhelper } from '../../utils/UIhelper';
 import { Common, setupBrowser } from '../../utils/Common';
 
 let page;
-test.describe.skip('Test ACR plugin', () => {
+test.describe('Test ACR plugin', () => {
   let uiHelper: UIhelper;
   let common: Common;
   const dateRegex =
