@@ -5,6 +5,7 @@ set -e
 LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
 TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TMPDIR=$(mktemp -d)
 
 cleanup() {
   echo "Cleaning up before exiting"
@@ -12,6 +13,7 @@ cleanup() {
   # helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
   # oc delete namespace ${NAME_SPACE}
   rm -rf ~/tmpbin
+  rm -rf $TMPDIR
 }
 
 trap cleanup EXIT
@@ -243,7 +245,12 @@ main() {
 
   echo "Tag name : ${TAG_NAME}"
 
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+  # There is currently now way to use helm cli to add valeus to an existing array.
+  # The following is workaround to add new env variable to upstream.backstage.extraEnvVars without overriding already existing.
+  helm show values rhdh-chart/backstage > $TMPDIR/values.yaml
+  yq eval '.upstream.backstage.extraEnvVars += [{"name": "SEGMENT_TEST_MODE", "value": "true"}]' -i $TMPDIR/values.yaml
+
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME} --values $TMPDIR/values.yaml
 
   check_backstage_running
   backstage_status=$?

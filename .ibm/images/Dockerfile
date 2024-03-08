@@ -65,15 +65,16 @@ RUN curl -fsSL https://clis.cloud.ibm.com/install/linux | sh && \
 ENV GO_VERSION 1.19
 ENV GO_SHA256 464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6
 
-# Install Go
+# Install Go and other tools used by the pipeline
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl yq && \
     curl -LO "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz" && \
     echo "${GO_SHA256} go${GO_VERSION}.linux-amd64.tar.gz" | sha256sum -c - && \
     tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
     rm go${GO_VERSION}.linux-amd64.tar.gz && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
 
 # Set environment variables to make Go work correctly
 ENV GOPATH /go
