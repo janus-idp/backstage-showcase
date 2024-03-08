@@ -3,15 +3,35 @@ import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
   private page: Page;
+  private selectors: { [key: string]: string };
 
   constructor(page: Page) {
     this.page = page;
+    this.selectors = {
+      'Analyze': 'button#analyze',  // Exemplo de seletor, ajuste conforme necessário
+      'Refresh': 'button#refresh', // Exemplo de seletor, ajuste conforme necessário
+      'Import': 'button#import',   // Exemplo de seletor, ajuste conforme necessário
+      'View Component': 'button#view-component', // Exemplo de seletor, ajuste conforme necessário
+      'Register another': 'button#register-another' // Exemplo de seletor, ajuste conforme necessário
+    };
+  }
+
+  getSelector(buttonName: string): string {
+    if (this.selectors.hasOwnProperty(buttonName)) {
+      return this.selectors[buttonName];
+    } else {
+      throw new Error(`Selector not defined for button: ${buttonName}`);
+    }
   }
 
   async verifyComponentInCatalog(kind: string, expectedRows: string[]) {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  async searchInputPlaceholder(searchText: string) {
+    await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
   async waitForHeaderTitle() {
@@ -75,6 +95,12 @@ export class UIhelper {
     const element = this.page.getByText(text, { exact: exact }).first();
     await element.scrollIntoViewIfNeeded();
     await expect(element).toBeVisible();
+  }
+
+  async isBtnVisible(text: string): Promise<boolean> {
+    await this.page.waitForLoadState('networkidle');
+    const button = this.page.locator(`button:has-text("${text}")`);
+    return button.isVisible();
   }
 
   async waitForSideBarVisible() {

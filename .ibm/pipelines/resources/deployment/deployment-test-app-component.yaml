@@ -7,7 +7,7 @@ metadata:
     app.openshift.io/vcs-ref: main
   labels:
     backstage.io/kubernetes-id: developer-hub
-    app.openshift.io/runtime: perl    
+    app.openshift.io/runtime: perl
 spec:
   replicas: 2
   selector:
@@ -22,7 +22,7 @@ spec:
       containers:
       - name: ubuntu
         image: ubuntu
-        command: 
+        command:
         - /bin/sh
         args:
         - -c

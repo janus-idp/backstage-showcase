@@ -33,8 +33,14 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'showcase',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+    },
+    {
+      name: 'showcase-rbac',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
     },
 
     // {

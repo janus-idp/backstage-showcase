@@ -9,4 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rhdh-k8s-plugin
-  namespace: janus-idp-prod
+  namespace: showcase
