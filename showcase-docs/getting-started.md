@@ -2,6 +2,57 @@
 
 There are several different methods for running the Backstage Showcase app today. We currently have support for running the application locally, using a helm chart to deploy to a cluster, and manifests for deployment using ArgoCD.
 
+## Telemetry collection
+
+This software enables telemetry data collection through the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin in its default configuration to enhance user experience while prioritizing privacy:
+
+- **Privacy-Focused Configuration**:
+
+  - IP addresses are anonymized (`maskIP: true`), recorded as `0.0.0.0`.
+  - `anonymousId` used for tracking is a hash derived from the user's username.
+
+- **Data Collection Overview**:
+  - **Events Tracked**: Page visits, clicks on links or buttons.
+  - **Common Data Points for All Events**:
+    - IP address: Zeroed out to ensure privacy.
+    - Anonymous Id: Hashed username for anonymity.
+    - User-related info: Locale, timezone, userAgent (browser and OS details).
+    - Page-related info: Title, Category, Extension name, URL, path, referrer, search parameters.
+
+This ensures a thorough understanding of user interactions with the application while maintaining user anonymity and privacy.
+
+You can check our [Telemetry data collection notice](https://developers.redhat.com/article/tool-data-collection) and [Privacy Policy](https://www.redhat.com/en/about/privacy-policy) for more information.
+
+### Disable Telemetry Using Helm Chart
+
+To turn off Segment telemetry while using the Helm chart, you need to deactivate the Segment provider plugin in your Helm `values.yaml` file by adding the following configuration:
+
+```yaml
+global:
+  dynamic:
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+        disabled: true
+```
+
+### Disable Telemetry for Local Development
+
+When running locally without using the `dynamic-plugins.default.yaml` file, the Segment plugin is not activated by default.
+However, if your configuration is based on `dynamic-plugins.default.yaml`, you can disable the Segment plugin by adding the below lines to your configuration file:
+
+```yaml
+dynamicPlugins:
+  plugins:
+    - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      disabled: true
+```
+
+Afterward, remove the Segment plugin directory by deleting `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment`
+
+### Disabling Telemetry in Continuous Integration (CI) Environments
+
+To disable telemetry while running Backstage in a CI environment, set the `SEGMENT_TEST_MODE` environment variable to `true`. This action deactivates telemetry transmissions.
+
 ## Running Locally with a basic configuration
 
 The easiest and fastest method for getting started: Backstage Showcase app, running it locally only requires a few simple steps.
