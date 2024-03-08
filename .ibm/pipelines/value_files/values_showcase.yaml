@@ -30,8 +30,6 @@ global:
                         seconds: 15
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
           disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-dynamic-plugins-info
-          disabled: false
         - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
           disabled: false
         - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
