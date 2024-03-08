@@ -28,7 +28,7 @@ RUN echo "whoami: $(whoami)" \
   # NPM does not need to be installed as it is already included with Node.
   && npm i -g yarn@latest \
   # Show where Node loads required modules from
-  && node -p 'module.paths' 
+  && node -p 'module.paths'
   # plus Electron and bundled Node versions
 
 RUN  echo  " node version:    $(node -v) \n" \
@@ -50,9 +50,9 @@ RUN curl -fsSL https://clis.cloud.ibm.com/install/linux | sh && \
 ENV GO_VERSION 1.19
 ENV GO_SHA256 464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6
 
-# Install Go
+# Install Go and other tools used by the pipeline
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl yq && \
     curl -LO "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz" && \
     echo "${GO_SHA256} go${GO_VERSION}.linux-amd64.tar.gz" | sha256sum -c - && \
     tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
@@ -74,6 +74,9 @@ RUN curl -fsSL -o /tmp/openshift-client-linux.tar.gz "https://mirror.openshift.c
 # Install rsync
 RUN apt-get update -y && \
     apt-get install -y rsync
+
+# Install yq
+RUN wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64.tar.gz -O - | tar xz && mv yq_linux_amd64 /usr/bin/yq
 
 # Set environment variables to make Go work correctly
 ENV GOPATH /go
