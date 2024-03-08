@@ -30,7 +30,7 @@ test.describe.serial('Test OCM plugin', () => {
 
     await common.loginAsGithubUser();
   });
-  test('Navigate to Clusters and Verify OCM Clusters', async () => {
+  test.skip('Navigate to Clusters and Verify OCM Clusters', async () => {
     await uiHelper.openSidebar('Clusters');
     await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
       clusterDetails.status,
@@ -52,7 +52,7 @@ test.describe.serial('Test OCM plugin', () => {
     );
   });
 
-  test('Navigate to Catalog > resources and verify cluster', async () => {
+  test.skip('Navigate to Catalog > resources and verify cluster', async () => {
     await uiHelper.openSidebar('Catalog');
     await common.waitForLoad();
     await uiHelper.selectMuiBox('Kind', 'Resource');

@@ -64,6 +64,8 @@ test.describe.serial('GitHub Happy path', () => {
       'S3 Object bucket storage',
     ]);
 
+    await uiHelper.openSidebar('Catalog');
+    await uiHelper.selectMuiBox('Kind', 'User');
     await uiHelper.searchInputPlaceholder('rhdh');
     await uiHelper.verifyRowsInTable(['rhdh-qe']);
   });
@@ -80,6 +82,7 @@ test.describe.serial('GitHub Happy path', () => {
   });
 
   test('Click login on the login popup and verify that Overview tab renders', async () => {
+    await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
     await uiHelper.clickLink('Backstage Showcase');
     await common.clickOnGHloginPopup();

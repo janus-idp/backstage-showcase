@@ -103,7 +103,7 @@ data:
               url: temp
               token: temp
     permission:
-      enabled: false
+      enabled: true
       rbac:
         policies-csv-file: './rbac/rbac-policy.csv'
         admin:
