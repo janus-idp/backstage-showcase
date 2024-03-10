@@ -84,9 +84,7 @@ export class UIhelper {
   async openSidebar(navBarText: string) {
     const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
     await navLink.waitFor({ state: 'visible' });
-    const href = navLink.getAttribute('href');
     await navLink.click();
-    await this.page.waitForURL(`**/${href}`);
   }
 
   async selectMuiBox(label: string, value: string) {
@@ -94,6 +92,8 @@ export class UIhelper {
     const optionSelector = `li[role="option"]:has-text("${value}")`;
     await this.page.waitForSelector(optionSelector);
     await this.page.click(optionSelector);
+    const regexp = RegExp(`.*filters%5B${label}%5D=${value}.*`, 'i');
+    await this.page.waitForURL(regexp);
   }
 
   async verifyRowsInTable(
@@ -104,26 +104,25 @@ export class UIhelper {
 
     let hasNextPage = true;
 
-    // Loop through pages as long as a "Next" link is present
     while (hasNextPage) {
       for (const rowText of rowTexts) {
         const rowLocator = this.page
           .locator(`tr>td`)
           .getByText(rowText, { exact: exact })
           .first();
-        await rowLocator.waitFor({ state: 'visible' });
-        await rowLocator.scrollIntoViewIfNeeded();
+
         if (rowLocator.isVisible()) {
           foundTexts.add(rowText);
         }
       }
 
-      const nextPageButton = this.page.getByLabel('Next Page').nth(0);
+      const nextPageButton = this.page.getByLabel('Next Page').first();
 
       if (await nextPageButton.isDisabled()) {
         hasNextPage = false;
       } else {
         await nextPageButton.click();
+        await this.page.waitForResponse('**/api/catalog/entities/by-query**');
       }
     }
 
@@ -132,12 +131,10 @@ export class UIhelper {
     });
 
     // Go to the first page
-    let previousPageButton = this.page.getByLabel('Previous Page').nth(0);
-    while (
-      (previousPageButton = this.page.getByLabel('Previous Page').nth(0)) &&
-      (await previousPageButton.isVisible())
-    ) {
+    const previousPageButton = this.page.getByLabel('Previous Page').first();
+    while (await previousPageButton.isEnabled()) {
       await previousPageButton.click();
+      await this.page.waitForResponse('**/api/catalog/entities/by-query**');
     }
   }
 
