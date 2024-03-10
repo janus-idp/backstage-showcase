@@ -12,7 +12,7 @@ save_logs() {
 
     ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
 
-    tar -czvf /tmp/${LOGFILE}-report.tar.gz e2e-tests/playwright-report/
+    tar -czvf /tmp/${LOGFILE}-report.tar.gz playwright-report/
 
     CRN=$(ibmcloud resource service-instance ${IBM_COS} --output json | jq -r .[0].guid)
     ibmcloud cos config crn --crn "${CRN}"
@@ -20,7 +20,7 @@ save_logs() {
     ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report.tar.gz" --file "/tmp/${LOGFILE}-report.tar.gz" --content-type "application/gzip"
 
     # Loop through each file in the e2e-tests/playwright-report directory
-    find e2e-tests/playwright-report -type f | while read FILE; do
+    find playwright-report -type f | while read FILE; do
       # Extract the file path relative to the directory to maintain the structure in COS
       RELATIVE_PATH=${FILE#$DIRECTORY_TO_UPLOAD}
       # Upload the file
