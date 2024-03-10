@@ -98,14 +98,28 @@ export class UIhelper {
     rowTexts: string[] | RegExp[],
     exact: boolean = true,
   ) {
-    for (const rowText of rowTexts) {
-      const rowLocator = this.page
-        .locator(`tr>td`)
-        .getByText(rowText, { exact: exact })
-        .first();
-      await rowLocator.waitFor({ state: 'visible' });
-      await rowLocator.scrollIntoViewIfNeeded();
-      await expect(rowLocator).toBeVisible();
+    let hasNextPage = true;
+
+    while (hasNextPage) {
+      for (const rowText of rowTexts) {
+        const rowLocator = this.page
+          .locator(`tr>td`)
+          .getByText(rowText, { exact: exact })
+          .first();
+        await rowLocator.waitFor({ state: 'visible' });
+        await rowLocator.scrollIntoViewIfNeeded();
+        await expect(rowLocator).toBeVisible();
+      }
+
+      // Pagination Logic
+      const nextPageButton = this.page.getByLabel('Next Page').nth(1);
+      if (await nextPageButton.isDisabled()) {
+        hasNextPage = false;
+      } else {
+        await nextPageButton.click();
+        // Wait for the new page to load (adjust as needed)
+        await this.page.waitForNavigation();
+      }
     }
   }
 
