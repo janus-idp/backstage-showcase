@@ -24,7 +24,7 @@ save_logs() {
       # Extract the file path relative to the directory to maintain the structure in COS
       RELATIVE_PATH=${FILE#$DIRECTORY_TO_UPLOAD}
       # Upload the file
-      ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report}/${RELATIVE_PATH}" --file "${FILE}"
+      ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report/${RELATIVE_PATH}" --file "${FILE}"
     done
 
 
@@ -38,8 +38,8 @@ save_logs() {
     cat <<EOF | pr-commenter -key-from-env-var ROBOT_KEY -application-id=${GITHUB_APP_PR_COMMENTER_ID} -pr-comment=${GIT_PR_NUMBER} -repository=${GITHUB_REPOSITORY_NAME} -org=${GITHUB_ORG_NAME}
 ${NAME} on commit ${GIT_COMMIT} finished **${STATUS}**.
 View [test log](${BASE_URL}/${LOGFILE}.html)
-Download [Playwright report](${BASE_URL}/${LOGFILE}-report.tar.gz)
 View [Playwright report](${BASE_URL}/${LOGFILE}-report/)
+Download [Playwright report](${BASE_URL}/${LOGFILE}-report.tar.gz)
 EOF
 }
 
