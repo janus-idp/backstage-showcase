@@ -11,7 +11,7 @@ save_logs() {
     RESULT="$3"
 
     ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
-
+    # Create a tarball of the playwright-report directory
     tar -czvf /tmp/${LOGFILE}-report.tar.gz playwright-report/
 
     CRN=$(ibmcloud resource service-instance ${IBM_COS} --output json | jq -r .[0].guid)
