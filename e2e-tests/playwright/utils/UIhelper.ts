@@ -84,7 +84,9 @@ export class UIhelper {
   async openSidebar(navBarText: string) {
     const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
     await navLink.waitFor({ state: 'visible' });
+    const href = navLink.getAttribute('href');
     await navLink.click();
+    await this.page.waitForURL(`**/${href}`);
   }
 
   async selectMuiBox(label: string, value: string) {
@@ -98,8 +100,11 @@ export class UIhelper {
     rowTexts: string[] | RegExp[],
     exact: boolean = true,
   ) {
+    const foundTexts = new Set();
+
     let hasNextPage = true;
 
+    // Loop through pages as long as a "Next" link is present
     while (hasNextPage) {
       for (const rowText of rowTexts) {
         const rowLocator = this.page
@@ -108,18 +113,31 @@ export class UIhelper {
           .first();
         await rowLocator.waitFor({ state: 'visible' });
         await rowLocator.scrollIntoViewIfNeeded();
-        await expect(rowLocator).toBeVisible();
+        if (rowLocator.isVisible()) {
+          foundTexts.add(rowText);
+        }
       }
 
-      // Pagination Logic
-      const nextPageButton = this.page.getByLabel('Next Page').nth(1);
+      const nextPageButton = this.page.getByLabel('Next Page').nth(0);
+
       if (await nextPageButton.isDisabled()) {
         hasNextPage = false;
       } else {
         await nextPageButton.click();
-        // Wait for the new page to load (adjust as needed)
-        await this.page.waitForNavigation();
       }
+    }
+
+    rowTexts.forEach(item => {
+      expect(foundTexts.has(item)).toBeTruthy();
+    });
+
+    // Go to the first page
+    let previousPageButton = this.page.getByLabel('Previous Page').nth(0);
+    while (
+      (previousPageButton = this.page.getByLabel('Previous Page').nth(0)) &&
+      (await previousPageButton.isVisible())
+    ) {
+      await previousPageButton.click();
     }
   }
 
