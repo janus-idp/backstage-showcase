@@ -50,6 +50,8 @@ export class Common {
     await this.page.goto('/');
     await this.uiHelper.clickButton('Sign In');
     await this.checkAndReauthorizeGithubApp();
+    // TODO: Remove this once the issue is fixed
+    await this.page.reload();
     await this.uiHelper.waitForSideBarVisible();
   }
 
