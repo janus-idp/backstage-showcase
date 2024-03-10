@@ -24,7 +24,7 @@ save_logs() {
       # Extract the file path relative to the directory to maintain the structure in COS
       RELATIVE_PATH=${FILE#$DIRECTORY_TO_UPLOAD}
       # Upload the file
-      echo ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report}/${RELATIVE_PATH}" --file "${FILE}"
+      ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report}/${RELATIVE_PATH}" --file "${FILE}"
     done
 
 
