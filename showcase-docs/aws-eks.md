@@ -330,6 +330,207 @@ $ kubectl --namespace=prometheus port-forward deploy/prometheus-server 9090
 
 ![Backstage Metrics from the Prometheus Console](./images/aws-eks-prometheus-console.png)
 
-<!-- ## Using AWS Auth Provider
+## Using AWS Cognito as Authentication Provider
 
-TODO -->
+Amazon Cognito is the underlying AWS service recommended for adding an authentication layer to web applications like Backstage. Your Backstage users can sign in either directly through a user pool, or federate through a third-party identity provider.
+
+Amazon Cognito is not part of the core authentication providers provided by Backstage, but we can use it via the generic OpenID Connect (OIDC) provider.
+
+**Prerequisites**
+
+- Make sure you have a User Pool (or create a new one). See [Amazon Cognito user pools](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html?icmpid=docs_cognito_console_help_panel).
+  - Keep track of the AWS region where the user pool is created
+  - Keep track of the user pool ID
+- In your user pool, create an App Client for integrating the hosted UI. See [Setting up the hosted UI with the Amazon Cognito console](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-app-integration.html#cognito-user-pools-create-an-app-integration).
+  - Under **Allowed callback URL(s)**, add `https://<app_dns>/api/auth/oidc/handler/frame`
+    - Make sure to replace `<app_dns>` with the URL to your Showcase application, e.g.: `my.backstage.example.com`
+  - Under **Allowed sign-out URL(s)**, add `https://<app_dns>`
+    - Make sure to replace `<app_dns>` with the URL to your Showcase application, e.g.: `my.backstage.example.com`
+  - Under **OAuth 2.0 grant types**, select **Authorization code grant** to return an authorization code
+  - Under **OpenID Connect scopes**, select at least the following scopes:
+    - OpenID
+    - Profile
+    - Email
+
+![AWS Cognito App Client Configuration](./images/aws-auth-cognito-app-client-config.png)
+
+### Configuring the application
+
+#### Helm deployment
+
+1. Edit or create your custom `app-config-backstage` ConfigMap:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-backstage
+data:
+  'app-config-backstage.yaml': |
+
+    signInPage: oidc
+    auth:
+      # Production to disable guest user login
+      environment: production
+      # Providing an auth.session.secret is needed because the oidc provider requires session support.
+      session:
+        secret: ${AUTH_SESSION_SECRET}
+      providers:
+        oidc:
+          production:
+            # See https://github.com/backstage/backstage/blob/master/plugins/auth-backend-module-oidc-provider/config.d.ts
+            clientId: ${AWS_COGNITO_APP_CLIENT_ID}
+            clientSecret: ${AWS_COGNITO_APP_CLIENT_SECRET}
+            metadataUrl: ${AWS_COGNITO_APP_METADATA_URL}
+            callbackUrl: ${AWS_COGNITO_APP_CALLBACK_URL}
+            # Minimal set of scopes needed. Feel free to add more if needed.
+            scope: 'openid profile email'
+
+            # Note that by default, this provider will use the 'none' prompt which assumes that your are already logged on in the IDP.
+            # You should set prompt to:
+            # - auto: will let the IDP decide if you need to log on or if you can skip login when you have an active SSO session
+            # - login: will force the IDP to always present a login form to the user
+            prompt: auto
+```
+
+2. Edit or create your custom `secrets-backstage` Secret with the following template. Make sure to replace the values accordingly.
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secrets-backstage
+stringData:
+  # --- Truncated ---
+  # TODO: Change auth session secret.
+  AUTH_SESSION_SECRET: 'my super auth session secret - change me!!!'
+
+  # TODO: user pool app client ID
+  AWS_COGNITO_APP_CLIENT_ID: 'my-aws-cognito-app-client-id'
+
+  # TODO: user pool app client Secret
+  AWS_COGNITO_APP_CLIENT_SECRET: 'my-aws-cognito-app-client-secret'
+
+  # TODO: Replace region and user pool ID
+  AWS_COGNITO_APP_METADATA_URL: 'https://cognito-idp.[region].amazonaws.com/[userPoolId]/.well-known/openid-configuration'
+
+  # TODO: Replace <app_dns>
+  AWS_COGNITO_APP_CALLBACK_URL: 'https://[app_dns]/api/auth/oidc/handler/frame'
+```
+
+3. Reference both the ConfigMap and Secret resources in your `values.yaml` file by setting the `upstream.backstage.extraAppConfig` and `upstream.backstage.extraEnvVarsSecrets` fields, like so:
+
+```yaml
+# --- Truncated ---
+upstream:
+  backstage:
+    podSecurityContext:
+      fsGroup: 2000
+    extraAppConfig:
+      - filename: app-config-backstage.yaml
+         configMapRef: app-config-backstage
+    extraEnvVarsSecrets:
+      - secrets-backstage
+# --- Truncated ---
+```
+
+4. Upgrade your Helm release.
+
+#### Operator-backed deployment
+
+1. Add the following to your `app-config-backstage` ConfigMap:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config-backstage
+data:
+  'app-config-backstage.yaml': |
+    # --- Truncated ---
+
+    signInPage: oidc
+    auth:
+      # Production to disable guest user login
+      environment: production
+      # Providing an auth.session.secret is needed because the oidc provider requires session support.
+      session:
+        secret: ${AUTH_SESSION_SECRET}
+      providers:
+        oidc:
+          production:
+            # See https://github.com/backstage/backstage/blob/master/plugins/auth-backend-module-oidc-provider/config.d.ts
+            clientId: ${AWS_COGNITO_APP_CLIENT_ID}
+            clientSecret: ${AWS_COGNITO_APP_CLIENT_SECRET}
+            metadataUrl: ${AWS_COGNITO_APP_METADATA_URL}
+            callbackUrl: ${AWS_COGNITO_APP_CALLBACK_URL}
+            # Minimal set of scopes needed. Feel free to add more if needed.
+            scope: 'openid profile email'
+
+            # Note that by default, this provider will use the 'none' prompt which assumes that your are already logged on in the IDP.
+            # You should set prompt to:
+            # - auto: will let the IDP decide if you need to log on or if you can skip login when you have an active SSO session
+            # - login: will force the IDP to always present a login form to the user
+            prompt: auto
+```
+
+2. Add the following to your `secrets-backstage` Secret. Replace the values accordingly.
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secrets-backstage
+stringData:
+  # --- Truncated ---
+
+  # TODO: Change auth session secret.
+  AUTH_SESSION_SECRET: 'my super auth session secret - change me!!!'
+
+  # TODO: user pool app client ID
+  AWS_COGNITO_APP_CLIENT_ID: 'my-aws-cognito-app-client-id'
+
+  # TODO: user pool app client Secret
+  AWS_COGNITO_APP_CLIENT_SECRET: 'my-aws-cognito-app-client-secret'
+
+  # TODO: Replace region and user pool ID
+  AWS_COGNITO_APP_METADATA_URL: 'https://cognito-idp.[region].amazonaws.com/[userPoolId]/.well-known/openid-configuration'
+
+  # TODO: Replace <app_dns>
+  AWS_COGNITO_APP_CALLBACK_URL: 'https://[app_dns]/api/auth/oidc/handler/frame'
+```
+
+3. Make sure your Custom Resource references both the `app-config-backstage` ConfigMap and `secrets-backstage` Secret, like so:
+
+```yaml
+apiVersion: rhdh.redhat.com/v1alpha1
+kind: Backstage
+metadata:
+  # TODO: this the name of your Showcase instance
+  name: my-backstage
+spec:
+  application:
+    # --- Truncated ---
+    appConfig:
+      configMaps:
+        - name: 'app-config-backstage'
+    extraEnvs:
+      secrets:
+        - name: 'secrets-backstage'
+```
+
+4. If you already have an running instance of Backstage backed by the Custom Resource above and didn't edit the Custom Resource, please manually delete the Backstage Deployment to have it recreated by the operator. Run the following command (replace `<CR_NAME>` with the name of your Custom Resource):
+
+```sh
+$ kubectl delete deployment -l app.kubernetes.io/instance=<CR_NAME>
+```
+
+### Verification
+
+Navigate to your Showcase web app URL and you should be able to sign in using OIDC, which will prompt you to authenticate through the configured AWS Cognito user pool.
+
+![Showcase Login page with AWS auth](./images/login_page_with_aws_auth.png)
+
+Once logged in, click on **Settings** to confirm the user details:
+
+![User details after auth via AWS](./images/settings_page_after_aws_auth.png)
