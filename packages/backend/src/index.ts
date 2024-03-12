@@ -16,6 +16,7 @@ import { metricsHandler } from './metrics';
 import { statusCheckHandler } from '@backstage/backend-common';
 import { RequestHandler } from 'express';
 import * as path from 'path';
+import { CommonJSModuleLoader } from './loader';
 
 const backend = createBackend();
 
@@ -43,7 +44,12 @@ backend.add(
   }),
 );
 backend.add(dynamicPluginsFeatureDiscoveryServiceFactory()); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
-backend.add(dynamicPluginsServiceFactory());
+backend.add(
+  dynamicPluginsServiceFactory({
+    moduleLoader: logger => new CommonJSModuleLoader(logger),
+  }),
+);
+
 backend.add(
   dynamicPluginsSchemasServiceFactory({
     schemaLocator(pluginPackage) {
