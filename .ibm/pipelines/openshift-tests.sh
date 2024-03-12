@@ -257,9 +257,7 @@ main() {
 
   echo "Tag name : ${TAG_NAME}"
 
-
-
-  # There is currently now way to use helm cli to add values to an existing array.
+  # There is currently no way to use helm cli to add values to an existing array.
   # The following is workaround to add new env variable to upstream.backstage.extraEnvVars without overriding already existing.
   helm show values rhdh-chart/backstage > $TMPDIR/values.yaml
   yq eval '.upstream.backstage.extraEnvVars += [{"name": "SEGMENT_TEST_MODE", "value": "true"}]' -i $TMPDIR/values.yaml
