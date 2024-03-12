@@ -11,11 +11,23 @@ save_logs() {
     RESULT="$3"
 
     ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
-    
+    # Create a tarball of the playwright-report directory
+    tar -czvf /tmp/${LOGFILE}-report.tar.gz playwright-report/
+
     CRN=$(ibmcloud resource service-instance ${IBM_COS} --output json | jq -r .[0].guid)
     ibmcloud cos config crn --crn "${CRN}"
     ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}.html" --file "/tmp/${LOGFILE}.html" --content-type "text/html; charset=UTF-8"
-    
+    ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report.tar.gz" --file "/tmp/${LOGFILE}-report.tar.gz" --content-type "application/gzip"
+
+    # Loop through each file in the e2e-tests/playwright-report directory
+    find playwright-report -type f | while read FILE; do
+      # Extract the file path relative to the directory to maintain the structure in COS
+      RELATIVE_PATH=${FILE#$DIRECTORY_TO_UPLOAD}
+      # Upload the file
+      ibmcloud cos upload --bucket "${IBM_BUCKET}" --key "${LOGFILE}-report/${RELATIVE_PATH}" --file "${FILE}"
+    done
+
+
     BASE_URL="https://s3.${IBM_REGION}.cloud-object-storage.appdomain.cloud/${IBM_BUCKET}"
     if [[ $RESULT == "0" ]]; then
         STATUS="successfully"
@@ -26,6 +38,8 @@ save_logs() {
     cat <<EOF | pr-commenter -key-from-env-var ROBOT_KEY -application-id=${GITHUB_APP_PR_COMMENTER_ID} -pr-comment=${GIT_PR_NUMBER} -repository=${GITHUB_REPOSITORY_NAME} -org=${GITHUB_ORG_NAME}
 ${NAME} on commit ${GIT_COMMIT} finished **${STATUS}**.
 View [test log](${BASE_URL}/${LOGFILE}.html)
+View [Playwright report](${BASE_URL}/${LOGFILE}-report/playwright-report/index.html)
+Download [Playwright report](${BASE_URL}/${LOGFILE}-report.tar.gz)
 EOF
 }
 
