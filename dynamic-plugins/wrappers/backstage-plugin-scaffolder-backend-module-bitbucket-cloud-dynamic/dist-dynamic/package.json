@@ -33,7 +33,6 @@
     "node-fetch": "^2.6.7",
     "yaml": "^2.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],

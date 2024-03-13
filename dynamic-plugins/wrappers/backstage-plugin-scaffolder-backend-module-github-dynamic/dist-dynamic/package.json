@@ -36,7 +36,6 @@
     "winston": "^3.2.1",
     "yaml": "^2.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
