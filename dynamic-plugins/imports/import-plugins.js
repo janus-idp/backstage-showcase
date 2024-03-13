@@ -29,26 +29,29 @@ for (const dep in packageJson.peerDependencies) {
   }
 
   console.log(`Importing: ${dep}@${packageJson.peerDependencies[dep]}`);
-
-  // BEGIN-NOSCAN
-  // This is a dev tool. We don't care about security here.
-  const archive = exec(`npm pack ${dep}@${packageJson.peerDependencies[dep]}`, {
-    stdio: ['pipe', 'pipe', 'ignore'],
-  })
-    .toString()
-    .trim();
-  // END-NOSCAN
-
   const directory = dep.replace(/^@/, '').replace(/\//, '-');
-  if (cleanMode) {
-    console.log(
-      `Deleting previous package directory for: ${dep}@${packageJson.peerDependencies[dep]}`,
-    );
-    fs.rmSync(directory, { recursive: true, force: true });
-  }
-  fs.mkdirSync(directory, { recursive: true });
 
   if (!installOnly) {
+    // BEGIN-NOSCAN
+    // This is a dev tool. We don't care about security here.
+    const archive = exec(
+      `npm pack ${dep}@${packageJson.peerDependencies[dep]}`,
+      {
+        stdio: ['pipe', 'pipe', 'ignore'],
+      },
+    )
+      .toString()
+      .trim();
+    // END-NOSCAN
+
+    if (cleanMode) {
+      console.log(
+        `Deleting previous package directory for: ${dep}@${packageJson.peerDependencies[dep]}`,
+      );
+      fs.rmSync(directory, { recursive: true, force: true });
+    }
+    fs.mkdirSync(directory, { recursive: true });
+
     console.log(
       `Extracting: ${dep}@${packageJson.peerDependencies[dep]} to ${directory}`,
     );
@@ -63,14 +66,22 @@ for (const dep in packageJson.peerDependencies) {
       strip: 1,
       sync: true,
     });
+    // END-NOSCAN
+
+    fs.rmSync(archive);
   } else {
+    if (cleanMode) {
+      console.log(
+        `Deleting previous package directory for: ${dep}@${packageJson.peerDependencies[dep]}`,
+      );
+      fs.rmSync(directory, { recursive: true, force: true });
+    }
+    fs.mkdirSync(directory, { recursive: true });
+
     console.log(
       `Skipping extraction of : ${dep}@${packageJson.peerDependencies[dep]} since --install-only was passed`,
     );
   }
-
-  // END-NOSCAN
-  fs.rmSync(archive);
 
   const pkgJson = require(
     fs.realpathSync(path.join(directory, 'package.json')),
@@ -104,7 +115,7 @@ for (const dep in packageJson.peerDependencies) {
 
       // BEGIN-NOSCAN
       // This is a dev tool. We assume the right yarn is on the PATH.
-      exec('yarn install --production --frozen-lockfile', {
+      exec('yarn workspaces focus --production', {
         cwd: distDynamicDir,
       });
       // END-NOSCAN
