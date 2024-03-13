@@ -4,3 +4,5 @@ coverage
 .vscode
 *.yaml
 .yarn
+packages/app/src/build-metadata.json
+scripts/update-backstage.mjs
