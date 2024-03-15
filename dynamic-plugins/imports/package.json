@@ -25,7 +25,7 @@
     "@janus-idp/backstage-plugin-keycloak-backend": "1.8.5",
     "@janus-idp/backstage-plugin-nexus-repository-manager": "1.4.28",
     "@janus-idp/backstage-plugin-ocm": "3.7.5",
-    "@janus-idp/backstage-plugin-ocm-backend": "3.5.6",
+    "@janus-idp/backstage-plugin-ocm-backend": "3.5.7",
     "@janus-idp/backstage-plugin-quay": "1.5.9",
     "@janus-idp/backstage-plugin-rbac": "1.15.3",
     "@janus-idp/backstage-plugin-tekton": "3.5.10",
