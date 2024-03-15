@@ -119,7 +119,7 @@ describe('oidcAuthenticator', () => {
               given_name: 'Alice',
               family_name: 'Adams',
               email: 'alice@test.com',
-              picture: 'http://testPictureUrl/photo.jpg',
+              picture: 'http://testPictureUrl/photo.jpg', // NOSONAR
             }),
           ),
       ),
@@ -330,7 +330,7 @@ describe('oidcAuthenticator', () => {
         fullProfile: {
           userinfo: {
             email: 'alice@test.com',
-            picture: 'http://testPictureUrl/photo.jpg',
+            picture: 'http://testPictureUrl/photo.jpg', // NOSONAR
             name: 'Alice Adams',
           },
         },

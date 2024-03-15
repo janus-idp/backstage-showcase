@@ -127,7 +127,7 @@ describe('authModuleOidcProvider', () => {
               given_name: 'Alice',
               family_name: 'Adams',
               email: 'alice@test.com',
-              picture: 'http://testPictureUrl/photo.jpg',
+              picture: 'http://testPictureUrl/photo.jpg', // NOSONAR
             }),
           ),
       ),
@@ -200,7 +200,7 @@ describe('authModuleOidcProvider', () => {
 
     expect(decodeOAuthState(startUrl.searchParams.get('state')!)).toEqual({
       env: 'development',
-      nonce: decodeURIComponent(nonceCookie.value),
+      nonce: decodeURIComponent(nonceCookie!.value),
     });
   });
 
