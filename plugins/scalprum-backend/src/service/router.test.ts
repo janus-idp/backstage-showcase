@@ -8,21 +8,21 @@ import {
   ScannedPluginManifest,
   ScannedPluginPackage,
 } from '@backstage/backend-dynamic-feature-service';
-import mockFs from 'mock-fs';
-import { randomUUID } from 'crypto';
+import { createMockDirectory } from '@backstage/backend-test-utils';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 describe('createRouter', () => {
   let app: express.Express;
   let router: Router;
+  const mockDir = createMockDirectory();
 
   beforeEach(() => {
     app = express();
+    mockDir.clear();
   });
 
   afterEach(() => {
     jest.resetAllMocks();
-    mockFs.restore();
     app.delete('scalprum');
   });
 
@@ -55,16 +55,12 @@ describe('createRouter', () => {
         },
       },
       pluginExternalBaseURL: 'http://localhost:3000',
-      distScalprumDir: mockFs.directory({
-        items: {
-          'plugin-manifest.json': mockFs.file({
-            content: JSON.stringify({
-              name: 'scalprum-plugin',
-              anotherField: 'anotherValue',
-            }),
-          }),
-        },
-      }),
+      distScalprumDir: {
+        'plugin-manifest.json': JSON.stringify({
+          name: 'scalprum-plugin',
+          anotherField: 'anotherValue',
+        }),
+      },
       testedPluginsURL: '/scalprum/plugins',
       expectedPluginsStatusCode: 200,
       expectedPluginsBody: {
@@ -115,7 +111,7 @@ describe('createRouter', () => {
         },
       },
       pluginExternalBaseURL: 'http://localhost:3000',
-      distScalprumDir: mockFs.directory({}),
+      distScalprumDir: {},
       testedPluginsURL: '/scalprum/plugins',
       expectedPluginsStatusCode: 200,
       expectedPluginsBody: {},
@@ -124,9 +120,7 @@ describe('createRouter', () => {
     },
   ])('$name', async (tc: TestCase): Promise<void> => {
     const plugin: ScannedPluginPackage = {
-      location: url.pathToFileURL(
-        path.resolve(`/node_modules/jest-tests/${randomUUID()}`),
-      ),
+      location: url.pathToFileURL(path.join(mockDir.path)),
       manifest: tc.packageManifest,
     };
 
@@ -138,7 +132,7 @@ describe('createRouter', () => {
       ] = tc.distScalprumDir;
     }
 
-    mockFs(mockedFiles);
+    mockDir.setContent(mockedFiles);
 
     const warn = jest.fn();
     const logger: LoggerService = {
