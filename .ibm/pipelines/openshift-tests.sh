@@ -70,6 +70,13 @@ install_helm() {
   fi
 }
 
+uninstall_helmchart() {
+  if helm list -n ${NAME_SPACE} | grep -q ${RELEASE_NAME}; then
+    echo "Chart already exists. Removing it before install."
+    helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
+  fi
+}
+
 configure_namespace() {
   if oc get namespace ${NAME_SPACE} >/dev/null 2>&1; then
     echo "Namespace ${NAME_SPACE} already exists! refreshing namespace"
@@ -237,6 +244,8 @@ main() {
   configure_namespace
   installPipelinesOperator $DIR
   install_helm
+  uninstall_helmchart
+
   cd $DIR
   apply_yaml_files $DIR
   add_helm_repos
