@@ -8,17 +8,15 @@ import {
   SidebarSpace,
 } from '@backstage/core-components';
 import { SidebarSearchModal } from '@backstage/plugin-search';
-import {
-  Settings as SidebarSettings,
-  UserSettingsSignInAvatar,
-} from '@backstage/plugin-user-settings';
+import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import AppsIcon from '@mui/icons-material/Apps';
-import ExtensionIcon from '@mui/icons-material/Extension';
-import HomeIcon from '@mui/icons-material/Home';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MuiMenuIcon from '@mui/icons-material/Menu';
-import SchoolIcon from '@mui/icons-material/School';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
@@ -66,19 +64,23 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
-          <SideBarItemWrapper icon={HomeIcon as any} to="/" text="Home" />
           <SideBarItemWrapper
-            icon={AppsIcon as IconComponent}
+            icon={HomeOutlinedIcon as any}
+            to="/"
+            text="Home"
+          />
+          <SideBarItemWrapper
+            icon={CategoryOutlinedIcon as IconComponent}
             to="catalog"
             text="Catalog"
           />
           <SideBarItemWrapper
-            icon={ExtensionIcon as IconComponent}
+            icon={ExtensionOutlinedIcon as IconComponent}
             to="api-docs"
             text="APIs"
           />
           <SideBarItemWrapper
-            icon={SchoolIcon as IconComponent}
+            icon={SchoolOutlinedIcon as IconComponent}
             to="learning-paths"
             text="Learning Paths"
           />
@@ -117,12 +119,8 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         ) : (
           <></>
         )}
-        <SidebarGroup
-          label="Settings"
-          icon={<UserSettingsSignInAvatar />}
-          to="/settings"
-        >
-          <SidebarSettings />
+        <SidebarGroup label="Settings" to="/settings">
+          <SidebarSettings icon={AccountCircleOutlinedIcon as IconComponent} />
         </SidebarGroup>
       </Sidebar>
       {children}
