@@ -5836,10 +5836,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@janus-idp/backstage-plugin-rbac-backend@2.3.4":
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-2.3.4.tgz#6843e60bc9265597fbc5986903758cd0e0623bda"
-  integrity sha512-hfjq+v0xLI2pZi2HBWdHZ9eo1bdDCU38PQ3T9qrKjZL6SB1frwRw+VCDoXOhwaALf1KIRhExucepEeckuzEHjw==
+"@janus-idp/backstage-plugin-rbac-backend@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-2.4.0.tgz#16fd70b12dd94cb47b6c72259f5e4c689a816c6c"
+  integrity sha512-VICamB3Oo7vQDwCzQzg0Z06MPxYHcrcbiRoZyXvwXNMXMo3RuCfvhQwsyxWyfeYSh8oPM3U2tlz74jEMOVKYnA==
   dependencies:
     "@backstage/backend-common" "^0.21.3"
     "@backstage/backend-plugin-api" "^0.6.13"
