@@ -21,7 +21,7 @@ This software enables telemetry data collection through the [`@janus-idp/backsta
 
 This ensures a thorough understanding of user interactions with the application while maintaining user anonymity and privacy.
 
-You can check our [Telemetry data collection notice](https://developers.redhat.com/article/tool-data-collection) and [Privacy Policy](https://www.redhat.com/en/about/privacy-policy) for more information.
+The data will be used only for internal analysis and to improve the product, not for sales and marketing purposes.
 
 ### Disable Telemetry Using Helm Chart
 
