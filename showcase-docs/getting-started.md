@@ -123,34 +123,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Enabling Authentication in Showcase
 
-     - To enable authentication in the Showcase, add the [respective config](https://backstage.io/docs/auth/) in your `app-config`. The Showcase supports the following providers:
-
-       - Auth0 - `auth0`
-       - Atlassian - `atlassian`
-       - Azure - `microsoft`
-       - Azure Easy Auth - `azure-easyauth`
-       - Bitbucket - `bitbucket`
-       - Bitbucket Server - `bitbucketServer`
-       - Cloudflare Access - `cfaccess`
-       - GitHub - `github`
-       - GitLab - `gitlab`
-       - Google - `google`
-       - Google IAP - `gcp-iap`
-       - OIDC - `oidc`
-       - Okta - `okta`
-       - OAuth 2 Custom Proxy - `oauth2Proxy`
-       - OneLogin - `onelogin`
-       - SAML - `saml`
-
-     - Add the corresponding authentication provider key as the value to `signInPage` in your `app-config`.
-
-       e.g.
-
-       ```yaml
-       signInPage: oidc
-       ```
-
-     - To disable the guest login set `auth.environment` to `production`.
+     - Refer to the [authentication documentation](./auth.md) for the available auth providers and the steps to configure them.
 
    - Setup the RBAC plugin
 
