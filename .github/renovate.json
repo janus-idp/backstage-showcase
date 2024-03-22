@@ -33,5 +33,6 @@
       "dependencyDashboardApproval": true
     }
   ],
-  "ignorePaths": ["**/dist-dynamic/**"]
+  "ignorePaths": ["**/dist-dynamic/**"],
+  "ignoreDeps": ["@roadiehq/backstage-plugin-argo-cd"]
 }
