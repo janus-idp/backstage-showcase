@@ -7505,7 +7505,7 @@
     react-double-scrollbar "0.0.15"
     uuid "^3.4.0"
 
-"@material-ui/core@^4.12.2", "@material-ui/core@^4.12.4", "@material-ui/core@^4.9.13":
+"@material-ui/core@^4.11.0", "@material-ui/core@^4.12.2", "@material-ui/core@^4.12.4", "@material-ui/core@^4.9.13":
   version "4.12.4"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.12.4.tgz#4ac17488e8fcaf55eb6a7f5efb2a131e10138a73"
   integrity sha512-tr7xekNlM9LjA6pagJmL8QCgZXaubWUwkJnoYcMKd4gw/t4XiyvnTkjdGrUVicyB2BsdaAv1tvow45bPM4sSwQ==
@@ -9110,17 +9110,17 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@roadiehq/backstage-plugin-argo-cd@2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-argo-cd/-/backstage-plugin-argo-cd-2.6.2.tgz#322676e55b5aa79cd2b58d5fe1191fe3ee767aa8"
-  integrity sha512-vxkP95gclmvABnAg5Ix565G21J4G75kH1Wv8A7/hyKHwS/k3B/sop5O6Nx/3Ezb1U35hxE6jeAOwqRzewnwBQw==
+"@roadiehq/backstage-plugin-argo-cd@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-argo-cd/-/backstage-plugin-argo-cd-2.4.1.tgz#5b874e690bb9f37e2462433f93151821ce33b1f6"
+  integrity sha512-9S8+DXP01/2pPCaK9+tvdBl5+5MquPisR1KptFh+sr0088VtfPZqUv7gAT/WykzgDca/oLXhMh9dLXJWd0S7Nw==
   dependencies:
-    "@backstage/catalog-model" "^1.4.4"
-    "@backstage/core-components" "^0.14.0"
-    "@backstage/core-plugin-api" "^1.9.0"
-    "@backstage/plugin-catalog-react" "^1.10.0"
-    "@backstage/theme" "^0.5.1"
-    "@material-ui/core" "^4.12.2"
+    "@backstage/catalog-model" "^1.4.3"
+    "@backstage/core-components" "^0.13.8"
+    "@backstage/core-plugin-api" "^1.8.0"
+    "@backstage/plugin-catalog-react" "^1.9.1"
+    "@backstage/theme" "^0.4.4"
+    "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/lab" "4.0.0-alpha.45"
     cross-fetch "^3.1.4"
