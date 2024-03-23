@@ -1,6 +1,6 @@
 import { UnifiedThemeOptions } from '@backstage/theme';
-import { defaultThemePalette } from './defaultThemePalette';
 import { ThemeColors } from '../types/types';
+import { defaultThemePalette } from './defaultThemePalette';
 
 const redhatFont = `@font-face {
   font-family: 'Red Hat Font';
@@ -18,6 +18,7 @@ export const components = (
 ): UnifiedThemeOptions['components'] => {
   const themePalette = defaultThemePalette(mode);
   return {
+    // @ts-expect-error - BackstageHeaderTabs is a custom component
     BackstageHeaderTabs: {
       styleOverrides: {
         tabsWrapper: {
