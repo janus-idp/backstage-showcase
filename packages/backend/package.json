@@ -56,7 +56,7 @@
     "express": "4.18.2",
     "express-prom-bundle": "6.6.0",
     "express-promise-router": "4.1.1",
-    "express-rate-limit": "7.1.5",
+    "express-rate-limit": "7.2.0",
     "fs-extra": "11.2.0",
     "isolated-vm": "4.6.0",
     "lodash": "4.17.21",
