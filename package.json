@@ -39,7 +39,7 @@
     "node-gyp": "9.4.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2",
+    "@backstage/cli": "0.26.0",
     "@smithy/util-utf8": "2.1.1",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
