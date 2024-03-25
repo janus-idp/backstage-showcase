@@ -30,7 +30,8 @@
     "@backstage/backend-plugin-api": "0.6.13",
     "@backstage/backend-dynamic-feature-service": "0.2.3",
     "@backstage/plugin-techdocs-backend": "1.9.6",
-    "@backstage/plugin-search-backend-module-techdocs": "0.1.17"
+    "@backstage/plugin-search-backend-module-techdocs": "0.1.17",
+    "@backstage/plugin-techdocs-node": "1.11.5"
   },
   "devDependencies": {
     "@backstage/cli": "0.25.2",
