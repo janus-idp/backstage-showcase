@@ -31,7 +31,7 @@
     "@backstage/backend-plugin-api": "0.6.10",
     "@backstage/plugin-auth-backend": "0.21.0",
     "@backstage/plugin-auth-node": "0.4.5",
-    "express": "4.18.2",
+    "express": "4.19.2",
     "openid-client": "5.5.0",
     "passport": "0.7.0"
   },
