@@ -29,6 +29,10 @@
   },
   "packageRules": [
     {
+      "matchDatasources": ["docker"],
+      "groupName": ["Docker base images"]
+    },
+    {
       "matchPackagePatterns": [
         "^@backstage/",
         "^@janus-idp/",
