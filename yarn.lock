@@ -6308,10 +6308,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@janus-idp/backstage-plugin-rbac-backend@2.3.4":
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-2.3.4.tgz#6843e60bc9265597fbc5986903758cd0e0623bda"
-  integrity sha512-hfjq+v0xLI2pZi2HBWdHZ9eo1bdDCU38PQ3T9qrKjZL6SB1frwRw+VCDoXOhwaALf1KIRhExucepEeckuzEHjw==
+"@janus-idp/backstage-plugin-rbac-backend@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-2.4.1.tgz#9d3d46f0d6352fd524233fa3d7a9216efb9cc5ec"
+  integrity sha512-A0HiLpg8FDTgcTv2+fKcWeMB9Eahg2wbnPJFzkstzJGaHBviZE59gZHKd7KBuMSJFlWea6msZK+4ptGD54zp/w==
   dependencies:
     "@backstage/backend-common" "^0.21.3"
     "@backstage/backend-plugin-api" "^0.6.13"
@@ -13248,7 +13248,7 @@ body-parser@1.20.1:
     type-is "~1.6.18"
     unpipe "1.0.0"
 
-body-parser@^1.20.2:
+body-parser@1.20.2, body-parser@^1.20.2:
   version "1.20.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.2.tgz#6feb0e21c4724d06de7ff38da36dad4f57a747fd"
   integrity sha512-ml9pReCu3M61kGlqoTm2umSXTlRTuGTx0bfYj+uIUKKYycG5NtSbeetV3faSU6R7ajOPw0g/J1PvK4qNy7s5bA==
@@ -16410,7 +16410,44 @@ express-session@^1.17.1:
     safe-buffer "5.2.1"
     uid-safe "~2.1.5"
 
-express@4.18.2, express@^4.17.1, express@^4.17.3, express@^4.18.1, express@^4.18.2:
+express@4.19.2:
+  version "4.19.2"
+  resolved "https://registry.yarnpkg.com/express/-/express-4.19.2.tgz#e25437827a3aa7f2a827bc8171bbbb664a356465"
+  integrity sha512-5T6nhjsT+EOMzuck8JjBHARTHfMht0POzlA60WV2pMD3gyXw2LZnZ+ueGdNxG+0calOJcWKbpFcuzLZ91YWq9Q==
+  dependencies:
+    accepts "~1.3.8"
+    array-flatten "1.1.1"
+    body-parser "1.20.2"
+    content-disposition "0.5.4"
+    content-type "~1.0.4"
+    cookie "0.6.0"
+    cookie-signature "1.0.6"
+    debug "2.6.9"
+    depd "2.0.0"
+    encodeurl "~1.0.2"
+    escape-html "~1.0.3"
+    etag "~1.8.1"
+    finalhandler "1.2.0"
+    fresh "0.5.2"
+    http-errors "2.0.0"
+    merge-descriptors "1.0.1"
+    methods "~1.1.2"
+    on-finished "2.4.1"
+    parseurl "~1.3.3"
+    path-to-regexp "0.1.7"
+    proxy-addr "~2.0.7"
+    qs "6.11.0"
+    range-parser "~1.2.1"
+    safe-buffer "5.2.1"
+    send "0.18.0"
+    serve-static "1.15.0"
+    setprototypeof "1.2.0"
+    statuses "2.0.1"
+    type-is "~1.6.18"
+    utils-merge "1.0.1"
+    vary "~1.1.2"
+
+express@^4.17.1, express@^4.17.3, express@^4.18.1, express@^4.18.2:
   version "4.18.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.18.2.tgz#3fabe08296e930c796c19e3c516979386ba9fd59"
   integrity sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==
