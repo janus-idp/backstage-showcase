@@ -74,6 +74,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Save');
+    await uiHelper.verifyText(
+      'Role role:default/test-role updated successfully',
+    );
 
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
