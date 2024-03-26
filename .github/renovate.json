@@ -5,7 +5,9 @@
     ":rebaseStalePrs",
     "group:allNonMajor",
     "group:linters",
-    "group:test"
+    "group:test",
+    "default:pinDigestsDisabled",
+    "default:automergeBranchPush"
   ],
   "labels": ["kind/dependency upgrade"],
   "npm": {
@@ -13,6 +15,11 @@
   },
   "pip_requirements": {
     "fileMatch": ["requirements.*\\.in"]
+  },
+  "docker": {
+    "digest": {
+      "enabled": false
+    }
   },
   "packageRules": [
     {
