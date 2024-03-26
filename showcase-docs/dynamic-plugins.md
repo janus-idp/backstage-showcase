@@ -14,14 +14,11 @@ While this package remains in an experimental phase and is a private package in 
 
 ### Backend plugins
 
-The backstage showcase application is still using the legacy backend system.
-So to be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be completed code-wise, as well as rebuilt with a dedicated CLI command.
+To be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be completed code-wise, as well as rebuilt with a dedicated CLI command.
 
-#### Required code changes
+#### Add the Dynamic Plugin script
 
-In the old backend system, the wiring of the plugin in the application must be done manually, based on instructions generally passed in the readme of the plugin. This is obviously not compatible with the dynamic plugin support, which requires the plugin to be wired automatically.
-
-So there are some changes to be made to the plugin code, in order to make it compatible with the dynamic plugin support:
+There are some changes to be made to the plugin code, in order to make it compatible with the dynamic plugin support:
 
 1. The plugin must:
 
@@ -44,12 +41,12 @@ These recommended changes to the `package.json` are summarized below:
   ...
   "dependencies": {
     ...
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "@backstage/backend-dynamic-feature-service": "0.2.3",
     ...
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.4.7"
+    "@janus-idp/cli": "^1.7.5"
   },
   ...
   "files": [
@@ -60,64 +57,11 @@ These recommended changes to the `package.json` are summarized below:
   ],
 ```
 
-1. A `src/dynamic/index.ts` file must be added, and must export a named entry point (`dynamicPluginInstaller`) of a specific type (`BackendDynamicPluginInstaller`) that will contain the code of the plugin wiring:
+#### Creating entry points
 
-```ts
-import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
+It is required to create entry points (using `createBackendPlugin` or `createBackendModule`) to enable a backend plugin's dynamic functionality.
 
-export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
-  kind: 'legacy',
-
-  // Contributions of the plugin to the application.
-  // Here optional fields allow embedding the code which is usually described in the plugin readme for manual addition.
-  // If a contribution is not used, the field should be omitted.
-
-  router: {
-    pluginID: 'router plugin ID, used as REST endpoint suffix',
-    createPlugin(env) {
-      // Return a promise to your router.
-      return Promise.reject(new Error('Not implemented'));
-    },
-  },
-
-  events(eventsBackend, env) {
-    // Do something with the events backend (add subscribers or publishers)
-    // and return a list of HttpPostIngressOptions that will be
-    // registered with the http event endpoint.
-    return [];
-  },
-
-  catalog(builder, env) {
-    // Add catalog contributions, such as
-    // entity providers or location analyzers.
-  },
-
-  scaffolder(env) {
-    // Return an array of scaffolder actions (TemplateAction)
-    // that will be registered with the scaffolder.
-    return [];
-  },
-
-  search(indexBuilder, schedule, env) {
-    // Add search contributions, such as
-    // collators and decorators.
-  },
-};
-```
-
-1. The `dynamicPluginInstaller` entry point must be exported in the main `src/index.ts` file:
-
-```ts
-export * from './dynamic/index';
-```
-
-#### Note about the new backend system support
-
-While the Showcase application has not yet integrated the new backend system, the underlying mechanism responsible for discovering and loading dynamic backend plugins is already compatible with both the new and old backend systems.
-
-As the new backend system gains broader acceptance and is implemented in the Janus Showcase, it is advisable to adapt dynamic backend plugins to rely on this new system. Therefore, we **strongly recommend** creating the anticipated entry points for the new backend system (using `createBackendPlugin` or `createBackendModule`) when implementing code changes to enable a backend plugin's dynamic functionality. This proactive step ensures preparedness for the eventual transition to the new backend system.
-
-For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/dynamic/alpha.ts#L14).
+For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/module.ts#L25).
 
 #### Exporting the backend plugin as a dynamic plugin package
 
