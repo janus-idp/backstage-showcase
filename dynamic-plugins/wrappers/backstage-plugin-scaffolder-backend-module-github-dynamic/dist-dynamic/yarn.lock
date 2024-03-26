@@ -275,10 +275,10 @@
   resolved "https://registry.yarnpkg.com/@octokit/webhooks-types/-/webhooks-types-6.11.0.tgz#1fb903bff3f2883490d6ba88d8cb8f8a55f68176"
   integrity sha512-AanzbulOHljrku1NGfafxdpTCfw2ENaWzH01N2vqQM+cUFbk868Cgh0xylz0JIM9BoKbfI++bdD6EYX0Q/UTEw==
 
-"@octokit/webhooks-types@7.3.2":
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/@octokit/webhooks-types/-/webhooks-types-7.3.2.tgz#c4a5049b28a6d4b0c397f4db48a9112fef579ba0"
-  integrity sha512-JWOoOgtWTFnTSAamPXXyjTY5/apttvNxF+vPBnwdSu5cj5snrd7FO0fyw4+wTXy8fHduq626JjhO+TwCyyA6vA==
+"@octokit/webhooks-types@7.4.0":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@octokit/webhooks-types/-/webhooks-types-7.4.0.tgz#7ed15c75908683a34e0079c80f261fe568b87395"
+  integrity sha512-FE2V+QZ2UYlh+9wWd5BPLNXG+J/XUD/PPq0ovS+nCcGX4+3qVbi3jYOmCTW48hg9SBBLtInx9+o7fFt4H5iP0Q==
 
 "@octokit/webhooks@^10.0.0":
   version "10.9.2"
@@ -291,13 +291,13 @@
     aggregate-error "^3.1.0"
 
 "@octokit/webhooks@^12.0.4":
-  version "12.1.2"
-  resolved "https://registry.yarnpkg.com/@octokit/webhooks/-/webhooks-12.1.2.tgz#df4c5623d608c11b3b2e6aaa2b531b5f27755357"
-  integrity sha512-+nGS3ReCByF6m+nbNB59x7Aa3CNjCCGuBLFzfkiJP1O3uVKKuJbkP4uO4t46YqH26nlugmOhqjT7nx5D0VPtdA==
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/@octokit/webhooks/-/webhooks-12.2.0.tgz#ea1ee2d9d9c5a4b7b53ff8bc64a9feb0dac94161"
+  integrity sha512-CyuLJ0/P7bKZ+kIYw+fnkeVdhUzNuDKgNSI7pU/m7Nod0T7kP+s4s2f0pNmG9HL8/RZN1S0ZWTDll3VTMrFLAw==
   dependencies:
     "@octokit/request-error" "^5.0.0"
     "@octokit/webhooks-methods" "^4.1.0"
-    "@octokit/webhooks-types" "7.3.2"
+    "@octokit/webhooks-types" "7.4.0"
     aggregate-error "^3.1.0"
 
 "@smithy/is-array-buffer@^2.2.0":
@@ -714,9 +714,9 @@ winston-transport@^4.7.0:
     triple-beam "^1.3.0"
 
 winston@^3.2.1:
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-3.12.0.tgz#a5d965a41d3dc31be5408f8c66e927958846c0d0"
-  integrity sha512-OwbxKaOlESDi01mC9rkM0dQqQt2I8DAUMRLZ/HpbwvDXm85IryEHgoogy5fziQy38PntgZsLlhAYHz//UPHZ5w==
+  version "3.13.0"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-3.13.0.tgz#e76c0d722f78e04838158c61adc1287201de7ce3"
+  integrity sha512-rwidmA1w3SE4j0E5MuIufFhyJPBDG7Nu71RkZor1p2+qHvJSZ9GYDA81AyleQcZbh/+V6HjeBdfnTZJm9rSeQQ==
   dependencies:
     "@colors/colors" "^1.6.0"
     "@dabh/diagnostics" "^2.0.2"
