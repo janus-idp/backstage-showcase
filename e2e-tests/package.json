@@ -8,7 +8,7 @@
   "author": "janus-idp",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "playwright test",
+    "test": "playwright test --reporter=list",
     "lint": "eslint . --ext .js,.ts",
     "postinstall": "playwright install"
   },
