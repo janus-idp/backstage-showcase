@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "0.6.16",
-    "@backstage/plugin-scaffolder-node": "^0.4.2",
+    "@backstage/plugin-scaffolder-node": "^0.3.3",
     "@roadiehq/scaffolder-backend-module-utils": "1.14.0"
   },
   "devDependencies": {

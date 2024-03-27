@@ -5383,7 +5383,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     azure-devops-node-api: "npm:^12.0.0"
     yaml: "npm:^2.0.0"
   checksum: 10c0/f4f16e86f027f8a383c3832c2ba1c20a0ac7fcf45fa6cb6e2bb77cfbba91d7144618d9646b9365e20d60587d6b32e7e664124cdf4adfbbde8f6dfa7035a54ba9
@@ -5415,7 +5415,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     fs-extra: "npm:^11.2.0"
     node-fetch: "npm:^2.6.7"
     yaml: "npm:^2.0.0"
@@ -5448,7 +5448,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     fs-extra: "npm:^11.2.0"
     node-fetch: "npm:^2.6.7"
     yaml: "npm:^2.0.0"
@@ -5467,7 +5467,7 @@ __metadata:
     "@backstage/integration": "npm:^1.9.0"
     "@backstage/plugin-scaffolder-backend-module-bitbucket-cloud": "npm:^0.1.3"
     "@backstage/plugin-scaffolder-backend-module-bitbucket-server": "npm:^0.1.3"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     fs-extra: "npm:^11.2.0"
     node-fetch: "npm:^2.6.7"
     yaml: "npm:^2.0.0"
@@ -5516,7 +5516,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     node-fetch: "npm:^2.6.7"
     yaml: "npm:^2.0.0"
   checksum: 10c0/ba4df41f28a32caa904bbe0d226130932a1012932bbc0ce3dc2b7a542d068d5137c2011625c8e6baf28c406b88287c9aafae37f2c0a31be380d0d21f1d2f0e0d
@@ -5531,7 +5531,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     node-fetch: "npm:^2.6.7"
     yaml: "npm:^2.0.0"
   checksum: 10c0/d5e0c463c2f3e5ab14bf17f66533f3eafa96bcc81ca3e567eb47e228292c49272e304690e1fbbd476c87ccbe461d4ba89d052ba28ca848156dbf32ee032e2fc5
@@ -5582,7 +5582,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     "@octokit/webhooks": "npm:^10.0.0"
     libsodium-wrappers: "npm:^0.7.11"
     octokit: "npm:^3.0.0"
@@ -5622,7 +5622,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/integration": "npm:^1.9.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     "@gitbeaker/core": "npm:^35.8.0"
     "@gitbeaker/node": "npm:^35.8.0"
     "@gitbeaker/rest": "npm:^39.25.0"
@@ -5713,7 +5713,7 @@ __metadata:
     "@backstage/plugin-scaffolder-backend-module-github": "npm:^0.2.3"
     "@backstage/plugin-scaffolder-backend-module-gitlab": "npm:^0.2.16"
     "@backstage/plugin-scaffolder-common": "npm:^1.5.0"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     "@backstage/types": "npm:^1.1.1"
     "@types/express": "npm:^4.17.6"
     "@types/luxon": "npm:^3.0.0"
@@ -8062,7 +8062,7 @@ __metadata:
     "@types/express": "npm:4.17.21"
     "@types/supertest": "npm:6.0.2"
     express: "npm:4.19.2"
-    msw: "npm:2.2.12"
+    msw: "npm:2.2.13"
     node-fetch: "npm:3.3.2"
     supertest: "npm:6.3.4"
     winston: "npm:3.13.0"
@@ -8084,7 +8084,7 @@ __metadata:
     "@types/supertest": "npm:6.0.2"
     express: "npm:4.19.2"
     mock-fs: "npm:5.2.0"
-    msw: "npm:2.2.12"
+    msw: "npm:2.2.13"
     node-fetch: "npm:3.3.2"
     supertest: "npm:6.3.4"
     winston: "npm:3.13.0"
@@ -9137,9 +9137,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.26.12":
-  version: 0.26.13
-  resolution: "@mswjs/interceptors@npm:0.26.13"
+"@mswjs/interceptors@npm:^0.26.14":
+  version: 0.26.14
+  resolution: "@mswjs/interceptors@npm:0.26.14"
   dependencies:
     "@open-draft/deferred-promise": "npm:^2.2.0"
     "@open-draft/logger": "npm:^0.3.0"
@@ -9147,7 +9147,7 @@ __metadata:
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.2.1"
     strict-event-emitter: "npm:^0.5.1"
-  checksum: 10c0/cf276f40443ddecf828395ee555b6f3803113aeec2bcb0631decd81ebf8453438a90b70e5fba1e12391bf3643dadf37e4aebbff8a631adda0a51ccd3c2df6d40
+  checksum: 10c0/7ef163e68fb95a6653c1e476b53f62ec89f8c47c6756e114ba70bfa2c4be65580b3d93a225c47e94ddafad770cbf1be222bb69ee205a3d6704417f78a13db196
   languageName: node
   linkType: hard
 
@@ -11413,7 +11413,7 @@ __metadata:
     "@backstage/config": "npm:^1.1.1"
     "@backstage/errors": "npm:^1.2.3"
     "@backstage/plugin-scaffolder-backend": "npm:^1.21.3"
-    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
+    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
     adm-zip: "npm:^0.5.9"
     cross-fetch: "npm:^3.1.4"
     detect-indent: "npm:^6.1.0"
@@ -15839,7 +15839,7 @@ __metadata:
     "@testing-library/react-hooks": "npm:8.0.1"
     "@testing-library/user-event": "npm:14.5.2"
     "@types/node": "npm:20.11.30"
-    "@types/react": "npm:18.2.72"
+    "@types/react": "npm:18.2.73"
     "@types/react-dom": "npm:18.2.22"
     history: "npm:5.3.0"
     lodash: "npm:4.17.21"
@@ -28301,15 +28301,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.2.12":
-  version: 2.2.12
-  resolution: "msw@npm:2.2.12"
+"msw@npm:2.2.13":
+  version: 2.2.13
+  resolution: "msw@npm:2.2.13"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.0"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
     "@inquirer/confirm": "npm:^3.0.0"
     "@mswjs/cookies": "npm:^1.1.0"
-    "@mswjs/interceptors": "npm:^0.26.12"
+    "@mswjs/interceptors": "npm:^0.26.14"
     "@open-draft/until": "npm:^2.1.0"
     "@types/cookie": "npm:^0.6.0"
     "@types/statuses": "npm:^2.0.4"
@@ -28329,7 +28329,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10c0/1cb84a45e7d042aa87375db856e3e01f151574c4e4ddda93654b4619d4dba67e53da3ac322064bdcaa20328930112bcfddb7de3e1e578626cb24fd27db2ef532
+  checksum: 10c0/3e1cf1f4122410b5e4685101bf0e131c508a6fb0f889cf475c0d361263e4feb3aed03fbf31ed5e39fff04562bbe92cfe09b49e72270acadd5842d68ce2080ff2
   languageName: node
   linkType: hard
 
@@ -32491,7 +32491,7 @@ __metadata:
   dependencies:
     "@backstage/backend-plugin-api": "npm:0.6.16"
     "@backstage/cli": "npm:0.26.2"
-    "@backstage/plugin-scaffolder-node": "npm:^0.4.2"
+    "@backstage/plugin-scaffolder-node": "npm:^0.3.3"
     "@janus-idp/cli": "npm:1.7.5"
     "@roadiehq/scaffolder-backend-module-utils": "npm:1.14.0"
   languageName: unknown

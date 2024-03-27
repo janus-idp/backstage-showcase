@@ -280,7 +280,7 @@ __metadata:
     "@backstage/config": ^1.1.1
     "@backstage/errors": ^1.2.3
     "@backstage/plugin-scaffolder-backend": ^1.21.3
-    "@backstage/plugin-scaffolder-node": ^0.3.3
+    "@backstage/plugin-scaffolder-node": ^0.4.2
   languageName: unknown
   linkType: soft
 

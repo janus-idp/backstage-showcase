@@ -47,7 +47,7 @@
     "@backstage/catalog-client": "^1.6.0",
     "@backstage/config": "^1.1.1",
     "@backstage/plugin-scaffolder-backend": "^1.21.3",
-    "@backstage/plugin-scaffolder-node": "^0.3.3"
+    "@backstage/plugin-scaffolder-node": "^0.4.2"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
