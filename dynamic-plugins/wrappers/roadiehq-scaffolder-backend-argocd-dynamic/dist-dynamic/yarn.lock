@@ -804,13 +804,13 @@ __metadata:
     winston: "npm:^3.2.1"
     yn: "npm:^4.0.0"
   peerDependencies:
-    "@backstage/backend-common": 0.21.3
-    "@backstage/backend-dynamic-feature-service": 0.2.0
-    "@backstage/backend-plugin-api": 0.6.10
+    "@backstage/backend-common": 0.21.6
+    "@backstage/backend-dynamic-feature-service": 0.2.7
+    "@backstage/backend-plugin-api": 0.6.16
     "@backstage/catalog-client": ^1.6.0
     "@backstage/config": ^1.1.1
     "@backstage/plugin-scaffolder-backend": ^1.21.3
-    "@backstage/plugin-scaffolder-node": ^0.4.2
+    "@backstage/plugin-scaffolder-node": ^0.3.3
   languageName: unknown
   linkType: soft
 

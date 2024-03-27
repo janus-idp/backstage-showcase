@@ -185,10 +185,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/openapi-types@npm:^12.11.0":
-  version: 12.11.0
-  resolution: "@octokit/openapi-types@npm:12.11.0"
-  checksum: 10c0/b3bb3684d9686ef948d8805ab56f85818f36e4cb64ef97b8e48dc233efefef22fe0bddd9da705fb628ea618a1bebd62b3d81b09a3f7dce9522f124d998041896
+"@octokit/openapi-types@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "@octokit/openapi-types@npm:14.0.0"
+  checksum: 10c0/d122bbfd4997ea7e056c7fcf5b3240982b5b090b816671eca01829ac5ce19d2a19f6da35d126ae19a956a4203c68302d8fb33d5c00c77996b4e4a746878ea589
   languageName: node
   linkType: hard
 
@@ -305,12 +305,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:^6.8.2":
-  version: 6.41.0
-  resolution: "@octokit/types@npm:6.41.0"
+"@octokit/types@npm:^8.0.0":
+  version: 8.2.1
+  resolution: "@octokit/types@npm:8.2.1"
   dependencies:
-    "@octokit/openapi-types": "npm:^12.11.0"
-  checksum: 10c0/81cfa58e5524bf2e233d75a346e625fd6e02a7b919762c6ddb523ad6fb108943ef9d34c0298ff3c5a44122e449d9038263bc22959247fd6ff8894a48888ac705
+    "@octokit/openapi-types": "npm:^14.0.0"
+  checksum: 10c0/85a97bca714b88ea0d34066b4821e48ba4f8dda8f3970f1a00deb02b3e3f1cc315720d25430082dc651c400717510273193ac6af610268488160bb9e6a30bef8
   languageName: node
   linkType: hard
 
@@ -438,15 +438,15 @@ __metadata:
     "@octokit/webhooks": "npm:^10.0.0"
     libsodium-wrappers: "npm:^0.7.11"
     octokit: "npm:^3.0.0"
-    octokit-plugin-create-pull-request: "npm:^3.10.0"
+    octokit-plugin-create-pull-request: "npm:^5.0.0"
     winston: "npm:^3.2.1"
     yaml: "npm:^2.0.0"
   peerDependencies:
-    "@backstage/backend-common": ^0.21.3
-    "@backstage/backend-plugin-api": ^0.6.13
-    "@backstage/config": ^1.1.1
-    "@backstage/errors": ^1.2.3
-    "@backstage/integration": ^1.9.0
+    "@backstage/backend-common": ^0.21.6
+    "@backstage/backend-plugin-api": ^0.6.16
+    "@backstage/config": ^1.2.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/integration": ^1.9.1
     "@backstage/plugin-scaffolder-node": ^0.4.2
   languageName: unknown
   linkType: soft
@@ -752,12 +752,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"octokit-plugin-create-pull-request@npm:^3.10.0":
-  version: 3.13.1
-  resolution: "octokit-plugin-create-pull-request@npm:3.13.1"
+"octokit-plugin-create-pull-request@npm:^5.0.0":
+  version: 5.1.1
+  resolution: "octokit-plugin-create-pull-request@npm:5.1.1"
   dependencies:
-    "@octokit/types": "npm:^6.8.2"
-  checksum: 10c0/da0a34b66b6ac3e39c704dcbdc1302d362363051ce00607792e545801b9327ada30952b94266b530c5e302b9dc59f0c8650f13b42084071bb1507eb46d3893b7
+    "@octokit/types": "npm:^8.0.0"
+  checksum: 10c0/cec36b5d69cd362ff44eacb1bc0c55a0631147fac4a218a4b922191e4bc38465f08e844bc4d936cd8c036a444fa8944a609920062bb448fc7bb2cd3b8270a3c6
   languageName: node
   linkType: hard
 

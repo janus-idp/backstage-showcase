@@ -2129,21 +2129,21 @@ __metadata:
     recursive-readdir: "npm:^2.2.2"
     winston: "npm:^3.2.1"
   peerDependencies:
-    "@backstage/backend-common": 0.21.3
-    "@backstage/backend-dynamic-feature-service": 0.2.3
-    "@backstage/backend-plugin-api": 0.6.13
-    "@backstage/backend-tasks": ^0.5.18
-    "@backstage/catalog-client": ^1.6.0
-    "@backstage/catalog-model": ^1.4.4
-    "@backstage/config": ^1.1.1
-    "@backstage/errors": ^1.2.3
-    "@backstage/integration": ^1.9.0
-    "@backstage/integration-aws-node": ^0.1.9
-    "@backstage/plugin-catalog-common": ^1.0.21
-    "@backstage/plugin-catalog-node": ^1.7.3
-    "@backstage/plugin-permission-common": ^0.7.12
-    "@backstage/plugin-search-backend-node": ^1.2.17
-    "@backstage/plugin-search-common": ^1.2.10
+    "@backstage/backend-common": 0.21.6
+    "@backstage/backend-dynamic-feature-service": 0.2.7
+    "@backstage/backend-plugin-api": 0.6.16
+    "@backstage/backend-tasks": ^0.5.21
+    "@backstage/catalog-client": ^1.6.3
+    "@backstage/catalog-model": ^1.4.5
+    "@backstage/config": ^1.2.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/integration": ^1.9.1
+    "@backstage/integration-aws-node": ^0.1.12
+    "@backstage/plugin-catalog-common": ^1.0.22
+    "@backstage/plugin-catalog-node": ^1.11.0
+    "@backstage/plugin-permission-common": ^0.7.13
+    "@backstage/plugin-search-backend-node": ^1.2.20
+    "@backstage/plugin-search-common": ^1.2.11
   languageName: unknown
   linkType: soft
 

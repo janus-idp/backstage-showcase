@@ -638,7 +638,7 @@ __metadata:
     yn: "npm:^4.0.0"
   peerDependencies:
     "@backstage/backend-common": ^0.19.9
-    "@backstage/backend-dynamic-feature-service": 0.2.0
+    "@backstage/backend-dynamic-feature-service": 0.2.7
     "@backstage/backend-plugin-api": ^0.6.7
     "@backstage/config": ^1.1.1
     "@backstage/integration": ^1.7.0

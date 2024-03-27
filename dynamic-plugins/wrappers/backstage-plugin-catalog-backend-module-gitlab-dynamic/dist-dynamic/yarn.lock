@@ -43,16 +43,16 @@ __metadata:
   dependencies:
     lodash: "npm:^4.17.21"
     node-fetch: "npm:^2.6.7"
-    uuid: "npm:^8.0.0"
+    uuid: "npm:^9.0.0"
     winston: "npm:^3.2.1"
   peerDependencies:
-    "@backstage/backend-common": ^0.21.3
-    "@backstage/backend-plugin-api": ^0.6.13
-    "@backstage/backend-tasks": ^0.5.18
-    "@backstage/catalog-model": ^1.4.4
-    "@backstage/config": ^1.1.1
-    "@backstage/integration": ^1.9.0
-    "@backstage/plugin-catalog-node": ^1.7.3
+    "@backstage/backend-common": ^0.21.6
+    "@backstage/backend-plugin-api": ^0.6.16
+    "@backstage/backend-tasks": ^0.5.21
+    "@backstage/catalog-model": ^1.4.5
+    "@backstage/config": ^1.2.0
+    "@backstage/integration": ^1.9.1
+    "@backstage/plugin-catalog-node": ^1.11.0
   languageName: unknown
   linkType: soft
 
@@ -287,12 +287,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.0.0":
-  version: 8.3.2
-  resolution: "uuid@npm:8.3.2"
+"uuid@npm:^9.0.0":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
   bin:
     uuid: dist/bin/uuid
-  checksum: 10c0/bcbb807a917d374a49f475fae2e87fdca7da5e5530820ef53f65ba1d12131bd81a92ecf259cc7ce317cbe0f289e7d79fdfebcef9bfa3087c8c8a2fa304c9be54
+  checksum: 10c0/1607dd32ac7fc22f2d8f77051e6a64845c9bce5cd3dd8aa0070c074ec73e666a1f63c7b4e0f4bf2bc8b9d59dc85a15e17807446d9d2b17c8485fbc2147b27f9b
   languageName: node
   linkType: hard
 

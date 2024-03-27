@@ -29,7 +29,7 @@
     "@backstage/backend-common": "0.21.6",
     "@backstage/backend-dynamic-feature-service": "0.2.7",
     "@backstage/backend-plugin-api": "0.6.16",
-    "@backstage/plugin-scaffolder-node": "^0.4.2",
+    "@backstage/plugin-scaffolder-node": "^0.3.3",
     "@roadiehq/scaffolder-backend-argocd": "1.1.24"
   },
   "devDependencies": {

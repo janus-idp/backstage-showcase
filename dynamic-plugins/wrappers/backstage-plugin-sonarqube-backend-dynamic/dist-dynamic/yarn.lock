@@ -173,10 +173,10 @@ __metadata:
     winston: "npm:^3.2.1"
     yn: "npm:^5.0.0"
   peerDependencies:
-    "@backstage/backend-common": ^0.21.3
-    "@backstage/backend-plugin-api": ^0.6.13
-    "@backstage/config": ^1.1.1
-    "@backstage/errors": ^1.2.3
+    "@backstage/backend-common": ^0.21.6
+    "@backstage/backend-plugin-api": ^0.6.16
+    "@backstage/config": ^1.2.0
+    "@backstage/errors": ^1.2.4
   languageName: unknown
   linkType: soft
 
