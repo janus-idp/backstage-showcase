@@ -92,20 +92,49 @@ export class UIhelper {
     const optionSelector = `li[role="option"]:has-text("${value}")`;
     await this.page.waitForSelector(optionSelector);
     await this.page.click(optionSelector);
+    const regexp = RegExp(`.*filters%5B${label}%5D=${value}.*`, 'i');
+    await this.page.waitForURL(regexp);
   }
 
   async verifyRowsInTable(
     rowTexts: string[] | RegExp[],
     exact: boolean = true,
   ) {
-    for (const rowText of rowTexts) {
-      const rowLocator = this.page
-        .locator(`tr>td`)
-        .getByText(rowText, { exact: exact })
-        .first();
-      await rowLocator.waitFor({ state: 'visible' });
-      await rowLocator.scrollIntoViewIfNeeded();
-      await expect(rowLocator).toBeVisible();
+    const foundTexts = new Set();
+
+    let hasNextPage = true;
+
+    while (hasNextPage) {
+      for (const rowText of rowTexts) {
+        const rowLocator = this.page
+          .locator(`tr>td`)
+          .getByText(rowText, { exact: exact })
+          .first();
+
+        if (rowLocator.isVisible()) {
+          foundTexts.add(rowText);
+        }
+      }
+
+      const nextPageButton = this.page.getByLabel('Next Page').first();
+
+      if (await nextPageButton.isDisabled()) {
+        hasNextPage = false;
+      } else {
+        await nextPageButton.click();
+        await this.page.waitForResponse('**/api/catalog/entities/by-query**');
+      }
+    }
+
+    rowTexts.forEach(item => {
+      expect(foundTexts.has(item)).toBeTruthy();
+    });
+
+    // Go to the first page
+    const previousPageButton = this.page.getByLabel('Previous Page').first();
+    while (await previousPageButton.isEnabled()) {
+      await previousPageButton.click();
+      await this.page.waitForResponse('**/api/catalog/entities/by-query**');
     }
   }
 
