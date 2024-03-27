@@ -50,7 +50,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          yarn install --frozen-lockfile
+          yarn install --immutable
 
       - name: Prettier
         run: |

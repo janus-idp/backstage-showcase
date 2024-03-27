@@ -29,26 +29,24 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-bitbucket-cloud --embed-package @backstage/plugin-bitbucket-cloud-common"
   },
   "dependencies": {
-    "uuid": "^8.0.0",
-    "winston": "^3.2.1",
-    "cross-fetch": "^4.0.0"
+    "cross-fetch": "^4.0.0",
+    "uuid": "^9.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "0.21.3",
-    "@backstage/backend-plugin-api": "0.6.13",
-    "@backstage/plugin-catalog-node": "1.7.3",
-    "@backstage/backend-tasks": "^0.5.18",
-    "@backstage/catalog-client": "^1.6.0",
-    "@backstage/catalog-model": "^1.4.4",
-    "@backstage/config": "^1.1.1",
-    "@backstage/integration": "^1.9.0",
-    "@backstage/plugin-catalog-common": "^1.0.21",
-    "@backstage/plugin-events-node": "^0.2.22"
+    "@backstage/backend-common": "0.21.6",
+    "@backstage/backend-plugin-api": "0.6.16",
+    "@backstage/backend-tasks": "^0.5.21",
+    "@backstage/catalog-client": "^1.6.3",
+    "@backstage/catalog-model": "^1.4.5",
+    "@backstage/config": "^1.2.0",
+    "@backstage/integration": "^1.9.1",
+    "@backstage/plugin-catalog-common": "^1.0.22",
+    "@backstage/plugin-catalog-node": "1.11.0",
+    "@backstage/plugin-events-node": "^0.3.2"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

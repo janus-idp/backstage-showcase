@@ -23,7 +23,7 @@
     "@roadiehq/backstage-plugin-github-pull-requests": "2.5.24"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2",
+    "@backstage/cli": "0.26.2",
     "@janus-idp/cli": "1.7.5"
   },
   "files": [

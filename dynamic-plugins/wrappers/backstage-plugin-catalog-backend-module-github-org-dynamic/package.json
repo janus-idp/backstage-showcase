@@ -26,8 +26,8 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github --override-interop default"
   },
   "dependencies": {
-    "@backstage/plugin-catalog-backend-module-github-org": "0.1.7",
-    "@backstage/plugin-catalog-backend-module-github": "0.5.3"
+    "@backstage/plugin-catalog-backend-module-github": "0.5.7",
+    "@backstage/plugin-catalog-backend-module-github-org": "0.1.11"
   },
   "devDependencies": {
     "@janus-idp/cli": "1.7.5"

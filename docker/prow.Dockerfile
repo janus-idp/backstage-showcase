@@ -16,7 +16,7 @@
 #  This Dockerfile used to run tests on OpenShift CI (Prow)
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-98 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-34 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -36,14 +36,14 @@ ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-4.1.1.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 RUN chmod +x $YARN
 
-RUN $YARN install --frozen-lockfile --network-timeout 600000
+RUN $YARN install --immutable
 
 # https://docs.ci.openshift.org/docs/architecture/ci-operator/#build-root-image
 RUN mkdir -p /go

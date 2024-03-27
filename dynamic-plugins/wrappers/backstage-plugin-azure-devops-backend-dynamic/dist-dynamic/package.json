@@ -39,19 +39,22 @@
     "winston": "^3.2.1",
     "yn": "^4.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.3",
-    "@backstage/backend-plugin-api": "^0.6.13",
-    "@backstage/catalog-model": "^1.4.4",
-    "@backstage/config": "^1.1.1",
-    "@backstage/integration": "^1.9.0",
-    "@backstage/plugin-catalog-common": "^1.0.21",
-    "@backstage/plugin-catalog-node": "^1.7.3"
+    "@backstage/backend-common": "^0.21.6",
+    "@backstage/backend-plugin-api": "^0.6.16",
+    "@backstage/catalog-model": "^1.4.5",
+    "@backstage/config": "^1.2.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/integration": "^1.9.1",
+    "@backstage/plugin-auth-node": "^0.4.11",
+    "@backstage/plugin-catalog-common": "^1.0.22",
+    "@backstage/plugin-catalog-node": "^1.11.0",
+    "@backstage/plugin-permission-common": "^0.7.13",
+    "@backstage/plugin-permission-node": "^0.7.27"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

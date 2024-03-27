@@ -7,17 +7,17 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "ci": "turbo run lint build test",
+    "ci": "turbo run lint build test --concurrency=100%",
     "start": "turbo run start --parallel",
-    "start-backend": "turbo run start --filter=backend",
-    "build": "turbo run build",
+    "start-backend": "turbo run start --concurrency=100% --filter=backend",
+    "build": "turbo run build --concurrency=100%",
     "tsc": "tsc",
-    "export-dynamic": "turbo run export-dynamic --concurrency 1",
+    "export-dynamic": "turbo run export-dynamic --concurrency=100%",
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
-    "clean": "turbo run clean",
-    "test": "turbo run test",
+    "clean": "turbo run clean --concurrency=100%",
+    "test": "turbo run test --concurrency=100%",
     "fix": "backstage-cli repo fix",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint --concurrency=100%",
     "lint-staged": "lint-staged",
     "prettier:check": "prettier --ignore-unknown --check .",
     "prettier:fix": "prettier --ignore-unknown --write .",
@@ -36,21 +36,21 @@
     ]
   },
   "dependencies": {
-    "node-gyp": "9.4.1"
+    "node-gyp": "10.1.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2",
-    "@smithy/util-utf8": "2.1.1",
+    "@backstage/cli": "0.26.2",
+    "@smithy/util-utf8": "2.3.0",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
-    "husky": "8.0.3",
-    "ip": "1.1.9",
-    "lint-staged": "15.2.0",
-    "prettier": "3.1.1",
-    "sanitize-html": "2.12.1",
-    "turbo": "1.11.3",
-    "typescript": "5.3.3",
-    "undici": "5.28.3"
+    "husky": "9.0.11",
+    "ip": "2.0.1",
+    "lint-staged": "15.2.2",
+    "prettier": "3.2.5",
+    "sanitize-html": "2.13.0",
+    "turbo": "1.13.0",
+    "typescript": "5.4.3",
+    "undici": "6.10.2"
   },
   "resolutions": {
     "@types/react": "18.2.48",
@@ -65,5 +65,5 @@
     "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
     "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
   },
-  "packageManager": "yarn@1.22.21"
+  "packageManager": "yarn@4.1.1"
 }

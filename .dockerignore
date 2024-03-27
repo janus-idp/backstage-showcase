@@ -10,3 +10,5 @@ plugins
 coverage
 dist-types
 examples
+docker/Dockerfile
+docker/prow.Dockerfile

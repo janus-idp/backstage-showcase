@@ -12,8 +12,8 @@
     "lint": "backstage-cli package lint"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2",
-    "tar": "6.2.0"
+    "@backstage/cli": "0.26.2",
+    "tar": "6.2.1"
   },
   "peerDependencies": {
     "@janus-idp/backstage-plugin-3scale-backend": "1.4.7",

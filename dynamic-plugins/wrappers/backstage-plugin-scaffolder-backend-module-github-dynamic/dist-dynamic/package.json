@@ -32,22 +32,21 @@
     "@octokit/webhooks": "^10.0.0",
     "libsodium-wrappers": "^0.7.11",
     "octokit": "^3.0.0",
-    "octokit-plugin-create-pull-request": "^3.10.0",
+    "octokit-plugin-create-pull-request": "^5.0.0",
     "winston": "^3.2.1",
     "yaml": "^2.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.3",
-    "@backstage/backend-plugin-api": "^0.6.13",
-    "@backstage/config": "^1.1.1",
-    "@backstage/errors": "^1.2.3",
-    "@backstage/integration": "^1.9.0",
-    "@backstage/plugin-scaffolder-node": "^0.3.3"
+    "@backstage/backend-common": "^0.21.6",
+    "@backstage/backend-plugin-api": "^0.6.16",
+    "@backstage/config": "^1.2.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/integration": "^1.9.1",
+    "@backstage/plugin-scaffolder-node": "^0.4.2"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

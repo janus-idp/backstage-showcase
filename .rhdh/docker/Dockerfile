@@ -19,8 +19,8 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-98 AS build
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-34 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -38,7 +38,7 @@ ENV EXTERNAL_SOURCE_NESTED=$EXTERNAL_SOURCE/distgit/containers/rhdh-hub
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-4.1.1.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
@@ -111,7 +111,7 @@ RUN \
     # cat $CONTAINER_SOURCE/.npmrc || true; \
     # $YARN config list --verbose; npm config list; npm config list -l
 
-RUN $YARN install --frozen-lockfile --network-timeout 600000
+RUN $YARN install --immutable
 
 # Stage 3 - Build packages
 COPY $EXTERNAL_SOURCE_NESTED ./
@@ -165,11 +165,11 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN $YARN install --frozen-lockfile --production --network-timeout 600000
+RUN $YARN workspaces focus --production
 
 # Stage 5 - Build the runner image
-#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-103 AS runner
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-37 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src

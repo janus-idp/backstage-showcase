@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-scaffolder-backend-argocd-dynamic",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -29,26 +29,25 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-argocd --embed-package @roadiehq/backstage-plugin-argo-cd-backend --override-interop default"
   },
   "dependencies": {
-    "winston": "^3.2.1",
     "@types/express": "^4.17.6",
     "cross-fetch": "^3.1.4",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
+    "winston": "^3.2.1",
     "yn": "^4.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "0.21.3",
-    "@backstage/backend-plugin-api": "0.6.10",
-    "@backstage/plugin-scaffolder-node": "0.3.2",
-    "@backstage/backend-dynamic-feature-service": "0.2.0",
+    "@backstage/backend-common": "0.21.6",
+    "@backstage/backend-dynamic-feature-service": "0.2.7",
+    "@backstage/backend-plugin-api": "0.6.16",
+    "@backstage/catalog-client": "^1.6.0",
     "@backstage/config": "^1.1.1",
-    "@backstage/plugin-scaffolder-backend": "^1.21.2",
-    "@backstage/catalog-client": "^1.6.0"
+    "@backstage/plugin-scaffolder-backend": "^1.21.3",
+    "@backstage/plugin-scaffolder-node": "^0.3.3"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
