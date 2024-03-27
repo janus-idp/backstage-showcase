@@ -40,8 +40,9 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.25.2",
-    "@smithy/util-utf8": "2.1.1",
-    "@smithy/is-array-buffer": "2.1.1",
+    "@smithy/util-utf8": "^2.3.0",
+    "@smithy/is-array-buffer": "^2.2.0",
+    "@smithy/util-buffer-from": "^2.2.0",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
