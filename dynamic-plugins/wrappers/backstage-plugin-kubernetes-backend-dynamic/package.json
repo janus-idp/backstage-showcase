@@ -26,10 +26,10 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-kubernetes-backend --embed-package @backstage/plugin-kubernetes-node --override-interop default"
   },
   "dependencies": {
-    "@backstage/plugin-kubernetes-backend": "0.15.3"
+    "@backstage/plugin-kubernetes-backend": "0.16.3"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2",
+    "@backstage/cli": "0.26.2",
     "@janus-idp/cli": "1.7.5"
   },
   "files": [

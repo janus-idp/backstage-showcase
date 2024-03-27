@@ -26,10 +26,10 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-gerrit --override-interop default"
   },
   "dependencies": {
-    "@backstage/plugin-scaffolder-backend-module-gerrit": "0.1.5"
+    "@backstage/plugin-scaffolder-backend-module-gerrit": "0.1.8"
   },
   "devDependencies": {
-    "@backstage/cli": "0.25.2",
+    "@backstage/cli": "0.26.2",
     "@janus-idp/cli": "1.7.5"
   },
   "files": [
