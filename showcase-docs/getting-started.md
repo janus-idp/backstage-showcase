@@ -199,3 +199,27 @@ COMING SOON
 ## Deploying with ArgoCD
 
 COMING SOON
+
+## Secure by Default
+
+Our goal is to make this software **Secure by Default**, which means that the default configuration settings are the most secure possible, but not necessarily the most user-friendly. Here we will document the default security settings that have been enabled, our reasoning behind these choices and how to modify the options to fit your organizations needs.
+
+Please keep in mind that these are the recommended default settings for this application and that modifying these settings could adversely affect your attack surface.
+
+> **Secure by Default**, in software, means that the default configuration settings are the most secure settings possible, which are not necessarily the most user-friendly settings. In many cases, security and user-friendliness are evaluated based on both risk analysis and usability tests. This leads to the discussion of what the most secure settings are. As a result, the precise meaning of "secure by default" remains undefined.
+>
+> -- <cite>[Wikipedia contributors. "Secure by default." Wikipedia, The Free Encyclopedia. Wikipedia, The Free Encyclopedia, 13 Jan. 2024. Web. 1 Feb. 2024.](https://en.wikipedia.org/wiki/Secure_by_default)</cite>
+
+### Auto Logout
+
+The [auto logout](https://backstage.io/docs/auth/autologout/) feature is an optional (but highly recommended) added security to Backstage, designed to automatically log out users after a preconfigured duration of inactivity. This capability helps to effectively mitigate the risks associated with unauthorized access through abandoned sessions, especially in shared device scenarios.feature is designed to automatically log out users after a pre-determined duration of inactivity.
+
+This feature is enabled by default in the `Backstage Showcase` application and can be configured by passing the following environment variables to backstage.
+
+| Name                                   | Description                                                                                            | Allowed Values | Default Value |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------- | ------------- |
+| AUTO_LOGOUT_ENABLED                    | Enable/disable the feature                                                                             | true/false     | true          |
+| AUTO_LOGOUT_IDLE_TIMEOUT_MINUTES       | Idle time (in minutes) after which the user is logged out                                              | >= 0.5         | 60            |
+| AUTO_LOGOUT_PROMPT_BEFORE_IDLE_SECONDS | The time (in seconds) before the user is logged out when a prompt will appear. `0` disables the prompt | >= 0           | 10            |
+| AUTO_LOGOUT_USE_WORKER_TIMERS          | Enables or disables the use of Node's worker thread timers instead of main thread timers               | true/false     | true          |
+| AUTO_LOGOUT_LOGOUT_IF_DISCONNECTED     | Enable/disable auto logout for disconnected users                                                      | true/false     | true          |

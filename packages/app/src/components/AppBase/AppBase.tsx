@@ -1,5 +1,9 @@
 import { FlatRoutes } from '@backstage/core-app-api';
-import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
+import {
+  AlertDisplay,
+  AutoLogout,
+  OAuthRequestDialog,
+} from '@backstage/core-components';
 import { ApiExplorerPage } from '@backstage/plugin-api-docs';
 import { CatalogEntityPage, CatalogIndexPage } from '@backstage/plugin-catalog';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
@@ -28,6 +32,7 @@ const AppBase = () => {
     <AppProvider>
       <AlertDisplay />
       <OAuthRequestDialog />
+      <AutoLogout />
       <AppRouter>
         <Root>
           <FlatRoutes>
