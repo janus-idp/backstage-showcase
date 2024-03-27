@@ -58,6 +58,7 @@ RUN $YARN install --immutable
 # Stage 3 - Build packages
 FROM deps AS build
 COPY $EXTERNAL_SOURCE_NESTED ./
+RUN chmod +x $YARN
 
 RUN git config --global --add safe.directory ./
 # Upstream only
