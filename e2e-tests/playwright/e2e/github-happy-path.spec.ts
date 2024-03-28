@@ -32,7 +32,7 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify Profile is Github Account Name in the Settings page', async () => {
     await uiHelper.openSidebar('Settings');
-    await expect(page).toHaveURL(process.env.BASE_URL + '/settings');
+    await expect(page).toHaveURL('/settings');
     await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
     await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
   });

@@ -23,7 +23,9 @@ export default defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: process.env.BASE_URL,
+    // baseURL: process.env.BASE_URL,
+    baseURL:
+      'https://rhdh-backstage-showcase.backstage-os-2-eu-de-2-bx-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud',
     ignoreHTTPSErrors: true,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -33,8 +35,14 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'showcase',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+    },
+    {
+      name: 'showcase-rbac',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
     },
 
     // {
