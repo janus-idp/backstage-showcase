@@ -1,10 +1,7 @@
 # to use this file, `pip install pip-tools -U` first (need >= 7.3), then 
 # pip-compile --allow-unsafe --output-file=requirements.txt --strip-extras requirements.in
 
-# get a newer archive/commit SHA from github, then run cachito_hash.sh to update the sha256: hash
-# must include from source because https://pypi.org/project/mkdocs-techdocs-core/1.3.3/#files source tarball is missing requirements.txt (so cachito poops itself)
-mkdocs-techdocs-core==1.3.3
-https://github.com/backstage/mkdocs-techdocs-core/archive/bbdab44e0d3aecfdc4e77b14c72b57791d4902b2.zip#egg=mkdocs-techdocs-core&cachito_hash=sha256:40421a5f43b11fd9ea9f92e107f91089b6bfa326967ad497666ab5a451fcf136
+mkdocs-techdocs-core==1.3.5
 
 # get a newer archive/commit SHA from github, then run cachito_hash.sh to update the sha256: hash
 # must include from source because https://pypi.org/project/plantuml-markdown/3.9.2/#files contains no source tarball (so cachito poops itself)
@@ -39,9 +36,9 @@ markdown==3.2.2
 markupsafe==2.1.4
 mdx-truly-sane-lists==1.3
 mergedeep==1.3.4
-mkdocs-material-extensions==1.3.1
-mkdocs-material==9.4.14
-mkdocs-monorepo-plugin==1.1.0
+mkdocs-material-extensions>=1.3.1
+mkdocs-material>=9.5
+mkdocs-monorepo-plugin>=1.1.0
 mkdocs==1.5.3
 packaging==23.2
 packaging>=20
