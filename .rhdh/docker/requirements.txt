@@ -120,7 +120,7 @@ pathspec==0.12.1
     #   -r requirements.in
     #   hatchling
     #   mkdocs
-plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/17d348bfaa9112cdd2130e6410ce3a50224db3cf.zip
+plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/17d348bfaa9112cdd2130e6410ce3a50224db3cf.zip#cachito_hash=sha256:221cc4972c75ba911cad4a56df07f61771c20077f8cbc8966181e30cabf68de1
     # via
     #   -r requirements.in
     #   mkdocs-techdocs-core
