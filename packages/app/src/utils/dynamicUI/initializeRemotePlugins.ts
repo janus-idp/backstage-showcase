@@ -13,22 +13,24 @@ const initializeRemotePlugins = async (
     ),
   );
   let remotePlugins = await Promise.all(
-    requiredModules.map(({ scope, module }) =>
-      pluginStore
-        .getExposedModule<{
-          [importName: string]: React.ComponentType<{}>;
-        }>(scope, module)
-        .catch(() => {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to load plugin ${scope}`);
-          return undefined;
-        })
-        .then(remoteModule => ({
-          module,
-          scope,
-          remoteModule,
-        })),
-    ),
+    requiredModules
+      .filter(({ scope }) => !scope.startsWith('@internal'))
+      .map(({ scope, module }) =>
+        pluginStore
+          .getExposedModule<{
+            [importName: string]: React.ComponentType<{}>;
+          }>(scope, module)
+          .catch(() => {
+            // eslint-disable-next-line no-console
+            console.error(`Failed to load plugin ${scope}`);
+            return undefined;
+          })
+          .then(remoteModule => ({
+            module,
+            scope,
+            remoteModule,
+          })),
+      ),
   );
   // remove all remote modules that are undefined
   remotePlugins = remotePlugins.filter(({ remoteModule }) =>
