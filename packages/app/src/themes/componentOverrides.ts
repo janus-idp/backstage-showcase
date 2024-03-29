@@ -18,7 +18,6 @@ export const components = (
 ): UnifiedThemeOptions['components'] => {
   const themePalette = defaultThemePalette(mode);
   return {
-    // @ts-expect-error - BackstageHeaderTabs is a custom component
     BackstageHeaderTabs: {
       styleOverrides: {
         tabsWrapper: {
