@@ -40,7 +40,7 @@
   "peerDependencies": {
     "@backstage/backend-common": "^0.20.0",
     "@backstage/backend-plugin-api": "^0.6.12",
-    "@backstage/integration": "^1.9.0",
+    "@backstage/integration": "^1.8.0",
     "@backstage/plugin-scaffolder-node": "^0.2.9",
     "@backstage/backend-dynamic-feature-service": "^0.2.2",
     "@backstage/config": "^1.1.1",
