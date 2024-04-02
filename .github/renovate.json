@@ -5,7 +5,9 @@
     ":rebaseStalePrs",
     "group:allNonMajor",
     "group:linters",
-    "group:test"
+    "group:test",
+    "default:pinDigestsDisabled",
+    "default:automergeBranchPush"
   ],
   "js": {
     "managerBranchPrefix": "js-"
@@ -20,7 +22,16 @@
   "pip_requirements": {
     "fileMatch": ["requirements.*\\.in"]
   },
+  "docker": {
+    "digest": {
+      "enabled": false
+    }
+  },
   "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "groupName": ["Docker base images"]
+    },
     {
       "matchPackagePatterns": [
         "^@backstage/",
@@ -33,5 +44,6 @@
       "dependencyDashboardApproval": true
     }
   ],
-  "ignorePaths": ["**/dist-dynamic/**"]
+  "ignorePaths": ["**/dist-dynamic/**"],
+  "ignoreDeps": ["@roadiehq/backstage-plugin-argo-cd"]
 }
