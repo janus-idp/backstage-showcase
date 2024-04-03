@@ -14,7 +14,7 @@ While this package remains in an experimental phase and is a private package in 
 
 ### Backend plugins
 
-To be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be completed code-wise, as well as rebuilt with a dedicated CLI command.
+To be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be based on, or compatible with, the new backend system, as well as rebuilt with a dedicated CLI command.
 
 #### Add the Dynamic Plugin script
 
@@ -22,7 +22,6 @@ There are some changes to be made to the plugin code, in order to make it compat
 
 1. The plugin must:
 
-- import the `@backstage/backend-dynamic-feature-service` package,
 - add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
 - add the `export-dynamic` script entry,
 - add the following elements to the package `files` list:
@@ -35,7 +34,7 @@ These recommended changes to the `package.json` are summarized below:
   ...
   "scripts": {
     ...
-    "export-dynamic": "janus-cli package export-dynamic-plugin"
+    "export-dynamic": "janus-cli package export-dynamic-plugin ----embed-as-dependencies"
     ...
   },
   ...
@@ -46,7 +45,7 @@ These recommended changes to the `package.json` are summarized below:
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.7.5"
+    "@janus-idp/cli": "^1.7.7"
   },
   ...
   "files": [
@@ -57,9 +56,11 @@ These recommended changes to the `package.json` are summarized below:
   ],
 ```
 
-#### Creating entry points
+#### Required entry points
 
-It is required to create entry points (using `createBackendPlugin` or `createBackendModule`) to enable a backend plugin's dynamic functionality.
+The new backend system standard entrypoint (created using `createBackendPlugin()` or `createBackendModule()`) should be exported as the default export of either the main package or of an `alpha` package (if the new backend support is still provided as `alpha` APIs).
+
+So this doesn't add any additional requirement on top of the standard plugin development guidelines of the new backend system.
 
 For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/module.ts#L25).
 
@@ -129,7 +130,7 @@ These recommended changes to the `package.json` are summarized below:
   },
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.4.7"
+    "@janus-idp/cli": "^1.7.7"
   },
   ...
   "files": [
