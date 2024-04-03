@@ -301,14 +301,18 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 
 - Create a `dynamic-plugins-root` folder at the root of the showcase application repository.
 
-- In the `app-config.yaml` file, add the following entry:
+- To use the `dynamic` plugins packaged within this project, generate and copy them to the `dynamic-plugins-root` using the following commands:
 
-  ```yaml
-  dynamicPlugins:
-    rootDirectory: dynamic-plugins-root
+  ```bash
+  yarn tsc
+  yarn build
+  yarn export-dynamic
+  yarn copy-dynamic-plugins ../dynamic-plugins-root
   ```
 
-- Copy the dynamic plugin package to the `dynamic-plugins-root` folder with the following commands:
+  **Note**: Review the list of the dynamic plugins copied and keep the ones you need or use all of them !
+
+- Copy your dynamic plugin package(s) to be tested/developed to the `dynamic-plugins-root` folder using the following commands:
 
   ```bash
   pkg=<local dist-dynamic sub-folder or external package name of the dynamic plugin package>
@@ -319,10 +323,45 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 
   It will create a sub-folder named after the package name, and containing the dynamic plugin package.
 
+- In the `app-config.local.yaml` file, add the following entry at the end:
+
+  ```yaml
+  dynamicPlugins:
+    rootDirectory: dynamic-plugins-root
+  ```
+
+- Append next to this file the `frontend` [configurations](..%2Fdynamic-plugins.default.yaml) as they are not loaded automatically when backstage runs locally vs on ocp (as packaged within the backstage-showcase image):
+
+  ```yaml
+  dynamicPlugins:
+    rootDirectory: qshift-dynamic-plugins-root
+    frontend:
+      # Your plugin config !
+
+      # Kubernetes, Topology, Tekton, etc config
+
+      # RBAC page in the app-provided Administration page
+      janus-idp.backstage-plugin-rbac:
+        dynamicRoutes:
+          - path: /admin/rbac
+            module: RbacPlugin
+            importName: RbacPage
+        mountPoints:
+          - mountPoint: admin.page.rbac/cards
+            module: RbacPlugin
+            importName: RbacPage
+            config:
+              layout:
+                gridColumn: '1 / -1'
+                width: 100vw
+              props:
+                useHeader: false
+  ```
+
 - Start the showcase application. During the initialization step it should have a log entry similar to the following:
 
   ```bash
-  backstage info loaded dynamic backend plugin '@scope/some-plugin-dynamic' from 'file:///showacase-root/dynamic-plugins-root/scope-some-plugin-dynamic-0.0.1'
+  backstage info loaded dynamic backend plugin '@scope/some-plugin-dynamic' from 'file:///showcase-root/dynamic-plugins-root/scope-some-plugin-dynamic-0.0.1'
   ```
 
 ### Helm deployment
@@ -648,26 +687,27 @@ Mount points are defined identifiers available across the applications. These po
 
 The following mount points are available:
 
-| Mount point                  | Description                         | Visible even when no plugins are enabled                       |
-| ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
-| `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
-| `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
-| `entity.page.issues`         | Catalog entity "Issues" tab         | NO                                                             |
-| `entity.page.pull-requests`  | Catalog entity "Pull Requests" tab  | NO                                                             |
-| `entity.page.ci`             | Catalog entity "CI" tab             | NO                                                             |
-| `entity.page.cd`             | Catalog entity "CD" tab             | NO                                                             |
-| `entity.page.kubernetes`     | Catalog entity "Kubernetes" tab     | NO                                                             |
-| `entity.page.image-registry` | Catalog entity "Image Registry" tab | NO                                                             |
-| `entity.page.monitoring`     | Catalog entity "Monitoring" tab     | NO                                                             |
-| `entity.page.lighthouse`     | Catalog entity "Lighthouse" tab     | NO                                                             |
-| `entity.page.api`            | Catalog entity "API" tab            | YES for entity of `kind: Component` and `spec.type: 'service'` |
-| `entity.page.dependencies`   | Catalog entity "Dependencies" tab   | YES for entity of `kind: Component`                            |
-| `entity.page.docs`           | Catalog entity "Documentation" tab  | YES for entity that satisfies `isTechDocsAvailable`            |
-| `entity.page.definition`     | Catalog entity "Definitions" tab    | YES for entity of `kind: Api`                                  |
-| `entity.page.diagram`        | Catalog entity "Diagram" tab        | YES for entity of `kind: System`                               |
-| `search.page.types`          | Search result type                  | YES, default catalog search type is available                  |
-| `search.page.filters`        | Search filters                      | YES, default catalog kind and lifecycle filters are visible    |
-| `search.page.results`        | Search results content              | YES, default catalog search is present                         |
+| Mount point                  | Description                                                                                                      | Visible even when no plugins are enabled                       |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `entity.page.overview`       | Catalog entity overview page                                                                                     | YES for all entities                                           |
+| `entity.page.topology`       | Catalog entity "Topology" tab                                                                                    | NO                                                             |
+| `entity.page.quarkus`        | Catalog entity "[Quarkus](https://github.com/q-shift/backstage-plugins/?tab=readme-ov-file#quarkus-console)" tab | NO                                                             |
+| `entity.page.issues`         | Catalog entity "Issues" tab                                                                                      | NO                                                             |
+| `entity.page.pull-requests`  | Catalog entity "Pull Requests" tab                                                                               | NO                                                             |
+| `entity.page.ci`             | Catalog entity "CI" tab                                                                                          | NO                                                             |
+| `entity.page.cd`             | Catalog entity "CD" tab                                                                                          | NO                                                             |
+| `entity.page.kubernetes`     | Catalog entity "Kubernetes" tab                                                                                  | NO                                                             |
+| `entity.page.image-registry` | Catalog entity "Image Registry" tab                                                                              | NO                                                             |
+| `entity.page.monitoring`     | Catalog entity "Monitoring" tab                                                                                  | NO                                                             |
+| `entity.page.lighthouse`     | Catalog entity "Lighthouse" tab                                                                                  | NO                                                             |
+| `entity.page.api`            | Catalog entity "API" tab                                                                                         | YES for entity of `kind: Component` and `spec.type: 'service'` |
+| `entity.page.dependencies`   | Catalog entity "Dependencies" tab                                                                                | YES for entity of `kind: Component`                            |
+| `entity.page.docs`           | Catalog entity "Documentation" tab                                                                               | YES for entity that satisfies `isTechDocsAvailable`            |
+| `entity.page.definition`     | Catalog entity "Definitions" tab                                                                                 | YES for entity of `kind: Api`                                  |
+| `entity.page.diagram`        | Catalog entity "Diagram" tab                                                                                     | YES for entity of `kind: System`                               |
+| `search.page.types`          | Search result type                                                                                               | YES, default catalog search type is available                  |
+| `search.page.filters`        | Search filters                                                                                                   | YES, default catalog kind and lifecycle filters are visible    |
+| `search.page.results`        | Search results content                                                                                           | YES, default catalog search is present                         |
 
 Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
 

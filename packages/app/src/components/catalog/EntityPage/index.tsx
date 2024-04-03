@@ -294,6 +294,12 @@ export const entityPage = (
     })}
 
     {tab({
+      path: '/quarkus',
+      title: 'Quarkus',
+      mountPoint: 'entity.page.quarkus',
+    })}
+
+    {tab({
       path: '/topology',
       title: 'Topology',
       mountPoint: 'entity.page.topology',
