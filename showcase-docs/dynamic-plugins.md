@@ -22,11 +22,8 @@ There are some changes to be made to the plugin code, in order to make it compat
 
 1. The plugin must:
 
-- add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
-- add the `export-dynamic` script entry,
-- add the following elements to the package `files` list:
-
-  `"dist-dynamic/*.*", "dist-dynamic/dist/**", "dist-dynamic/alpha/*"`
+- include the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
+- include the `export-dynamic` script entry,
 
 These recommended changes to the `package.json` are summarized below:
 
@@ -36,24 +33,11 @@ These recommended changes to the `package.json` are summarized below:
     ...
     "export-dynamic": "janus-cli package export-dynamic-plugin ----embed-as-dependencies"
     ...
-  },
-  ...
-  "dependencies": {
-    ...
-    "@backstage/backend-dynamic-feature-service": "0.2.3",
-    ...
   }
   ...
   "devDependencies": {
     "@janus-idp/cli": "^1.7.7"
-  },
-  ...
-  "files": [
-    ...
-    "dist-dynamic/*.*",
-    "dist-dynamic/dist/**",
-    "dist-dynamic/alpha/*"
-  ],
+  }
 ```
 
 #### Required entry points
