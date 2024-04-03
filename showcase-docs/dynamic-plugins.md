@@ -1,36 +1,5 @@
 # Dynamic Plugins support
 
-# Table of Contents
-
-- [Overview](#overview)
-- [How it works](#how-it-works)
-- [Preparing dynamic plugins for the showcase](#preparing-dynamic-plugins-for-the-showcase)
-  - [Backend plugins](#backend-plugins)
-    - [Required code changes](#required-code-changes)
-    - [Note about the new backend system support](#note-about-the-new-backend-system-support)
-    - [Exporting the backend plugin as a dynamic plugin package](#exporting-the-backend-plugin-as-a-dynamic-plugin-package)
-    - [Publishing the dynamic backend plugin package to an NPM registry](#publishing-the-dynamic-backend-plugin-package-to-an-npm-registry)
-    - [About embedding dependencies in the plugin package](#about-embedding-dependencies-in-the-plugin-package)
-    - [Wrapping a third-party backend plugin to add dynamic plugin support](#wrapping-a-third-party-backend-plugin-to-add-dynamic-plugin-support)
-  - [Frontend plugins](#frontend-plugins)
-    - [Required code changes](#required-code-changes-1)
-    - [Exporting the plugin as a dynamic plugin package](#exporting-the-plugin-as-a-dynamic-plugin-package)
-    - [Wrapping a third-party frontend plugin to add dynamic plugin support](#wrapping-a-third-party-frontend-plugin-to-add-dynamic-plugin-support)
-- [Installing a dynamic plugin package in the showcase](#installing-a-dynamic-plugin-package-in-the-showcase)
-  - [Local configuration](#local-configuration)
-  - [Helm deployment](#helm-deployment)
-  - [Dynamic plugins included in the Showcase container image](#dynamic-plugins-included-in-the-showcase-container-image)
-  - [Example of external dynamic backend plugins](#example-of-external-dynamic-backend-plugins)
-  - [Using a custom NPM registry](#using-a-custom-npm-registry)
-  - [Air Gapped Environment](#air-gapped-environment)
-- [Plugin configuration](#plugin-configuration)
-  - [Frontend layout configuration](#frontend-layout-configuration)
-    - [Extend internal library of available icons](#extend-internal-library-of-available-icons)
-    - [Dynamic routes](#dynamic-routes)
-    - [Bind to existing plugins](#bind-to-existing-plugins)
-    - [Using mount points](#using-mount-points)
-    - [Provide additional Utility APIs](#provide-additional-utility-apis)
-
 ## Overview
 
 This document describes how to enable the dynamic plugins feature in the Janus Backstage showcase application.
