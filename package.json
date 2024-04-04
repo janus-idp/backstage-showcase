@@ -50,7 +50,7 @@
     "sanitize-html": "2.13.0",
     "turbo": "1.13.2",
     "typescript": "5.4.3",
-    "undici": "5.28.4"
+    "undici": "6.11.1"
   },
   "resolutions": {
     "@types/react": "18.2.48",
