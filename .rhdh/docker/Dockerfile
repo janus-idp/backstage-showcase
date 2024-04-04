@@ -16,11 +16,11 @@
 # 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
 # 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
 # 3. uncomment lines with RUN source .../cachito.env
-# 4. add Brew metadata 
+# 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-18:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-80 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-18:1-98 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -52,6 +52,8 @@ COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.js
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
+# new for 1.1?
+# COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 
 # Downstream only - debugging
 # COPY $REMOTE_SOURCES/ ./
@@ -168,7 +170,7 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-18-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-85 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-103 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
