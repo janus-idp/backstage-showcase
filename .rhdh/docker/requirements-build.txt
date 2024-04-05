@@ -10,7 +10,7 @@ babel==2.14.0
     #   mkdocs-material
 calver==2022.6.26
     # via -r requirements-build.in
-certifi==2023.11.17
+certifi==2024.2.2
     # via
     #   -r requirements-build.in
     #   requests
