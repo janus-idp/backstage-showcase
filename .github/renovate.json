@@ -33,17 +33,28 @@
       "groupName": ["Docker base images"]
     },
     {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": ["DevDependencies (non-major)"]
+    },
+    {
       "matchPackagePatterns": [
         "^@backstage/",
         "^@janus-idp/",
         "^@immobiliarelabs/",
         "^@roadiehq/",
-        "^@pagerduty/"
+        "^@pagerduty/",
+        "^@internal/"
       ],
       "groupName": ["Backstage packages"],
       "dependencyDashboardApproval": true
     }
   ],
   "ignorePaths": ["**/dist-dynamic/**"],
-  "ignoreDeps": ["@roadiehq/backstage-plugin-argo-cd"]
+  "ignoreDeps": ["@roadiehq/backstage-plugin-argo-cd"],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "addLabels": ["kind/security"]
+  },
+  "osvVulnerabilityAlerts": true
 }
