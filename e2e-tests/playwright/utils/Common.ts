@@ -63,7 +63,7 @@ export class Common {
           await this.page.waitForTimeout(1000); // Using page here because if the popup closes automatically, it throws an error during the wait
         }
 
-        const locator = popup.locator('#js-oauth-authorize-btn');
+        const locator = popup.locator('button.js-oauth-authorize-btn');
         if (!popup.isClosed() && (await locator.isVisible())) {
           await popup.locator('body').click();
           await locator.waitFor();
