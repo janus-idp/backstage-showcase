@@ -78,3 +78,19 @@ You can find the Backstage Showcase app running at <https://showcase.janus-idp.i
 For more information on our plugin offerings, consult the [Janus IDP Backstage Plugins](https://github.com/janus-idp/backstage-plugins) repo.
 
 Want to know more about Backstage, consult the [documentation](https://backstage.io/docs/overview/what-is-backstage) and [GitHub](https://github.com/backstage/backstage) repo.
+
+## Multi-arch support
+
+RHDH is currently only available for amd64/x86_64. 
+
+For additional architecture support, please vote for https://issues.redhat.com/browse/RHIDP-1351 with your reason for needing additional arches.
+
+If you want an image that runs on Mac M1 (arm64/aarch64) or another architecture, you will need to build it yourself.
+
+### Building locally
+
+Check out this repo, choose the branch or tag you want to use, then build an image:
+
+```
+podman build -f docker/Dockerfile . -t janus-idp/backstage-showcase:local
+```
