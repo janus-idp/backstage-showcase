@@ -47,7 +47,7 @@
     "@backstage/plugin-search-backend-node": "1.2.17",
     "@internal/plugin-dynamic-plugins-info-backend": "*",
     "@internal/plugin-scalprum-backend": "*",
-    "@janus-idp/backstage-plugin-rbac-backend": "2.4.1",
+    "@janus-idp/backstage-plugin-rbac-backend": "2.6.1",
     "@janus-idp/backstage-plugin-rbac-node": "1.0.3",
     "@manypkg/get-packages": "2.2.0",
     "app": "*",
