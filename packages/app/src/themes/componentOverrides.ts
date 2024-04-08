@@ -99,6 +99,12 @@ export const components = (
             backgroundColor: themePalette.general.cardBorderColor,
           },
         },
+        elevation2: {
+          backgroundColor: themePalette.general.tableBackgroundColor,
+          boxShadow: 'none',
+          outline: `1px solid ${themePalette.general.cardBorderColor}`,
+          padding: '1rem',
+        },
       },
     },
     MuiAccordion: {
@@ -114,6 +120,80 @@ export const components = (
           '&:last-child': {
             borderBottomLeftRadius: '0',
             borderBottomRightRadius: '0',
+          },
+        },
+      },
+    },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themePalette.general.tableBackgroundColor,
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        regular: {
+          '& > div > h2[class*="MuiTypography-h5"]': {
+            fontSize: '1.25rem',
+            color: themePalette.general.tableTitleColor,
+          },
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themePalette.general.tableBackgroundColor,
+          '&:not([class*="MuiTableRow-footer"]):hover': {
+            backgroundColor: `${themePalette.general.tableRowHover} !important`,
+          },
+          '& > th[class*="MuiTableCell-head"]': {
+            backgroundColor: themePalette.general.tableBackgroundColor,
+          },
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          '&[class*="BackstageTableHeader-header"]': {
+            borderTop: 'unset',
+            borderBottom: `1px solid ${themePalette.general.tableBorderColor}`,
+          },
+        },
+        // @ts-ignore
+        head: {
+          textTransform: 'unset !important',
+          color: `${themePalette.general.tableColumnTitleColor} !important`,
+          '& > span[class*="MuiTableSortLabel-active"]': {
+            color: `${themePalette.general.tableColumnTitleActiveColor} !important`,
+          },
+          '& > span > svg[class*="MuiTableSortLabel-icon"]': {
+            color: 'inherit !important',
+          },
+        },
+        body: {
+          fontWeight: 'normal !important',
+          color: themePalette.general.tableTitleColor,
+          '&:empty::before': {
+            content: '"--"',
+          },
+          '& > div > span:empty::before': {
+            content: '"--"',
+          },
+          '& > div[class*="MuiChip-sizeSmall"]': {
+            margin: '2px',
+          },
+        },
+      },
+    },
+    MuiTableFooter: {
+      styleOverrides: {
+        root: {
+          '& > tr > td': {
+            borderBottom: 'none',
           },
         },
       },

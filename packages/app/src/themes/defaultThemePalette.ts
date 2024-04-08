@@ -11,6 +11,13 @@ export const defaultThemePalette = (mode: string) => {
         sideBarBackgroundColor: '#1b1d21',
         cardSubtitleColor: '#FFF',
         cardBorderColor: '#444548',
+        tableTitleColor: '#E0E0E0',
+        tableSubtitleColor: '#E0E0E0',
+        tableColumnTitleColor: '#E0E0E0',
+        tableColumnTitleActiveColor: '#1FA7F8',
+        tableRowHover: '#0f1214',
+        tableBorderColor: '#515151',
+        tableBackgroundColor: '#1b1d21',
       },
       primary: {
         main: '#1FA7F8', // text button color, button background color
@@ -39,6 +46,13 @@ export const defaultThemePalette = (mode: string) => {
       sideBarBackgroundColor: '#212427',
       cardSubtitleColor: '#000',
       cardBorderColor: '#EBEBEB',
+      tableTitleColor: '#181818',
+      tableSubtitleColor: '#616161',
+      tableColumnTitleColor: '#151515',
+      tableColumnTitleActiveColor: '#0066CC',
+      tableRowHover: '#F5F5F5',
+      tableBorderColor: '#E0E0E0',
+      tableBackgroundColor: '#FFF',
     },
     primary: {
       main: '#0066CC',
