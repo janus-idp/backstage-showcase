@@ -501,22 +501,6 @@ plugins:
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-dynamic-plugins-info
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          janus-idp.backstage-plugin-dynamic-plugins-info:
-            dynamicRoutes:
-              - path: /admin/plugins
-                importName: DynamicPluginsInfo
-            mountPoints:
-              - mountPoint: admin.page.plugins/cards
-                importName: DynamicPluginsInfo
-                config:
-                  layout:
-                    gridColumn: "1 / -1"
-                    width: 100vw
-
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
     disabled: true
     pluginConfig:

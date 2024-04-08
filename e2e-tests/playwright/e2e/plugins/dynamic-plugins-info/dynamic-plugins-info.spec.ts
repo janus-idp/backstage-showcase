@@ -16,7 +16,7 @@ test.describe('dynamic-plugins-info UI tests', () => {
     await uiHelper.clickTab('Plugins');
   });
 
-  test('it should show a table and have a support button, the table should contain the dynamic-plugins-info plugin', async ({
+  test('it should show a table and have a support button, the table should contain techdocs plugins', async ({
     page,
   }) => {
     // what shows up in the list depends on how the instance is configured so
@@ -36,10 +36,7 @@ test.describe('dynamic-plugins-info UI tests', () => {
     // properly anyways
     await page
       .getByPlaceholder('Filter')
-      .pressSequentially('dynamic-plugins-info\n', { delay: 300 });
-    await uiHelper.verifyRowsInTable(
-      ['@janus-idp/backstage-plugin-dynamic-plugins-info'],
-      true,
-    );
+      .pressSequentially('techdocs\n', { delay: 300 });
+    await uiHelper.verifyRowsInTable(['backstage-plugin-techdocs'], true);
   });
 });
