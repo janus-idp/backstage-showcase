@@ -548,6 +548,8 @@ The following mount points are available:
 
 | Mount point                  | Description                         | Visible even when no plugins are enabled                       |
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
+| `admin.page.plugins`         | Administration plugins page         | NO                                                             |
+| `admin.page.rbac`            | Administration RBAC page            | NO                                                             |
 | `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
 | `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
 | `entity.page.issues`         | Catalog entity "Issues" tab         | NO                                                             |

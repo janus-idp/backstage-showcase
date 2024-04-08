@@ -92,10 +92,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
-            {dynamicRoutes.map(({ menuItem, path }) => {
+            {dynamicRoutes.map(({ scope, menuItem, path }) => {
               if (menuItem) {
                 return (
                   <SideBarItemWrapper
+                    key={`${scope}/${path}`}
                     icon={() => <MenuIcon icon={menuItem.icon} />}
                     to={path}
                     text={menuItem.text}
