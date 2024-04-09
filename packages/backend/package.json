@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@backstage/backend-app-api": "0.5.14",
-    "@backstage/backend-common": "0.21.3",
+    "@backstage/backend-common": "0.21.4",
     "@backstage/backend-defaults": "0.2.13",
     "@backstage/backend-dynamic-feature-service": "0.2.3",
     "@backstage/backend-plugin-api": "0.6.13",
