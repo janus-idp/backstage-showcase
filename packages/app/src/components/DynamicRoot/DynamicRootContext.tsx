@@ -74,18 +74,20 @@ export type RemotePlugins = {
   };
 };
 
-const DynamicRootContext = createContext<{
+export type ComponentRegistry = {
   AppProvider: React.ComponentType<React.PropsWithChildren>;
   AppRouter: React.ComponentType<React.PropsWithChildren>;
   dynamicRoutes: DynamicRootContextValue[];
-  mountPoints: {
-    [mountPoint: string]: ScalprumMountPoint[];
-  };
-}>({
+  mountPoints: { [mountPoint: string]: ScalprumMountPoint[] };
+  entityTabOverrides: Record<string, { title: string; mountPoint: string }>;
+};
+
+const DynamicRootContext = createContext<ComponentRegistry>({
   AppProvider: () => null,
   AppRouter: () => null,
   dynamicRoutes: [],
   mountPoints: {},
+  entityTabOverrides: {},
 });
 
 export default DynamicRootContext;

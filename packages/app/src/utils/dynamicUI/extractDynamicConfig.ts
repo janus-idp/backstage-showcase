@@ -1,4 +1,3 @@
-import { defaultConfigLoader } from '@backstage/core-app-api';
 import { Entity } from '@backstage/catalog-model';
 import { isKind } from '@backstage/plugin-catalog';
 import { hasAnnotation, isType } from '../../components/catalog/utils';
@@ -9,17 +8,6 @@ import {
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
-
-type AppConfig = {
-  context: string;
-  data: {
-    dynamicPlugins?: {
-      frontend?: {
-        [key: string]: CustomProperties;
-      };
-    };
-  };
-};
 
 type DynamicRoute = {
   scope: string;
@@ -60,6 +48,19 @@ type ApiFactory = {
   importName: string;
 };
 
+type EntityTab = {
+  mountPoint: string;
+  path: string;
+  title: string;
+};
+
+type EntityTabEntry = {
+  scope: string;
+  mountPoint: string;
+  path: string;
+  title: string;
+};
+
 type CustomProperties = {
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
@@ -70,49 +71,37 @@ type CustomProperties = {
     targets: BindingTarget[];
     bindings: RouteBinding[];
   };
+  entityTabs?: EntityTab[];
   mountPoints?: MountPoint[];
   appIcons?: AppIcon[];
   apiFactories?: ApiFactory[];
 };
 
-export const conditionsArrayMapper = (
-  condition:
-    | {
-        [key: string]: string | string[];
-      }
-    | Function,
-) => {
-  if (typeof condition === 'function') {
-    return (entity: Entity) => Boolean(condition(entity));
-  }
-  if (condition.isKind) {
-    return isKind(condition.isKind);
-  }
-  if (condition.isType) {
-    return isType(condition.isType);
-  }
-  if (condition.hasAnnotation) {
-    return hasAnnotation(condition.hasAnnotation as string);
-  }
-  return () => false;
+type AppConfig = {
+  context: string;
+  data: {
+    dynamicPlugins?: {
+      frontend?: {
+        [key: string]: CustomProperties;
+      };
+    };
+  };
 };
 
-export const configIfToCallable =
-  (conditional: ScalprumMountPointConfigRawIf) => (e: Entity) => {
-    if (conditional?.allOf) {
-      return conditional.allOf.map(conditionsArrayMapper).every(f => f(e));
-    }
-    if (conditional?.anyOf) {
-      return conditional.anyOf.map(conditionsArrayMapper).some(f => f(e));
-    }
-    if (conditional?.oneOf) {
-      return (
-        conditional.oneOf.map(conditionsArrayMapper).filter(f => f(e))
-          .length === 1
-      );
-    }
-    return true;
-  };
+type ExtractDynamicConfigProps = {
+  appConfig?: AppConfig[];
+  frontendAppConfig?: AppConfig;
+};
+
+type DynamicConfig = {
+  apiFactories: ApiFactory[];
+  appIcons: AppIcon[];
+  dynamicRoutes: DynamicRoute[];
+  entityTabs: EntityTabEntry[];
+  mountPoints: MountPoint[];
+  routeBindings: RouteBinding[];
+  routeBindingTargets: BindingTarget[];
+};
 
 /**
  * Converts all available configuration sources into the data structures
@@ -122,22 +111,23 @@ export const configIfToCallable =
  *
  * @param frontendAppConfig
  */
-async function extractDynamicConfig(
-  frontendAppConfig: AppConfig = { context: '', data: {} },
-) {
-  const appConfigs = (await defaultConfigLoader()) || [];
+async function extractDynamicConfig({
+  appConfig = [],
+  frontendAppConfig = { context: '', data: {} },
+}: ExtractDynamicConfigProps) {
   const initialDynamicConfig = appConfigsToDynamicConfig([frontendAppConfig]);
-  const dynamicConfig = appConfigsToDynamicConfig(appConfigs, {
-    routeBindings: initialDynamicConfig.routeBindings,
-    dynamicRoutes: initialDynamicConfig.dynamicRoutes.filter(dynamicRoute =>
-      doesConfigContain(dynamicRoute, 'dynamicRoutes', appConfigs),
-    ),
-    mountPoints: initialDynamicConfig.mountPoints.filter(mountPoint =>
-      doesConfigContain(mountPoint, 'mountPoints', appConfigs),
-    ),
-    appIcons: initialDynamicConfig.appIcons,
-    routeBindingTargets: initialDynamicConfig.routeBindingTargets,
+  const dynamicConfig = appConfigsToDynamicConfig(appConfig, {
     apiFactories: initialDynamicConfig.apiFactories,
+    appIcons: initialDynamicConfig.appIcons,
+    dynamicRoutes: initialDynamicConfig.dynamicRoutes.filter(dynamicRoute =>
+      doesConfigContain(dynamicRoute, 'dynamicRoutes', appConfig),
+    ),
+    entityTabs: initialDynamicConfig.entityTabs,
+    mountPoints: initialDynamicConfig.mountPoints.filter(mountPoint =>
+      doesConfigContain(mountPoint, 'mountPoints', appConfig),
+    ),
+    routeBindings: initialDynamicConfig.routeBindings,
+    routeBindingTargets: initialDynamicConfig.routeBindingTargets,
   });
   return dynamicConfig;
 }
@@ -151,30 +141,17 @@ async function extractDynamicConfig(
  */
 function appConfigsToDynamicConfig(
   appConfigs: AppConfig[],
-  initialDynamicConfig: {
-    routeBindings: RouteBinding[];
-    routeBindingTargets: BindingTarget[];
-    dynamicRoutes: DynamicRoute[];
-    appIcons: AppIcon[];
-    mountPoints: MountPoint[];
-    apiFactories: ApiFactory[];
-  } = {
-    routeBindings: [],
-    dynamicRoutes: [],
-    mountPoints: [],
-    appIcons: [],
-    routeBindingTargets: [],
+  initialDynamicConfig: DynamicConfig = {
     apiFactories: [],
+    appIcons: [],
+    dynamicRoutes: [],
+    entityTabs: [],
+    mountPoints: [],
+    routeBindings: [],
+    routeBindingTargets: [],
   },
 ) {
-  return appConfigs.reduce<{
-    routeBindings: RouteBinding[];
-    routeBindingTargets: BindingTarget[];
-    dynamicRoutes: DynamicRoute[];
-    appIcons: AppIcon[];
-    mountPoints: MountPoint[];
-    apiFactories: ApiFactory[];
-  }>((acc, { data }) => {
+  return appConfigs.reduce<DynamicConfig>((acc, { data }) => {
     if (data?.dynamicPlugins?.frontend) {
       acc.dynamicRoutes.push(
         ...Object.entries(data.dynamicPlugins.frontend).reduce<DynamicRoute[]>(
@@ -269,6 +246,20 @@ function appConfigsToDynamicConfig(
           [],
         ),
       );
+
+      acc.entityTabs.push(
+        ...Object.entries(data.dynamicPlugins.frontend).reduce<
+          EntityTabEntry[]
+        >((accEntityTabs, [scope, { entityTabs }]) => {
+          accEntityTabs.push(
+            ...(entityTabs ?? []).map(entityTab => ({
+              ...entityTab,
+              scope,
+            })),
+          );
+          return accEntityTabs;
+        }, []),
+      );
     }
     return acc;
   }, initialDynamicConfig);
@@ -298,6 +289,52 @@ function doesConfigContain(
     .reduce((_acc, curr: any) => {
       return curr[entry.scope][attribute] === undefined;
     }, true);
+}
+
+/**
+ * Evaluate the supplied conditional map.  Used to determine the visibility of
+ * tabs in the UI
+ * @param conditional
+ * @returns
+ */
+export function configIfToCallable(conditional: ScalprumMountPointConfigRawIf) {
+  return (e: Entity) => {
+    if (conditional?.allOf) {
+      return conditional.allOf.map(conditionsArrayMapper).every(f => f(e));
+    }
+    if (conditional?.anyOf) {
+      return conditional.anyOf.map(conditionsArrayMapper).some(f => f(e));
+    }
+    if (conditional?.oneOf) {
+      return (
+        conditional.oneOf.map(conditionsArrayMapper).filter(f => f(e))
+          .length === 1
+      );
+    }
+    return true;
+  };
+}
+
+export function conditionsArrayMapper(
+  condition:
+    | {
+        [key: string]: string | string[];
+      }
+    | Function,
+) {
+  if (typeof condition === 'function') {
+    return (entity: Entity) => Boolean(condition(entity));
+  }
+  if (condition.isKind) {
+    return isKind(condition.isKind);
+  }
+  if (condition.isType) {
+    return isType(condition.isType);
+  }
+  if (condition.hasAnnotation) {
+    return hasAnnotation(condition.hasAnnotation as string);
+  }
+  return () => false;
 }
 
 export default extractDynamicConfig;
