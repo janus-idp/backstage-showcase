@@ -1,4 +1,4 @@
-# Copyright 2023 The Janus IDP Authors
+# Copyright 2023-2024 The Janus IDP Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,8 +50,13 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          yarn install --frozen-lockfile
-
+          yarn install
+          if [[ $(git diff --name-only . | grep yarn.lock || true) ]]; then
+            echo "After 'yarn install', workspace is dirty! The following files have changed:"
+            echo
+            git diff --name-only . || true
+            exit 42
+          fi
       - name: Prettier
         run: |
           yarn run prettier:check
