@@ -50,7 +50,7 @@ hatchling==1.21.1
     #   hatch-nodejs-version
     #   hatch-requirements-txt
     #   hatch-vcs
-idna==3.6
+idna==3.7
     # via
     #   -r requirements.in
     #   requests
