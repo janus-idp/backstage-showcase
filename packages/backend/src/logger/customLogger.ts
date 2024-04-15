@@ -31,7 +31,7 @@ const auditLogFormat = winston.format((info, opts) => {
 });
 
 const transports = {
-  console: [
+  log: [
     new winston.transports.Console({
       format: winston.format.combine(
         auditLogFormat({ isAuditLog: false }),
@@ -41,41 +41,13 @@ const transports = {
       ),
     }),
   ],
-  log: [
-    new winston.transports.File({
-      filename: 'error.log',
-      level: 'error',
-      format: winston.format.combine(
-        auditLogFormat({ isAuditLog: false }),
-        defaultFormat,
-        winston.format.json(),
-      ),
-    }),
-    new winston.transports.File({
-      filename: 'combined.log',
-      format: winston.format.combine(
-        auditLogFormat({ isAuditLog: false }),
-        defaultFormat,
-        winston.format.json(),
-      ),
-    }),
-  ],
   auditLog: [
-    new winston.transports.File({
-      filename: 'audit-log-error.log',
-      level: 'error',
+    new winston.transports.Console({
       format: winston.format.combine(
         auditLogFormat({ isAuditLog: true }),
+        winston.format.colorize(),
         defaultFormat,
-        winston.format.json(),
-      ),
-    }),
-    new winston.transports.File({
-      filename: 'audit-log-combined.log',
-      format: winston.format.combine(
-        auditLogFormat({ isAuditLog: true }),
-        defaultFormat,
-        winston.format.json(),
+        winston.format.simple(),
       ),
     }),
   ],
@@ -100,11 +72,7 @@ export const customLogger = createServiceFactory({
       },
       level: process.env.LOG_LEVEL ?? 'info',
       format: winston.format.combine(defaultFormat, winston.format.json()),
-      transports: [
-        ...transports.console,
-        ...transports.log,
-        ...transports.auditLog,
-      ],
+      transports: [...transports.log, ...transports.auditLog],
     });
 
     const configSchema = await loadConfigSchema({
