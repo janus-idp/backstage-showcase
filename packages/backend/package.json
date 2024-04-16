@@ -62,7 +62,7 @@
     "lodash": "4.17.21",
     "pg": "8.11.3",
     "prom-client": "15.1.0",
-    "winston": "3.11.0"
+    "winston": "3.13.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.2",
