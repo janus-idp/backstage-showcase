@@ -61,7 +61,7 @@
     "isolated-vm": "4.6.0",
     "lodash": "4.17.21",
     "pg": "8.11.3",
-    "prom-client": "15.1.0",
+    "prom-client": "15.1.1",
     "winston": "3.11.0"
   },
   "devDependencies": {
