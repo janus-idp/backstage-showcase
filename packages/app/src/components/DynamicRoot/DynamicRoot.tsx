@@ -14,6 +14,7 @@ import { ScalprumProvider, useScalprum } from '@scalprum/react-core';
 
 import DynamicRootContext, {
   DynamicRootContextValue,
+  RemotePlugins,
   ScalprumMountPoint,
   ScalprumMountPointConfig,
 } from './DynamicRootContext';
@@ -27,16 +28,31 @@ import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import overrideBaseUrlConfigs from '../../utils/dynamicUI/overrideBaseUrlConfigs';
 import useAsync from 'react-use/lib/useAsync';
 import Loader from './Loader';
+import { AppConfig } from '@backstage/config';
+
+export type StaticPlugins = Record<
+  string,
+  {
+    plugin: BackstagePlugin;
+    module:
+      | React.ComponentType<{}>
+      | { [importName: string]: React.ComponentType<{}> };
+  }
+>;
 
 const DynamicRoot = ({
   afterInit,
   apis: staticApis,
+  baseFrontendConfig,
+  staticPluginStore = {},
   scalprumConfig,
 }: {
+  afterInit: () => Promise<{ default: React.ComponentType }>;
   // Static APIs
   apis: AnyApiFactory[];
+  baseFrontendConfig?: AppConfig;
+  staticPluginStore?: StaticPlugins;
   scalprumConfig: AppsConfig;
-  afterInit: () => Promise<{ default: React.ComponentType }>;
 }) => {
   const app = useRef<BackstageApp>();
   const [ChildComponent, setChildComponent] = useState<
@@ -63,7 +79,7 @@ const DynamicRoot = ({
       appIcons,
       routeBindingTargets,
       apiFactories,
-    } = await extractDynamicConfig();
+    } = await extractDynamicConfig(baseFrontendConfig);
 
     const requiredModules = [
       ...routeBindingTargets.map(({ scope, module }) => ({
@@ -88,15 +104,25 @@ const DynamicRoot = ({
       })),
     ];
 
+    const staticPlugins = Object.keys(staticPluginStore).reduce(
+      (acc, pluginKey) => {
+        return {
+          ...acc,
+          [pluginKey]: { PluginRoot: staticPluginStore[pluginKey].module },
+        };
+      },
+      {},
+    ) as RemotePlugins;
     const remotePlugins = await initializeRemotePlugins(
       pluginStore,
       scalprumConfig,
       requiredModules,
     );
+    const allPlugins = { ...staticPlugins, ...remotePlugins };
     const resolvedRouteBindingTargets = Object.fromEntries(
       routeBindingTargets.reduce<[string, BackstagePlugin<{}>][]>(
         (acc, { name, importName, scope, module }) => {
-          const plugin = remotePlugins[scope]?.[module]?.[importName];
+          const plugin = allPlugins[scope]?.[module]?.[importName];
 
           if (plugin) {
             acc.push([name, plugin as BackstagePlugin<{}>]);
@@ -115,7 +141,7 @@ const DynamicRoot = ({
     const icons = Object.fromEntries(
       appIcons.reduce<[string, React.ComponentType<{}>][]>(
         (acc, { scope, module, importName, name }) => {
-          const Component = remotePlugins[scope]?.[module]?.[importName];
+          const Component = allPlugins[scope]?.[module]?.[importName];
 
           if (Component) {
             acc.push([name, Component as React.ComponentType<{}>]);
@@ -133,7 +159,7 @@ const DynamicRoot = ({
 
     const remoteApis = apiFactories.reduce<AnyApiFactory[]>(
       (acc, { scope, module, importName }) => {
-        const apiFactory = remotePlugins[scope]?.[module]?.[importName];
+        const apiFactory = allPlugins[scope]?.[module]?.[importName];
 
         if (apiFactory) {
           acc.push(apiFactory as AnyApiFactory);
@@ -155,6 +181,9 @@ const DynamicRoot = ({
           bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
         icons,
+        plugins: Object.keys(staticPluginStore).map(
+          key => staticPluginStore[key].plugin,
+        ),
         themes: defaultThemes,
         components: defaultAppComponents,
       });
@@ -168,7 +197,7 @@ const DynamicRoot = ({
         staticJSXContent?: React.ReactNode;
       }[]
     >((acc, { module, importName, mountPoint, scope, config }) => {
-      const Component = remotePlugins[scope]?.[module]?.[importName];
+      const Component = allPlugins[scope]?.[module]?.[importName];
       // Only add mount points that have a component
       if (Component) {
         const ifCondition = configIfToCallable(
@@ -177,7 +206,7 @@ const DynamicRoot = ({
               k,
               v.map(c => {
                 if (typeof c === 'string') {
-                  const remoteFunc = remotePlugins[scope]?.[module]?.[c];
+                  const remoteFunc = allPlugins[scope]?.[module]?.[c];
                   if (remoteFunc === undefined) {
                     // eslint-disable-next-line no-console
                     console.warn(
@@ -236,7 +265,7 @@ const DynamicRoot = ({
       DynamicRootContextValue[]
     >((acc, route) => {
       const Component =
-        remotePlugins[route.scope]?.[route.module]?.[route.importName];
+        allPlugins[route.scope]?.[route.module]?.[route.importName];
       if (Component) {
         acc.push({
           ...route,
@@ -269,7 +298,14 @@ const DynamicRoot = ({
     afterInit().then(({ default: Component }) => {
       setChildComponent(() => Component);
     });
-  }, [pluginStore, scalprumConfig, staticApis, afterInit]);
+  }, [
+    afterInit,
+    baseFrontendConfig,
+    pluginStore,
+    scalprumConfig,
+    staticApis,
+    staticPluginStore,
+  ]);
 
   useEffect(() => {
     if (initialized && !components) {
@@ -291,10 +327,14 @@ const DynamicRoot = ({
 const ScalprumRoot = ({
   apis,
   afterInit,
+  baseFrontendConfig,
+  plugins,
 }: {
   // Static APIs
   apis: AnyApiFactory[];
   afterInit: () => Promise<{ default: React.ComponentType }>;
+  baseFrontendConfig?: AppConfig;
+  plugins?: StaticPlugins;
 }) => {
   const { loading, value } = useAsync(async () => {
     const config = ConfigReader.fromConfigs(
@@ -324,7 +364,7 @@ const ScalprumRoot = ({
             return {
               ...manifest,
               loadScripts: manifest.loadScripts.map(
-                script =>
+                (script: string) =>
                   `${value?.baseUrl ?? ''}/api/scalprum/${
                     manifest.name
                   }/${script}`,
@@ -336,8 +376,10 @@ const ScalprumRoot = ({
     >
       <DynamicRoot
         afterInit={afterInit}
-        scalprumConfig={value?.scalprumConfig ?? {}}
         apis={apis}
+        baseFrontendConfig={baseFrontendConfig}
+        staticPluginStore={plugins}
+        scalprumConfig={value?.scalprumConfig ?? {}}
       />
     </ScalprumProvider>
   );

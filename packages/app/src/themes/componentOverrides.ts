@@ -61,6 +61,206 @@ export const components = (
         },
       },
     },
+    BackstageSidebar: {
+      styleOverrides: {
+        drawer: {
+          backgroundColor: themePalette.general.sideBarBackgroundColor,
+        },
+      },
+    },
+    BackstageContent: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themePalette.general.mainSectionBackgroundColor,
+          '& div:first-child': {
+            '& > div[class*="-searchBar"]': {
+              backgroundColor: themePalette.general.formControlBackgroundColor,
+              boxShadow: `0px 2px 1px -1px ${themePalette.general.disabled}`,
+            },
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          backgroundColor: themePalette.general.cardBackgroundColor,
+          // hide the first child element which is a divider with MuiDivider-root classname in MuiPaper
+          '& > hr:first-child[class|="MuiDivider-root"]': {
+            height: 0,
+          },
+        },
+        elevation1: {
+          boxShadow: 'none',
+          borderRadius: '0',
+          outline: `1px solid ${themePalette.general.cardBorderColor}`,
+          '& > hr[class|="MuiDivider-root"]': {
+            backgroundColor: themePalette.general.cardBorderColor,
+          },
+        },
+        elevation2: {
+          backgroundColor: themePalette.general.tableBackgroundColor,
+          boxShadow: 'none',
+          outline: `1px solid ${themePalette.general.cardBorderColor}`,
+          padding: '1rem',
+        },
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+        rounded: {
+          '&:first-child': {
+            borderTopLeftRadius: '0',
+            borderTopRightRadius: '0',
+          },
+          '&:last-child': {
+            borderBottomLeftRadius: '0',
+            borderBottomRightRadius: '0',
+          },
+        },
+      },
+    },
+    MuiTable: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themePalette.general.tableBackgroundColor,
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        regular: {
+          '& > div > h2[class*="MuiTypography-h5"]': {
+            fontSize: '1.25rem',
+            color: themePalette.general.tableTitleColor,
+          },
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themePalette.general.tableBackgroundColor,
+          '&:not([class*="MuiTableRow-footer"]):hover': {
+            backgroundColor: `${themePalette.general.tableRowHover} !important`,
+          },
+          '& > th[class*="MuiTableCell-head"]': {
+            backgroundColor: themePalette.general.tableBackgroundColor,
+          },
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          '&[class*="BackstageTableHeader-header"]': {
+            borderTop: 'unset',
+            borderBottom: `1px solid ${themePalette.general.tableBorderColor}`,
+          },
+        },
+        // @ts-ignore
+        head: {
+          textTransform: 'unset !important',
+          color: `${themePalette.general.tableColumnTitleColor} !important`,
+          '& > span[class*="MuiTableSortLabel-active"]': {
+            color: `${themePalette.general.tableColumnTitleActiveColor} !important`,
+          },
+          '& > span > svg[class*="MuiTableSortLabel-icon"]': {
+            color: 'inherit !important',
+          },
+        },
+        body: {
+          fontWeight: 'normal !important',
+          color: themePalette.general.tableTitleColor,
+          '&:empty::before': {
+            content: '"--"',
+          },
+          '& > div > span:empty::before': {
+            content: '"--"',
+          },
+          '& > div[class*="MuiChip-sizeSmall"]': {
+            margin: '2px',
+          },
+        },
+      },
+    },
+    MuiTableFooter: {
+      styleOverrides: {
+        root: {
+          '& > tr > td': {
+            borderBottom: 'none',
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themePalette.general.cardBackgroundColor,
+        },
+      },
+    },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          height: '100%',
+          backgroundColor: themePalette.general.cardBackgroundColor,
+          '& > div > div > h2[class*="makeStyles-label"]': {
+            textTransform: 'unset',
+            color: themePalette.general.cardSubtitleColor,
+            opacity: '40%',
+          },
+          '& > div > div > p[class*="makeStyles-value"]': {
+            fontWeight: 'normal',
+          },
+          '& > div > div > div[class*="MuiChip-sizeSmall"]': {
+            backgroundColor: 'transparent',
+            borderRadius: '8px',
+            outline: `1px solid ${themePalette.general.disabled}`,
+          },
+          '& > div[class*="Mui-expanded"]': {
+            margin: 'auto',
+          },
+          '& > div[class*="MuiAccordion-root"]:before': {
+            height: 0,
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          '&:autofill': {
+            boxShadow: `0 0 0 100px ${themePalette.general.formControlBackgroundColor} inset`,
+            borderRadius: 'unset',
+          },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          '&::placeholder': {
+            color: themePalette.general.disabled,
+            opacity: 1,
+          },
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          '&:disabled': {
+            color: themePalette.general.disabled,
+          },
+        },
+      },
+    },
     MuiButton: {
       defaultProps: {
         disableRipple: true,
@@ -89,14 +289,14 @@ export const components = (
             color: themePalette.primary.contrastText,
           },
           '&:focus-visible': {
-            boxShadow: `inset 0 0 0 1px ${themePalette.primary.focusVisibleBorder}`,
-            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
+            boxShadow: `inset 0 0 0 1px ${themePalette.general.focusVisibleBorder}`,
+            outline: `${themePalette.general.focusVisibleBorder} solid 1px`,
             backgroundColor: themePalette.primary.dark,
             color: themePalette.primary.contrastText,
           },
           '&:disabled': {
-            color: themePalette.primary.disabled,
-            backgroundColor: themePalette.primary.disabledBackground,
+            color: themePalette.general.disabled,
+            backgroundColor: themePalette.general.disabledBackground,
           },
         },
         containedSecondary: {
@@ -107,14 +307,14 @@ export const components = (
             color: themePalette.secondary.contrastText,
           },
           '&:focus-visible': {
-            boxShadow: `inset 0 0 0 1px ${themePalette.secondary.focusVisibleBorder}`,
-            outline: `${themePalette.secondary.focusVisibleBorder} solid 1px`,
+            boxShadow: `inset 0 0 0 1px ${themePalette.general.focusVisibleBorder}`,
+            outline: `${themePalette.general.focusVisibleBorder} solid 1px`,
             backgroundColor: themePalette.secondary.dark,
             color: themePalette.secondary.contrastText,
           },
           '&:disabled': {
-            color: themePalette.secondary.disabled,
-            backgroundColor: themePalette.secondary.disabledBackground,
+            color: themePalette.general.disabled,
+            backgroundColor: themePalette.general.disabledBackground,
           },
         },
         outlined: {
@@ -127,7 +327,7 @@ export const components = (
           },
           '&:focus-visible': {
             boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
-            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
+            outline: `${themePalette.general.focusVisibleBorder} solid 1px`,
           },
         },
         outlinedPrimary: {
@@ -141,7 +341,7 @@ export const components = (
           },
           '&:focus-visible': {
             boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
-            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
+            outline: `${themePalette.general.focusVisibleBorder} solid 1px`,
           },
         },
         outlinedSecondary: {
@@ -155,7 +355,7 @@ export const components = (
           },
           '&:focus-visible': {
             boxShadow: `inset 0 0 0 2px ${themePalette.secondary.main}`,
-            outline: `${themePalette.secondary.focusVisibleBorder} solid 1px`,
+            outline: `${themePalette.general.focusVisibleBorder} solid 1px`,
           },
         },
         text: {
@@ -166,7 +366,7 @@ export const components = (
           },
           '&:focus-visible': {
             boxShadow: `inset 0 0 0 2px ${themePalette.primary.main}`,
-            outline: `${themePalette.primary.focusVisibleBorder} solid 1px`,
+            outline: `${themePalette.general.focusVisibleBorder} solid 1px`,
           },
         },
         textPrimary: {
@@ -196,6 +396,29 @@ export const components = (
     },
     MuiCssBaseline: {
       styleOverrides: redhatFont,
+    },
+    MuiCardHeader: {
+      styleOverrides: {
+        content: {
+          '& > span > nav span': {
+            textTransform: 'unset',
+            letterSpacing: 'normal',
+            fountweight: 'normal',
+          },
+        },
+        title: {
+          fontSize: '1.125rem',
+        },
+        action: {
+          '& > a > span > svg': {
+            fontSize: '1.125rem',
+          },
+          '& > a[class*="MuiIconButton-root"]:hover': {
+            color: themePalette.primary.textHover,
+            backgroundColor: 'transparent',
+          },
+        },
+      },
     },
   };
 };
