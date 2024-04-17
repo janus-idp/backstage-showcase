@@ -98,6 +98,11 @@ export const components = (
           '& > hr[class|="MuiDivider-root"]': {
             backgroundColor: themePalette.general.cardBorderColor,
           },
+          '&[class*="MuiPaper-root-"][class*="MuiCard-root-"][class*="MuiPaper-elevation1-"][class*="MuiPaper-rounded-"]':
+            {
+              display: 'flex',
+              flexDirection: 'column',
+            },
         },
         elevation2: {
           backgroundColor: themePalette.general.tableBackgroundColor,
@@ -229,6 +234,10 @@ export const components = (
           '& > div[class*="MuiAccordion-root"]:before': {
             height: 0,
           },
+          '& > div[class*="MuiGrid-root-"][class*="MuiGrid-container-"][class*="MuiGrid-spacing-xs-2-"] > div[class*="MuiGrid-root-"][class*="MuiGrid-item-"][class*="MuiGrid-grid-xs-12-"] > div[class*="MuiBox-root-"][class*="makeStyles-box"]':
+            {
+              '-webkit-line-clamp': '2',
+            },
         },
       },
     },
