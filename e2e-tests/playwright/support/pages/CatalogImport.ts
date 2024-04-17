@@ -22,7 +22,6 @@ export class CatalogImport {
       await this.uiHelper.clickButton('Import');
       await this.uiHelper.clickButton('View Component');
     }
-
   }
 }
 

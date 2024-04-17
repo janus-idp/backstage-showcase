@@ -48,6 +48,7 @@ export class Common {
   async loginAsGithubUser() {
     await this.logintoGithub();
     await this.page.goto('/');
+    await this.page.waitForLoadState('load');
     await this.uiHelper.clickButton('Sign In');
     await this.checkAndReauthorizeGithubApp();
     await this.uiHelper.waitForSideBarVisible();

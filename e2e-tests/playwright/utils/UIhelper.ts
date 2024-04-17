@@ -77,7 +77,7 @@ export class UIhelper {
     await expect(element).toBeVisible();
   }
 
-  async isBtnVisible(text: string) : Promise<boolean> {
+  async isBtnVisible(text: string): Promise<boolean> {
     await this.page.waitForLoadState('networkidle');
     const button = this.page.locator(`button:has-text("${text}")`);
     return button.isVisible();

@@ -107,7 +107,8 @@ apply_yaml_files() {
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: $K8S_PLUGIN_ANNOTATION/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
-    sed -i "s/$key:.*/$key: ${!key}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+    echo "Replacing $key with ${!key}"
+  sed -i "s|$key:.*|$key: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
   oc apply -f $dir/resources/service_account/service-account-rhdh.yaml --namespace=${NAME_SPACE}
@@ -227,11 +228,9 @@ installPipelinesOperator() {
 
 main() {
   echo "Log file: ${LOGFILE}"
-
-  source ./.ibm/pipelines/functions.sh
-  skip_if_only
-
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  source functions.sh
+  skip_if_only
 
   install_ibmcloud
   ibmcloud version
@@ -263,7 +262,7 @@ main() {
 
   echo "Tag name : ${TAG_NAME}"
 
-  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" rhdh-chart/backstage --version "${CHART_VERSION}" -f "$DIR"/value_files/"${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" rhdh-chart/backstage --version "${CHART_VERSION}" -f "$DIR"/value_files/"${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}"
 
   check_backstage_running
   backstage_status=$?
