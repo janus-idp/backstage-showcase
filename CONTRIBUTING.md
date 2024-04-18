@@ -66,6 +66,19 @@ Before submitting the PR, it is important to run some of our package scripts to 
 
 A special note. If there will be changes to the [app config](https://github.com/janus-idp/backstage-showcase/blob/main/app-config.yaml), we ask that [documentation](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) be updated if it will be a requirement for running the app. We also ask to ensure that the app will still work in the case of dummy information being supplied to the app config. While it is not a hard requirement, it does help others with quickly being able to get up and running with the showcase app.
 
+### Adding statically linked plugins for frontend and backend
+
+When contributing a new @internal plugin into this repo, you must remember to add the plugin to the Dockerfiles under the section titled `Stage 2 - Install dependencies`:
+
+* [Upstream Dockerfile](.rhdh/docker/Dockerfile)
+* [Downstream Dockerfile](docker/Dockerfile)
+
+For example:
+
+```
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
+```
+
 ## Support
 
 You can reach out to us in our [community slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) if you run into any issues with setup, running, or testing the application. Members of the team and community can assist you with questions and concerns you might have. Even if you don't need help, please consider joining and being involved in our community.
