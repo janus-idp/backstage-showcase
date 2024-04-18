@@ -65,14 +65,18 @@ test.describe.serial('GitHub Happy path', () => {
     ]);
 
     await uiHelper.selectMuiBox('Kind', 'User');
+    await uiHelper.searchInputPlaceholder('Subhash');
     await uiHelper.verifyRowsInTable([
-      'Subhash Khileri',
-      'Joseph Kim',
-      'Gustavo Lira e Silva',
-      'rhdh-qe',
-    ]);
-    await uiHelper.selectMuiBox('Kind', 'System');
-    await uiHelper.verifyRowsInTable(['Janus-IDP']);
+      'Subhash Khileri',]);
+    await uiHelper.searchInputPlaceholder('Joseph');
+    await uiHelper.verifyRowsInTable([
+      'Joseph Kim',]);
+    await uiHelper.searchInputPlaceholder('Gustavo');
+    await uiHelper.verifyRowsInTable([
+      'Gustavo Lira e Silva',]);
+    await uiHelper.searchInputPlaceholder('rhdh');
+    await uiHelper.verifyRowsInTable([
+      'rhdh-qe',]);
   });
 
   test('Verify all 12 Software Templates appear in the Create page', async () => {

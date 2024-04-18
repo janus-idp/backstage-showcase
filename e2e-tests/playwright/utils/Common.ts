@@ -35,7 +35,7 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
   }
 
-  async logintoGithub() {
+  private async logintoGithub() {
     await this.page.goto('https://github.com/login');
     await this.page.waitForSelector('#login_field');
     await this.page.fill('#login_field', process.env.GH_USER_ID);

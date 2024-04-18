@@ -25,7 +25,7 @@ export default defineConfig({
   use: {
     // baseURL: process.env.BASE_URL,
     baseURL:
-      'https://rhdh-backstage-showcase.backstage-os-2-eu-de-2-bx-c74b3ed44ce86949f501aefb2db80652-0000.eu-de.containers.appdomain.cloud',
+      'https://rhdh-backstage-showcase.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud/',
     ignoreHTTPSErrors: true,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

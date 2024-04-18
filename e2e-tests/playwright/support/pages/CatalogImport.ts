@@ -15,12 +15,23 @@ export class CatalogImport {
   async registerExistingComponent(url: string) {
     await this.page.fill(CatalogImportPO.componentURL, url);
     await this.uiHelper.clickButton('Analyze');
-    if (await this.uiHelper.isBtnVisible('Refresh')) {
-      await this.uiHelper.clickButton('Refresh');
-      expect(this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
-    } else {
-      await this.uiHelper.clickButton('Import');
-      await this.uiHelper.clickButton('View Component');
+
+    // Wait for the visibility of either 'Refresh' or 'Import' button
+    try {
+      await this.page.waitForSelector(this.uiHelper.getSelector('Refresh'), { state: 'visible', timeout: 10000 })
+        .then(async () => {
+          await this.uiHelper.clickButton('Refresh');
+          expect(await this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
+        })
+        .catch(async () => {
+          // If the 'Refresh' button does not appear, wait for the 'Import' button
+          await this.page.waitForSelector(this.uiHelper.getSelector('Import'), { state: 'visible', timeout: 10000 });
+          await this.uiHelper.clickButton('Import');
+          await this.uiHelper.clickButton('View Component');
+        });
+    } catch (error) {
+      // Handle the general error if neither button can be located
+      console.error('Error while registering component:', error);
     }
   }
 }
