@@ -1,6 +1,6 @@
 {
   "name": "immobiliarelabs-backstage-plugin-gitlab-backend-dynamic",
-  "version": "6.4.0",
+  "version": "6.5.0",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -20,16 +20,8 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test --passWithNoTests --coverage",
-    "clean": "backstage-cli package clean",
-    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default"
-  },
+  "scripts": {},
   "dependencies": {
-    "@types/express": "*",
     "body-parser": "^1.20.2",
     "express": "^4.17.3",
     "express-promise-router": "^4.1.0",
@@ -44,7 +36,7 @@
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-dynamic-feature-service": "0.2.0",
-    "@backstage/backend-common": "^0.19.9",
+    "@backstage/backend-common": "^0.20.1",
     "@backstage/backend-plugin-api": "^0.6.7",
     "@backstage/config": "^1.1.1",
     "@backstage/integration": "^1.7.0"
