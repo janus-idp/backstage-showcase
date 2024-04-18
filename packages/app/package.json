@@ -52,7 +52,7 @@
     "react-router-dom": "6.21.3",
     "react-use": "17.5.0",
     "swr": "2.2.4",
-    "tss-react": "4.9.3"
+    "tss-react": "4.9.6"
   },
   "devDependencies": {
     "@backstage/test-utils": "1.5.3",
