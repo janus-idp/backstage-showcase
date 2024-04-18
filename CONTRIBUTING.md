@@ -70,8 +70,8 @@ A special note. If there will be changes to the [app config](https://github.com/
 
 When contributing a new @internal plugin into this repo, you must remember to add the plugin to the Dockerfiles under the section titled `Stage 2 - Install dependencies`:
 
-* [Upstream Dockerfile](.rhdh/docker/Dockerfile)
-* [Downstream Dockerfile](docker/Dockerfile)
+- [Upstream Dockerfile](.rhdh/docker/Dockerfile)
+- [Downstream Dockerfile](docker/Dockerfile)
 
 For example:
 
