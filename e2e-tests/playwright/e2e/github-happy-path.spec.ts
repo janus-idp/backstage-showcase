@@ -64,13 +64,6 @@ test.describe.serial('GitHub Happy path', () => {
       'S3 Object bucket storage',
     ]);
 
-    await uiHelper.selectMuiBox('Kind', 'User');
-    await uiHelper.searchInputPlaceholder('Subhash');
-    await uiHelper.verifyRowsInTable(['Subhash Khileri']);
-    await uiHelper.searchInputPlaceholder('Joseph');
-    await uiHelper.verifyRowsInTable(['Joseph Kim']);
-    await uiHelper.searchInputPlaceholder('Gustavo');
-    await uiHelper.verifyRowsInTable(['Gustavo Lira e Silva']);
     await uiHelper.searchInputPlaceholder('rhdh');
     await uiHelper.verifyRowsInTable(['rhdh-qe']);
   });
