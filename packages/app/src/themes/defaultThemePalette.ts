@@ -1,11 +1,16 @@
-export const defaultThemePalette = (mode: string) => {
+import { ThemeColors } from '../types/types';
+
+export const defaultThemePalette = (mode: string, themeColors: ThemeColors) => {
   if (mode === 'dark') {
     return {
       general: {
         disabledBackground: '#444548',
         disabled: '#AAABAC',
+        searchBarBorderColor: '#57585a',
         formControlBackgroundColor: '#36373A',
         mainSectionBackgroundColor: '#0f1214',
+        headerBackgroundColor: '#0f1214',
+        headerTextColor: '#FFF',
         cardBackgroundColor: '#212427',
         focusVisibleBorder: '#ADD6FF',
         sideBarBackgroundColor: '#1b1d21',
@@ -18,9 +23,10 @@ export const defaultThemePalette = (mode: string) => {
         tableRowHover: '#0f1214',
         tableBorderColor: '#515151',
         tableBackgroundColor: '#1b1d21',
+        tabsBottomBorderColor: '#444548',
       },
       primary: {
-        main: '#1FA7F8', // text button color, button background color
+        main: themeColors.primaryColor || '#1FA7F8', // text button color, button background color
         containedButtonBackground: '#0066CC', // contained button background color
         textHover: '#73BCF7', // text button hover color
         contrastText: '#FFF', // contained button text color
@@ -39,9 +45,12 @@ export const defaultThemePalette = (mode: string) => {
     general: {
       disabledBackground: '#D2D2D2',
       disabled: '#6A6E73',
+      searchBarBorderColor: '#E4E4E4',
       focusVisibleBorder: '#0066CC',
       formControlBackgroundColor: '#FFF',
-      mainSectionBackgroundColor: '#f0f0f0',
+      mainSectionBackgroundColor: '#FFF',
+      headerBackgroundColor: '#FFF',
+      headerTextColor: '#151515',
       cardBackgroundColor: '#FFF',
       sideBarBackgroundColor: '#212427',
       cardSubtitleColor: '#000',
@@ -53,9 +62,10 @@ export const defaultThemePalette = (mode: string) => {
       tableRowHover: '#F5F5F5',
       tableBorderColor: '#E0E0E0',
       tableBackgroundColor: '#FFF',
+      tabsBottomBorderColor: '#D2D2D2',
     },
     primary: {
-      main: '#0066CC',
+      main: themeColors.primaryColor || '#0066CC',
       containedButtonBackground: '#0066CC',
       mainHover: '#004080',
       contrastText: '#FFF',
