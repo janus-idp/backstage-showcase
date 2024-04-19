@@ -23,7 +23,9 @@ export class HomePage {
     quickAccessItem: string,
     expand = false,
   ) {
-    await this.page.waitForSelector(HomePagePO.MuiAccordion, { state: 'visible' });
+    await this.page.waitForSelector(HomePagePO.MuiAccordion, {
+      state: 'visible',
+    });
 
     const sectionLocator = this.page
       .locator(HomePagePO.MuiAccordion)

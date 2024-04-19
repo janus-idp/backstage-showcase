@@ -8,11 +8,11 @@ export class UIhelper {
   constructor(page: Page) {
     this.page = page;
     this.selectors = {
-      'Analyze': 'button#analyze',  // Exemplo de seletor, ajuste conforme necessário
-      'Refresh': 'button#refresh', // Exemplo de seletor, ajuste conforme necessário
-      'Import': 'button#import',   // Exemplo de seletor, ajuste conforme necessário
-      'View Component': 'button#view-component', // Exemplo de seletor, ajuste conforme necessário
-      'Register another': 'button#register-another' // Exemplo de seletor, ajuste conforme necessário
+      Analyze: 'button#analyze',
+      Refresh: 'button#refresh',
+      Import: 'button#import',
+      'View Component': 'button#view-component',
+      'Register another': 'button#register-another',
     };
   }
 
