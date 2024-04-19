@@ -2,8 +2,6 @@
 
 set -e
 
-LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
-TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAME_SPACE_RBAC="showcase-rbac"
 
@@ -230,16 +228,16 @@ main() {
   source functions.sh
   skip_if_only
 
-#  install_ibmcloud
-#  ibmcloud version
-#  ibmcloud config --check-version=false
-#  ibmcloud plugin install -f container-registry
-#  ibmcloud plugin install -f kubernetes-service
-#  ibmcloud login -r "${IBM_REGION}" -g "${IBM_RSC_GROUP}" --apikey "${SERVICE_ID_API_KEY}"
-#  ibmcloud oc cluster config --cluster "${OPENSHIFT_CLUSTER_ID}"
+  install_ibmcloud
+  ibmcloud version
+  ibmcloud config --check-version=false
+  ibmcloud plugin install -f container-registry
+  ibmcloud plugin install -f kubernetes-service
+  ibmcloud login -r "${IBM_REGION}" -g "${IBM_RSC_GROUP}" --apikey "${SERVICE_ID_API_KEY}"
+  ibmcloud oc cluster config --cluster "${OPENSHIFT_CLUSTER_ID}"
 
-#  install_oc
-#  oc version --client
+  install_oc
+  oc version --client
   oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
 
   API_SERVER_URL=$(oc whoami --show-server)
