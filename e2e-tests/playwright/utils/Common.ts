@@ -21,7 +21,7 @@ export class Common {
     // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
     this.page.on('dialog', async dialog => {
       console.log(`Dialog message: ${dialog.message()}`);
-      await dialog.accept(); // Clicar no botão "OK"
+      await dialog.accept();
     });
 
     await this.uiHelper.waitForSideBarVisible();
