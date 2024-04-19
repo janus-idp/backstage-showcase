@@ -18,7 +18,7 @@ trap cleanup EXIT
 add_helm_repos() {
   helm version
 
-  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "rhdh-chart=https://redhat-developer.github.io/rhdh-chart")
+  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "${HELM_REPO_NAME}=${HELM_REPO_URL}")
 
   for repo in "${repos[@]}"; do
     key="${repo%%=*}"
@@ -246,7 +246,7 @@ main() {
   add_helm_repos
 
   echo "Tag name : ${TAG_NAME}"
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} rhdh-chart/backstage --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
   check_backstage_running
   backstage_status=$?

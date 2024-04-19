@@ -2,19 +2,17 @@
 set -a  # Automatically export all variables
 
 #ENVS and Vault Secrets
-IBM_REGION=eu-de
-IBM_RSC_GROUP=backstage-rsc-group
 HELM_CHART_VALUE_FILE_NAME="values_showcase.yaml"
 HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
-HELM_REPO_URL="https://charts.openshift.io/"
+HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
 K8S_CLUSTER_ROUTER_BASE="rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud"
 K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN)
 K8S_CLUSTER_URL=https://c100-e.us-east.containers.cloud.ibm.com:32212
 OPENSHIFT_CLUSTER_ID=cobct3kw0lbiltuijvmg
 
 RELEASE_NAME=rhdh
-CHART_VERSION="2.13.3"
+CHART_VERSION="2.15.2"
 GITHUB_APP_APP_ID=Mzc2ODY2
 GITHUB_APP_CLIENT_ID=SXYxLjdiZDNlZDFmZjY3MmY3ZDg=
 GITHUB_APP_PRIVATE_KEY=$(cat /tmp/secrets/GITHUB_APP_PRIVATE_KEY)
