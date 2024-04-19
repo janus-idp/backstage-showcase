@@ -2,8 +2,6 @@
 
 set -e
 
-LOGFILE="pr-${GIT_PR_NUMBER}-openshift-tests-${BUILD_NUMBER}"
-TEST_NAME="backstage-showcase Tests"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAME_SPACE_RBAC="showcase-rbac"
 
@@ -162,13 +160,11 @@ run_tests() {
     set -e
     echo Using PR container image: "${TAG_NAME}"
     yarn "$project"
-  ) |& tee "/tmp/${LOGFILE}"
+  )
 
   RESULT=${PIPESTATUS[0]}
 
   pkill Xvfb
-
-  save_logs "${LOGFILE}" "${TEST_NAME}" ${RESULT}
 
   exit ${RESULT}
 }
@@ -183,7 +179,7 @@ check_backstage_running() {
   # Time in seconds to wait
   local wait_seconds=30
 
-  echo "Checking if Backstage is up and running at $url" | tee "/tmp/${LOGFILE}"
+  echo "Checking if Backstage is up and running at $url" 
 
   for ((i=1; i<=max_attempts; i++)); do
     # Get the status code
@@ -197,13 +193,12 @@ check_backstage_running() {
       echo "$BASE_URL"
       return 0
     else
-      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" | tee -a "/tmp/${LOGFILE}"
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
       sleep $wait_seconds
     fi
   done
 
-  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." | tee -a "/tmp/${LOGFILE}"
-  save_logs "${LOGFILE}" "${TEST_NAME}" 1
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts."
 
   return 1
 }
@@ -230,16 +225,16 @@ main() {
   source functions.sh
   skip_if_only
 
-#  install_ibmcloud
-#  ibmcloud version
-#  ibmcloud config --check-version=false
-#  ibmcloud plugin install -f container-registry
-#  ibmcloud plugin install -f kubernetes-service
-#  ibmcloud login -r "${IBM_REGION}" -g "${IBM_RSC_GROUP}" --apikey "${SERVICE_ID_API_KEY}"
-#  ibmcloud oc cluster config --cluster "${OPENSHIFT_CLUSTER_ID}"
+  install_ibmcloud
+  ibmcloud version
+  ibmcloud config --check-version=false
+  ibmcloud plugin install -f container-registry
+  ibmcloud plugin install -f kubernetes-service
+  ibmcloud login -r "${IBM_REGION}" -g "${IBM_RSC_GROUP}" --apikey "${SERVICE_ID_API_KEY}"
+  ibmcloud oc cluster config --cluster "${OPENSHIFT_CLUSTER_ID}"
 
-#  install_oc
-#  oc version --client
+  install_oc
+  oc version --client
   oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
 
   API_SERVER_URL=$(oc whoami --show-server)
