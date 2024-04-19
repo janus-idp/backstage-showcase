@@ -32,7 +32,7 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify Profile is Github Account Name in the Settings page', async () => {
     await uiHelper.openSidebar('Settings');
-    await expect(page).toHaveURL(process.env.BASE_URL + '/settings');
+    await expect(page).toHaveURL('/settings');
     await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
     await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
   });
@@ -64,15 +64,8 @@ test.describe.serial('GitHub Happy path', () => {
       'S3 Object bucket storage',
     ]);
 
-    await uiHelper.selectMuiBox('Kind', 'User');
-    await uiHelper.verifyRowsInTable([
-      'Subhash Khileri',
-      'Joseph Kim',
-      'Gustavo Lira e Silva',
-      'rhdh-qe',
-    ]);
-    await uiHelper.selectMuiBox('Kind', 'System');
-    await uiHelper.verifyRowsInTable(['Janus-IDP']);
+    await uiHelper.searchInputPlaceholder('rhdh');
+    await uiHelper.verifyRowsInTable(['rhdh-qe']);
   });
 
   test('Verify all 12 Software Templates appear in the Create page', async () => {

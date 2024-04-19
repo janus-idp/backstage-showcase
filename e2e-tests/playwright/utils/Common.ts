@@ -17,6 +17,13 @@ export class Common {
     await this.page.goto('/');
     await this.uiHelper.verifyHeading('Select a sign-in method');
     await this.uiHelper.clickButton('Enter');
+
+    // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
+    this.page.on('dialog', async dialog => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      await dialog.accept();
+    });
+
     await this.uiHelper.waitForSideBarVisible();
   }
 
@@ -35,7 +42,7 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
   }
 
-  async logintoGithub() {
+  private async logintoGithub() {
     await this.page.goto('https://github.com/login');
     await this.page.waitForSelector('#login_field');
     await this.page.fill('#login_field', process.env.GH_USER_ID);
@@ -48,6 +55,7 @@ export class Common {
   async loginAsGithubUser() {
     await this.logintoGithub();
     await this.page.goto('/');
+    await this.page.waitForLoadState('load');
     await this.uiHelper.clickButton('Sign In');
     await this.checkAndReauthorizeGithubApp();
     await this.uiHelper.waitForSideBarVisible();

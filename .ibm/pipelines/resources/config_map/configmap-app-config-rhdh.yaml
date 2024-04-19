@@ -9,6 +9,7 @@ data:
       title: Red Hat Developer Hub
     backend:
       auth:
+        dangerouslyDisableDefaultAuthPolicy: true # TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
         keys:
           - secret: temp
     integrations:
