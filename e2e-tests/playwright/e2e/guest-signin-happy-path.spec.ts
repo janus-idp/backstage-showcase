@@ -30,5 +30,6 @@ test.describe('Guest Signing Happy path', () => {
   test('Sign Out and Verify that you return to the Sign-in page', async () => {
     await uiHelper.openSidebar('Settings');
     await common.signOut();
+    // added a temporary comment to try out e2e test : this will be removed after test
   });
 });
