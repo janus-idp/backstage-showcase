@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
+LOGFILE="test-log"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NAME_SPACE_RBAC="showcase-rbac"
 
@@ -18,7 +19,7 @@ trap cleanup EXIT
 add_helm_repos() {
   helm version
 
-  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "rhdh-chart=https://redhat-developer.github.io/rhdh-chart")
+  declare -a repos=("bitnami=https://charts.bitnami.com/bitnami" "backstage=https://backstage.github.io/charts" "${HELM_REPO_NAME}=${HELM_REPO_URL}")
 
   for repo in "${repos[@]}"; do
     key="${repo%%=*}"
@@ -148,7 +149,6 @@ apply_yaml_files() {
 
 run_tests() {
   local project=$1
-
   cd $DIR/../../e2e-tests
   yarn install
   yarn playwright install
@@ -158,48 +158,53 @@ run_tests() {
 
   (
     set -e
-    echo Using PR container image: "${TAG_NAME}"
+    echo Using PR container image: ${TAG_NAME}
     yarn "$project"
-  )
+  ) |& tee "/tmp/${LOGFILE}"
 
   RESULT=${PIPESTATUS[0]}
 
   pkill Xvfb
 
+  mkdir -p ${ARTIFACT_DIR}/$project/test-results
+  cp -a /tmp/backstage-showcase/e2e-tests/test-results/* ${ARTIFACT_DIR}/$project/test-results
+
+  ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
+  cp -a "/tmp/${LOGFILE}.html" ${ARTIFACT_DIR}
   exit ${RESULT}
 }
 
 check_backstage_running() {
   local release_name=$1
-  local namespace=$1
-  local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+    local namespace=$1
+    local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
 
-  # Maximum number of attempts to check URL
-  local max_attempts=30
-  # Time in seconds to wait
-  local wait_seconds=30
+    # Maximum number of attempts to check URL
+    local max_attempts=30
+    # Time in seconds to wait
+    local wait_seconds=30
 
-  echo "Checking if Backstage is up and running at $url" 
+    echo "Checking if Backstage is up and running at $url"
 
-  for ((i=1; i<=max_attempts; i++)); do
-    # Get the status code
-    local http_status=$(curl --insecure -I -s "$url" | grep HTTP | awk '{print $2}')
+    for ((i=1; i<=max_attempts; i++)); do
+      # Get the status code
+      local http_status=$(curl --insecure -I -s "$url" | grep HTTP | awk '{print $2}')
 
-    # Check if the status code is 200
-    if [[ $http_status -eq 200 ]]; then
-      echo "Backstage is up and running!"
-      export BASE_URL=$url
-      echo "######## BASE URL ########"
-      echo "$BASE_URL"
-      return 0
-    else
-      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
-      sleep $wait_seconds
-    fi
-  done
+      # Check if the status code is 200
+      if [[ $http_status -eq 200 ]]; then
+        echo "Backstage is up and running!"
+        export BASE_URL=$url
+        echo "######## BASE URL ########"
+        echo "$BASE_URL"
+        return 0
+      else
+        echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
+        sleep $wait_seconds
+      fi
+    done
 
-  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts."
-
+  echo "Failed to reach Backstage at $BASE_URL after $max_attempts attempts." | tee -a "/tmp/${LOGFILE}"
+  cp -a "/tmp/${LOGFILE}" ${ARTIFACT_DIR}
   return 1
 }
 
@@ -222,20 +227,15 @@ installPipelinesOperator() {
 main() {
   echo "Log file: ${LOGFILE}"
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  source functions.sh
-  skip_if_only
+  source ./.ibm/pipelines/env_variables.sh
+  echo "OPENSHIFT_CLUSTER_ID : $OPENSHIFT_CLUSTER_ID"
 
   install_ibmcloud
   ibmcloud version
   ibmcloud config --check-version=false
-  ibmcloud plugin install -f container-registry
-  ibmcloud plugin install -f kubernetes-service
-  ibmcloud login -r "${IBM_REGION}" -g "${IBM_RSC_GROUP}" --apikey "${SERVICE_ID_API_KEY}"
-  ibmcloud oc cluster config --cluster "${OPENSHIFT_CLUSTER_ID}"
-
   install_oc
   oc version --client
-  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  oc login --token=${K8S_CLUSTER_TOKEN} --server=${K8S_CLUSTER_URL}
 
   API_SERVER_URL=$(oc whoami --show-server)
   K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
@@ -244,24 +244,24 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "$API_SERVER_URL" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
-  configure_namespace "$NAME_SPACE"
-  installPipelinesOperator "$DIR"
+  configure_namespace ${NAME_SPACE}
+  oc project ${NAME_SPACE}
+  installPipelinesOperator $DIR
   install_helm
   uninstall_helmchart
 
-  cd "$DIR"
-  apply_yaml_files "$DIR" "$NAME_SPACE"
+  cd $DIR
+  apply_yaml_files $DIR "$NAME_SPACE"
   add_helm_repos
 
   echo "Tag name : ${TAG_NAME}"
-
-  helm upgrade -i "${NAME_SPACE}" -n "${NAME_SPACE}" rhdh-chart/backstage --version "${CHART_VERSION}" -f "$DIR"/value_files/"${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" -set upstream.backstage.image.tag=${TAG_NAME}
+  helm upgrade -i "${NAME_SPACE}" -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
   check_backstage_running $NAME_SPACE
   backstage_status=$?
 
   echo "Display pods for verification..."
-  oc get pods -n "${NAME_SPACE}"
+  oc get pods -n ${NAME_SPACE}
 
   if [ $backstage_status -ne 0 ]; then
     echo "Backstage is not running. Exiting..."
