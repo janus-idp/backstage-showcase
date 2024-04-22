@@ -50,9 +50,8 @@ site
 
 .turbo
 
-# Cypress
-**/cypress/downloads
-**/cypress/screenshots
+# e2e test results
+e2e-tests/junit-results.xml
 
 # Dynamic plugins root content
 dynamic-plugins-root/*
