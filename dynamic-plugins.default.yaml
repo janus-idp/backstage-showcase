@@ -327,6 +327,8 @@ plugins:
                   if:
                     allOf:
                       - isAzureDevOpsAvailable
+  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories
+    disabled: true
 
   # Group: Jenkins
   - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic

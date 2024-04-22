@@ -22,7 +22,7 @@ export const azureRepositoriesActions = createBackendModule({
         config: coreServices.rootConfig,
       },
       async init({ config, scaffolder }) {
-        const integrations = ScmIntegrations.fromConfig(config);
+        const integrations = ScmIntegrations.fromConfig(config) as any;
         scaffolder.addActions(
           cloneAzureRepoAction({ integrations }),
           pushAzureRepoAction({ integrations, config: config }),
