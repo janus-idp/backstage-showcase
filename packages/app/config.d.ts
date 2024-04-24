@@ -15,6 +15,11 @@ export interface Config {
        */
       fullLogo?: string;
       /**
+       * size Configuration for the full logo
+       * The following units are supported: <number>, px, em, rem, <percentage>
+       */
+      fullLogoSize?: string | number;
+      /**
        * Base64 URI for the icon logo
        * @visibility frontend
        */
