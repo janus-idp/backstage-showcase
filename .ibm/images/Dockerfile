@@ -71,6 +71,10 @@ RUN curl -fsSL -o /tmp/openshift-client-linux.tar.gz "https://mirror.openshift.c
     && tar -xzvf /tmp/openshift-client-linux.tar.gz -C /usr/local/bin oc kubectl \
     && rm -rf /tmp/*
 
+# Install rsync
+RUN apt-get update -y && \
+    apt-get install -y rsync
+
 # Set environment variables to make Go work correctly
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
