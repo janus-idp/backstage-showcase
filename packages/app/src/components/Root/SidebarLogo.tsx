@@ -39,7 +39,10 @@ export const SidebarLogo = () => {
   const logoFullBase64URI = configApi.getOptionalString(
     'app.branding.fullLogo',
   );
-  const fullLogoSize = configApi.getOptionalString('app.branding.fullLogoSize');
+  const fullLogoSize = configApi
+    .getOptional('app.branding.fullLogoSize')
+    ?.toString();
+
   const logoIconBase64URI = configApi.getOptionalString(
     'app.branding.iconLogo',
   );

@@ -7,12 +7,14 @@ To customize the look of your showcase instance, you can edit the `app-config.ya
 The sidebar uses two logos - one for the expanded sidebar and one for the collapsed sidebar.
 
 - To customize the logo for the expanded sidebar, provide a Base64 encoded image of your logo in the `app.branding.fullLogo` field of the `app-config.yaml`.
+- To change the width of logo, provide your required size of logo in the `app.branding.fullLogoSize` field of `app-config.yaml`
 - Similarly, to customize the logo for the collapsed sidebar, provide a Base64 encoded image of your logo in the `app.branding.iconLogo` field of the `app-config.yaml`:
 
 ```yaml title="app-config.yaml"
 app:
   branding:
     fullLogo: ${BASE64_EMBEDDED_FULL_LOGO} # SVG Example: data:image/svg+xml;base64,PD94...
+    fullLogoSize: ${FULL_LOGO_SIZE} # The following units are supported: <number>, px, em, rem, <percentage>
     iconLogo: ${BASE64_EMBEDDED_ICON_LOGO} # PNG Example: data:image/png;base64,iVBO...
 ```
 

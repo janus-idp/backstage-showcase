@@ -17,6 +17,7 @@ export interface Config {
       /**
        * size Configuration for the full logo
        * The following units are supported: <number>, px, em, rem, <percentage>
+       * @visibility frontend
        */
       fullLogoSize?: string | number;
       /**
