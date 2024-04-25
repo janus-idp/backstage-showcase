@@ -26,7 +26,7 @@ describe('SidebarLogo', () => {
   it('when sidebar is open renders the component with full logo base64 provided by config', () => {
     (useApi as any).mockReturnValue({
       getOptionalString: jest.fn().mockReturnValue('fullLogoBase64URI'),
-      getOptional: jest.fn().mockReturnValue('fullLogoSize'),
+      getOptional: jest.fn().mockReturnValue('fullLogoWidth'),
     });
 
     (useSidebarOpenState as any).mockReturnValue({ isOpen: true });
@@ -60,7 +60,7 @@ describe('SidebarLogo', () => {
   it('when sidebar is closed renders the component with icon logo base64 provided by config', () => {
     (useApi as any).mockReturnValue({
       getOptionalString: jest.fn().mockReturnValue('iconLogoBase64URI'),
-      getOptional: jest.fn().mockReturnValue('fullLogoSize'),
+      getOptional: jest.fn().mockReturnValue('fullLogoWidth'),
     });
 
     (useSidebarOpenState as any).mockReturnValue({ isOpen: false });

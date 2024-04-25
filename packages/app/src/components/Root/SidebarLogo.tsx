@@ -39,8 +39,8 @@ export const SidebarLogo = () => {
   const logoFullBase64URI = configApi.getOptionalString(
     'app.branding.fullLogo',
   );
-  const fullLogoSize = configApi
-    .getOptional('app.branding.fullLogoSize')
+  const fullLogoWidth = configApi
+    .getOptional('app.branding.fullLogoWidth')
     ?.toString();
 
   const logoIconBase64URI = configApi.getOptionalString(
@@ -54,7 +54,7 @@ export const SidebarLogo = () => {
           <LogoRender
             base64Logo={logoFullBase64URI}
             defaultLogo={<LogoFull />}
-            width={fullLogoSize ?? 110}
+            width={fullLogoWidth ?? 110}
           />
         ) : (
           <LogoRender

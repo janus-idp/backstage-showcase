@@ -4,7 +4,7 @@ app:
   branding:
     fullLogo: ${BASE64_EMBEDDED_FULL_LOGO}
     iconLogo: ${BASE64_EMBEDDED_ICON_LOGO}
-    fullLogoSize: ${FULL_LOGO_SIZE}
+    fullLogoWidth: ${FULL_LOGO_WIDTH}
     theme:
       light:
         primaryColor: ${PRIMARY_LIGHT_COLOR}

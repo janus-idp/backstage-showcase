@@ -19,7 +19,7 @@ export interface Config {
        * The following units are supported: <number>, px, em, rem, <percentage>
        * @visibility frontend
        */
-      fullLogoSize?: string | number;
+      fullLogoWidth?: string | number;
       /**
        * Base64 URI for the icon logo
        * @visibility frontend
