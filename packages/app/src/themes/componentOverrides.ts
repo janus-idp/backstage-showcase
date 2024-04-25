@@ -53,7 +53,6 @@ export const components = (
       defaultProps: {
         TabIndicatorProps: {
           style: {
-            height: '3px',
             background:
               themeColors.navigationIndicatorColor || themePalette.primary.main,
           },
@@ -63,6 +62,21 @@ export const components = (
         root: {
           boxShadow: `0 -1px ${themePalette.general.tabsBottomBorderColor} inset`,
           padding: '0 1.5rem',
+        },
+        flexContainerVertical: {
+          '& > button:hover': {
+            boxShadow: `-3px 0 ${themePalette.general.tabsBottomBorderColor} inset`,
+          },
+        },
+      },
+    },
+    PrivateTabIndicator: {
+      styleOverrides: {
+        root: {
+          height: '3px',
+        },
+        vertical: {
+          width: '3px',
         },
       },
     },
@@ -387,6 +401,15 @@ export const components = (
             {
               '-webkit-line-clamp': '2',
             },
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          '& > div': {
+            backgroundColor: themePalette.general.cardBackgroundColor,
+          },
         },
       },
     },
