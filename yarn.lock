@@ -8046,6 +8046,18 @@
     "@roadiehq/backstage-plugin-argo-cd-backend" "^2.14.7"
     winston "^3.2.1"
 
+"@roadiehq/scaffolder-backend-module-http-request@4.1.10":
+  version "4.1.10"
+  resolved "https://registry.yarnpkg.com/@roadiehq/scaffolder-backend-module-http-request/-/scaffolder-backend-module-http-request-4.1.10.tgz#10eaaa080e5d26a5ecac9829a8cfa8920cce3a72"
+  integrity sha512-IarqYXpU/iElUTCzZf+/9HpGFOtlz96aXwUhVpdmxsycdSxKu8pIT5D/cT8EkGkxuYCXZwpzvqihk3UOPS67kQ==
+  dependencies:
+    "@backstage/backend-common" "^0.21.6"
+    "@backstage/core-app-api" "^1.12.3"
+    "@backstage/core-plugin-api" "^1.9.1"
+    "@backstage/plugin-scaffolder-backend" "^1.22.3"
+    cross-fetch "^4.0.0"
+    winston "^3.2.1"
+
 "@roadiehq/scaffolder-backend-module-utils@1.14.1":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@roadiehq/scaffolder-backend-module-utils/-/scaffolder-backend-module-utils-1.14.1.tgz#a5d3a335744835331bb3a80676d42796506248a7"
