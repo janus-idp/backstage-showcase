@@ -20,14 +20,7 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test --passWithNoTests --coverage",
-    "clean": "backstage-cli package clean",
-    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-http-request --override-interop default"
-  },
+  "scripts": {},
   "dependencies": {
     "cross-fetch": "^4.0.0",
     "winston": "^3.2.1"
@@ -38,8 +31,7 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-dynamic-feature-service": "^0.2.2",
-    "@backstage/backend-plugin-api": "0.6.13",
+    "@backstage/backend-plugin-api": "0.6.16",
     "@backstage/plugin-scaffolder-backend": "^1.22.3",
     "@backstage/plugin-scaffolder-node": "^0.3.0",
     "@backstage/backend-common": "^0.21.6",
