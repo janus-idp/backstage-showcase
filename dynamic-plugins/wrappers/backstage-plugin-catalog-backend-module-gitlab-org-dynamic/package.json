@@ -28,7 +28,7 @@
   "dependencies": {
     "@backstage/backend-common": "^0.21.6",
     "@backstage/backend-plugin-api": "^0.6.16",
-    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.10",
+    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.14",
     "@backstage/plugin-catalog-node": "^1.11.0"
   },
   "devDependencies": {
