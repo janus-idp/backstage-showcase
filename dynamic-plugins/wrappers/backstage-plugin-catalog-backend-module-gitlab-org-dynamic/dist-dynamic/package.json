@@ -20,14 +20,7 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test --passWithNoTests --coverage",
-    "clean": "backstage-cli package clean",
-    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-gitlab --override-interop default"
-  },
+  "scripts": {},
   "dependencies": {
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.7",
