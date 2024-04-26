@@ -52,7 +52,7 @@ ENV GO_SHA256 464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6
 
 # Install Go and other tools used by the pipeline
 RUN apt-get update && \
-    apt-get install -y curl yq && \
+    apt-get install -y curl && \
     curl -LO "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz" && \
     echo "${GO_SHA256} go${GO_VERSION}.linux-amd64.tar.gz" | sha256sum -c - && \
     tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
