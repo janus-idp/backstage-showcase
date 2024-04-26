@@ -61,7 +61,6 @@ install_helm() {
   else
     echo "Installing Helm 3 client"
     mkdir ~/tmpbin && cd ~/tmpbin
-
     HELM_INSTALL_DIR=$(pwd)
     curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -f
     export PATH=${HELM_INSTALL_DIR}:$PATH
@@ -70,23 +69,28 @@ install_helm() {
 }
 
 uninstall_helmchart() {
-  if helm list -n ${NAME_SPACE} | grep -q ${RELEASE_NAME}; then
+  local project=$1
+  local release=$2
+  if helm list -n ${project} | grep -q ${release}; then
     echo "Chart already exists. Removing it before install."
-    helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
+    helm uninstall ${release} -n ${project}
   fi
 }
 
 configure_namespace() {
-  if oc get namespace ${NAME_SPACE} >/dev/null 2>&1; then
-    echo "Namespace ${NAME_SPACE} already exists! refreshing namespace"
-    oc delete namespace ${NAME_SPACE}
+  local project=$1
+  if oc get namespace ${project} >/dev/null 2>&1; then
+    echo "Namespace ${project} already exists! refreshing namespace"
+    oc delete namespace ${project}
   fi
-  oc create namespace ${NAME_SPACE}
-  oc config set-context --current --namespace=${NAME_SPACE}
+  oc create namespace ${project}
+  oc config set-context --current --namespace=${project}
 }
 
 apply_yaml_files() {
   local dir=$1
+  local project=$2
+  echo "NAME SPACE ${project}"
 
   # Update namespace and other configurations in YAML files
   local files=("$dir/resources/service_account/service-account-rhdh.yaml"
@@ -96,21 +100,21 @@ apply_yaml_files() {
     "$dir/auth/secrets-rhdh-secrets.yaml")
 
   for file in "${files[@]}"; do
-    sed -i "s/namespace:.*/namespace: $NAME_SPACE/g" "$file"
+    sed -i "s/namespace:.*/namespace: $project/g" "$file"
   done
 
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: $K8S_PLUGIN_ANNOTATION/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
-    sed -i "s/$key:.*/$key: ${!key}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+    sed -i "s|$key:.*|$key: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
-  oc apply -f $dir/resources/service_account/service-account-rhdh.yaml --namespace=${NAME_SPACE}
-  oc apply -f $dir/auth/service-account-rhdh-secret.yaml --namespace=${NAME_SPACE}
-  oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${NAME_SPACE}
-  oc apply -f $dir/resources/deployment/deployment-test-app-component.yaml --namespace=${NAME_SPACE}
-  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace=${NAME_SPACE}
-  oc expose svc/test-backstage-customization-provider --namespace=${NAME_SPACE}
+  oc apply -f $dir/resources/service_account/service-account-rhdh.yaml --namespace=${project}
+  oc apply -f $dir/auth/service-account-rhdh-secret.yaml --namespace=${project}
+  oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${project}
+  oc apply -f $dir/resources/deployment/deployment-test-app-component.yaml --namespace=${project}
+  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace=${project}
+  oc expose svc/test-backstage-customization-provider --namespace=${project}
   oc apply -f $dir/resources/cluster_role/cluster-role-k8s.yaml
   oc apply -f $dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml
   oc apply -f $dir/resources/cluster_role/cluster-role-ocm.yaml
@@ -128,12 +132,13 @@ apply_yaml_files() {
   # Cleanup temp file
   rm $dir/auth/service-account-rhdh-token.yaml
 
-  # oc apply -f $dir/auth/rhdh-quay-pull-secret.yaml --namespace=${NAME_SPACE}
-
-  # re-apply with the updated cluster service account token
-  oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${NAME_SPACE}
-  oc apply -f $dir/resources/config_map/configmap-app-config-rhdh.yaml --namespace=${NAME_SPACE}
-  oc apply -f $dir/resources/config_map/configmap-rbac-policy-rhdh.yaml --namespace=${NAME_SPACE}
+  if [[ "${project}" == "showcase-rbac" ]]; then
+    oc apply -f $dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml --namespace=${project}
+  else
+    oc apply -f $dir/resources/config_map/configmap-app-config-rhdh.yaml --namespace=${project}
+  fi
+  oc apply -f $dir/resources/config_map/configmap-rbac-policy-rhdh.yaml --namespace=${project}
+  oc apply -f $dir/auth/secrets-rhdh-secrets.yaml --namespace=${project}
 
   # pipelines (required for tekton)
   sleep 20 # wait for Pipeline Operator to be ready
@@ -142,6 +147,7 @@ apply_yaml_files() {
 }
 
 run_tests() {
+  local project=$1
   cd $DIR/../../e2e-tests
   yarn install
   yarn playwright install
@@ -152,32 +158,34 @@ run_tests() {
   (
     set -e
     echo Using PR container image: ${TAG_NAME}
-    yarn test
+    yarn "$project"
   ) |& tee "/tmp/${LOGFILE}"
 
   RESULT=${PIPESTATUS[0]}
 
   pkill Xvfb
 
-  mkdir ${ARTIFACT_DIR}/test-results
-  cp -a /tmp/backstage-showcase/e2e-tests/test-results/* ${ARTIFACT_DIR}/test-results
+  mkdir -p ${ARTIFACT_DIR}/$project/test-results
+  cp -a /tmp/backstage-showcase/e2e-tests/test-results/* ${ARTIFACT_DIR}/$project/test-results
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
-  cp -a "/tmp/${LOGFILE}.html" ${ARTIFACT_DIR}
+  cp -a "/tmp/${LOGFILE}.html" ${ARTIFACT_DIR}/${project}
   exit ${RESULT}
 }
 
 check_backstage_running() {
-  local url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+  local release_name=$1
+  local namespace=$2
+  local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
 
   # Maximum number of attempts to check URL
   local max_attempts=30
   # Time in seconds to wait
   local wait_seconds=30
 
-  echo "Checking if Backstage is up and running at $url" | tee "/tmp/${LOGFILE}"
+  echo "Checking if Backstage is up and running at $url"
 
-  for ((i=1; i<=max_attempts; i++)); do
+  for ((i = 1; i <= max_attempts; i++)); do
     # Get the status code
     local http_status=$(curl --insecure -I -s "$url" | grep HTTP | awk '{print $2}')
 
@@ -189,7 +197,7 @@ check_backstage_running() {
       echo "$BASE_URL"
       return 0
     else
-      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)" | tee -a "/tmp/${LOGFILE}"
+      echo "Attempt $i of $max_attempts: Backstage not yet available (HTTP Status: $http_status)"
       sleep $wait_seconds
     fi
   done
@@ -199,9 +207,6 @@ check_backstage_running() {
   return 1
 }
 
-# Required for tekton plugin
-# Red Hat OpenShift Pipelines is a cloud-native continuous integration and delivery (CI/CD)
-# Solution for building pipelines using Tekton.
 installPipelinesOperator() {
   local dir=$1
   DISPLAY_NAME="Red Hat OpenShift Pipelines"
@@ -213,6 +218,37 @@ installPipelinesOperator() {
     oc apply -f "$dir"/resources/pipeline-run/pipelines-operator.yaml
   fi
 
+}
+initiate_deployments() {
+  configure_namespace ${NAME_SPACE}
+  installPipelinesOperator $DIR
+  install_helm
+  uninstall_helmchart ${NAME_SPACE} ${RELEASE_NAME}
+
+  cd $DIR
+  apply_yaml_files $DIR "$NAME_SPACE"
+  add_helm_repos
+  helm upgrade -i "${RELEASE_NAME}" -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+
+  configure_namespace ${NAME_SPACE_RBAC}
+  installPipelinesOperator $DIR
+  uninstall_helmchart ${NAME_SPACE_RBAC} ${RELEASE_NAME_RBAC}
+  apply_yaml_files $DIR "${NAME_SPACE_RBAC}"
+  helm upgrade -i ${RELEASE_NAME_RBAC} -n ${NAME_SPACE_RBAC} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+}
+
+check_and_test() {
+  local release_name=$1
+  local namespace=$2
+  check_backstage_running $release_name $namespace
+  backstage_status=$?
+  echo "Display pods for verification..."
+  oc get pods -n $namespace
+  if [ $backstage_status -ne 0 ]; then
+    echo "Backstage is not running. Exiting..."
+    exit 1
+  fi
+    run_tests $namespace
 }
 
 main() {
@@ -235,31 +271,9 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "$API_SERVER_URL" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
-  configure_namespace
-  oc project ${NAME_SPACE}
-  installPipelinesOperator $DIR
-  install_helm
-  uninstall_helmchart
-
-  cd $DIR
-  apply_yaml_files $DIR
-  add_helm_repos
-
-  echo "Tag name : ${TAG_NAME}"
-  helm upgrade -i ${RELEASE_NAME} -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
-
-  check_backstage_running
-  backstage_status=$?
-
-  echo "Display pods for verification..."
-  oc get pods -n ${NAME_SPACE}
-
-  if [ $backstage_status -ne 0 ]; then
-    echo "Backstage is not running. Exiting..."
-    exit 1
-  fi
-
-  run_tests
+  initiate_deployments
+  check_and_test ${RELEASE_NAME} ${NAME_SPACE}
+  check_and_test ${RELEASE_NAME_RBAC} ${NAME_SPACE_RBAC}
 }
 
 main
