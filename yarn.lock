@@ -7887,7 +7887,22 @@
     lodash "^4.17.21"
     lodash-es "^4.17.21"
 
-"@roadiehq/backstage-plugin-argo-cd-backend@2.14.7", "@roadiehq/backstage-plugin-argo-cd-backend@^2.14.7":
+"@roadiehq/backstage-plugin-argo-cd-backend@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@roadiehq/backstage-plugin-argo-cd-backend/-/backstage-plugin-argo-cd-backend-3.0.0.tgz#e0eae09cbe3f2be4d97f60db09fd9bc15b510139"
+  integrity sha512-YvybIBwVzx2RfKyYvXENqwTC+1FZvHNRXibbO1GHxMovjfDx5Mnlc4dhPhhLnSac+wFhBLphslmr1hp8OOFRGw==
+  dependencies:
+    "@backstage/backend-common" "^0.21.6"
+    "@backstage/catalog-client" "^1.6.3"
+    "@backstage/config" "^1.2.0"
+    "@types/express" "^4.17.6"
+    cross-fetch "^3.1.4"
+    express "^4.17.1"
+    express-promise-router "^4.1.0"
+    winston "^3.2.1"
+    yn "^4.0.0"
+
+"@roadiehq/backstage-plugin-argo-cd-backend@^2.14.7":
   version "2.14.7"
   resolved "https://registry.yarnpkg.com/@roadiehq/backstage-plugin-argo-cd-backend/-/backstage-plugin-argo-cd-backend-2.14.7.tgz#405ae68beeb91be9518bb2afb54321292c96837d"
   integrity sha512-4kyTcWjvOLJKE+xbrcmTmMKbAXZio1k2wddf7g367CC95DoW36HQvLCbRNr65tyhHEmml0rakeF40jEee5/uPA==
