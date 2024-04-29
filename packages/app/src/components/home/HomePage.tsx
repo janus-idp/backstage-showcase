@@ -12,7 +12,8 @@ import Grid from '@mui/material/Grid';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { ErrorReport } from '../../common';
-import { useQuickAccess } from '../../hooks/useQuickAccess';
+import { useCustomizationData } from '../../hooks/useCustomizationData';
+import { QuickAccessLinks } from '../../types/types';
 
 const useStyles = makeStyles()(theme => ({
   img: {
@@ -38,7 +39,11 @@ const useStyles = makeStyles()(theme => ({
 
 const QuickAccess = () => {
   const { classes } = useStyles();
-  const { data, error, isLoading } = useQuickAccess();
+  const { data, error, isLoading } = useCustomizationData() as {
+    data: QuickAccessLinks[] | undefined;
+    error: Error | undefined;
+    isLoading: boolean;
+  };
 
   if (isLoading) {
     return <CircularProgress />;

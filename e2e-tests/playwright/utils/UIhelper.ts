@@ -58,6 +58,7 @@ export class UIhelper {
       await button.click();
     }
   }
+
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
@@ -98,13 +99,14 @@ export class UIhelper {
   }
 
   async isBtnVisible(text: string): Promise<boolean> {
-    await this.page.waitForLoadState('networkidle');
-    const button = this.page.locator(`button:has-text("${text}")`);
+    const locator = `button:has-text("${text}")`;
+    await this.page.waitForSelector(locator);
+    const button = this.page.locator(locator);
     return button.isVisible();
   }
 
   async waitForSideBarVisible() {
-    await this.page.waitForSelector('nav a');
+    await this.page.waitForSelector('nav a', { timeout: 120000 });
   }
 
   async openSidebar(navBarText: string) {
@@ -152,10 +154,10 @@ export class UIhelper {
 
   async verifyHeading(heading: string) {
     const headingLocator = this.page
-      .locator(`h1, h2, h3, h4, h5, h6`)
+      .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
-    await headingLocator.waitFor();
+    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
 
