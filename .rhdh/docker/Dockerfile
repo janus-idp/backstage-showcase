@@ -19,8 +19,8 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-98 AS build
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-34.1712566506 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -51,6 +51,7 @@ COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 
@@ -168,8 +169,8 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-103 AS runner
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-37.1712566503 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src

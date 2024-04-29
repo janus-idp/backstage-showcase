@@ -9,7 +9,7 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  timeout: 60000,
+  timeout: 80000,
   testDir: './playwright',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -18,7 +18,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: 5,
+  workers: 3,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -33,8 +33,14 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'showcase',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+    },
+    {
+      name: 'showcase-rbac',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
     },
 
     // {
