@@ -3112,122 +3112,6 @@
     semver "^7.5.3"
     zod "^3.22.4"
 
-"@backstage/cli@0.25.2":
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.25.2.tgz#53f27c99c988f17edffb9e77b1864a53bccb3334"
-  integrity sha512-PljPYaxljPtgrs+wFUSw30UXNq7/lTsMPqC4SgCzPXNCA1XDKGK0mnNkJJJD2r4bYwBXZ9mRdcs+zCf7MBrOmg==
-  dependencies:
-    "@backstage/catalog-model" "^1.4.4"
-    "@backstage/cli-common" "^0.1.13"
-    "@backstage/cli-node" "^0.2.3"
-    "@backstage/config" "^1.1.1"
-    "@backstage/config-loader" "^1.6.2"
-    "@backstage/errors" "^1.2.3"
-    "@backstage/eslint-plugin" "^0.1.5"
-    "@backstage/integration" "^1.9.0"
-    "@backstage/release-manifests" "^0.0.11"
-    "@backstage/types" "^1.1.1"
-    "@manypkg/get-packages" "^1.1.3"
-    "@octokit/graphql" "^5.0.0"
-    "@octokit/graphql-schema" "^13.7.0"
-    "@octokit/oauth-app" "^4.2.0"
-    "@octokit/request" "^6.0.0"
-    "@pmmmwh/react-refresh-webpack-plugin" "^0.5.7"
-    "@rollup/plugin-commonjs" "^25.0.0"
-    "@rollup/plugin-json" "^6.0.0"
-    "@rollup/plugin-node-resolve" "^15.0.0"
-    "@rollup/plugin-yaml" "^4.0.0"
-    "@spotify/eslint-config-base" "^14.0.0"
-    "@spotify/eslint-config-react" "^14.0.0"
-    "@spotify/eslint-config-typescript" "^14.0.0"
-    "@sucrase/webpack-loader" "^2.0.0"
-    "@svgr/core" "6.5.x"
-    "@svgr/plugin-jsx" "6.5.x"
-    "@svgr/plugin-svgo" "6.5.x"
-    "@svgr/rollup" "6.5.x"
-    "@svgr/webpack" "6.5.x"
-    "@swc/core" "^1.3.46"
-    "@swc/helpers" "^0.5.0"
-    "@swc/jest" "^0.2.22"
-    "@types/jest" "^29.5.11"
-    "@types/webpack-env" "^1.15.2"
-    "@typescript-eslint/eslint-plugin" "^6.12.0"
-    "@typescript-eslint/parser" "^6.7.2"
-    "@yarnpkg/lockfile" "^1.1.0"
-    "@yarnpkg/parsers" "^3.0.0-rc.4"
-    bfj "^8.0.0"
-    buffer "^6.0.3"
-    chalk "^4.0.0"
-    chokidar "^3.3.1"
-    commander "^12.0.0"
-    cross-fetch "^4.0.0"
-    cross-spawn "^7.0.3"
-    css-loader "^6.5.1"
-    ctrlc-windows "^2.1.0"
-    diff "^5.0.0"
-    esbuild "^0.20.0"
-    esbuild-loader "^4.0.0"
-    eslint "^8.6.0"
-    eslint-config-prettier "^9.0.0"
-    eslint-formatter-friendly "^7.0.0"
-    eslint-plugin-deprecation "^2.0.0"
-    eslint-plugin-import "^2.25.4"
-    eslint-plugin-jest "^27.0.0"
-    eslint-plugin-jsx-a11y "^6.5.1"
-    eslint-plugin-react "^7.28.0"
-    eslint-plugin-react-hooks "^4.3.0"
-    eslint-plugin-unused-imports "^3.0.0"
-    eslint-webpack-plugin "^4.0.0"
-    express "^4.17.1"
-    fork-ts-checker-webpack-plugin "^9.0.0"
-    fs-extra "^11.2.0"
-    git-url-parse "^14.0.0"
-    glob "^7.1.7"
-    global-agent "^3.0.0"
-    handlebars "^4.7.3"
-    html-webpack-plugin "^5.3.1"
-    inquirer "^8.2.0"
-    jest "^29.7.0"
-    jest-css-modules "^2.1.0"
-    jest-environment-jsdom "^29.0.2"
-    jest-runtime "^29.0.2"
-    json-schema "^0.4.0"
-    lodash "^4.17.21"
-    mini-css-extract-plugin "^2.4.2"
-    minimatch "^5.1.1"
-    node-fetch "^2.6.7"
-    node-libs-browser "^2.2.1"
-    npm-packlist "^5.0.0"
-    ora "^5.3.0"
-    p-queue "^6.6.2"
-    postcss "^8.1.0"
-    process "^0.11.10"
-    react-dev-utils "^12.0.0-next.60"
-    react-refresh "^0.14.0"
-    recursive-readdir "^2.2.2"
-    replace-in-file "^6.0.0"
-    rollup "^2.60.2"
-    rollup-plugin-dts "^4.0.1"
-    rollup-plugin-esbuild "^4.7.2"
-    rollup-plugin-postcss "^4.0.0"
-    rollup-pluginutils "^2.8.2"
-    run-script-webpack-plugin "^0.2.0"
-    semver "^7.5.3"
-    style-loader "^3.3.1"
-    sucrase "^3.20.2"
-    swc-loader "^0.2.3"
-    tar "^6.1.12"
-    terser-webpack-plugin "^5.1.3"
-    tsx "^4.0.0"
-    util "^0.12.3"
-    webpack "^5.70.0"
-    webpack-dev-server "^4.7.3"
-    webpack-node-externals "^3.0.0"
-    yaml "^2.0.0"
-    yml-loader "^2.1.0"
-    yn "^4.0.0"
-    zod "^3.22.4"
-
 "@backstage/cli@0.26.2":
   version "0.26.2"
   resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.26.2.tgz#2f7a2c98f3eabaec7afa97bc6d415b7984489111"
@@ -3553,14 +3437,6 @@
   dependencies:
     "@backstage/types" "^1.1.1"
     serialize-error "^8.0.1"
-
-"@backstage/eslint-plugin@^0.1.5":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@backstage/eslint-plugin/-/eslint-plugin-0.1.7.tgz#9fe844f5075a8b449b09b37b4eb11f5e24b5e597"
-  integrity sha512-a2vPwtw5UpfCjVeBtyiP/fdbZ1NqjcpF5z5iAVsgDUiJKwfMSpoQNrbh4SuUxgG+PFkftR1GkdQPBuJZnimXKA==
-  dependencies:
-    "@manypkg/get-packages" "^1.1.3"
-    minimatch "^9.0.0"
 
 "@backstage/eslint-plugin@^0.1.6":
   version "0.1.6"
@@ -7002,69 +6878,6 @@
     yml-loader "^2.1.0"
     yn "^4.0.0"
 
-"@janus-idp/cli@1.7.5":
-  version "1.7.5"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.7.5.tgz#de6b3913240198dde0223bd0826e9fdfb71bab35"
-  integrity sha512-haNT+uATBnkc/IKG2mc7D4ptwcG1g/tnZSEAnXZQaA/SweFA/XxfvwfA0MG7Wl96UhfJPwT5BMJ6EltQM0rtYA==
-  dependencies:
-    "@backstage/cli-common" "^0.1.13"
-    "@backstage/cli-node" "^0.2.3"
-    "@backstage/config" "^1.1.1"
-    "@backstage/config-loader" "^1.6.2"
-    "@backstage/errors" "^1.2.3"
-    "@backstage/eslint-plugin" "^0.1.5"
-    "@backstage/types" "^1.1.1"
-    "@manypkg/get-packages" "^1.1.3"
-    "@openshift/dynamic-plugin-sdk-webpack" "^3.0.0"
-    "@pmmmwh/react-refresh-webpack-plugin" "^0.5.7"
-    "@rollup/plugin-commonjs" "^25.0.4"
-    "@rollup/plugin-json" "^6.0.0"
-    "@rollup/plugin-node-resolve" "^15.2.1"
-    "@rollup/plugin-yaml" "^4.0.0"
-    "@svgr/rollup" "^8.1.0"
-    "@svgr/webpack" "^6.5.1"
-    "@yarnpkg/lockfile" "^1.1.0"
-    "@yarnpkg/parsers" "^3.0.0-rc.4"
-    bfj "^7.0.2"
-    chalk "^4.0.0"
-    chokidar "^3.3.1"
-    commander "^9.1.0"
-    css-loader "^6.5.1"
-    esbuild "^0.19.0"
-    esbuild-loader "^2.18.0"
-    eslint "^8.49.0"
-    eslint-config-prettier "^8.10.0"
-    eslint-webpack-plugin "^3.2.0"
-    express "^4.18.2"
-    fork-ts-checker-webpack-plugin "^7.0.0-alpha.8"
-    fs-extra "^10.1.0"
-    handlebars "^4.7.7"
-    html-webpack-plugin "^5.3.1"
-    inquirer "^8.2.0"
-    lodash "^4.17.21"
-    mini-css-extract-plugin "^2.4.2"
-    node-libs-browser "^2.2.1"
-    npm-packlist "^5.0.0"
-    ora "^5.3.0"
-    postcss "^8.2.13"
-    process "^0.11.10"
-    react-dev-utils "^12.0.0-next.60"
-    react-refresh "^0.14.0"
-    recursive-readdir "^2.2.2"
-    rollup "^2.78.0"
-    rollup-plugin-dts "^4.0.1"
-    rollup-plugin-esbuild "^4.7.2"
-    rollup-plugin-postcss "^4.0.0"
-    rollup-pluginutils "^2.8.2"
-    semver "^7.5.4"
-    style-loader "^3.3.1"
-    swc-loader "^0.2.3"
-    typescript-json-schema "^0.62.0"
-    webpack "^5.89.0"
-    webpack-dev-server "^4.15.1"
-    yml-loader "^2.1.0"
-    yn "^4.0.0"
-
 "@jest-mock/express@^2.0.1":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@jest-mock/express/-/express-2.0.2.tgz#e4f61c30b45e517c14b35ea5d67d89a7e52908f7"
@@ -10259,30 +10072,15 @@
     "@smithy/types" "^2.10.0"
     tslib "^2.5.0"
 
-"@spotify/eslint-config-base@^14.0.0":
-  version "14.1.6"
-  resolved "https://registry.yarnpkg.com/@spotify/eslint-config-base/-/eslint-config-base-14.1.6.tgz#249b25ef683884e12aa0d10fc2783d9361e2890a"
-  integrity sha512-pTctiCA/nrrIoBUd9jk+1AjJ9lqy9f5N85ctbSU5O5HW0/yIqJBUPH0+97+2/AOeSmnO5R2e9vSiwQwCZkXjig==
-
 "@spotify/eslint-config-base@^15.0.0":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@spotify/eslint-config-base/-/eslint-config-base-15.0.0.tgz#fa8a003e656b1c14694528a487bb9e974e013e4d"
   integrity sha512-7UA5QWbb8xk3Q1665BkRldzieI/Of7ONzjEXZpoyIjrfBDEmlXEDdCmOsv8Pt2aOuzHSTiykMzn7wNF5ymGL/A==
 
-"@spotify/eslint-config-react@^14.0.0":
-  version "14.1.6"
-  resolved "https://registry.yarnpkg.com/@spotify/eslint-config-react/-/eslint-config-react-14.1.6.tgz#3aa134e336f1e4cb298a55e4114d5cbd2abd6b46"
-  integrity sha512-WguVK3HuVy4ZYyN8Gojef34OeTLZwLzd3Dk3kaCbL4pjWJ5fJfT2epe6N4PfC5W358OuPG12X3s3CYVCQsUDfg==
-
 "@spotify/eslint-config-react@^15.0.0":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@spotify/eslint-config-react/-/eslint-config-react-15.0.0.tgz#5f3bba8ea2120eda16eed9f38d093a49e42b7b68"
   integrity sha512-TgYLvOb0RvniWbJ3dz0Skh/AMRpkJU7aNnUfHIaEvXziVQYUrRAuMwNvCCjeCfR9FkeImuORsyBobZhgsfjrZQ==
-
-"@spotify/eslint-config-typescript@^14.0.0":
-  version "14.1.6"
-  resolved "https://registry.yarnpkg.com/@spotify/eslint-config-typescript/-/eslint-config-typescript-14.1.6.tgz#dffaf2eeffd0c879605497c3d6ab275d02053db1"
-  integrity sha512-7TbP8nywFUMu73nNTv0NzCmmgNFvGWlRMFZ7lCiFS+UOmfyaiYpJXUHLXXmNQ+qB8/PMrtaznvCIYmus9tqI9Q==
 
 "@spotify/eslint-config-typescript@^15.0.0":
   version "15.0.0"
@@ -16700,7 +16498,7 @@ esbuild@^0.16.17:
     "@esbuild/win32-ia32" "0.16.17"
     "@esbuild/win32-x64" "0.16.17"
 
-esbuild@^0.19.0, esbuild@~0.19.10:
+esbuild@^0.19.0:
   version "0.19.12"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.19.12.tgz#dc82ee5dc79e82f5a5c3b4323a2a641827db3e04"
   integrity sha512-aARqgq8roFBj054KvQr5f1sFu0D65G+miZRCuJyJ0G13Zwx7vRar5Zhn2tkQNzIXcBrNVsv/8stehpj+GAjgbg==
@@ -17822,7 +17620,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-fsevents@^2.3.2, fsevents@~2.3.2, fsevents@~2.3.3:
+fsevents@^2.3.2, fsevents@~2.3.2:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
@@ -18041,7 +17839,7 @@ glob@^10.3.10:
     minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
     path-scurry "^1.10.1"
 
-glob@^7.1.3, glob@^7.1.4, glob@^7.1.6, glob@^7.1.7, glob@^7.2.0, glob@^7.2.3:
+glob@^7.1.3, glob@^7.1.4, glob@^7.1.6, glob@^7.1.7, glob@^7.2.3:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
@@ -21641,7 +21439,7 @@ minimatch@^4.2.3:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@^5.0.0, minimatch@^5.0.1, minimatch@^5.1.0, minimatch@^5.1.1:
+minimatch@^5.0.0, minimatch@^5.0.1, minimatch@^5.1.0:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-5.1.6.tgz#1cfcb8cf5522ea69952cd2af95ae09477f122a96"
   integrity sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==
@@ -24573,15 +24371,6 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-replace-in-file@^6.0.0:
-  version "6.3.5"
-  resolved "https://registry.yarnpkg.com/replace-in-file/-/replace-in-file-6.3.5.tgz#ff956b0ab5bc96613207d603d197cd209400a654"
-  integrity sha512-arB9d3ENdKva2fxRnSjwBEXfK1npgyci7ZZuwysgAp7ORjHSyxz6oqIjTEv8R0Ydl4Ll7uOAZXL4vbkhGIizCg==
-  dependencies:
-    chalk "^4.1.2"
-    glob "^7.2.0"
-    yargs "^17.2.1"
-
 request@^2.88.0:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
@@ -24856,7 +24645,7 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^2.60.2, rollup@^2.78.0:
+rollup@^2.78.0:
   version "2.79.1"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.79.1.tgz#bedee8faef7c9f93a2647ac0108748f497f081c7"
   integrity sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==
@@ -26665,16 +26454,6 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-tsx@^4.0.0:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/tsx/-/tsx-4.7.2.tgz#a108b1a6e16876cd4c9a4b4ba263f2a07f9cf562"
-  integrity sha512-BCNd4kz6fz12fyrgCTEdZHGJ9fWTGeUzXmQysh0RVocDY3h4frk05ZNCXSy4kIenF7y/QnrdiVpTsyNRn6vlAw==
-  dependencies:
-    esbuild "~0.19.10"
-    get-tsconfig "^4.7.2"
-  optionalDependencies:
-    fsevents "~2.3.3"
-
 tty-browserify@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.0.tgz#a157ba402da24e9bf957f9aa69d524eed42901a6"
@@ -27977,7 +27756,7 @@ yargs@^16.0.0:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-yargs@^17.1.1, yargs@^17.2.1, yargs@^17.3.1, yargs@^17.6.2, yargs@^17.7.2:
+yargs@^17.1.1, yargs@^17.3.1, yargs@^17.6.2, yargs@^17.7.2:
   version "17.7.2"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.7.2.tgz#991df39aca675a192b816e1e0363f9d75d2aa269"
   integrity sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==
