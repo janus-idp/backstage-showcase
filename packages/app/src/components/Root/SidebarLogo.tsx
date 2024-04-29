@@ -18,7 +18,7 @@ const LogoRender = ({
 }: {
   base64Logo: string | undefined;
   defaultLogo: React.JSX.Element;
-  width: number;
+  width: string | number;
 }) => {
   return base64Logo ? (
     <img
@@ -39,6 +39,10 @@ export const SidebarLogo = () => {
   const logoFullBase64URI = configApi.getOptionalString(
     'app.branding.fullLogo',
   );
+  const fullLogoWidth = configApi
+    .getOptional('app.branding.fullLogoWidth')
+    ?.toString();
+
   const logoIconBase64URI = configApi.getOptionalString(
     'app.branding.iconLogo',
   );
@@ -50,7 +54,7 @@ export const SidebarLogo = () => {
           <LogoRender
             base64Logo={logoFullBase64URI}
             defaultLogo={<LogoFull />}
-            width={110}
+            width={fullLogoWidth ?? 110}
           />
         ) : (
           <LogoRender
