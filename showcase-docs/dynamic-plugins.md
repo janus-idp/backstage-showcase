@@ -542,7 +542,7 @@ This configuration allows you to bind to existing plugins and their routes as we
 
 This section aims to allow users dynamic extension of [Catalog Components](https://backstage.io/docs/plugins/composability/#catalog-components), but can be used to extend additional views in the future as well.
 
-Mount points are defined identifiers available across the applications. These points specifically allow users to extend existing pages with additional content.
+Mount points are defined identifiers available across the application. These points specifically allow users to extend existing pages with additional content.
 
 The following mount points are available:
 
@@ -615,7 +615,57 @@ Each mount point supports additional configuration:
   - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
   - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`
 
-#### Provide additional Utility APIs
+#### Customizing and Adding Entity tabs
+
+Out of the box the frontend system provides an opinionated set of tabs for catalog entity views. This set of tabs can be further customized and extended as needed via the `entityTabs` configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      entityTabs:
+        # Adding a new tab
+        - path: /new-path
+          title: My New Tab
+          mountPoint: entity.page.my-new-tab
+        # Change an existing tab's title or mount point
+        - path: /
+          title: General
+          mountPoint: entity.page.overview #this can be customized too
+```
+
+Each entity tab entry requires the following attributes:
+
+- `path`: Specifies the sub-path route in the catalog where this tab will be available
+- `title`: The title that is displayed to the user
+- `mountPoint`: The base mount point name that will be available on the tab. This name will be expanded to create two mount points per tab, one appended with `/context` and the second appended with `/cards`.
+
+Dynamic frontend plugins can then be configured to target the mount points exposed by the `entityTabs` configuration.
+
+Here are the default catalog entity routes in the default order:
+
+| Route             | Title               | Mount Point                  | Entity Kind                          |
+| ----------------- | ------------------- | ---------------------------- | ------------------------------------ |
+| `/`               | Overview            | `entity.page.overview`       | Any                                  |
+| `/topology`       | Topology            | `entity.page.topology`       | Any                                  |
+| `/issues`         | Issues              | `entity.page.issues`         | Any                                  |
+| `/pr`             | Pull/Merge Requests | `entity.page.pull-requests`  | Any                                  |
+| `/ci`             | CI                  | `entity.page.ci`             | Any                                  |
+| `/cd`             | CD                  | `entity.page.cd`             | Any                                  |
+| `/kubernetes`     | Kubernetes          | `entity.page.kubernetes`     | Any                                  |
+| `/image-registry` | Image Registry      | `entity.page.image-registry` | Any                                  |
+| `/monitoring`     | Monitoring          | `entity.page.monitoring`     | Any                                  |
+| `/lighthouse`     | Lighthouse          | `entity.page.lighthouse`     | Any                                  |
+| `/api`            | Api                 | `entity.page.api`            | `kind: Service` or `kind: Component` |
+| `/dependencies`   | Dependencies        | `entity.page.dependencies`   | `kind: Component`                    |
+| `/docs`           | Docs                | `entity.page.docs`           | Any                                  |
+| `/definition`     | Definition          | `entity.page.definition`     | `kind: API`                          |
+| `/system`         | Diagram             | `entity.page.diagram`        | `kind: System`                       |
+
+The visibility of a tab is derived from the kind of entity that is being displayed along with the visibility guidance mentioned in "[Using mount points](#using-mount-points)".
+
+### Provide additional Utility APIs
 
 Backstage offers an Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
 
