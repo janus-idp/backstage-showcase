@@ -2895,7 +2895,7 @@
     lodash "^4.17.21"
     winston "^3.2.1"
 
-"@backstage/backend-dynamic-feature-service@0.2.8", "@backstage/backend-dynamic-feature-service@^0.2.2":
+"@backstage/backend-dynamic-feature-service@0.2.8":
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/@backstage/backend-dynamic-feature-service/-/backend-dynamic-feature-service-0.2.8.tgz#4ca64e0a713aaf01155f3606a5ce24d026319a3b"
   integrity sha512-7QB3voc1XCS9ioa8VEw9W/Yq3V0pPxGlBFdIaqJXcSGaehrCZm5qGKZG0EiP/WCqBEbzybPW4psHWwcOv3y9KA==
