@@ -23,9 +23,9 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/backend-common": "0.21.6",
-    "@backstage/backend-dynamic-feature-service": "0.2.8",
-    "@backstage/backend-plugin-api": "0.6.16",
+    "@backstage/backend-common": "0.21.7",
+    "@backstage/backend-dynamic-feature-service": "0.2.9",
+    "@backstage/backend-plugin-api": "0.6.17",
     "@backstage/config": "1.2.0",
     "@types/express": "4.17.21",
     "express": "4.19.2",
@@ -33,7 +33,7 @@
     "winston": "3.11.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.2",
+    "@backstage/cli": "0.26.4",
     "@types/supertest": "6.0.2",
     "supertest": "6.3.4",
     "msw": "2.2.13"

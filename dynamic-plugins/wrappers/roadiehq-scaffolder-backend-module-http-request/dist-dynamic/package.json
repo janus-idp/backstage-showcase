@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-scaffolder-backend-module-http-request-dynamic",
-  "version": "4.1.10",
+  "version": "4.3.1",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -31,9 +31,9 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "0.6.16",
+    "@backstage/backend-plugin-api": "0.6.17",
     "@backstage/plugin-scaffolder-backend": "^1.22.3",
-    "@backstage/plugin-scaffolder-node": "^0.3.0",
+    "@backstage/plugin-scaffolder-node": "0.4.2",
     "@backstage/backend-common": "^0.21.6",
     "@backstage/core-app-api": "^1.12.3",
     "@backstage/core-plugin-api": "^1.9.1"
