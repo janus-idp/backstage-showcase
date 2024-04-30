@@ -1,16 +1,17 @@
 import React, { Fragment } from 'react';
 
-import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 import { createPlugin, createRouteRef } from '@backstage/core-plugin-api';
 import { removeScalprum } from '@scalprum/core';
-import * as useAsync from 'react-use/lib/useAsync';
 import { renderWithEffects } from '@backstage/test-utils';
 import AppBase from '../AppBase/AppBase';
 import { act } from 'react-dom/test-utils';
+import { AppConfig } from '@backstage/config';
+import * as useAsync from 'react-use/lib/useAsync';
+import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 
 const DynamicRoot = React.lazy(() => import('../DynamicRoot/DynamicRoot'));
 const mockAppInner = () => <AppBase />;
-const MockApp = () => (
+const MockApp = ({ appConfig }: { appConfig: AppConfig[] }) => (
   <React.Suspense fallback={null}>
     <DynamicRoot
       apis={[]}
@@ -19,6 +20,9 @@ const MockApp = () => (
           default: mockAppInner,
         })
       }
+      appConfig={appConfig}
+      baseFrontendConfig={{ context: 'frontend', data: {} }}
+      scalprumConfig={{}}
     />
   </React.Suspense>
 );
@@ -86,7 +90,7 @@ jest.mock('@backstage/config', () => {
     static fromConfigs(args: any) {
       const answer = OldConfigReader.fromConfigs([
         ...[Array.isArray(args) ? args : []],
-        ...(process.env.APP_CONFIG as any),
+        ...(JSON.parse(process.env.APP_CONFIG || '[]') as Array<unknown>),
       ]);
       return answer;
     }
@@ -106,25 +110,22 @@ jest.mock('../../utils/dynamicUI/initializeRemotePlugins', () => ({
   __esModule: true,
 }));
 
-const mockProcessEnv = (dynamicPluginsConfig: { [key: string]: any }) => ({
-  NODE_ENV: 'test',
-  APP_CONFIG: [
-    {
-      data: {
-        app: { title: 'Test' },
-        backend: { baseUrl: 'http://localhost:7007' },
-        techdocs: {
-          storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
-        },
-        auth: { environment: 'development' },
-        dynamicPlugins: {
-          frontend: dynamicPluginsConfig,
-        },
+const createAppConfig = (dynamicPluginsConfig: { [key: string]: any }) => [
+  {
+    data: {
+      app: { title: 'Test' },
+      backend: { baseUrl: 'http://localhost:7007' },
+      techdocs: {
+        storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
       },
-      context: 'test',
+      auth: { environment: 'development' },
+      dynamicPlugins: {
+        frontend: dynamicPluginsConfig,
+      },
     },
-  ] as any,
-});
+    context: 'test',
+  },
+];
 
 const consoleSpy = jest.spyOn(console, 'warn');
 
@@ -143,7 +144,9 @@ describe('AdminTabs', () => {
           isTestConditionTrue: () => true,
           isTestConditionFalse: () => false,
           TestComponentWithStaticJSX: {
-            element: ({ children }) => <>{children}</>,
+            element: ({ children }: { children?: React.ReactNode }) => (
+              <>{children}</>
+            ),
             staticJSXContent: <div />,
           },
         },
@@ -159,14 +162,15 @@ describe('AdminTabs', () => {
   });
 
   it('Should not be available when not configured', async () => {
-    process.env = mockProcessEnv({
+    const appConfig = createAppConfig({
       'test-plugin': {
         dynamicRoutes: [],
         mountPoints: [],
       },
     });
+    process.env = { NODE_ENV: 'test', APP_CONFIG: JSON.stringify(appConfig) };
     initialEntries = ['/'];
-    const rendered = await renderWithEffects(<MockApp />);
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     expect(rendered.baseElement).toBeInTheDocument();
     const home = rendered.queryByText('Home');
     const administration = rendered.queryByText('Administration');
@@ -175,14 +179,15 @@ describe('AdminTabs', () => {
   });
 
   it('Should be available when configured', async () => {
-    process.env = mockProcessEnv({
+    const appConfig = createAppConfig({
       'test-plugin': {
         dynamicRoutes: [{ path: '/admin/plugins' }],
         mountPoints: [{ mountPoint: 'admin.page.plugins/cards' }],
       },
     });
     initialEntries = ['/'];
-    const rendered = await renderWithEffects(<MockApp />);
+    process.env = { NODE_ENV: 'test', APP_CONFIG: JSON.stringify(appConfig) };
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     expect(rendered.baseElement).toBeInTheDocument();
     const home = rendered.queryByText('Home');
     const administration = rendered.queryByText('Administration');
@@ -191,14 +196,15 @@ describe('AdminTabs', () => {
   });
 
   it('Should route to the plugin tab when configured', async () => {
-    process.env = mockProcessEnv({
+    const appConfig = createAppConfig({
       'test-plugin': {
         dynamicRoutes: [{ path: '/admin/plugins' }],
         mountPoints: [{ mountPoint: 'admin.page.plugins/cards' }],
       },
     });
     initialEntries = ['/'];
-    const rendered = await renderWithEffects(<MockApp />);
+    process.env = { NODE_ENV: 'test', APP_CONFIG: JSON.stringify(appConfig) };
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     expect(rendered.baseElement).toBeInTheDocument();
     await act(() => {
       rendered.getByText('Administration').click();
@@ -208,14 +214,15 @@ describe('AdminTabs', () => {
   });
 
   it('Should route to the rbac tab when configured', async () => {
-    process.env = mockProcessEnv({
+    const appConfig = createAppConfig({
       'test-plugin': {
         dynamicRoutes: [{ path: '/admin/rbac' }],
         mountPoints: [{ mountPoint: 'admin.page.rbac/cards' }],
       },
     });
     initialEntries = ['/'];
-    const rendered = await renderWithEffects(<MockApp />);
+    process.env = { NODE_ENV: 'test', APP_CONFIG: JSON.stringify(appConfig) };
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     expect(rendered.baseElement).toBeInTheDocument();
     await act(() => {
       rendered.getByText('Administration').click();
@@ -225,14 +232,15 @@ describe('AdminTabs', () => {
   });
 
   it("Should fail back to the default tab if the currently routed tab doesn't match the configuration", async () => {
-    process.env = mockProcessEnv({
+    const appConfig = createAppConfig({
       'test-plugin': {
         dynamicRoutes: [{ path: '/admin/rbac' }],
         mountPoints: [{ mountPoint: 'admin.page.rbac/cards' }],
       },
     });
     initialEntries = ['/admin/plugins'];
-    const rendered = await renderWithEffects(<MockApp />);
+    process.env = { NODE_ENV: 'test', APP_CONFIG: JSON.stringify(appConfig) };
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     // When debugging this test it can be handy to see the entire rendered output
     // process.stdout.write(`${prettyDOM(rendered.baseElement, 900000)}`);
     expect(rendered.baseElement).toBeInTheDocument();
@@ -240,14 +248,15 @@ describe('AdminTabs', () => {
   });
 
   it('Should fail with an error page if routed to but no configuration is defined', async () => {
-    process.env = mockProcessEnv({
+    const appConfig = createAppConfig({
       'test-plugin': {
         dynamicRoutes: [],
         mountPoints: [],
       },
     });
     initialEntries = ['/admin/plugins'];
-    const rendered = await renderWithEffects(<MockApp />);
+    process.env = { NODE_ENV: 'test', APP_CONFIG: JSON.stringify(appConfig) };
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     // When debugging this test it can be handy to see the entire rendered output
     // process.stdout.write(`${prettyDOM(rendered.baseElement, 900000)}`);
     expect(rendered.baseElement).toBeInTheDocument();

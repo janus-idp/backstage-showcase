@@ -15,7 +15,8 @@ import {
 } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import * as appDefaults from '@backstage/app-defaults';
-import { AppRouteBinder } from '@backstage/core-app-api';
+import { AppRouteBinder, defaultConfigLoader } from '@backstage/core-app-api';
+import { AppConfig } from '@backstage/config';
 
 const DynamicRoot = React.lazy(() => import('./DynamicRoot'));
 
@@ -67,7 +68,9 @@ const MockPage = () => {
   );
 };
 
-const MockApp = () => (
+const loadAppConfig = async () => await defaultConfigLoader();
+
+const MockApp = ({ appConfig }: { appConfig: AppConfig[] }) => (
   <React.Suspense fallback={null}>
     <DynamicRoot
       apis={[]}
@@ -78,6 +81,12 @@ const MockApp = () => (
           },
         })
       }
+      appConfig={appConfig}
+      baseFrontendConfig={{
+        context: '',
+        data: {},
+      }}
+      scalprumConfig={{}}
     />
   </React.Suspense>
 );
@@ -184,7 +193,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'foo.bar': { dynamicRoutes: [{ path: '/foo' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -198,7 +208,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'foo.bar': { dynamicRoutes: [{ path: '/foo' }, { path: '/bar' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -212,7 +223,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'doesnt.exist': { dynamicRoutes: [{ path: '/foo' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -231,7 +243,8 @@ describe('DynamicRoot', () => {
         dynamicRoutes: [{ path: '/foo', importName: 'BarComponent' }],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -248,7 +261,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'foo.bar': { dynamicRoutes: [{ path: '/foo', module: 'BarPlugin' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -269,7 +283,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -285,7 +300,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'foo.bar': { mountPoints: [{ mountPoint: 'a.b.c/cards' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -304,7 +320,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -323,7 +340,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -347,7 +365,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -370,7 +389,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -393,7 +413,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -414,7 +435,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -430,7 +452,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'doesnt.exist': { mountPoints: [{ mountPoint: 'a.b.c/cards' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -451,7 +474,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -470,7 +494,8 @@ describe('DynamicRoot', () => {
         mountPoints: [{ mountPoint: 'a.b.c/cards', module: 'BarPlugin' }],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -494,7 +519,8 @@ describe('DynamicRoot', () => {
         ],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -510,7 +536,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'foo.bar': { appIcons: [{ name: 'fooIcon' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -524,7 +551,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'foo.bar': { appIcons: [{ name: 'fooIcon' }, { name: 'foo2Icon' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -541,7 +569,8 @@ describe('DynamicRoot', () => {
     process.env = mockProcessEnv({
       'doesnt.exist': { appIcons: [{ name: 'fooIcon' }] },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -572,7 +601,8 @@ describe('DynamicRoot', () => {
         },
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -612,7 +642,8 @@ describe('DynamicRoot', () => {
         },
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -650,7 +681,8 @@ describe('DynamicRoot', () => {
         },
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -667,7 +699,8 @@ describe('DynamicRoot', () => {
         apiFactories: [{ importName: 'fooPluginApi' }],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -687,7 +720,8 @@ describe('DynamicRoot', () => {
         apiFactories: [{ importName: 'barPluginApi' }],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -706,7 +740,8 @@ describe('DynamicRoot', () => {
         apiFactories: [{ importName: 'fooPluginApi', module: 'BarPlugin' }],
       },
     });
-    const rendered = await renderWithEffects(<MockApp />);
+    const appConfig = await loadAppConfig();
+    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
