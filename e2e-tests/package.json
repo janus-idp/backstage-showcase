@@ -8,8 +8,8 @@
   "author": "janus-idp",
   "license": "Apache-2.0",
   "scripts": {
-    "showcase": "playwright test --reporter=list --project=showcase",
-    "showcase-rbac": "playwright test --reporter=list --project=showcase-rbac",
+    "showcase": "playwright test --project=showcase",
+    "showcase-rbac": "playwright test --project=showcase-rbac",
     "lint": "eslint . --ext .js,.ts",
     "postinstall": "playwright install"
   },
