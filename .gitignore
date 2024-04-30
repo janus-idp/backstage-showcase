@@ -50,10 +50,6 @@ site
 
 .turbo
 
-# Cypress
-**/cypress/downloads
-**/cypress/screenshots
-
 # Dynamic plugins root content
 dynamic-plugins-root/*
 !dynamic-plugins-root/.gitkeep
