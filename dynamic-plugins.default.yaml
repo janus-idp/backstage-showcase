@@ -176,6 +176,13 @@ plugins:
         providers:
           gitlab: {}
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-org-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          gitlab: {}
+
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
     disabled: true
