@@ -22,7 +22,7 @@ import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
 
 const AppBase = () => {
-  const { AppProvider, AppRouter, dynamicRoutes } =
+  const { AppProvider, AppRouter, dynamicRoutes, entityTabOverrides } =
     useContext(DynamicRootContext);
   return (
     <AppProvider>
@@ -41,7 +41,7 @@ const AppBase = () => {
               path="/catalog/:namespace/:kind/:name"
               element={<CatalogEntityPage />}
             >
-              {entityPage}
+              {entityPage(entityTabOverrides)}
             </Route>
             <Route
               path="/create"

@@ -3,17 +3,7 @@ import extractDynamicConfig, {
   conditionsArrayMapper,
   configIfToCallable,
 } from './extractDynamicConfig';
-import { defaultConfigLoader } from '@backstage/core-app-api';
 import { Entity } from '@backstage/catalog-model';
-
-jest.mock('@backstage/core-app-api', () => ({
-  ...jest.requireActual('@backstage/core-app-api'),
-  defaultConfigLoader: jest.fn(),
-}));
-
-const mockedDefaultConfigLoader = defaultConfigLoader as jest.MockedFunction<
-  typeof defaultConfigLoader
->;
 
 describe('conditionsArrayMapper', () => {
   it.each([
@@ -154,11 +144,13 @@ describe('extractDynamicConfig', () => {
       { dynamicPlugins: { frontend: {} } },
     ],
   ])('returns empty data when %s', async (_, source) => {
-    mockedDefaultConfigLoader.mockResolvedValue([source] as AppConfig[]);
-    const config = await extractDynamicConfig();
+    const config = await extractDynamicConfig({
+      appConfig: [source] as AppConfig[],
+    });
     expect(config).toEqual({
       routeBindings: [],
       dynamicRoutes: [],
+      entityTabs: [],
       mountPoints: [],
       appIcons: [],
       routeBindingTargets: [],
@@ -439,19 +431,21 @@ describe('extractDynamicConfig', () => {
       },
     ],
   ])('parses %s', async (_, source, output) => {
-    mockedDefaultConfigLoader.mockResolvedValue([
-      {
-        context: 'foo',
-        data: {
-          dynamicPlugins: { frontend: { 'janus-idp.plugin-foo': source } },
+    const config = await extractDynamicConfig({
+      appConfig: [
+        {
+          context: 'foo',
+          data: {
+            dynamicPlugins: { frontend: { 'janus-idp.plugin-foo': source } },
+          },
         },
-      },
-    ] as AppConfig[]);
-    const config = await extractDynamicConfig();
+      ] as AppConfig[],
+    });
     expect(config).toEqual({
       routeBindings: [],
       routeBindingTargets: [],
       dynamicRoutes: [],
+      entityTabs: [],
       mountPoints: [],
       appIcons: [],
       apiFactories: [],

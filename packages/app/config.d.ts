@@ -87,6 +87,11 @@ export interface Config {
             };
           }[];
         };
+        entityTabs?: {
+          path: string;
+          title: string;
+          mountPoint: string;
+        }[];
         mountPoints?: {
           mountPoint: string;
           module?: string;
