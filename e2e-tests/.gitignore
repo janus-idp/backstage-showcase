@@ -64,3 +64,6 @@ site
 
 # IntelliJ
 .idea
+
+# e2e test results
+junit-results.xml

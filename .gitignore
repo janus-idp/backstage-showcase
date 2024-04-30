@@ -50,9 +50,6 @@ site
 
 .turbo
 
-# e2e test results
-e2e-tests/junit-results.xml
-
 # Dynamic plugins root content
 dynamic-plugins-root/*
 !dynamic-plugins-root/.gitkeep
