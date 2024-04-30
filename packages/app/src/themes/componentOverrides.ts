@@ -53,7 +53,6 @@ export const components = (
       defaultProps: {
         TabIndicatorProps: {
           style: {
-            height: '3px',
             background:
               themeColors.navigationIndicatorColor || themePalette.primary.main,
           },
@@ -63,6 +62,21 @@ export const components = (
         root: {
           boxShadow: `0 -1px ${themePalette.general.tabsBottomBorderColor} inset`,
           padding: '0 1.5rem',
+        },
+        flexContainerVertical: {
+          '& > button:hover': {
+            boxShadow: `-3px 0 ${themePalette.general.tabsBottomBorderColor} inset`,
+          },
+        },
+      },
+    },
+    PrivateTabIndicator: {
+      styleOverrides: {
+        root: {
+          height: '3px',
+        },
+        vertical: {
+          width: '3px',
         },
       },
     },
@@ -100,6 +114,7 @@ export const components = (
       styleOverrides: {
         root: {
           overflow: 'scroll',
+          backgroundColor: themePalette.general.mainSectionBackgroundColor,
         },
       },
     },
@@ -122,7 +137,7 @@ export const components = (
             {
               paddingLeft: '0',
             },
-          '& > div[class*="MuiGrid-root"][class*="MuiGrid-container"][class*="MuiGrid-spacing-xs-6"] > div[class*="MuiGrid-item"][class*="MuiGrid-grid-xs-12"]':
+          '& > div[class*="MuiGrid-root"][class*="MuiGrid-container"][class*="MuiGrid-spacing-xs-6"][class*="-MuiGrid-root"] > div[class*="MuiGrid-item"][class*="MuiGrid-grid-xs-12"]':
             {
               paddingLeft: '0',
             },
@@ -238,6 +253,17 @@ export const components = (
           // hide the first child element which is a divider with MuiDivider-root classname in MuiPaper
           '& > hr:first-child[class|="MuiDivider-root"]': {
             height: 0,
+          },
+        },
+        elevation0: {
+          '& div[class*="Mui-disabled"]': {
+            backgroundColor: 'unset',
+          },
+          '& span[class*="Mui-disabled"]': {
+            backgroundColor: 'unset',
+          },
+          '& input[class*="Mui-disabled"]': {
+            backgroundColor: 'unset',
           },
         },
         elevation1: {
@@ -387,6 +413,15 @@ export const components = (
             {
               '-webkit-line-clamp': '2',
             },
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          '& > div': {
+            backgroundColor: themePalette.general.cardBackgroundColor,
+          },
         },
       },
     },

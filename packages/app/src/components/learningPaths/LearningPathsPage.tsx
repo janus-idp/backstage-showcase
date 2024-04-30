@@ -5,9 +5,13 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import React from 'react';
-import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
-import { ErrorReport, fetcher } from '../../common';
+import { ErrorReport } from '../../common';
+import { LearningPathLinks } from '../../types/types';
+import {
+  learningPathPage,
+  useCustomizationData,
+} from '../../hooks/useCustomizationData';
 
 const useStyles = makeStyles()({
   link: {
@@ -26,16 +30,7 @@ const useStyles = makeStyles()({
   },
 });
 
-type Path = {
-  label: string;
-  url: string;
-  description?: string;
-  hours?: number;
-  minutes?: number;
-  paths?: number;
-};
-
-const learningPathLengthInfo = (path: Path) => {
+const learningPathLengthInfo = (path: LearningPathLinks) => {
   const hoursText = path.hours === 1 ? 'hour' : 'hours';
   const minutesText = path.minutes === 1 ? 'minute' : 'minutes';
 
@@ -47,10 +42,16 @@ const learningPathLengthInfo = (path: Path) => {
 
 const LearningPathCards = () => {
   const { classes } = useStyles();
-  const { data, error, isLoading } = useSWR(
-    '/learning-paths/data.json',
-    fetcher<Path>,
-  );
+
+  const { data, error, isLoading } = useCustomizationData(learningPathPage) as {
+    data: LearningPathLinks[] | undefined;
+    error: Error | undefined;
+    isLoading: boolean;
+  };
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   if (!data) {
     return (
@@ -58,14 +59,10 @@ const LearningPathCards = () => {
     );
   }
 
-  if (error) {
+  if (!isLoading && !data && error) {
     return (
       <ErrorReport title="Could not fetch data." errorText={error.toString()} />
     );
-  }
-
-  if (isLoading) {
-    return <CircularProgress />;
   }
 
   return (

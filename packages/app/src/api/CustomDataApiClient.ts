@@ -3,12 +3,13 @@ import {
   createApiRef,
   DiscoveryApi,
 } from '@backstage/core-plugin-api';
-import { QuickAccessLinks } from '../types/types';
+import { LearningPathLinks, QuickAccessLinks } from '../types/types';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';
 
 export interface CustomDataApi {
   getHomeDataJson(): Promise<QuickAccessLinks[]>;
+  getLearningPathDataJson(): Promise<LearningPathLinks[]>;
 }
 
 export const customDataApiRef = createApiRef<CustomDataApi>({
@@ -51,6 +52,12 @@ export class CustomDataApiClient implements CustomDataApi {
   async getHomeDataJson() {
     const proxyUrl = await this.getBaseUrl();
     const data = await this.fetcher(`${proxyUrl}`);
+    return data;
+  }
+
+  async getLearningPathDataJson() {
+    const proxyUrl = await this.getBaseUrl();
+    const data = await this.fetcher(`${proxyUrl}/learning-paths`);
     return data;
   }
 }

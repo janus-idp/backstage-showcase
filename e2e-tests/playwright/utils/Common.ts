@@ -1,6 +1,6 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
 
@@ -49,16 +49,51 @@ export class Common {
     await this.page.fill('#password', process.env.GH_USER_PASS);
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP());
-    await this.page.waitForLoadState('networkidle');
+    await expect(this.page.locator('#app_totp')).toBeHidden({
+      timeout: 120000,
+    });
   }
 
   async loginAsGithubUser() {
     await this.logintoGithub();
     await this.page.goto('/');
-    await this.page.waitForLoadState('load');
+    await this.waitForLoad(240000);
     await this.uiHelper.clickButton('Sign In');
     await this.checkAndReauthorizeGithubApp();
     await this.uiHelper.waitForSideBarVisible();
+  }
+
+  /**
+   * Performs any action with retries.
+   * @param action A function that performs the desired action.
+   * @param retries Number of retries.
+   * @param retryInterval Time to wait between retries in milliseconds.
+   */
+  async performActionWithRetry<T>(
+    action: () => Promise<T>,
+    retries: number = 3,
+    retryInterval: number = 5000,
+  ): Promise<T> {
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        return await action();
+      } catch (error) {
+        lastError = error;
+        if (attempt < retries - 1) {
+          console.log(
+            `Attempt ${attempt + 1} failed, retrying after ${retryInterval}ms...`,
+          );
+          await new Promise(resolve => setTimeout(resolve, retryInterval));
+        } else {
+          console.log('All retries failed.');
+        }
+      }
+    }
+
+    // If all attempts fail, throw the last encountered error.
+    throw lastError;
   }
 
   async checkAndReauthorizeGithubApp() {
