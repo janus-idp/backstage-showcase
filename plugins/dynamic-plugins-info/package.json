@@ -29,6 +29,7 @@
     "@backstage/core-plugin-api": "1.9.1",
     "@backstage/theme": "0.5.2",
     "@material-table/core": "3.1.0",
+    "@mui/material": "5.15.6",
     "react-use": "17.4.0"
   },
   "peerDependencies": {

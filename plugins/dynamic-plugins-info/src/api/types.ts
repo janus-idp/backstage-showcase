@@ -5,6 +5,8 @@ export type DynamicPluginInfo = {
   version: string;
   role: string;
   platform: string;
+  enabled: boolean;
+  internal: boolean;
 };
 
 export interface DynamicPluginsInfoApi {
