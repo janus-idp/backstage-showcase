@@ -2,7 +2,7 @@ import {
   RadarEntry,
   TechRadarApi,
   type TechRadarLoaderResponse,
-} from '@backstage/plugin-tech-radar';
+} from '@backstage-community/plugin-tech-radar';
 import { ConfigApi, DiscoveryApi } from '@backstage/core-plugin-api';
 import defaultResponse from '../data/data-default.json';
 
