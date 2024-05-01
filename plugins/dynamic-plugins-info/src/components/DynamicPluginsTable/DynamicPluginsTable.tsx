@@ -10,11 +10,16 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Query, QueryResult } from '@material-table/core';
 
 import { DynamicPluginInfo, dynamicPluginsInfoApiRef } from '../../api/types';
+import {
+  InternalPluginsMap,
+  getNotEnabledInternalPlugins,
+} from '../InternalPluginsMap';
 
 export const DynamicPluginsTable = () => {
   const [error, setError] = useState<Error | undefined>(undefined);
   const [count, setCount] = useState<number>(0);
   const dynamicPluginInfo = useApi(dynamicPluginsInfoApiRef);
+  let data: DynamicPluginInfo[] = [];
   const columns: TableColumn<DynamicPluginInfo>[] = [
     {
       title: 'Name',
@@ -24,11 +29,25 @@ export const DynamicPluginsTable = () => {
     {
       title: 'Version',
       field: 'version',
-      width: '30%',
+      width: '15%',
+    },
+    {
+      title: 'Enabled',
+      field: 'enabled',
+      render: ({ enabled }) => <>{enabled ? 'Yes' : 'No'}</>,
+      width: '10%',
+    },
+    {
+      title: 'Preinstalled',
+      field: 'internal',
+      render: ({ internal }) => <>{internal ? 'Yes' : 'No'}</>,
+      width: '10%',
     },
     {
       title: 'Role',
-      render: ({ platform, role }) => <>{`${role} (${platform})`}</>,
+      render: ({ platform, role }) => (
+        <>{(role && `${role} (${platform})`) || null}</>
+      ),
       sorting: false,
     },
   ];
@@ -44,21 +63,55 @@ export const DynamicPluginsTable = () => {
     } = query || {};
     try {
       // for now sorting/searching/pagination is handled client-side
-      const data = (await dynamicPluginInfo.listLoadedPlugins())
-        .sort((a: Record<string, string>, b: Record<string, string>) => {
-          const field = orderBy.field!;
-          if (!a[field] || !b[field]) {
-            return 0;
+      const enabledPlugins = (await dynamicPluginInfo.listLoadedPlugins()).map(
+        plugin => {
+          if (plugin.name in InternalPluginsMap) {
+            return {
+              ...plugin,
+              internal: true,
+              enabled: true,
+            };
           }
-          return (
-            a[field].localeCompare(b[field]) *
-            (orderDirection === 'desc' ? -1 : 1)
-          );
-        })
-        .filter(
-          value =>
-            search.trim() === '' ||
-            JSON.stringify(value).indexOf(search.trim()) > 0,
+          return { ...plugin, internal: false, enabled: true };
+        },
+      );
+      const notEnabledInternalPlugins = getNotEnabledInternalPlugins(
+        enabledPlugins.map(plugin => plugin.name),
+      );
+      data = [...enabledPlugins]
+        // add other internal plugins that are not enabled
+        .concat(notEnabledInternalPlugins)
+        .sort(
+          (
+            a: Record<string, string | boolean>,
+            b: Record<string, string | boolean>,
+          ) => {
+            const field = orderBy.field!;
+            const orderMultiplier = orderDirection === 'desc' ? -1 : 1;
+
+            if (a[field] === null || b[field] === null) {
+              return 0;
+            }
+
+            // Handle boolean values separately
+            if (
+              typeof a[field] === 'boolean' &&
+              typeof b[field] === 'boolean'
+            ) {
+              return (a[field] ? 1 : -1) * orderMultiplier;
+            }
+
+            return (
+              (a[field] as string).localeCompare(b[field] as string) *
+              orderMultiplier
+            );
+          },
+        )
+        .filter(plugin =>
+          plugin.name
+            .toLowerCase()
+            .trim()
+            .includes(search.toLowerCase().trim()),
         );
       const totalCount = data.length;
       let start = 0;
@@ -79,7 +132,7 @@ export const DynamicPluginsTable = () => {
   }
   return (
     <Table
-      title={`Installed Plugins (${count})`}
+      title={`Plugins (${count})`}
       options={{
         draggable: false,
         filtering: false,
