@@ -45,7 +45,9 @@
     "app": "*",
     "express": "4.19.2",
     "express-prom-bundle": "6.6.0",
+    "global-agent": "^3.0.0",
     "prom-client": "15.1.0",
+    "undici": "^6.15.0",
     "winston": "3.11.0"
   },
   "devDependencies": {
