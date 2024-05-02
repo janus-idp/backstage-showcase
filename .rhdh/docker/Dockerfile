@@ -243,8 +243,8 @@ ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 # To avoid running scripts when using `npm pack` to install dynamic plugins
 ENV NPM_CONFIG_ignore-scripts='true'
 
-# Downstream only - use production key in stable 1.yy.x branch; use devel key in main for CI/next builds
-#TODO
+# gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t is key for dev environment
+# Use production key in stable 1.yy.x branch; use dev key in main for CI/next builds
 ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
 ENV SEGMENT_TEST_MODE=false
 

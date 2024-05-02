@@ -4,24 +4,48 @@ There are several different methods for running the Backstage Showcase app today
 
 ## Telemetry collection
 
-This software enables telemetry data collection through the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin in its default configuration to enhance user experience while prioritizing privacy:
+This software may enable telemetry data collection through the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin in its default configuration to enhance user experience while prioritizing privacy:
 
-- **Privacy-Focused Configuration**:
+- **Anonymized-focused configuration**:
 
-  - IP addresses are anonymized (`maskIP: true`), recorded as `0.0.0.0`.
+  - IP addresses are anonymized (`maskIP: true`), and recorded as `0.0.0.0`.
   - `anonymousId` used for tracking is a hash derived from the user's username.
 
 - **Data Collection Overview**:
   - **Events Tracked**: Page visits, clicks on links or buttons.
   - **Common Data Points for All Events**:
-    - IP address: Zeroed out to ensure privacy.
-    - Anonymous Id: Hashed username for anonymity.
     - User-related info: Locale, timezone, userAgent (browser and OS details).
     - Page-related info: Title, Category, Extension name, URL, path, referrer, search parameters.
 
 This ensures a thorough understanding of user interactions with the application while maintaining user anonymity and privacy.
 
-The data will be used only for internal analysis and to improve the product, not for sales and marketing purposes.
+The data will be used only for internal analysis and product improvement.
+
+If you wish to enable telemetry data collection, follow the steps below.
+
+### Enable Telemetry Using Helm Chart
+
+To turn on the telemetry while using the Helm chart, you need to enable Segment provider plugin in your Helm `values.yaml` file by adding the following configuration:
+
+```yaml
+global:
+  dynamic:
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+        disabled: false
+```
+
+By default, the Segment plugin is configured to send data to Red Hat. If you wish to change the destination, you can do so by setting the `SEGMENT_WRITE_KEY` environment variable to the desired Segment write key.
+
+```yaml
+upstream:
+  backstage:
+    extraEnvVars:
+      - name: SEGMENT_WRITE_KEY
+        value: <segment_key>
+```
+
+If you wish to subsequently disable telemetry data collection, use one of the following methods described below.
 
 ### Disable Telemetry Using Helm Chart
 
