@@ -5,6 +5,7 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import semver from 'semver';
+import { updateBuildMetadata } from './update-metadata.mjs'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -120,32 +121,6 @@ function updateBackstageVersionFile(version) {
   writeFileSync('backstage.json', modifiedContent, 'utf8');
 }
 
-function updateBuildMetadata(backstageVersion) {
-  const buildMetadataPath = join(
-    process.cwd(),
-    'packages',
-    'app',
-    'src',
-    'build-metadata.json',
-  );
-  const buildMetadata = JSON.parse(readFileSync(buildMetadataPath, 'utf8'));
-
-  const rootPackageJson = JSON.parse(readFileSync('package.json', 'utf8'));
-  const rhdhVersion = rootPackageJson.version;
-
-  const card = [
-    `RHDH Version: ${rhdhVersion}`,
-    `Backstage Version: ${backstageVersion}`,
-  ];
-  buildMetadata.card = card;
-
-  writeFileSync(
-    buildMetadataPath,
-    JSON.stringify(buildMetadata, null, 2),
-    'utf8',
-  );
-}
-
 console.log('Bumping version...');
 execSync('yarn run versions:bump', { stdio: 'inherit' });
 
@@ -169,7 +144,7 @@ const backstageVersion = await getLatestBackstageVersion();
 console.log(`Updating backstage.json to ${backstageVersion}...`);
 updateBackstageVersionFile(backstageVersion);
 
-console.log('Updating build metadata...');
+console.log('Updating packages/app/src/build-metadata.json ...');
 updateBuildMetadata(backstageVersion);
 
 console.log(
