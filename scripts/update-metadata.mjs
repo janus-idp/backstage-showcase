@@ -47,7 +47,5 @@ export function updateBuildMetadata(backstageVersion) {
   );
 }
 
-export { updateBuildMetadata };
-
 console.log('Updating packages/app/src/build-metadata.json ...');
 updateBuildMetadata(backstageVersion);
