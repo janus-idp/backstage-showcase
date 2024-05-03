@@ -73,7 +73,7 @@ RUN $YARN build --filter=backend && \
   $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
   $YARN copy-dynamic-plugins dist && \
   # insert build time into the build-metadata.json
-  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r -e "s/\"(Last Commit: )(.+)\"/\"\1\2\", \"Build Time: $now\""
+  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r -e "s/\"(Last Commit: )(.+)\"/\"\1\2\", \"Build Time: $now\"/"
 
 # Stage 4 - Build the actual backend image and install production dependencies
 FROM skeleton AS cleanup
