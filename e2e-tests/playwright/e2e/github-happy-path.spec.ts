@@ -1,6 +1,6 @@
-import { test, expect, Page, firefox, chromium } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
-import { Common } from '../utils/Common';
+import { Common, setupBrowser } from '../utils/Common';
 import { resources } from '../support/testData/resources';
 import {
   BackstageShowcase,
@@ -18,10 +18,8 @@ test.describe.serial('GitHub Happy path', () => {
   const component =
     'https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml';
 
-  test.beforeAll(async ({ browserName }) => {
-    const browserType = browserName === 'firefox' ? firefox : chromium;
-    const browser = await browserType.launch();
-    page = await browser.newPage();
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);

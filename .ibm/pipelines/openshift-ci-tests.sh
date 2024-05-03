@@ -255,6 +255,12 @@ main() {
   echo "Log file: ${LOGFILE}"
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   source ./.ibm/pipelines/env_variables.sh
+  # Update the namespace for nightly job.
+  if [ "$JOB_TYPE" != "presubmit" ]; then
+    NAME_SPACE="showcase-ci-nightly"
+    NAME_SPACE_RBAC="showcase-rbac-nightly"
+  fi
+
   echo "OPENSHIFT_CLUSTER_ID : $OPENSHIFT_CLUSTER_ID"
 
   install_ibmcloud
