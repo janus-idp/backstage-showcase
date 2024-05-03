@@ -1,10 +1,8 @@
 /* eslint-disable */
-import glob from 'glob';
 import { execSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import semver from 'semver';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
