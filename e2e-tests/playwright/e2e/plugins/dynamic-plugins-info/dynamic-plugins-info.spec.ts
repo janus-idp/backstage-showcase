@@ -1,6 +1,7 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { UIhelper } from '../../../utils/UIhelper';
 import { Common } from '../../../utils/Common';
+import { UIhelperPO } from '../../../support/pageObjects/global-obj';
 
 test.describe('dynamic-plugins-info UI tests', () => {
   let uiHelper: UIhelper;
@@ -22,13 +23,21 @@ test.describe('dynamic-plugins-info UI tests', () => {
     // what shows up in the list depends on how the instance is configured so
     // let's check for the main basic elements of the component to verify the
     // mount point is working as expected
-    await uiHelper.verifyText('Plugins', false);
+    await uiHelper.verifyText('Plugins (55)');
     await uiHelper.verifyText('5 rows');
-    await uiHelper.verifyText('Name');
-    await uiHelper.verifyText('Version');
-    await uiHelper.verifyText('Enabled');
-    await uiHelper.verifyText('Preinstalled');
-    await uiHelper.verifyText('Role');
+    await uiHelper.verifyColumnHeading(
+      ['Name', 'Version', 'Enabled', 'Preinstalled', 'Role'],
+      true,
+    );
+
+    // test out column values
+    const row = await page.locator(
+      UIhelperPO.rowByText(
+        '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      ),
+    );
+    expect(await row.locator('td').nth(2).innerText()).toBe('Yes');
+    expect(await row.locator('td').nth(3).innerText()).toBe('Yes');
 
     // Check the filter and use that to verify that the table contains the
     // dynamic-plugins-info plugin, which is required for this test to run
@@ -37,5 +46,11 @@ test.describe('dynamic-plugins-info UI tests', () => {
       .getByPlaceholder('Filter')
       .pressSequentially('techdocs\n', { delay: 300 });
     await uiHelper.verifyRowsInTable(['backstage-plugin-techdocs'], true);
+  });
+  test.skip('it should have a plugin-todo-list plugin which is Enabled but not Preinstalled', async () => {
+    await uiHelper.verifyRowInTableByUniqueText('@internal/plugin-todo-list', [
+      'Yes',
+      'No',
+    ]);
   });
 });
