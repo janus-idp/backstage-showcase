@@ -16,20 +16,19 @@ test.describe('dynamic-plugins-info UI tests', () => {
     await uiHelper.clickTab('Plugins');
   });
 
-  test('it should show a table and have a support button, the table should contain techdocs plugins', async ({
+  test('it should show a table, and the table should contain techdocs plugins', async ({
     page,
   }) => {
     // what shows up in the list depends on how the instance is configured so
     // let's check for the main basic elements of the component to verify the
     // mount point is working as expected
-    await uiHelper.verifyText('Installed Plugins', false);
+    await uiHelper.verifyText('Plugins', false);
     await uiHelper.verifyText('5 rows');
     await uiHelper.verifyText('Name');
     await uiHelper.verifyText('Version');
+    await uiHelper.verifyText('Enabled');
+    await uiHelper.verifyText('Preinstalled');
     await uiHelper.verifyText('Role');
-    await uiHelper.clickButton('Support');
-    await uiHelper.verifyText('All of the installed plugins');
-    await uiHelper.clickButton('Close');
 
     // Check the filter and use that to verify that the table contains the
     // dynamic-plugins-info plugin, which is required for this test to run

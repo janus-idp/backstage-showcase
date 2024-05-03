@@ -1,14 +1,9 @@
 import React from 'react';
-
-import { ContentHeader, SupportButton } from '@backstage/core-components';
-
+import Box from '@mui/material/Box';
 import { DynamicPluginsTable } from '../DynamicPluginsTable/DynamicPluginsTable';
 
 export const DynamicPluginsInfoContent = () => (
-  <>
-    <ContentHeader title="">
-      <SupportButton>All of the installed plugins</SupportButton>
-    </ContentHeader>
+  <Box sx={{ marginTop: '1rem' }}>
     <DynamicPluginsTable />
-  </>
+  </Box>
 );
