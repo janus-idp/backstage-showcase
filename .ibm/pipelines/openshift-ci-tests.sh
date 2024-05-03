@@ -132,7 +132,7 @@ apply_yaml_files() {
   # Cleanup temp file
   rm $dir/auth/service-account-rhdh-token.yaml
 
-  if [[ "${project}" == "showcase-rbac" ]]; then
+  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" ]]; then
     oc apply -f $dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml --namespace=${project}
   else
     oc apply -f $dir/resources/config_map/configmap-app-config-rhdh.yaml --namespace=${project}
