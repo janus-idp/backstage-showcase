@@ -2,7 +2,6 @@
 
 Out of the box, the Showcase application can be run behind a corporate proxy, by setting any of the following environment variables prior to starting the application:
 
-- `GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE` to an empty value
 - `HTTP_PROXY`: HTTP proxy to use.
 - `HTTPS_PROXY`: distinct proxy to use for HTTPS requests.
 
@@ -16,8 +15,6 @@ You can set the proxy information in your Helm `values` file, like so:
 upstream:
   backstage:
     extraEnvVars:
-      - name: GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE
-        value: ''
       - name: HTTP_PROXY
         # HTTP proxy to use
         value: '<my_http_proxy_url>'
@@ -38,14 +35,12 @@ upstream:
 upstream:
   backstage:
     extraEnvVars:
-      - name: GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE
-        value: ''
       - name: HTTP_PROXY
         value: 'http://10.10.10.105:3128'
       - name: HTTPS_PROXY
         value: 'http://10.10.10.106:3128'
       - name: NO_PROXY
-        value: 'localhost,internal.example.org'
+        value: 'localhost,example.org'
 ```
 
 </details>
@@ -59,8 +54,6 @@ spec:
   application:
     extraEnvs:
       envs:
-        - name: GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE
-          value: ''
         - name: HTTP_PROXY
           # HTTP proxy to use
           value: '<my_http_proxy_url>'
@@ -82,14 +75,26 @@ spec:
   application:
     extraEnvs:
       envs:
-        - name: GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE
-          value: ''
         - name: HTTP_PROXY
           value: 'http://10.10.10.105:3128'
         - name: HTTPS_PROXY
           value: 'http://10.10.10.106:3128'
         - name: NO_PROXY
-          value: 'localhost,internal.example.org'
+          value: 'localhost,example.org'
 ```
 
 </details>
+
+## Local development
+
+If you are behind a corporate proxy and are running the Showcase locally, as depicted in [Running locally with a basic configuration](./getting-started.md#running-locally-with-a-basic-configuration) or [Running locally with the Optional Plugins](./getting-started.md#running-locally-with-the-optional-plugins), you will need to additionally set the `GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE` to an empty value prior to running `yarn start`.
+
+Example:
+
+```shell
+$ GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE='' \
+  HTTP_PROXY=http://10.10.10.105:3128 \
+  HTTPS_PROXY=http://10.10.10.106:3128 \
+  NO_PROXY='localhost,example.org' \
+  yarn start
+```
