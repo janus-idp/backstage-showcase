@@ -27,8 +27,6 @@ export class DynamicPluginsInfoClient implements DynamicPluginsInfoApi {
   async listLoadedPlugins(): Promise<DynamicPluginInfo[]> {
     const baseUrl = await this.discoveryApi.getBaseUrl('dynamic-plugins-info');
     const targetUrl = `${baseUrl}${loadedPluginsEndpoint}`;
-    // this value is undefined when the guest login is used without a
-    // guest login provider implemented in the app
     const { token } = await this.identityApi.getCredentials();
     const response = await this.fetchApi.fetch(targetUrl, {
       ...(token ? { headers: { Authorization: `Bearer ${token}` } } : {}),
