@@ -17,7 +17,6 @@ The telemetry data collection feature is used to enhance your experience with th
     - User-related info: Locale, timezone, userAgent (browser and OS details).
     - Page-related info: Title, Category, Extension name, URL, path, referrer, search parameters.
 
-
 The telemetry data will only be used for internal analysis and product improvements. The collected data is analyzed to understand user interactions with the application while maintaining user anonymity and privacy.
 
 To enable or disable telemetry data collection and customize a telemetry destination, see the following sections.
@@ -28,7 +27,7 @@ To turn on the telemetry feature, you must enable the `analytics-provider-segmen
 
 #### Using Helm Chart
 
- Add the following code in your Helm configuration file:
+Add the following code in your Helm configuration file:
 
 ```yaml
 global:
@@ -38,9 +37,11 @@ global:
         disabled: false
 ```
 
+NOTE: If the `analytics-provider-segment` plugin is already present in your Helm configuration file, set the value of the `plugins.disabled` parameter to `true`.
+
 #### Using RHDH Operator
 
-If you have created the `dynamic-plugins-rhdh` ConfigMap file as described in the [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) section, add the `analytics-provider-segment` plugin to the list of plugins and set the `plugins.disabled` parameter to `false`. 
+If you have created the `dynamic-plugins-rhdh` ConfigMap file as described in the [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) section, add the `analytics-provider-segment` plugin to the list of plugins and set the `plugins.disabled` parameter to `false`.
 
 If you have not created the `dynamic-plugins-rhdh` ConfigMap file, create it with the following content:
 
@@ -58,6 +59,8 @@ data:
         disabled: false
 ```
 
+NOTE: If the `analytics-provider-segment` plugin is already present in your ConfigMap file, set the value of the `plugins.disabled` parameter to `true`.
+
 Set the value of the `dynamicPluginsConfigMapName` parameter to the name of the `ConfigMap` file in your `Backstage` custom resource:
 
 ```yaml
@@ -68,10 +71,9 @@ spec:
 
 ### Customizing Telemetry Destination
 
-The `analytics-provider-segment`  plugin is configured to send data to Red Hat by default. To change the destination that receives telemetry data, set the value of the `SEGMENT_WRITE_KEY` environment variable in your Helm configuration file as shown in the following examples.
+The `analytics-provider-segment` plugin is configured to send data to Red Hat by default. To change the destination that receives telemetry data, set the value of the `SEGMENT_WRITE_KEY` environment variable in your Helm configuration file as shown in the following examples.
 
 #### Example using Helm Chart
-
 
 ```yaml
 upstream:
