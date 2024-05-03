@@ -14,7 +14,7 @@ const backstageVersion = JSON.parse(
   readFileSync('backstage.json', 'utf8'),
 ).version.toString();
 
-function updateBuildMetadata(backstageVersion) {
+export function updateBuildMetadata(backstageVersion) {
   const buildMetadataPath = join(
     process.cwd(),
     'packages',
