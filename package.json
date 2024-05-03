@@ -10,7 +10,7 @@
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "start-backend": "turbo run start --filter=backend",
-    "build": "turbo run build; yarn versions:metadata",
+    "build": "turbo run build",
     "tsc": "tsc",
     "export-dynamic": "turbo run export-dynamic --concurrency 1",
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
@@ -63,7 +63,7 @@
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
     "*": "turbo run prettier:fix --",
-    "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
+    "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix; yarn versions:metadata",
     "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
   },
   "packageManager": "yarn@1.22.21"
