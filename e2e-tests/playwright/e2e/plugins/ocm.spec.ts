@@ -1,5 +1,5 @@
-import { Page, chromium, firefox, test } from '@playwright/test';
-import { Common } from '../../utils/Common';
+import { Page, test } from '@playwright/test';
+import { Common, setupBrowser } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import { Clusters } from '../../support/pages/Clusters';
 
@@ -19,10 +19,8 @@ test.describe.serial('Test OCM plugin', () => {
   let clusters: Clusters;
   let common: Common;
 
-  test.beforeAll(async ({ browserName }) => {
-    const browserType = browserName === 'firefox' ? firefox : chromium;
-    const browser = await browserType.launch();
-    page = await browser.newPage();
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
 
     common = new Common(page);
     uiHelper = new UIhelper(page);
