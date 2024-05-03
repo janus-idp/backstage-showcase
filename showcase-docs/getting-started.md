@@ -23,9 +23,13 @@ The data will be used only for internal analysis and product improvement.
 
 If you wish to enable telemetry data collection, follow the steps below.
 
-### Enable Telemetry Using Helm Chart
+### Enable Telemetry
 
-To turn on the telemetry while using the Helm chart, you need to enable Segment provider plugin in your Helm `values.yaml` file by adding the following configuration:
+To turn on the telemetry you need to enable Segment provider plugin.
+
+#### When using Helm Chart
+
+Modify Helm values and add the following configuration:
 
 ```yaml
 global:
@@ -35,7 +39,41 @@ global:
         disabled: false
 ```
 
+#### When using RHDH Operator
+
+If you already have `dynamic-plugins-rhdh` ConfigMap as described in [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) you just need to add the Segment plugin to the list of plugins. Refer to `ConfgiMap` example below.
+
+If you don't have the `dynamic-plugins-rhdh` ConfigMap, you can create it with the following content:
+
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins-rhdh
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+        disabled: false
+```
+
+Don't forget to add `dynamicPluginsConfigMapName` referencing the above `ConfigMap` to your `Backstage` resource:
+
+```yaml
+spec:
+  application:
+    dynamicPluginsConfigMapName: dynamic-plugins-rhdh
+```
+
+### Customizing Telemetry Destination
+
 By default, the Segment plugin is configured to send data to Red Hat. If you wish to change the destination, you can do so by setting the `SEGMENT_WRITE_KEY` environment variable to the desired Segment write key.
+
+#### When using Helm Chart
+
+Add the following configuration to your
 
 ```yaml
 upstream:
@@ -45,15 +83,48 @@ upstream:
         value: <segment_key>
 ```
 
+#### When using RHDH Operator
+
+```yaml
+extraEnvs:
+  envs:
+    - name: SEGMENT_WRITE_KEY
+      value: <segment_key>
+```
+
 If you wish to subsequently disable telemetry data collection, use one of the following methods described below.
 
-### Disable Telemetry Using Helm Chart
+### Disable Telemetry
 
-To turn off Segment telemetry while using the Helm chart, you need to deactivate the Segment provider plugin in your Helm `values.yaml` file by adding the following configuration:
+To turn off Segment telemetry, you need to deactivate the Segment provider plugin
+
+#### Using Helm Chart
+
+When you are using Helm Chart, you need to modify Helm values by adding the following configuration (if the Segment plugin is already present in your configuration, you can just change `disabled: false` to `disabled: true`):
 
 ```yaml
 global:
   dynamic:
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+        disabled: true
+```
+
+#### When using RHDH Operator
+
+When using RHDH Operator, you need to modify the ConfigMaps used for dynamic plugin configuration. The name of this ConfigMap is specified in `dynamicPluginsConfigMapName` field in your `Backstage` CustomResource.
+Usually, it is named as `dynamic-plugins-rhdh`.
+To disable Segment provider plugin, add the following configuration (if the Segment plugin is already present in your configuration, you can just change `disabled: false` to `disabled: true`):
+
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins-rhdh
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - dynamic-plugins.default.yaml
     plugins:
       - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
         disabled: true
