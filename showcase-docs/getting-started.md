@@ -4,9 +4,9 @@ There are several different methods for running the Backstage Showcase app today
 
 ## Telemetry collection
 
-This software may enable telemetry data collection through the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin in its default configuration to enhance user experience while prioritizing privacy:
+The telemetry data collection feature is used to enhance your experience with the application without compromising your privacy. To enable or disable telemetry data collection, you can configure the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin accordingly.
 
-- **Anonymized-focused configuration**:
+- **Anonymous configuration**:
 
   - IP addresses are anonymized (`maskIP: true`), and recorded as `0.0.0.0`.
   - `anonymousId` used for tracking is a hash derived from the user's username.
@@ -17,19 +17,18 @@ This software may enable telemetry data collection through the [`@janus-idp/back
     - User-related info: Locale, timezone, userAgent (browser and OS details).
     - Page-related info: Title, Category, Extension name, URL, path, referrer, search parameters.
 
-This ensures a thorough understanding of user interactions with the application while maintaining user anonymity and privacy.
 
-The data will be used only for internal analysis and product improvement.
+The telemetry data will only be used for internal analysis and product improvements. The collected data is analyzed to understand user interactions with the application while maintaining user anonymity and privacy.
 
-If you wish to enable telemetry data collection, follow the steps below.
+To enable or disable telemetry data collection and customize a telemetry destination, see the following sections.
 
 ### Enable Telemetry
 
-To turn on the telemetry you need to enable Segment provider plugin.
+To turn on the telemetry feature, you must enable the `analytics-provider-segment` plugin either using the Helm Chart or the RHDH Operator.
 
-#### When using Helm Chart
+#### Using Helm Chart
 
-Modify Helm values and add the following configuration:
+ Add the following code in your Helm configuration file:
 
 ```yaml
 global:
@@ -39,11 +38,11 @@ global:
         disabled: false
 ```
 
-#### When using RHDH Operator
+#### Using RHDH Operator
 
-If you already have `dynamic-plugins-rhdh` ConfigMap as described in [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) you just need to add the Segment plugin to the list of plugins. Refer to `ConfgiMap` example below.
+If you have created the `dynamic-plugins-rhdh` ConfigMap file as described in the [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) section, add the `analytics-provider-segment` plugin to the list of plugins and set the `plugins.disabled` parameter to `false`. 
 
-If you don't have the `dynamic-plugins-rhdh` ConfigMap, you can create it with the following content:
+If you have not created the `dynamic-plugins-rhdh` ConfigMap file, create it with the following content:
 
 ```yaml
 kind: ConfigMap
@@ -59,7 +58,7 @@ data:
         disabled: false
 ```
 
-Don't forget to add `dynamicPluginsConfigMapName` referencing the above `ConfigMap` to your `Backstage` resource:
+Set the value of the `dynamicPluginsConfigMapName` parameter to the name of the `ConfigMap` file in your `Backstage` custom resource:
 
 ```yaml
 spec:
@@ -69,11 +68,10 @@ spec:
 
 ### Customizing Telemetry Destination
 
-By default, the Segment plugin is configured to send data to Red Hat. If you wish to change the destination, you can do so by setting the `SEGMENT_WRITE_KEY` environment variable to the desired Segment write key.
+The `analytics-provider-segment`  plugin is configured to send data to Red Hat by default. To change the destination that receives telemetry data, set the value of the `SEGMENT_WRITE_KEY` environment variable in your Helm configuration file as shown in the following examples.
 
-#### When using Helm Chart
+#### Example using Helm Chart
 
-Add the following configuration to your
 
 ```yaml
 upstream:
@@ -83,7 +81,7 @@ upstream:
         value: <segment_key>
 ```
 
-#### When using RHDH Operator
+#### Example using RHDH Operator
 
 ```yaml
 extraEnvs:
@@ -96,11 +94,11 @@ If you wish to subsequently disable telemetry data collection, use one of the fo
 
 ### Disable Telemetry
 
-To turn off Segment telemetry, you need to deactivate the Segment provider plugin
+To turn off the telemetry feature, you must disable the `analytics-provider-segment` plugin either using the Helm Chart or the RHDH Operator.
 
 #### Using Helm Chart
 
-When you are using Helm Chart, you need to modify Helm values by adding the following configuration (if the Segment plugin is already present in your configuration, you can just change `disabled: false` to `disabled: true`):
+Add the following code in your Helm configuration file:
 
 ```yaml
 global:
@@ -110,11 +108,10 @@ global:
         disabled: true
 ```
 
-#### When using RHDH Operator
+#### Using RHDH Operator
 
-When using RHDH Operator, you need to modify the ConfigMaps used for dynamic plugin configuration. The name of this ConfigMap is specified in `dynamicPluginsConfigMapName` field in your `Backstage` CustomResource.
-Usually, it is named as `dynamic-plugins-rhdh`.
-To disable Segment provider plugin, add the following configuration (if the Segment plugin is already present in your configuration, you can just change `disabled: false` to `disabled: true`):
+When using RHDH Operator, you must modify the `ConfigMap` file created for dynamic plugin configuration. You specify the name of this `ConfigMap` file in the `dynamicPluginsConfigMapName` field of your `Backstage` custom resource. Usually, the `ConfigMap` file is named as `dynamic-plugins-rhdh`.
+Add the following code in your `ConfigMap` file:
 
 ```yaml
 kind: ConfigMap
@@ -132,8 +129,8 @@ data:
 
 ### Disable Telemetry for Local Development
 
-When running locally without using the `dynamic-plugins.default.yaml` file, the Segment plugin is not activated by default.
-However, if your configuration is based on `dynamic-plugins.default.yaml`, you can disable the Segment plugin by adding the below lines to your configuration file:
+By default, the `analytics-provider-segment` plugin is disabled when you run your application locally without using the `dynamic-plugins.default.yaml` file.
+However, if you run your application using the `dynamic-plugins.default.yaml` file, you can disable the `analytics-provider-segment` plugin as shown in the following example:
 
 ```yaml
 dynamicPlugins:
@@ -142,11 +139,11 @@ dynamicPlugins:
       disabled: true
 ```
 
-Afterward, remove the Segment plugin directory by deleting `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment`
+Delete the `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment` plugin directory.
 
 ### Disabling Telemetry in Continuous Integration (CI) Environments
 
-To disable telemetry while running Backstage in a CI environment, set the `SEGMENT_TEST_MODE` environment variable to `true`. This action deactivates telemetry transmissions.
+To disable telemetry while running Backstage in a CI environment, set the value of the `SEGMENT_TEST_MODE` environment variable to `true`. This action deactivates telemetry transmissions.
 
 ## Running Locally with a basic configuration
 
