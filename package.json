@@ -10,7 +10,7 @@
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "start-backend": "turbo run start --filter=backend",
-    "build": "turbo run build",
+    "build": "turbo run build; yarn versions:metadata",
     "tsc": "tsc",
     "export-dynamic": "turbo run export-dynamic --concurrency 1",
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
@@ -20,10 +20,11 @@
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "prettier:check": "prettier --ignore-unknown --check .",
-    "prettier:fix": "prettier --ignore-unknown --write .",
+    "prettier:fix": "prettier --ignore-unknown --write .; yarn versions:metadata",
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
     "versions:bump": "backstage-cli versions:bump --pattern @{backstage,roadiehq,immobiliarelabs,janus-idp,pagerduty}/*",
+    "versions:metadata": "node ./scripts/update-metadata.mjs",
     "versions:all": "node ./scripts/update-backstage.mjs"
   },
   "workspaces": {
