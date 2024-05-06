@@ -28,11 +28,8 @@ export function updateBuildMetadata(backstageVersion) {
     readFileSync('package.json', 'utf8'),
   ).version.toString();
 
-  // const commitTime = new Date().toISOString() is similar but returns millis too: 2024-05-03T12:12:08.174Z
-  // using the shell command allows us to have consistent datestamping everywhere, including sed+date transforms downstream
-  // unsure if this will break anyone developing on Windows; could switch to ISOString if it's a problem.
-  const commitTime = execSync('/usr/bin/date -u +%FT%TZ').toString().trim(); // eg., 2024-05-03T12:12:08Z
-
+  const commitTime = new Date().toISOString() // 2024-05-03T12:12:08.174Z
+  
   const card = [
     `RHDH Version: ${rhdhVersion}`,
     `Backstage Version: ${backstageVersion}`,
