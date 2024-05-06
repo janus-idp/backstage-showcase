@@ -258,7 +258,6 @@ main() {
   echo "Log file: ${LOGFILE}"
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   source ./.ibm/pipelines/env_variables.sh
-  JOB_TYPE="nightly"
   # Update the namespace for nightly job.
   if [ "$JOB_TYPE" != "presubmit" ]; then
     NAME_SPACE="showcase-ci-nightly"
