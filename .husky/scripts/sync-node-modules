@@ -16,4 +16,3 @@ changed_files="$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD)"
 if [[ $changed_files == *"package.json"* ]]; then
   eval "yarn install"
 fi
-

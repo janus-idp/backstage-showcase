@@ -26,8 +26,7 @@ export function updateBuildMetadata(backstageVersion) {
     readFileSync('package.json', 'utf8'),
   ).version.toString();
 
-  const isoString = new Date().toISOString();
-  const commitTime = isoString.substring(0, isoString.indexOf('.')) + 'Z'; // 2024-05-03T12:12:08Z
+  const commitTime = new Date().toISOString().slice(0, -5) + 'Z'; // eg., 2024-05-03T12:12:08Z
 
   const card = [
     `RHDH Version: ${rhdhVersion}`,
