@@ -14,8 +14,8 @@ The telemetry data collection feature is used to enhance your experience with th
 - **Data Collection Overview**:
   - **Events Tracked**: Page visits, clicks on links or buttons.
   - **Common Data Points for All Events**:
-    - User-related info: Locale, timezone, userAgent (browser and OS details).
-    - Page-related info: Title, Category, Extension name, URL, path, referrer, search parameters.
+    - User-related info: locale, timezone, userAgent (browser and OS details).
+    - Page-related info: title, category, extension name, URL, path, referrer, search parameters.
 
 The telemetry data will only be used for internal analysis and product improvements. The collected data is analyzed to understand user interactions with the application while maintaining user anonymity and privacy.
 
@@ -37,11 +37,11 @@ global:
         disabled: false
 ```
 
-NOTE: If the `analytics-provider-segment` plugin is already present in your Helm configuration file, set the value of the `plugins.disabled` parameter to `true`.
+NOTE: If the `analytics-provider-segment` plugin is already present in your Helm configuration file, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
 
 #### Using RHDH Operator
 
-If you have created the `dynamic-plugins-rhdh` ConfigMap file as described in the [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) section, add the `analytics-provider-segment` plugin to the list of plugins and set the `plugins.disabled` parameter to `false`.
+If you have created the `dynamic-plugins-rhdh` ConfigMap file as described in the [Configuring dynamic plugins with the Red Hat Developer Hub Operator](https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html-single/administration_guide_for_red_hat_developer_hub/index#configuring-dynamic-plugins-with-the-red-hat-developer-hub-operator) section, add the `analytics-provider-segment` plugin to the list of plugins and set the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
 
 If you have not created the `dynamic-plugins-rhdh` ConfigMap file, create it with the following content:
 
@@ -59,7 +59,7 @@ data:
         disabled: false
 ```
 
-NOTE: If the `analytics-provider-segment` plugin is already present in your ConfigMap file, set the value of the `plugins.disabled` parameter to `true`.
+NOTE: If the `analytics-provider-segment` plugin is already present in your ConfigMap file, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
 
 Set the value of the `dynamicPluginsConfigMapName` parameter to the name of the `ConfigMap` file in your `Backstage` custom resource:
 
