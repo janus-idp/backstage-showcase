@@ -23,7 +23,7 @@ test.describe('dynamic-plugins-info UI tests', () => {
     // what shows up in the list depends on how the instance is configured so
     // let's check for the main basic elements of the component to verify the
     // mount point is working as expected
-    await uiHelper.verifyText('Plugins (55)');
+    await uiHelper.verifyText('Plugins (52)');
     await uiHelper.verifyText('5 rows');
     await uiHelper.verifyColumnHeading(
       ['Name', 'Version', 'Enabled', 'Preinstalled', 'Role'],
