@@ -25,6 +25,8 @@ To enable or disable telemetry data collection and customize a telemetry destina
 
 To turn on the telemetry feature, you must enable the `analytics-provider-segment` plugin either using the Helm Chart or the RHDH Operator.
 
+NOTE: If the `analytics-provider-segment` plugin is already present in your dynamic plugins configuration, set the value of the `plugins.disabled` parameter to `false` to enable telemetry, or `true` to enable it.
+
 #### Using Helm Chart
 
 Add the following code in your Helm configuration file:
@@ -36,8 +38,6 @@ global:
       - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
         disabled: false
 ```
-
-NOTE: If the `analytics-provider-segment` plugin is already present in your Helm configuration file, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
 
 #### Using RHDH Operator
 
@@ -58,8 +58,6 @@ data:
       - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
         disabled: false
 ```
-
-NOTE: If the `analytics-provider-segment` plugin is already present in your ConfigMap file, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
 
 Set the value of the `dynamicPluginsConfigMapName` parameter to the name of the `ConfigMap` file in your `Backstage` custom resource:
 
@@ -97,6 +95,8 @@ If you wish to subsequently disable telemetry data collection, use one of the fo
 ### Disable Telemetry
 
 To turn off the telemetry feature, you must disable the `analytics-provider-segment` plugin either using the Helm Chart or the RHDH Operator.
+
+NOTE: If the `analytics-provider-segment` plugin is already present in your dynamic plugins configuration, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
 
 #### Using Helm Chart
 
@@ -141,7 +141,7 @@ dynamicPlugins:
       disabled: true
 ```
 
-Delete the `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment` plugin directory.
+Than delete the `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment` plugin directory, to stop plugin from loading.
 
 ### Disabling Telemetry in Continuous Integration (CI) Environments
 
