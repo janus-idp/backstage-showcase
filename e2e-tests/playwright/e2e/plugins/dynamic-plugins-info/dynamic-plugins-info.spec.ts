@@ -30,15 +30,6 @@ test.describe('dynamic-plugins-info UI tests', () => {
       true,
     );
 
-    // A plugin is not enabled but preinstalled by default
-    const row = await page.locator(
-      UIhelperPO.rowByText(
-        '@janus-idp/backstage-plugin-3scale-backend-dynamic',
-      ),
-    );
-    expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
-    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
-
     // Check the filter and use that to verify that the table contains the
     // dynamic-plugins-info plugin, which is required for this test to run
     // properly anyways
@@ -47,10 +38,48 @@ test.describe('dynamic-plugins-info UI tests', () => {
       .pressSequentially('techdocs\n', { delay: 300 });
     await uiHelper.verifyRowsInTable(['backstage-plugin-techdocs'], true);
   });
-  test.skip('it should have a plugin-todo-list plugin which is Enabled but not Preinstalled', async () => {
-    await uiHelper.verifyRowInTableByUniqueText('@internal/plugin-todo-list', [
-      'Yes',
-      'No',
-    ]);
+
+  test('it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled', async ({
+    page,
+  }) => {
+    await page
+      .getByPlaceholder('Filter')
+      .pressSequentially('backstage-plugin-tech-radar\n', { delay: 300 });
+    const row = await page.locator(
+      UIhelperPO.rowByText('backstage-plugin-tech-radar'),
+    );
+    expect(await row.locator('td').nth(2).innerText()).toBe('Yes'); // enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
+  });
+
+  test('it should have a backstage-plugin-3scale-backend-dynamic plugin which is not Enabled but Preinstalled', async ({
+    page,
+  }) => {
+    await page
+      .getByPlaceholder('Filter')
+      .pressSequentially('backstage-plugin-3scale-backend-dynamic\n', {
+        delay: 300,
+      });
+    const row = await page.locator(
+      UIhelperPO.rowByText(
+        '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      ),
+    );
+    expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
+  });
+
+  // TODO: Add plugin-todo-list plugin in ci process to enable this test
+  test.skip('it should have a plugin-todo-list plugin which is Enabled but not Preinstalled', async ({
+    page,
+  }) => {
+    await page
+      .getByPlaceholder('Filter')
+      .pressSequentially('plugin-todo-list\n', { delay: 300 });
+    const row = await page.locator(
+      UIhelperPO.rowByText('@internal/plugin-todo-list'),
+    );
+    expect(await row.locator('td').nth(2).innerText()).toBe('Yes'); // enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('No'); // not preinstalled
   });
 });
