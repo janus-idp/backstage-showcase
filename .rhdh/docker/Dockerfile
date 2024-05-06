@@ -122,8 +122,11 @@ RUN git config --global --add safe.directory ./
 # RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 # hadolint ignore=DL3059,DL4006,SC2086
-RUN $YARN build --filter=backend && \
-
+RUN \
+  # insert build time into the build-metadata.json
+  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
+    -e "s/\"(Last Commit: )(.+)\"/\"\1\2\", \"Build Time: $now\"/" && \
+  $YARN build --filter=backend && \
   # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Downstream only - replace registry refs with cachito ones
@@ -135,9 +138,7 @@ RUN $YARN build --filter=backend && \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
   $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
   $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
-  $YARN copy-dynamic-plugins dist && \
-  # insert build time into the build-metadata.json
-  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r -e "s/\"(Last Commit: )(.+)\"/\"\1\2\", \"Build Time: $now\"/"
+  $YARN copy-dynamic-plugins dist
 
 # Downstream only - debug
 # hadolint ignore=SC3010,DL4006
