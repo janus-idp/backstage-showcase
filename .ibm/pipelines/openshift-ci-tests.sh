@@ -170,6 +170,8 @@ run_tests() {
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" ${ARTIFACT_DIR}/${project}
+  cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* ${ARTIFACT_DIR}/${project}
+  
   exit ${RESULT}
 }
 
@@ -228,6 +230,7 @@ initiate_deployments() {
   cd $DIR
   apply_yaml_files $DIR "$NAME_SPACE"
   add_helm_repos
+  echo "Deploying Image : $TAG_NAME"
   helm upgrade -i "${RELEASE_NAME}" -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 
   configure_namespace ${NAME_SPACE_RBAC}
@@ -255,6 +258,7 @@ main() {
   echo "Log file: ${LOGFILE}"
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   source ./.ibm/pipelines/env_variables.sh
+  JOB_TYPE="nightly"
   # Update the namespace for nightly job.
   if [ "$JOB_TYPE" != "presubmit" ]; then
     NAME_SPACE="showcase-ci-nightly"
