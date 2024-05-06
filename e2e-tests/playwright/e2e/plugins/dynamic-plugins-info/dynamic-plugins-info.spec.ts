@@ -30,14 +30,14 @@ test.describe('dynamic-plugins-info UI tests', () => {
       true,
     );
 
-    // test out column values
+    // A plugin is not enabled but preinstalled by default
     const row = await page.locator(
       UIhelperPO.rowByText(
         '@janus-idp/backstage-plugin-3scale-backend-dynamic',
       ),
     );
-    expect(await row.locator('td').nth(2).innerText()).toBe('Yes');
-    expect(await row.locator('td').nth(3).innerText()).toBe('Yes');
+    expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
 
     // Check the filter and use that to verify that the table contains the
     // dynamic-plugins-info plugin, which is required for this test to run
