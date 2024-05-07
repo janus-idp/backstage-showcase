@@ -36,7 +36,7 @@
     "@backstage/backend-test-utils": "0.3.6",
     "@backstage/cli": "0.26.2",
     "@types/supertest": "6.0.2",
-    "msw": "2.2.13",
+    "msw": "2.2.14",
     "supertest": "6.3.4"
   },
   "files": [
