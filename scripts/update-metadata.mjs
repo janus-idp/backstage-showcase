@@ -31,7 +31,7 @@ export function updateBuildMetadata(backstageVersion) {
   const card = [
     `RHDH Version: ${rhdhVersion}`,
     `Backstage Version: ${backstageVersion}`,
-    `Last Commit: ${commitTime}`,
+    `Last Commit: repo @ ${commitTime}`,
   ];
   buildMetadata.card = card;
 
