@@ -308,7 +308,7 @@ check_and_test() {
     echo "Backstage is not running. Exiting..."
     exit 1
   fi
-    run_tests $release_name $namespace
+  run_tests $release_name $namespace
 }
 
 main() {
