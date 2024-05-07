@@ -151,8 +151,8 @@ droute_send() {
   set -x
 
   local release_name=$1
-  local project=$2
-  local pod_name="${release_name}-postgresql-0"
+  local project=droute
+  local pod_name="droute-centos"
   METEDATA_OUTPUT="data_router_metadata_output.json"
 
   # Remove properties (only used for skipped test and invalidates the file if empty)
