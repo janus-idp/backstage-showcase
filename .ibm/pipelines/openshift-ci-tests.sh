@@ -151,8 +151,9 @@ droute_send() {
   set -x
 
   local release_name=$1
-  local project=droute
-  local pod_name="droute-centos"
+  local project=$2
+  local droute_project="droute"
+  local droute_pod_name="droute-centos"
   METEDATA_OUTPUT="data_router_metadata_output.json"
 
   # Remove properties (only used for skipped test and invalidates the file if empty)
@@ -176,15 +177,15 @@ droute_send() {
         {"key": $key2, "value": $value2}
       ]' data_router/data_router_metadata_template.json > ${ARTIFACT_DIR}/$project/${METEDATA_OUTPUT}
 
-  oc rsync -c postgresql -n ${project} ${ARTIFACT_DIR}/$project/ ${project}/${pod_name}:/tmp/droute
+  oc rsync -n ${droute_project} ${ARTIFACT_DIR}/$project/ ${droute_project}/${droute_pod_name}:/tmp/droute
 
-  oc exec -n ${project} "$pod_name" -- /bin/bash -c "$(cat <<EOF
+  oc exec -n ${droute_project} "$droute_pod_name" -- /bin/bash -c "$(cat <<EOF
 curl -fsSLk -o /tmp/droute-linux-amd64 "https://nexus.hosts.prod.upshift.rdu2.redhat.com/nexus/repository/dno-raw/droute-client/1.1/droute-linux-amd64" \
 && chmod +x /tmp/droute-linux-amd64
 EOF
 )"
   
-  oc exec -n ${project} "$pod_name" -- /bin/bash -c "$(cat <<EOF
+  oc exec -n ${droute_project} "$droute_pod_name" -- /bin/bash -c "$(cat <<EOF
 /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
   --url "$DATA_ROUTER_URL" \
   --username "$DATA_ROUTER_USERNAME" \
