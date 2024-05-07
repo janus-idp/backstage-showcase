@@ -44,6 +44,8 @@ DH_TARGET_URL=aHR0cDovL3Rlc3QtYmFja3N0YWdlLWN1c3RvbWl6YXRpb24tcHJvdmlkZXItc2hvd2
 GOOGLE_CLIENT_ID=$(cat /tmp/secrets/GOOGLE_CLIENT_ID)
 GOOGLE_CLIENT_SECRET=$(cat /tmp/secrets/GOOGLE_CLIENT_SECRET)
 GOOGLE_ACC_COOKIE=$(cat /tmp/secrets/GOOGLE_ACC_COOKIE)
+GOOGLE_USER_ID=$(cat /tmp/secrets/GOOGLE_USER_ID)
+GOOGLE_USER_PASS=$(cat /tmp/secrets/GOOGLE_USER_PASS)
 
 DATA_ROUTER_URL="https://api-dno-datarouter.apps.ocp-c1.prod.psi.redhat.com"
 DATA_ROUTER_USERNAME=$(cat /tmp/secrets/DATA_ROUTER_USERNAME)
