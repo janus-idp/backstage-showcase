@@ -47,4 +47,10 @@ GOOGLE_ACC_COOKIE=$(cat /tmp/secrets/GOOGLE_ACC_COOKIE)
 GOOGLE_USER_ID=$(cat /tmp/secrets/GOOGLE_USER_ID)
 GOOGLE_USER_PASS=$(cat /tmp/secrets/GOOGLE_USER_PASS)
 
+DATA_ROUTER_URL="https://api-dno-datarouter.apps.ocp-c1.prod.psi.redhat.com"
+DATA_ROUTER_USERNAME=$(cat /tmp/secrets/DATA_ROUTER_USERNAME)
+DATA_ROUTER_PASSWORD=$(cat /tmp/secrets/DATA_ROUTER_PASSWORD)
+DATA_ROUTER_PROJECT="main"
+REPORTPORTAL_HOSTNAME="reportportal-rhdh-backstage-qe.apps.ocp-c1.prod.psi.redhat.com"
+
 set +a  # Stop automatically exporting variables

@@ -3,6 +3,7 @@
 set -e
 
 LOGFILE="test-log"
+JUNIT_RESULTS="junit-results.xml"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cleanup() {
@@ -146,8 +147,60 @@ apply_yaml_files() {
   oc apply -f "$dir"/resources/pipeline-run/hello-world-pipeline-run.yaml
 }
 
+droute_send() {
+  set -x
+
+  local release_name=$1
+  local project=$2
+  local droute_project="droute"
+  local droute_pod_name="droute-centos"
+  METEDATA_OUTPUT="data_router_metadata_output.json"
+
+  # Remove properties (only used for skipped test and invalidates the file if empty)
+  sed -i '/<properties>/,/<\/properties>/d' ${ARTIFACT_DIR}/$project/junit-results.xml
+
+  jq \
+    --arg hostname "$REPORTPORTAL_HOSTNAME" \
+    --arg project "$DATA_ROUTER_PROJECT" \
+    --arg name "$JOB_NAME" \
+    --arg description "https://prow.ci.openshift.org/view/gs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}" \
+    --arg key1 "job_type" \
+    --arg value1 "$JOB_TYPE" \
+    --arg key2 "pr" \
+    --arg value2 "$GIT_PR_NUMBER" \
+    '.targets.reportportal.config.hostname = $hostname |
+     .targets.reportportal.config.project = $project |
+     .targets.reportportal.processing.launch.name = $name |
+     .targets.reportportal.processing.launch.description = $description |
+     .targets.reportportal.processing.launch.attributes += [
+        {"key": $key1, "value": $value1},
+        {"key": $key2, "value": $value2}
+      ]' data_router/data_router_metadata_template.json > ${ARTIFACT_DIR}/$project/${METEDATA_OUTPUT}
+
+  oc rsync -n ${droute_project} ${ARTIFACT_DIR}/$project/ ${droute_project}/${droute_pod_name}:/tmp/droute
+
+  oc exec -n ${droute_project} "$droute_pod_name" -- /bin/bash -c "$(cat <<EOF
+curl -fsSLk -o /tmp/droute-linux-amd64 "https://nexus.hosts.prod.upshift.rdu2.redhat.com/nexus/repository/dno-raw/droute-client/1.1/droute-linux-amd64" \
+&& chmod +x /tmp/droute-linux-amd64
+EOF
+)"
+  
+  oc exec -n ${droute_project} "$droute_pod_name" -- /bin/bash -c "$(cat <<EOF
+/tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
+  --url "$DATA_ROUTER_URL" \
+  --username "$DATA_ROUTER_USERNAME" \
+  --password "$DATA_ROUTER_PASSWORD" \
+  --results "/tmp/droute/${JUNIT_RESULTS}" \
+  --verbose
+EOF
+)"
+
+set +x
+}
+
 run_tests() {
-  local project=$1
+  local release_name=$1
+  local project=$2
   cd $DIR/../../e2e-tests
   yarn install
   yarn playwright install
@@ -167,11 +220,15 @@ run_tests() {
 
   mkdir -p ${ARTIFACT_DIR}/$project/test-results
   cp -a /tmp/backstage-showcase/e2e-tests/test-results/* ${ARTIFACT_DIR}/$project/test-results
+  cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} ${ARTIFACT_DIR}/$project/${JUNIT_RESULTS}
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" ${ARTIFACT_DIR}/${project}
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* ${ARTIFACT_DIR}/${project}
   
+
+  droute_send $release_name $project
+
   exit ${RESULT}
 }
 
@@ -251,7 +308,7 @@ check_and_test() {
     echo "Backstage is not running. Exiting..."
     exit 1
   fi
-    run_tests $namespace
+  run_tests $release_name $namespace
 }
 
 main() {
