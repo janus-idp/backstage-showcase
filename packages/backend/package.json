@@ -49,8 +49,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
-    "@types/express": "4.17.21",
-    "better-sqlite3": "9.3.0"
+    "@types/express": "4.17.21"
   },
   "files": [
     "dist"
