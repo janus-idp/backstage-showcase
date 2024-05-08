@@ -36,7 +36,7 @@ type ScalprumMountPointConfigBase = {
 };
 
 export type ScalprumMountPointConfig = ScalprumMountPointConfigBase & {
-  if: (e: Entity) => boolean | Promise<boolean>;
+  if: (e: Entity) => boolean;
 };
 
 export type ScalprumMountPointConfigRawIf = {
