@@ -66,9 +66,10 @@ RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 # hadolint ignore=DL3059,DL4006,SC2086
 RUN \
-  # insert build time into the build-metadata.json
+  # Upstream only - append build time into packages/app/src/build-metadata.json
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
-    -e "s/\"(Last Commit: )(.+)\"/\"\1\2\", \"Build Time: $now\"/" && \
+    -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
+  cat packages/app/src/build-metadata.json; echo && \
   $YARN build --filter=backend && \
   # Build dynamic plugins: split commands for consistency with downstream
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
@@ -118,9 +119,6 @@ RUN microdnf update -y && \
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 # Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-
-# Upstream only - store a copy of the build metadata from $CONTAINER_SOURCE in the final container
-COPY --from=build $CONTAINER_SOURCE/packages/app/src/build-metadata.json .
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
