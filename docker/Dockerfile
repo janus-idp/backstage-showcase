@@ -119,8 +119,8 @@ COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 # Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
-# store a copy of the build metadata in the final container
-COPY --from=build $CONTAINER_SOURCE/packages/app/src/build-metadata.json /opt/app-root/src/
+# Upstream only - store a copy of the build metadata from $CONTAINER_SOURCE in the final container
+COPY --from=build $CONTAINER_SOURCE/packages/app/src/build-metadata.json .
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./

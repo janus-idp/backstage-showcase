@@ -210,8 +210,8 @@ COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
 # Downstream only - copy embedded dynamic plugins from $REMOTE_SOURCES_DIR
 COPY --from=build $REMOTE_SOURCES_DIR/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
-# store a copy of the build metadata in the final container
-COPY --from=build $CONTAINER_SOURCE/packages/app/src/build-metadata.json /opt/app-root/src/
+# Downstream only - store a copy of the build metadata from $REMOTE_SOURCES_DIR in the final container
+COPY --from=build $REMOTE_SOURCES_DIR/packages/app/src/build-metadata.json .
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
