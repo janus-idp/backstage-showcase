@@ -8,6 +8,7 @@ HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
 K8S_CLUSTER_ROUTER_BASE="rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud"
 K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN)
+K8S_CLUSTER_TOKEN_ENCODED=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN_ENCODED)
 K8S_CLUSTER_URL=https://c100-e.us-east.containers.cloud.ibm.com:32212
 OPENSHIFT_CLUSTER_ID=cobct3kw0lbiltuijvmg
 

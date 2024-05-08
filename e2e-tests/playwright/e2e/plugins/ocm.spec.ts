@@ -4,13 +4,15 @@ import { UIhelper } from '../../utils/UIhelper';
 import { Clusters } from '../../support/pages/Clusters';
 
 //Pre-req: Enable janus-idp-backstage-plugin-ocm-backend-dynamic and janus-idp-backstage-plugin-ocm Plugins
+//Pre-req: Install Advanced Cluster Management for Kubernetes "MultiClusterHub"
+// https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.10/html/install/installing#installing-from-the-operatorhub
 
 const clusterDetails = {
   clusterName: 'testCluster',
   status: 'Ready',
   platform: 'IBM',
-  cpuCores: '16',
-  memorySize: '63 Gi',
+  cpuCores: '24',
+  memorySize: '94 Gi',
   ocVersion: /^\d+\.\d+\.\d+$/,
 };
 let page: Page;
@@ -28,7 +30,7 @@ test.describe.serial('Test OCM plugin', () => {
 
     await common.loginAsGithubUser();
   });
-  test.skip('Navigate to Clusters and Verify OCM Clusters', async () => {
+  test('Navigate to Clusters and Verify OCM Clusters', async () => {
     await uiHelper.openSidebar('Clusters');
     await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
       clusterDetails.status,
@@ -50,7 +52,7 @@ test.describe.serial('Test OCM plugin', () => {
     );
   });
 
-  test.skip('Navigate to Catalog > resources and verify cluster', async () => {
+  test('Navigate to Catalog > resources and verify cluster', async () => {
     await uiHelper.openSidebar('Catalog');
     await common.waitForLoad();
     await uiHelper.selectMuiBox('Kind', 'Resource');

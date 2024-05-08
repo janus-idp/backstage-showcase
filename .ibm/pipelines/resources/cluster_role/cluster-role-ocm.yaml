@@ -11,6 +11,7 @@ rules:
     - get
     - watch
     - list
+    - create
 - apiGroups:
     - internal.open-cluster-management.io
   resources:

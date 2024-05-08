@@ -5,6 +5,7 @@ set -e
 LOGFILE="test-log"
 JUNIT_RESULTS="junit-results.xml"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+secret_name="rhdh-k8s-plugin-secret"
 
 cleanup() {
   echo "Cleaning up before exiting"
@@ -82,21 +83,24 @@ configure_namespace() {
   local project=$1
   if oc get namespace ${project} >/dev/null 2>&1; then
     echo "Namespace ${project} already exists! refreshing namespace"
-    oc delete namespace ${project}
+    oc delete namespace "${project}"
   fi
-  oc create namespace ${project}
-  oc config set-context --current --namespace=${project}
+  oc create namespace "${project}"
+  oc config set-context --current --namespace="${project}"
 }
 
 apply_yaml_files() {
   local dir=$1
   local project=$2
   echo "NAME SPACE ${project}"
+  #ensure that we are in the right namespace
+  oc config set-context --current --namespace="${project}"
 
   # Update namespace and other configurations in YAML files
   local files=("$dir/resources/service_account/service-account-rhdh.yaml"
     "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml"
-    "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml"
+    "$dir/resources/cluster_role/cluster-role-k8s.yaml"
+    "$dir/resources/cluster_role/cluster-role-ocm.yaml"
     "$dir/resources/deployment/deployment-test-app-component.yaml"
     "$dir/auth/secrets-rhdh-secrets.yaml")
 
@@ -106,7 +110,7 @@ apply_yaml_files() {
 
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: $K8S_PLUGIN_ANNOTATION/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET OCM_CLUSTER_TOKEN ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED; do
     sed -i "s|$key:.*|$key: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -116,22 +120,17 @@ apply_yaml_files() {
   oc apply -f $dir/resources/deployment/deployment-test-app-component.yaml --namespace=${project}
   oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace=${project}
   oc expose svc/test-backstage-customization-provider --namespace=${project}
-  oc apply -f $dir/resources/cluster_role/cluster-role-k8s.yaml
-  oc apply -f $dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml
-  oc apply -f $dir/resources/cluster_role/cluster-role-ocm.yaml
-  oc apply -f $dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml
+  oc apply -f $dir/resources/cluster_role/cluster-role-k8s.yaml  --namespace=${project}
+  oc apply -f $dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml  --namespace=${project}
+  oc apply -f $dir/resources/cluster_role/cluster-role-ocm.yaml  --namespace=${project}
+  oc apply -f $dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml  --namespace=${project}
 
-  # obtain K8S_SERVICE_ACCOUNT_TOKEN, K8S_CLUSTER_NAME, K8S_CLUSTER_API_SERVER_URL and add them to secrets-rhdh-secrets.yaml
-  oc get secret rhdh-k8s-plugin-secret -o yaml >$dir/auth/service-account-rhdh-token.yaml
-
-  TOKEN=$(grep 'token:' $dir/auth/service-account-rhdh-token.yaml | awk '{print $2}')
-
-  sed -i "s/K8S_SERVICE_ACCOUNT_TOKEN:.*/K8S_SERVICE_ACCOUNT_TOKEN: $TOKEN/g" $dir/auth/secrets-rhdh-secrets.yaml
   sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: $ENCODED_API_SERVER_URL/g" $dir/auth/secrets-rhdh-secrets.yaml
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: $ENCODED_CLUSTER_NAME/g" $dir/auth/secrets-rhdh-secrets.yaml
 
-  # Cleanup temp file
-  rm $dir/auth/service-account-rhdh-token.yaml
+  token=$(oc get secret $secret_name -n "$project" -o=jsonpath='{.data.token}')
+  sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: $token/" "$dir"/auth/secrets-rhdh-secrets.yaml
+
 
   if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" ]]; then
     oc apply -f $dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml --namespace=${project}
@@ -184,7 +183,7 @@ curl -fsSLk -o /tmp/droute-linux-amd64 "https://nexus.hosts.prod.upshift.rdu2.re
 && chmod +x /tmp/droute-linux-amd64
 EOF
 )"
-  
+
   oc exec -n ${droute_project} "$droute_pod_name" -- /bin/bash -c "$(cat <<EOF
 /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
   --url "$DATA_ROUTER_URL" \
@@ -225,7 +224,6 @@ run_tests() {
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" ${ARTIFACT_DIR}/${project}
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* ${ARTIFACT_DIR}/${project}
-  
 
   droute_send $release_name $project
 
@@ -314,7 +312,7 @@ check_and_test() {
 main() {
   echo "Log file: ${LOGFILE}"
   DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  source ./.ibm/pipelines/env_variables.sh
+  source "${DIR}/env_variables.sh"
   # Update the namespace for nightly job.
   if [ "$JOB_TYPE" != "presubmit" ]; then
     NAME_SPACE="showcase-ci-nightly"
@@ -323,9 +321,6 @@ main() {
 
   echo "OPENSHIFT_CLUSTER_ID : $OPENSHIFT_CLUSTER_ID"
 
-  install_ibmcloud
-  ibmcloud version
-  ibmcloud config --check-version=false
   install_oc
   oc version --client
   oc login --token=${K8S_CLUSTER_TOKEN} --server=${K8S_CLUSTER_URL}
