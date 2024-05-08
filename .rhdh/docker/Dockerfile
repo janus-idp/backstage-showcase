@@ -125,7 +125,7 @@ RUN git config --global --add safe.directory ./
 RUN \
   # insert build time into the build-metadata.json
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
-    -e "s/\"(Last Commit: )(.+)\"/\"\1\2\", \"Build Time: $now\"/" && \
+    -e "s/\"(Last Commit: )(.+)\"/\"Upstream: \2\", \"Build Time: $now\"/" && \
   $YARN build --filter=backend && \
   # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
