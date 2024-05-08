@@ -38,7 +38,7 @@
     "@types/mock-fs": "4.13.4",
     "@types/supertest": "6.0.2",
     "mock-fs": "5.2.0",
-    "msw": "2.2.13",
+    "msw": "2.2.14",
     "supertest": "6.3.4"
   },
   "files": [

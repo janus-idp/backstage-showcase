@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createApp } from '@backstage/app-defaults';
 import { BackstageApp } from '@backstage/core-app-api';
 import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
+
+import { useThemes } from '@redhat-developer/red-hat-developer-hub-theme';
 import { AppsConfig, getScalprum } from '@scalprum/core';
 import { useScalprum } from '@scalprum/react-core';
 import DynamicRootContext, {
@@ -16,7 +18,6 @@ import extractDynamicConfig, {
   configIfToCallable,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
-import defaultThemes from './defaultThemes';
 import defaultAppComponents from './defaultAppComponents';
 import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import Loader from './Loader';
@@ -57,6 +58,8 @@ export const DynamicRoot = ({
   // registry of remote components loaded at bootstrap
   const [components, setComponents] = useState<ComponentRegistry | undefined>();
   const { initialized, pluginStore } = useScalprum();
+
+  const themes = useThemes();
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
@@ -288,7 +291,7 @@ export const DynamicRoot = ({
         },
         icons,
         plugins: Object.values(staticPluginStore).map(entry => entry.plugin),
-        themes: defaultThemes,
+        themes,
         components: defaultAppComponents,
         configLoader: async () => Promise.resolve(fullConfig),
       });
@@ -313,6 +316,7 @@ export const DynamicRoot = ({
     scalprumConfig,
     staticApis,
     staticPluginStore,
+    themes,
   ]);
 
   useEffect(() => {

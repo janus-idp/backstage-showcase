@@ -4,6 +4,7 @@ import {
   createRoutableExtension,
   discoveryApiRef,
   fetchApiRef,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 
 import { DynamicPluginsInfoClient } from './api/DynamicPluginsInfoClient';
@@ -21,9 +22,10 @@ export const dynamicPluginsInfoPlugin = createPlugin({
       deps: {
         discoveryApi: discoveryApiRef,
         fetchApi: fetchApiRef,
+        identityApi: identityApiRef,
       },
-      factory: ({ discoveryApi, fetchApi }) =>
-        new DynamicPluginsInfoClient({ discoveryApi, fetchApi }),
+      factory: ({ discoveryApi, fetchApi, identityApi }) =>
+        new DynamicPluginsInfoClient({ discoveryApi, fetchApi, identityApi }),
     }),
   ],
 });

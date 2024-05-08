@@ -7,6 +7,16 @@ roleRef:
   kind: ClusterRole
   name: rhdh-k8s-plugin-ocm
 subjects:
-- kind: ServiceAccount
-  name: rhdh-k8s-plugin
-  namespace: showcase
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-rbac
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-rbac
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-ci-nightly
+

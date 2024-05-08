@@ -40,6 +40,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get the last commit short SHA
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+          if [[ -f packages/app/src/build-metadata.json ]]; then
+            repo="${{ github.repository }}"
+            now="$(date -u +%FT%TZ)"
+            sed -i packages/app/src/build-metadata.json -r \
+              -e 's|("Last Commit:.+)|"Last Commit: '$repo' @ '$SHORT_SHA'"|'
+          fi
+
       - name: Build and Push with Buildx
         uses: ./.github/actions/docker-build
         with:

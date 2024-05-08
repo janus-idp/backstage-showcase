@@ -1,8 +1,9 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { expect, Page } from '@playwright/test';
+import { Browser, expect, Page, TestInfo } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
+import path from 'path';
 
 export class Common {
   page: Page;
@@ -15,8 +16,6 @@ export class Common {
 
   async loginAsGuest() {
     await this.page.goto('/');
-    await this.uiHelper.verifyHeading('Select a sign-in method');
-    await this.uiHelper.clickButton('Enter');
 
     // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
     this.page.on('dialog', async dialog => {
@@ -24,6 +23,8 @@ export class Common {
       await dialog.accept();
     });
 
+    await this.uiHelper.verifyHeading('Select a sign-in method');
+    await this.uiHelper.clickButton('Enter');
     await this.uiHelper.waitForSideBarVisible();
   }
 
@@ -71,8 +72,8 @@ export class Common {
    */
   async performActionWithRetry<T>(
     action: () => Promise<T>,
-    retries: number = 3,
-    retryInterval: number = 5000,
+    retries = 3,
+    retryInterval = 5000,
   ): Promise<T> {
     let lastError: unknown;
 
@@ -148,4 +149,15 @@ export class Common {
     const secret = process.env.GH_2FA_SECRET;
     return authenticator.generate(secret);
   }
+}
+
+export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
+  const context = await browser.newContext({
+    recordVideo: {
+      dir: `test-results/${path.parse(testInfo.file).name.replace('.spec', '')}`,
+      size: { width: 1280, height: 720 },
+    },
+  });
+  const page = await context.newPage();
+  return { page, context };
 }

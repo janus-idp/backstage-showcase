@@ -125,8 +125,25 @@ After selecting the authentication provider you wish to use with your Backstage 
   signInPage: <provider-id>
   ```
 
-### Disabling the guest login
+### Enabling/Disabling the guest provider and login
 
-We also offer an option to disable the Guest Login provider that disable the ability for guests to login to your Backstage Showcase instance.
+The guest login is provided by a special authentication provider that must be explicitly enabled. This authentication provider should be used for development purposes only and is not intended for production, as it creates a default user that has user-level access to the Backstage instance.
+
+- To enable the guest provider for local development:
+
+```yaml
+auth:
+  providers:
+    guest: {}
+```
+
+- To enable the guest provider when running the container:
+
+```yaml
+auth:
+  providers:
+    guest:
+      dangerouslyAllowOutsideDevelopment: true
+```
 
 - To disable the guest login set `auth.environment` to `production`.

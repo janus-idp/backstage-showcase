@@ -8,6 +8,7 @@ HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
 K8S_CLUSTER_ROUTER_BASE="rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud"
 K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN)
+K8S_CLUSTER_TOKEN_ENCODED=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN_ENCODED)
 K8S_CLUSTER_URL=https://c100-e.us-east.containers.cloud.ibm.com:32212
 OPENSHIFT_CLUSTER_ID=cobct3kw0lbiltuijvmg
 
@@ -44,5 +45,13 @@ DH_TARGET_URL=aHR0cDovL3Rlc3QtYmFja3N0YWdlLWN1c3RvbWl6YXRpb24tcHJvdmlkZXItc2hvd2
 GOOGLE_CLIENT_ID=$(cat /tmp/secrets/GOOGLE_CLIENT_ID)
 GOOGLE_CLIENT_SECRET=$(cat /tmp/secrets/GOOGLE_CLIENT_SECRET)
 GOOGLE_ACC_COOKIE=$(cat /tmp/secrets/GOOGLE_ACC_COOKIE)
+GOOGLE_USER_ID=$(cat /tmp/secrets/GOOGLE_USER_ID)
+GOOGLE_USER_PASS=$(cat /tmp/secrets/GOOGLE_USER_PASS)
+
+DATA_ROUTER_URL="https://api-dno-datarouter.apps.ocp-c1.prod.psi.redhat.com"
+DATA_ROUTER_USERNAME=$(cat /tmp/secrets/DATA_ROUTER_USERNAME)
+DATA_ROUTER_PASSWORD=$(cat /tmp/secrets/DATA_ROUTER_PASSWORD)
+DATA_ROUTER_PROJECT="main"
+REPORTPORTAL_HOSTNAME="reportportal-rhdh-backstage-qe.apps.ocp-c1.prod.psi.redhat.com"
 
 set +a  # Stop automatically exporting variables

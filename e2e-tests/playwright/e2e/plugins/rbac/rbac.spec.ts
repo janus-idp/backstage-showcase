@@ -1,6 +1,6 @@
 import { test, Page, expect } from '@playwright/test';
 import { UIhelper } from '../../../utils/UIhelper';
-import { Common } from '../../../utils/Common';
+import { Common, setupBrowser } from '../../../utils/Common';
 import { Roles } from '../../../support/pages/rbac';
 import {
   HomePagePO,
@@ -16,8 +16,8 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
   let page: Page;
   let rolesHelper: Roles;
 
-  test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);

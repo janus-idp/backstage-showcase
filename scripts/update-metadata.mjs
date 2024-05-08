@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -32,7 +31,7 @@ export function updateBuildMetadata(backstageVersion) {
   const card = [
     `RHDH Version: ${rhdhVersion}`,
     `Backstage Version: ${backstageVersion}`,
-    `Last Commit: ${commitTime}`,
+    `Last Commit: repo @ ${commitTime}`,
   ];
   buildMetadata.card = card;
 
