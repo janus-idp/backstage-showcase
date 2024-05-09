@@ -304,16 +304,6 @@ plugins:
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
     disabled: true
     pluginConfig:
-      argocd:
-        baseurl: ''
-        refreshInterval: 10000
-        appLocatorMethods:
-          - type: 'config'
-            instances:
-              - name: argoInstance1
-                url: "${ARGOCD_INSTANCE1_URL}"
-              - name: argoInstance2
-                url: "${ARGOCD_INSTANCE2_URL}"
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-argocd:
@@ -327,7 +317,7 @@ plugins:
                       xs: "span 12"
                   if:
                     allOf:
-                      - isArgocdAvailable
+                      - isArgocdConfigured
               - mountPoint: entity.page.cd/cards
                 importName: ArgocdDeploymentLifecycle
                 config:

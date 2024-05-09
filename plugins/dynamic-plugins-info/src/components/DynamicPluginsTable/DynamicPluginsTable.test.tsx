@@ -27,10 +27,10 @@ describe('DynamicPluginsTable', () => {
     const { findByText, container } = await renderWithEffects(
       <DynamicPluginsTable />,
     );
-    // 6 mockapi returned external(enabled) + 52 internal(not enabled)
+    // 6 mockapi returned external(enabled) + 53 internal(not enabled)
     // mockapi returns enabled plugins
     // keys from InternalPluginsMap are internal plugins
-    expect(await findByText('Plugins (58)')).toBeInTheDocument();
+    expect(await findByText('Plugins (59)')).toBeInTheDocument();
     expect(
       await findByText('@janus-idp/backstage-plugin-3scale-backend-dynamic'),
     ).toBeInTheDocument();
@@ -50,9 +50,7 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-3scale-backend-dynamic',
     );
-    expect(nameCells[4].textContent).toBe(
-      '@janus-idp/backstage-plugin-jfrog-artifactory',
-    );
+    expect(nameCells[4].textContent).toBe('@janus-idp/backstage-plugin-argocd');
     expect(versionCells[0].textContent).toBe('');
     expect(versionCells[4].textContent).toBe('');
     expect(enabledCells[0].textContent).toBe('No');
@@ -87,9 +85,7 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-3scale-backend-dynamic',
     );
-    expect(nameCells[4].textContent).toBe(
-      '@janus-idp/backstage-plugin-jfrog-artifactory',
-    );
+    expect(nameCells[4].textContent).toBe('@janus-idp/backstage-plugin-argocd');
     await act(() => findByText('Name').then(el => el.click()));
     // ascending by name
     nameCells = Array.from(
