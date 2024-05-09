@@ -12,6 +12,7 @@ import useAsync from 'react-use/lib/useAsync';
 import Loader from './Loader';
 import { AppConfig } from '@backstage/config';
 import { DynamicRoot, StaticPlugins } from './DynamicRoot';
+import { DynamicPluginConfig } from '../../utils/dynamicUI/extractDynamicConfig';
 
 const ScalprumRoot = ({
   apis,
@@ -27,19 +28,23 @@ const ScalprumRoot = ({
 }) => {
   const { loading, value } = useAsync(
     async (): Promise<{
-      appConfig: AppConfig[];
+      dynamicPlugins: DynamicPluginConfig;
       baseUrl: string;
       scalprumConfig?: AppsConfig;
     }> => {
       const appConfig = overrideBaseUrlConfigs(await defaultConfigLoader());
-      const reader = ConfigReader.fromConfigs(appConfig);
+      const reader = ConfigReader.fromConfigs([
+        baseFrontendConfig ?? { context: '', data: {} },
+        ...appConfig,
+      ]);
       const baseUrl = reader.getString('backend.baseUrl');
+      const dynamicPlugins = reader.get<DynamicPluginConfig>('dynamicPlugins');
       try {
         const scalprumConfig: AppsConfig = await fetch(
           `${baseUrl}/api/scalprum/plugins`,
         ).then(r => r.json());
         return {
-          appConfig,
+          dynamicPlugins,
           baseUrl,
           scalprumConfig,
         };
@@ -49,7 +54,7 @@ const ScalprumRoot = ({
           `Failed to fetch scalprum configuration: ${JSON.stringify(err)}`,
         );
         return {
-          appConfig,
+          dynamicPlugins,
           baseUrl,
           scalprumConfig: {},
         };
@@ -59,7 +64,7 @@ const ScalprumRoot = ({
   if (loading && !value) {
     return <Loader />;
   }
-  const { appConfig, baseUrl, scalprumConfig } = value || {};
+  const { dynamicPlugins, baseUrl, scalprumConfig } = value || {};
   return (
     <ScalprumProvider
       config={scalprumConfig ?? {}}
@@ -80,8 +85,7 @@ const ScalprumRoot = ({
       <DynamicRoot
         afterInit={afterInit}
         apis={apis}
-        appConfig={appConfig ?? []}
-        baseFrontendConfig={baseFrontendConfig ?? { context: '', data: {} }}
+        dynamicPlugins={dynamicPlugins ?? {}}
         staticPluginStore={plugins}
         scalprumConfig={scalprumConfig ?? {}}
       />
