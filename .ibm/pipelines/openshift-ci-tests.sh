@@ -227,7 +227,7 @@ run_tests() {
 
   droute_send $release_name $project
 
-  exit ${RESULT}
+  echo ${RESULT}
 }
 
 check_backstage_running() {
