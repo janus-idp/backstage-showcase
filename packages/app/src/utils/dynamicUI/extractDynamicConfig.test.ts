@@ -153,6 +153,7 @@ describe('extractDynamicConfig', () => {
       appIcons: [],
       routeBindingTargets: [],
       apiFactories: [],
+      scaffolderFieldExtensions: [],
     });
   });
 
@@ -428,6 +429,59 @@ describe('extractDynamicConfig', () => {
         ],
       },
     ],
+    [
+      'a scaffolder field extension',
+      {
+        scaffolderFieldExtensions: [{ importName: 'foo', module: 'FooRoot' }],
+      },
+      {
+        scaffolderFieldExtensions: [
+          {
+            importName: 'foo',
+            module: 'FooRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+        ],
+      },
+    ],
+    [
+      'a scaffolder field extension; default module',
+      {
+        scaffolderFieldExtensions: [{ importName: 'foo' }],
+      },
+      {
+        scaffolderFieldExtensions: [
+          {
+            importName: 'foo',
+            module: 'PluginRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+        ],
+      },
+    ],
+    [
+      'multiple scaffolder field extensions',
+      {
+        scaffolderFieldExtensions: [
+          { importName: 'foo', module: 'FooRoot' },
+          { importName: 'bar', module: 'BarRoot' },
+        ],
+      },
+      {
+        scaffolderFieldExtensions: [
+          {
+            importName: 'foo',
+            module: 'FooRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+          {
+            importName: 'bar',
+            module: 'BarRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+        ],
+      },
+    ],
   ])('parses %s', (_, source: any, output) => {
     const config = extractDynamicConfig({
       frontend: { 'janus-idp.plugin-foo': source },
@@ -440,6 +494,7 @@ describe('extractDynamicConfig', () => {
       mountPoints: [],
       appIcons: [],
       apiFactories: [],
+      scaffolderFieldExtensions: [],
       ...output,
     });
   });

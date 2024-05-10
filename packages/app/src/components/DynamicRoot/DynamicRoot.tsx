@@ -69,8 +69,8 @@ export const DynamicRoot = ({
       mountPoints,
       routeBindings,
       routeBindingTargets,
+      scaffolderFieldExtensions,
     } = extractDynamicConfig(dynamicPlugins);
-
     const requiredModules = [
       ...routeBindingTargets.map(({ scope, module }) => ({
         scope,
@@ -89,6 +89,10 @@ export const DynamicRoot = ({
         module,
       })),
       ...apiFactories.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...scaffolderFieldExtensions.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -290,12 +294,38 @@ export const DynamicRoot = ({
       });
     }
 
+    const scaffolderFieldExtensionComponents = scaffolderFieldExtensions.reduce<
+      {
+        scope: string;
+        module: string;
+        importName: string;
+        Component: React.ComponentType<{}>;
+      }[]
+    >((acc, { scope, module, importName }) => {
+      const extensionComponent = allPlugins[scope]?.[module]?.[importName];
+      if (extensionComponent) {
+        acc.push({
+          scope,
+          module,
+          importName,
+          Component: extensionComponent as React.ComponentType<unknown>,
+        });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring scaffolderFieldExtension: ${importName}`,
+        );
+      }
+      return acc;
+    }, []);
+
     setComponents({
       AppProvider: app.current.getProvider(),
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
-      mountPoints: mountPointComponents,
       entityTabOverrides,
+      mountPoints: mountPointComponents,
+      scaffolderFieldExtensions: scaffolderFieldExtensionComponents,
     });
 
     afterInit().then(({ default: Component }) => {

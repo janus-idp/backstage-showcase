@@ -689,3 +689,32 @@ Each plugin can expose multiple API Factories and each factory is required to de
 
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+
+### Provide custom Scaffolder field extensions
+
+The Backstage scaffolder component supports specifying [custom form fields](https://backstage.io/docs/features/software-templates/writing-custom-field-extensions/#creating-a-field-extension) for the software template wizard, for example:
+
+```typescript
+export const MyNewFieldExtension = scaffolderPlugin.provide(
+  createScaffolderFieldExtension({
+    name: 'MyNewFieldExtension',
+    component: MyNewField,
+    validation: myNewFieldValidator,
+  }),
+);
+```
+
+These components can be contributed by plugins by exposing the scaffolder field extension component via the `scaffolderFieldExtensions` configuration:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      scaffolderFieldExtensions:
+        - importName: MyNewFieldExtension
+```
+
+A plugin can specify multiple field extensions, in which case each field extension will need to supply an `importName` for each field extension.
+
+- `importName` is an optional import name that should reference the value returned the scaffolder field extension API
+- `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
