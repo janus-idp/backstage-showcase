@@ -151,10 +151,10 @@ is-stream@^2.0.0:
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.1.tgz#fac1e3d53b97ad5a9d0ae9cef2389f5810a5c077"
   integrity sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==
 
-jsonata@^1.8.6:
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/jsonata/-/jsonata-1.8.7.tgz#e5cf5a4e28e3c88dd79e23282bffb7797350d035"
-  integrity sha512-tOW2/hZ+nR2bcQZs+0T62LVe5CHaNa3laFFWb/262r39utN6whJGBF7IR2Wq1QXrDbhftolk5gggW8uUJYlBTQ==
+jsonata@^2.0.4:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/jsonata/-/jsonata-2.0.5.tgz#2b3b5098c019b264c4fae061a9cb24d59c7115a2"
+  integrity sha512-wEse9+QLIIU5IaCgtJCPsFi/H4F3qcikWzF4bAELZiRz08ohfx3Q6CjDRf4ZPF5P/92RI3KIHtb7u3jqPaHXdQ==
 
 jsonfile@^6.0.1:
   version "6.1.0"
