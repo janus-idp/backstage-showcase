@@ -30,6 +30,10 @@ const AppBase = () => {
     entityTabOverrides,
     scaffolderFieldExtensions,
   } = useContext(DynamicRootContext);
+
+  const ifNotDynamic = (path: string, route: React.ReactElement) =>
+    dynamicRoutes.filter(({ path: p }) => p === path).length === 0 && route;
+
   return (
     <AppProvider>
       <AlertDisplay />
@@ -37,52 +41,80 @@ const AppBase = () => {
       <AppRouter>
         <Root>
           <FlatRoutes>
-            {dynamicRoutes.filter(({ path }) => path === '/').length === 0 && (
+            {ifNotDynamic(
+              '/',
               <Route path="/" element={<HomepageCompositionRoot />}>
                 <HomePage />
               </Route>
             )}
-            <Route path="/catalog" element={<CatalogIndexPage pagination />} />
-            <Route
-              path="/catalog/:namespace/:kind/:name"
-              element={<CatalogEntityPage />}
-            >
-              {entityPage(entityTabOverrides)}
+            {ifNotDynamic(
+              '/catalog',
+              <Route path="/catalog" element={<CatalogIndexPage pagination />} />
+            )}
+            {ifNotDynamic(
+              '//catalog/:namespace/:kind/:name',
+              <Route
+                path="/catalog/:namespace/:kind/:name"
+                element={<CatalogEntityPage />}
+              >
+                {entityPage(entityTabOverrides)}
+              </Route>
+            )}
+            {ifNotDynamic(
+              '/create',
+              <Route
+                path="/create"
+                element={
+                  <ScaffolderPage
+                    headerOptions={{ title: 'Software Templates' }}
+                  />
+                }
+              >
+                <ScaffolderFieldExtensions>
+                  {scaffolderFieldExtensions.map(
+                    ({ scope, module, importName, Component }) => (
+                      <Component key={`${scope}-${module}-${importName}`} />
+                    ),
+                  )}
+                </ScaffolderFieldExtensions>
+                scaffolderFieldExtensions
             </Route>
-            <Route
-              path="/create"
-              element={
-                <ScaffolderPage
-                  headerOptions={{ title: 'Software Templates' }}
-                />
-              }
-            >
-              <ScaffolderFieldExtensions>
-                {scaffolderFieldExtensions.map(
-                  ({ scope, module, importName, Component }) => (
-                    <Component key={`${scope}-${module}-${importName}`} />
-                  ),
-                )}
-              </ScaffolderFieldExtensions>
-              scaffolderFieldExtensions
-            </Route>
-            <Route path="/api-docs" element={<ApiExplorerPage />} />
-            <Route
-              path="/catalog-import"
-              element={
-                <RequirePermission permission={catalogEntityCreatePermission}>
-                  <CatalogImportPage />
-                </RequirePermission>
-              }
-            />
-            <Route path="/search" element={<BackstageSearchPage />}>
-              <SearchPage />
-            </Route>
-            <Route path="/settings" element={<UserSettingsPage />}>
-              {settingsPage}
-            </Route>
-            <Route path="/catalog-graph" element={<CatalogGraphPage />} />
-            <Route path="/learning-paths" element={<LearningPaths />} />
+            )}
+            {ifNotDynamic(
+              '/api-docs',
+              <Route path="/api-docs" element={<ApiExplorerPage />} />
+            )}
+            {ifNotDynamic(
+              '/catalog-import',
+              <Route
+                path="/catalog-import"
+                element={
+                  <RequirePermission permission={catalogEntityCreatePermission}>
+                    <CatalogImportPage />
+                  </RequirePermission>
+                }
+              />
+            )}
+            {ifNotDynamic(
+              '/search',
+              <Route path="/search" element={<BackstageSearchPage />}>
+                <SearchPage />
+              </Route>
+            )}
+            {ifNotDynamic(
+              '/settings',
+              <Route path="/settings" element={<UserSettingsPage />}>
+                {settingsPage}
+              </Route>
+            )}
+            {ifNotDynamic(
+              '/catalog-graph',
+              <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+            )}
+            {ifNotDynamic(
+              '/learning-paths',
+              <Route path="/learning-paths" element={<LearningPaths />} />
+            )}
             <Route path="/admin" element={<AdminPage />} />
             {dynamicRoutes
               .filter(({ path }) => path.startsWith('/admin'))
