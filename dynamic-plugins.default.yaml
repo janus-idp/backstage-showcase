@@ -301,6 +301,31 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-argocd:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: ArgocdDeploymentSummary
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: "span 8"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isArgocdConfigured
+              - mountPoint: entity.page.cd/cards
+                importName: ArgocdDeploymentLifecycle
+                config:
+                  layout:
+                    gridColumn: '1 / -1'
+                  if:
+                    allOf:
+                      - isArgocdConfigured    
 
   # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic

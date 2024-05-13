@@ -73,6 +73,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-plugin-3scale-backend-dynamic',
   '@janus-idp/backstage-plugin-keycloak-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic',
+  '@janus-idp/backstage-plugin-argocd':
+    './dynamic-plugins/dist/janus-idp-backstage-plugin-argocd',
   'backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic':
     './dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic',
   'backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic':
