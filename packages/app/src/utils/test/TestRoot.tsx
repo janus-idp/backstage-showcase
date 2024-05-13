@@ -41,6 +41,7 @@ const TestRoot = ({ children }: PropsWithChildren<{}>) => {
         dynamicRoutes: [],
         mountPoints: {},
         entityTabOverrides: {},
+        scaffolderFieldExtensions: [],
       }}
     >
       {children}

@@ -3122,7 +3122,7 @@
     zen-observable "^0.10.0"
     zod "^3.22.4"
 
-"@backstage/core-plugin-api@1.9.2", "@backstage/core-plugin-api@^1.8.0", "@backstage/core-plugin-api@^1.8.2", "@backstage/core-plugin-api@^1.9.2":
+"@backstage/core-plugin-api@1.9.2", "@backstage/core-plugin-api@^1.9.2":
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-1.9.2.tgz#1a75865e567708829f5a8056ad23ea94233f4b7f"
   integrity sha512-VbMzgbp5c14B+xi5qFDXEd/LMsrM9D9IpU9tLPSaN2fn9FWhxmeHILNaiLHO2mdLd6RxLopKKbKWduBYbqyu5Q==
@@ -3131,6 +3131,18 @@
     "@backstage/errors" "^1.2.4"
     "@backstage/types" "^1.1.1"
     "@backstage/version-bridge" "^1.0.8"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    history "^5.0.0"
+
+"@backstage/core-plugin-api@^1.8.0", "@backstage/core-plugin-api@^1.8.2":
+  version "1.9.1"
+  resolved "https://registry.npmjs.org/@backstage/core-plugin-api/-/core-plugin-api-1.9.1.tgz#3ad8b7ee247198bb59fcd3b146092e4f9512a5de"
+  integrity sha512-hV/U08XkgcEgE8YmwfK/onF2V/BlXaq0GxsalNJ5UarQde1XtRLydCg3NJ6oHTqrmzgcLPBAiOzSs+v5Z/SV5A==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/types" "^1.1.1"
+    "@backstage/version-bridge" "^1.0.7"
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     history "^5.0.0"
 
@@ -4444,7 +4456,7 @@
     zod "^3.22.4"
     zod-to-json-schema "^3.20.4"
 
-"@backstage/plugin-scaffolder-react@^1.8.4":
+"@backstage/plugin-scaffolder-react@1.8.4", "@backstage/plugin-scaffolder-react@^1.8.4":
   version "1.8.4"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-react/-/plugin-scaffolder-react-1.8.4.tgz#cb2797bd94b60d4e0c65e9c25792bf161f5f611a"
   integrity sha512-RpOJ9Ou7GUT9gJhQh1ZYz4hV99KU8mwfsmyIEITHp/bEjeschea+hSxHs3iT3a6p/e9ooXsSkOpwigHpOSmjJw==

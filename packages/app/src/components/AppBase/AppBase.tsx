@@ -8,6 +8,7 @@ import { CatalogImportPage } from '@backstage/plugin-catalog-import';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
+import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import React, { useContext } from 'react';
@@ -22,8 +23,13 @@ import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
 
 const AppBase = () => {
-  const { AppProvider, AppRouter, dynamicRoutes, entityTabOverrides } =
-    useContext(DynamicRootContext);
+  const {
+    AppProvider,
+    AppRouter,
+    dynamicRoutes,
+    entityTabOverrides,
+    scaffolderFieldExtensions,
+  } = useContext(DynamicRootContext);
   return (
     <AppProvider>
       <AlertDisplay />
@@ -50,7 +56,16 @@ const AppBase = () => {
                   headerOptions={{ title: 'Software Templates' }}
                 />
               }
-            />
+            >
+              <ScaffolderFieldExtensions>
+                {scaffolderFieldExtensions.map(
+                  ({ scope, module, importName, Component }) => (
+                    <Component key={`${scope}-${module}-${importName}`} />
+                  ),
+                )}
+              </ScaffolderFieldExtensions>
+              scaffolderFieldExtensions
+            </Route>
             <Route path="/api-docs" element={<ApiExplorerPage />} />
             <Route
               path="/catalog-import"
