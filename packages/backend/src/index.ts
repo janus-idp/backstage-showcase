@@ -67,22 +67,28 @@ backend.add(dynamicPluginsFrontendSchemas());
 backend.add(customLogger());
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
-backend.add(
-  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
-);
 
-backend.add(import('@backstage/plugin-catalog-backend/alpha'));
+if (process.env.DISABLE_STANDARD_CATALOG !== 'true') {
+  backend.add(
+    import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+  );
+  backend.add(import('@backstage/plugin-catalog-backend/alpha'));
 
-// TODO: Probably we should now provide this as a dynamic plugin
-backend.add(import('@backstage/plugin-catalog-backend-module-openapi'));
+  // TODO: Probably we should now provide this as a dynamic plugin
+  backend.add(import('@backstage/plugin-catalog-backend-module-openapi'));
+}
 
 backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 
-// TODO: Check in the Scaffolder new backend plugin why the identity is not passed and the default is built instead.
-backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+if (process.env.DISABLE_STANDARD_SCAFFOLDER !== 'true') {
+  // TODO: Check in the Scaffolder new backend plugin why the identity is not passed and the default is built instead.
+  backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+}
 
-backend.add(import('@backstage/plugin-search-backend/alpha'));
-backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
+if (process.env.DISABLE_STANDARD_SEARCH !== 'true') {
+  backend.add(import('@backstage/plugin-search-backend/alpha'));
+  backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
+}
 
 // TODO: We should test it more deeply. The structure is not exactly the same as the old backend implementation
 backend.add(import('@backstage/plugin-events-backend/alpha'));
