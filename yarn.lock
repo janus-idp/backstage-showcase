@@ -8201,10 +8201,10 @@
     "@react-spring/shared" "~9.7.3"
     "@react-spring/types" "~9.7.3"
 
-"@redhat-developer/red-hat-developer-hub-theme@0.0.37":
-  version "0.0.37"
-  resolved "https://registry.yarnpkg.com/@redhat-developer/red-hat-developer-hub-theme/-/red-hat-developer-hub-theme-0.0.37.tgz#4e9cb9df90ac551daea1c844f58543517d29969d"
-  integrity sha512-i4eCcnMHgEy6QA50JVk0jJsM7x9n8QrpSH21i8rL2fVXd8pzuJEBxuLcsdMRJ0gGdFGHJ67o0Jf7P+ItVLW0iw==
+"@redhat-developer/red-hat-developer-hub-theme@^0.0.40":
+  version "0.0.40"
+  resolved "https://registry.yarnpkg.com/@redhat-developer/red-hat-developer-hub-theme/-/red-hat-developer-hub-theme-0.0.40.tgz#870379e2107d40824de2c05e48b4dfe9156ccdc9"
+  integrity sha512-or2YShmjhcPCuGDYmio8abABLAkFXqcqFPhUA6QQJ9BFYHL97AFJ+h+1JNi29lZCcw4PHEUDACHJJZkN86Ld3g==
 
 "@remix-run/router@1.14.2":
   version "1.14.2"
