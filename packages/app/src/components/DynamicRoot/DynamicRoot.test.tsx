@@ -16,7 +16,6 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import * as appDefaults from '@backstage/app-defaults';
 import { AppRouteBinder, defaultConfigLoader } from '@backstage/core-app-api';
-import { AppConfig } from '@backstage/config';
 
 const DynamicRoot = React.lazy(() => import('./DynamicRoot'));
 
@@ -68,9 +67,11 @@ const MockPage = () => {
   );
 };
 
-const loadAppConfig = async () => await defaultConfigLoader();
-
-const MockApp = ({ appConfig }: { appConfig: AppConfig[] }) => (
+const MockApp = ({
+  dynamicPlugins,
+}: {
+  dynamicPlugins: any; // allow tests to supply specific values for specific use cases
+}) => (
   <React.Suspense fallback={null}>
     <DynamicRoot
       apis={[]}
@@ -81,11 +82,7 @@ const MockApp = ({ appConfig }: { appConfig: AppConfig[] }) => (
           },
         })
       }
-      appConfig={appConfig}
-      baseFrontendConfig={{
-        context: '',
-        data: {},
-      }}
+      dynamicPlugins={dynamicPlugins}
       scalprumConfig={{}}
     />
   </React.Suspense>
@@ -124,25 +121,26 @@ jest.mock('../../utils/dynamicUI/initializeRemotePlugins', () => ({
   __esModule: true,
 }));
 
-const mockProcessEnv = (dynamicPluginsConfig: { [key: string]: any }) => ({
-  NODE_ENV: 'test',
-  APP_CONFIG: [
-    {
-      data: {
-        app: { title: 'Test' },
-        backend: { baseUrl: 'http://localhost:7007' },
-        techdocs: {
-          storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
+const loadTestConfig = async (dynamicPlugins: any) => {
+  process.env = {
+    NODE_ENV: 'test',
+    APP_CONFIG: [
+      {
+        data: {
+          app: { title: 'Test' },
+          backend: { baseUrl: 'http://localhost:7007' },
+          techdocs: {
+            storageUrl: 'http://localhost:7007/api/techdocs/static/docs',
+          },
+          auth: { environment: 'development' },
+          dynamicPlugins,
         },
-        auth: { environment: 'development' },
-        dynamicPlugins: {
-          frontend: dynamicPluginsConfig,
-        },
+        context: 'test',
       },
-      context: 'test',
-    },
-  ] as any,
-});
+    ] as any,
+  };
+  await defaultConfigLoader();
+};
 
 const consoleSpy = jest.spyOn(console, 'warn');
 
@@ -190,11 +188,15 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one dynamicRoute', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': { dynamicRoutes: [{ path: '/foo' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': { dynamicRoutes: [{ path: '/foo' }] },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -205,11 +207,17 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with two dynamicRoutes', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': { dynamicRoutes: [{ path: '/foo' }, { path: '/bar' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          dynamicRoutes: [{ path: '/foo' }, { path: '/bar' }],
+        },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -220,11 +228,17 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one dynamicRoute from nonexistent plugin', async () => {
-    process.env = mockProcessEnv({
-      'doesnt.exist': { dynamicRoutes: [{ path: '/foo' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'doesnt.exist': {
+          dynamicRoutes: [{ path: '/foo' }],
+        },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -238,13 +252,17 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one dynamicRoute with nonexistent importName', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        dynamicRoutes: [{ path: '/foo', importName: 'BarComponent' }],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          dynamicRoutes: [{ path: '/foo', importName: 'BarComponent' }],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -258,11 +276,17 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one dynamicRoute with nonexistent module', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': { dynamicRoutes: [{ path: '/foo', module: 'BarPlugin' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          dynamicRoutes: [{ path: '/foo', module: 'BarPlugin' }],
+        },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -276,15 +300,22 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one dynamicRoute with staticJSXContent', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        dynamicRoutes: [
-          { path: '/foo', importName: 'FooComponentWithStaticJSX' },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          dynamicRoutes: [
+            {
+              path: '/foo',
+              importName: 'FooComponentWithStaticJSX',
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -297,11 +328,21 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with single component', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': { mountPoints: [{ mountPoint: 'a.b.c/cards' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+            },
+          ],
+        },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -312,16 +353,24 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with two components', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          { mountPoint: 'a.b.c/cards' },
-          { mountPoint: 'a.b.c/cards' },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+            },
+            {
+              mountPoint: 'a.b.c/cards',
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -332,16 +381,25 @@ describe('DynamicRoot', () => {
   });
 
   it("should render with one mountPoint with two components where one importName doesn't exist", async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          { mountPoint: 'a.b.c/cards' },
-          { mountPoint: 'a.b.c/cards', importName: 'BarComponent' },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+            },
+            {
+              mountPoint: 'a.b.c/cards',
+              importName: 'BarComponent',
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -355,18 +413,22 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with config.if === true', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          {
-            mountPoint: 'a.b.c/cards',
-            config: { if: { allOf: ['isFooConditionTrue'] } },
-          },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+              config: { if: { allOf: ['isFooConditionTrue'] } },
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -379,18 +441,22 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with config.if === false', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          {
-            mountPoint: 'a.b.c/cards',
-            config: { if: { allOf: ['isFooConditionFalse'] } },
-          },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+              config: { if: { allOf: ['isFooConditionFalse'] } },
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -403,18 +469,22 @@ describe('DynamicRoot', () => {
   });
 
   it("should render with one mountPoint with config.if where importName doesn't exist", async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          {
-            mountPoint: 'a.b.c/cards',
-            config: { if: { allOf: ['isBarConditionTrue'] } },
-          },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+              config: { if: { allOf: ['isBarConditionTrue'] } },
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -427,16 +497,20 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with two mountPoints with one component each', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          { mountPoint: 'a.b.c/cards' },
-          { mountPoint: 'x.y.z/cards' },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            { mountPoint: 'a.b.c/cards' },
+            { mountPoint: 'x.y.z/cards' },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -449,11 +523,15 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint from nonexistent plugin', async () => {
-    process.env = mockProcessEnv({
-      'doesnt.exist': { mountPoints: [{ mountPoint: 'a.b.c/cards' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'doesnt.exist': { mountPoints: [{ mountPoint: 'a.b.c/cards' }] },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -467,15 +545,19 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with nonexistent importName', async () => {
-    process.env = mockProcessEnv({
-      'doesnt.exist': {
-        mountPoints: [
-          { mountPoint: 'a.b.c/cards', importName: 'BarComponent' },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'doesnt.exist': {
+          mountPoints: [
+            { mountPoint: 'a.b.c/cards', importName: 'BarComponent' },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -489,13 +571,17 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with nonexistent module', async () => {
-    process.env = mockProcessEnv({
-      'doesnt.exist': {
-        mountPoints: [{ mountPoint: 'a.b.c/cards', module: 'BarPlugin' }],
+    const dynamicPlugins = {
+      frontend: {
+        'doesnt.exist': {
+          mountPoints: [{ mountPoint: 'a.b.c/cards', module: 'BarPlugin' }],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -509,18 +595,22 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one mountPoint with staticJSXContent', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        mountPoints: [
-          {
-            mountPoint: 'a.b.c/cards',
-            importName: 'FooComponentWithStaticJSX',
-          },
-        ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          mountPoints: [
+            {
+              mountPoint: 'a.b.c/cards',
+              importName: 'FooComponentWithStaticJSX',
+            },
+          ],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -533,11 +623,15 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one appIcon', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': { appIcons: [{ name: 'fooIcon' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': { appIcons: [{ name: 'fooIcon' }] },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -548,11 +642,15 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with two appIcons', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': { appIcons: [{ name: 'fooIcon' }, { name: 'foo2Icon' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': { appIcons: [{ name: 'fooIcon' }, { name: 'foo2Icon' }] },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -566,11 +664,15 @@ describe('DynamicRoot', () => {
   });
 
   it('should render with one appIcon from nonexistent plugin', async () => {
-    process.env = mockProcessEnv({
-      'doesnt.exist': { appIcons: [{ name: 'fooIcon' }] },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    const dynamicPlugins = {
+      frontend: {
+        'doesnt.exist': { appIcons: [{ name: 'fooIcon' }] },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -585,24 +687,28 @@ describe('DynamicRoot', () => {
 
   it('should bind routes on routeBindings target', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        routeBindings: {
-          targets: [
-            { importName: 'fooPluginTarget' },
-            { importName: 'fooPlugin' },
-          ],
-          bindings: [
-            {
-              bindTarget: 'fooPluginTarget.externalRoutes',
-              bindMap: { barTarget: 'fooPlugin.routes.bar' },
-            },
-          ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          routeBindings: {
+            targets: [
+              { importName: 'fooPluginTarget' },
+              { importName: 'fooPlugin' },
+            ],
+            bindings: [
+              {
+                bindTarget: 'fooPluginTarget.externalRoutes',
+                bindMap: { barTarget: 'fooPlugin.routes.bar' },
+              },
+            ],
+          },
         },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -623,27 +729,31 @@ describe('DynamicRoot', () => {
 
   it('should bind routes on routeBindings target with a custom name', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        routeBindings: {
-          targets: [
-            {
-              importName: 'fooPluginTarget',
-              name: 'fooPluginTargetWithCustomName',
-            },
-            { importName: 'fooPlugin' },
-          ],
-          bindings: [
-            {
-              bindTarget: 'fooPluginTargetWithCustomName.externalRoutes',
-              bindMap: { barTarget: 'fooPlugin.routes.bar' },
-            },
-          ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          routeBindings: {
+            targets: [
+              {
+                importName: 'fooPluginTarget',
+                name: 'fooPluginTargetWithCustomName',
+              },
+              { importName: 'fooPlugin' },
+            ],
+            bindings: [
+              {
+                bindTarget: 'fooPluginTargetWithCustomName.externalRoutes',
+                bindMap: { barTarget: 'fooPlugin.routes.bar' },
+              },
+            ],
+          },
         },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -663,26 +773,30 @@ describe('DynamicRoot', () => {
   });
 
   it('should not bind routes on routeBindings target with nonexistent importName', async () => {
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        routeBindings: {
-          targets: [
-            {
-              importName: 'barPlugin',
-            },
-            { importName: 'fooPlugin' },
-          ],
-          bindings: [
-            {
-              bindTarget: 'barPlugin.externalRoutes',
-              bindMap: { barTarget: 'fooPlugin.routes.bar' },
-            },
-          ],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          routeBindings: {
+            targets: [
+              {
+                importName: 'barPlugin',
+              },
+              { importName: 'fooPlugin' },
+            ],
+            bindings: [
+              {
+                bindTarget: 'barPlugin.externalRoutes',
+                bindMap: { barTarget: 'fooPlugin.routes.bar' },
+              },
+            ],
+          },
         },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -694,13 +808,17 @@ describe('DynamicRoot', () => {
 
   it('should add custom ApiFactory', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        apiFactories: [{ importName: 'fooPluginApi' }],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          apiFactories: [{ importName: 'fooPluginApi' }],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -715,13 +833,17 @@ describe('DynamicRoot', () => {
 
   it('should not add custom ApiFactory with nonexistent importName', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        apiFactories: [{ importName: 'barPluginApi' }],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          apiFactories: [{ importName: 'barPluginApi' }],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
@@ -735,13 +857,17 @@ describe('DynamicRoot', () => {
 
   it('should not add custom ApiFactory with nonexistent module', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
-    process.env = mockProcessEnv({
-      'foo.bar': {
-        apiFactories: [{ importName: 'fooPluginApi', module: 'BarPlugin' }],
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          apiFactories: [{ importName: 'fooPluginApi', module: 'BarPlugin' }],
+        },
       },
-    });
-    const appConfig = await loadAppConfig();
-    const rendered = await renderWithEffects(<MockApp appConfig={appConfig} />);
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
     await waitFor(async () => {
       expect(rendered.baseElement).toBeInTheDocument();
       expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();

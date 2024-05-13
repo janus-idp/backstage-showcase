@@ -1,5 +1,5 @@
-import { AppConfig } from '@backstage/config';
 import extractDynamicConfig, {
+  DynamicPluginConfig,
   conditionsArrayMapper,
   configIfToCallable,
 } from './extractDynamicConfig';
@@ -143,10 +143,8 @@ describe('extractDynamicConfig', () => {
       'no frontend dynamic plugins are defined',
       { dynamicPlugins: { frontend: {} } },
     ],
-  ])('returns empty data when %s', async (_, source) => {
-    const config = await extractDynamicConfig({
-      appConfig: [source] as AppConfig[],
-    });
+  ])('returns empty data when %s', (_, source) => {
+    const config = extractDynamicConfig(source as DynamicPluginConfig);
     expect(config).toEqual({
       routeBindings: [],
       dynamicRoutes: [],
@@ -430,16 +428,9 @@ describe('extractDynamicConfig', () => {
         ],
       },
     ],
-  ])('parses %s', async (_, source, output) => {
-    const config = await extractDynamicConfig({
-      appConfig: [
-        {
-          context: 'foo',
-          data: {
-            dynamicPlugins: { frontend: { 'janus-idp.plugin-foo': source } },
-          },
-        },
-      ] as AppConfig[],
+  ])('parses %s', (_, source: any, output) => {
+    const config = extractDynamicConfig({
+      frontend: { 'janus-idp.plugin-foo': source },
     });
     expect(config).toEqual({
       routeBindings: [],

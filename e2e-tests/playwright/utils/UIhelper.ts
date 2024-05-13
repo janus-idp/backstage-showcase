@@ -17,6 +17,7 @@ export class UIhelper {
   }
 
   getSelector(buttonName: string): string {
+    /*eslint-disable-next-line no-prototype-builtins*/
     if (this.selectors.hasOwnProperty(buttonName)) {
       return this.selectors[buttonName];
     } else {
@@ -132,6 +133,7 @@ export class UIhelper {
         .getByText(rowText, { exact: exact })
         .first();
       await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.waitFor({ state: 'attached' });
       await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }

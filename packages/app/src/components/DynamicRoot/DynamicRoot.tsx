@@ -15,13 +15,13 @@ import DynamicRootContext, {
   ScalprumMountPointConfig,
 } from './DynamicRootContext';
 import extractDynamicConfig, {
+  DynamicPluginConfig,
   configIfToCallable,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 import defaultAppComponents from './defaultAppComponents';
 import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import Loader from './Loader';
-import { AppConfig } from '@backstage/config';
 
 export type StaticPlugins = Record<
   string,
@@ -38,16 +38,14 @@ type EntityTabMap = Record<string, { title: string; mountPoint: string }>;
 export const DynamicRoot = ({
   afterInit,
   apis: staticApis,
-  appConfig,
-  baseFrontendConfig,
+  dynamicPlugins,
   staticPluginStore = {},
   scalprumConfig,
 }: {
   afterInit: () => Promise<{ default: React.ComponentType }>;
   // Static APIs
   apis: AnyApiFactory[];
-  appConfig: AppConfig[];
-  baseFrontendConfig: AppConfig;
+  dynamicPlugins: DynamicPluginConfig;
   staticPluginStore?: StaticPlugins;
   scalprumConfig: AppsConfig;
 }) => {
@@ -71,10 +69,7 @@ export const DynamicRoot = ({
       mountPoints,
       routeBindings,
       routeBindingTargets,
-    } = await extractDynamicConfig({
-      frontendAppConfig: baseFrontendConfig,
-      appConfig,
-    });
+    } = extractDynamicConfig(dynamicPlugins);
 
     const requiredModules = [
       ...routeBindingTargets.map(({ scope, module }) => ({
@@ -283,7 +278,6 @@ export const DynamicRoot = ({
       {} as EntityTabMap,
     );
     if (!app.current) {
-      const fullConfig = [baseFrontendConfig, ...appConfig];
       app.current = createApp({
         apis: [...staticApis, ...remoteApis],
         bindRoutes({ bind }) {
@@ -293,7 +287,6 @@ export const DynamicRoot = ({
         plugins: Object.values(staticPluginStore).map(entry => entry.plugin),
         themes,
         components: defaultAppComponents,
-        configLoader: async () => Promise.resolve(fullConfig),
       });
     }
 
@@ -310,8 +303,7 @@ export const DynamicRoot = ({
     });
   }, [
     afterInit,
-    appConfig,
-    baseFrontendConfig,
+    dynamicPlugins,
     pluginStore,
     scalprumConfig,
     staticApis,
