@@ -158,11 +158,18 @@ droute_send() {
   # Remove properties (only used for skipped test and invalidates the file if empty)
   sed -i '/<properties>/,/<\/properties>/d' ${ARTIFACT_DIR}/$project/junit-results.xml
 
+  JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
+  if [ -n "${PULL_NUMBER:-}" ]; then
+    JOB_URL=${JOB_BASE_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}
+  else
+    JOB_URL=${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}
+  fi
+
   jq \
     --arg hostname "$REPORTPORTAL_HOSTNAME" \
     --arg project "$DATA_ROUTER_PROJECT" \
     --arg name "$JOB_NAME" \
-    --arg description "https://prow.ci.openshift.org/view/gs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}" \
+    --arg description "[View job run details](${JOB_URL})" \
     --arg key1 "job_type" \
     --arg value1 "$JOB_TYPE" \
     --arg key2 "pr" \
@@ -179,7 +186,7 @@ droute_send() {
   oc rsync -n ${droute_project} ${ARTIFACT_DIR}/$project/ ${droute_project}/${droute_pod_name}:/tmp/droute
 
   oc exec -n ${droute_project} "$droute_pod_name" -- /bin/bash -c "$(cat <<EOF
-curl -fsSLk -o /tmp/droute-linux-amd64 "https://nexus.hosts.prod.upshift.rdu2.redhat.com/nexus/repository/dno-raw/droute-client/1.1/droute-linux-amd64" \
+curl -fsSLk -o /tmp/droute-linux-amd64 "https://${NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/1.1/droute-linux-amd64" \
 && chmod +x /tmp/droute-linux-amd64
 EOF
 )"
