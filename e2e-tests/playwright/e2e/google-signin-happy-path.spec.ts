@@ -9,7 +9,6 @@ test.describe.skip('Google signin happy path', () => {
   const google_user_id = process.env.GOOGLE_USER_ID;
 
   test.beforeAll(async ({ browser }) => {
-    test.skip();
     const cookiesBase64 = process.env.GOOGLE_ACC_COOKIE;
     const cookiesString = Buffer.from(cookiesBase64, 'base64').toString('utf8');
     const cookies = JSON.parse(cookiesString);
