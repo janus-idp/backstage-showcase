@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-scaffolder-backend-module-gerrit-dynamic",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -31,11 +31,11 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^0.6.16",
+    "@backstage/backend-plugin-api": "^0.6.17",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/integration": "^1.9.1",
-    "@backstage/plugin-scaffolder-node": "^0.4.2"
+    "@backstage/integration": "^1.10.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.3"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-azure-devops-backend-dynamic",
-  "version": "0.6.3",
+  "version": "0.6.5",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -29,7 +29,6 @@
     "lodash": "^4.17.21",
     "mime-types": "^2.1.27",
     "p-limit": "^3.1.0",
-    "winston": "^3.2.1",
     "yn": "^4.0.0"
   },
   "devDependencies": {},
@@ -38,17 +37,17 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.6",
-    "@backstage/backend-plugin-api": "^0.6.16",
+    "@backstage/backend-common": "^0.21.7",
+    "@backstage/backend-plugin-api": "^0.6.17",
     "@backstage/catalog-model": "^1.4.5",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/integration": "^1.9.1",
-    "@backstage/plugin-auth-node": "^0.4.11",
+    "@backstage/integration": "^1.10.0",
+    "@backstage/plugin-auth-node": "^0.4.12",
     "@backstage/plugin-catalog-common": "^1.0.22",
-    "@backstage/plugin-catalog-node": "^1.11.0",
+    "@backstage/plugin-catalog-node": "^1.11.1",
     "@backstage/plugin-permission-common": "^0.7.13",
-    "@backstage/plugin-permission-node": "^0.7.27"
+    "@backstage/plugin-permission-node": "^0.7.28"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

@@ -1,1 +1,1 @@
-export * from '@backstage/plugin-github-issues';
+export * from '@backstage-community/plugin-github-issues';

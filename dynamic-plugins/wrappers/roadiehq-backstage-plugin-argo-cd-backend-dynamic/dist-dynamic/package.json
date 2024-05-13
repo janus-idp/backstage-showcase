@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-backstage-plugin-argo-cd-backend-dynamic",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -35,10 +35,9 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.6",
+    "@backstage/backend-common": "0.21.7",
     "@backstage/backend-plugin-api": "^0.6.12",
-    "@backstage/backend-dynamic-feature-service": "^0.2.2",
-    "@backstage/catalog-client": "^1.6.3",
+    "@backstage/catalog-client": "^1.6.4",
     "@backstage/config": "^1.2.0"
   },
   "overrides": {

@@ -72,8 +72,8 @@ export class Common {
    */
   async performActionWithRetry<T>(
     action: () => Promise<T>,
-    retries: number = 3,
-    retryInterval: number = 5000,
+    retries = 3,
+    retryInterval = 5000,
   ): Promise<T> {
     let lastError: unknown;
 
