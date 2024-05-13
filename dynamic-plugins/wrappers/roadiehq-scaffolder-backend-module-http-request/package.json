@@ -26,9 +26,9 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-http-request --override-interop default"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "^0.6.17",
-    "@backstage/plugin-scaffolder-backend": "^1.22.5",
-    "@backstage/plugin-scaffolder-node": "^0.4.3",
+    "@backstage/backend-plugin-api": "0.6.17",
+    "@backstage/plugin-scaffolder-backend": "1.22.5",
+    "@backstage/plugin-scaffolder-node": "0.4.3",
     "@roadiehq/scaffolder-backend-module-http-request": "4.3.2"
   },
   "devDependencies": {

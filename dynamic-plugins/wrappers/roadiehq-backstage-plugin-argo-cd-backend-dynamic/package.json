@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@backstage/backend-common": "0.21.7",
-    "@backstage/backend-plugin-api": "^0.6.12",
+    "@backstage/backend-plugin-api": "0.6.12",
     "@roadiehq/backstage-plugin-argo-cd-backend": "3.0.2"
   },
   "devDependencies": {
