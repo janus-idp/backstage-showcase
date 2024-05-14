@@ -29,7 +29,7 @@
     "@janus-idp/backstage-plugin-rbac": "1.18.2",
     "@janus-idp/backstage-plugin-tekton": "3.6.5",
     "@janus-idp/backstage-plugin-topology": "1.19.5",
-    "@janus-idp/backstage-plugin-argocd": "1.0.3",
+    "@janus-idp/backstage-plugin-argocd": "1.0.4",
     "@janus-idp/backstage-scaffolder-backend-module-quay": "1.4.6",
     "@janus-idp/backstage-scaffolder-backend-module-regex": "1.4.6",
     "@janus-idp/backstage-scaffolder-backend-module-servicenow": "1.4.7",
