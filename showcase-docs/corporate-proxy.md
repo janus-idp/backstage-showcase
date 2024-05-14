@@ -2,8 +2,8 @@
 
 Out of the box, the Showcase application can be run behind a corporate proxy, by setting any of the following environment variables prior to starting the application:
 
-- `HTTP_PROXY`: HTTP proxy to use.
-- `HTTPS_PROXY`: distinct proxy to use for HTTPS requests.
+- `HTTP_PROXY`: Proxy to use for HTTP requests.
+- `HTTPS_PROXY`: Proxy to use for HTTPS requests.
 
 Additionally, you can set the `NO_PROXY` environment variable to exclude certain domains from proxying. The value is a comma-separated list of hostnames that do not require a proxy to get reached, even if one is specified.
 
@@ -15,14 +15,14 @@ You can set the proxy information in your Helm `values` file, like so:
 upstream:
   backstage:
     extraEnvVars:
+      # Proxy to use for HTTP requests
       - name: HTTP_PROXY
-        # HTTP proxy to use
         value: '<my_http_proxy_url>'
+      # Proxy to use for HTTPS requests
       - name: HTTPS_PROXY
-        # Distinct proxy to use for HTTPS requests
         value: '<my_https_proxy_url>'
       - name: NO_PROXY
-        # Pattern of comma-separated URLs that should be excluded from proxying.
+        # List of comma-separated URLs that should be excluded from proxying.
         # Example: 'foo.com,baz.com'
         value: '<my_no_proxy_settings>'
 ```
@@ -54,14 +54,14 @@ spec:
   application:
     extraEnvs:
       envs:
+        # Proxy to use for HTTP requests
         - name: HTTP_PROXY
-          # HTTP proxy to use
           value: '<my_http_proxy_url>'
+        # Proxy to use for HTTPS requests
         - name: HTTPS_PROXY
-          # Distinct proxy to use for HTTPS requests
           value: '<my_https_proxy_url>'
         - name: NO_PROXY
-          # Pattern of comma-separated URLs that should be excluded from proxying.
+          # List of comma-separated URLs that should be excluded from proxying.
           # Example: 'foo.com,baz.com'
           value: '<my_no_proxy_settings>'
 ```
