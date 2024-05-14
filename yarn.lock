@@ -2396,7 +2396,7 @@
     winston "^3.2.1"
     winston-transport "^4.5.0"
 
-"@backstage/backend-app-api@^0.5.10", "@backstage/backend-app-api@^0.5.11", "@backstage/backend-app-api@^0.5.14", "@backstage/backend-app-api@^0.5.9":
+"@backstage/backend-app-api@^0.5.10", "@backstage/backend-app-api@^0.5.11", "@backstage/backend-app-api@^0.5.14":
   version "0.5.14"
   resolved "https://registry.yarnpkg.com/@backstage/backend-app-api/-/backend-app-api-0.5.14.tgz#a110bdbebc3b8b1b302b0726b7c92b2742fb5e3f"
   integrity sha512-Sqd5WRkp5x0JxK0ms5shes+VXmJ/t9++Z88CR8N3oBtp3H0t+iKewxOlgHhvYZKPyPiVCXZqKu7eCWH9UZ+Gqg==
@@ -2432,21 +2432,21 @@
     winston "^3.2.1"
     winston-transport "^4.5.0"
 
-"@backstage/backend-common@0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.20.0.tgz#b3f6e7a33605ed8c32a4282186e8615169212cda"
-  integrity sha512-/zMfTYCY2YJCLjnjBSAxE1ALZfxxpWrz5HZnH1yjk1H/vdXfxa6YxYTXBtry7ClELokIWWcQzUMHaNy+9dLW5Q==
+"@backstage/backend-common@0.20.2", "@backstage/backend-common@^0.20.0", "@backstage/backend-common@^0.20.1":
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.20.2.tgz#0ce5b7bfcb91918008c4ec6bb6aede72c4474e20"
+  integrity sha512-hQazpWVhjcOIic1bDMVKZ2pQn9Th4gKmI+1Q5aT2cls7dnXNF7Mwb3bRgnVQk+18bEn6sxHOUyCAFd8KzYTtLg==
   dependencies:
     "@aws-sdk/abort-controller" "^3.347.0"
     "@aws-sdk/client-s3" "^3.350.0"
     "@aws-sdk/credential-providers" "^3.350.0"
     "@aws-sdk/types" "^3.347.0"
-    "@backstage/backend-app-api" "^0.5.9"
-    "@backstage/backend-dev-utils" "^0.1.2"
-    "@backstage/backend-plugin-api" "^0.6.8"
+    "@backstage/backend-app-api" "^0.5.10"
+    "@backstage/backend-dev-utils" "^0.1.3"
+    "@backstage/backend-plugin-api" "^0.6.9"
     "@backstage/cli-common" "^0.1.13"
     "@backstage/config" "^1.1.1"
-    "@backstage/config-loader" "^1.6.0"
+    "@backstage/config-loader" "^1.6.1"
     "@backstage/errors" "^1.2.3"
     "@backstage/integration" "^1.8.0"
     "@backstage/integration-aws-node" "^0.1.8"
@@ -2556,67 +2556,6 @@
     yauzl "^3.0.0"
     yn "^4.0.0"
 
-"@backstage/backend-common@^0.20.0", "@backstage/backend-common@^0.20.1":
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.20.2.tgz#0ce5b7bfcb91918008c4ec6bb6aede72c4474e20"
-  integrity sha512-hQazpWVhjcOIic1bDMVKZ2pQn9Th4gKmI+1Q5aT2cls7dnXNF7Mwb3bRgnVQk+18bEn6sxHOUyCAFd8KzYTtLg==
-  dependencies:
-    "@aws-sdk/abort-controller" "^3.347.0"
-    "@aws-sdk/client-s3" "^3.350.0"
-    "@aws-sdk/credential-providers" "^3.350.0"
-    "@aws-sdk/types" "^3.347.0"
-    "@backstage/backend-app-api" "^0.5.10"
-    "@backstage/backend-dev-utils" "^0.1.3"
-    "@backstage/backend-plugin-api" "^0.6.9"
-    "@backstage/cli-common" "^0.1.13"
-    "@backstage/config" "^1.1.1"
-    "@backstage/config-loader" "^1.6.1"
-    "@backstage/errors" "^1.2.3"
-    "@backstage/integration" "^1.8.0"
-    "@backstage/integration-aws-node" "^0.1.8"
-    "@backstage/types" "^1.1.1"
-    "@google-cloud/storage" "^7.0.0"
-    "@keyv/memcache" "^1.3.5"
-    "@keyv/redis" "^2.5.3"
-    "@kubernetes/client-node" "0.20.0"
-    "@manypkg/get-packages" "^1.1.3"
-    "@octokit/rest" "^19.0.3"
-    "@types/cors" "^2.8.6"
-    "@types/dockerode" "^3.3.0"
-    "@types/express" "^4.17.6"
-    "@types/luxon" "^3.0.0"
-    "@types/webpack-env" "^1.15.2"
-    archiver "^6.0.0"
-    base64-stream "^1.0.0"
-    compression "^1.7.4"
-    concat-stream "^2.0.0"
-    cors "^2.8.5"
-    dockerode "^3.3.1"
-    express "^4.17.1"
-    express-promise-router "^4.1.0"
-    fs-extra "10.1.0"
-    git-url-parse "^13.0.0"
-    helmet "^6.0.0"
-    isomorphic-git "^1.23.0"
-    jose "^4.6.0"
-    keyv "^4.5.2"
-    knex "^3.0.0"
-    lodash "^4.17.21"
-    logform "^2.3.2"
-    luxon "^3.0.0"
-    minimatch "^5.0.0"
-    mysql2 "^2.2.5"
-    node-fetch "^2.6.7"
-    p-limit "^3.1.0"
-    pg "^8.11.3"
-    raw-body "^2.4.1"
-    tar "^6.1.12"
-    uuid "^8.3.2"
-    winston "^3.2.1"
-    winston-transport "^4.5.0"
-    yauzl "^2.10.0"
-    yn "^4.0.0"
-
 "@backstage/backend-defaults@0.2.17":
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/@backstage/backend-defaults/-/backend-defaults-0.2.17.tgz#cbb2b7e0ac2c9b340513e38d762f7bc2d06e0ce0"
@@ -2625,7 +2564,7 @@
     "@backstage/backend-app-api" "^0.7.0"
     "@backstage/backend-common" "^0.21.7"
 
-"@backstage/backend-dev-utils@^0.1.2", "@backstage/backend-dev-utils@^0.1.3", "@backstage/backend-dev-utils@^0.1.4":
+"@backstage/backend-dev-utils@^0.1.3", "@backstage/backend-dev-utils@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@backstage/backend-dev-utils/-/backend-dev-utils-0.1.4.tgz#65d204939c49b5df6a2148e8ad4dc718ccd1df07"
   integrity sha512-5YgAPz4CRtnqdaUlYCHwGmXvpkGQ1jaUMoDtiQ81WDxQrf+0iYZCwS4ftVyQmB0Ga6BaGOUf6GG/OuFA56Y5mA==
@@ -2973,7 +2912,7 @@
     yn "^4.0.0"
     zod "^3.22.4"
 
-"@backstage/config-loader@1.8.0", "@backstage/config-loader@^1.6.0", "@backstage/config-loader@^1.6.1", "@backstage/config-loader@^1.6.2", "@backstage/config-loader@^1.8.0":
+"@backstage/config-loader@1.8.0", "@backstage/config-loader@^1.6.1", "@backstage/config-loader@^1.6.2", "@backstage/config-loader@^1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-1.8.0.tgz#6b526475c45cd93ee51a0ddcb7e1f5bd49469eeb"
   integrity sha512-35a9eD1DbQvPG0/JjG8cgOuN2Il4GP6w9EaGTaDWORiYqzqYsZko+5tCXZPIWF8rzptUbSkr4SIT6Bt+ujfKqg==
