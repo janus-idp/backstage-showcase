@@ -45,11 +45,14 @@ const AppBase = () => {
               '/',
               <Route path="/" element={<HomepageCompositionRoot />}>
                 <HomePage />
-              </Route>
+              </Route>,
             )}
             {ifNotDynamic(
               '/catalog',
-              <Route path="/catalog" element={<CatalogIndexPage pagination />} />
+              <Route
+                path="/catalog"
+                element={<CatalogIndexPage pagination />}
+              />,
             )}
             {ifNotDynamic(
               '//catalog/:namespace/:kind/:name',
@@ -58,7 +61,7 @@ const AppBase = () => {
                 element={<CatalogEntityPage />}
               >
                 {entityPage(entityTabOverrides)}
-              </Route>
+              </Route>,
             )}
             {ifNotDynamic(
               '/create',
@@ -78,11 +81,11 @@ const AppBase = () => {
                   )}
                 </ScaffolderFieldExtensions>
                 scaffolderFieldExtensions
-            </Route>
+              </Route>,
             )}
             {ifNotDynamic(
               '/api-docs',
-              <Route path="/api-docs" element={<ApiExplorerPage />} />
+              <Route path="/api-docs" element={<ApiExplorerPage />} />,
             )}
             {ifNotDynamic(
               '/catalog-import',
@@ -93,27 +96,27 @@ const AppBase = () => {
                     <CatalogImportPage />
                   </RequirePermission>
                 }
-              />
+              />,
             )}
             {ifNotDynamic(
               '/search',
               <Route path="/search" element={<BackstageSearchPage />}>
                 <SearchPage />
-              </Route>
+              </Route>,
             )}
             {ifNotDynamic(
               '/settings',
               <Route path="/settings" element={<UserSettingsPage />}>
                 {settingsPage}
-              </Route>
+              </Route>,
             )}
             {ifNotDynamic(
               '/catalog-graph',
-              <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+              <Route path="/catalog-graph" element={<CatalogGraphPage />} />,
             )}
             {ifNotDynamic(
               '/learning-paths',
-              <Route path="/learning-paths" element={<LearningPaths />} />
+              <Route path="/learning-paths" element={<LearningPaths />} />,
             )}
             <Route path="/admin" element={<AdminPage />} />
             {dynamicRoutes
