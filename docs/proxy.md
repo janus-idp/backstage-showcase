@@ -23,6 +23,12 @@ podman container run --rm --name squid-container \
   -it docker.io/ubuntu/squid:latest
 ```
 
+# Plugin vendors
+
+The upstream Backstage project recommends the use of the `node-fetch` libraries in backend plugins for HTTP data fetching - see [ADR013](https://backstage.io/docs/architecture-decisions/adrs-adr013/).
+
+We currently only support corporate proxy settings for Axios, `fetch` and `node-fetch` libraries. Backend plugins using any of these libraries have nothing special to do to support corporate proxies.
+
 # Testing
 
 The most challenging part of writing an end-to-end test from the context of a corporate proxy is to set up an environment where an application is forbidden access to the public Internet except through that proxy.
