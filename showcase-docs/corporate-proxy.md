@@ -85,18 +85,4 @@ spec:
 
 </details>
 
-**NOTE**: Instead of specifying the proxy settings in each Custom Resource, you can edit the Operator default configuration once. To do so, look for a `ConfigMap` named `backstage-default-config` in the namespace where the Operator is deployed (typically `backstage-system` or `rhdh-operator`), and edit the key named `deployment.yaml` by adding the `HTTP(S)_PROXY` and `NO_PROXY` environment variables to the containers listed in this Deployment spec.
-
-## Local development
-
-If you are behind a corporate proxy and are running the Showcase locally, as depicted in [Running locally with a basic configuration](./getting-started.md#running-locally-with-a-basic-configuration) or [Running locally with the Optional Plugins](./getting-started.md#running-locally-with-the-optional-plugins), you will need to additionally set the `GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE` to an empty value prior to running `yarn start`.
-
-Example:
-
-```shell
-$ GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE='' \
-  HTTP_PROXY=http://10.10.10.105:3128 \
-  HTTPS_PROXY=http://10.10.10.106:3128 \
-  NO_PROXY='localhost,example.org' \
-  yarn start
-```
+**NOTE**: Instead of specifying the proxy settings in each Custom Resource, you can edit the Operator default configuration once. To do so, look for a `ConfigMap` named `backstage-default-config` in the namespace where the Operator is deployed (typically `backstage-system` or `rhdh-operator`). Then edit the `deployment.yaml` key by adding the `HTTP(S)_PROXY` and `NO_PROXY` environment variables to the containers listed in this Deployment spec.
