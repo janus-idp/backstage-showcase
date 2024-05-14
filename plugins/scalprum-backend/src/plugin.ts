@@ -26,6 +26,10 @@ export const scalprumPlugin = createBackendPlugin({
             discovery,
           }),
         );
+        http.addAuthPolicy({
+          path: '/',
+          allow: 'unauthenticated',
+        });
       },
     });
   },

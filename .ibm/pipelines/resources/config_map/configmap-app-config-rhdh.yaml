@@ -44,6 +44,8 @@ data:
           development:
             clientId: ${GOOGLE_CLIENT_ID}
             clientSecret: ${GOOGLE_CLIENT_SECRET}
+        guest:
+          dangerouslyAllowOutsideDevelopment: true
 
     proxy:
       skipInvalidProxies: true
@@ -102,7 +104,7 @@ data:
               url: temp
               token: temp
     permission:
-      enabled: false # Disabling the permission until we can use RBAC to test the pages using login as Guest.
+      enabled: false
       rbac:
         policies-csv-file: './rbac/rbac-policy.csv'
         admin:

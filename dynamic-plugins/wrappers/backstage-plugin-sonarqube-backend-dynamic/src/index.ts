@@ -1,1 +1,1 @@
-export { default } from '@backstage/plugin-sonarqube-backend';
+export { default } from '@backstage-community/plugin-sonarqube-backend';

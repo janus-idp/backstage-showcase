@@ -176,6 +176,13 @@ plugins:
         providers:
           gitlab: {}
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-org-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          gitlab: {}
+
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
     disabled: true
@@ -294,6 +301,31 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-argocd:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: ArgocdDeploymentSummary
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: "span 8"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isArgocdConfigured
+              - mountPoint: entity.page.cd/cards
+                importName: ArgocdDeploymentLifecycle
+                config:
+                  layout:
+                    gridColumn: '1 / -1'
+                  if:
+                    allOf:
+                      - isArgocdConfigured    
 
   # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
@@ -327,6 +359,8 @@ plugins:
                   if:
                     allOf:
                       - isAzureDevOpsAvailable
+  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories
+    disabled: true
 
   # Group: Jenkins
   - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
@@ -496,6 +530,8 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
 
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+
+  - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
 

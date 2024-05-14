@@ -51,6 +51,12 @@ jobs:
         run: |
           SHORT_SHA=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+          if [[ -f packages/app/src/build-metadata.json ]]; then
+            repoPR="${{ github.repository }}/pull/${{ github.event.number }}"
+            now="$(date -u +%FT%TZ)"
+            sed -i packages/app/src/build-metadata.json -r \
+              -e 's|("Last Commit:.+)|"Last Commit: '$repoPR' @ '$SHORT_SHA'"|'
+          fi
 
       - name: Build and Push with Buildx
         uses: ./.github/actions/docker-build

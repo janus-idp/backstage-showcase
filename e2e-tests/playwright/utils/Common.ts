@@ -1,8 +1,9 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { Page } from '@playwright/test';
+import { Browser, expect, Page, TestInfo } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
+import path from 'path';
 
 export class Common {
   page: Page;
@@ -15,6 +16,13 @@ export class Common {
 
   async loginAsGuest() {
     await this.page.goto('/');
+
+    // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
+    this.page.on('dialog', async dialog => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      await dialog.accept();
+    });
+
     await this.uiHelper.verifyHeading('Select a sign-in method');
     await this.uiHelper.clickButton('Enter');
     await this.uiHelper.waitForSideBarVisible();
@@ -35,22 +43,58 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
   }
 
-  async logintoGithub() {
+  private async logintoGithub() {
     await this.page.goto('https://github.com/login');
     await this.page.waitForSelector('#login_field');
     await this.page.fill('#login_field', process.env.GH_USER_ID);
     await this.page.fill('#password', process.env.GH_USER_PASS);
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP());
-    await this.page.waitForLoadState('networkidle');
+    await expect(this.page.locator('#app_totp')).toBeHidden({
+      timeout: 120000,
+    });
   }
 
   async loginAsGithubUser() {
     await this.logintoGithub();
     await this.page.goto('/');
+    await this.waitForLoad(240000);
     await this.uiHelper.clickButton('Sign In');
     await this.checkAndReauthorizeGithubApp();
     await this.uiHelper.waitForSideBarVisible();
+  }
+
+  /**
+   * Performs any action with retries.
+   * @param action A function that performs the desired action.
+   * @param retries Number of retries.
+   * @param retryInterval Time to wait between retries in milliseconds.
+   */
+  async performActionWithRetry<T>(
+    action: () => Promise<T>,
+    retries = 3,
+    retryInterval = 5000,
+  ): Promise<T> {
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        return await action();
+      } catch (error) {
+        lastError = error;
+        if (attempt < retries - 1) {
+          console.log(
+            `Attempt ${attempt + 1} failed, retrying after ${retryInterval}ms...`,
+          );
+          await new Promise(resolve => setTimeout(resolve, retryInterval));
+        } else {
+          console.log('All retries failed.');
+        }
+      }
+    }
+
+    // If all attempts fail, throw the last encountered error.
+    throw lastError;
   }
 
   async checkAndReauthorizeGithubApp() {
@@ -105,4 +149,15 @@ export class Common {
     const secret = process.env.GH_2FA_SECRET;
     return authenticator.generate(secret);
   }
+}
+
+export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
+  const context = await browser.newContext({
+    recordVideo: {
+      dir: `test-results/${path.parse(testInfo.file).name.replace('.spec', '')}`,
+      size: { width: 1280, height: 720 },
+    },
+  });
+  const page = await context.newPage();
+  return { page, context };
 }

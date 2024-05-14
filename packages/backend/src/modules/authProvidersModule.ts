@@ -180,7 +180,10 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
       return providers.oauth2Proxy.create({
         signIn: {
           async resolver({ result }, ctx) {
-            const name = result.getHeader('x-forwarded-preferred-username');
+            const name = process.env.OAUTH_USER_HEADER
+              ? result.getHeader(process.env.OAUTH_USER_HEADER)
+              : result.getHeader('x-forwarded-preferred-username') ||
+                result.getHeader('x-forwarded-user');
             if (!name) {
               throw new Error('Request did not contain a user');
             }
@@ -251,10 +254,13 @@ const authProvidersModule = createBackendModule({
       async init({ config, authProviders, logger }) {
         const providersConfig = config.getConfig('auth.providers');
         const authFactories: ProviderFactories = {};
-        providersConfig.keys().forEach(providerId => {
-          const factory = getAuthProviderFactory(providerId);
-          authFactories[providerId] = factory;
-        });
+        providersConfig
+          .keys()
+          .filter(key => key !== 'guest')
+          .forEach(providerId => {
+            const factory = getAuthProviderFactory(providerId);
+            authFactories[providerId] = factory;
+          });
 
         const providerFactories: ProviderFactories = {
           ...defaultAuthProviderFactories,

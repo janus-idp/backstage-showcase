@@ -1,4 +1,8 @@
 {
   "title": "RHDH Metadata",
-  "card": ["RHDH Version: 1.2.0", "Backstage Version: 1.23.4"]
+  "card": [
+    "RHDH Version: 1.2.0",
+    "Backstage Version: 1.26.5",
+    "Last Commit: repo @ 2024-05-10T14:59:23Z"
+  ]
 }

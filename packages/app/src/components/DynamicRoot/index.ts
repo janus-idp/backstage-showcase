@@ -1,1 +1,1 @@
-export { default } from './DynamicRoot';
+export { default } from './ScalprumRoot';

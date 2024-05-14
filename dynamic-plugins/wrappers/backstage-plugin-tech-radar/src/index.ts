@@ -1,12 +1,12 @@
-import { techRadarApiRef } from '@backstage/plugin-tech-radar';
-import { CustomTechRadar } from './api/CustomTechRadar';
+import { techRadarApiRef } from '@backstage-community/plugin-tech-radar';
 import {
   configApiRef,
   createApiFactory,
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
+import { CustomTechRadar } from './api/CustomTechRadar';
 
-export * from '@backstage/plugin-tech-radar';
+export * from '@backstage-community/plugin-tech-radar';
 
 export const TechRadarApi = createApiFactory({
   api: techRadarApiRef,

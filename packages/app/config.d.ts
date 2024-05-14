@@ -15,6 +15,12 @@ export interface Config {
        */
       fullLogo?: string;
       /**
+       * size Configuration for the full logo
+       * The following units are supported: <number>, px, em, rem, <percentage>
+       * @visibility frontend
+       */
+      fullLogoWidth?: string | number;
+      /**
        * Base64 URI for the icon logo
        * @visibility frontend
        */
@@ -81,6 +87,11 @@ export interface Config {
             };
           }[];
         };
+        entityTabs?: {
+          path: string;
+          title: string;
+          mountPoint: string;
+        }[];
         mountPoints?: {
           mountPoint: string;
           module?: string;

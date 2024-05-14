@@ -35,7 +35,8 @@
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
-      "groupName": ["DevDependencies (non-major)"]
+      "groupName": ["DevDependencies (non-major)"],
+      "automerge": true
     },
     {
       "matchPackagePatterns": [

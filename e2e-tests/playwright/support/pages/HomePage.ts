@@ -23,20 +23,26 @@ export class HomePage {
     quickAccessItem: string,
     expand = false,
   ) {
-    await this.page.waitForSelector(HomePagePO.MuiAccordion);
+    await this.page.waitForSelector(HomePagePO.MuiAccordion, {
+      state: 'visible',
+    });
+
     const sectionLocator = this.page
       .locator(HomePagePO.MuiAccordion)
       .filter({ hasText: section });
 
     if (expand) {
       await sectionLocator.click();
+      await this.page.waitForTimeout(500);
     }
 
-    await sectionLocator.waitFor();
     const itemLocator = sectionLocator
       .locator(`a div[class*="MuiListItemText-root"]`)
       .filter({ hasText: quickAccessItem });
+
     await itemLocator.waitFor({ state: 'visible' });
-    expect(itemLocator.isVisible()).toBeTruthy();
+
+    const isVisible = await itemLocator.isVisible();
+    expect(isVisible).toBeTruthy();
   }
 }

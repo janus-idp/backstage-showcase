@@ -3,15 +3,36 @@ import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
   private page: Page;
+  private selectors: { [key: string]: string };
 
   constructor(page: Page) {
     this.page = page;
+    this.selectors = {
+      Analyze: 'button#analyze',
+      Refresh: 'button#refresh',
+      Import: 'button#import',
+      'View Component': 'button#view-component',
+      'Register another': 'button#register-another',
+    };
+  }
+
+  getSelector(buttonName: string): string {
+    /*eslint-disable-next-line no-prototype-builtins*/
+    if (this.selectors.hasOwnProperty(buttonName)) {
+      return this.selectors[buttonName];
+    } else {
+      throw new Error(`Selector not defined for button: ${buttonName}`);
+    }
   }
 
   async verifyComponentInCatalog(kind: string, expectedRows: string[]) {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  async searchInputPlaceholder(searchText: string) {
+    await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
   async waitForHeaderTitle() {
@@ -38,6 +59,7 @@ export class UIhelper {
       await button.click();
     }
   }
+
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
@@ -77,8 +99,15 @@ export class UIhelper {
     await expect(element).toBeVisible();
   }
 
+  async isBtnVisible(text: string): Promise<boolean> {
+    const locator = `button:has-text("${text}")`;
+    await this.page.waitForSelector(locator);
+    const button = this.page.locator(locator);
+    return button.isVisible();
+  }
+
   async waitForSideBarVisible() {
-    await this.page.waitForSelector('nav a');
+    await this.page.waitForSelector('nav a', { timeout: 120000 });
   }
 
   async openSidebar(navBarText: string) {
@@ -104,6 +133,7 @@ export class UIhelper {
         .getByText(rowText, { exact: exact })
         .first();
       await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.waitFor({ state: 'attached' });
       await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }
@@ -126,10 +156,10 @@ export class UIhelper {
 
   async verifyHeading(heading: string) {
     const headingLocator = this.page
-      .locator(`h1, h2, h3, h4, h5, h6`)
+      .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
-    await headingLocator.waitFor();
+    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
 

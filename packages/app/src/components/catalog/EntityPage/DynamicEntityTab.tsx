@@ -5,29 +5,39 @@ import React from 'react';
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import Grid from '../Grid';
 
-export type TabProps = {
+export type DynamicEntityTabProps = {
   path: string;
   title: string;
   mountPoint: string;
-  if?: (e: Entity) => boolean;
+  if?: (entity: Entity) => boolean;
   children?: React.ReactNode;
 };
 
-const tab = ({
+/**
+ * Returns an configured route element suitable to use within an
+ * EntityLayout component that will load content based on the dynamic
+ * route and mount point configuration.  Accepts a {@link DynamicEntityTabProps}
+ * Note - only call this as a function from within an EntityLayout
+ * component
+ * @param param0
+ * @returns
+ */
+export const dynamicEntityTab = ({
   path,
   title,
   mountPoint,
   children,
   if: condition,
-}: TabProps) => (
+}: DynamicEntityTabProps) => (
   <EntityLayout.Route
+    key={`${path}`}
     path={path}
     title={title}
-    if={e =>
-      (condition ? condition(e) : Boolean(children)) ||
+    if={entity =>
+      (condition ? condition(entity) : Boolean(children)) ||
       getMountPointData<React.ComponentType>(`${mountPoint}/cards`)
         .flatMap(({ config }) => config.if)
-        .some(c => c(e))
+        .some(cond => cond(entity))
     }
   >
     {getMountPointData<React.ComponentType<React.PropsWithChildren>>(
@@ -42,19 +52,19 @@ const tab = ({
           React.ComponentType<React.PropsWithChildren>,
           React.ReactNode
         >(`${mountPoint}/cards`).map(
-          ({ Component, config, staticJSXContent }) => (
-            <EntitySwitch key={`${Component.displayName}`}>
-              <EntitySwitch.Case if={config.if}>
-                <Box sx={config.layout}>
-                  <Component {...config.props}>{staticJSXContent}</Component>
-                </Box>
-              </EntitySwitch.Case>
-            </EntitySwitch>
-          ),
+          ({ Component, config, staticJSXContent }, index) => {
+            return (
+              <EntitySwitch key={`${Component.displayName}-${index}`}>
+                <EntitySwitch.Case if={config.if}>
+                  <Box sx={config.layout}>
+                    <Component {...config.props}>{staticJSXContent}</Component>
+                  </Box>
+                </EntitySwitch.Case>
+              </EntitySwitch>
+            );
+          },
         )}
       </Grid>,
     )}
   </EntityLayout.Route>
 );
-
-export default tab;

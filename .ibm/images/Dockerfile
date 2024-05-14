@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.40.0-jammy
+FROM mcr.microsoft.com/playwright:v1.43.1-jammy
 
 ENV CI=1 \
   QT_X11_NO_MITSHM=1 \
@@ -70,6 +70,10 @@ RUN curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-lin
 RUN curl -fsSL -o /tmp/openshift-client-linux.tar.gz "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OC_VERSION}/openshift-client-linux-${OC_VERSION}.tar.gz" \
     && tar -xzvf /tmp/openshift-client-linux.tar.gz -C /usr/local/bin oc kubectl \
     && rm -rf /tmp/*
+
+# Install rsync
+RUN apt-get update -y && \
+    apt-get install -y rsync
 
 # Set environment variables to make Go work correctly
 ENV GOPATH /go

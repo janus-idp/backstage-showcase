@@ -14,23 +14,16 @@ While this package remains in an experimental phase and is a private package in 
 
 ### Backend plugins
 
-The backstage showcase application is still using the legacy backend system.
-So to be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be completed code-wise, as well as rebuilt with a dedicated CLI command.
+To be compatible with the showcase dynamic plugin support, and used as dynamic plugins, existing plugins must be based on, or compatible with, the new backend system, as well as rebuilt with a dedicated CLI command.
 
-#### Required code changes
+#### Add the Dynamic Plugin script
 
-In the old backend system, the wiring of the plugin in the application must be done manually, based on instructions generally passed in the readme of the plugin. This is obviously not compatible with the dynamic plugin support, which requires the plugin to be wired automatically.
-
-So there are some changes to be made to the plugin code, in order to make it compatible with the dynamic plugin support:
+There are some changes to be made to the plugin code, in order to make it compatible with the dynamic plugin support:
 
 1. The plugin must:
 
-- import the `@backstage/backend-dynamic-feature-service` package,
-- add the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
-- add the `export-dynamic` script entry,
-- add the following elements to the package `files` list:
-
-  `"dist-dynamic/*.*", "dist-dynamic/dist/**", "dist-dynamic/alpha/*"`
+- include the `@janus-idp/cli` dependency, which provides a new, required, `export-dynamic-plugin` command.
+- include the `export-dynamic` script entry,
 
 These recommended changes to the `package.json` are summarized below:
 
@@ -38,86 +31,22 @@ These recommended changes to the `package.json` are summarized below:
   ...
   "scripts": {
     ...
-    "export-dynamic": "janus-cli package export-dynamic-plugin"
-    ...
-  },
-  ...
-  "dependencies": {
-    ...
-    "@backstage/backend-dynamic-feature-service": "0.1.0",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-as-dependencies"
     ...
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.4.7"
-  },
-  ...
-  "files": [
-    ...
-    "dist-dynamic/*.*",
-    "dist-dynamic/dist/**",
-    "dist-dynamic/alpha/*"
-  ],
+    "@janus-idp/cli": "^1.7.7"
+  }
 ```
 
-1. A `src/dynamic/index.ts` file must be added, and must export a named entry point (`dynamicPluginInstaller`) of a specific type (`BackendDynamicPluginInstaller`) that will contain the code of the plugin wiring:
+#### Required entry points
 
-```ts
-import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
+The new backend system standard entrypoint (created using `createBackendPlugin()` or `createBackendModule()`) should be exported as the default export of either the main package or of an `alpha` package (if the new backend support is still provided as `alpha` APIs).
 
-export const dynamicPluginInstaller: BackendDynamicPluginInstaller = {
-  kind: 'legacy',
+So this doesn't add any additional requirement on top of the standard plugin development guidelines of the new backend system.
 
-  // Contributions of the plugin to the application.
-  // Here optional fields allow embedding the code which is usually described in the plugin readme for manual addition.
-  // If a contribution is not used, the field should be omitted.
-
-  router: {
-    pluginID: 'router plugin ID, used as REST endpoint suffix',
-    createPlugin(env) {
-      // Return a promise to your router.
-      return Promise.reject(new Error('Not implemented'));
-    },
-  },
-
-  events(eventsBackend, env) {
-    // Do something with the events backend (add subscribers or publishers)
-    // and return a list of HttpPostIngressOptions that will be
-    // registered with the http event endpoint.
-    return [];
-  },
-
-  catalog(builder, env) {
-    // Add catalog contributions, such as
-    // entity providers or location analyzers.
-  },
-
-  scaffolder(env) {
-    // Return an array of scaffolder actions (TemplateAction)
-    // that will be registered with the scaffolder.
-    return [];
-  },
-
-  search(indexBuilder, schedule, env) {
-    // Add search contributions, such as
-    // collators and decorators.
-  },
-};
-```
-
-1. The `dynamicPluginInstaller` entry point must be exported in the main `src/index.ts` file:
-
-```ts
-export * from './dynamic/index';
-```
-
-#### Note about the new backend system support
-
-While the Showcase application has not yet integrated the new backend system, the underlying mechanism responsible for discovering and loading dynamic backend plugins is already compatible with both the new and old backend systems.
-
-As the new backend system gains broader acceptance and is implemented in the Janus Showcase, it is advisable to adapt dynamic backend plugins to rely on this new system. Therefore, we **strongly recommend** creating the anticipated entry points for the new backend system (using `createBackendPlugin` or `createBackendModule`) when implementing code changes to enable a backend plugin's dynamic functionality. This proactive step ensures preparedness for the eventual transition to the new backend system.
-
-For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/dynamic/alpha.ts#L14).
+For a practical example of a dynamic plugin entry point built upon the new backend system, please refer to the [Janus plugins repository](https://github.com/janus-idp/backstage-plugins/blob/main/plugins/aap-backend/src/module.ts#L25).
 
 #### Exporting the backend plugin as a dynamic plugin package
 
@@ -185,7 +114,7 @@ These recommended changes to the `package.json` are summarized below:
   },
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.4.7"
+    "@janus-idp/cli": "^1.7.7"
   },
   ...
   "files": [
@@ -613,7 +542,7 @@ This configuration allows you to bind to existing plugins and their routes as we
 
 This section aims to allow users dynamic extension of [Catalog Components](https://backstage.io/docs/plugins/composability/#catalog-components), but can be used to extend additional views in the future as well.
 
-Mount points are defined identifiers available across the applications. These points specifically allow users to extend existing pages with additional content.
+Mount points are defined identifiers available across the application. These points specifically allow users to extend existing pages with additional content.
 
 The following mount points are available:
 
@@ -686,7 +615,57 @@ Each mount point supports additional configuration:
   - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
   - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`
 
-#### Provide additional Utility APIs
+#### Customizing and Adding Entity tabs
+
+Out of the box the frontend system provides an opinionated set of tabs for catalog entity views. This set of tabs can be further customized and extended as needed via the `entityTabs` configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      entityTabs:
+        # Adding a new tab
+        - path: /new-path
+          title: My New Tab
+          mountPoint: entity.page.my-new-tab
+        # Change an existing tab's title or mount point
+        - path: /
+          title: General
+          mountPoint: entity.page.overview #this can be customized too
+```
+
+Each entity tab entry requires the following attributes:
+
+- `path`: Specifies the sub-path route in the catalog where this tab will be available
+- `title`: The title that is displayed to the user
+- `mountPoint`: The base mount point name that will be available on the tab. This name will be expanded to create two mount points per tab, one appended with `/context` and the second appended with `/cards`.
+
+Dynamic frontend plugins can then be configured to target the mount points exposed by the `entityTabs` configuration.
+
+Here are the default catalog entity routes in the default order:
+
+| Route             | Title               | Mount Point                  | Entity Kind                          |
+| ----------------- | ------------------- | ---------------------------- | ------------------------------------ |
+| `/`               | Overview            | `entity.page.overview`       | Any                                  |
+| `/topology`       | Topology            | `entity.page.topology`       | Any                                  |
+| `/issues`         | Issues              | `entity.page.issues`         | Any                                  |
+| `/pr`             | Pull/Merge Requests | `entity.page.pull-requests`  | Any                                  |
+| `/ci`             | CI                  | `entity.page.ci`             | Any                                  |
+| `/cd`             | CD                  | `entity.page.cd`             | Any                                  |
+| `/kubernetes`     | Kubernetes          | `entity.page.kubernetes`     | Any                                  |
+| `/image-registry` | Image Registry      | `entity.page.image-registry` | Any                                  |
+| `/monitoring`     | Monitoring          | `entity.page.monitoring`     | Any                                  |
+| `/lighthouse`     | Lighthouse          | `entity.page.lighthouse`     | Any                                  |
+| `/api`            | Api                 | `entity.page.api`            | `kind: Service` or `kind: Component` |
+| `/dependencies`   | Dependencies        | `entity.page.dependencies`   | `kind: Component`                    |
+| `/docs`           | Docs                | `entity.page.docs`           | Any                                  |
+| `/definition`     | Definition          | `entity.page.definition`     | `kind: API`                          |
+| `/system`         | Diagram             | `entity.page.diagram`        | `kind: System`                       |
+
+The visibility of a tab is derived from the kind of entity that is being displayed along with the visibility guidance mentioned in "[Using mount points](#using-mount-points)".
+
+### Provide additional Utility APIs
 
 Backstage offers an Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
 
@@ -709,4 +688,33 @@ dynamicPlugins:
 Each plugin can expose multiple API Factories and each factory is required to define its `importName` (if it differs from the default export).
 
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
+- `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+
+### Provide custom Scaffolder field extensions
+
+The Backstage scaffolder component supports specifying [custom form fields](https://backstage.io/docs/features/software-templates/writing-custom-field-extensions/#creating-a-field-extension) for the software template wizard, for example:
+
+```typescript
+export const MyNewFieldExtension = scaffolderPlugin.provide(
+  createScaffolderFieldExtension({
+    name: 'MyNewFieldExtension',
+    component: MyNewField,
+    validation: myNewFieldValidator,
+  }),
+);
+```
+
+These components can be contributed by plugins by exposing the scaffolder field extension component via the `scaffolderFieldExtensions` configuration:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      scaffolderFieldExtensions:
+        - importName: MyNewFieldExtension
+```
+
+A plugin can specify multiple field extensions, in which case each field extension will need to supply an `importName` for each field extension.
+
+- `importName` is an optional import name that should reference the value returned the scaffolder field extension API
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.

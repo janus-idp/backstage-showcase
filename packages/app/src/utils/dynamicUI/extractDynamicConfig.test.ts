@@ -1,19 +1,9 @@
-import { AppConfig } from '@backstage/config';
 import extractDynamicConfig, {
+  DynamicPluginConfig,
   conditionsArrayMapper,
   configIfToCallable,
 } from './extractDynamicConfig';
-import { defaultConfigLoader } from '@backstage/core-app-api';
 import { Entity } from '@backstage/catalog-model';
-
-jest.mock('@backstage/core-app-api', () => ({
-  ...jest.requireActual('@backstage/core-app-api'),
-  defaultConfigLoader: jest.fn(),
-}));
-
-const mockedDefaultConfigLoader = defaultConfigLoader as jest.MockedFunction<
-  typeof defaultConfigLoader
->;
 
 describe('conditionsArrayMapper', () => {
   it.each([
@@ -153,16 +143,17 @@ describe('extractDynamicConfig', () => {
       'no frontend dynamic plugins are defined',
       { dynamicPlugins: { frontend: {} } },
     ],
-  ])('returns empty data when %s', async (_, source) => {
-    mockedDefaultConfigLoader.mockResolvedValue([source] as AppConfig[]);
-    const config = await extractDynamicConfig();
+  ])('returns empty data when %s', (_, source) => {
+    const config = extractDynamicConfig(source as DynamicPluginConfig);
     expect(config).toEqual({
       routeBindings: [],
       dynamicRoutes: [],
+      entityTabs: [],
       mountPoints: [],
       appIcons: [],
       routeBindingTargets: [],
       apiFactories: [],
+      scaffolderFieldExtensions: [],
     });
   });
 
@@ -438,23 +429,72 @@ describe('extractDynamicConfig', () => {
         ],
       },
     ],
-  ])('parses %s', async (_, source, output) => {
-    mockedDefaultConfigLoader.mockResolvedValue([
+    [
+      'a scaffolder field extension',
       {
-        context: 'foo',
-        data: {
-          dynamicPlugins: { frontend: { 'janus-idp.plugin-foo': source } },
-        },
+        scaffolderFieldExtensions: [{ importName: 'foo', module: 'FooRoot' }],
       },
-    ] as AppConfig[]);
-    const config = await extractDynamicConfig();
+      {
+        scaffolderFieldExtensions: [
+          {
+            importName: 'foo',
+            module: 'FooRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+        ],
+      },
+    ],
+    [
+      'a scaffolder field extension; default module',
+      {
+        scaffolderFieldExtensions: [{ importName: 'foo' }],
+      },
+      {
+        scaffolderFieldExtensions: [
+          {
+            importName: 'foo',
+            module: 'PluginRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+        ],
+      },
+    ],
+    [
+      'multiple scaffolder field extensions',
+      {
+        scaffolderFieldExtensions: [
+          { importName: 'foo', module: 'FooRoot' },
+          { importName: 'bar', module: 'BarRoot' },
+        ],
+      },
+      {
+        scaffolderFieldExtensions: [
+          {
+            importName: 'foo',
+            module: 'FooRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+          {
+            importName: 'bar',
+            module: 'BarRoot',
+            scope: 'janus-idp.plugin-foo',
+          },
+        ],
+      },
+    ],
+  ])('parses %s', (_, source: any, output) => {
+    const config = extractDynamicConfig({
+      frontend: { 'janus-idp.plugin-foo': source },
+    });
     expect(config).toEqual({
       routeBindings: [],
       routeBindingTargets: [],
       dynamicRoutes: [],
+      entityTabs: [],
       mountPoints: [],
       appIcons: [],
       apiFactories: [],
+      scaffolderFieldExtensions: [],
       ...output,
     });
   });

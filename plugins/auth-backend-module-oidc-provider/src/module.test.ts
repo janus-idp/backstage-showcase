@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import request from 'supertest';
-import { decodeOAuthState } from '@backstage/plugin-auth-node';
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
 import {
   mockServices,
   setupRequestMockHandlers,
   startTestBackend,
 } from '@backstage/backend-test-utils';
+import { decodeOAuthState } from '@backstage/plugin-auth-node';
 import { Server } from 'http';
 import { JWK, SignJWT, exportJWK, generateKeyPair } from 'jose';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import request from 'supertest';
 import { authModuleOidcProvider } from './module';
 
 describe('authModuleOidcProvider', () => {
@@ -184,7 +184,7 @@ describe('authModuleOidcProvider', () => {
     });
     expect(nonceCookie).toBeDefined();
 
-    const startUrl = new URL(startResponse.get('location'));
+    const startUrl = new URL(startResponse.get('location') ?? '');
     expect(startUrl.origin).toBe('https://oidc.test');
     expect(startUrl.pathname).toBe('/oauth2/authorize');
     expect(Object.fromEntries(startUrl.searchParams)).toEqual({
