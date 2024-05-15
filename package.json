@@ -38,7 +38,9 @@
     ]
   },
   "dependencies": {
-    "node-gyp": "9.4.1"
+    "node-gyp": "9.4.1",
+    "patch-package": "8.0.0",
+    "postinstall-postinstall": "2.1.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
@@ -48,8 +50,6 @@
     "husky": "8.0.3",
     "ip": "1.1.9",
     "lint-staged": "15.2.2",
-    "patch-package": "8.0.0",
-    "postinstall-postinstall": "2.1.0",
     "prettier": "3.2.5",
     "sanitize-html": "2.13.0",
     "turbo": "1.13.3",
