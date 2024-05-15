@@ -3,7 +3,7 @@ import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
 
 let page: Page;
-test.describe.skip('Google signin happy path', () => {
+test.describe('Google signin happy path', () => {
   let uiHelper: UIhelper;
   let common: Common;
   const google_user_id = process.env.GOOGLE_USER_ID;
