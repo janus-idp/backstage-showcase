@@ -117,6 +117,7 @@ export class Common {
       });
     });
   }
+
   async googleSignIn(email: string) {
     await new Promise<void>(resolve => {
       this.page.once('popup', async popup => {
@@ -128,6 +129,12 @@ export class Common {
         await locator.waitFor({ state: 'visible' });
         await locator.click({ force: true });
         await popup.waitForTimeout(3000);
+
+        await popup.locator("[name=Passwd]").fill(process.env.GOOGLE_USER_PASS);
+        await popup.locator("[name=Passwd]").press("Enter");
+        await popup.waitForTimeout(3500);
+        await popup.locator("[name=totpPin]").fill(this.getGoogle2FAOTP());
+        await popup.locator("[name=totpPin]").press("Enter");
         await popup
           .getByRole('button', { name: /Continue|Weiter/ })
           .click({ timeout: 60000 });
@@ -149,6 +156,12 @@ export class Common {
     const secret = process.env.GH_2FA_SECRET;
     return authenticator.generate(secret);
   }
+
+  getGoogle2FAOTP(): string {
+    const secret = process.env.GOOGLE_2FA_SECRET;
+    return authenticator.generate(secret);
+  }
+
 }
 
 export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
