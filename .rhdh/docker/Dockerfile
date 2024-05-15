@@ -48,6 +48,7 @@ RUN chmod +x $YARN
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
@@ -213,6 +214,9 @@ RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
 # Downstream only - copy embedded dynamic plugins from $REMOTE_SOURCES_DIR
 COPY --from=build $REMOTE_SOURCES_DIR/dynamic-plugins/dist/ ./dynamic-plugins/dist/
+
+# include patch files in final container just for reference
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./

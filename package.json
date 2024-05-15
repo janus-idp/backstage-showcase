@@ -7,6 +7,7 @@
   },
   "scripts": {
     "prepare": "husky install",
+    "postinstall": "patch-package",
     "ci": "turbo run lint build test",
     "start": "turbo run start --parallel",
     "start-backend": "turbo run start --filter=backend",
@@ -37,7 +38,9 @@
     ]
   },
   "dependencies": {
-    "node-gyp": "9.4.1"
+    "node-gyp": "9.4.1",
+    "patch-package": "8.0.0",
+    "postinstall-postinstall": "2.1.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
