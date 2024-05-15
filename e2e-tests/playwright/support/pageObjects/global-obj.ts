@@ -6,6 +6,7 @@ export const waitsObjs = {
 export const UIhelperPO = {
   MuiButtonLabel: 'span[class^="MuiButton-label"]',
   MuiBoxLabel: 'div[class*="MuiBox-root"] label',
+  MuiTableHead: 'th[class*="MuiTableCell-root"]',
   MuiTableCell: 'td[class*="MuiTableCell-root"]',
   MuiTableRow: 'tr[class*="MuiTableRow-root"]',
   MuiCard: cardHeading =>
