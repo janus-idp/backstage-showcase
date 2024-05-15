@@ -699,11 +699,6 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
-jssha@~3.3.1:
-  version "3.3.1"
-  resolved "https://registry.npmjs.org/jssha/-/jssha-3.3.1.tgz"
-  integrity sha512-VCMZj12FCFMQYcFLPRm/0lOBbLi8uM2BhXPTqw3U4YAfs4AZfiApOoBLoN8cQE60Z50m1MYMTQVCfgF/KaCVhQ==
-
 levn@^0.4.1:
   version "0.4.1"
   resolved "https://registry.npmjs.org/levn/-/levn-0.4.1.tgz"
@@ -800,13 +795,6 @@ optionator@^0.9.3:
     levn "^0.4.1"
     prelude-ls "^1.2.1"
     type-check "^0.4.0"
-
-otpauth@^9.2.4:
-  version "9.2.4"
-  resolved "https://registry.npmjs.org/otpauth/-/otpauth-9.2.4.tgz"
-  integrity sha512-t0Nioq2Up2ZaT5AbpXZLTjrsNtLc/g/rVSaEThmKLErAuT9mrnAKJryiPOKc3rCH+3ycWBgKpRHYn+DHqfaPiQ==
-  dependencies:
-    jssha "~3.3.1"
 
 otplib@12.0.1:
   version "12.0.1"
