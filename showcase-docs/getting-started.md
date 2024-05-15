@@ -4,7 +4,10 @@ There are several different methods for running the Backstage Showcase app today
 
 ## Telemetry collection
 
-The telemetry data collection feature is used to enhance your experience with the application without compromising your privacy. To enable or disable telemetry data collection, you can configure the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin accordingly.
+The telemetry data collection feature is used to enhance your experience with the application without compromising your privacy. 
+This is enabled by default. 
+To disable telemetry data collection, you need to disable the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin as documented below.
+
 
 - **Anonymous configuration**:
 
@@ -20,6 +23,63 @@ The telemetry data collection feature is used to enhance your experience with th
 The telemetry data will only be used for internal analysis and product improvements. The collected data is analyzed to understand user interactions with the application while maintaining user anonymity and privacy.
 
 To enable or disable telemetry data collection and customize a telemetry destination, see the following sections.
+
+
+
+### Disable Telemetry
+
+To turn off the telemetry feature, you must disable the `analytics-provider-segment` plugin either using the Helm Chart or the RHDH Operator.
+
+NOTE: If the `analytics-provider-segment` plugin is already present in your dynamic plugins configuration, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
+
+#### Using Helm Chart
+
+Add the following code in your Helm configuration file:
+
+```yaml
+global:
+  dynamic:
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+        disabled: true
+```
+
+#### Using RHDH Operator
+
+When using RHDH Operator, you must modify the `ConfigMap` file created for dynamic plugin configuration. You specify the name of this `ConfigMap` file in the `dynamicPluginsConfigMapName` field of your `Backstage` custom resource. Usually, the `ConfigMap` file is named as `dynamic-plugins-rhdh`.
+Add the following code in your `ConfigMap` file:
+
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins-rhdh
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins:
+      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+        disabled: true
+```
+
+### Disable Telemetry for Local Development
+
+By default, the `analytics-provider-segment` plugin is disabled when you run your application locally without using the `dynamic-plugins.default.yaml` file.
+However, if you run your application using the `dynamic-plugins.default.yaml` file, you can disable the `analytics-provider-segment` plugin as shown in the following example:
+
+```yaml
+dynamicPlugins:
+  plugins:
+    - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      disabled: true
+```
+
+Than delete the `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment` plugin directory, to stop plugin from loading.
+
+### Disabling Telemetry in Continuous Integration (CI) Environments
+
+To disable telemetry while running Backstage in a CI environment, set the value of the `SEGMENT_TEST_MODE` environment variable to `true`. This action deactivates telemetry transmissions.
 
 ### Enable Telemetry
 
@@ -92,60 +152,6 @@ extraEnvs:
 
 If you wish to subsequently disable telemetry data collection, use one of the following methods described below.
 
-### Disable Telemetry
-
-To turn off the telemetry feature, you must disable the `analytics-provider-segment` plugin either using the Helm Chart or the RHDH Operator.
-
-NOTE: If the `analytics-provider-segment` plugin is already present in your dynamic plugins configuration, set the value of the `plugins.disabled` parameter to `true` to disable telemetry, or `false` to enable it.
-
-#### Using Helm Chart
-
-Add the following code in your Helm configuration file:
-
-```yaml
-global:
-  dynamic:
-    plugins:
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
-        disabled: true
-```
-
-#### Using RHDH Operator
-
-When using RHDH Operator, you must modify the `ConfigMap` file created for dynamic plugin configuration. You specify the name of this `ConfigMap` file in the `dynamicPluginsConfigMapName` field of your `Backstage` custom resource. Usually, the `ConfigMap` file is named as `dynamic-plugins-rhdh`.
-Add the following code in your `ConfigMap` file:
-
-```yaml
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: dynamic-plugins-rhdh
-data:
-  dynamic-plugins.yaml: |
-    includes:
-      - dynamic-plugins.default.yaml
-    plugins:
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
-        disabled: true
-```
-
-### Disable Telemetry for Local Development
-
-By default, the `analytics-provider-segment` plugin is disabled when you run your application locally without using the `dynamic-plugins.default.yaml` file.
-However, if you run your application using the `dynamic-plugins.default.yaml` file, you can disable the `analytics-provider-segment` plugin as shown in the following example:
-
-```yaml
-dynamicPlugins:
-  plugins:
-    - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
-      disabled: true
-```
-
-Than delete the `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment` plugin directory, to stop plugin from loading.
-
-### Disabling Telemetry in Continuous Integration (CI) Environments
-
-To disable telemetry while running Backstage in a CI environment, set the value of the `SEGMENT_TEST_MODE` environment variable to `true`. This action deactivates telemetry transmissions.
 
 ## Running Locally with a basic configuration
 
