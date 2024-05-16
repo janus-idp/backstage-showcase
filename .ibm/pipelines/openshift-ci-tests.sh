@@ -6,6 +6,8 @@ LOGFILE="test-log"
 JUNIT_RESULTS="junit-results.xml"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
+TMPDIR=$(mktemp -d)
+
 
 cleanup() {
   echo "Cleaning up before exiting"
@@ -13,6 +15,7 @@ cleanup() {
   # helm uninstall ${RELEASE_NAME} -n ${NAME_SPACE}
   # oc delete namespace ${NAME_SPACE}
   rm -rf ~/tmpbin
+  rm -rf $TMPDIR
 }
 
 trap cleanup EXIT
@@ -289,17 +292,22 @@ initiate_deployments() {
   install_helm
   uninstall_helmchart ${NAME_SPACE} ${RELEASE_NAME}
 
+  # There is currently no way to use helm cli to add values to an existing array.
+  # The following is a workaround to add new env variable to upstream.backstage.extraEnvVars without overriding the existing value.
+  helm show values ${HELM_REPO_NAME}/${HELM_IMAGE_NAME}  --version ${CHART_VERSION} > $TMPDIR/values.yaml
+  yq eval '.upstream.backstage.extraEnvVars += [{"name": "SEGMENT_TEST_MODE", "value": "true"}]' -i $TMPDIR/values.yaml
+
   cd $DIR
   apply_yaml_files $DIR "$NAME_SPACE"
   add_helm_repos
   echo "Deploying Image : $TAG_NAME"
-  helm upgrade -i "${RELEASE_NAME}" -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+  helm upgrade -i "${RELEASE_NAME}" -n ${NAME_SPACE} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME} --values $TMPDIR/values.yaml
 
   configure_namespace ${NAME_SPACE_RBAC}
   installPipelinesOperator $DIR
   uninstall_helmchart ${NAME_SPACE_RBAC} ${RELEASE_NAME_RBAC}
   apply_yaml_files $DIR "${NAME_SPACE_RBAC}"
-  helm upgrade -i ${RELEASE_NAME_RBAC} -n ${NAME_SPACE_RBAC} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+  helm upgrade -i ${RELEASE_NAME_RBAC} -n ${NAME_SPACE_RBAC} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME} --values $TMPDIR/values.yaml
 }
 
 check_and_test() {
