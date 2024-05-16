@@ -7,6 +7,7 @@ LOGFILE="test-log"
 JUNIT_RESULTS="junit-results.xml"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
+OVERALL_RESULT=0
 
 cleanup() {
   echo "Cleaning up before exiting"
@@ -235,8 +236,12 @@ run_tests() {
 
   droute_send $release_name $project
 
-  echo ${RESULT}
+  echo "$project RESULT: $RESULT"
+  if [ "${RESULT}" -ne 0 ]; then
+    OVERALL_RESULT=1
+  fi
 }
+
 
 check_backstage_running() {
   local release_name=$1
@@ -300,7 +305,7 @@ initiate_deployments() {
   installPipelinesOperator $DIR
   uninstall_helmchart ${NAME_SPACE_RBAC} ${RELEASE_NAME_RBAC}
   apply_yaml_files $DIR "${NAME_SPACE_RBAC}"
-  helm upgrade -i ${RELEASE_NAME_RBAC} -n ${NAME_SPACE_RBAC} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
+  helm upgrade -i ${RELEASE_NAME_RBAC} -n ${NAME_SPACE_RBAC} ${HELM_REPO_NAME}/${HELM_IMAGE_NAME} --version ${CHART_VERSION} -f $DIR/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME} --set global.clusterRouterBase=${K8S_CLUSTER_ROUTER_BASE} --set upstream.backstage.image.tag=${TAG_NAME}
 }
 
 check_and_test() {
@@ -312,7 +317,7 @@ check_and_test() {
   oc get pods -n $namespace
   if [ $backstage_status -ne 0 ]; then
     echo "Backstage is not running. Exiting..."
-    exit 1
+    OVERALL_RESULT=1
   fi
   run_tests $release_name $namespace
 }
@@ -343,6 +348,7 @@ main() {
   initiate_deployments
   check_and_test ${RELEASE_NAME} ${NAME_SPACE}
   check_and_test ${RELEASE_NAME_RBAC} ${NAME_SPACE_RBAC}
+  exit $OVERALL_RESULT
 }
 
 main
