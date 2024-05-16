@@ -4,10 +4,11 @@ There are several different methods for running the Backstage Showcase app today
 
 ## Telemetry collection
 
-The telemetry data collection feature is used to enhance your experience with the application without compromising your privacy. 
-This is enabled by default. 
-To disable telemetry data collection, you need to disable the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin as documented below.
+The telemetry data collection feature enhances your experience with the application without compromising your privacy.
 
+**Telemetry data collection is enabled by default.**
+
+To disable telemetry data collection, you need to disable the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin as documented below.
 
 - **Anonymous configuration**:
 
@@ -23,8 +24,6 @@ To disable telemetry data collection, you need to disable the [`@janus-idp/backs
 The telemetry data will only be used for internal analysis and product improvements. The collected data is analyzed to understand user interactions with the application while maintaining user anonymity and privacy.
 
 To enable or disable telemetry data collection and customize a telemetry destination, see the following sections.
-
-
 
 ### Disable Telemetry
 
@@ -47,7 +46,7 @@ global:
 #### Using RHDH Operator
 
 When using RHDH Operator, you must modify the `ConfigMap` file created for dynamic plugin configuration. You specify the name of this `ConfigMap` file in the `dynamicPluginsConfigMapName` field of your `Backstage` custom resource. Usually, the `ConfigMap` file is named as `dynamic-plugins-rhdh`.
-Add the following code in your `ConfigMap` file:
+Add the following code to your `ConfigMap`` file:
 
 ```yaml
 kind: ConfigMap
@@ -129,7 +128,7 @@ spec:
 
 ### Customizing Telemetry Destination
 
-The `analytics-provider-segment` plugin is configured to send data to Red Hat by default. To change the destination that receives telemetry data, set the value of the `SEGMENT_WRITE_KEY` environment variable in your Helm configuration file as shown in the following examples.
+By default, the `analytics-provider-segment` plugin is configured to send data to Red Hat. To change the destination that receives telemetry data, set the value of the `SEGMENT_WRITE_KEY` environment variable in your Helm configuration file as shown in the following examples.
 
 #### Example using Helm Chart
 
@@ -151,7 +150,6 @@ extraEnvs:
 ```
 
 If you wish to subsequently disable telemetry data collection, use one of the following methods described below.
-
 
 ## Running Locally with a basic configuration
 
