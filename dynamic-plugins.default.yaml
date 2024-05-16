@@ -325,7 +325,7 @@ plugins:
                     gridColumn: '1 / -1'
                   if:
                     allOf:
-                      - isArgocdConfigured    
+                      - isArgocdConfigured
 
   # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
@@ -844,7 +844,7 @@ plugins:
                     height: 800
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
-    disabled: true
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
