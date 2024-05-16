@@ -1,14 +1,16 @@
 diff --git a/node_modules/@backstage/plugin-app-backend/README.md b/node_modules/@backstage/plugin-app-backend/README.md
-index 0f0c235..71e8093 100644
+index 0f0c235..7043adf 100644
 --- a/node_modules/@backstage/plugin-app-backend/README.md
 +++ b/node_modules/@backstage/plugin-app-backend/README.md
-@@ -2,6 +2,10 @@
+@@ -2,6 +2,12 @@
  
  This backend plugin can be installed to serve static content of a Backstage app.
  
 +NOTE: This plugin has been patched to manually apply this change:
 +
 +https://github.com/backstage/backstage/pull/24779/commits/fb398264c67c0a58f42ef512f74bf9c7a9a5f559
++
++Once @backstage/plugin-app-backend 0.3.67 is available, we may be able to drop this patch in favour of the released package.
 +
  ## Installation
  

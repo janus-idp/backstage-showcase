@@ -162,11 +162,12 @@ RUN find dynamic-plugins -maxdepth 1 -mindepth 1 -type d -not -name dist -exec r
 
 # Downstream only - files already exist, nothing to copy; next line for debugging only
 # RUN ls -l $CONTAINER_SOURCE/ $CONTAINER_SOURCE/packages/backend/dist/
-
 ENV TARBALL_PATH=./packages/backend/dist
+
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
   rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
-
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
+  
 # Copy app-config files needed in runtime
 # Upstream only
 # COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
