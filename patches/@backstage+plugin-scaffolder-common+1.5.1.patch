@@ -1,0 +1,1706 @@
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/CHANGELOG.md b/node_modules/@backstage/plugin-scaffolder-common/CHANGELOG.md
+deleted file mode 100644
+index ed58b28..0000000
+--- a/node_modules/@backstage/plugin-scaffolder-common/CHANGELOG.md
++++ /dev/null
+@@ -1,662 +0,0 @@
+-# @backstage/plugin-scaffolder-common
+-
+-## 1.5.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.13
+-  - @backstage/catalog-model@1.4.5
+-  - @backstage/types@1.1.1
+-
+-## 1.5.1-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.13-next.1
+-  - @backstage/catalog-model@1.4.5-next.0
+-  - @backstage/types@1.1.1
+-
+-## 1.5.1-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.13-next.0
+-  - @backstage/catalog-model@1.4.5-next.0
+-  - @backstage/types@1.1.1
+-
+-## 1.5.0
+-
+-### Minor Changes
+-
+-- 11b9a08: Introduced the first version of recoverable tasks.
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.4
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.12
+-
+-## 1.5.0-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.4-next.0
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.12
+-
+-## 1.5.0-next.0
+-
+-### Minor Changes
+-
+-- 11b9a08: Introduced the first version of recoverable tasks.
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.12
+-
+-## 1.4.5
+-
+-### Patch Changes
+-
+-- 178b8d8: Updated Template.v1beta3.schema.json, added a missing "presentation" field
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.12
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-
+-## 1.4.4
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.11
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-
+-## 1.4.3
+-
+-### Patch Changes
+-
+-- 2e0cef42ab: Add missing required property `type` in `Template.v1beta3.schema.json` schema
+-- 76d07da66a: Make it possible to define control buttons text (Back, Create, Review) per template
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.10
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-
+-## 1.4.3-next.1
+-
+-### Patch Changes
+-
+-- 76d07da66a: Make it possible to define control buttons text (Back, Create, Review) per template
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.9
+-
+-## 1.4.3-next.0
+-
+-### Patch Changes
+-
+-- 2e0cef42ab: Add missing required property `type` in `Template.v1beta3.schema.json` schema
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.9
+-
+-## 1.4.2
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.3
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.9
+-
+-## 1.4.2-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.3-next.0
+-  - @backstage/types@1.1.1
+-  - @backstage/plugin-permission-common@0.7.9-next.0
+-
+-## 1.4.1
+-
+-### Patch Changes
+-
+-- 406b786a2a2c: Mark package as being free of side effects, allowing more optimized Webpack builds.
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.2
+-  - @backstage/plugin-permission-common@0.7.8
+-  - @backstage/types@1.1.1
+-
+-## 1.4.1-next.2
+-
+-### Patch Changes
+-
+-- 406b786a2a2c: Mark package as being free of side effects, allowing more optimized Webpack builds.
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.2-next.2
+-  - @backstage/plugin-permission-common@0.7.8-next.2
+-  - @backstage/types@1.1.1-next.0
+-
+-## 1.4.1-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.2-next.1
+-  - @backstage/plugin-permission-common@0.7.8-next.1
+-  - @backstage/types@1.1.0
+-
+-## 1.4.1-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.2-next.0
+-  - @backstage/plugin-permission-common@0.7.8-next.0
+-  - @backstage/types@1.1.0
+-
+-## 1.4.0
+-
+-### Minor Changes
+-
+-- e514aac3eac0: Introduce `each` property on action steps, allowing them to be ran repeatedly.
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.1
+-  - @backstage/types@1.1.0
+-  - @backstage/plugin-permission-common@0.7.7
+-
+-## 1.3.2
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.1
+-  - @backstage/types@1.1.0
+-  - @backstage/plugin-permission-common@0.7.7
+-
+-## 1.3.2-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.1-next.0
+-  - @backstage/types@1.1.0
+-  - @backstage/plugin-permission-common@0.7.7-next.0
+-
+-## 1.3.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/types@1.1.0
+-  - @backstage/catalog-model@1.4.0
+-  - @backstage/plugin-permission-common@0.7.6
+-
+-## 1.3.1-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.0-next.1
+-  - @backstage/types@1.0.2
+-  - @backstage/plugin-permission-common@0.7.6-next.0
+-
+-## 1.3.1-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.4.0-next.0
+-  - @backstage/plugin-permission-common@0.7.6-next.0
+-  - @backstage/types@1.0.2
+-
+-## 1.3.0
+-
+-### Minor Changes
+-
+-- 82e10a6939c: Add support for Markdown text blob outputs from templates
+-- 67115f532b8: Expose scaffolder permissions in new sub-aggregations.
+-
+-  In addition to exporting a list of all scaffolder permissions in `scaffolderPermissions`, scaffolder-common now exports `scaffolderTemplatePermissions` and `scaffolderActionPermissions`, which contain subsets of the scaffolder permissions separated by resource type.
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.3.0
+-  - @backstage/types@1.0.2
+-  - @backstage/plugin-permission-common@0.7.5
+-
+-## 1.3.0-next.0
+-
+-### Minor Changes
+-
+-- 82e10a6939c: Add support for Markdown text blob outputs from templates
+-
+-## 1.2.7
+-
+-### Patch Changes
+-
+-- 65e989f4018: Added permissions for authorizing parameters and steps
+-- 48da4c46e45: Export `typeguard` for `isTemplateEntityV1beta3`
+-- bcae5aaf25c: Added permissions for authorizing actions
+-- 65e989f4018: Define optional `backstage:permissions` property to parameters and steps used to authorize part of the template using the permission framework
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.5
+-  - @backstage/catalog-model@1.3.0
+-  - @backstage/types@1.0.2
+-
+-## 1.2.7-next.2
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.3.0-next.0
+-  - @backstage/types@1.0.2
+-  - @backstage/plugin-permission-common@0.7.5-next.0
+-
+-## 1.2.7-next.1
+-
+-### Patch Changes
+-
+-- 65e989f4018: Added permissions for authorizing parameters and steps
+-- 65e989f4018: Define optional `backstage:permissions` property to parameters and steps used to authorize part of the template using the permission framework
+-- Updated dependencies
+-  - @backstage/plugin-permission-common@0.7.5-next.0
+-  - @backstage/catalog-model@1.2.1
+-  - @backstage/types@1.0.2
+-
+-## 1.2.7-next.0
+-
+-### Patch Changes
+-
+-- 48da4c46e45: Export `typeguard` for `isTemplateEntityV1beta3`
+-- Updated dependencies
+-  - @backstage/catalog-model@1.2.1
+-  - @backstage/types@1.0.2
+-
+-## 1.2.6
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.2.1
+-  - @backstage/types@1.0.2
+-
+-## 1.2.6-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.2.1-next.1
+-  - @backstage/types@1.0.2
+-
+-## 1.2.6-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.2.1-next.0
+-  - @backstage/types@1.0.2
+-
+-## 1.2.5
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.2.0
+-  - @backstage/types@1.0.2
+-
+-## 1.2.5-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.2.0-next.1
+-  - @backstage/types@1.0.2
+-
+-## 1.2.5-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.6-next.0
+-
+-## 1.2.4
+-
+-### Patch Changes
+-
+-- 011bd518b7: Fixed spelling mistakes in documentation.
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.5
+-  - @backstage/types@1.0.2
+-
+-## 1.2.4-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.5-next.1
+-  - @backstage/types@1.0.2
+-
+-## 1.2.4-next.0
+-
+-### Patch Changes
+-
+-- 011bd518b7: Fixed spelling mistakes in documentation.
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.5-next.0
+-  - @backstage/types@1.0.2
+-
+-## 1.2.3
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/types@1.0.2
+-  - @backstage/catalog-model@1.1.4
+-
+-## 1.2.3-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/types@1.0.2-next.1
+-  - @backstage/catalog-model@1.1.4-next.1
+-
+-## 1.2.3-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/types@1.0.2-next.0
+-  - @backstage/catalog-model@1.1.4-next.0
+-
+-## 1.2.2
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.3
+-  - @backstage/types@1.0.1
+-
+-## 1.2.2-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.3-next.0
+-  - @backstage/types@1.0.1-next.0
+-
+-## 1.2.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.2
+-  - @backstage/types@1.0.0
+-
+-## 1.2.1-next.2
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.2-next.2
+-  - @backstage/types@1.0.0
+-
+-## 1.2.1-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.2-next.1
+-  - @backstage/types@1.0.0
+-
+-## 1.2.1-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.2-next.0
+-  - @backstage/types@1.0.0
+-
+-## 1.2.0
+-
+-### Minor Changes
+-
+-- 1ff817b3f0: add entity metadata to the template info type
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.1
+-
+-## 1.2.0-next.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.1-next.0
+-
+-## 1.2.0-next.0
+-
+-### Minor Changes
+-
+-- 1ff817b3f0: add entity metadata to the template info type
+-
+-## 1.1.2
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.0
+-
+-## 1.1.2-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.1.0-next.0
+-
+-## 1.1.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.3
+-
+-## 1.1.1-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.3-next.0
+-
+-## 1.1.0
+-
+-### Minor Changes
+-
+-- f8baf7df44: Added the ability to reference the user in the `template.yaml` manifest
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.2
+-
+-## 1.1.0-next.0
+-
+-### Minor Changes
+-
+-- f8baf7df44: Added the ability to reference the user in the `template.yaml` manifest
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.2-next.0
+-
+-## 1.0.1
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.1
+-
+-## 1.0.1-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.1-next.0
+-
+-## 1.0.0
+-
+-### Major Changes
+-
+-- b58c70c223: This package has been promoted to v1.0! To understand how this change affects the package, please check out our [versioning policy](https://backstage.io/docs/overview/versioning-policy).
+-
+-### Patch Changes
+-
+-- c8475ab3bb: Adding some documentation for exported things
+-- Updated dependencies
+-  - @backstage/catalog-model@1.0.0
+-  - @backstage/types@1.0.0
+-
+-## 0.3.0
+-
+-### Minor Changes
+-
+-- 310e905998: The following deprecations are now breaking and have been removed:
+-
+-  - **BREAKING**: Support for `backstage.io/v1beta2` Software Templates has been removed. Please migrate your legacy templates to the new `scaffolder.backstage.io/v1beta3` `apiVersion` by following the [migration guide](https://backstage.io/docs/features/software-templates/migrating-from-v1beta2-to-v1beta3)
+-
+-  - **BREAKING**: Removed the deprecated `TemplateMetadata`. Please use `TemplateInfo` instead.
+-
+-  - **BREAKING**: Removed the deprecated `context.baseUrl`. It's now available on `context.templateInfo.baseUrl`.
+-
+-  - **BREAKING**: Removed the deprecated `DispatchResult`, use `TaskBrokerDispatchResult` instead.
+-
+-  - **BREAKING**: Removed the deprecated `runCommand`, use `executeShellCommond` instead.
+-
+-  - **BREAKING**: Removed the deprecated `Status` in favour of `TaskStatus` instead.
+-
+-  - **BREAKING**: Removed the deprecated `TaskState` in favour of `CurrentClaimedTask` instead.
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@0.13.0
+-
+-## 0.3.0-next.0
+-
+-### Minor Changes
+-
+-- 310e905998: The following deprecations are now breaking and have been removed:
+-
+-  - **BREAKING**: Support for `backstage.io/v1beta2` Software Templates has been removed. Please migrate your legacy templates to the new `scaffolder.backstage.io/v1beta3` `apiVersion` by following the [migration guide](https://backstage.io/docs/features/software-templates/migrating-from-v1beta2-to-v1beta3)
+-
+-  - **BREAKING**: Removed the deprecated `TemplateMetadata`. Please use `TemplateInfo` instead.
+-
+-  - **BREAKING**: Removed the deprecated `context.baseUrl`. It's now available on `context.templateInfo.baseUrl`.
+-
+-  - **BREAKING**: Removed the deprecated `DispatchResult`, use `TaskBrokerDispatchResult` instead.
+-
+-  - **BREAKING**: Removed the deprecated `runCommand`, use `executeShellCommond` instead.
+-
+-  - **BREAKING**: Removed the deprecated `Status` in favour of `TaskStatus` instead.
+-
+-  - **BREAKING**: Removed the deprecated `TaskState` in favour of `CurrentClaimedTask` instead.
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@0.13.0-next.0
+-
+-## 0.2.3
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@0.12.0
+-
+-## 0.2.2
+-
+-### Patch Changes
+-
+-- a4d53fe18e: **DEPRECATED** - The `TaskSpec.metadata` and `TaskSpec.baseUrl` has been deprecated in favour of the new `TaskSpec.templateInfo`.
+-  The `baseUrl` is now found on the `templateInfo` object, and the name can be inferred from the `templateInfo.entityRef` property.
+-
+-  Usages of `TaskSpec.metadata.name` or `ctx.metadata.name` in Actions should migrate to using `parseEntityRef(taskSpec.templateInfo.entityRef)` to get the parsed entity triplet.
+-
+-  Usages of `ctx.baseUrl` in Actions should migrate to using `ctx.templateInfo.baseUrl` instead.
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@0.11.0
+-
+-## 0.2.1
+-
+-### Patch Changes
+-
+-- Fix for the previous release with missing type declarations.
+-- Updated dependencies
+-  - @backstage/catalog-model@0.10.1
+-  - @backstage/types@0.1.3
+-
+-## 0.2.0
+-
+-### Minor Changes
+-
+-- 5e585bbc7f: **BREAKING**: Removed the `templateEntityV1beta3Schema` export
+-
+-### Patch Changes
+-
+-- e72d371296: Added `TemplateEntityV1beta2` which was moved here from
+-  `@backstage/plugin-scaffolder-common`. It has also been marked as deprecated in
+-  the process - please consider [migrating to `v1beta3`
+-  templates](https://backstage.io/docs/features/software-templates/migrating-from-v1beta2-to-v1beta3).
+-- c77c5c7eb6: Added `backstage.role` to `package.json`
+-- Updated dependencies
+-  - @backstage/catalog-model@0.10.0
+-  - @backstage/types@0.1.2
+-
+-## 0.1.3
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@0.9.10
+-
+-## 0.1.3-next.0
+-
+-### Patch Changes
+-
+-- Updated dependencies
+-  - @backstage/catalog-model@0.9.10-next.0
+-
+-## 0.1.2
+-
+-### Patch Changes
+-
+-- d078377f67: Support navigating back to pre-filled templates to update inputs of scaffolder tasks for resubmission
+-
+-## 0.1.1
+-
+-### Patch Changes
+-
+-- 10615525f3: Switch to use the json and observable types from `@backstage/types`
+-- Updated dependencies
+-  - @backstage/catalog-model@0.9.6
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/alpha/package.json b/node_modules/@backstage/plugin-scaffolder-common/alpha/package.json
+index fded266..65640d6 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/alpha/package.json
++++ b/node_modules/@backstage/plugin-scaffolder-common/alpha/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "@backstage/plugin-scaffolder-common",
+-  "version": "1.5.1",
++  "version": "1.5.2",
+   "main": "../dist/alpha.cjs.js",
+   "module": "../dist/alpha.esm.js",
+   "types": "../dist/alpha.d.ts"
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/Template.v1beta3.schema.json.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/Template.v1beta3.schema.json.esm.js
+new file mode 100644
+index 0000000..7e4740e
+--- /dev/null
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/Template.v1beta3.schema.json.esm.js
+@@ -0,0 +1,349 @@
++var $schema = "http://json-schema.org/draft-07/schema";
++var $id = "TemplateV1beta3";
++var description = "A Template describes a scaffolding task for use with the Scaffolder. It describes the required parameters as well as a series of steps that will be taken to execute the scaffolding task.";
++var examples = [
++	{
++		apiVersion: "scaffolder.backstage.io/v1beta3",
++		kind: "Template",
++		metadata: {
++			name: "react-ssr-template",
++			title: "React SSR Template",
++			description: "Next.js application skeleton for creating isomorphic web applications.",
++			tags: [
++				"recommended",
++				"react"
++			]
++		},
++		spec: {
++			owner: "artist-relations-team",
++			type: "website",
++			parameters: {
++				required: [
++					"name",
++					"description",
++					"repoUrl"
++				],
++				"backstage:permissions": {
++					tags: [
++						"one",
++						"two"
++					]
++				},
++				properties: {
++					name: {
++						title: "Name",
++						type: "string",
++						description: "Unique name of the component"
++					},
++					description: {
++						title: "Description",
++						type: "string",
++						description: "Description of the component"
++					},
++					repoUrl: {
++						title: "Pick a repository",
++						type: "string",
++						"ui:field": "RepoUrlPicker"
++					}
++				}
++			},
++			steps: [
++				{
++					id: "fetch",
++					name: "Fetch",
++					action: "fetch:plain",
++					parameters: {
++						url: "./template"
++					},
++					"backstage:permissions": {
++						tags: [
++							"one",
++							"two"
++						]
++					}
++				},
++				{
++					id: "publish",
++					name: "Publish to GitHub",
++					action: "publish:github",
++					parameters: {
++						repoUrl: "${{ parameters.repoUrl }}"
++					},
++					"if": "${{ parameters.repoUrl }}"
++				}
++			],
++			output: {
++				catalogInfoUrl: "${{ steps.publish.output.catalogInfoUrl }}"
++			}
++		}
++	}
++];
++var allOf = [
++	{
++		$ref: "Entity"
++	},
++	{
++		type: "object",
++		required: [
++			"spec"
++		],
++		properties: {
++			apiVersion: {
++				"enum": [
++					"scaffolder.backstage.io/v1beta3"
++				]
++			},
++			kind: {
++				"enum": [
++					"Template"
++				]
++			},
++			spec: {
++				type: "object",
++				required: [
++					"type",
++					"steps"
++				],
++				properties: {
++					type: {
++						type: "string",
++						description: "The type of component created by the template. The software catalog accepts any type value, but an organization should take great care to establish a proper taxonomy for these. Tools including Backstage itself may read this field and behave differently depending on its value. For example, a website type component may present tooling in the Backstage interface that is specific to just websites.",
++						examples: [
++							"service",
++							"website",
++							"library"
++						],
++						minLength: 1
++					},
++					owner: {
++						type: "string",
++						description: "The user (or group) owner of the template",
++						minLength: 1
++					},
++					parameters: {
++						oneOf: [
++							{
++								type: "object",
++								description: "The JSONSchema describing the inputs for the template.",
++								properties: {
++									"backstage:permissions": {
++										type: "object",
++										description: "Object used for authorizing the parameter",
++										properties: {
++											tags: {
++												type: "array",
++												items: {
++													type: "string"
++												}
++											}
++										}
++									}
++								}
++							},
++							{
++								type: "array",
++								description: "A list of separate forms to collect parameters.",
++								items: {
++									type: "object",
++									description: "The JSONSchema describing the inputs for the template.",
++									properties: {
++										"backstage:permissions": {
++											type: "object",
++											description: "Object used for authorizing the parameter",
++											properties: {
++												tags: {
++													type: "array",
++													items: {
++														type: "string"
++													}
++												}
++											}
++										}
++									}
++								}
++							}
++						]
++					},
++					presentation: {
++						type: "object",
++						description: "A way to redefine the presentation of the scaffolder.",
++						properties: {
++							buttonLabels: {
++								type: "object",
++								description: "A way to redefine the labels for actionable buttons.",
++								properties: {
++									backButtonText: {
++										type: "string",
++										description: "A button which return the user to one step back."
++									},
++									createButtonText: {
++										type: "string",
++										description: "A button which start the execution of the template."
++									},
++									reviewButtonText: {
++										type: "string",
++										description: "A button which open the review step to verify the input prior to start the execution."
++									}
++								}
++							}
++						}
++					},
++					EXPERIMENTAL_recovery: {
++						type: "object",
++						description: "A task recovery section.",
++						properties: {
++							EXPERIMENTAL_strategy: {
++								type: "string",
++								description: "Recovery strategy for your task (none or startOver). By default none"
++							}
++						}
++					},
++					steps: {
++						type: "array",
++						description: "A list of steps to execute.",
++						items: {
++							type: "object",
++							description: "A description of the step to execute.",
++							required: [
++								"action"
++							],
++							properties: {
++								id: {
++									type: "string",
++									description: "The ID of the step, which can be used to refer to its outputs."
++								},
++								name: {
++									type: "string",
++									description: "The name of the step, which will be displayed in the UI during the scaffolding process."
++								},
++								action: {
++									type: "string",
++									description: "The name of the action to execute."
++								},
++								input: {
++									type: "object",
++									description: "A templated object describing the inputs to the action."
++								},
++								"if": {
++									type: [
++										"string",
++										"boolean"
++									],
++									description: "A templated condition that skips the step when evaluated to false. If the condition is true or not defined, the step is executed. The condition is true, if the input is not `false`, `undefined`, `null`, `\"\"`, `0`, or `[]`."
++								},
++								"backstage:permissions": {
++									type: "object",
++									description: "Object used for authorizing the step",
++									properties: {
++										tags: {
++											type: "array",
++											items: {
++												type: "string"
++											}
++										}
++									}
++								}
++							}
++						}
++					},
++					output: {
++						type: "object",
++						description: "A templated object describing the outputs of the scaffolding task.",
++						properties: {
++							links: {
++								type: "array",
++								description: "A list of external hyperlinks, typically pointing to resources created or updated by the template",
++								items: {
++									type: "object",
++									required: [
++									],
++									properties: {
++										url: {
++											type: "string",
++											description: "A url in a standard uri format.",
++											examples: [
++												"https://github.com/my-org/my-new-repo"
++											],
++											minLength: 1
++										},
++										entityRef: {
++											type: "string",
++											description: "An entity reference to an entity in the catalog.",
++											examples: [
++												"Component:default/my-app"
++											],
++											minLength: 1
++										},
++										title: {
++											type: "string",
++											description: "A user friendly display name for the link.",
++											examples: [
++												"View new repo"
++											],
++											minLength: 1
++										},
++										icon: {
++											type: "string",
++											description: "A key representing a visual icon to be displayed in the UI.",
++											examples: [
++												"dashboard"
++											],
++											minLength: 1
++										}
++									}
++								}
++							},
++							text: {
++								type: "array",
++								description: "A list of Markdown text blobs, like output data from the template.",
++								items: {
++									type: "object",
++									required: [
++									],
++									properties: {
++										title: {
++											type: "string",
++											description: "A user friendly display name for the text.",
++											examples: [
++												"Output Content"
++											],
++											minLength: 1
++										},
++										icon: {
++											type: "string",
++											description: "A key representing a visual icon to be displayed in the UI.",
++											examples: [
++												"dashboard"
++											],
++											minLength: 1
++										},
++										content: {
++											type: "string",
++											description: "The text blob to display in the UI, rendered as Markdown.",
++											examples: [
++												"**hey** _I'm_ Markdown"
++											]
++										}
++									}
++								}
++							}
++						},
++						additionalProperties: {
++							type: "string"
++						}
++					}
++				}
++			}
++		}
++	}
++];
++var schema = {
++	$schema: $schema,
++	$id: $id,
++	description: description,
++	examples: examples,
++	allOf: allOf
++};
++
++export { $id, $schema, allOf, schema as default, description, examples };
++//# sourceMappingURL=Template.v1beta3.schema.json.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/Template.v1beta3.schema.json.esm.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/Template.v1beta3.schema.json.esm.js.map
+new file mode 100644
+index 0000000..4839641
+--- /dev/null
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/Template.v1beta3.schema.json.esm.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"Template.v1beta3.schema.json.esm.js","sources":[],"sourcesContent":[],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/TemplateEntityV1beta3.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/TemplateEntityV1beta3.esm.js
+new file mode 100644
+index 0000000..ba1b9aa
+--- /dev/null
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/TemplateEntityV1beta3.esm.js
+@@ -0,0 +1,14 @@
++import { entityKindSchemaValidator } from '@backstage/catalog-model';
++import schema from './Template.v1beta3.schema.json.esm.js';
++
++const validator = entityKindSchemaValidator(schema);
++const templateEntityV1beta3Validator = {
++  // TODO(freben): Emulate the old KindValidator until we fix that type
++  async check(data) {
++    return validator(data) === data;
++  }
++};
++const isTemplateEntityV1beta3 = (entity) => entity.apiVersion === "scaffolder.backstage.io/v1beta3" && entity.kind === "Template";
++
++export { isTemplateEntityV1beta3, templateEntityV1beta3Validator };
++//# sourceMappingURL=TemplateEntityV1beta3.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/TemplateEntityV1beta3.esm.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/TemplateEntityV1beta3.esm.js.map
+new file mode 100644
+index 0000000..53ab372
+--- /dev/null
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/TemplateEntityV1beta3.esm.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"TemplateEntityV1beta3.esm.js","sources":["../src/TemplateEntityV1beta3.ts"],"sourcesContent":["/*\n * Copyright 2020 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport {\n  Entity,\n  entityKindSchemaValidator,\n  KindValidator,\n} from '@backstage/catalog-model';\nimport { JsonObject } from '@backstage/types';\nimport schema from './Template.v1beta3.schema.json';\n\n/**\n * Backstage catalog Template kind Entity. Templates are used by the Scaffolder\n * plugin to create new entities, such as Components.\n *\n * @public\n */\nexport interface TemplateEntityV1beta3 extends Entity {\n  /**\n   * The apiVersion string of the TaskSpec.\n   */\n  apiVersion: 'scaffolder.backstage.io/v1beta3';\n  /**\n   * The kind of the entity\n   */\n  kind: 'Template';\n  /**\n   * The specification of the Template Entity\n   */\n  spec: {\n    /**\n     * The type that the Template will create. For example service, website or library.\n     */\n    type: string;\n\n    /**\n     * Template specific configuration of the presentation layer.\n     */\n    presentation?: TemplatePresentationV1beta3;\n\n    /**\n     * Recovery strategy for the template\n     */\n    EXPERIMENTAL_recovery?: TemplateRecoveryV1beta3;\n\n    /**\n     * This is a JSONSchema or an array of JSONSchema's which is used to render a form in the frontend\n     * to collect user input and validate it against that schema. This can then be used in the `steps` part below to template\n     * variables passed from the user into each action in the template.\n     */\n    parameters?: TemplateParametersV1beta3 | TemplateParametersV1beta3[];\n    /**\n     * A list of steps to be executed in sequence which are defined by the template. These steps are a list of the underlying\n     * javascript action and some optional input parameters that may or may not have been collected from the end user.\n     */\n    steps: Array<TemplateEntityStepV1beta3>;\n    /**\n     * The output is an object where template authors can pull out information from template actions and return them in a known standard way.\n     */\n    output?: { [name: string]: string };\n    /**\n     * The owner entityRef of the TemplateEntity\n     */\n    owner?: string;\n  };\n}\n\n/**\n * Depends on how you designed your task you might tailor the behaviour for each of them.\n *\n * @public\n */\nexport interface TemplateRecoveryV1beta3 extends JsonObject {\n  /**\n   *\n   * none - not recover, let the task be marked as failed\n   * startOver - do recover, start the execution of the task from the first step.\n   *\n   * @public\n   */\n  EXPERIMENTAL_strategy?: 'none' | 'startOver';\n}\n\n/**\n * The presentation of the template.\n *\n * @public\n */\nexport interface TemplatePresentationV1beta3 extends JsonObject {\n  /**\n   * Overrides default buttons' text\n   */\n  buttonLabels?: {\n    /**\n     * The text for the button which leads to the previous template page\n     */\n    backButtonText?: string;\n    /**\n     * The text for the button which starts the execution of the template\n     */\n    createButtonText?: string;\n    /**\n     * The text for the button which opens template's review/summary\n     */\n    reviewButtonText?: string;\n  };\n}\n\n/**\n * Step that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateEntityStepV1beta3 extends JsonObject {\n  id?: string;\n  name?: string;\n  action: string;\n  input?: JsonObject;\n  if?: string | boolean;\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n * Parameter that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateParametersV1beta3 extends JsonObject {\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n *  Access control properties for parts of a template.\n *\n * @public\n */\nexport interface TemplatePermissionsV1beta3 extends JsonObject {\n  tags?: string[];\n}\n\nconst validator = entityKindSchemaValidator(schema);\n\n/**\n * Entity data validator for {@link TemplateEntityV1beta3}.\n *\n * @public\n */\nexport const templateEntityV1beta3Validator: KindValidator = {\n  // TODO(freben): Emulate the old KindValidator until we fix that type\n  async check(data: Entity) {\n    return validator(data) === data;\n  },\n};\n\n/**\n * Typeguard for filtering entities and ensuring v1beta3 entities\n * @public\n */\nexport const isTemplateEntityV1beta3 = (\n  entity: Entity,\n): entity is TemplateEntityV1beta3 =>\n  entity.apiVersion === 'scaffolder.backstage.io/v1beta3' &&\n  entity.kind === 'Template';\n"],"names":[],"mappings":";;;AAyJA,MAAM,SAAA,GAAY,0BAA0B,MAAM,CAAA,CAAA;AAO3C,MAAM,8BAAgD,GAAA;AAAA;AAAA,EAE3D,MAAM,MAAM,IAAc,EAAA;AACxB,IAAO,OAAA,SAAA,CAAU,IAAI,CAAM,KAAA,IAAA,CAAA;AAAA,GAC7B;AACF,EAAA;AAMO,MAAM,0BAA0B,CACrC,MAAA,KAEA,OAAO,UAAe,KAAA,iCAAA,IACtB,OAAO,IAAS,KAAA;;;;"}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js
+index cf493d1..77e5ede 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js
+@@ -1,7 +1,5 @@
+ 'use strict';
+ 
+-Object.defineProperty(exports, '__esModule', { value: true });
+-
+ var pluginPermissionCommon = require('@backstage/plugin-permission-common');
+ 
+ const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = "scaffolder-template";
+@@ -25,23 +23,48 @@ const templateStepReadPermission = pluginPermissionCommon.createPermission({
+   },
+   resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
+ });
+-const scaffolderPermissions = [
+-  actionExecutePermission,
+-  templateParameterReadPermission,
+-  templateStepReadPermission
+-];
++const taskReadPermission = pluginPermissionCommon.createPermission({
++  name: "scaffolder.task.read",
++  attributes: {
++    action: "read"
++  }
++});
++const taskCreatePermission = pluginPermissionCommon.createPermission({
++  name: "scaffolder.task.create",
++  attributes: {
++    action: "create"
++  }
++});
++const taskCancelPermission = pluginPermissionCommon.createPermission({
++  name: "scaffolder.task.cancel",
++  attributes: {}
++});
+ const scaffolderTemplatePermissions = [
+   templateParameterReadPermission,
+   templateStepReadPermission
+ ];
+ const scaffolderActionPermissions = [actionExecutePermission];
++const scaffolderTaskPermissions = [
++  taskCancelPermission,
++  taskCreatePermission,
++  taskReadPermission
++];
++const scaffolderPermissions = [
++  ...scaffolderTemplatePermissions,
++  ...scaffolderActionPermissions,
++  ...scaffolderTaskPermissions
++];
+ 
+ exports.RESOURCE_TYPE_SCAFFOLDER_ACTION = RESOURCE_TYPE_SCAFFOLDER_ACTION;
+ exports.RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = RESOURCE_TYPE_SCAFFOLDER_TEMPLATE;
+ exports.actionExecutePermission = actionExecutePermission;
+ exports.scaffolderActionPermissions = scaffolderActionPermissions;
+ exports.scaffolderPermissions = scaffolderPermissions;
++exports.scaffolderTaskPermissions = scaffolderTaskPermissions;
+ exports.scaffolderTemplatePermissions = scaffolderTemplatePermissions;
++exports.taskCancelPermission = taskCancelPermission;
++exports.taskCreatePermission = taskCreatePermission;
++exports.taskReadPermission = taskReadPermission;
+ exports.templateParameterReadPermission = templateParameterReadPermission;
+ exports.templateStepReadPermission = templateStepReadPermission;
+ //# sourceMappingURL=alpha.cjs.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map
+index dd40a24..d32e739 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"alpha.cjs.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  actionExecutePermission,\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n"],"names":["createPermission"],"mappings":";;;;;;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0BA,uCAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkCA,uCAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6BA,uCAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAMM,MAAM,qBAAwB,GAAA;AAAA,EACnC,uBAAA;AAAA,EACA,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMO,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB;;;;;;;;;;;"}
+\ No newline at end of file
++{"version":3,"file":"alpha.cjs.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading one or more tasks in the scaffolder,\n * and reading logs of tasks\n *\n * @alpha\n */\nexport const taskReadPermission = createPermission({\n  name: 'scaffolder.task.read',\n  attributes: {\n    action: 'read',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the creation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCreatePermission = createPermission({\n  name: 'scaffolder.task.create',\n  attributes: {\n    action: 'create',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the cancellation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCancelPermission = createPermission({\n  name: 'scaffolder.task.cancel',\n  attributes: {},\n});\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder tasks.\n * @alpha\n */\nexport const scaffolderTaskPermissions = [\n  taskCancelPermission,\n  taskCreatePermission,\n  taskReadPermission,\n];\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  ...scaffolderTemplatePermissions,\n  ...scaffolderActionPermissions,\n  ...scaffolderTaskPermissions,\n];\n"],"names":["createPermission"],"mappings":";;;;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0BA,uCAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkCA,uCAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6BA,uCAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAQM,MAAM,qBAAqBA,uCAAiB,CAAA;AAAA,EACjD,IAAM,EAAA,sBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuBA,uCAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,QAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuBA,uCAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,YAAY,EAAC;AACf,CAAC,EAAA;AAMM,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB,EAAA;AAM5D,MAAM,yBAA4B,GAAA;AAAA,EACvC,oBAAA;AAAA,EACA,oBAAA;AAAA,EACA,kBAAA;AACF,EAAA;AAMO,MAAM,qBAAwB,GAAA;AAAA,EACnC,GAAG,6BAAA;AAAA,EACH,GAAG,2BAAA;AAAA,EACH,GAAG,yBAAA;AACL;;;;;;;;;;;;;;;"}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js
+index 79e7cd8..46ec0ad 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js
+@@ -1,36 +1,2 @@
+-import { createPermission } from '@backstage/plugin-permission-common';
+-
+-const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = "scaffolder-template";
+-const RESOURCE_TYPE_SCAFFOLDER_ACTION = "scaffolder-action";
+-const actionExecutePermission = createPermission({
+-  name: "scaffolder.action.execute",
+-  attributes: {},
+-  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION
+-});
+-const templateParameterReadPermission = createPermission({
+-  name: "scaffolder.template.parameter.read",
+-  attributes: {
+-    action: "read"
+-  },
+-  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
+-});
+-const templateStepReadPermission = createPermission({
+-  name: "scaffolder.template.step.read",
+-  attributes: {
+-    action: "read"
+-  },
+-  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
+-});
+-const scaffolderPermissions = [
+-  actionExecutePermission,
+-  templateParameterReadPermission,
+-  templateStepReadPermission
+-];
+-const scaffolderTemplatePermissions = [
+-  templateParameterReadPermission,
+-  templateStepReadPermission
+-];
+-const scaffolderActionPermissions = [actionExecutePermission];
+-
+-export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTemplatePermissions, templateParameterReadPermission, templateStepReadPermission };
++export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTaskPermissions, scaffolderTemplatePermissions, taskCancelPermission, taskCreatePermission, taskReadPermission, templateParameterReadPermission, templateStepReadPermission } from './permissions.esm.js';
+ //# sourceMappingURL=alpha.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js.map
+index 37b2b4f..5811c6a 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js.map
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"alpha.esm.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  actionExecutePermission,\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n"],"names":[],"mappings":";;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0B,gBAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkC,gBAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6B,gBAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAMM,MAAM,qBAAwB,GAAA;AAAA,EACnC,uBAAA;AAAA,EACA,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMO,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB;;;;"}
+\ No newline at end of file
++{"version":3,"file":"alpha.esm.js","sources":[],"sourcesContent":[],"names":[],"mappings":""}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js b/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js
+index 4b16cd2..806f594 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js
+@@ -1,7 +1,5 @@
+ 'use strict';
+ 
+-Object.defineProperty(exports, '__esModule', { value: true });
+-
+ var catalogModel = require('@backstage/catalog-model');
+ 
+ var $schema = "http://json-schema.org/draft-07/schema";
+@@ -172,19 +170,25 @@ var allOf = [
+ 					},
+ 					presentation: {
+ 						type: "object",
+-						description: "A way to redefine the labels for actionable buttons.",
++						description: "A way to redefine the presentation of the scaffolder.",
+ 						properties: {
+-							backButtonText: {
+-								type: "string",
+-								description: "A button which return the user to one step back."
+-							},
+-							createButtonText: {
+-								type: "string",
+-								description: "A button which start the execution of the template."
+-							},
+-							reviewButtonText: {
+-								type: "string",
+-								description: "A button which open the review step to verify the input prior to start the execution."
++							buttonLabels: {
++								type: "object",
++								description: "A way to redefine the labels for actionable buttons.",
++								properties: {
++									backButtonText: {
++										type: "string",
++										description: "A button which return the user to one step back."
++									},
++									createButtonText: {
++										type: "string",
++										description: "A button which start the execution of the template."
++									},
++									reviewButtonText: {
++										type: "string",
++										description: "A button which open the review step to verify the input prior to start the execution."
++									}
++								}
+ 							}
+ 						}
+ 					},
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js.map
+index 6987e0c..e154855 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js.map
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/index.cjs.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"index.cjs.js","sources":["../src/TemplateEntityV1beta3.ts"],"sourcesContent":["/*\n * Copyright 2020 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport {\n  Entity,\n  entityKindSchemaValidator,\n  KindValidator,\n} from '@backstage/catalog-model';\nimport { JsonObject } from '@backstage/types';\nimport schema from './Template.v1beta3.schema.json';\n\n/**\n * Backstage catalog Template kind Entity. Templates are used by the Scaffolder\n * plugin to create new entities, such as Components.\n *\n * @public\n */\nexport interface TemplateEntityV1beta3 extends Entity {\n  /**\n   * The apiVersion string of the TaskSpec.\n   */\n  apiVersion: 'scaffolder.backstage.io/v1beta3';\n  /**\n   * The kind of the entity\n   */\n  kind: 'Template';\n  /**\n   * The specification of the Template Entity\n   */\n  spec: {\n    /**\n     * The type that the Template will create. For example service, website or library.\n     */\n    type: string;\n\n    /**\n     * Template specific configuration of the presentation layer.\n     */\n    presentation?: TemplatePresentationV1beta3;\n\n    /**\n     * Recovery strategy for the template\n     */\n    EXPERIMENTAL_recovery?: TemplateRecoveryV1beta3;\n\n    /**\n     * This is a JSONSchema or an array of JSONSchema's which is used to render a form in the frontend\n     * to collect user input and validate it against that schema. This can then be used in the `steps` part below to template\n     * variables passed from the user into each action in the template.\n     */\n    parameters?: TemplateParametersV1beta3 | TemplateParametersV1beta3[];\n    /**\n     * A list of steps to be executed in sequence which are defined by the template. These steps are a list of the underlying\n     * javascript action and some optional input parameters that may or may not have been collected from the end user.\n     */\n    steps: Array<TemplateEntityStepV1beta3>;\n    /**\n     * The output is an object where template authors can pull out information from template actions and return them in a known standard way.\n     */\n    output?: { [name: string]: string };\n    /**\n     * The owner entityRef of the TemplateEntity\n     */\n    owner?: string;\n  };\n}\n\n/**\n * Depends on how you designed your task you might tailor the behaviour for each of them.\n *\n * @public\n */\nexport interface TemplateRecoveryV1beta3 extends JsonObject {\n  /**\n   *\n   * none - not recover, let the task be marked as failed\n   * startOver - do recover, start the execution of the task from the first step.\n   *\n   * @public\n   */\n  EXPERIMENTAL_strategy?: 'none' | 'startOver';\n}\n\n/**\n * The presentation of the template.\n *\n * @public\n */\nexport interface TemplatePresentationV1beta3 extends JsonObject {\n  /**\n   * Overrides default buttons' text\n   */\n  buttonLabels?: {\n    /**\n     * The text for the button which leads to the previous template page\n     */\n    backButtonText?: string;\n    /**\n     * The text for the button which starts the execution of the template\n     */\n    createButtonText?: string;\n    /**\n     * The text for the button which opens template's review/summary\n     */\n    reviewButtonText?: string;\n  };\n}\n\n/**\n * Step that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateEntityStepV1beta3 extends JsonObject {\n  id?: string;\n  name?: string;\n  action: string;\n  input?: JsonObject;\n  if?: string | boolean;\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n * Parameter that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateParametersV1beta3 extends JsonObject {\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n *  Access control properties for parts of a template.\n *\n * @public\n */\nexport interface TemplatePermissionsV1beta3 extends JsonObject {\n  tags?: string[];\n}\n\nconst validator = entityKindSchemaValidator(schema);\n\n/**\n * Entity data validator for {@link TemplateEntityV1beta3}.\n *\n * @public\n */\nexport const templateEntityV1beta3Validator: KindValidator = {\n  // TODO(freben): Emulate the old KindValidator until we fix that type\n  async check(data: Entity) {\n    return validator(data) === data;\n  },\n};\n\n/**\n * Typeguard for filtering entities and ensuring v1beta3 entities\n * @public\n */\nexport const isTemplateEntityV1beta3 = (\n  entity: Entity,\n): entity is TemplateEntityV1beta3 =>\n  entity.apiVersion === 'scaffolder.backstage.io/v1beta3' &&\n  entity.kind === 'Template';\n"],"names":["entityKindSchemaValidator"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAyJA,MAAM,SAAA,GAAYA,uCAA0B,MAAM,CAAA,CAAA;AAO3C,MAAM,8BAAgD,GAAA;AAAA;AAAA,EAE3D,MAAM,MAAM,IAAc,EAAA;AACxB,IAAO,OAAA,SAAA,CAAU,IAAI,CAAM,KAAA,IAAA,CAAA;AAAA,GAC7B;AACF,EAAA;AAMO,MAAM,0BAA0B,CACrC,MAAA,KAEA,OAAO,UAAe,KAAA,iCAAA,IACtB,OAAO,IAAS,KAAA;;;;;"}
+\ No newline at end of file
++{"version":3,"file":"index.cjs.js","sources":["../src/TemplateEntityV1beta3.ts"],"sourcesContent":["/*\n * Copyright 2020 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport {\n  Entity,\n  entityKindSchemaValidator,\n  KindValidator,\n} from '@backstage/catalog-model';\nimport { JsonObject } from '@backstage/types';\nimport schema from './Template.v1beta3.schema.json';\n\n/**\n * Backstage catalog Template kind Entity. Templates are used by the Scaffolder\n * plugin to create new entities, such as Components.\n *\n * @public\n */\nexport interface TemplateEntityV1beta3 extends Entity {\n  /**\n   * The apiVersion string of the TaskSpec.\n   */\n  apiVersion: 'scaffolder.backstage.io/v1beta3';\n  /**\n   * The kind of the entity\n   */\n  kind: 'Template';\n  /**\n   * The specification of the Template Entity\n   */\n  spec: {\n    /**\n     * The type that the Template will create. For example service, website or library.\n     */\n    type: string;\n\n    /**\n     * Template specific configuration of the presentation layer.\n     */\n    presentation?: TemplatePresentationV1beta3;\n\n    /**\n     * Recovery strategy for the template\n     */\n    EXPERIMENTAL_recovery?: TemplateRecoveryV1beta3;\n\n    /**\n     * This is a JSONSchema or an array of JSONSchema's which is used to render a form in the frontend\n     * to collect user input and validate it against that schema. This can then be used in the `steps` part below to template\n     * variables passed from the user into each action in the template.\n     */\n    parameters?: TemplateParametersV1beta3 | TemplateParametersV1beta3[];\n    /**\n     * A list of steps to be executed in sequence which are defined by the template. These steps are a list of the underlying\n     * javascript action and some optional input parameters that may or may not have been collected from the end user.\n     */\n    steps: Array<TemplateEntityStepV1beta3>;\n    /**\n     * The output is an object where template authors can pull out information from template actions and return them in a known standard way.\n     */\n    output?: { [name: string]: string };\n    /**\n     * The owner entityRef of the TemplateEntity\n     */\n    owner?: string;\n  };\n}\n\n/**\n * Depends on how you designed your task you might tailor the behaviour for each of them.\n *\n * @public\n */\nexport interface TemplateRecoveryV1beta3 extends JsonObject {\n  /**\n   *\n   * none - not recover, let the task be marked as failed\n   * startOver - do recover, start the execution of the task from the first step.\n   *\n   * @public\n   */\n  EXPERIMENTAL_strategy?: 'none' | 'startOver';\n}\n\n/**\n * The presentation of the template.\n *\n * @public\n */\nexport interface TemplatePresentationV1beta3 extends JsonObject {\n  /**\n   * Overrides default buttons' text\n   */\n  buttonLabels?: {\n    /**\n     * The text for the button which leads to the previous template page\n     */\n    backButtonText?: string;\n    /**\n     * The text for the button which starts the execution of the template\n     */\n    createButtonText?: string;\n    /**\n     * The text for the button which opens template's review/summary\n     */\n    reviewButtonText?: string;\n  };\n}\n\n/**\n * Step that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateEntityStepV1beta3 extends JsonObject {\n  id?: string;\n  name?: string;\n  action: string;\n  input?: JsonObject;\n  if?: string | boolean;\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n * Parameter that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateParametersV1beta3 extends JsonObject {\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n *  Access control properties for parts of a template.\n *\n * @public\n */\nexport interface TemplatePermissionsV1beta3 extends JsonObject {\n  tags?: string[];\n}\n\nconst validator = entityKindSchemaValidator(schema);\n\n/**\n * Entity data validator for {@link TemplateEntityV1beta3}.\n *\n * @public\n */\nexport const templateEntityV1beta3Validator: KindValidator = {\n  // TODO(freben): Emulate the old KindValidator until we fix that type\n  async check(data: Entity) {\n    return validator(data) === data;\n  },\n};\n\n/**\n * Typeguard for filtering entities and ensuring v1beta3 entities\n * @public\n */\nexport const isTemplateEntityV1beta3 = (\n  entity: Entity,\n): entity is TemplateEntityV1beta3 =>\n  entity.apiVersion === 'scaffolder.backstage.io/v1beta3' &&\n  entity.kind === 'Template';\n"],"names":["entityKindSchemaValidator"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAyJA,MAAM,SAAA,GAAYA,uCAA0B,MAAM,CAAA,CAAA;AAO3C,MAAM,8BAAgD,GAAA;AAAA;AAAA,EAE3D,MAAM,MAAM,IAAc,EAAA;AACxB,IAAO,OAAA,SAAA,CAAU,IAAI,CAAM,KAAA,IAAA,CAAA;AAAA,GAC7B;AACF,EAAA;AAMO,MAAM,0BAA0B,CACrC,MAAA,KAEA,OAAO,UAAe,KAAA,iCAAA,IACtB,OAAO,IAAS,KAAA;;;;;"}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/index.d.ts b/node_modules/@backstage/plugin-scaffolder-common/dist/index.d.ts
+index 4903b32..df93489 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/index.d.ts
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/index.d.ts
+@@ -270,4 +270,4 @@ declare const templateEntityV1beta3Validator: KindValidator;
+  */
+ declare const isTemplateEntityV1beta3: (entity: Entity) => entity is TemplateEntityV1beta3;
+ 
+-export { TaskRecoverStrategy, TaskRecovery, TaskSpec, TaskSpecV1beta3, TaskStep, TemplateEntityStepV1beta3, TemplateEntityV1beta3, TemplateInfo, TemplateParametersV1beta3, TemplatePermissionsV1beta3, TemplatePresentationV1beta3, TemplateRecoveryV1beta3, isTemplateEntityV1beta3, templateEntityV1beta3Validator };
++export { type TaskRecoverStrategy, type TaskRecovery, type TaskSpec, type TaskSpecV1beta3, type TaskStep, type TemplateEntityStepV1beta3, type TemplateEntityV1beta3, type TemplateInfo, type TemplateParametersV1beta3, type TemplatePermissionsV1beta3, type TemplatePresentationV1beta3, type TemplateRecoveryV1beta3, isTemplateEntityV1beta3, templateEntityV1beta3Validator };
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js
+index 006d941..2db4f47 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js
+@@ -1,354 +1,2 @@
+-import { entityKindSchemaValidator } from '@backstage/catalog-model';
+-
+-var $schema = "http://json-schema.org/draft-07/schema";
+-var $id = "TemplateV1beta3";
+-var description = "A Template describes a scaffolding task for use with the Scaffolder. It describes the required parameters as well as a series of steps that will be taken to execute the scaffolding task.";
+-var examples = [
+-	{
+-		apiVersion: "scaffolder.backstage.io/v1beta3",
+-		kind: "Template",
+-		metadata: {
+-			name: "react-ssr-template",
+-			title: "React SSR Template",
+-			description: "Next.js application skeleton for creating isomorphic web applications.",
+-			tags: [
+-				"recommended",
+-				"react"
+-			]
+-		},
+-		spec: {
+-			owner: "artist-relations-team",
+-			type: "website",
+-			parameters: {
+-				required: [
+-					"name",
+-					"description",
+-					"repoUrl"
+-				],
+-				"backstage:permissions": {
+-					tags: [
+-						"one",
+-						"two"
+-					]
+-				},
+-				properties: {
+-					name: {
+-						title: "Name",
+-						type: "string",
+-						description: "Unique name of the component"
+-					},
+-					description: {
+-						title: "Description",
+-						type: "string",
+-						description: "Description of the component"
+-					},
+-					repoUrl: {
+-						title: "Pick a repository",
+-						type: "string",
+-						"ui:field": "RepoUrlPicker"
+-					}
+-				}
+-			},
+-			steps: [
+-				{
+-					id: "fetch",
+-					name: "Fetch",
+-					action: "fetch:plain",
+-					parameters: {
+-						url: "./template"
+-					},
+-					"backstage:permissions": {
+-						tags: [
+-							"one",
+-							"two"
+-						]
+-					}
+-				},
+-				{
+-					id: "publish",
+-					name: "Publish to GitHub",
+-					action: "publish:github",
+-					parameters: {
+-						repoUrl: "${{ parameters.repoUrl }}"
+-					},
+-					"if": "${{ parameters.repoUrl }}"
+-				}
+-			],
+-			output: {
+-				catalogInfoUrl: "${{ steps.publish.output.catalogInfoUrl }}"
+-			}
+-		}
+-	}
+-];
+-var allOf = [
+-	{
+-		$ref: "Entity"
+-	},
+-	{
+-		type: "object",
+-		required: [
+-			"spec"
+-		],
+-		properties: {
+-			apiVersion: {
+-				"enum": [
+-					"scaffolder.backstage.io/v1beta3"
+-				]
+-			},
+-			kind: {
+-				"enum": [
+-					"Template"
+-				]
+-			},
+-			spec: {
+-				type: "object",
+-				required: [
+-					"type",
+-					"steps"
+-				],
+-				properties: {
+-					type: {
+-						type: "string",
+-						description: "The type of component created by the template. The software catalog accepts any type value, but an organization should take great care to establish a proper taxonomy for these. Tools including Backstage itself may read this field and behave differently depending on its value. For example, a website type component may present tooling in the Backstage interface that is specific to just websites.",
+-						examples: [
+-							"service",
+-							"website",
+-							"library"
+-						],
+-						minLength: 1
+-					},
+-					owner: {
+-						type: "string",
+-						description: "The user (or group) owner of the template",
+-						minLength: 1
+-					},
+-					parameters: {
+-						oneOf: [
+-							{
+-								type: "object",
+-								description: "The JSONSchema describing the inputs for the template.",
+-								properties: {
+-									"backstage:permissions": {
+-										type: "object",
+-										description: "Object used for authorizing the parameter",
+-										properties: {
+-											tags: {
+-												type: "array",
+-												items: {
+-													type: "string"
+-												}
+-											}
+-										}
+-									}
+-								}
+-							},
+-							{
+-								type: "array",
+-								description: "A list of separate forms to collect parameters.",
+-								items: {
+-									type: "object",
+-									description: "The JSONSchema describing the inputs for the template.",
+-									properties: {
+-										"backstage:permissions": {
+-											type: "object",
+-											description: "Object used for authorizing the parameter",
+-											properties: {
+-												tags: {
+-													type: "array",
+-													items: {
+-														type: "string"
+-													}
+-												}
+-											}
+-										}
+-									}
+-								}
+-							}
+-						]
+-					},
+-					presentation: {
+-						type: "object",
+-						description: "A way to redefine the labels for actionable buttons.",
+-						properties: {
+-							backButtonText: {
+-								type: "string",
+-								description: "A button which return the user to one step back."
+-							},
+-							createButtonText: {
+-								type: "string",
+-								description: "A button which start the execution of the template."
+-							},
+-							reviewButtonText: {
+-								type: "string",
+-								description: "A button which open the review step to verify the input prior to start the execution."
+-							}
+-						}
+-					},
+-					EXPERIMENTAL_recovery: {
+-						type: "object",
+-						description: "A task recovery section.",
+-						properties: {
+-							EXPERIMENTAL_strategy: {
+-								type: "string",
+-								description: "Recovery strategy for your task (none or startOver). By default none"
+-							}
+-						}
+-					},
+-					steps: {
+-						type: "array",
+-						description: "A list of steps to execute.",
+-						items: {
+-							type: "object",
+-							description: "A description of the step to execute.",
+-							required: [
+-								"action"
+-							],
+-							properties: {
+-								id: {
+-									type: "string",
+-									description: "The ID of the step, which can be used to refer to its outputs."
+-								},
+-								name: {
+-									type: "string",
+-									description: "The name of the step, which will be displayed in the UI during the scaffolding process."
+-								},
+-								action: {
+-									type: "string",
+-									description: "The name of the action to execute."
+-								},
+-								input: {
+-									type: "object",
+-									description: "A templated object describing the inputs to the action."
+-								},
+-								"if": {
+-									type: [
+-										"string",
+-										"boolean"
+-									],
+-									description: "A templated condition that skips the step when evaluated to false. If the condition is true or not defined, the step is executed. The condition is true, if the input is not `false`, `undefined`, `null`, `\"\"`, `0`, or `[]`."
+-								},
+-								"backstage:permissions": {
+-									type: "object",
+-									description: "Object used for authorizing the step",
+-									properties: {
+-										tags: {
+-											type: "array",
+-											items: {
+-												type: "string"
+-											}
+-										}
+-									}
+-								}
+-							}
+-						}
+-					},
+-					output: {
+-						type: "object",
+-						description: "A templated object describing the outputs of the scaffolding task.",
+-						properties: {
+-							links: {
+-								type: "array",
+-								description: "A list of external hyperlinks, typically pointing to resources created or updated by the template",
+-								items: {
+-									type: "object",
+-									required: [
+-									],
+-									properties: {
+-										url: {
+-											type: "string",
+-											description: "A url in a standard uri format.",
+-											examples: [
+-												"https://github.com/my-org/my-new-repo"
+-											],
+-											minLength: 1
+-										},
+-										entityRef: {
+-											type: "string",
+-											description: "An entity reference to an entity in the catalog.",
+-											examples: [
+-												"Component:default/my-app"
+-											],
+-											minLength: 1
+-										},
+-										title: {
+-											type: "string",
+-											description: "A user friendly display name for the link.",
+-											examples: [
+-												"View new repo"
+-											],
+-											minLength: 1
+-										},
+-										icon: {
+-											type: "string",
+-											description: "A key representing a visual icon to be displayed in the UI.",
+-											examples: [
+-												"dashboard"
+-											],
+-											minLength: 1
+-										}
+-									}
+-								}
+-							},
+-							text: {
+-								type: "array",
+-								description: "A list of Markdown text blobs, like output data from the template.",
+-								items: {
+-									type: "object",
+-									required: [
+-									],
+-									properties: {
+-										title: {
+-											type: "string",
+-											description: "A user friendly display name for the text.",
+-											examples: [
+-												"Output Content"
+-											],
+-											minLength: 1
+-										},
+-										icon: {
+-											type: "string",
+-											description: "A key representing a visual icon to be displayed in the UI.",
+-											examples: [
+-												"dashboard"
+-											],
+-											minLength: 1
+-										},
+-										content: {
+-											type: "string",
+-											description: "The text blob to display in the UI, rendered as Markdown.",
+-											examples: [
+-												"**hey** _I'm_ Markdown"
+-											]
+-										}
+-									}
+-								}
+-							}
+-						},
+-						additionalProperties: {
+-							type: "string"
+-						}
+-					}
+-				}
+-			}
+-		}
+-	}
+-];
+-var schema = {
+-	$schema: $schema,
+-	$id: $id,
+-	description: description,
+-	examples: examples,
+-	allOf: allOf
+-};
+-
+-const validator = entityKindSchemaValidator(schema);
+-const templateEntityV1beta3Validator = {
+-  // TODO(freben): Emulate the old KindValidator until we fix that type
+-  async check(data) {
+-    return validator(data) === data;
+-  }
+-};
+-const isTemplateEntityV1beta3 = (entity) => entity.apiVersion === "scaffolder.backstage.io/v1beta3" && entity.kind === "Template";
+-
+-export { isTemplateEntityV1beta3, templateEntityV1beta3Validator };
++export { isTemplateEntityV1beta3, templateEntityV1beta3Validator } from './TemplateEntityV1beta3.esm.js';
+ //# sourceMappingURL=index.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js.map
+index e5e40cc..1a67fcc 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js.map
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/index.esm.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"index.esm.js","sources":["../src/TemplateEntityV1beta3.ts"],"sourcesContent":["/*\n * Copyright 2020 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport {\n  Entity,\n  entityKindSchemaValidator,\n  KindValidator,\n} from '@backstage/catalog-model';\nimport { JsonObject } from '@backstage/types';\nimport schema from './Template.v1beta3.schema.json';\n\n/**\n * Backstage catalog Template kind Entity. Templates are used by the Scaffolder\n * plugin to create new entities, such as Components.\n *\n * @public\n */\nexport interface TemplateEntityV1beta3 extends Entity {\n  /**\n   * The apiVersion string of the TaskSpec.\n   */\n  apiVersion: 'scaffolder.backstage.io/v1beta3';\n  /**\n   * The kind of the entity\n   */\n  kind: 'Template';\n  /**\n   * The specification of the Template Entity\n   */\n  spec: {\n    /**\n     * The type that the Template will create. For example service, website or library.\n     */\n    type: string;\n\n    /**\n     * Template specific configuration of the presentation layer.\n     */\n    presentation?: TemplatePresentationV1beta3;\n\n    /**\n     * Recovery strategy for the template\n     */\n    EXPERIMENTAL_recovery?: TemplateRecoveryV1beta3;\n\n    /**\n     * This is a JSONSchema or an array of JSONSchema's which is used to render a form in the frontend\n     * to collect user input and validate it against that schema. This can then be used in the `steps` part below to template\n     * variables passed from the user into each action in the template.\n     */\n    parameters?: TemplateParametersV1beta3 | TemplateParametersV1beta3[];\n    /**\n     * A list of steps to be executed in sequence which are defined by the template. These steps are a list of the underlying\n     * javascript action and some optional input parameters that may or may not have been collected from the end user.\n     */\n    steps: Array<TemplateEntityStepV1beta3>;\n    /**\n     * The output is an object where template authors can pull out information from template actions and return them in a known standard way.\n     */\n    output?: { [name: string]: string };\n    /**\n     * The owner entityRef of the TemplateEntity\n     */\n    owner?: string;\n  };\n}\n\n/**\n * Depends on how you designed your task you might tailor the behaviour for each of them.\n *\n * @public\n */\nexport interface TemplateRecoveryV1beta3 extends JsonObject {\n  /**\n   *\n   * none - not recover, let the task be marked as failed\n   * startOver - do recover, start the execution of the task from the first step.\n   *\n   * @public\n   */\n  EXPERIMENTAL_strategy?: 'none' | 'startOver';\n}\n\n/**\n * The presentation of the template.\n *\n * @public\n */\nexport interface TemplatePresentationV1beta3 extends JsonObject {\n  /**\n   * Overrides default buttons' text\n   */\n  buttonLabels?: {\n    /**\n     * The text for the button which leads to the previous template page\n     */\n    backButtonText?: string;\n    /**\n     * The text for the button which starts the execution of the template\n     */\n    createButtonText?: string;\n    /**\n     * The text for the button which opens template's review/summary\n     */\n    reviewButtonText?: string;\n  };\n}\n\n/**\n * Step that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateEntityStepV1beta3 extends JsonObject {\n  id?: string;\n  name?: string;\n  action: string;\n  input?: JsonObject;\n  if?: string | boolean;\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n * Parameter that is part of a Template Entity.\n *\n * @public\n */\nexport interface TemplateParametersV1beta3 extends JsonObject {\n  'backstage:permissions'?: TemplatePermissionsV1beta3;\n}\n\n/**\n *  Access control properties for parts of a template.\n *\n * @public\n */\nexport interface TemplatePermissionsV1beta3 extends JsonObject {\n  tags?: string[];\n}\n\nconst validator = entityKindSchemaValidator(schema);\n\n/**\n * Entity data validator for {@link TemplateEntityV1beta3}.\n *\n * @public\n */\nexport const templateEntityV1beta3Validator: KindValidator = {\n  // TODO(freben): Emulate the old KindValidator until we fix that type\n  async check(data: Entity) {\n    return validator(data) === data;\n  },\n};\n\n/**\n * Typeguard for filtering entities and ensuring v1beta3 entities\n * @public\n */\nexport const isTemplateEntityV1beta3 = (\n  entity: Entity,\n): entity is TemplateEntityV1beta3 =>\n  entity.apiVersion === 'scaffolder.backstage.io/v1beta3' &&\n  entity.kind === 'Template';\n"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAyJA,MAAM,SAAA,GAAY,0BAA0B,MAAM,CAAA,CAAA;AAO3C,MAAM,8BAAgD,GAAA;AAAA;AAAA,EAE3D,MAAM,MAAM,IAAc,EAAA;AACxB,IAAO,OAAA,SAAA,CAAU,IAAI,CAAM,KAAA,IAAA,CAAA;AAAA,GAC7B;AACF,EAAA;AAMO,MAAM,0BAA0B,CACrC,MAAA,KAEA,OAAO,UAAe,KAAA,iCAAA,IACtB,OAAO,IAAS,KAAA;;;;"}
+\ No newline at end of file
++{"version":3,"file":"index.esm.js","sources":[],"sourcesContent":[],"names":[],"mappings":""}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js
+new file mode 100644
+index 0000000..9eb5441
+--- /dev/null
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js
+@@ -0,0 +1,57 @@
++import { createPermission } from '@backstage/plugin-permission-common';
++
++const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = "scaffolder-template";
++const RESOURCE_TYPE_SCAFFOLDER_ACTION = "scaffolder-action";
++const actionExecutePermission = createPermission({
++  name: "scaffolder.action.execute",
++  attributes: {},
++  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION
++});
++const templateParameterReadPermission = createPermission({
++  name: "scaffolder.template.parameter.read",
++  attributes: {
++    action: "read"
++  },
++  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
++});
++const templateStepReadPermission = createPermission({
++  name: "scaffolder.template.step.read",
++  attributes: {
++    action: "read"
++  },
++  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
++});
++const taskReadPermission = createPermission({
++  name: "scaffolder.task.read",
++  attributes: {
++    action: "read"
++  }
++});
++const taskCreatePermission = createPermission({
++  name: "scaffolder.task.create",
++  attributes: {
++    action: "create"
++  }
++});
++const taskCancelPermission = createPermission({
++  name: "scaffolder.task.cancel",
++  attributes: {}
++});
++const scaffolderTemplatePermissions = [
++  templateParameterReadPermission,
++  templateStepReadPermission
++];
++const scaffolderActionPermissions = [actionExecutePermission];
++const scaffolderTaskPermissions = [
++  taskCancelPermission,
++  taskCreatePermission,
++  taskReadPermission
++];
++const scaffolderPermissions = [
++  ...scaffolderTemplatePermissions,
++  ...scaffolderActionPermissions,
++  ...scaffolderTaskPermissions
++];
++
++export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTaskPermissions, scaffolderTemplatePermissions, taskCancelPermission, taskCreatePermission, taskReadPermission, templateParameterReadPermission, templateStepReadPermission };
++//# sourceMappingURL=permissions.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map
+new file mode 100644
+index 0000000..fdb5975
+--- /dev/null
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"permissions.esm.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading one or more tasks in the scaffolder,\n * and reading logs of tasks\n *\n * @alpha\n */\nexport const taskReadPermission = createPermission({\n  name: 'scaffolder.task.read',\n  attributes: {\n    action: 'read',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the creation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCreatePermission = createPermission({\n  name: 'scaffolder.task.create',\n  attributes: {\n    action: 'create',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the cancellation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCancelPermission = createPermission({\n  name: 'scaffolder.task.cancel',\n  attributes: {},\n});\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder tasks.\n * @alpha\n */\nexport const scaffolderTaskPermissions = [\n  taskCancelPermission,\n  taskCreatePermission,\n  taskReadPermission,\n];\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  ...scaffolderTemplatePermissions,\n  ...scaffolderActionPermissions,\n  ...scaffolderTaskPermissions,\n];\n"],"names":[],"mappings":";;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0B,gBAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkC,gBAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6B,gBAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAQM,MAAM,qBAAqB,gBAAiB,CAAA;AAAA,EACjD,IAAM,EAAA,sBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuB,gBAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,QAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuB,gBAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,YAAY,EAAC;AACf,CAAC,EAAA;AAMM,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB,EAAA;AAM5D,MAAM,yBAA4B,GAAA;AAAA,EACvC,oBAAA;AAAA,EACA,oBAAA;AAAA,EACA,kBAAA;AACF,EAAA;AAMO,MAAM,qBAAwB,GAAA;AAAA,EACnC,GAAG,6BAAA;AAAA,EACH,GAAG,2BAAA;AAAA,EACH,GAAG,yBAAA;AACL;;;;"}
+\ No newline at end of file
