@@ -84,7 +84,9 @@ export class Common {
         lastError = error;
         if (attempt < retries - 1) {
           console.log(
-            `Attempt ${attempt + 1} failed, retrying after ${retryInterval}ms...`,
+            `Attempt ${
+              attempt + 1
+            } failed, retrying after ${retryInterval}ms...`,
           );
           await new Promise(resolve => setTimeout(resolve, retryInterval));
         } else {
@@ -166,7 +168,9 @@ export class Common {
 export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
   const context = await browser.newContext({
     recordVideo: {
-      dir: `test-results/${path.parse(testInfo.file).name.replace('.spec', '')}`,
+      dir: `test-results/${path
+        .parse(testInfo.file)
+        .name.replace('.spec', '')}`,
       size: { width: 1280, height: 720 },
     },
   });
