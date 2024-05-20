@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+set -x
 
 LOGFILE="test-log"
 JUNIT_RESULTS="junit-results.xml"
