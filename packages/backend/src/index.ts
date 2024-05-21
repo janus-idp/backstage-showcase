@@ -17,6 +17,10 @@ import {
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules/rbacDynamicPluginsModule';
+import { configureCorporateProxyAgent } from './corporate-proxy';
+
+// RHIDP-2217: adds support for corporate proxy
+configureCorporateProxyAgent();
 
 const backend = createBackend();
 
