@@ -5110,14 +5110,14 @@ index 0aa57fd..d760b0f 100644
 -template](https://github.com/backstage/backstage/blob/master/packages/create-app/templates/default-app/app-config.yaml.hbs).
 +catalog locations from the [create-app template](https://github.com/backstage/backstage/blob/master/packages/create-app/templates/default-app/app-config.yaml.hbs).
 diff --git a/node_modules/@backstage/plugin-scaffolder-backend/alpha/package.json b/node_modules/@backstage/plugin-scaffolder-backend/alpha/package.json
-index 5c81229..6bdca7f 100644
+index 5c81229..74f4802 100644
 --- a/node_modules/@backstage/plugin-scaffolder-backend/alpha/package.json
 +++ b/node_modules/@backstage/plugin-scaffolder-backend/alpha/package.json
 @@ -1,6 +1,6 @@
  {
    "name": "@backstage/plugin-scaffolder-backend",
 -  "version": "1.22.5",
-+  "version": "1.22.6",
++  "version": "1.22.8-next.0",
    "main": "../dist/alpha.cjs.js",
    "types": "../dist/alpha.d.ts"
  }
