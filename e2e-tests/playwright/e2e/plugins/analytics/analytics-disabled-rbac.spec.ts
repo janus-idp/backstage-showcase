@@ -1,17 +1,23 @@
 import { test, expect, Page } from '@playwright/test';
 import { Analytics } from '../../../utils/analytics/analytics';
 import { Common, setupBrowser } from '../../../utils/Common';
+import { UIhelper } from '../../../utils/UIhelper';
 
-let page: Page;
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
-  let common = new Common(page);
+  let common: Common;
+  let uiHelper: UIhelper;
+  let page: Page;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
+    uiHelper = new UIhelper(page);
     common = new Common(page);
-
     await common.loginAsGithubUser();
+    await uiHelper.openSidebar('Administration');
+    await uiHelper.verifyHeading('Administration');
+    await uiHelper.verifyLink('RBAC');
+    await uiHelper.clickTab('RBAC');
   });
 
   test('is disabled', async () => {
