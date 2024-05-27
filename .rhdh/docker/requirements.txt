@@ -106,7 +106,7 @@ mkdocs-monorepo-plugin==1.1.0
     #   mkdocs-techdocs-core
 mkdocs-techdocs-core @ https://github.com/backstage/mkdocs-techdocs-core/archive/bbdab44e0d3aecfdc4e77b14c72b57791d4902b2.zip#cachito_hash=sha256:40421a5f43b11fd9ea9f92e107f91089b6bfa326967ad497666ab5a451fcf136
     # via -r requirements.in
-packaging==23.2
+packaging==24.0
     # via
     #   -r requirements.in
     #   hatch-requirements-txt
