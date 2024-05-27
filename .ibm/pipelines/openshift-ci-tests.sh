@@ -16,6 +16,16 @@ cleanup() {
 
 trap cleanup EXIT
 
+set_cluster_info() {
+  export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
+  export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
+  
+  if [[ "$JOB_NAME" == *ocp-v14 ]]; then
+    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
+    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
+  fi
+}
+
 add_helm_repos() {
   helm version
 
@@ -104,7 +114,7 @@ apply_yaml_files() {
 
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: ${K8S_PLUGIN_ANNOTATION}/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -304,20 +314,21 @@ check_and_test() {
 
 main() {
   echo "Log file: ${LOGFILE}"
+  set_cluster_info
   source "${DIR}/env_variables.sh"
-  if [ "${JOB_TYPE}" != "presubmit" ]; then
+  if [[ "$JOB_NAME" == *periodic-* ]]; then
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
   fi
 
-  echo "OPENSHIFT_CLUSTER_ID: ${OPENSHIFT_CLUSTER_ID}"
-
   install_oc
-  oc version --client
   oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  echo "OCP version: $(oc version)"
 
   API_SERVER_URL=$(oc whoami --show-server)
   K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+
+  echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
 
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
