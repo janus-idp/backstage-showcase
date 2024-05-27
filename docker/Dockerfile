@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-34.1712566506 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-44.1715773199 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -104,7 +104,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-37.1712566503 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-47.1715773198 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -145,6 +145,17 @@ ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 
 # To avoid running scripts when using `npm pack` to install dynamic plugins
 ENV NPM_CONFIG_ignore-scripts='true'
+
+# Upstream only - Use dev key in all branches
+ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
+ENV SEGMENT_TEST_MODE=false
+
+# RHIDP-2217: corporate proxy support (configured using 'global-agent')
+# This is to avoid having to define several environment variables for the same purpose,
+# i.e, GLOBAL_AGENT_HTTP(S)_PROXY (for 'global-agent') and the conventional HTTP(S)_PROXY (honored by other libraries like Axios).
+# By setting GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE to an empty value,
+# 'global-agent' will use the same HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
+ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 

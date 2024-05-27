@@ -7,22 +7,6 @@ export class UIhelper {
 
   constructor(page: Page) {
     this.page = page;
-    this.selectors = {
-      Analyze: 'button#analyze',
-      Refresh: 'button#refresh',
-      Import: 'button#import',
-      'View Component': 'button#view-component',
-      'Register another': 'button#register-another',
-    };
-  }
-
-  getSelector(buttonName: string): string {
-    /*eslint-disable-next-line no-prototype-builtins*/
-    if (this.selectors.hasOwnProperty(buttonName)) {
-      return this.selectors[buttonName];
-    } else {
-      throw new Error(`Selector not defined for button: ${buttonName}`);
-    }
   }
 
   async verifyComponentInCatalog(kind: string, expectedRows: string[]) {
@@ -40,24 +24,26 @@ export class UIhelper {
   }
 
   async clickButton(
-    label: string,
+    label: string | RegExp,
     options: { exact?: boolean; force?: boolean } = {
       exact: true,
       force: false,
     },
   ) {
-    const selector = `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
+    const selector = `${UIhelperPO.MuiButtonLabel}`;
     const button = this.page
       .locator(selector)
       .getByText(label, { exact: options.exact })
       .first();
     await button.waitFor({ state: 'visible' });
+    await button.waitFor({ state: 'attached' });
 
     if (options?.force) {
       await button.click({ force: true });
     } else {
       await button.click();
     }
+    return button;
   }
 
   async verifyDivHasText(divText: string) {
@@ -101,9 +87,16 @@ export class UIhelper {
 
   async isBtnVisible(text: string): Promise<boolean> {
     const locator = `button:has-text("${text}")`;
-    await this.page.waitForSelector(locator);
-    const button = this.page.locator(locator);
-    return button.isVisible();
+    try {
+      await this.page.waitForSelector(locator, {
+        state: 'visible',
+        timeout: 10000,
+      });
+      const button = this.page.locator(locator);
+      return button.isVisible();
+    } catch (error) {
+      return false;
+    }
   }
 
   async waitForSideBarVisible() {
@@ -227,7 +220,11 @@ export class UIhelper {
     await expect(link).toBeVisible();
   }
 
-  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+  async verifyTextinCard(
+    cardHeading: string,
+    text: string | RegExp,
+    exact = true,
+  ) {
     const locator = this.page
       .locator(UIhelperPO.MuiCard(cardHeading))
       .getByText(text, { exact: exact })
