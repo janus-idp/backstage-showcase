@@ -122,8 +122,8 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
-  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
-  oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  # oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
+  # oc expose svc/test-backstage-customization-provider --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-ocm.yaml" --namespace="${project}"
@@ -150,6 +150,9 @@ apply_yaml_files() {
 
 droute_send() {
   set -x
+  if [[ "$JOB_NAME" == *ocp-v14 ]]; then
+    return 0
+  fi
 
   local release_name=$1
   local project=$2
