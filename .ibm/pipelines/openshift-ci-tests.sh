@@ -20,9 +20,12 @@ set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
   
-  if [[ "$JOB_NAME" == *ocp-v14 ]]; then
+  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
+    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
+    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
   fi
 }
 
@@ -122,8 +125,8 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
-  # oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
-  # oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
+  oc expose svc/test-backstage-customization-provider --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-ocm.yaml" --namespace="${project}"
@@ -150,7 +153,8 @@ apply_yaml_files() {
 
 droute_send() {
   set -x
-  if [[ "$JOB_NAME" == *ocp-v14 ]]; then
+  # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
+  if [[ "$JOB_NAME" == *ocp-v4* ]]; then
     return 0
   fi
 
