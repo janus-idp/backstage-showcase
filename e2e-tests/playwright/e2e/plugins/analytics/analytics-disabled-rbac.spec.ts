@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import { Analytics } from '../../../utils/analytics/analytics';
 import { Common } from '../../../utils/Common';
 
-test.describe('Check "analytics-provider-segment" plugin', () => {
-  test.beforeAll(async ({ page }) => {
+test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
+  test.beforeEach(async ({ page }) => {
     const common = new Common(page);
     await common.loginAsGuest();
   });
