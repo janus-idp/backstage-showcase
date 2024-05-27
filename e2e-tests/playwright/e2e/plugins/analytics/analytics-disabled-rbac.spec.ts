@@ -1,10 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { Analytics } from '../../../utils/analytics/analytics';
-import { Common } from '../../../utils/Common';
+import { Common, setupBrowser } from '../../../utils/Common';
 
+let page: Page;
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
-  test.beforeEach(async ({ page }) => {
-    const common = new Common(page);
+  let common = new Common(page);
+
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
+
+    common = new Common(page);
+
     await common.loginAsGithubUser();
   });
 
