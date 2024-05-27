@@ -16,8 +16,8 @@
     "postinstall": "playwright install"
   },
   "devDependencies": {
-    "@playwright/test": "1.43.1",
-    "@types/node": "20.12.10",
+    "@playwright/test": "1.44.1",
+    "@types/node": "20.12.12",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "eslint": "8.57.0",
