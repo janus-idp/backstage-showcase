@@ -220,7 +220,11 @@ export class UIhelper {
     await expect(link).toBeVisible();
   }
 
-  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+  async verifyTextinCard(
+    cardHeading: string,
+    text: string | RegExp,
+    exact = true,
+  ) {
     const locator = this.page
       .locator(UIhelperPO.MuiCard(cardHeading))
       .getByText(text, { exact: exact })
