@@ -230,10 +230,13 @@ run_tests() {
   pkill Xvfb
 
   mkdir -p "${ARTIFACT_DIR}/${project}/test-results"
-  mkdir -p "${ARTIFACT_DIR}/${project}/attachments"
+  mkdir -p "${ARTIFACT_DIR}/${project}/attachments/screenshots"
   cp -a /tmp/backstage-showcase/e2e-tests/test-results/* "${ARTIFACT_DIR}/${project}/test-results"
   cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
-  cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/"
+
+  if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
+      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots"
+  fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"

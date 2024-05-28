@@ -33,7 +33,7 @@ test.describe('CustomTheme should be applied', () => {
       fullPage: true,
     });
 
-    await testInfo.attach('screenshot', {
+    await testInfo.attach('cusotm-theme-inspection', {
       path: 'screenshots/cusotm-theme-inspection.png',
     });
 
@@ -43,7 +43,7 @@ test.describe('CustomTheme should be applied', () => {
       path: 'screenshots/cusotm-theme-inspection-collapsed.png',
       fullPage: true,
     });
-    await testInfo.attach('screenshot', {
+    await testInfo.attach('cusotm-theme-inspection-collapsed', {
       path: 'screenshots/cusotm-theme-inspection-collapsed.png',
     });
 
