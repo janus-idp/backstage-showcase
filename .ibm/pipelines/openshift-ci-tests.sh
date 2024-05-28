@@ -186,6 +186,7 @@ droute_send() {
     --username '${DATA_ROUTER_USERNAME}' \
     --password '${DATA_ROUTER_PASSWORD}' \
     --results '/tmp/droute/${JUNIT_RESULTS}' \
+    --attachments '/tmp/droute/attachments' \
     --verbose"
 
   set +x
@@ -214,6 +215,7 @@ run_tests() {
   mkdir -p "${ARTIFACT_DIR}/${project}/test-results"
   cp -a /tmp/backstage-showcase/e2e-tests/test-results/* "${ARTIFACT_DIR}/${project}/test-results"
   cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+  cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/"
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
