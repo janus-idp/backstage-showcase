@@ -10,16 +10,14 @@ test.describe('CustomTheme should be applied', () => {
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
-
     common = new Common(page);
     uiHelper = new UIhelper(page);
 
     await common.loginAsGuest();
   });
 
-  test('Verify that theme colors are applied and make screenshots', async ({
-    page,
-  }, testInfo) => {
+  test('Verify that theme colors are applied and make screenshots', async ({}, testInfo) => {
+    // eslint-disable-line no-empty-pattern
     await uiHelper.openSidebar('Settings');
 
     const header = await page.locator('header').first();
