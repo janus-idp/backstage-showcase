@@ -6,7 +6,7 @@ There are several different methods for running the Backstage Showcase app today
 
 The telemetry data collection feature enhances your experience with the application without compromising your privacy.
 
-**Telemetry data collection is enabled by default.**
+**Telemetry data collection is disabled by default.**
 
 To disable telemetry data collection, you need to disable the [`@janus-idp/backstage-plugin-analytics-provider-segment`](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/analytics-provider-segment) plugin as documented below.
 

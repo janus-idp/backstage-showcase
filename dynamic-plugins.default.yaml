@@ -844,7 +844,7 @@ plugins:
                     height: 800
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
-    disabled: false
+    disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
