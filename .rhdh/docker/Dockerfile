@@ -167,7 +167,7 @@ ENV TARBALL_PATH=./packages/backend/dist
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
   rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
-  
+
 # Copy app-config files needed in runtime
 # Upstream only
 # COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
@@ -254,6 +254,10 @@ ENV SEGMENT_TEST_MODE=false
 # By setting GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE to an empty value,
 # 'global-agent' will use the same HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
 ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
+
+# Enables the usage of the backstage scaffolder on nodejs 20
+# https://github.com/backstage/backstage/issues/20661
+ENV NODE_OPTIONS='--no-node-snapshot'
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
