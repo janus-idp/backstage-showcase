@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements-build.txt --strip-extras requirements-build.in
 #
-babel==2.14.0
+babel==2.15.0
     # via
     #   -r requirements-build.in
     #   mkdocs-material
@@ -57,7 +57,7 @@ jinja2==3.1.4
     #   -r requirements-build.in
     #   mkdocs
     #   mkdocs-material
-markdown==3.2.2
+markdown==3.6
     # via
     #   -r requirements-build.in
     #   markdown-inline-graphviz-extension
@@ -71,7 +71,7 @@ markdown-inline-graphviz-extension==1.1.2
     # via
     #   -r requirements-build.in
     #   mkdocs-techdocs-core
-markupsafe==2.1.4
+markupsafe==2.1.5
     # via
     #   -r requirements-build.in
     #   jinja2
@@ -84,13 +84,13 @@ mergedeep==1.3.4
     # via
     #   -r requirements-build.in
     #   mkdocs
-mkdocs==1.5.3
+mkdocs==1.6.0
     # via
     #   -r requirements-build.in
     #   mkdocs-material
     #   mkdocs-monorepo-plugin
     #   mkdocs-techdocs-core
-mkdocs-material==9.4.14
+mkdocs-material==9.5.25
     # via
     #   -r requirements-build.in
     #   mkdocs-techdocs-core
@@ -130,21 +130,21 @@ pluggy==1.5.0
     # via
     #   -r requirements-build.in
     #   hatchling
-pygments==2.17.2
+pygments==2.18.0
     # via
     #   -r requirements-build.in
     #   mkdocs-material
     #   mkdocs-techdocs-core
-pymdown-extensions==10.3.1
+pymdown-extensions==10.8.1
     # via
     #   -r requirements-build.in
     #   mkdocs-material
     #   mkdocs-techdocs-core
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
     # via
     #   -r requirements-build.in
     #   ghp-import
-python-slugify==8.0.2
+python-slugify==8.0.4
     # via
     #   -r requirements-build.in
     #   mkdocs-monorepo-plugin
@@ -162,7 +162,7 @@ regex==2023.12.25
     # via
     #   -r requirements-build.in
     #   mkdocs-material
-requests==2.32.2
+requests==2.32.3
     # via
     #   -r requirements-build.in
     #   mkdocs-material
@@ -189,9 +189,9 @@ trove-classifiers==2023.11.29
     # via
     #   -r requirements-build.in
     #   hatchling
-typing-extensions==4.9.0
+typing-extensions==4.12.0
     # via -r requirements-build.in
-urllib3==2.1.0
+urllib3==2.2.1
     # via
     #   -r requirements-build.in
     #   requests
@@ -199,7 +199,7 @@ watchdog==3.0.0
     # via
     #   -r requirements-build.in
     #   mkdocs
-wheel==0.42.0
+wheel==0.43.0
     # via -r requirements-build.in
 
 # The following packages are considered to be unsafe in a requirements file:
