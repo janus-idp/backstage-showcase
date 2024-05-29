@@ -158,7 +158,7 @@ pyyaml-env-tag==0.1
     # via
     #   -r requirements.in
     #   mkdocs
-regex==2023.12.25
+regex==2024.5.15
     # via
     #   -r requirements.in
     #   mkdocs-material
