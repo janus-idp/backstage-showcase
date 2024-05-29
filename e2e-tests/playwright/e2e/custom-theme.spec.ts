@@ -16,7 +16,9 @@ test.describe('CustomTheme should be applied', () => {
     await common.loginAsGuest();
   });
 
-  test('Verify that theme colors are applied and make screenshots', async (_, testInfo) => {
+  // eslint-disable-next-line no-empty-pattern
+  test('Verify that theme colors are applied and make screenshots', async ({}, testInfo) => {
+    // NOSONAR
     await uiHelper.openSidebar('Settings');
 
     const header = await page.locator('header').first();
