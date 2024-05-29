@@ -203,6 +203,7 @@ droute_send() {
     --username '${DATA_ROUTER_USERNAME}' \
     --password '${DATA_ROUTER_PASSWORD}' \
     --results '/tmp/droute/${JUNIT_RESULTS}' \
+    --attachments '/tmp/droute/attachments' \
     --verbose"
 
   set +x
@@ -229,8 +230,13 @@ run_tests() {
   pkill Xvfb
 
   mkdir -p "${ARTIFACT_DIR}/${project}/test-results"
+  mkdir -p "${ARTIFACT_DIR}/${project}/attachments/screenshots"
   cp -a /tmp/backstage-showcase/e2e-tests/test-results/* "${ARTIFACT_DIR}/${project}/test-results"
   cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+
+  if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
+      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+  fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"

@@ -54,6 +54,7 @@ site
 
 # Playwright
 /test-results/
+/screenshots/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
