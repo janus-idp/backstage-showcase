@@ -17,7 +17,7 @@
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
     "@backstage-community/plugin-sonarqube": "0.7.17"
