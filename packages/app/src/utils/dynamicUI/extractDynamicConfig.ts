@@ -3,14 +3,26 @@ import { isKind } from '@backstage/plugin-catalog';
 import { hasAnnotation, isType } from '../../components/catalog/utils';
 import {
   DynamicModuleEntry,
-  MenuItem,
   RouteBinding,
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
 import { ApiHolder } from '@backstage/core-plugin-api';
 
-type DynamicRoute = {
+export type MenuItem =
+  | {
+      text: string;
+      icon: string;
+    }
+  | {
+      module?: string;
+      importName: string;
+      config?: {
+        props?: Record<string, any>;
+      };
+    };
+
+export type DynamicRoute = {
   scope: string;
   module: string;
   importName: string;
