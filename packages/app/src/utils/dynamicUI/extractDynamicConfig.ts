@@ -8,6 +8,7 @@ import {
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
+import { ApiHolder } from '@backstage/core-plugin-api';
 
 type DynamicRoute = {
   scope: string;
@@ -231,17 +232,22 @@ function extractDynamicConfig(
  * @returns
  */
 export function configIfToCallable(conditional: ScalprumMountPointConfigRawIf) {
-  return (e: Entity) => {
+  return (entity: Entity, context?: { apis: ApiHolder }) => {
     if (conditional?.allOf) {
-      return conditional.allOf.map(conditionsArrayMapper).every(f => f(e));
+      return conditional.allOf
+        .map(conditionsArrayMapper)
+        .every(f => f(entity, context));
     }
     if (conditional?.anyOf) {
-      return conditional.anyOf.map(conditionsArrayMapper).some(f => f(e));
+      return conditional.anyOf
+        .map(conditionsArrayMapper)
+        .some(f => f(entity, context));
     }
     if (conditional?.oneOf) {
       return (
-        conditional.oneOf.map(conditionsArrayMapper).filter(f => f(e))
-          .length === 1
+        conditional.oneOf
+          .map(conditionsArrayMapper)
+          .filter(f => f(entity, context)).length === 1
       );
     }
     return true;
@@ -254,9 +260,10 @@ export function conditionsArrayMapper(
         [key: string]: string | string[];
       }
     | Function,
-) {
+): (entity: Entity, context?: { apis: ApiHolder }) => boolean {
   if (typeof condition === 'function') {
-    return (entity: Entity) => Boolean(condition(entity));
+    return (entity: Entity, context?: { apis: ApiHolder }): boolean =>
+      condition(entity, context);
   }
   if (condition.isKind) {
     return isKind(condition.isKind);

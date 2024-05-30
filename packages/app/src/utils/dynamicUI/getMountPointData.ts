@@ -3,7 +3,11 @@ import { ScalprumMountPointConfig } from '../../components/DynamicRoot/DynamicRo
 
 function getMountPointData<T = any, T2 = any>(
   mountPoint: string,
-): { config: ScalprumMountPointConfig; Component: T; staticJSXContent: T2 }[] {
+): {
+  config: ScalprumMountPointConfig;
+  Component: T;
+  staticJSXContent: T2;
+}[] {
   return getScalprum().api.mountPoints?.[mountPoint] ?? [];
 }
 
