@@ -64,6 +64,7 @@ export const DynamicRoot = ({
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
     const {
+      pluginModules,
       apiFactories,
       appIcons,
       dynamicRoutes,
@@ -74,6 +75,10 @@ export const DynamicRoot = ({
       scaffolderFieldExtensions,
     } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
+      ...pluginModules.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
       ...routeBindingTargets.map(({ scope, module }) => ({
         scope,
         module,
@@ -114,6 +119,25 @@ export const DynamicRoot = ({
       scalprumConfig,
       requiredModules,
     );
+
+    const allScopes = Object.values(remotePlugins);
+    const allModules = allScopes.flatMap(scope => Object.values(scope));
+    const allImports = allModules.flatMap(module => Object.values(module));
+    const remoteBackstagePlugins = allImports.filter(imported => {
+      const prototype = Object.getPrototypeOf(imported);
+      return (
+        prototype !== undefined &&
+        [
+          'getId',
+          'getApis',
+          'getFeatureFlags',
+          'provide',
+          'routes',
+          'externalRoutes',
+        ].every(field => field in prototype)
+      );
+    }) as BackstagePlugin<{}>[];
+
     const allPlugins = { ...staticPlugins, ...remotePlugins };
     const resolvedRouteBindingTargets = Object.fromEntries(
       routeBindingTargets.reduce<[string, BackstagePlugin<{}>][]>(
@@ -313,7 +337,10 @@ export const DynamicRoot = ({
           bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
         icons,
-        plugins: Object.values(staticPluginStore).map(entry => entry.plugin),
+        plugins: [
+          ...Object.values(staticPluginStore).map(entry => entry.plugin),
+          ...remoteBackstagePlugins,
+        ],
         themes,
         components: defaultAppComponents,
       });

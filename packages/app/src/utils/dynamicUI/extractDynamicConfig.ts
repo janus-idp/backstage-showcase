@@ -33,6 +33,11 @@ export type DynamicRoute = {
   };
 };
 
+type PluginModule = {
+  scope: string;
+  module: string;
+};
+
 type MountPoint = {
   scope: string;
   mountPoint: string;
@@ -81,6 +86,7 @@ type EntityTabEntry = {
 };
 
 type CustomProperties = {
+  pluginModule?: string;
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
     module?: string;
@@ -106,6 +112,7 @@ export type DynamicPluginConfig = {
 };
 
 type DynamicConfig = {
+  pluginModules: PluginModule[];
   apiFactories: ApiFactory[];
   appIcons: AppIcon[];
   dynamicRoutes: DynamicRoute[];
@@ -125,6 +132,7 @@ function extractDynamicConfig(
 ) {
   const frontend = dynamicPlugins.frontend || {};
   const config: DynamicConfig = {
+    pluginModules: [],
     apiFactories: [],
     appIcons: [],
     dynamicRoutes: [],
@@ -134,6 +142,16 @@ function extractDynamicConfig(
     routeBindingTargets: [],
     scaffolderFieldExtensions: [],
   };
+  config.pluginModules = Object.entries(frontend).reduce<PluginModule[]>(
+    (pluginSet, [scope, customProperties]) => {
+      pluginSet.push({
+        scope,
+        module: customProperties.pluginModule ?? 'PluginRoot',
+      });
+      return pluginSet;
+    },
+    [],
+  );
   config.dynamicRoutes = Object.entries(frontend).reduce<DynamicRoute[]>(
     (pluginSet, [scope, customProperties]) => {
       pluginSet.push(
