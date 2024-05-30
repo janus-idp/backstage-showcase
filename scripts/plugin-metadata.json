@@ -1,0 +1,64 @@
+{
+  "description:showcase-plugins1": "This is a list of plugins in the janus-idp repo which are included in the showcase.",
+  "description:mappings": {
+    "description:plugin": "@janus-idp/backstage-plugin-[analytics-provider-segment] => plugins/[analytics-provider-segment]",
+    "description:action": "@janus-idp/backstage-scaffolder-backend-module-[quay] => plugins/[quay]-actions"
+  },
+
+  "showcase-plugins": {
+    "support:production": [
+      "@janus-idp/backstage-plugin-analytics-provider-segment",
+      "@janus-idp/backstage-plugin-keycloak-backend",
+      "@janus-idp/backstage-plugin-ocm",
+      "@janus-idp/backstage-plugin-ocm-backend",
+      "@janus-idp/backstage-plugin-ocm-common",
+      "@janus-idp/backstage-plugin-quay",
+      "@janus-idp/backstage-plugin-rbac",
+      "@janus-idp/backstage-plugin-rbac-node",
+      "@janus-idp/backstage-plugin-rbac-backend",
+      "@janus-idp/backstage-plugin-rbac-common",
+      "@janus-idp/backstage-plugin-tekton",
+      "@janus-idp/backstage-plugin-topology",
+      "@janus-idp/backstage-scaffolder-backend-module-quay",
+      "@janus-idp/backstage-scaffolder-backend-module-regex",
+      "@janus-idp/backstage-plugin-dynamic-plugins-info",
+      "@janus-idp/shared-react"
+    ],
+
+    "support:tech-preview": [
+      "@janus-idp/backstage-plugin-3scale-backend",
+      "@janus-idp/backstage-plugin-aap-backend",
+      "@janus-idp/backstage-plugin-acr",
+      "@janus-idp/backstage-plugin-jfrog-artifactory",
+      "@janus-idp/backstage-plugin-nexus-repository-manager",
+      "@janus-idp/backstage-scaffolder-backend-module-servicenow",
+      "@janus-idp/backstage-scaffolder-backend-module-sonarqube"
+    ]
+  },
+
+  "description:other-plugins1": "This is a list of plugins in the janus-idp repo which are NOT included in the showcase; these will be installablae dynamically via some other process.",
+  "other-plugins": {
+    "support:production": ["@janus-idp/backstage-plugin-argocd"],
+
+    "support:tech-preview": [
+      "@janus-idp/backstage-plugin-analytics-module-matomo",
+      "@janus-idp/backstage-plugin-bulk-import",
+      "@janus-idp/backstage-plugin-feedback",
+      "@janus-idp/backstage-plugin-feedback-backend",
+      "@janus-idp/backstage-plugin-kiali",
+      "@janus-idp/backstage-plugin-kiali-backend",
+      "@janus-idp/backstage-scaffolder-backend-module-kubernetes",
+      "@janus-idp/backstage-plugin-matomo",
+      "@janus-idp/backstage-plugin-matomo-backend",
+      "@janus-idp/plugin-notifications",
+      "@janus-idp/plugin-notifications-backend",
+      "@janus-idp/backstage-plugin-openshift-image-registry",
+      "@janus-idp/backstage-plugin-orchestrator",
+      "@janus-idp/backstage-plugin-orchestrator-backend",
+      "@janus-idp/backstage-plugin-orchestrator-common",
+      "@janus-idp/backstage-plugin-orchestrator-swf-editor-envelope",
+      "@janus-idp/backstage-scaffolder-backend-module-annotator",
+      "@janus-idp/backstage-plugin-web-terminal"
+    ]
+  }
+}
