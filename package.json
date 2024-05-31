@@ -48,7 +48,7 @@
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
-    "ip": "1.1.9",
+    "ip": "2.0.1",
     "lint-staged": "15.2.5",
     "prettier": "3.2.5",
     "sanitize-html": "2.13.0",
