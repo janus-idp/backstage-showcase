@@ -9,7 +9,8 @@ import { AppsConfig, getScalprum } from '@scalprum/core';
 import { useScalprum } from '@scalprum/react-core';
 import DynamicRootContext, {
   ComponentRegistry,
-  DynamicRootContextValue,
+  ResolvedDynamicRoute,
+  ResolvedMenuItem,
   RemotePlugins,
   ScalprumMountPoint,
   ScalprumMountPointConfig,
@@ -17,6 +18,7 @@ import DynamicRootContext, {
 import extractDynamicConfig, {
   DynamicPluginConfig,
   configIfToCallable,
+  DynamicRoute,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 import defaultAppComponents from './defaultAppComponents';
@@ -62,6 +64,7 @@ export const DynamicRoot = ({
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
     const {
+      pluginModules,
       apiFactories,
       appIcons,
       dynamicRoutes,
@@ -72,6 +75,10 @@ export const DynamicRoot = ({
       scaffolderFieldExtensions,
     } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
+      ...pluginModules.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
       ...routeBindingTargets.map(({ scope, module }) => ({
         scope,
         module,
@@ -112,6 +119,25 @@ export const DynamicRoot = ({
       scalprumConfig,
       requiredModules,
     );
+
+    const allScopes = Object.values(remotePlugins);
+    const allModules = allScopes.flatMap(scope => Object.values(scope));
+    const allImports = allModules.flatMap(module => Object.values(module));
+    const remoteBackstagePlugins = allImports.filter(imported => {
+      const prototype = Object.getPrototypeOf(imported);
+      return (
+        prototype !== undefined &&
+        [
+          'getId',
+          'getApis',
+          'getFeatureFlags',
+          'provide',
+          'routes',
+          'externalRoutes',
+        ].every(field => field in prototype)
+      );
+    }) as BackstagePlugin<{}>[];
+
     const allPlugins = { ...staticPlugins, ...remotePlugins };
     const resolvedRouteBindingTargets = Object.fromEntries(
       routeBindingTargets.reduce<[string, BackstagePlugin<{}>][]>(
@@ -241,13 +267,36 @@ export const DynamicRoot = ({
     getScalprum().api.mountPoints = mountPointComponents;
 
     const dynamicRoutesComponents = dynamicRoutes.reduce<
-      DynamicRootContextValue[]
+      ResolvedDynamicRoute[]
     >((acc, route) => {
+      function resolveMenuItem(
+        route: DynamicRoute,
+      ): ResolvedMenuItem | undefined {
+        if (route.menuItem === undefined) {
+          return undefined;
+        }
+        if ('text' in route.menuItem) {
+          return route.menuItem;
+        }
+        const MenuItemComponent =
+          allPlugins[route.scope]?.[route.menuItem.module ?? route.module]?.[
+            route.menuItem.importName
+          ];
+        if (MenuItemComponent === undefined) {
+          return undefined;
+        }
+        return {
+          Component: MenuItemComponent as React.ComponentType<{}>,
+          config: route.menuItem.config || {},
+        };
+      }
+
       const Component =
         allPlugins[route.scope]?.[route.module]?.[route.importName];
       if (Component) {
         acc.push({
           ...route,
+          menuItem: resolveMenuItem(route),
           Component:
             typeof Component === 'object' && 'element' in Component
               ? (Component.element as React.ComponentType<{}>)
@@ -288,7 +337,10 @@ export const DynamicRoot = ({
           bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
         icons,
-        plugins: Object.values(staticPluginStore).map(entry => entry.plugin),
+        plugins: [
+          ...Object.values(staticPluginStore).map(entry => entry.plugin),
+          ...remoteBackstagePlugins,
+        ],
         themes,
         components: defaultAppComponents,
       });
