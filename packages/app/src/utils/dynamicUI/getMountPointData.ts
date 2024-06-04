@@ -8,7 +8,7 @@ function getMountPointData<T = any, T2 = any>(
   Component: T;
   staticJSXContent: T2;
 }[] {
-  return getScalprum().api.mountPoints?.[mountPoint] ?? [];
+  return getScalprum().api.dynamicRootConfig?.mountPoints?.[mountPoint] ?? [];
 }
 
 export default getMountPointData;
