@@ -2,6 +2,11 @@ import React, { ReactNode, useMemo, useState } from 'react';
 import { EntityLayout } from '@backstage/plugin-catalog';
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import { MenuIcon } from '../../Root/Root';
+import { IconComponent } from '@backstage/core-plugin-api';
+
+const makeIcon =
+  (iconName: string): IconComponent =>
+  () => <MenuIcon icon={iconName} />;
 
 export const ContextMenuAwareEntityLayout = (props: {
   children?: ReactNode;
@@ -11,19 +16,28 @@ export const ContextMenuAwareEntityLayout = (props: {
       `entity.context.menu`,
     );
 
-  const [openStates, openStatesSet] = useState(
+  const [openStates, setOpenStates] = useState(
     new Array<boolean>(contextMenuElements.length).fill(false),
   );
 
+  const changeValueAt = (
+    values: boolean[],
+    index: number,
+    newValue: boolean,
+  ): boolean[] => values.map((v, i) => (i === index ? newValue : v));
+
   const extraMenuItems = useMemo(
     () =>
-      contextMenuElements.map((e, index) => ({
-        title: e.config.props?.title ?? 'title',
-        Icon: () => <MenuIcon icon={e.config.props?.icon ?? 'icon'} />,
-        onClick: () => {
-          openStatesSet(openStates.map((s, i) => (i === index ? true : s)));
-        },
-      })),
+      contextMenuElements.map((e, index) => {
+        const Icon = makeIcon(e.config.props?.icon ?? 'icon');
+        return {
+          title: e.config.props?.title ?? '<title>',
+          Icon,
+          onClick: () => {
+            setOpenStates(changeValueAt(openStates, index, true));
+          },
+        };
+      }),
     [contextMenuElements, openStates],
   );
 
@@ -38,14 +52,11 @@ export const ContextMenuAwareEntityLayout = (props: {
         {props.children}
       </EntityLayout>
       {contextMenuElements.map(({ Component }, index) => (
-        <>
-          <Component
-            open={openStates[index]}
-            onClose={() =>
-              openStatesSet(openStates.map((s, i) => (i === index ? false : s)))
-            }
-          />
-        </>
+        <Component
+          key={`entity.context.menu-${Component.displayName}`}
+          open={openStates[index]}
+          onClose={() => setOpenStates(changeValueAt(openStates, index, false))}
+        />
       ))}
     </>
   );
