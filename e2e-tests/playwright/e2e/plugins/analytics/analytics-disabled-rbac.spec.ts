@@ -7,7 +7,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   let common: Common;
   let uiHelper: UIhelper;
 
-  test.beforeAll(async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();
