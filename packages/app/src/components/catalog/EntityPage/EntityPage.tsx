@@ -1,7 +1,7 @@
 import React from 'react';
-import { EntityLayout } from '@backstage/plugin-catalog';
 import { dynamicEntityTab, DynamicEntityTabProps } from './DynamicEntityTab';
 import { defaultTabs, tabRules, tabChildren } from './defaultTabs';
+import { ContextMenuAwareEntityLayout } from './ContextMenuAwareEntityLayout';
 
 /**
  * Displays the tabs and content for a catalog entity
@@ -16,7 +16,7 @@ export const entityPage = (
   > = {},
 ) => {
   return (
-    <EntityLayout>
+    <ContextMenuAwareEntityLayout>
       {Object.entries({ ...defaultTabs, ...entityTabOverrides }).map(
         ([path, config]) => {
           return dynamicEntityTab({
@@ -27,6 +27,6 @@ export const entityPage = (
           } as DynamicEntityTabProps);
         },
       )}
-    </EntityLayout>
+    </ContextMenuAwareEntityLayout>
   );
 };
