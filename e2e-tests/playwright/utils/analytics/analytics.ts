@@ -9,7 +9,7 @@ export class Analytics {
     return data.backstageIdentity.token;
   }
 
-  async getAuthHeader(): Promise<{ [key: string]: string }> {
+  async getGuestAuthHeader(): Promise<{ [key: string]: string }> {
     const token = await this.getGuestToken();
     const headers = {
       Authorization: `Bearer ${token}`,

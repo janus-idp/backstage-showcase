@@ -4,7 +4,7 @@ import { Analytics } from '../../../utils/analytics/analytics';
 test('Check "analytics-provider-segment" plugin is enabled', async () => {
   const analytics = new Analytics();
 
-  const authHeader = await analytics.getAuthHeader();
+  const authHeader = await analytics.getGuestAuthHeader();
   const pluginsList = await analytics.getDynamicPluginsList(authHeader);
   const isPluginListed = analytics.checkPluginListed(
     pluginsList,
