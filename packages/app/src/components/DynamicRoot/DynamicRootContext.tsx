@@ -27,6 +27,7 @@ export type DynamicModuleEntry = Pick<
   ScalprumComponentProps,
   'scope' | 'module'
 >;
+
 export type ResolvedDynamicRoute = DynamicModuleEntry & {
   path: string;
   menuItem?: ResolvedMenuItem;
@@ -81,19 +82,31 @@ export type RemotePlugins = {
   };
 };
 
+export type EntityTabOverrides = Record<
+  string,
+  { title: string; mountPoint: string }
+>;
+
+export type MountPoints = Record<string, ScalprumMountPoint[]>;
+
+export type ScaffolderFieldExtension = {
+  scope: string;
+  module: string;
+  importName: string;
+  Component: React.ComponentType<{}>;
+};
+
+export type DynamicRootConfig = {
+  dynamicRoutes: ResolvedDynamicRoute[];
+  entityTabOverrides: EntityTabOverrides;
+  mountPoints: MountPoints;
+  scaffolderFieldExtensions: ScaffolderFieldExtension[];
+};
+
 export type ComponentRegistry = {
   AppProvider: React.ComponentType<React.PropsWithChildren>;
   AppRouter: React.ComponentType<React.PropsWithChildren>;
-  dynamicRoutes: ResolvedDynamicRoute[];
-  entityTabOverrides: Record<string, { title: string; mountPoint: string }>;
-  mountPoints: { [mountPoint: string]: ScalprumMountPoint[] };
-  scaffolderFieldExtensions: {
-    scope: string;
-    module: string;
-    importName: string;
-    Component: React.ComponentType<{}>;
-  }[];
-};
+} & DynamicRootConfig;
 
 const DynamicRootContext = createContext<ComponentRegistry>({
   AppProvider: () => null,
