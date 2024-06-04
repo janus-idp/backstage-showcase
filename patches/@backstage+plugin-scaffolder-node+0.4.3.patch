@@ -1,0 +1,12 @@
+diff --git a/node_modules/@backstage/plugin-scaffolder-node/dist/index.d.ts b/node_modules/@backstage/plugin-scaffolder-node/dist/index.d.ts
+index 5736df3..4b6ae16 100644
+--- a/node_modules/@backstage/plugin-scaffolder-node/dist/index.d.ts
++++ b/node_modules/@backstage/plugin-scaffolder-node/dist/index.d.ts
+@@ -89,6 +89,7 @@ type TaskBrokerDispatchOptions = {
+  * @public
+  */
+ interface TaskContext {
++    taskId: string;
+     cancelSignal: AbortSignal;
+     spec: TaskSpec;
+     secrets?: TaskSecrets;
