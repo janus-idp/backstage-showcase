@@ -1,22 +1,6 @@
 import { expect, request } from '@playwright/test';
 
 export class Analytics {
-  async getGuestToken(): Promise<string> {
-    const context = await request.newContext();
-    const response = await context.post('/api/auth/guest/refresh');
-    expect(response.status()).toBe(200);
-    const data = await response.json();
-    return data.backstageIdentity.token;
-  }
-
-  async getGuestAuthHeader(): Promise<{ [key: string]: string }> {
-    const token = await this.getGuestToken();
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-    return headers;
-  }
-
   async getDynamicPluginsList(authHeader: { [key: string]: string }) {
     const context = await request.newContext();
     const loadedPluginsEndpoint = '/api/dynamic-plugins-info/loaded-plugins';
