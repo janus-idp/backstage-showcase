@@ -48,6 +48,7 @@ site
 # vscode database functionality support files
 *.session.sql
 
+.vscode
 .turbo
 
 # Dynamic plugins root content
