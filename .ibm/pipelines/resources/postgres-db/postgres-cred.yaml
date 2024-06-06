@@ -1,0 +1,10 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: postgres-cred
+data:
+  POSTGRES_PASSWORD: dG1w
+  POSTGRES_PORT: NTQzMg==
+  POSTGRES_USER: amFudXMtaWRw
+  POSTGRES_HOST: cG9zdGdyZXNzLWV4dGVybmFsLWRiLXByaW1hcnkucG9zdGdyZXNzLWV4dGVybmFsLWRiLnN2Yy5jbHVzdGVyLmxvY2Fs
+  PGSSLMODE: cmVxdWlyZQ==
