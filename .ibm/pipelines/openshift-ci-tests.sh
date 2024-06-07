@@ -96,22 +96,23 @@ configure_namespace() {
 }
 
 configure_external_postgres_db() {
-  oc apply -f "${DIR}/resources/postgres-db/postgres.yaml"
+  local project=$1
+  oc apply -f "${DIR}/resources/postgres-db/postgres.yaml" --namespace="${NAME_SPACE_POSTGRES_DB}"
   sleep 5
 
-  oc get secret postgress-external-db-cluster-cert -n postgress-external-db -o jsonpath='{.data.ca\.crt}' | base64 --decode > postgres-ca
-  oc get secret postgress-external-db-cluster-cert -n postgress-external-db -o jsonpath='{.data.tls\.crt}' | base64 --decode > postgres-tls-crt
-  oc get secret postgress-external-db-cluster-cert -n postgress-external-db -o jsonpath='{.data.tls\.key}' | base64 --decode > postgres-tsl-key
+  oc get secret postgress-external-db-cluster-cert -n "${NAME_SPACE_POSTGRES_DB}" -o jsonpath='{.data.ca\.crt}' | base64 --decode > postgres-ca
+  oc get secret postgress-external-db-cluster-cert -n "${NAME_SPACE_POSTGRES_DB}" -o jsonpath='{.data.tls\.crt}' | base64 --decode > postgres-tls-crt
+  oc get secret postgress-external-db-cluster-cert -n "${NAME_SPACE_POSTGRES_DB}" -o jsonpath='{.data.tls\.key}' | base64 --decode > postgres-tsl-key
 
   oc create secret generic postgress-external-db-cluster-cert \
   --from-file=ca.crt=postgres-ca \
   --from-file=tls.crt=postgres-tls-crt \
   --from-file=tls.key=postgres-tsl-key \
-  --dry-run=client -o yaml | oc apply -f  --namespace="${NAME_SPACE_RBAC}" -
+  --dry-run=client -o yaml | oc apply -f - --namespace="${project}"
 
-  POSTGRES_PASSWORD=$(oc get secret/postgress-external-db-pguser-janus-idp -n postgress-external-db -o jsonpath={.data.password})
+  POSTGRES_PASSWORD=$(oc get secret/postgress-external-db-pguser-janus-idp -n "${NAME_SPACE_POSTGRES_DB}" -o jsonpath={.data.password})
   sed -i "s|POSTGRES_PASSWORD:.*|POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
-  oc apply -f "${DIR}/resources/postgres-db/postgres-cred.yaml"  --namespace="${NAME_SPACE_RBAC}"
+  oc apply -f "${DIR}/resources/postgres-db/postgres-cred.yaml"  --namespace="${project}"
 }
 
 apply_yaml_files() {
@@ -324,10 +325,11 @@ initiate_deployments() {
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
-  configure_namespace "postgress-external-db"
-  configure_external_postgres_db
-
+  configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
+  configure_external_postgres_db "${NAME_SPACE_RBAC}"
+
+  
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
