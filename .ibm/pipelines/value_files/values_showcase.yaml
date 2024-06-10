@@ -128,8 +128,8 @@ upstream:
         - rhdh-pull-secret
       # using test image from https://quay.io/repository/janus-idp/backstage-showcase
       registry: quay.io
-      repository: janus-idp/backstage-showcase
-      tag: next
+      repository: rhdh/rhdh-hub-rhel9
+      tag: "1.2"
     command: []
     # FIXME (tumido): USE POSTGRES_PASSWORD and POSTGRES_USER instead of POSTGRES_ADMIN_PASSWORD
     # This is a hack. In {fedora,rhel}/postgresql images, regular user is forbidden
