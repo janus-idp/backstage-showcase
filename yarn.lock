@@ -4413,7 +4413,7 @@
     "@backstage/plugin-auth-node" "^0.4.12"
     jose "^5.0.0"
 
-"@backstage/plugin-auth-backend-module-oidc-provider@^0.1.8":
+"@backstage/plugin-auth-backend-module-oidc-provider@0.1.8", "@backstage/plugin-auth-backend-module-oidc-provider@^0.1.8":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend-module-oidc-provider/-/plugin-auth-backend-module-oidc-provider-0.1.8.tgz#5f240c5aaaf1e83e13a7c390d30ecf8d66883ea7"
   integrity sha512-JdeeJTDPS392R0Dhel4+3l23m6FTAhWYCYGmtvCxUEFbNMnP+4EuOjBt/HFRyaD6Y0OF6jkkMKPvg9S5z5j40A==

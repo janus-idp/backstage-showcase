@@ -31,6 +31,9 @@ export interface Config {
           tokenSignedResponseAlg?: string;
           scope?: string;
           prompt?: string;
+          signIn?: {
+            resolvers?: Array<{ resolver: string }>;
+          };
         };
       };
     };
