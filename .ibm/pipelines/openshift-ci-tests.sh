@@ -329,12 +329,6 @@ check_and_test() {
 main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info
-
-  export NAME_SPACE="showcase-1-2-x"
-  export NAME_SPACE_RBAC="showcase-rbac-1-2-x"
-  export QUAY_REPO="rhdh/rhdh-hub-rhel9"
-  export TAG_NAME="1.2"
-
   source "${DIR}/env_variables.sh"
   if [[ "$JOB_NAME" == *periodic-* ]]; then
     NAME_SPACE="showcase-ci-nightly"
