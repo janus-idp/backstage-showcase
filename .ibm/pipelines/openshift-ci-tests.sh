@@ -138,7 +138,7 @@ apply_yaml_files() {
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
   sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" ]]; then
+  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-2-x" ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
   else
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh.yaml" --namespace="${project}"
@@ -334,7 +334,7 @@ main() {
   export NAME_SPACE_RBAC="showcase-rbac-1-2-x"
   export QUAY_REPO="rhdh/rhdh-hub-rhel9"
   export TAG_NAME="1.2"
-  
+
   source "${DIR}/env_variables.sh"
   if [[ "$JOB_NAME" == *periodic-* ]]; then
     NAME_SPACE="showcase-ci-nightly"
