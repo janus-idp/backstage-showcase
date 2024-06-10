@@ -5,7 +5,7 @@ metadata:
   namespace: postgress-external-db
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
-  postgresVersion: 14
+  postgresVersion: 16
   instances:
     - name: instance1
       dataVolumeClaimSpec:
