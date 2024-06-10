@@ -8,11 +8,12 @@ HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
 K8S_CLUSTER_TOKEN_ENCODED=$(echo -n $K8S_CLUSTER_TOKEN | base64 | tr -d '\n')
+QUAY_REPO="${QUAY_REPO:-janus-idp/backstage-showcase}"
 
 RELEASE_NAME=rhdh
 RELEASE_NAME_RBAC=rhdh-rbac
-NAME_SPACE=showcase
-NAME_SPACE_RBAC=showcase-rbac
+NAME_SPACE="${NAME_SPACE:-showcase}"
+NAME_SPACE_RBAC="${NAME_SPACE_RBAC:-showcase-rbac}"
 CHART_VERSION="2.15.2"
 GITHUB_APP_APP_ID=Mzc2ODY2
 GITHUB_APP_CLIENT_ID=SXYxLjdiZDNlZDFmZjY3MmY3ZDg=
