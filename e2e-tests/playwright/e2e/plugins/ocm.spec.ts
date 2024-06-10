@@ -11,8 +11,8 @@ const clusterDetails = {
   clusterName: 'testCluster',
   status: 'Ready',
   platform: 'IBM',
-  cpuCores: '24',
-  memorySize: '94 Gi',
+  cpuCores: /CPU cores\d+/,
+  memorySize: /Memory size\d+ Gi/,
   ocVersion: /^\d+\.\d+\.\d+$/,
 };
 let page: Page;
@@ -28,7 +28,7 @@ test.describe.serial('Test OCM plugin', () => {
     uiHelper = new UIhelper(page);
     clusters = new Clusters(page);
 
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
   test('Navigate to Clusters and Verify OCM Clusters', async () => {
     await uiHelper.openSidebar('Clusters');

@@ -3,14 +3,11 @@ set -a  # Automatically export all variables
 
 #ENVS and Vault Secrets
 HELM_CHART_VALUE_FILE_NAME="values_showcase.yaml"
+HELM_CHART_RBAC_VALUE_FILE_NAME="values_showcase-rbac.yaml"
 HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
-K8S_CLUSTER_ROUTER_BASE="rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud"
-K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN)
-K8S_CLUSTER_TOKEN_ENCODED=$(cat /tmp/secrets/K8S_CLUSTER_TOKEN_ENCODED)
-K8S_CLUSTER_URL=https://c100-e.us-east.containers.cloud.ibm.com:32212
-OPENSHIFT_CLUSTER_ID=cobct3kw0lbiltuijvmg
+K8S_CLUSTER_TOKEN_ENCODED=$(echo -n $K8S_CLUSTER_TOKEN | base64 | tr -d '\n')
 
 RELEASE_NAME=rhdh
 RELEASE_NAME_RBAC=rhdh-rbac
@@ -30,11 +27,10 @@ GH_USER_PASS=$(cat /tmp/secrets/GH_USER_PASS)
 GH_2FA_SECRET=$(cat /tmp/secrets/GH_2FA_SECRET)
 GH_RHDH_QE_USER_TOKEN=$(cat /tmp/secrets/GH_RHDH_QE_USER_TOKEN)
 
-K8S_CLUSTER_NAME=Y29iY3Qza3cwbGJpbHR1aWp2bWc=
-K8S_CLUSTER_API_SERVER_URL=aHR0cHM6Ly9jMTAwLWUudXMtZWFzdC5jb250YWluZXJzLmNsb3VkLmlibS5jb206MzIyMTI=
-K8S_SERVICE_ACCOUNT_TOKEN=$(cat /tmp/secrets/K8S_SERVICE_ACCOUNT_TOKEN)
-OCM_CLUSTER_URL=aHR0cHM6Ly9jMTAwLWUudXMtZWFzdC5jb250YWluZXJzLmNsb3VkLmlibS5jb206MzIyMTI=
-OCM_CLUSTER_TOKEN=$(cat /tmp/secrets/OCM_CLUSTER_TOKEN)
+K8S_CLUSTER_API_SERVER_URL=$(echo -n "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
+K8S_SERVICE_ACCOUNT_TOKEN=$K8S_CLUSTER_TOKEN_ENCODED
+OCM_CLUSTER_URL=$(echo -n "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
+OCM_CLUSTER_TOKEN=$K8S_CLUSTER_TOKEN_ENCODED
 KEYCLOAK_BASE_URL='https://keycloak-keycloak.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud'
 KEYCLOAK_LOGIN_REALM='myrealm'
 KEYCLOAK_REALM='myrealm'

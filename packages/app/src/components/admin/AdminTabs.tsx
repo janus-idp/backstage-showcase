@@ -9,7 +9,6 @@ import {
 } from '@backstage/core-components';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface AdminTabsProps {
@@ -81,9 +80,9 @@ export const AdminTabs = ({ tabs }: AdminTabsProps) => {
           {(mountPoints[`admin.page.${selectedTab}/cards`] || []).map(
             ({ Component, config = {}, staticJSXContent }) => {
               return (
-                <Box key={`${Component.name}`} sx={config.layout}>
+                <Grid key={`${Component.name}`} item sx={config.layout}>
                   <Component {...config.props}>{staticJSXContent}</Component>
-                </Box>
+                </Grid>
               );
             },
           )}

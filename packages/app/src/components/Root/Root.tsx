@@ -94,6 +94,15 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           <SidebarScrollWrapper>
             {dynamicRoutes.map(({ scope, menuItem, path }) => {
               if (menuItem) {
+                if ('Component' in menuItem) {
+                  return (
+                    <menuItem.Component
+                      {...(menuItem.config?.props || [])}
+                      key={`${scope}/${path}`}
+                      to={path}
+                    />
+                  );
+                }
                 return (
                   <SideBarItemWrapper
                     key={`${scope}/${path}`}

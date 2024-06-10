@@ -20,7 +20,7 @@
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-34.1712566506 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-44.1716477801 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -167,7 +167,7 @@ ENV TARBALL_PATH=./packages/backend/dist
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
   rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
-  
+
 # Copy app-config files needed in runtime
 # Upstream only
 # COPY $EXTERNAL_SOURCE_NESTED/app-config*.yaml ./
@@ -179,7 +179,7 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-37.1712566503 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-47.1716472878 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -254,6 +254,10 @@ ENV SEGMENT_TEST_MODE=false
 # By setting GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE to an empty value,
 # 'global-agent' will use the same HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
 ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
+
+# Enables the usage of the backstage scaffolder on nodejs 20
+# https://github.com/backstage/backstage/issues/20661
+ENV NODE_OPTIONS='--no-node-snapshot'
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
