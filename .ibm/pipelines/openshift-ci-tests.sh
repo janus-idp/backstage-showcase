@@ -327,6 +327,7 @@ check_and_test() {
 }
 
 main() {
+  echo "test 1.2.x PR check"
   echo "Log file: ${LOGFILE}"
   set_cluster_info
   source "${DIR}/env_variables.sh"
