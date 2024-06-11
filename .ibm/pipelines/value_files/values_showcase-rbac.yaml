@@ -157,7 +157,7 @@ upstream:
             user: ${POSTGRES_USER}
             password: ${POSTGRES_PASSWORD}
             ssl:
-              rejectUnauthorized: false,
+              rejectUnauthorized: true,
               ca:
                 $file: /opt/app-root/src/postgres-ca.pem
               key:
