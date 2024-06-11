@@ -11,18 +11,26 @@ export type RouteBinding = {
   };
 };
 
-export type MenuItem = {
-  text: string;
-  icon: string;
-};
+export type ResolvedMenuItem =
+  | {
+      text: string;
+      icon: string;
+    }
+  | {
+      Component: React.ComponentType<any>;
+      config: {
+        props?: Record<string, any>;
+      };
+    };
 
 export type DynamicModuleEntry = Pick<
   ScalprumComponentProps,
   'scope' | 'module'
 >;
-export type DynamicRootContextValue = DynamicModuleEntry & {
+
+export type ResolvedDynamicRoute = DynamicModuleEntry & {
   path: string;
-  menuItem?: MenuItem;
+  menuItem?: ResolvedMenuItem;
   Component: React.ComponentType<any>;
   staticJSXContent?: React.ReactNode;
   config: {
@@ -36,7 +44,7 @@ type ScalprumMountPointConfigBase = {
 };
 
 export type ScalprumMountPointConfig = ScalprumMountPointConfigBase & {
-  if: (e: Entity) => boolean | Promise<boolean>;
+  if: (e: Entity) => boolean;
 };
 
 export type ScalprumMountPointConfigRawIf = {
@@ -74,19 +82,31 @@ export type RemotePlugins = {
   };
 };
 
+export type EntityTabOverrides = Record<
+  string,
+  { title: string; mountPoint: string }
+>;
+
+export type MountPoints = Record<string, ScalprumMountPoint[]>;
+
+export type ScaffolderFieldExtension = {
+  scope: string;
+  module: string;
+  importName: string;
+  Component: React.ComponentType<{}>;
+};
+
+export type DynamicRootConfig = {
+  dynamicRoutes: ResolvedDynamicRoute[];
+  entityTabOverrides: EntityTabOverrides;
+  mountPoints: MountPoints;
+  scaffolderFieldExtensions: ScaffolderFieldExtension[];
+};
+
 export type ComponentRegistry = {
   AppProvider: React.ComponentType<React.PropsWithChildren>;
   AppRouter: React.ComponentType<React.PropsWithChildren>;
-  dynamicRoutes: DynamicRootContextValue[];
-  entityTabOverrides: Record<string, { title: string; mountPoint: string }>;
-  mountPoints: { [mountPoint: string]: ScalprumMountPoint[] };
-  scaffolderFieldExtensions: {
-    scope: string;
-    module: string;
-    importName: string;
-    Component: React.ComponentType<{}>;
-  }[];
-};
+} & DynamicRootConfig;
 
 const DynamicRootContext = createContext<ComponentRegistry>({
   AppProvider: () => null,

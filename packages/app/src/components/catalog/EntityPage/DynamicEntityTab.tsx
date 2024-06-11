@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import React from 'react';
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import Grid from '../Grid';
+import { ApiHolder } from '@backstage/core-plugin-api';
 
 export type DynamicEntityTabProps = {
   path: string;
@@ -34,10 +35,20 @@ export const dynamicEntityTab = ({
     path={path}
     title={title}
     if={entity =>
-      (condition ? condition(entity) : Boolean(children)) ||
+      (condition
+        ? errorWrappedCondition(
+            `route path ${path} and title ${title}`,
+            condition,
+          )(entity)
+        : Boolean(children)) ||
       getMountPointData<React.ComponentType>(`${mountPoint}/cards`)
         .flatMap(({ config }) => config.if)
-        .some(cond => cond(entity))
+        .some(cond =>
+          errorWrappedCondition(
+            `route path ${path} and title ${title}`,
+            cond,
+          )(entity),
+        )
     }
   >
     {getMountPointData<React.ComponentType<React.PropsWithChildren>>(
@@ -55,7 +66,14 @@ export const dynamicEntityTab = ({
           ({ Component, config, staticJSXContent }, index) => {
             return (
               <EntitySwitch key={`${Component.displayName}-${index}`}>
-                <EntitySwitch.Case if={config.if}>
+                <EntitySwitch.Case
+                  if={(entity, context) =>
+                    errorWrappedCondition(
+                      `route path ${path}, title ${title} and mountPoint ${mountPoint}/cards`,
+                      config.if,
+                    )(entity, context)
+                  }
+                >
                   <Box sx={config.layout}>
                     <Component {...config.props}>{staticJSXContent}</Component>
                   </Box>
@@ -68,3 +86,21 @@ export const dynamicEntityTab = ({
     )}
   </EntityLayout.Route>
 );
+
+function errorWrappedCondition(
+  evaluationContext: string,
+  condition: (entity: Entity, context?: { apis: ApiHolder }) => boolean,
+): (entity: Entity, context?: { apis: ApiHolder }) => boolean {
+  return (entity: Entity, context?: { apis: ApiHolder }) => {
+    try {
+      return condition(entity, context);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Error evaluating conditional expression for ${evaluationContext}: `,
+        error,
+      );
+    }
+    return false;
+  };
+}

@@ -31,9 +31,9 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^0.6.17",
-    "@backstage/plugin-scaffolder-backend": "^1.22.5",
-    "@backstage/plugin-scaffolder-node": "^0.4.3",
+    "@backstage/backend-plugin-api": "0.6.17",
+    "@backstage/plugin-scaffolder-backend": "1.22.5",
+    "@backstage/plugin-scaffolder-node": "0.4.3",
     "@backstage/backend-common": "^0.21.7",
     "@backstage/core-app-api": "^1.12.4",
     "@backstage/core-plugin-api": "^1.9.2"

@@ -1,14 +1,14 @@
-import { test, Page, expect } from '@playwright/test';
-import { UIhelper } from '../../../utils/UIhelper';
-import { Common, setupBrowser } from '../../../utils/Common';
-import { Roles } from '../../../support/pages/rbac';
+import { Page, expect, test } from '@playwright/test';
+import { UIhelperPO } from '../../../support/pageObjects/global-obj';
 import {
   HomePagePO,
   RoleFormPO,
   RoleListPO,
   RoleOverviewPO,
 } from '../../../support/pageObjects/page-obj';
-import { UIhelperPO } from '../../../support/pageObjects/global-obj';
+import { Roles } from '../../../support/pages/rbac';
+import { Common, setupBrowser } from '../../../utils/Common';
+import { UIhelper } from '../../../utils/UIhelper';
 
 test.describe.serial('Test RBAC plugin as an admin user', () => {
   let common: Common;
@@ -52,7 +52,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
       Roles.getUsersAndGroupsListCellsIdentifier();
     await uiHelper.verifyCellsInTable(usersAndGroupsCellsIdentifier);
 
-    await uiHelper.verifyHeading('Permission policies (9)');
+    await uiHelper.verifyHeading('Permission policies (5)');
     const permissionPoliciesColumnsText =
       Roles.getPermissionPoliciesListColumnsText();
     await uiHelper.verifyColumnHeading(permissionPoliciesColumnsText);

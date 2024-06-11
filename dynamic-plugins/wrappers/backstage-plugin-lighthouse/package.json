@@ -17,7 +17,7 @@
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
     "@mui/icons-material": "5.15.6",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.8.6"
+    "@janus-idp/cli": "1.10.0"
   },
   "files": [
     "dist",

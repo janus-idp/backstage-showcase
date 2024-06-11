@@ -36,7 +36,7 @@
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-common": "0.21.7",
-    "@backstage/backend-plugin-api": "^0.6.12",
+    "@backstage/backend-plugin-api": "0.6.12",
     "@backstage/catalog-client": "^1.6.4",
     "@backstage/config": "^1.2.0"
   },
