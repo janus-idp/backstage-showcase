@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common } from '../utils/Common';
 
@@ -22,7 +22,9 @@ test.describe('Learning Paths', () => {
       await page.locator(`div[class*="MuiCardHeader-root"]`).nth(i).click();
       const popup = await popupPromise;
       await popup.waitForLoadState();
-      console.log(await popup.evaluate('location.href'));
+      const url = await popup.evaluate('location.href');
+      console.log(url);
+      expect(url).not.toBe('about:blank');
       await popup.close();
     }
   });
