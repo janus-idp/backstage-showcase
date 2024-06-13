@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -36,5 +37,20 @@
     "dist",
     "dist-dynamic/*.*",
     "dist-dynamic/dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "The Backstage Community",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://github.com/janus-idp/backstage-plugins/issues",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
   ]
 }
