@@ -38,7 +38,6 @@
     "@backstage/backend-common": "0.21.7",
     "@backstage/backend-plugin-api": "0.6.17",
     "@backstage/plugin-scaffolder-node": "0.4.3",
-    "@backstage/backend-dynamic-feature-service": "0.2.0",
     "@backstage/backend-test-utils": "^0.3.7",
     "@backstage/config": "^1.2.0",
     "@backstage/plugin-scaffolder-backend": "^1.22.5",
