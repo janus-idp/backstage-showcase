@@ -100,12 +100,12 @@ For more information on setting up the OAuth2 Proxy auth provider, consult the [
           # tokenEndpointAuthMethod: ${AUTH_OIDC_TOKEN_ENDPOINT_METHOD}
           # tokenSignedResponseAlg: ${AUTH_OIDC_SIGNED_RESPONSE_ALG}
           # scope: ${AUTH_OIDC_SCOPE}
-          ## Auth provider will try each resolver until it succeeds. Comment out the resolvers you do not want
-          signIn:
-            resolvers:
-              - resolver: preferredUsernameMatchingUserEntityName
-              - resolver: emailMatchingUserEntityProfileEmail
-              - resolver: emailLocalPartMatchingUserEntityName
+          ## Auth provider will try each resolver until it succeeds. Uncomment the resolvers you want to use to override the default resolver: `emailLocalPartMatchingUserEntityName`
+          # signIn:
+          #  resolvers:
+          #    - resolver: preferredUsernameMatchingUserEntityName
+          #    - resolver: emailMatchingUserEntityProfileEmail
+          #    - resolver: emailLocalPartMatchingUserEntityName
   ```
 
 In an example using Keycloak for authentication with the OIDC provider, there are a few steps that need to be taken to get everything working:
@@ -117,8 +117,11 @@ In an example using Keycloak for authentication with the OIDC provider, there ar
 5. Set the `clientId` to `backstage`.
 6. Obtain the client secret for the client backstage within Keycloak and set `clientSecret`.
 7. Set the `prompt` to `auto`.
-8. Set the `signIn.resolvers[].resolver` to `preferredUsernameMatchingUserEntityName`
-9. Finally, set `auth.session.secret` to `superSecretSecret`.
+8. Finally, set `auth.session.secret` to `superSecretSecret`.
+
+The default resolver provided by the `oidc` auth provider is the `emailLocalPartMatchingUserEntityName` resolver.
+
+If you want to use a different resolver, add the resolver you want to use in the `auth.providers.oidc.[environment].signIn.resolvers` configuration as soon in the example above, and it will override the default resolver.
 
 For more information on setting up the OIDC auth provider, consult the [Backstage documentation](https://backstage.io/docs/auth/oidc#the-configuration).
 
@@ -138,19 +141,39 @@ The guest login is provided by a special authentication provider that must be ex
 
 - To enable the guest provider for local development:
 
-```yaml
-auth:
-  providers:
-    guest: {}
-```
+  ```yaml
+  auth:
+    providers:
+      guest: {}
+  ```
+
+  This will sign you in as `user:development/guest`
+
+- To customize the `userEntity` the auth provider signs you in with:
+
+  ```yaml
+  auth:
+    providers:
+      guest:
+        userEntityRef: user:custom-namespace/custom-name
+  ```
+
+- To customize the ownership of the `userEntity` the auth provider signs you in with:
+
+  ```yaml
+  auth:
+    providers:
+      guest:
+        ownershipEntityRefs: ['user:custom/user', 'user:custom2/user2']
+  ```
 
 - To enable the guest provider when running the container:
 
-```yaml
-auth:
-  providers:
-    guest:
-      dangerouslyAllowOutsideDevelopment: true
-```
+  ```yaml
+  auth:
+    providers:
+      guest:
+        dangerouslyAllowOutsideDevelopment: true
+  ```
 
 - To disable the guest login set `auth.environment` to `production`.
