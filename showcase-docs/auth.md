@@ -100,6 +100,12 @@ For more information on setting up the OAuth2 Proxy auth provider, consult the [
           # tokenEndpointAuthMethod: ${AUTH_OIDC_TOKEN_ENDPOINT_METHOD}
           # tokenSignedResponseAlg: ${AUTH_OIDC_SIGNED_RESPONSE_ALG}
           # scope: ${AUTH_OIDC_SCOPE}
+          ## Auth provider will try each resolver until it succeeds. Comment out the resolvers you do not want
+          signIn:
+            resolvers:
+              - resolver: preferredUsernameMatchingUserEntityName
+              - resolver: emailMatchingUserEntityProfileEmail
+              - resolver: emailLocalPartMatchingUserEntityName
   ```
 
 In an example using Keycloak for authentication with the OIDC provider, there are a few steps that need to be taken to get everything working:
@@ -111,7 +117,8 @@ In an example using Keycloak for authentication with the OIDC provider, there ar
 5. Set the `clientId` to `backstage`.
 6. Obtain the client secret for the client backstage within Keycloak and set `clientSecret`.
 7. Set the `prompt` to `auto`.
-8. Finally, set `auth.session.secret` to `superSecretSecret`.
+8. Set the `signIn.resolvers[].resolver` to `preferredUsernameMatchingUserEntityName`
+9. Finally, set `auth.session.secret` to `superSecretSecret`.
 
 For more information on setting up the OIDC auth provider, consult the [Backstage documentation](https://backstage.io/docs/auth/oidc#the-configuration).
 
