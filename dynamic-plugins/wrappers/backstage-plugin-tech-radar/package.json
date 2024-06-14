@@ -47,9 +47,9 @@
   "maintainers": [
     "@janus-idp/maintainers-showcase"
   ],
-  "author": "The Backstage Community",
+  "author": "Red Hat",
   "homepage": "https://red.ht/rhdh",
-  "bugs": "https://github.com/janus-idp/backstage-plugins/issues",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
   "keywords": [
     "support:tech-preview",
     "lifecycle:active"
