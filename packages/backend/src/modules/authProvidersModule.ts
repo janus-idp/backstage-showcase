@@ -196,6 +196,8 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
     case 'oidc':
       return createOAuthProviderFactory({
         authenticator: oidcAuthenticator,
+        signInResolver:
+          oidcSignInResolvers.emailLocalPartMatchingUserEntityName(),
         signInResolverFactories: {
           ...oidcSignInResolvers,
         },
