@@ -1,0 +1,180 @@
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js
+index 3b3df65..77e5ede 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js
+@@ -23,23 +23,48 @@ const templateStepReadPermission = pluginPermissionCommon.createPermission({
+   },
+   resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
+ });
+-const scaffolderPermissions = [
+-  actionExecutePermission,
+-  templateParameterReadPermission,
+-  templateStepReadPermission
+-];
++const taskReadPermission = pluginPermissionCommon.createPermission({
++  name: "scaffolder.task.read",
++  attributes: {
++    action: "read"
++  }
++});
++const taskCreatePermission = pluginPermissionCommon.createPermission({
++  name: "scaffolder.task.create",
++  attributes: {
++    action: "create"
++  }
++});
++const taskCancelPermission = pluginPermissionCommon.createPermission({
++  name: "scaffolder.task.cancel",
++  attributes: {}
++});
+ const scaffolderTemplatePermissions = [
+   templateParameterReadPermission,
+   templateStepReadPermission
+ ];
+ const scaffolderActionPermissions = [actionExecutePermission];
++const scaffolderTaskPermissions = [
++  taskCancelPermission,
++  taskCreatePermission,
++  taskReadPermission
++];
++const scaffolderPermissions = [
++  ...scaffolderTemplatePermissions,
++  ...scaffolderActionPermissions,
++  ...scaffolderTaskPermissions
++];
+ 
+ exports.RESOURCE_TYPE_SCAFFOLDER_ACTION = RESOURCE_TYPE_SCAFFOLDER_ACTION;
+ exports.RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = RESOURCE_TYPE_SCAFFOLDER_TEMPLATE;
+ exports.actionExecutePermission = actionExecutePermission;
+ exports.scaffolderActionPermissions = scaffolderActionPermissions;
+ exports.scaffolderPermissions = scaffolderPermissions;
++exports.scaffolderTaskPermissions = scaffolderTaskPermissions;
+ exports.scaffolderTemplatePermissions = scaffolderTemplatePermissions;
++exports.taskCancelPermission = taskCancelPermission;
++exports.taskCreatePermission = taskCreatePermission;
++exports.taskReadPermission = taskReadPermission;
+ exports.templateParameterReadPermission = templateParameterReadPermission;
+ exports.templateStepReadPermission = templateStepReadPermission;
+ //# sourceMappingURL=alpha.cjs.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map
+index 17ab680..d32e739 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.cjs.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"alpha.cjs.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  actionExecutePermission,\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n"],"names":["createPermission"],"mappings":";;;;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0BA,uCAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkCA,uCAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6BA,uCAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAMM,MAAM,qBAAwB,GAAA;AAAA,EACnC,uBAAA;AAAA,EACA,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMO,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB;;;;;;;;;;;"}
+\ No newline at end of file
++{"version":3,"file":"alpha.cjs.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading one or more tasks in the scaffolder,\n * and reading logs of tasks\n *\n * @alpha\n */\nexport const taskReadPermission = createPermission({\n  name: 'scaffolder.task.read',\n  attributes: {\n    action: 'read',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the creation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCreatePermission = createPermission({\n  name: 'scaffolder.task.create',\n  attributes: {\n    action: 'create',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the cancellation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCancelPermission = createPermission({\n  name: 'scaffolder.task.cancel',\n  attributes: {},\n});\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder tasks.\n * @alpha\n */\nexport const scaffolderTaskPermissions = [\n  taskCancelPermission,\n  taskCreatePermission,\n  taskReadPermission,\n];\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  ...scaffolderTemplatePermissions,\n  ...scaffolderActionPermissions,\n  ...scaffolderTaskPermissions,\n];\n"],"names":["createPermission"],"mappings":";;;;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0BA,uCAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkCA,uCAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6BA,uCAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAQM,MAAM,qBAAqBA,uCAAiB,CAAA;AAAA,EACjD,IAAM,EAAA,sBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuBA,uCAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,QAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuBA,uCAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,YAAY,EAAC;AACf,CAAC,EAAA;AAMM,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB,EAAA;AAM5D,MAAM,yBAA4B,GAAA;AAAA,EACvC,oBAAA;AAAA,EACA,oBAAA;AAAA,EACA,kBAAA;AACF,EAAA;AAMO,MAAM,qBAAwB,GAAA;AAAA,EACnC,GAAG,6BAAA;AAAA,EACH,GAAG,2BAAA;AAAA,EACH,GAAG,yBAAA;AACL;;;;;;;;;;;;;;;"}
+\ No newline at end of file
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.d.ts b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.d.ts
+index e9c8f73..88ec94b 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.d.ts
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.d.ts
+@@ -42,10 +42,24 @@ declare const templateParameterReadPermission: _backstage_plugin_permission_comm
+  */
+ declare const templateStepReadPermission: _backstage_plugin_permission_common.ResourcePermission<"scaffolder-template">;
+ /**
+- * List of all the scaffolder permissions
++ * This permission is used to authorize actions that involve reading one or more tasks in the scaffolder,
++ * and reading logs of tasks
++ *
+  * @alpha
+  */
+-declare const scaffolderPermissions: (_backstage_plugin_permission_common.ResourcePermission<"scaffolder-action"> | _backstage_plugin_permission_common.ResourcePermission<"scaffolder-template">)[];
++declare const taskReadPermission: _backstage_plugin_permission_common.BasicPermission;
++/**
++ * This permission is used to authorize actions that involve the creation of tasks in the scaffolder.
++ *
++ * @alpha
++ */
++declare const taskCreatePermission: _backstage_plugin_permission_common.BasicPermission;
++/**
++ * This permission is used to authorize actions that involve the cancellation of tasks in the scaffolder.
++ *
++ * @alpha
++ */
++declare const taskCancelPermission: _backstage_plugin_permission_common.BasicPermission;
+ /**
+  * List of the scaffolder permissions that are associated with template steps and parameters.
+  * @alpha
+@@ -56,5 +70,15 @@ declare const scaffolderTemplatePermissions: _backstage_plugin_permission_common
+  * @alpha
+  */
+ declare const scaffolderActionPermissions: _backstage_plugin_permission_common.ResourcePermission<"scaffolder-action">[];
++/**
++ * List of the scaffolder permissions that are associated with scaffolder tasks.
++ * @alpha
++ */
++declare const scaffolderTaskPermissions: _backstage_plugin_permission_common.BasicPermission[];
++/**
++ * List of all the scaffolder permissions
++ * @alpha
++ */
++declare const scaffolderPermissions: (_backstage_plugin_permission_common.BasicPermission | _backstage_plugin_permission_common.ResourcePermission<"scaffolder-action"> | _backstage_plugin_permission_common.ResourcePermission<"scaffolder-template">)[];
+ 
+-export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTemplatePermissions, templateParameterReadPermission, templateStepReadPermission };
++export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTaskPermissions, scaffolderTemplatePermissions, taskCancelPermission, taskCreatePermission, taskReadPermission, templateParameterReadPermission, templateStepReadPermission };
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js
+index 2a4dfd6..46ec0ad 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/alpha.esm.js
+@@ -1,2 +1,2 @@
+-export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTemplatePermissions, templateParameterReadPermission, templateStepReadPermission } from './permissions.esm.js';
++export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTaskPermissions, scaffolderTemplatePermissions, taskCancelPermission, taskCreatePermission, taskReadPermission, templateParameterReadPermission, templateStepReadPermission } from './permissions.esm.js';
+ //# sourceMappingURL=alpha.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js
+index 929500a..9eb5441 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js
+@@ -21,16 +21,37 @@ const templateStepReadPermission = createPermission({
+   },
+   resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE
+ });
+-const scaffolderPermissions = [
+-  actionExecutePermission,
+-  templateParameterReadPermission,
+-  templateStepReadPermission
+-];
++const taskReadPermission = createPermission({
++  name: "scaffolder.task.read",
++  attributes: {
++    action: "read"
++  }
++});
++const taskCreatePermission = createPermission({
++  name: "scaffolder.task.create",
++  attributes: {
++    action: "create"
++  }
++});
++const taskCancelPermission = createPermission({
++  name: "scaffolder.task.cancel",
++  attributes: {}
++});
+ const scaffolderTemplatePermissions = [
+   templateParameterReadPermission,
+   templateStepReadPermission
+ ];
+ const scaffolderActionPermissions = [actionExecutePermission];
++const scaffolderTaskPermissions = [
++  taskCancelPermission,
++  taskCreatePermission,
++  taskReadPermission
++];
++const scaffolderPermissions = [
++  ...scaffolderTemplatePermissions,
++  ...scaffolderActionPermissions,
++  ...scaffolderTaskPermissions
++];
+ 
+-export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTemplatePermissions, templateParameterReadPermission, templateStepReadPermission };
++export { RESOURCE_TYPE_SCAFFOLDER_ACTION, RESOURCE_TYPE_SCAFFOLDER_TEMPLATE, actionExecutePermission, scaffolderActionPermissions, scaffolderPermissions, scaffolderTaskPermissions, scaffolderTemplatePermissions, taskCancelPermission, taskCreatePermission, taskReadPermission, templateParameterReadPermission, templateStepReadPermission };
+ //# sourceMappingURL=permissions.esm.js.map
+diff --git a/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map
+index 4ebcb8e..fdb5975 100644
+--- a/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map
++++ b/node_modules/@backstage/plugin-scaffolder-common/dist/permissions.esm.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"permissions.esm.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  actionExecutePermission,\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n"],"names":[],"mappings":";;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0B,gBAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkC,gBAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6B,gBAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAMM,MAAM,qBAAwB,GAAA;AAAA,EACnC,uBAAA;AAAA,EACA,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMO,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB;;;;"}
+\ No newline at end of file
++{"version":3,"file":"permissions.esm.js","sources":["../src/permissions.ts"],"sourcesContent":["/*\n * Copyright 2022 The Backstage Authors\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\nimport { createPermission } from '@backstage/plugin-permission-common';\n\n/**\n * Permission resource type which corresponds to a scaffolder templates.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_TEMPLATE = 'scaffolder-template';\n\n/**\n * Permission resource type which corresponds to a scaffolder action.\n *\n * @alpha\n */\nexport const RESOURCE_TYPE_SCAFFOLDER_ACTION = 'scaffolder-action';\n\n/**\n * This permission is used to authorize actions that involve executing\n * an action from a template.\n *\n * @alpha\n */\nexport const actionExecutePermission = createPermission({\n  name: 'scaffolder.action.execute',\n  attributes: {},\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_ACTION,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more parameters from a template.\n *\n * If this permission is not authorized, it will appear that the\n * parameter does not exist in the template — both in the frontend\n * and in API responses.\n *\n * @alpha\n */\nexport const templateParameterReadPermission = createPermission({\n  name: 'scaffolder.template.parameter.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading\n * one or more steps from a template.\n *\n * If this permission is not authorized, it will appear that the\n * step does not exist in the template — both in the frontend\n * and in API responses. Steps will also not be executed.\n *\n * @alpha\n */\nexport const templateStepReadPermission = createPermission({\n  name: 'scaffolder.template.step.read',\n  attributes: {\n    action: 'read',\n  },\n  resourceType: RESOURCE_TYPE_SCAFFOLDER_TEMPLATE,\n});\n\n/**\n * This permission is used to authorize actions that involve reading one or more tasks in the scaffolder,\n * and reading logs of tasks\n *\n * @alpha\n */\nexport const taskReadPermission = createPermission({\n  name: 'scaffolder.task.read',\n  attributes: {\n    action: 'read',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the creation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCreatePermission = createPermission({\n  name: 'scaffolder.task.create',\n  attributes: {\n    action: 'create',\n  },\n});\n\n/**\n * This permission is used to authorize actions that involve the cancellation of tasks in the scaffolder.\n *\n * @alpha\n */\nexport const taskCancelPermission = createPermission({\n  name: 'scaffolder.task.cancel',\n  attributes: {},\n});\n\n/**\n * List of the scaffolder permissions that are associated with template steps and parameters.\n * @alpha\n */\nexport const scaffolderTemplatePermissions = [\n  templateParameterReadPermission,\n  templateStepReadPermission,\n];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder actions.\n * @alpha\n */\nexport const scaffolderActionPermissions = [actionExecutePermission];\n\n/**\n * List of the scaffolder permissions that are associated with scaffolder tasks.\n * @alpha\n */\nexport const scaffolderTaskPermissions = [\n  taskCancelPermission,\n  taskCreatePermission,\n  taskReadPermission,\n];\n\n/**\n * List of all the scaffolder permissions\n * @alpha\n */\nexport const scaffolderPermissions = [\n  ...scaffolderTemplatePermissions,\n  ...scaffolderActionPermissions,\n  ...scaffolderTaskPermissions,\n];\n"],"names":[],"mappings":";;AAuBO,MAAM,iCAAoC,GAAA,sBAAA;AAO1C,MAAM,+BAAkC,GAAA,oBAAA;AAQxC,MAAM,0BAA0B,gBAAiB,CAAA;AAAA,EACtD,IAAM,EAAA,2BAAA;AAAA,EACN,YAAY,EAAC;AAAA,EACb,YAAc,EAAA,+BAAA;AAChB,CAAC,EAAA;AAYM,MAAM,kCAAkC,gBAAiB,CAAA;AAAA,EAC9D,IAAM,EAAA,oCAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAYM,MAAM,6BAA6B,gBAAiB,CAAA;AAAA,EACzD,IAAM,EAAA,+BAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AAAA,EACA,YAAc,EAAA,iCAAA;AAChB,CAAC,EAAA;AAQM,MAAM,qBAAqB,gBAAiB,CAAA;AAAA,EACjD,IAAM,EAAA,sBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,MAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuB,gBAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,UAAY,EAAA;AAAA,IACV,MAAQ,EAAA,QAAA;AAAA,GACV;AACF,CAAC,EAAA;AAOM,MAAM,uBAAuB,gBAAiB,CAAA;AAAA,EACnD,IAAM,EAAA,wBAAA;AAAA,EACN,YAAY,EAAC;AACf,CAAC,EAAA;AAMM,MAAM,6BAAgC,GAAA;AAAA,EAC3C,+BAAA;AAAA,EACA,0BAAA;AACF,EAAA;AAMa,MAAA,2BAAA,GAA8B,CAAC,uBAAuB,EAAA;AAM5D,MAAM,yBAA4B,GAAA;AAAA,EACvC,oBAAA;AAAA,EACA,oBAAA;AAAA,EACA,kBAAA;AACF,EAAA;AAMO,MAAM,qBAAwB,GAAA;AAAA,EACnC,GAAG,6BAAA;AAAA,EACH,GAAG,2BAAA;AAAA,EACH,GAAG,yBAAA;AACL;;;;"}
+\ No newline at end of file
