@@ -48,6 +48,11 @@
       "automerge": true
     },
     {
+      "extends": ["packages:test"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "Test packages"
+    },
+    {
       "matchPackagePatterns": [
         "^@janus-idp/",
         "^@immobiliarelabs/",
