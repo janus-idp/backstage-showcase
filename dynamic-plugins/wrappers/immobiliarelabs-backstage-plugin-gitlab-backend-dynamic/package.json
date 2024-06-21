@@ -27,12 +27,12 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@backstage/backend-dynamic-feature-service": "0.2.0",
-    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.5.0"
+    "@backstage/backend-dynamic-feature-service": "0.2.13",
+    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.5.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.9",
+    "@janus-idp/cli": "1.11.1"
   },
   "files": [
     "dist",

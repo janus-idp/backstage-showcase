@@ -43,7 +43,7 @@
     "postinstall-postinstall": "2.1.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
+    "@backstage/cli": "0.26.9",
     "@smithy/util-utf8": "2.3.0",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",

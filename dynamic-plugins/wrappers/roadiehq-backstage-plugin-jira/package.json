@@ -24,8 +24,8 @@
     "@roadiehq/backstage-plugin-jira": "2.5.8"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.9",
+    "@janus-idp/cli": "1.11.1"
   },
   "files": [
     "dist",

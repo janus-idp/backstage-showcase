@@ -21,19 +21,19 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@backstage/core-plugin-api": "1.9.2",
-    "@backstage/plugin-catalog-react": "1.11.3",
-    "@backstage/plugin-search-react": "1.7.10",
-    "@backstage/plugin-techdocs": "1.10.4",
-    "@backstage/plugin-techdocs-module-addons-contrib": "1.1.9",
-    "@backstage/plugin-techdocs-react": "1.2.3"
+    "@backstage/core-plugin-api": "1.9.3",
+    "@backstage/plugin-catalog-react": "1.12.1",
+    "@backstage/plugin-search-react": "1.7.12",
+    "@backstage/plugin-techdocs": "1.10.6",
+    "@backstage/plugin-techdocs-module-addons-contrib": "1.1.11",
+    "@backstage/plugin-techdocs-react": "1.2.5"
   },
   "peerDependencies": {
     "react": "16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.9",
+    "@janus-idp/cli": "1.11.1"
   },
   "files": [
     "dist",
