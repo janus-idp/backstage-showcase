@@ -17,7 +17,7 @@ certifi==2023.11.17
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
-Cython==0.29.37
+Cython==3.0.10
 editables==0.5
 flit_core==3.9.0
 ghp-import==2.1.0
