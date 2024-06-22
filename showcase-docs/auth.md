@@ -100,6 +100,12 @@ For more information on setting up the OAuth2 Proxy auth provider, consult the [
           # tokenEndpointAuthMethod: ${AUTH_OIDC_TOKEN_ENDPOINT_METHOD}
           # tokenSignedResponseAlg: ${AUTH_OIDC_SIGNED_RESPONSE_ALG}
           # scope: ${AUTH_OIDC_SCOPE}
+          ## Auth provider will try each resolver until it succeeds. Uncomment the resolvers you want to use to override the default resolver: `emailLocalPartMatchingUserEntityName`
+          # signIn:
+          #  resolvers:
+          #    - resolver: preferredUsernameMatchingUserEntityName
+          #    - resolver: emailMatchingUserEntityProfileEmail
+          #    - resolver: emailLocalPartMatchingUserEntityName
   ```
 
 In an example using Keycloak for authentication with the OIDC provider, there are a few steps that need to be taken to get everything working:
@@ -113,6 +119,10 @@ In an example using Keycloak for authentication with the OIDC provider, there ar
 7. Set the `prompt` to `auto`.
 8. Finally, set `auth.session.secret` to `superSecretSecret`.
 
+The default resolver provided by the `oidc` auth provider is the `emailLocalPartMatchingUserEntityName` resolver.
+
+If you want to use a different resolver, add the resolver you want to use in the `auth.providers.oidc.[environment].signIn.resolvers` configuration as soon in the example above, and it will override the default resolver.
+
 For more information on setting up the OIDC auth provider, consult the [Backstage documentation](https://backstage.io/docs/auth/oidc#the-configuration).
 
 ### Sign In Page configuration value
@@ -125,8 +135,45 @@ After selecting the authentication provider you wish to use with your Backstage 
   signInPage: <provider-id>
   ```
 
-### Disabling the guest login
+### Enabling/Disabling the guest provider and login
 
-We also offer an option to disable the Guest Login provider that disable the ability for guests to login to your Backstage Showcase instance.
+The guest login is provided by a special authentication provider that must be explicitly enabled. This authentication provider should be used for development purposes only and is not intended for production, as it creates a default user that has user-level access to the Backstage instance.
+
+- To enable the guest provider for local development:
+
+  ```yaml
+  auth:
+    providers:
+      guest: {}
+  ```
+
+  This will sign you in as `user:development/guest`
+
+- To customize the `userEntity` the auth provider signs you in with:
+
+  ```yaml
+  auth:
+    providers:
+      guest:
+        userEntityRef: user:custom-namespace/custom-name
+  ```
+
+- To customize the ownership of the `userEntity` the auth provider signs you in with:
+
+  ```yaml
+  auth:
+    providers:
+      guest:
+        ownershipEntityRefs: ['user:custom/user', 'user:custom2/user2']
+  ```
+
+- To enable the guest provider when running the container:
+
+  ```yaml
+  auth:
+    providers:
+      guest:
+        dangerouslyAllowOutsideDevelopment: true
+  ```
 
 - To disable the guest login set `auth.environment` to `production`.

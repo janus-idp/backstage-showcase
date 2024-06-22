@@ -1,6 +1,7 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { UIhelper } from '../../../utils/UIhelper';
 import { Common } from '../../../utils/Common';
+import { UIhelperPO } from '../../../support/pageObjects/global-obj';
 
 test.describe('dynamic-plugins-info UI tests', () => {
   let uiHelper: UIhelper;
@@ -16,30 +17,69 @@ test.describe('dynamic-plugins-info UI tests', () => {
     await uiHelper.clickTab('Plugins');
   });
 
-  test('it should show a table and have a support button, the table should contain the dynamic-plugins-info plugin', async ({
+  test('it should show a table, and the table should contain techdocs plugins', async ({
     page,
   }) => {
     // what shows up in the list depends on how the instance is configured so
     // let's check for the main basic elements of the component to verify the
     // mount point is working as expected
-    await uiHelper.verifyText('Installed Plugins', false);
+    await uiHelper.verifyText('Plugins (54)');
     await uiHelper.verifyText('5 rows');
-    await uiHelper.verifyText('Name');
-    await uiHelper.verifyText('Version');
-    await uiHelper.verifyText('Role');
-    await uiHelper.clickButton('Support');
-    await uiHelper.verifyText('All of the installed plugins');
-    await uiHelper.clickButton('Close');
+    await uiHelper.verifyColumnHeading(
+      ['Name', 'Version', 'Enabled', 'Preinstalled', 'Role'],
+      true,
+    );
 
     // Check the filter and use that to verify that the table contains the
     // dynamic-plugins-info plugin, which is required for this test to run
     // properly anyways
     await page
       .getByPlaceholder('Filter')
-      .pressSequentially('dynamic-plugins-info\n', { delay: 300 });
-    await uiHelper.verifyRowsInTable(
-      ['@janus-idp/backstage-plugin-dynamic-plugins-info'],
-      true,
+      .pressSequentially('techdocs\n', { delay: 300 });
+    await uiHelper.verifyRowsInTable(['backstage-plugin-techdocs'], true);
+  });
+
+  test('it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled', async ({
+    page,
+  }) => {
+    await page
+      .getByPlaceholder('Filter')
+      .pressSequentially('backstage-plugin-tech-radar\n', { delay: 300 });
+    const row = await page.locator(
+      UIhelperPO.rowByText('backstage-plugin-tech-radar'),
     );
+    expect(await row.locator('td').nth(2).innerText()).toBe('Yes'); // enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
+  });
+
+  test('it should have a backstage-plugin-3scale-backend-dynamic plugin which is not Enabled but Preinstalled', async ({
+    page,
+  }) => {
+    await page
+      .getByPlaceholder('Filter')
+      .pressSequentially('backstage-plugin-3scale-backend-dynamic\n', {
+        delay: 300,
+      });
+    const row = await page.locator(
+      UIhelperPO.rowByText(
+        '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      ),
+    );
+    expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
+  });
+
+  // TODO: Add plugin-todo-list plugin in ci process to enable this test
+  test.skip('it should have a plugin-todo-list plugin which is Enabled but not Preinstalled', async ({
+    page,
+  }) => {
+    await page
+      .getByPlaceholder('Filter')
+      .pressSequentially('plugin-todo-list\n', { delay: 300 });
+    const row = await page.locator(
+      UIhelperPO.rowByText('@internal/plugin-todo-list'),
+    );
+    expect(await row.locator('td').nth(2).innerText()).toBe('Yes'); // enabled
+    expect(await row.locator('td').nth(3).innerText()).toBe('No'); // not preinstalled
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-scaffolder-backend-module-gitlab-dynamic",
-  "version": "0.2.16",
+  "version": "0.3.3",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -20,14 +20,7 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test --passWithNoTests --coverage",
-    "clean": "backstage-cli package clean",
-    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-gitlab --override-interop default"
-  },
+  "scripts": {},
   "dependencies": {
     "@gitbeaker/core": "^35.8.0",
     "@gitbeaker/node": "^35.8.0",
@@ -42,12 +35,12 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.3",
-    "@backstage/backend-plugin-api": "^0.6.13",
-    "@backstage/config": "^1.1.1",
-    "@backstage/errors": "^1.2.3",
-    "@backstage/integration": "^1.9.0",
-    "@backstage/plugin-scaffolder-node": "^0.3.3"
+    "@backstage/backend-common": "^0.21.7",
+    "@backstage/backend-plugin-api": "^0.6.17",
+    "@backstage/config": "^1.2.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/integration": "^1.10.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.3"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

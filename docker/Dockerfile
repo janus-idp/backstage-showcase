@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-98 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-44.1717085241 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -47,9 +47,11 @@ RUN chmod +x $YARN
 FROM skeleton AS deps
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 
@@ -64,7 +66,12 @@ RUN git config --global --add safe.directory ./
 RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 # hadolint ignore=DL3059,DL4006,SC2086
-RUN $YARN build --filter=backend && \
+RUN \
+  # Upstream only - append build time into packages/app/src/build-metadata.json
+  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
+    -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
+  cat packages/app/src/build-metadata.json; echo && \
+  $YARN build --filter=backend && \
   # Build dynamic plugins: split commands for consistency with downstream
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
@@ -82,8 +89,10 @@ COPY --from=build $CONTAINER_SOURCE/yarn.lock \
      $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
      ./
 ENV TARBALL_PATH=.
+
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
   rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy app-config files needed in runtime
 # Upstream only
@@ -95,7 +104,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-103 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-47.1717076367 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -113,6 +122,9 @@ RUN microdnf update -y && \
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 # Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
+
+# include patch files in final container just for reference
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
@@ -133,6 +145,21 @@ ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 
 # To avoid running scripts when using `npm pack` to install dynamic plugins
 ENV NPM_CONFIG_ignore-scripts='true'
+
+# Upstream only - Use dev key in all branches
+ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
+ENV SEGMENT_TEST_MODE=false
+
+# RHIDP-2217: corporate proxy support (configured using 'global-agent')
+# This is to avoid having to define several environment variables for the same purpose,
+# i.e, GLOBAL_AGENT_HTTP(S)_PROXY (for 'global-agent') and the conventional HTTP(S)_PROXY (honored by other libraries like Axios).
+# By setting GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE to an empty value,
+# 'global-agent' will use the same HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
+ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
+
+# Enables the usage of the backstage scaffolder on nodejs 20
+# https://github.com/backstage/backstage/issues/20661
+ENV NODE_OPTIONS='--no-node-snapshot'
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 

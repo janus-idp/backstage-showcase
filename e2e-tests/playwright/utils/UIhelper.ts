@@ -3,6 +3,7 @@ import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
   private page: Page;
+  private selectors: { [key: string]: string };
 
   constructor(page: Page) {
     this.page = page;
@@ -14,30 +15,37 @@ export class UIhelper {
     await this.verifyRowsInTable(expectedRows);
   }
 
+  async searchInputPlaceholder(searchText: string) {
+    await this.page.fill('input[placeholder="Search"]', searchText);
+  }
+
   async waitForHeaderTitle() {
     await this.page.waitForSelector('h2[data-testid="header-title"]');
   }
 
   async clickButton(
-    label: string,
+    label: string | RegExp,
     options: { exact?: boolean; force?: boolean } = {
       exact: true,
       force: false,
     },
   ) {
-    const selector = `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
+    const selector = `${UIhelperPO.MuiButtonLabel}`;
     const button = this.page
       .locator(selector)
       .getByText(label, { exact: options.exact })
       .first();
     await button.waitFor({ state: 'visible' });
+    await button.waitFor({ state: 'attached' });
 
     if (options?.force) {
       await button.click({ force: true });
     } else {
       await button.click();
     }
+    return button;
   }
+
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
@@ -77,8 +85,22 @@ export class UIhelper {
     await expect(element).toBeVisible();
   }
 
+  async isBtnVisible(text: string): Promise<boolean> {
+    const locator = `button:has-text("${text}")`;
+    try {
+      await this.page.waitForSelector(locator, {
+        state: 'visible',
+        timeout: 10000,
+      });
+      const button = this.page.locator(locator);
+      return button.isVisible();
+    } catch (error) {
+      return false;
+    }
+  }
+
   async waitForSideBarVisible() {
-    await this.page.waitForSelector('nav a');
+    await this.page.waitForSelector('nav a', { timeout: 120000 });
   }
 
   async openSidebar(navBarText: string) {
@@ -104,6 +126,7 @@ export class UIhelper {
         .getByText(rowText, { exact: exact })
         .first();
       await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.waitFor({ state: 'attached' });
       await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }
@@ -126,10 +149,10 @@ export class UIhelper {
 
   async verifyHeading(heading: string) {
     const headingLocator = this.page
-      .locator(`h1, h2, h3, h4, h5, h6`)
+      .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
-    await headingLocator.waitFor();
+    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
 
@@ -197,7 +220,11 @@ export class UIhelper {
     await expect(link).toBeVisible();
   }
 
-  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+  async verifyTextinCard(
+    cardHeading: string,
+    text: string | RegExp,
+    exact = true,
+  ) {
     const locator = this.page
       .locator(UIhelperPO.MuiCard(cardHeading))
       .getByText(text, { exact: exact })

@@ -54,6 +54,7 @@ site
 
 # Playwright
 /test-results/
+/screenshots/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
@@ -64,3 +65,6 @@ site
 
 # IntelliJ
 .idea
+
+# e2e test results
+junit-results.xml

@@ -15,8 +15,15 @@ export class CatalogImport {
   async registerExistingComponent(url: string) {
     await this.page.fill(CatalogImportPO.componentURL, url);
     await this.uiHelper.clickButton('Analyze');
-    await this.uiHelper.clickButton('Import');
-    await this.uiHelper.clickButton('View Component');
+
+    // Wait for the visibility of either 'Refresh' or 'Import' button
+    if (await this.uiHelper.isBtnVisible('Import')) {
+      await this.uiHelper.clickButton('Import');
+      await this.uiHelper.clickButton('View Component');
+    } else {
+      await this.uiHelper.clickButton('Refresh');
+      expect(await this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
+    }
   }
 }
 

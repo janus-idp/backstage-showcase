@@ -1,6 +1,6 @@
-import { test, chromium, firefox } from '@playwright/test';
+import { test } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
-import { Common } from '../../utils/Common';
+import { Common, setupBrowser } from '../../utils/Common';
 
 let page;
 test.describe('Test ACR plugin', () => {
@@ -8,14 +8,12 @@ test.describe('Test ACR plugin', () => {
   let common: Common;
   const dateRegex =
     /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}/gm;
-  test.beforeAll(async ({ browserName }) => {
-    const browserType = browserName === 'firefox' ? firefox : chromium;
-    const browser = await browserType.launch();
-    page = await browser.newPage();
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
 
   test('Verify ACR Images are visible', async () => {

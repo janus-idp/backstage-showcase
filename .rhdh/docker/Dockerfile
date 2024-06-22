@@ -19,8 +19,8 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18:1-98 AS build
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-44.1717085241 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -48,9 +48,11 @@ RUN chmod +x $YARN
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 
@@ -120,9 +122,16 @@ RUN git config --global --add safe.directory ./
 # Upstream only
 # RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
-# hadolint ignore=DL3059,DL4006,SC2086
-RUN $YARN build --filter=backend && \
+# Downstream only - replace midstream build-metadata.json with the version from downstream (where we include the midstream SHA)
+COPY packages/app/src/build-metadata.json ./packages/app/src/
 
+# hadolint ignore=DL3059,DL4006,SC2086
+RUN \
+  # Downstream only - relabel upstream + append build time into packages/app/src/build-metadata.json
+  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
+    -e "s/\"Last Commit: (.+)\"/\"Upstream: \1\", \"Build Time: $now\"/" && \
+  cat packages/app/src/build-metadata.json; echo && \
+  $YARN build --filter=backend && \
   # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Downstream only - replace registry refs with cachito ones
@@ -153,10 +162,11 @@ RUN find dynamic-plugins -maxdepth 1 -mindepth 1 -type d -not -name dist -exec r
 
 # Downstream only - files already exist, nothing to copy; next line for debugging only
 # RUN ls -l $CONTAINER_SOURCE/ $CONTAINER_SOURCE/packages/backend/dist/
-
 ENV TARBALL_PATH=./packages/backend/dist
+
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
   rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy app-config files needed in runtime
 # Upstream only
@@ -168,8 +178,8 @@ RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; 
 RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-#@follow_tag(registry.access.redhat.com/ubi9/nodejs-18-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:1-103 AS runner
+#@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-47.1717076367 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -206,6 +216,9 @@ COPY --from=build --chown=1001:1001 $REMOTE_SOURCES_DIR/ ./
 # Downstream only - copy embedded dynamic plugins from $REMOTE_SOURCES_DIR
 COPY --from=build $REMOTE_SOURCES_DIR/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
+# include patch files in final container just for reference
+COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
+
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
@@ -229,6 +242,22 @@ ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 
 # To avoid running scripts when using `npm pack` to install dynamic plugins
 ENV NPM_CONFIG_ignore-scripts='true'
+
+# gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t is key for dev environment
+# Use production key in stable 1.yy.x branch; use dev key in main for CI/next builds
+ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
+ENV SEGMENT_TEST_MODE=false
+
+# RHIDP-2217: corporate proxy support (configured using 'global-agent')
+# This is to avoid having to define several environment variables for the same purpose,
+# i.e, GLOBAL_AGENT_HTTP(S)_PROXY (for 'global-agent') and the conventional HTTP(S)_PROXY (honored by other libraries like Axios).
+# By setting GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE to an empty value,
+# 'global-agent' will use the same HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
+ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
+
+# Enables the usage of the backstage scaffolder on nodejs 20
+# https://github.com/backstage/backstage/issues/20661
+ENV NODE_OPTIONS='--no-node-snapshot'
 
 ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 

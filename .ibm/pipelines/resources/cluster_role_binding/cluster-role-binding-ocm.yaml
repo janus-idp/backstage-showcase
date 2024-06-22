@@ -7,6 +7,22 @@ roleRef:
   kind: ClusterRole
   name: rhdh-k8s-plugin-ocm
 subjects:
-- kind: ServiceAccount
-  name: rhdh-k8s-plugin
-  namespace: janus-idp-prod
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-rbac
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-rbac
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-ci-nightly
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-1-2-x
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-rbac-1-2-x
+

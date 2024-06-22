@@ -1,1 +1,1 @@
-export * from '@backstage/plugin-jenkins';
+export * from '@backstage-community/plugin-jenkins';

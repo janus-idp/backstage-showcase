@@ -48,11 +48,8 @@ site
 # vscode database functionality support files
 *.session.sql
 
+.vscode
 .turbo
-
-# Cypress
-**/cypress/downloads
-**/cypress/screenshots
 
 # Dynamic plugins root content
 dynamic-plugins-root/*

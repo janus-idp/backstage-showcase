@@ -176,6 +176,13 @@ plugins:
         providers:
           gitlab: {}
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-org-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          gitlab: {}
+
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
     disabled: true
@@ -294,6 +301,31 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-argocd:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: ArgocdDeploymentSummary
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: "span 8"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isArgocdConfigured
+              - mountPoint: entity.page.cd/cards
+                importName: ArgocdDeploymentLifecycle
+                config:
+                  layout:
+                    gridColumn: '1 / -1'
+                  if:
+                    allOf:
+                      - isArgocdConfigured
 
   # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
@@ -327,6 +359,8 @@ plugins:
                   if:
                     allOf:
                       - isAzureDevOpsAvailable
+  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories
+    disabled: true
 
   # Group: Jenkins
   - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
@@ -497,25 +531,11 @@ plugins:
 
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
 
+  - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
-
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-dynamic-plugins-info
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          janus-idp.backstage-plugin-dynamic-plugins-info:
-            dynamicRoutes:
-              - path: /admin/plugins
-                importName: DynamicPluginsInfo
-            mountPoints:
-              - mountPoint: admin.page.plugins/cards
-                importName: DynamicPluginsInfo
-                config:
-                  layout:
-                    gridColumn: "1 / -1"
-                    width: 100vw
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
     disabled: true
@@ -822,17 +842,27 @@ plugins:
                   props:
                     width: 1500
                     height: 800
+
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
-    disabled: true
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-analytics-provider-segment:
             apiFactories:
               - importName: SegmentAnalyticsApi
+      backend:
+        csp:
+          script-src:
+            - '''self'''
+            - '''unsafe-eval'''
+            - 'https://cdn.segment.com'
       app:
         analytics:
           segment:
             writeKey: ${SEGMENT_WRITE_KEY}
-            maskIP: ${SEGMENT_MASK_IP} # prevents IP addresses from being sent if true
+            maskIP: true # prevents IP addresses from being sent if true
             testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
+
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
+    disabled: false

@@ -12,9 +12,11 @@ export const dynamicPluginsInfoPlugin = createBackendPlugin({
       deps: {
         http: coreServices.httpRouter,
         pluginProvider: dynamicPluginsServiceRef,
+        httpAuth: coreServices.httpAuth,
+        discovery: coreServices.discovery,
       },
-      async init({ http, pluginProvider }) {
-        http.use(await createRouter({ pluginProvider }));
+      async init({ http, pluginProvider, httpAuth, discovery }) {
+        http.use(await createRouter({ pluginProvider, httpAuth, discovery }));
       },
     });
   },

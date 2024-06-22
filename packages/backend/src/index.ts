@@ -1,22 +1,26 @@
 import { rootHttpRouterServiceFactory } from '@backstage/backend-app-api';
+import { statusCheckHandler } from '@backstage/backend-common';
 import { createBackend } from '@backstage/backend-defaults';
-import { PackageRoles } from '@backstage/cli-node';
 import {
   dynamicPluginsFeatureDiscoveryServiceFactory,
-  dynamicPluginsServiceFactory,
-  dynamicPluginsSchemasServiceFactory,
   dynamicPluginsFrontendSchemas,
-  dynamicPluginsRootLoggerServiceFactory,
+  dynamicPluginsSchemasServiceFactory,
+  dynamicPluginsServiceFactory,
 } from '@backstage/backend-dynamic-feature-service';
-import {
-  rbacDynamicPluginsProvider,
-  pluginIDProviderService,
-} from './modules/rbacDynamicPluginsModule';
-import { metricsHandler } from './metrics';
-import { statusCheckHandler } from '@backstage/backend-common';
+import { PackageRoles } from '@backstage/cli-node';
 import { RequestHandler } from 'express';
 import * as path from 'path';
 import { CommonJSModuleLoader } from './loader';
+import { customLogger } from './logger';
+import { metricsHandler } from './metrics';
+import {
+  pluginIDProviderService,
+  rbacDynamicPluginsProvider,
+} from './modules/rbacDynamicPluginsModule';
+import { configureCorporateProxyAgent } from './corporate-proxy';
+
+// RHIDP-2217: adds support for corporate proxy
+configureCorporateProxyAgent();
 
 const backend = createBackend();
 
@@ -64,7 +68,7 @@ backend.add(
   }),
 );
 backend.add(dynamicPluginsFrontendSchemas());
-backend.add(dynamicPluginsRootLoggerServiceFactory());
+backend.add(customLogger());
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
 backend.add(
@@ -88,10 +92,14 @@ backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
 backend.add(import('@backstage/plugin-events-backend/alpha'));
 
 backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
+backend.add(
+  import('@janus-idp/backstage-scaffolder-backend-module-annotator/alpha'),
+);
 backend.add(pluginIDProviderService);
 backend.add(rbacDynamicPluginsProvider);
 
 backend.add(import('@backstage/plugin-auth-backend'));
+backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 backend.add(import('./modules/authProvidersModule'));
 
 backend.add(import('@internal/plugin-dynamic-plugins-info-backend'));

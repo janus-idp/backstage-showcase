@@ -1,1 +1,1 @@
-export { default } from '@backstage/plugin-azure-devops-backend';
+export { default } from '@backstage-community/plugin-azure-devops-backend';

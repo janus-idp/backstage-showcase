@@ -1,1 +1,1 @@
-export * from '@backstage/plugin-sonarqube';
+export * from '@backstage-community/plugin-sonarqube';

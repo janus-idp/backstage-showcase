@@ -1,1 +1,1 @@
-export * from '@backstage/plugin-github-actions';
+export * from '@backstage-community/plugin-github-actions';

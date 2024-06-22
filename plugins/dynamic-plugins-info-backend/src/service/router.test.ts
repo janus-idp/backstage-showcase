@@ -4,6 +4,7 @@ import { plugins } from '../../__fixtures__/data';
 import { expectedList } from '../../__fixtures__/expected_result';
 import { createRouter } from './router';
 import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('createRouter', () => {
   let app: express.Express;
@@ -14,6 +15,8 @@ describe('createRouter', () => {
 
     const router = await createRouter({
       pluginProvider: pluginManager,
+      discovery: mockServices.discovery(),
+      httpAuth: mockServices.httpAuth(),
     });
 
     app = express();

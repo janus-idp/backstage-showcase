@@ -1,0 +1,20 @@
+{
+  "targets": {
+    "reportportal": {
+      "disabled": false,
+      "config": {
+        "hostname": "",
+        "project": ""
+      },
+      "processing": {
+        "apply_tfa": true,
+        "property_filter": [".*"],
+        "launch": {
+          "name": "",
+          "description": "",
+          "attributes": []
+        }
+      }
+    }
+  }
+}

@@ -1,71 +1,84 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-
 import { createApp } from '@backstage/app-defaults';
-import {
-  BackstageApp,
-  ConfigReader,
-  defaultConfigLoader,
-} from '@backstage/core-app-api';
+import { BackstageApp } from '@backstage/core-app-api';
 import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
 
-import { AppsConfig, getScalprum } from '@scalprum/core';
-import { ScalprumProvider, useScalprum } from '@scalprum/react-core';
-
+import { useThemes } from '@redhat-developer/red-hat-developer-hub-theme';
+import { AppsConfig } from '@scalprum/core';
+import { useScalprum } from '@scalprum/react-core';
 import DynamicRootContext, {
-  DynamicRootContextValue,
-  ScalprumMountPoint,
+  ComponentRegistry,
+  ResolvedDynamicRoute,
+  ResolvedMenuItem,
+  EntityTabOverrides,
+  MountPoints,
+  RemotePlugins,
+  ScaffolderFieldExtension,
   ScalprumMountPointConfig,
 } from './DynamicRootContext';
 import extractDynamicConfig, {
+  DynamicPluginConfig,
   configIfToCallable,
+  DynamicRoute,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
-import defaultThemes from './defaultThemes';
 import defaultAppComponents from './defaultAppComponents';
 import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
-import overrideBaseUrlConfigs from '../../utils/dynamicUI/overrideBaseUrlConfigs';
-import useAsync from 'react-use/lib/useAsync';
 import Loader from './Loader';
 
-const DynamicRoot = ({
+export type StaticPlugins = Record<
+  string,
+  {
+    plugin: BackstagePlugin;
+    module:
+      | React.ComponentType<{}>
+      | { [importName: string]: React.ComponentType<{}> };
+  }
+>;
+
+export const DynamicRoot = ({
   afterInit,
   apis: staticApis,
+  dynamicPlugins,
+  staticPluginStore = {},
   scalprumConfig,
 }: {
+  afterInit: () => Promise<{ default: React.ComponentType }>;
   // Static APIs
   apis: AnyApiFactory[];
+  dynamicPlugins: DynamicPluginConfig;
+  staticPluginStore?: StaticPlugins;
   scalprumConfig: AppsConfig;
-  afterInit: () => Promise<{ default: React.ComponentType }>;
 }) => {
   const app = useRef<BackstageApp>();
   const [ChildComponent, setChildComponent] = useState<
     React.ComponentType | undefined
   >(undefined);
   // registry of remote components loaded at bootstrap
-  const [components, setComponents] = useState<
-    | {
-        AppProvider: React.ComponentType;
-        AppRouter: React.ComponentType;
-        dynamicRoutes: DynamicRootContextValue[];
-        mountPoints: { [mountPoint: string]: ScalprumMountPoint[] };
-      }
-    | undefined
-  >();
-  const { initialized, pluginStore } = useScalprum();
+  const [components, setComponents] = useState<ComponentRegistry | undefined>();
+  const { initialized, pluginStore, api: scalprumApi } = useScalprum();
+
+  const themes = useThemes();
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
     const {
+      pluginModules,
+      apiFactories,
+      appIcons,
       dynamicRoutes,
+      entityTabs,
       mountPoints,
       routeBindings,
-      appIcons,
       routeBindingTargets,
-      apiFactories,
-    } = await extractDynamicConfig();
-
+      scaffolderFieldExtensions,
+    } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
+      ...pluginModules.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
       ...routeBindingTargets.map(({ scope, module }) => ({
         scope,
         module,
@@ -86,17 +99,50 @@ const DynamicRoot = ({
         scope,
         module,
       })),
+      ...scaffolderFieldExtensions.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
     ];
 
+    const staticPlugins = Object.keys(staticPluginStore).reduce(
+      (acc, pluginKey) => {
+        return {
+          ...acc,
+          [pluginKey]: { PluginRoot: staticPluginStore[pluginKey].module },
+        };
+      },
+      {},
+    ) as RemotePlugins;
     const remotePlugins = await initializeRemotePlugins(
       pluginStore,
       scalprumConfig,
       requiredModules,
     );
+
+    const allScopes = Object.values(remotePlugins);
+    const allModules = allScopes.flatMap(scope => Object.values(scope));
+    const allImports = allModules.flatMap(module => Object.values(module));
+    const remoteBackstagePlugins = allImports.filter(imported => {
+      const prototype = Object.getPrototypeOf(imported);
+      return (
+        prototype !== undefined &&
+        [
+          'getId',
+          'getApis',
+          'getFeatureFlags',
+          'provide',
+          'routes',
+          'externalRoutes',
+        ].every(field => field in prototype)
+      );
+    }) as BackstagePlugin<{}>[];
+
+    const allPlugins = { ...staticPlugins, ...remotePlugins };
     const resolvedRouteBindingTargets = Object.fromEntries(
       routeBindingTargets.reduce<[string, BackstagePlugin<{}>][]>(
         (acc, { name, importName, scope, module }) => {
-          const plugin = remotePlugins[scope]?.[module]?.[importName];
+          const plugin = allPlugins[scope]?.[module]?.[importName];
 
           if (plugin) {
             acc.push([name, plugin as BackstagePlugin<{}>]);
@@ -115,7 +161,7 @@ const DynamicRoot = ({
     const icons = Object.fromEntries(
       appIcons.reduce<[string, React.ComponentType<{}>][]>(
         (acc, { scope, module, importName, name }) => {
-          const Component = remotePlugins[scope]?.[module]?.[importName];
+          const Component = allPlugins[scope]?.[module]?.[importName];
 
           if (Component) {
             acc.push([name, Component as React.ComponentType<{}>]);
@@ -133,7 +179,7 @@ const DynamicRoot = ({
 
     const remoteApis = apiFactories.reduce<AnyApiFactory[]>(
       (acc, { scope, module, importName }) => {
-        const apiFactory = remotePlugins[scope]?.[module]?.[importName];
+        const apiFactory = allPlugins[scope]?.[module]?.[importName];
 
         if (apiFactory) {
           acc.push(apiFactory as AnyApiFactory);
@@ -148,18 +194,6 @@ const DynamicRoot = ({
       [],
     );
 
-    if (!app.current) {
-      app.current = createApp({
-        apis: [...staticApis, ...remoteApis],
-        bindRoutes({ bind }) {
-          bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
-        },
-        icons,
-        themes: defaultThemes,
-        components: defaultAppComponents,
-      });
-    }
-
     const providerMountPoints = mountPoints.reduce<
       {
         mountPoint: string;
@@ -168,7 +202,7 @@ const DynamicRoot = ({
         staticJSXContent?: React.ReactNode;
       }[]
     >((acc, { module, importName, mountPoint, scope, config }) => {
-      const Component = remotePlugins[scope]?.[module]?.[importName];
+      const Component = allPlugins[scope]?.[module]?.[importName];
       // Only add mount points that have a component
       if (Component) {
         const ifCondition = configIfToCallable(
@@ -177,7 +211,7 @@ const DynamicRoot = ({
               k,
               v.map(c => {
                 if (typeof c === 'string') {
-                  const remoteFunc = remotePlugins[scope]?.[module]?.[c];
+                  const remoteFunc = allPlugins[scope]?.[module]?.[c];
                   if (remoteFunc === undefined) {
                     // eslint-disable-next-line no-console
                     console.warn(
@@ -216,30 +250,51 @@ const DynamicRoot = ({
       return acc;
     }, []);
 
-    const mountPointComponents = providerMountPoints.reduce<{
-      [mountPoint: string]: ScalprumMountPoint[];
-    }>((acc, entry) => {
-      if (!acc[entry.mountPoint]) {
-        acc[entry.mountPoint] = [];
-      }
-      acc[entry.mountPoint].push({
-        Component: entry.Component,
-        staticJSXContent: entry.staticJSXContent,
-        config: entry.config,
-      });
-      return acc;
-    }, {});
-
-    getScalprum().api.mountPoints = mountPointComponents;
+    const mountPointComponents = providerMountPoints.reduce<MountPoints>(
+      (acc, entry) => {
+        if (!acc[entry.mountPoint]) {
+          acc[entry.mountPoint] = [];
+        }
+        acc[entry.mountPoint].push({
+          Component: entry.Component,
+          staticJSXContent: entry.staticJSXContent,
+          config: entry.config,
+        });
+        return acc;
+      },
+      {},
+    );
 
     const dynamicRoutesComponents = dynamicRoutes.reduce<
-      DynamicRootContextValue[]
+      ResolvedDynamicRoute[]
     >((acc, route) => {
+      function resolveMenuItem(
+        route: DynamicRoute,
+      ): ResolvedMenuItem | undefined {
+        if (route.menuItem === undefined) {
+          return undefined;
+        }
+        if ('text' in route.menuItem) {
+          return route.menuItem;
+        }
+        const MenuItemComponent =
+          allPlugins[route.scope]?.[route.menuItem.module ?? route.module]?.[
+            route.menuItem.importName
+          ];
+        if (MenuItemComponent === undefined) {
+          return undefined;
+        }
+        return {
+          Component: MenuItemComponent as React.ComponentType<{}>,
+          config: route.menuItem.config || {},
+        };
+      }
       const Component =
-        remotePlugins[route.scope]?.[route.module]?.[route.importName];
+        allPlugins[route.scope]?.[route.module]?.[route.importName];
       if (Component) {
         acc.push({
           ...route,
+          menuItem: resolveMenuItem(route),
           Component:
             typeof Component === 'object' && 'element' in Component
               ? (Component.element as React.ComponentType<{}>)
@@ -259,17 +314,88 @@ const DynamicRoot = ({
       return acc;
     }, []);
 
+    const entityTabOverrides = entityTabs.reduce<EntityTabOverrides>(
+      (acc, { path, title, mountPoint, scope }) => {
+        if (acc[path]) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Plugin ${scope} is not configured properly: a tab has already been configured for "${path}", ignoring entry with title: "${title}" and mountPoint: "${mountPoint}"`,
+          );
+        } else {
+          acc[path] = { title, mountPoint };
+        }
+        return acc;
+      },
+      {},
+    );
+
+    const scaffolderFieldExtensionComponents = scaffolderFieldExtensions.reduce<
+      ScaffolderFieldExtension[]
+    >((acc, { scope, module, importName }) => {
+      const extensionComponent = allPlugins[scope]?.[module]?.[importName];
+      if (extensionComponent) {
+        acc.push({
+          scope,
+          module,
+          importName,
+          Component: extensionComponent as React.ComponentType<unknown>,
+        });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring scaffolderFieldExtension: ${importName}`,
+        );
+      }
+      return acc;
+    }, []);
+
+    if (!app.current) {
+      app.current = createApp({
+        apis: [...staticApis, ...remoteApis],
+        bindRoutes({ bind }) {
+          bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
+        },
+        icons,
+        plugins: [
+          ...Object.values(staticPluginStore).map(entry => entry.plugin),
+          ...remoteBackstagePlugins,
+        ],
+        themes,
+        components: defaultAppComponents,
+      });
+    }
+
+    // make the dynamic UI configuration available via Scalprum if possible
+    const dynamicRootConfig = scalprumApi ? scalprumApi.dynamicRootConfig : {};
+    dynamicRootConfig.dynamicRoutes = dynamicRoutesComponents;
+    dynamicRootConfig.entityTabOverrides = entityTabOverrides;
+    dynamicRootConfig.mountPoints = mountPointComponents;
+    dynamicRootConfig.scaffolderFieldExtensions =
+      scaffolderFieldExtensionComponents;
+
+    // make the dynamic UI configuration available to DynamicRootContext consumers
     setComponents({
       AppProvider: app.current.getProvider(),
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
+      entityTabOverrides,
       mountPoints: mountPointComponents,
+      scaffolderFieldExtensions: scaffolderFieldExtensionComponents,
     });
 
     afterInit().then(({ default: Component }) => {
       setChildComponent(() => Component);
     });
-  }, [pluginStore, scalprumConfig, staticApis, afterInit]);
+  }, [
+    afterInit,
+    scalprumApi,
+    dynamicPlugins,
+    pluginStore,
+    scalprumConfig,
+    staticApis,
+    staticPluginStore,
+    themes,
+  ]);
 
   useEffect(() => {
     if (initialized && !components) {
@@ -288,59 +414,4 @@ const DynamicRoot = ({
   );
 };
 
-const ScalprumRoot = ({
-  apis,
-  afterInit,
-}: {
-  // Static APIs
-  apis: AnyApiFactory[];
-  afterInit: () => Promise<{ default: React.ComponentType }>;
-}) => {
-  const { loading, value } = useAsync(async () => {
-    const config = ConfigReader.fromConfigs(
-      overrideBaseUrlConfigs(await defaultConfigLoader()),
-    );
-
-    const baseUrl = config.get('backend.baseUrl');
-    const scalprumConfig: AppsConfig = await fetch(
-      `${baseUrl}/api/scalprum/plugins`,
-    ).then(r => r.json());
-    return {
-      baseUrl,
-      scalprumConfig,
-    };
-  });
-
-  if (loading) {
-    return <Loader />;
-  }
-
-  return (
-    <ScalprumProvider
-      config={value?.scalprumConfig ?? {}}
-      pluginSDKOptions={{
-        pluginLoaderOptions: {
-          transformPluginManifest: manifest => {
-            return {
-              ...manifest,
-              loadScripts: manifest.loadScripts.map(
-                script =>
-                  `${value?.baseUrl ?? ''}/api/scalprum/${
-                    manifest.name
-                  }/${script}`,
-              ),
-            };
-          },
-        },
-      }}
-    >
-      <DynamicRoot
-        afterInit={afterInit}
-        scalprumConfig={value?.scalprumConfig ?? {}}
-        apis={apis}
-      />
-    </ScalprumProvider>
-  );
-};
-
-export default ScalprumRoot;
+export default DynamicRoot;

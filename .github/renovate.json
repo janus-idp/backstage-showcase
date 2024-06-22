@@ -5,7 +5,6 @@
     ":rebaseStalePrs",
     "group:allNonMajor",
     "group:linters",
-    "group:test",
     "default:pinDigestsDisabled",
     "default:automergeBranchPush"
   ],
@@ -27,6 +26,9 @@
       "enabled": false
     }
   },
+  "major": {
+    "dependencyDashboardApproval": true
+  },
   "packageRules": [
     {
       "matchDatasources": ["docker"],
@@ -35,11 +37,23 @@
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
-      "groupName": ["DevDependencies (non-major)"]
+      "groupName": ["DevDependencies (non-major)"],
+      "automerge": true
+    },
+    {
+      "extends": ["packages:test"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "Test packages (non-major)",
+      "automerge": true
+    },
+    {
+      "extends": ["packages:test"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "Test packages"
     },
     {
       "matchPackagePatterns": [
-        "^@backstage/",
         "^@janus-idp/",
         "^@immobiliarelabs/",
         "^@roadiehq/",
@@ -48,6 +62,11 @@
       ],
       "groupName": ["Backstage packages"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "matchDepPatterns": ["^@backstage/"],
+      "groupName": "Core Backstage packages",
+      "enabled": false
     }
   ],
   "ignorePaths": ["**/dist-dynamic/**"],
