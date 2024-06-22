@@ -11,14 +11,16 @@ import {
   AuthProviderFactory,
   AuthResolverContext,
   authProvidersExtensionPoint,
-  commonSignInResolvers,
   createOAuthProviderFactory,
 } from '@backstage/plugin-auth-node';
 import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
-import { oidcAuthenticator } from '@internal/plugin-auth-backend-module-oidc-provider';
+import {
+  oidcAuthenticator,
+  oidcSignInResolvers,
+} from '@internal/plugin-auth-backend-module-oidc-provider';
 
 /**
  * Function is responsible for signing in a user with the catalog user and
@@ -195,7 +197,10 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
       return createOAuthProviderFactory({
         authenticator: oidcAuthenticator,
         signInResolver:
-          commonSignInResolvers.emailLocalPartMatchingUserEntityName(),
+          oidcSignInResolvers.emailLocalPartMatchingUserEntityName(),
+        signInResolverFactories: {
+          ...oidcSignInResolvers,
+        },
       });
     case 'okta':
       return providers.okta.create({

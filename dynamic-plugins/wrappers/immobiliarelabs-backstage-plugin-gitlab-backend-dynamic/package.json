@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -23,7 +24,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
     "@backstage/backend-dynamic-feature-service": "0.2.0",
@@ -31,11 +32,26 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.8.6"
+    "@janus-idp/cli": "1.10.0"
   },
   "files": [
     "dist",
     "dist-dynamic/*.*",
     "dist-dynamic/dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
   ]
 }

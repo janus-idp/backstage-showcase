@@ -3,13 +3,26 @@ import { isKind } from '@backstage/plugin-catalog';
 import { hasAnnotation, isType } from '../../components/catalog/utils';
 import {
   DynamicModuleEntry,
-  MenuItem,
   RouteBinding,
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
+import { ApiHolder } from '@backstage/core-plugin-api';
 
-type DynamicRoute = {
+export type MenuItem =
+  | {
+      text: string;
+      icon: string;
+    }
+  | {
+      module?: string;
+      importName: string;
+      config?: {
+        props?: Record<string, any>;
+      };
+    };
+
+export type DynamicRoute = {
   scope: string;
   module: string;
   importName: string;
@@ -18,6 +31,11 @@ type DynamicRoute = {
   config?: {
     props?: Record<string, any>;
   };
+};
+
+type PluginModule = {
+  scope: string;
+  module: string;
 };
 
 type MountPoint = {
@@ -68,6 +86,7 @@ type EntityTabEntry = {
 };
 
 type CustomProperties = {
+  pluginModule?: string;
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
     module?: string;
@@ -93,6 +112,7 @@ export type DynamicPluginConfig = {
 };
 
 type DynamicConfig = {
+  pluginModules: PluginModule[];
   apiFactories: ApiFactory[];
   appIcons: AppIcon[];
   dynamicRoutes: DynamicRoute[];
@@ -112,6 +132,7 @@ function extractDynamicConfig(
 ) {
   const frontend = dynamicPlugins.frontend || {};
   const config: DynamicConfig = {
+    pluginModules: [],
     apiFactories: [],
     appIcons: [],
     dynamicRoutes: [],
@@ -121,6 +142,16 @@ function extractDynamicConfig(
     routeBindingTargets: [],
     scaffolderFieldExtensions: [],
   };
+  config.pluginModules = Object.entries(frontend).reduce<PluginModule[]>(
+    (pluginSet, [scope, customProperties]) => {
+      pluginSet.push({
+        scope,
+        module: customProperties.pluginModule ?? 'PluginRoot',
+      });
+      return pluginSet;
+    },
+    [],
+  );
   config.dynamicRoutes = Object.entries(frontend).reduce<DynamicRoute[]>(
     (pluginSet, [scope, customProperties]) => {
       pluginSet.push(
@@ -231,17 +262,22 @@ function extractDynamicConfig(
  * @returns
  */
 export function configIfToCallable(conditional: ScalprumMountPointConfigRawIf) {
-  return (e: Entity) => {
+  return (entity: Entity, context?: { apis: ApiHolder }) => {
     if (conditional?.allOf) {
-      return conditional.allOf.map(conditionsArrayMapper).every(f => f(e));
+      return conditional.allOf
+        .map(conditionsArrayMapper)
+        .every(f => f(entity, context));
     }
     if (conditional?.anyOf) {
-      return conditional.anyOf.map(conditionsArrayMapper).some(f => f(e));
+      return conditional.anyOf
+        .map(conditionsArrayMapper)
+        .some(f => f(entity, context));
     }
     if (conditional?.oneOf) {
       return (
-        conditional.oneOf.map(conditionsArrayMapper).filter(f => f(e))
-          .length === 1
+        conditional.oneOf
+          .map(conditionsArrayMapper)
+          .filter(f => f(entity, context)).length === 1
       );
     }
     return true;
@@ -254,9 +290,10 @@ export function conditionsArrayMapper(
         [key: string]: string | string[];
       }
     | Function,
-) {
+): (entity: Entity, context?: { apis: ApiHolder }) => boolean {
   if (typeof condition === 'function') {
-    return (entity: Entity) => Boolean(condition(entity));
+    return (entity: Entity, context?: { apis: ApiHolder }): boolean =>
+      condition(entity, context);
   }
   if (condition.isKind) {
     return isKind(condition.isKind);

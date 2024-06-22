@@ -147,37 +147,53 @@ const consoleSpy = jest.spyOn(console, 'warn');
 describe('DynamicRoot', () => {
   beforeEach(() => {
     removeScalprum();
-    mockInitializeRemotePlugins.mockResolvedValue({
-      'foo.bar': {
-        PluginRoot: {
-          default: React.Fragment,
-          fooPlugin: createPlugin({
-            id: 'fooPlugin',
-            routes: { bar: createRouteRef({ id: 'bar' }) },
-          }),
-          fooPluginTarget: createPlugin({
-            id: 'fooPluginTarget',
-            externalRoutes: {
-              barTarget: createExternalRouteRef({ id: 'bar' }),
-            },
-          }),
-          fooPluginApi: createApiFactory({
-            api: createApiRef<{}>({
-              id: 'plugin.foo.service',
-            }),
-            deps: {},
-            factory: () => ({}),
-          }),
-          FooComponent: React.Fragment,
-          isFooConditionTrue: () => true,
-          isFooConditionFalse: () => false,
-          FooComponentWithStaticJSX: {
-            element: ({ children }) => <>{children}</>,
-            staticJSXContent: <div />,
+    mockInitializeRemotePlugins.mockImplementation(
+      (_, __, requiredModules: { scope: string; module: string }[]) =>
+        Promise.resolve({
+          'foo.bar': {
+            ...(requiredModules.some(m => m.module === 'PluginRoot')
+              ? {
+                  PluginRoot: {
+                    default: React.Fragment,
+                    fooPlugin: createPlugin({
+                      id: 'fooPlugin',
+                      routes: { bar: createRouteRef({ id: 'bar' }) },
+                    }),
+                    fooPluginTarget: createPlugin({
+                      id: 'fooPluginTarget',
+                      externalRoutes: {
+                        barTarget: createExternalRouteRef({ id: 'bar' }),
+                      },
+                    }),
+                    fooPluginApi: createApiFactory({
+                      api: createApiRef<{}>({
+                        id: 'plugin.foo.service',
+                      }),
+                      deps: {},
+                      factory: () => ({}),
+                    }),
+                    FooComponent: React.Fragment,
+                    isFooConditionTrue: () => true,
+                    isFooConditionFalse: () => false,
+                    FooComponentWithStaticJSX: {
+                      element: ({ children }) => <>{children}</>,
+                      staticJSXContent: <div />,
+                    },
+                  },
+                }
+              : {}),
+            ...(requiredModules.some(m => m.module === 'OtherModule')
+              ? {
+                  OtherModule: {
+                    barPlugin: createPlugin({
+                      id: 'barPlugin',
+                    }),
+                  },
+                }
+              : {}),
           },
-        },
-      },
-    });
+        }),
+    );
     jest
       .spyOn(useAsync, 'default')
       .mockReturnValue({ loading: false, value: {} });
@@ -185,6 +201,58 @@ describe('DynamicRoot', () => {
 
   afterEach(() => {
     consoleSpy.mockReset();
+  });
+
+  it('should add plugins found in default module', async () => {
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {},
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
+        expect(
+          createAppSpy.mock.calls[0][0]?.plugins?.map(p => p.getId()),
+        ).toEqual(['fooPlugin', 'fooPluginTarget']);
+      });
+    } finally {
+      createAppSpy.mockRestore();
+    }
+  });
+
+  it('should add plugins found in specified module', async () => {
+    const createAppSpy = jest.spyOn(appDefaults, 'createApp');
+    const dynamicPlugins = {
+      frontend: {
+        'foo.bar': {
+          pluginModule: 'OtherModule',
+        },
+      },
+    };
+    await loadTestConfig(dynamicPlugins);
+    const rendered = await renderWithEffects(
+      <MockApp dynamicPlugins={dynamicPlugins} />,
+    );
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
+        expect(
+          createAppSpy.mock.calls[0][0]?.plugins?.map(p => p.getId()),
+        ).toEqual(['barPlugin']);
+      });
+    } finally {
+      createAppSpy.mockRestore();
+    }
   });
 
   it('should render with one dynamicRoute', async () => {
@@ -709,22 +777,28 @@ describe('DynamicRoot', () => {
     const rendered = await renderWithEffects(
       <MockApp dynamicPlugins={dynamicPlugins} />,
     );
-    await waitFor(async () => {
-      expect(rendered.baseElement).toBeInTheDocument();
-      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(createAppSpy).toHaveBeenCalled();
-      const bindResult: Record<string, any> = {};
-      const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
-        bindResult.externalRoutes = externalRoutes;
-        bindResult.targetRoutes = targetRoutes;
-      };
-      createAppSpy.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
-      expect(bindResult).toEqual({
-        externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
-        targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
+        const bindResult: Record<string, any> = {};
+        const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
+          bindResult.externalRoutes = externalRoutes;
+          bindResult.targetRoutes = targetRoutes;
+        };
+        createAppSpy.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
+        expect(bindResult).toEqual({
+          externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
+          targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
+        });
+        expect(
+          createAppSpy.mock.calls[0][0]?.plugins?.map(p => p.getId()),
+        ).toEqual(['fooPlugin', 'fooPluginTarget']);
       });
-    });
-    createAppSpy.mockRestore();
+    } finally {
+      createAppSpy.mockRestore();
+    }
   });
 
   it('should bind routes on routeBindings target with a custom name', async () => {
@@ -754,22 +828,25 @@ describe('DynamicRoot', () => {
     const rendered = await renderWithEffects(
       <MockApp dynamicPlugins={dynamicPlugins} />,
     );
-    await waitFor(async () => {
-      expect(rendered.baseElement).toBeInTheDocument();
-      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(createAppSpy).toHaveBeenCalled();
-      const bindResult: Record<string, any> = {};
-      const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
-        bindResult.externalRoutes = externalRoutes;
-        bindResult.targetRoutes = targetRoutes;
-      };
-      createAppSpy.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
-      expect(bindResult).toEqual({
-        externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
-        targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
+        const bindResult: Record<string, any> = {};
+        const bindFunc: AppRouteBinder = (externalRoutes, targetRoutes) => {
+          bindResult.externalRoutes = externalRoutes;
+          bindResult.targetRoutes = targetRoutes;
+        };
+        createAppSpy.mock.calls[0][0]?.bindRoutes?.({ bind: bindFunc });
+        expect(bindResult).toEqual({
+          externalRoutes: { barTarget: createExternalRouteRef({ id: 'bar' }) },
+          targetRoutes: { barTarget: createRouteRef({ id: 'bar' }) },
+        });
       });
-    });
-    createAppSpy.mockRestore();
+    } finally {
+      createAppSpy.mockRestore();
+    }
   });
 
   it('should not bind routes on routeBindings target with nonexistent importName', async () => {
@@ -819,16 +896,19 @@ describe('DynamicRoot', () => {
     const rendered = await renderWithEffects(
       <MockApp dynamicPlugins={dynamicPlugins} />,
     );
-    await waitFor(async () => {
-      expect(rendered.baseElement).toBeInTheDocument();
-      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(createAppSpy).toHaveBeenCalled();
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
 
-      const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
-      expect(resolvedApis.length).toEqual(1);
-      expect(resolvedApis[0].api.id).toEqual('plugin.foo.service');
-    });
-    createAppSpy.mockRestore();
+        const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
+        expect(resolvedApis.length).toEqual(1);
+        expect(resolvedApis[0].api.id).toEqual('plugin.foo.service');
+      });
+    } finally {
+      createAppSpy.mockRestore();
+    }
   });
 
   it('should not add custom ApiFactory with nonexistent importName', async () => {
@@ -844,15 +924,18 @@ describe('DynamicRoot', () => {
     const rendered = await renderWithEffects(
       <MockApp dynamicPlugins={dynamicPlugins} />,
     );
-    await waitFor(async () => {
-      expect(rendered.baseElement).toBeInTheDocument();
-      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(createAppSpy).toHaveBeenCalled();
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
 
-      const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
-      expect(resolvedApis.length).toEqual(0);
-    });
-    createAppSpy.mockRestore();
+        const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
+        expect(resolvedApis.length).toEqual(0);
+      });
+    } finally {
+      createAppSpy.mockRestore();
+    }
   });
 
   it('should not add custom ApiFactory with nonexistent module', async () => {
@@ -868,14 +951,17 @@ describe('DynamicRoot', () => {
     const rendered = await renderWithEffects(
       <MockApp dynamicPlugins={dynamicPlugins} />,
     );
-    await waitFor(async () => {
-      expect(rendered.baseElement).toBeInTheDocument();
-      expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
-      expect(createAppSpy).toHaveBeenCalled();
+    try {
+      await waitFor(async () => {
+        expect(rendered.baseElement).toBeInTheDocument();
+        expect(rendered.getByTestId('isLoadingFinished')).toBeInTheDocument();
+        expect(createAppSpy).toHaveBeenCalled();
 
-      const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
-      expect(resolvedApis.length).toEqual(0);
-    });
-    createAppSpy.mockRestore();
+        const resolvedApis = [...(createAppSpy.mock.calls[0][0]?.apis ?? [])];
+        expect(resolvedApis.length).toEqual(0);
+      });
+    } finally {
+      createAppSpy.mockRestore();
+    }
   });
 });

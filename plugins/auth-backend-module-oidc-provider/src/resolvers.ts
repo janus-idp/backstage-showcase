@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { commonSignInResolvers } from '@backstage/plugin-auth-node';
+import { OidcAuthResult } from '@backstage/plugin-auth-backend-module-oidc-provider';
+import {
+  AuthResolverContext,
+  OAuthAuthenticatorResult,
+  SignInInfo,
+  commonSignInResolvers,
+  createSignInResolverFactory,
+} from '@backstage/plugin-auth-node';
 
 /**
  * Available sign-in resolvers for the Oidc auth provider.
@@ -35,4 +42,25 @@ export namespace oidcSignInResolvers {
    */
   export const emailMatchingUserEntityProfileEmail =
     commonSignInResolvers.emailMatchingUserEntityProfileEmail;
+
+  /**
+   * A oidc resolver that looks up the user using their preferred username
+   * as the entity name
+   */
+  export const preferredUsernameMatchingUserEntityName =
+    createSignInResolverFactory({
+      create() {
+        return async (
+          info: SignInInfo<OAuthAuthenticatorResult<OidcAuthResult>>,
+          ctx: AuthResolverContext,
+        ) => {
+          const userId = info.result.fullProfile.userinfo.preferred_username;
+
+          if (!userId) {
+            throw new Error(`OIDC user profile does not contain a username`);
+          }
+          return ctx.signInWithCatalogUser({ entityRef: { name: userId } });
+        };
+      },
+    });
 }

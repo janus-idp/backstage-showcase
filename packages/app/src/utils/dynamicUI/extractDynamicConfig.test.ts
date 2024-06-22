@@ -146,6 +146,7 @@ describe('extractDynamicConfig', () => {
   ])('returns empty data when %s', (_, source) => {
     const config = extractDynamicConfig(source as DynamicPluginConfig);
     expect(config).toEqual({
+      pluginModules: [],
       routeBindings: [],
       dynamicRoutes: [],
       entityTabs: [],
@@ -487,6 +488,12 @@ describe('extractDynamicConfig', () => {
       frontend: { 'janus-idp.plugin-foo': source },
     });
     expect(config).toEqual({
+      pluginModules: [
+        {
+          module: 'PluginRoot',
+          scope: 'janus-idp.plugin-foo',
+        },
+      ],
       routeBindings: [],
       routeBindingTargets: [],
       dynamicRoutes: [],
