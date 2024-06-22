@@ -122,7 +122,7 @@ plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/17d34
     # via
     #   -r requirements.in
     #   mkdocs-techdocs-core
-platformdirs==3.11.0
+platformdirs==4.2.2
     # via
     #   -r requirements.in
     #   mkdocs
