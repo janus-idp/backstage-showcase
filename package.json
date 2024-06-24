@@ -49,11 +49,11 @@
     "cross-var": "1.1.0",
     "husky": "8.0.3",
     "ip": "1.1.9",
-    "lint-staged": "15.2.5",
-    "prettier": "3.2.5",
+    "lint-staged": "15.2.7",
+    "prettier": "3.3.2",
     "sanitize-html": "2.13.0",
-    "turbo": "1.13.3",
-    "typescript": "5.4.5",
+    "turbo": "1.13.4",
+    "typescript": "5.5.2",
     "undici": "5.28.4"
   },
   "resolutions": {
