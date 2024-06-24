@@ -191,7 +191,7 @@ trove-classifiers==2023.11.29
     #   hatchling
 typing-extensions==4.9.0
     # via -r requirements-build.in
-urllib3==2.1.0
+urllib3==2.2.2
     # via
     #   -r requirements-build.in
     #   requests
@@ -203,7 +203,7 @@ wheel==0.42.0
     # via -r requirements-build.in
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==23.3.2
+pip==24.1
     # via -r requirements-build.in
 setuptools==70.0.0
     # via
