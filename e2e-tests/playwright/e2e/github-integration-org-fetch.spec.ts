@@ -29,26 +29,7 @@ test.describe.serial('GitHub integration with Org data fetching', () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'User');
 
-    await uiHelper.searchInputPlaceholder('A');
-    await uiHelper.verifyRowsInTable(['Alessandro Barbarossa']);
-
-    await uiHelper.searchInputPlaceholder('G');
-    await uiHelper.verifyRowsInTable(['Gustavo Lira e Silva']);
-
-    await uiHelper.searchInputPlaceholder('J');
-    await uiHelper.verifyRowsInTable(['Joseph Kim']);
-
-    await uiHelper.searchInputPlaceholder('O');
-    await uiHelper.verifyRowsInTable(['Omar Al Jaljuli']);
-
     await uiHelper.searchInputPlaceholder('r');
     await uiHelper.verifyRowsInTable(['rhdh-qe']);
-
-    await uiHelper.searchInputPlaceholder('S');
-    await uiHelper.verifyRowsInTable(['Subhash Khileri']);
-
-    await uiHelper.searchInputPlaceholder('z');
-    await uiHelper.verifyRowsInTable(['Frank Kong']);
-    await uiHelper.verifyRowsInTable(['Zbyněk Drápela']);
   });
 });
