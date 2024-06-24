@@ -151,9 +151,19 @@ upstream:
         cors:
           origin: 'https://{{- include "janus-idp.hostname" . }}'
         database:
-          connection:
-            password: ${POSTGRESQL_ADMIN_PASSWORD}
-            user: postgres
+          connection:  # configure Backstage DB connection parameters
+            host: ${POSTGRES_HOST}
+            port: ${POSTGRES_PORT}
+            user: ${POSTGRES_USER}
+            password: ${POSTGRES_PASSWORD}
+            ssl:
+              rejectUnauthorized: true,
+              ca:
+                $file: /opt/app-root/src/postgres-ca.pem
+              key:
+                $file: /opt/app-root/src/postgres-key.key
+              cert:
+                $file: /opt/app-root/src/postgres-crt.pem
         auth:
           keys:
             - secret: ${BACKEND_SECRET}
@@ -183,11 +193,6 @@ upstream:
           secretKeyRef:
             key: backend-secret
             name: '{{ include "janus-idp.backend-secret-name" $ }}'
-      - name: POSTGRESQL_ADMIN_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            key: postgres-password
-            name: '{{ .Release.Name }}-postgresql'
       # disable telemetry in CI
       - name: SEGMENT_TEST_MODE
         value: 'true'
@@ -201,6 +206,15 @@ upstream:
         mountPath: /opt/app-root/src/dynamic-plugins-root
       - name: rbac-policy
         mountPath: /opt/app-root/src/rbac
+      - mountPath: /opt/app-root/src/postgres-crt.pem
+        name: postgress-external-db-cluster-cert
+        subPath: tls.crt
+      - mountPath: /opt/app-root/src/postgres-ca.pem
+        name: postgress-external-db-cluster-cert
+        subPath: ca.crt
+      - mountPath: /opt/app-root/src/postgres-key.key
+        name: postgress-external-db-cluster-cert
+        subPath: tls.key
     extraVolumes:
       # -- Ephemeral volume that will contain the dynamic plugins installed by the initContainer below at start.
       # To have more control on underlying storage, the [emptyDir](https://docs.openshift.com/container-platform/4.13/storage/understanding-ephemeral-storage.html)
@@ -226,6 +240,9 @@ upstream:
           defaultMode: 420
           optional: true
           secretName: dynamic-plugins-npmrc
+      - name: postgress-external-db-cluster-cert
+        secret:
+          secretName: postgress-external-db-cluster-cert
     initContainers:
       - name: install-dynamic-plugins
         # -- Image used by the initContainer to install dynamic plugins into the `dynamic-plugins-root` volume mount.
@@ -262,33 +279,10 @@ upstream:
         filename: app-config-rhdh.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
+      - postgres-cred
   postgresql:
-    enabled: true
-    postgresqlDataDir: /var/lib/pgsql/data/userdata
-    image:
-      registry: quay.io
-      repository: fedora/postgresql-15
-      tag: latest
+    enabled: false
     auth:
-      secretKeys:
-        adminPasswordKey: postgres-password
-        userPasswordKey: password
-    primary:
-      securityContext:
-        enabled: false
-      podSecurityContext:
-        enabled: false
-      containerSecurityContext:
-        enabled: false
-      persistence:
-        enabled: true
-        size: 1Gi
-        mountPath: /var/lib/pgsql/data
-      extraEnvVars:
-        - name: POSTGRESQL_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: postgres-password
-              name: '{{ .Release.Name }}-postgresql'
+      existingSecret: postgres-cred
   ingress:
     host: '{{ .Values.global.host }}'
