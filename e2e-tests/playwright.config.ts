@@ -41,12 +41,18 @@ export default defineConfig({
     {
       name: 'showcase',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+      testIgnore: [
+        '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+      ],
     },
     {
       name: 'showcase-rbac',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+      testMatch: [
+        '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+      ],
     },
 
     // {
