@@ -4,7 +4,7 @@ There are several different methods for running the Backstage Showcase app today
 
 ## Telemetry collection
 
-The telemetry data collection feature enhances your experience with the application without compromising your privacy.
+The telemetry data collection feature is used to enhance your experience with the application.
 
 **Telemetry data collection is enabled by default.**
 
@@ -21,7 +21,7 @@ To disable telemetry data collection, you need to disable the [`@janus-idp/backs
     - User-related info: locale, timezone, userAgent (browser and OS details).
     - Page-related info: title, category, extension name, URL, path, referrer, search parameters.
 
-The telemetry data will only be used for internal analysis and product improvements. The collected data is analyzed to understand user interactions with the application while maintaining user anonymity and privacy.
+The collected data is analyzed to understand your interactions with the application and to improve the offerings and your experience.
 
 To enable or disable telemetry data collection and customize a telemetry destination, see the following sections.
 
