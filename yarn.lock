@@ -5621,6 +5621,27 @@
     node-fetch "^2.6.7"
     uuid "^9.0.0"
 
+"@backstage/plugin-catalog-backend-module-msgraph@0.5.25":
+  version "0.5.25"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-msgraph/-/plugin-catalog-backend-module-msgraph-0.5.25.tgz#ca399c0f17ae8fc0661cc08da59ef79e14e3afc5"
+  integrity sha512-zGkwsDTimubGBESCBM0F8RBXeIC0UGwDxBsPJEP5kIV/fylo+PWrExCQPt/4IRvJfpeSN38xvwAegZ1W0NjhPw==
+  dependencies:
+    "@azure/identity" "^4.0.0"
+    "@backstage/backend-common" "^0.21.7"
+    "@backstage/backend-plugin-api" "^0.6.17"
+    "@backstage/backend-tasks" "^0.5.22"
+    "@backstage/catalog-model" "^1.4.5"
+    "@backstage/config" "^1.2.0"
+    "@backstage/plugin-catalog-common" "^1.0.22"
+    "@backstage/plugin-catalog-node" "^1.11.1"
+    "@microsoft/microsoft-graph-types" "^2.6.0"
+    "@types/node-fetch" "^2.5.12"
+    lodash "^4.17.21"
+    node-fetch "^2.6.7"
+    p-limit "^3.0.2"
+    qs "^6.9.4"
+    uuid "^9.0.0"
+
 "@backstage/plugin-catalog-backend-module-openapi@0.1.35":
   version "0.1.35"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-openapi/-/plugin-catalog-backend-module-openapi-0.1.35.tgz#9c3cd6cf514f85db842f27d36b410cda3cfeabe2"
@@ -9376,6 +9397,11 @@
     semver "~7.5.4"
     source-map "~0.6.1"
     typescript "5.4.2"
+
+"@microsoft/microsoft-graph-types@^2.6.0":
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/microsoft-graph-types/-/microsoft-graph-types-2.40.0.tgz#65f51600ab45ace97d7b1368c47f9e0f835fddca"
+  integrity sha512-1fcPVrB/NkbNcGNfCy+Cgnvwxt6/sbIEEFgZHFBJ670zYLegENYJF8qMo7x3LqBjWX2/Eneq5BVVRCLTmlJN+g==
 
 "@microsoft/tsdoc-config@~0.16.1":
   version "0.16.2"
