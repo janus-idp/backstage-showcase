@@ -27,7 +27,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-azure-devops-backend --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@backstage-community/plugin-azure-devops-backend": "0.6.5"
+    "@backstage-community/plugin-azure-devops-backend": "0.6.6"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",

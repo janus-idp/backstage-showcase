@@ -28,13 +28,13 @@
     "@backstage/core-components": "0.14.6",
     "@backstage/core-plugin-api": "1.9.2",
     "@backstage/theme": "0.5.3",
-    "@material-table/core": "3.1.0",
-    "@mui/material": "5.15.6",
-    "react-use": "17.4.0"
+    "@material-table/core": "3.2.5",
+    "@mui/material": "5.15.20",
+    "react-use": "17.5.0"
   },
   "peerDependencies": {
     "react": "16.13.1 || ^17.0.0 || ^18.2.0",
-    "react-router-dom": "6.20.0"
+    "react-router-dom": "6.24.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
