@@ -27,10 +27,8 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-gitlab --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@backstage/backend-common": "0.21.7",
-    "@backstage/backend-plugin-api": "0.6.17",
-    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.15",
-    "@backstage/plugin-catalog-node": "1.11.1"
+    "@backstage/backend-common": "^0.22.0",
+    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.16"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",

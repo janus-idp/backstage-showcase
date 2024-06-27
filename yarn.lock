@@ -5621,6 +5621,25 @@
     node-fetch "^2.6.7"
     uuid "^9.0.0"
 
+"@backstage/plugin-catalog-backend-module-gitlab@0.3.16":
+  version "0.3.16"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-gitlab/-/plugin-catalog-backend-module-gitlab-0.3.16.tgz#edb201282898eee0f122ec046c0ea7730241cd8d"
+  integrity sha512-FVh5kllpTkOoQdMtWo9dBKQoBvg4QvDpQ9WQf58kYKgeCJC+R+okI78Avs0g3SHDoN67nyX0M2qF7LiBXggq6A==
+  dependencies:
+    "@backstage/backend-common" "^0.22.0"
+    "@backstage/backend-plugin-api" "^0.6.18"
+    "@backstage/backend-tasks" "^0.5.23"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/config" "^1.2.0"
+    "@backstage/integration" "^1.11.0"
+    "@backstage/plugin-catalog-common" "^1.0.23"
+    "@backstage/plugin-catalog-node" "^1.12.0"
+    "@backstage/plugin-events-node" "^0.3.4"
+    "@gitbeaker/rest" "^40.0.3"
+    lodash "^4.17.21"
+    node-fetch "^2.6.7"
+    uuid "^9.0.0"
+
 "@backstage/plugin-catalog-backend-module-openapi@0.1.35":
   version "0.1.35"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend-module-openapi/-/plugin-catalog-backend-module-openapi-0.1.35.tgz#9c3cd6cf514f85db842f27d36b410cda3cfeabe2"
@@ -5847,20 +5866,6 @@
     react-use "^17.2.4"
     yaml "^2.0.0"
 
-"@backstage/plugin-catalog-node@1.11.1", "@backstage/plugin-catalog-node@^1.11.1":
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-node/-/plugin-catalog-node-1.11.1.tgz#ca848175ca4310106899e5ebe357e753df5922d4"
-  integrity sha512-9VlPc6wgCN+5phN6Yc0mAzHGfRrNQKZd+AyMH4Tt2ggiSt1qgasoQyLqgJrlqsrA8aOPJmFjq5ROiJSB+bmkVg==
-  dependencies:
-    "@backstage/backend-plugin-api" "^0.6.17"
-    "@backstage/catalog-client" "^1.6.4"
-    "@backstage/catalog-model" "^1.4.5"
-    "@backstage/errors" "^1.2.4"
-    "@backstage/plugin-catalog-common" "^1.0.22"
-    "@backstage/plugin-permission-common" "^0.7.13"
-    "@backstage/plugin-permission-node" "^0.7.28"
-    "@backstage/types" "^1.1.1"
-
 "@backstage/plugin-catalog-node@^1.11.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-node/-/plugin-catalog-node-1.11.0.tgz#02c458f18da1fda9e4863e0ed450a6560c7401ea"
@@ -5873,6 +5878,20 @@
     "@backstage/plugin-catalog-common" "^1.0.22"
     "@backstage/plugin-permission-common" "^0.7.13"
     "@backstage/plugin-permission-node" "^0.7.27"
+    "@backstage/types" "^1.1.1"
+
+"@backstage/plugin-catalog-node@^1.11.1":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-node/-/plugin-catalog-node-1.11.1.tgz#ca848175ca4310106899e5ebe357e753df5922d4"
+  integrity sha512-9VlPc6wgCN+5phN6Yc0mAzHGfRrNQKZd+AyMH4Tt2ggiSt1qgasoQyLqgJrlqsrA8aOPJmFjq5ROiJSB+bmkVg==
+  dependencies:
+    "@backstage/backend-plugin-api" "^0.6.17"
+    "@backstage/catalog-client" "^1.6.4"
+    "@backstage/catalog-model" "^1.4.5"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/plugin-catalog-common" "^1.0.22"
+    "@backstage/plugin-permission-common" "^0.7.13"
+    "@backstage/plugin-permission-node" "^0.7.28"
     "@backstage/types" "^1.1.1"
 
 "@backstage/plugin-catalog-node@^1.12.0":
@@ -8138,6 +8157,15 @@
     qs "^6.11.2"
     xcase "^2.0.1"
 
+"@gitbeaker/core@^40.0.3":
+  version "40.0.3"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-40.0.3.tgz#27ce6a9778a98673c03d77cd5c79c63727898bd7"
+  integrity sha512-MzeY4oCtoa9zmPIkQIdC2KU8cGmHIXwnAi0L6jjjouqjy6kcA4BydZf8W5Xsj27Rw5iiyhfj8YC1/O3CgrzvCQ==
+  dependencies:
+    "@gitbeaker/requester-utils" "^40.0.3"
+    qs "^6.11.2"
+    xcase "^2.0.1"
+
 "@gitbeaker/node@^35.8.0":
   version "35.8.1"
   resolved "https://registry.yarnpkg.com/@gitbeaker/node/-/node-35.8.1.tgz#d67885c827f2d7405afd7e39538a230721756e5c"
@@ -8168,6 +8196,16 @@
     rate-limiter-flexible "^4.0.0"
     xcase "^2.0.1"
 
+"@gitbeaker/requester-utils@^40.0.3":
+  version "40.0.3"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-40.0.3.tgz#e30f84d3e1cdb2e21b6f92431cd9d6822de7e545"
+  integrity sha512-L8JpuMIsvXTHfu/2wXzkc5QyfQJSWg4XyEPStHq1ig5SAcbxxqbBoe8ed27eUXLah+PcGrPInMK4cCMxhQm41g==
+  dependencies:
+    picomatch-browser "^2.2.6"
+    qs "^6.11.2"
+    rate-limiter-flexible "^4.0.0"
+    xcase "^2.0.1"
+
 "@gitbeaker/rest@^39.25.0":
   version "39.34.3"
   resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-39.34.3.tgz#3e3582766e45d5591353e8c4445e345460665ea1"
@@ -8175,6 +8213,14 @@
   dependencies:
     "@gitbeaker/core" "^39.34.3"
     "@gitbeaker/requester-utils" "^39.34.3"
+
+"@gitbeaker/rest@^40.0.3":
+  version "40.0.3"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-40.0.3.tgz#12ced15b57bf2774c3349efdcdc78b65f1a4f762"
+  integrity sha512-ihaA0GX3yCo4oUWbISkcjFMIw+WxDAC9L+bEYq2irz4wpv/0EpAU/0jKjggPzY4cGWL9VAyPhew77VeACv4YWw==
+  dependencies:
+    "@gitbeaker/core" "^40.0.3"
+    "@gitbeaker/requester-utils" "^40.0.3"
 
 "@google-cloud/container@^5.0.0":
   version "5.8.0"
