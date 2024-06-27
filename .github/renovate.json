@@ -4,15 +4,14 @@
     ":gitSignOff",
     ":rebaseStalePrs",
     "group:allNonMajor",
-    "group:linters",
     "default:pinDigestsDisabled",
     "default:automergeBranchPush"
   ],
-  "js": {
-    "managerBranchPrefix": "js-"
-  },
   "python": {
-    "managerBranchPrefix": "python-"
+    "groupName": "python  ",
+    "additionalBranchPrefix": "python ",
+    "dependencyDashboardApproval": true,
+    "description": "require dashboard approval for all python dependencies due to potential conflicts"
   },
   "labels": ["kind/dependency upgrade"],
   "npm": {
@@ -37,8 +36,24 @@
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
+      "matchCurrentVersion": "!/^0/",
       "groupName": ["DevDependencies (non-major)"],
       "automerge": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["major"],
+      "groupName": ["DevDependencies "]
+    },
+    {
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "Dependencies (non-major)",
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "groupName": "Dependencies",
+      "matchUpdateTypes": ["major"]
     },
     {
       "extends": ["packages:test"],
@@ -50,22 +65,76 @@
     {
       "extends": ["packages:test"],
       "matchUpdateTypes": ["major"],
-      "groupName": "Test packages"
+      "groupName": "Test packages "
+    },
+    {
+      "extends": ["packages:linters"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "linters  (non-major)",
+      "automerge": true
+    },
+    {
+      "extends": ["packages:linters"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "linters"
+    },
+    {
+      "extends": "monorepo:material-ui",
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "material-ui (non-major)",
+      "automerge": true
+    },
+    {
+      "extends": "monorepo:material-ui",
+      "matchUpdateTypes": ["major"],
+      "groupName": "material-ui"
+    },
+    {
+      "extends": "monorepo:react",
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "react (non-major)",
+      "automerge": true
+    },
+    {
+      "extends": "monorepo:react",
+      "matchUpdateTypes": ["major"],
+      "groupName": "react"
+    },
+    {
+      "extends": "monorepo:emotion",
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "emotion (non-major)",
+      "automerge": true
+    },
+    {
+      "extends": "monorepo:emotion",
+      "matchUpdateTypes": ["major"],
+      "groupName": "emotion"
+    },
+    {
+      "matchPackagePrefixes": ["@types/"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "groupName": "types (non-major)"
+    },
+    {
+      "matchPackagePrefixes": ["@types/"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "types "
     },
     {
       "matchPackagePatterns": [
+        "^@backstage/",
+        "^@backstage-community/",
         "^@janus-idp/",
         "^@immobiliarelabs/",
         "^@roadiehq/",
         "^@pagerduty/",
         "^@internal/"
       ],
+      "description": "ignore updates to all backstage updates and 3rd party plugins",
       "groupName": ["Backstage packages"],
-      "dependencyDashboardApproval": true
-    },
-    {
-      "matchDepPatterns": ["^@backstage/"],
-      "groupName": "Core Backstage packages",
+      "dependencyDashboardApproval": true,
       "enabled": false
     }
   ],
