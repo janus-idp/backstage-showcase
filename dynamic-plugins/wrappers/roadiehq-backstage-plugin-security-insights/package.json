@@ -21,11 +21,11 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-security-insights": "2.3.17"
+    "@roadiehq/backstage-plugin-security-insights": "2.3.19"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@janus-idp/cli": "1.11.1"
   },
   "files": [
     "dist",

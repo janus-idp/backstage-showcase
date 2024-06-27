@@ -29,11 +29,11 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "0.6.17",
     "@backstage/plugin-scaffolder-node": "0.4.3",
-    "@roadiehq/scaffolder-backend-module-utils": "1.15.3"
+    "@roadiehq/scaffolder-backend-module-utils": "1.17.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@janus-idp/cli": "1.11.1"
   },
   "files": [
     "dist",
