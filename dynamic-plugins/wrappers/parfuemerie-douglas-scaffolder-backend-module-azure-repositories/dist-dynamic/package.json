@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": {
@@ -29,12 +30,27 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
+  ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "0.20.2",
     "@backstage/backend-plugin-api": "0.6.12",
     "@backstage/integration": "1.8.0",
     "@backstage/plugin-scaffolder-node": "0.2.9",
+    "@backstage/backend-common": "^0.20.0",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",
     "@backstage/plugin-scaffolder-backend": "^1.19.2",

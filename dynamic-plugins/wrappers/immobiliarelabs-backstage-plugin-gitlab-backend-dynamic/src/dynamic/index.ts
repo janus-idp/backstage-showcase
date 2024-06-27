@@ -1,4 +1,4 @@
-import { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
+import type { BackendDynamicPluginInstaller } from '@backstage/backend-dynamic-feature-service';
 import {
   catalogPluginGitlabFillerProcessorModule,
   gitlabPlugin,
