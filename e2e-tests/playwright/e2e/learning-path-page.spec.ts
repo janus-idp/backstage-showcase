@@ -21,7 +21,7 @@ test.describe('Learning Paths', () => {
       const popupPromise = page.waitForEvent('popup');
       await page.locator(`div[class*="MuiCardHeader-root"]`).nth(i).click();
       const popup = await popupPromise;
-      await popup.waitForLoadState();
+      await popup.waitForLoadState('domcontentloaded');
       const url = await popup.evaluate('location.href');
       console.log(url);
       expect(url).not.toBe('about:blank');
