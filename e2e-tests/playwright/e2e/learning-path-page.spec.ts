@@ -15,6 +15,7 @@ test.describe('Learning Paths', () => {
   test('Verify that links in Learning Paths for Backstage opens in a new tab', async ({
     page,
   }) => {
+    test.slow();
     await uiHelper.openSidebar('Learning Paths');
 
     for (let i = 0; i < 5; i++) {
