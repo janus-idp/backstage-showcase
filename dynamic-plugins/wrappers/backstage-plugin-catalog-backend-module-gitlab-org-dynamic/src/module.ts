@@ -14,6 +14,7 @@ import {
 } from '@backstage/backend-plugin-api';
 import { catalogProcessingExtensionPoint } from '@backstage/plugin-catalog-node/alpha';
 import { GitlabOrgDiscoveryEntityProvider } from '@backstage/plugin-catalog-backend-module-gitlab';
+import { eventsServiceRef } from '@backstage/plugin-events-node';
 
 export const catalogModuleGitlabOrgDiscoveryEntityProvider =
   createBackendModule({
@@ -26,12 +27,14 @@ export const catalogModuleGitlabOrgDiscoveryEntityProvider =
           catalog: catalogProcessingExtensionPoint,
           logger: coreServices.logger,
           scheduler: coreServices.scheduler,
+          events: eventsServiceRef,
         },
-        async init({ config, catalog, logger, scheduler }) {
+        async init({ config, catalog, logger, scheduler, events }) {
           catalog.addEntityProvider(
             GitlabOrgDiscoveryEntityProvider.fromConfig(config, {
               logger: loggerToWinstonLogger(logger),
               scheduler,
+              events: events,
             }),
           );
         },
