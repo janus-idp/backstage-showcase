@@ -26,6 +26,27 @@ export class CatalogImport {
       expect(await this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
     }
   }
+
+  async registerExistingTemplate(url: string) {
+    await this.page.fill(CatalogImportPO.componentURL, url);
+    await this.uiHelper.clickButton('Analyze');
+
+    // Wait for the visibility of either 'Refresh' or 'Import' button
+    if (await this.uiHelper.isBtnVisible('Import')) {
+      await this.uiHelper.clickButton('Import');
+    } else {
+      await this.uiHelper.clickButton('Refresh');
+      expect(await this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
+    }
+  }
+
+  async inspectEntityAndVerifyYaml(text: string) {
+    await this.page.getByTitle('More').click();
+    await this.page.getByRole('menuitem').getByText('Inspect entity').click();
+    await this.uiHelper.clickTab('Raw YAML');
+    await expect(this.page.getByTestId('code-snippet')).toContainText(text);
+    await this.uiHelper.clickButton('Close');
+  }
 }
 
 export class BackstageShowcase {
