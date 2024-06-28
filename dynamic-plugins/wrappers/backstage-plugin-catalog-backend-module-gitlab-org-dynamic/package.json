@@ -28,7 +28,10 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.22.0",
-    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.16"
+    "@backstage/backend-plugin-api": "^0.6.21",
+    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.16",
+    "@backstage/plugin-catalog-node": "^1.12.3",
+    "@backstage/plugin-events-node": "^0.3.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.4",
