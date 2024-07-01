@@ -19,7 +19,10 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     componentName: `test-scaffoldedfromlink-${Date.now()}`,
     description: 'react app using template',
     repo: `test-scaffolded-${Date.now()}`,
-    repoOwner: process.env.GITHUB_ORG || 'janus-qe',
+    repoOwner: Buffer.from(
+      process.env.GITHUB_ORG || 'amFudXMtcWU=',
+      'base64',
+    ).toString('utf8'), // Default repoOwner janus-qe
   };
 
   test.beforeAll(async ({ browser }, testInfo) => {
