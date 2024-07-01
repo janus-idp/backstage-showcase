@@ -4,7 +4,7 @@ import { Common, setupBrowser } from '../utils/Common';
 
 let page: Page;
 
-test.describe('CustomTheme should be applied', () => {
+test.describe('Custom Theme should be applied ', () => {
   let common: Common;
   let uiHelper: UIhelper;
 
