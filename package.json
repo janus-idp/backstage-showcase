@@ -9,7 +9,7 @@
     "prepare": "husky install",
     "postinstall": "patch-package",
     "ci": "turbo run lint build test",
-    "start": "turbo run start --parallel",
+    "start": "turbo run start --parallel --filter=app --filter=backend",
     "start-backend": "turbo run start --filter=backend",
     "build": "turbo run build",
     "tsc": "tsc",
