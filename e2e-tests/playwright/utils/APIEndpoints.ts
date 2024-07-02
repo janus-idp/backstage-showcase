@@ -7,4 +7,6 @@ export const githubAPIEndpoints = {
   issues: (state: string) =>
     `${backstageShowcaseAPI}/issues?per_page=100&sort=updated&state=${state}`,
   workflowRuns: `${backstageShowcaseAPI}/actions/runs?per_page=100`,
+  deleteRepo: (owner: string, repo: string) =>
+    `https://api.github.com/repos/${owner}/${repo}`,
 };
