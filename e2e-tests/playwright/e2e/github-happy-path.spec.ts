@@ -115,19 +115,24 @@ test.describe.serial('GitHub Happy path', () => {
   });
 
   test('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
+    console.log('Fetching all PRs from GitHub');
     const allPRs = await BackstageShowcase.getGithubPRs('all', true);
 
+    console.log('Clicking on ALL button');
     await uiHelper.clickButton('ALL', { force: true });
     await backstageShowcase.verifyPRRows(allPRs, 0, 5);
 
+    console.log('Clicking on Next Page button');
     await backstageShowcase.clickNextPage();
     await backstageShowcase.verifyPRRows(allPRs, 5, 10);
 
-    // Calculate the starting index of the first PR on the last page, 5 PRs per page.
     const lastPagePRs = Math.floor((allPRs.length - 1) / 5) * 5;
+
+    console.log('Clicking on Last Page button');
     await backstageShowcase.clickLastPage();
     await backstageShowcase.verifyPRRows(allPRs, lastPagePRs, allPRs.length);
 
+    console.log('Clicking on Previous Page button');
     await backstageShowcase.clickPreviousPage();
     await backstageShowcase.verifyPRRows(allPRs, lastPagePRs - 5, lastPagePRs);
   });
