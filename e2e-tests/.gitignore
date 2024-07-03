@@ -68,11 +68,3 @@ site
 
 # e2e test results
 junit-results.xml
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/

@@ -15,14 +15,13 @@ test.describe('Learning Paths', () => {
   test('Verify that links in Learning Paths for Backstage opens in a new tab', async ({
     page,
   }) => {
-    test.slow();
     await uiHelper.openSidebar('Learning Paths');
 
     for (let i = 0; i < 5; i++) {
       const popupPromise = page.waitForEvent('popup');
       await page.locator(`div[class*="MuiCardHeader-root"]`).nth(i).click();
       const popup = await popupPromise;
-      await popup.waitForLoadState('load', { timeout: 120000 });
+      await popup.waitForLoadState('domcontentloaded', { timeout: 120000 });
       const url = await popup.evaluate('location.href');
       console.log(url);
       expect(url).not.toBe('about:blank');
