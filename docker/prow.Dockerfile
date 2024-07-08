@@ -16,7 +16,7 @@
 #  This Dockerfile used to run tests on OpenShift CI (Prow)
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-48.1719561324 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-48.1720017855 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
