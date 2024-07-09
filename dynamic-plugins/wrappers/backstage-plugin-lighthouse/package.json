@@ -21,7 +21,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@mui/icons-material": "5.15.6",
+    "@mui/icons-material": "5.15.21",
     "@backstage-community/plugin-lighthouse": "0.4.20"
   },
   "devDependencies": {
