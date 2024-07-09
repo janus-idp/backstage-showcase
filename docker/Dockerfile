@@ -66,28 +66,30 @@ RUN git config --global --add safe.directory ./
 RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
 # hadolint ignore=DL3059,DL4006,SC2086
-RUN \
-  # Upstream only - append build time into packages/app/src/build-metadata.json
-  now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
-    -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
-  cat packages/app/src/build-metadata.json; echo && \
-  $YARN build --filter=backend && \
-  # Build dynamic plugins: split commands for consistency with downstream
-  $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
-  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
-  $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
-  $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
-  $YARN copy-dynamic-plugins dist
+# Upstream only - append build time into packages/app/src/build-metadata.json
+RUN now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
+  -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
+  cat packages/app/src/build-metadata.json; echo
+
+RUN $YARN build --filter=backend
+
+# Build dynamic plugins: split commands for consistency with downstream
+RUN $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install
+
+# Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
+RUN $YARN --cwd ./dynamic-plugins/imports install-dynamic
+RUN $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/*
+RUN $YARN copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
 FROM skeleton AS cleanup
 
 # Upstream only - copy the install dependencies from the build stage and context
 COPY --from=build $CONTAINER_SOURCE/yarn.lock \
-     $CONTAINER_SOURCE/package.json \
-     $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
-     $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
-     ./
+  $CONTAINER_SOURCE/package.json \
+  $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
+  $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
+  ./
 ENV TARBALL_PATH=.
 
 RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
