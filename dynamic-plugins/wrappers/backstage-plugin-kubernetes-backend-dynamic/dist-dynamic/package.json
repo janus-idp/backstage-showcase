@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-kubernetes-backend-dynamic",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": {
@@ -52,19 +53,34 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:production",
+    "lifecycle:active"
+  ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.7",
-    "@backstage/backend-plugin-api": "^0.6.17",
-    "@backstage/catalog-client": "^1.6.4",
-    "@backstage/catalog-model": "^1.4.5",
+    "@backstage/backend-common": "^0.22.0",
+    "@backstage/backend-plugin-api": "^0.6.18",
+    "@backstage/catalog-client": "^1.6.5",
+    "@backstage/catalog-model": "^1.5.0",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
     "@backstage/integration-aws-node": "^0.1.12",
-    "@backstage/plugin-auth-node": "^0.4.12",
-    "@backstage/plugin-catalog-node": "^1.11.1",
+    "@backstage/plugin-auth-node": "^0.4.13",
+    "@backstage/plugin-catalog-node": "^1.12.0",
     "@backstage/plugin-permission-common": "^0.7.13",
-    "@backstage/plugin-permission-node": "^0.7.28",
+    "@backstage/plugin-permission-node": "^0.7.29",
     "@backstage/types": "^1.1.1"
   },
   "overrides": {
