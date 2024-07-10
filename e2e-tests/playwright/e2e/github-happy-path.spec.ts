@@ -19,8 +19,6 @@ test.describe.serial('GitHub Happy path', () => {
     'https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml';
 
   test.beforeAll(async ({ browser }, testInfo) => {
-    testInfo.setTimeout(testInfo.timeout + 30000);
-
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
