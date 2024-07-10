@@ -9,7 +9,7 @@ export class APIHelper {
     body?: string | object,
   ): Promise<APIResponse> {
     const context = await request.newContext();
-    const options = {
+    const options: any = {
       method: method,
       headers: {
         Accept: 'application/vnd.github+json',
@@ -26,10 +26,20 @@ export class APIHelper {
     return response;
   }
 
-  static async getGithubPaginatedRequest(url, pageNo = 1, response = []) {
+  static async getGithubPaginatedRequest(
+    url: string,
+    pageNo = 1,
+    response: any[] = [],
+  ): Promise<any[]> {
     const fullUrl = `${url}&page=${pageNo}`;
     const result = await this.githubRequest('GET', fullUrl);
     const body = await result.json();
+
+    if (!Array.isArray(body)) {
+      throw new Error(
+        `Expected array but got ${typeof body}: ${JSON.stringify(body)}`,
+      );
+    }
 
     if (body.length === 0) {
       return response;
