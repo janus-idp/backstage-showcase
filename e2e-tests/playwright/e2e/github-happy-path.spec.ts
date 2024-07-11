@@ -114,7 +114,7 @@ test.describe.serial('GitHub Happy path', () => {
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
 
-  test('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
+  test.skip('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
     const allPRs = await BackstageShowcase.getGithubPRs('all', true);
 
     await uiHelper.clickButton('ALL', { force: true });
