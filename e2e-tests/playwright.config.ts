@@ -40,12 +40,18 @@ export default defineConfig({
   projects: [
     {
       name: 'showcase',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
       testIgnore: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
     },
     {
       name: 'showcase-rbac',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
       testMatch: '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
     },
 
