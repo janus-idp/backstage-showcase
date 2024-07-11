@@ -55,20 +55,26 @@ export class BackstageShowcase {
     return response.json();
   }
 
+  async checkEnabledAndClick(locator: string) {
+    if (await this.page.locator(locator).isEnabled()) {
+      await this.page.click(locator);
+    }
+  }
+
   async clickNextPage() {
-    await this.page.click(BackstageShowcasePO.tableNextPage);
+    await this.checkEnabledAndClick(BackstageShowcasePO.tableNextPage);
   }
 
   async clickPreviousPage() {
-    await this.page.click(BackstageShowcasePO.tablePreviousPage);
+    await this.checkEnabledAndClick(BackstageShowcasePO.tablePreviousPage);
   }
 
   async clickLastPage() {
-    await this.page.click(BackstageShowcasePO.tableLastPage);
+    await this.checkEnabledAndClick(BackstageShowcasePO.tableLastPage);
   }
 
   async clickFirstPage() {
-    await this.page.click(BackstageShowcasePO.tableFirstPage);
+    await this.checkEnabledAndClick(BackstageShowcasePO.tableFirstPage);
   }
   async verifyPRRowsPerPage(rows, allPRs) {
     await this.selectRowsPerPage(rows);
