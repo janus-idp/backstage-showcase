@@ -138,6 +138,7 @@ test.describe.serial('GitHub Happy path', () => {
   });
 
   test('Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs', async () => {
+    await uiHelper.clickButton('ALL', { force: true });
     const allPRs = await BackstageShowcase.getGithubPRs('all');
     await backstageShowcase.clickFirstPage();
     await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
