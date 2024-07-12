@@ -114,6 +114,7 @@ test.describe.serial('GitHub Happy path', () => {
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
 
+  // Disabled because of a bug: https://issues.redhat.com/browse/RHIDP-3159
   test.skip('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
     console.log('Fetching all PRs from GitHub');
     const allPRs = await BackstageShowcase.getGithubPRs('all', true);
