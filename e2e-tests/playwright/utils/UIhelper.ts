@@ -89,7 +89,13 @@ export class UIhelper {
 
   async verifyText(text: string | RegExp, exact: boolean = true) {
     const element = this.page.getByText(text, { exact: exact }).first();
-    await element.scrollIntoViewIfNeeded();
+    try {
+      await element.scrollIntoViewIfNeeded();
+    } catch (error) {
+      console.warn(
+        `Warning: Could not scroll element into view. Error: ${error.message}`,
+      );
+    }
     await expect(element).toBeVisible();
   }
 
