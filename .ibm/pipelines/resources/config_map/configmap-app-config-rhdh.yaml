@@ -16,6 +16,11 @@ data:
             headerColor1: "rgb(248, 248, 248)"
             headerColor2: "rgb(248, 248, 248)"
             navigationIndicatorColor: "rgb(255,95,21)"
+          dark:
+            primaryColor: '#ab75cf'
+            headerColor1: 'rgb(0, 0, 208)'
+            headerColor2: 'rgb(255, 246, 140)'
+            navigationIndicatorColor: 'rgb(244, 238, 169)'
     backend:
       auth:
         keys:
@@ -98,7 +103,11 @@ data:
           target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
           rules:
             - allow: [User, Group]
-
+      providers:
+        githubOrg:
+          id: production
+          githubUrl: "${GITHUB_URL}"
+          orgs: ["${GITHUB_ORG}"]
 
     dynatrace:
       baseUrl: temp
@@ -119,4 +128,3 @@ data:
         admin:
           users:
             - name: user:default/rhdh-qe
-

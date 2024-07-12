@@ -10,7 +10,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "supported-versions": "1.26.5"
   },
   "scripts": {
     "build": "backstage-cli package build",
@@ -23,8 +24,8 @@
     "@backstage-community/plugin-github-actions": "0.6.16"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.6",
+    "@janus-idp/cli": "1.11.0"
   },
   "files": [
     "dist",
@@ -35,5 +36,20 @@
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-github-actions"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
+  ]
 }
