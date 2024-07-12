@@ -24,7 +24,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-http-request --override-interop default --no-embed-as-dependencies"
+    "export-dynamic": "tsc; janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-http-request --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "0.6.17",
