@@ -109,6 +109,7 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
 USER 0
 
+ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/
 
