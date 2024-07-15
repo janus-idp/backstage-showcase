@@ -133,6 +133,7 @@ RUN \
   cat packages/app/src/build-metadata.json; echo && \
   $YARN build --filter=backend && \
   # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
+  $YARN --cwd ./dynamic-plugins/imports tsc; \
   $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Downstream only - replace registry refs with cachito ones
   cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
@@ -142,6 +143,7 @@ RUN \
     done; \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
   $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
+  $YARN tsc; \
   $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
   $YARN copy-dynamic-plugins dist
 
@@ -181,6 +183,9 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
 USER 0
+
+# Downstream sources
+ENV EXTERNAL_SOURCE_NESTED=$EXTERNAL_SOURCE/distgit/containers/rhdh-hub
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/

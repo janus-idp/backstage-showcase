@@ -58,7 +58,9 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.j
 RUN $YARN install --frozen-lockfile --network-timeout 600000
 
 # Stage 3 - Build packages
+# Upstream only
 FROM deps AS build
+
 COPY $EXTERNAL_SOURCE_NESTED ./
 
 RUN git config --global --add safe.directory ./
@@ -82,6 +84,7 @@ RUN \
   $YARN copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
+# Upstream only
 FROM skeleton AS cleanup
 
 # Upstream only - copy the install dependencies from the build stage and context
@@ -109,7 +112,9 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
 USER 0
 
+# Upstream only
 ENV EXTERNAL_SOURCE_NESTED=.
+
 ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/
 
@@ -149,6 +154,7 @@ ENV CHOKIDAR_USEPOLLING='1' CHOKIDAR_INTERVAL='10000'
 # To avoid running scripts when using `npm pack` to install dynamic plugins
 ENV NPM_CONFIG_ignore-scripts='true'
 
+# gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t is key for dev environment
 # Upstream only - Use dev key in all branches
 ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
 ENV SEGMENT_TEST_MODE=false
