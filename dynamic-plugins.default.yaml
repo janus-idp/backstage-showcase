@@ -866,3 +866,10 @@ plugins:
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
     disabled: false
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-msgraph-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          microsoftGraphOrg: {}
