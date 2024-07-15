@@ -41,7 +41,7 @@ ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
-RUN chmod +x $YARN
+RUN chmod +x "$YARN"
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
@@ -55,7 +55,7 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 
-RUN $YARN install --frozen-lockfile --network-timeout 600000
+RUN "$YARN" install --frozen-lockfile --network-timeout 600000
 
 # Stage 3 - Build packages
 # Upstream only
@@ -73,15 +73,15 @@ RUN \
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
     -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
   cat packages/app/src/build-metadata.json; echo && \
-  $YARN build --filter=backend && \
+  "$YARN" build --filter=backend && \
   # Build dynamic plugins: split commands for consistency with downstream
-  $YARN --cwd ./dynamic-plugins/imports tsc; \
-  $YARN --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
+  "$YARN" --cwd ./dynamic-plugins/imports tsc; \
+  "$YARN" --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
-  $YARN --cwd ./dynamic-plugins/imports install-dynamic && \
-  $YARN tsc; \
-  $YARN export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
-  $YARN copy-dynamic-plugins dist
+  "$YARN" --cwd ./dynamic-plugins/imports install-dynamic && \
+  "$YARN" tsc; \
+  "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
+  "$YARN" copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
 # Upstream only
@@ -95,8 +95,8 @@ COPY --from=build $CONTAINER_SOURCE/yarn.lock \
      ./
 ENV TARBALL_PATH=.
 
-RUN tar xzf $TARBALL_PATH/skeleton.tar.gz; tar xzf $TARBALL_PATH/bundle.tar.gz; \
-  rm -f $TARBALL_PATH/skeleton.tar.gz $TARBALL_PATH/bundle.tar.gz
+RUN tar xzf "$TARBALL_PATH"/skeleton.tar.gz; tar xzf "$TARBALL_PATH"/bundle.tar.gz; \
+  rm -f "$TARBALL_PATH"/skeleton.tar.gz "$TARBALL_PATH"/bundle.tar.gz
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy app-config files needed in runtime
@@ -106,7 +106,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN $YARN install --frozen-lockfile --production --network-timeout 600000
+RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
