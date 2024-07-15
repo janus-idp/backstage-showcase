@@ -43,7 +43,7 @@
     "postinstall-postinstall": "2.1.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
+    "@backstage/cli": "0.26.6",
     "@smithy/util-utf8": "2.3.0",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
@@ -53,12 +53,12 @@
     "prettier": "3.3.2",
     "sanitize-html": "2.13.0",
     "turbo": "1.13.4",
-    "typescript": "5.5.2",
+    "typescript": "5.5.3",
     "undici": "5.28.4"
   },
   "resolutions": {
-    "@types/react": "18.2.48",
-    "@types/react-dom": "18.2.18"
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
   },
   "jest": {
     "testTimeout": 20000
@@ -69,5 +69,5 @@
     "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
     "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
   },
-  "packageManager": "yarn@1.22.21"
+  "packageManager": "yarn@1.22.22"
 }

@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-scaffolder-backend-module-utils-dynamic",
-  "version": "1.15.3",
+  "version": "1.17.0",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": {
@@ -29,11 +30,27 @@
     "jsonata": "^2.0.4",
     "lodash": "^4.17.21",
     "winston": "^3.2.1",
-    "yaml": "^2.3.4"
+    "yaml": "^2.3.4",
+    "yawn-yaml": "^2.2.0"
   },
   "devDependencies": {},
   "files": [
     "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
   ],
   "bundleDependencies": true,
   "peerDependencies": {
