@@ -2602,17 +2602,17 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
-"@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor/-/plugin-catalog-backend-module-scaffolder-relation-processor-0.2.0.tgz#75977225e4a20f685615ea6ff5bddbf37ef74a8b"
-  integrity sha512-b6o4F+yizroVk1r42a9/PsF6ztSIQpzXu+Fd/GuuShlh+NQ5Qu/V5esonxJ0Mnq3I/kKDmfM0drMrK6CCP4Ltw==
+"@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor/-/plugin-catalog-backend-module-scaffolder-relation-processor-1.2.1.tgz#36009736c6c8443aff21ba608874a6bca088bf7b"
+  integrity sha512-+xNmvlGGGIAyPw3Tt7W9gKpWDkmqqA/R4AB+c+G5U2iy9Ay2doY9ipVvQDqKrGcwa5OhiIRTk/tRRNjTS7tCPg==
   dependencies:
-    "@backstage/backend-common" "^0.21.6"
-    "@backstage/backend-dynamic-feature-service" "^0.2.8"
-    "@backstage/backend-plugin-api" "^0.6.16"
-    "@backstage/catalog-model" "^1.4.5"
-    "@backstage/plugin-catalog-common" "^1.0.22"
-    "@backstage/plugin-catalog-node" "^1.11.1"
+    "@backstage/backend-common" "^0.22.0"
+    "@backstage/backend-dynamic-feature-service" "^0.2.10"
+    "@backstage/backend-plugin-api" "^0.6.18"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/plugin-catalog-common" "^1.0.23"
+    "@backstage/plugin-catalog-node" "^1.12.0"
 
 "@backstage-community/plugin-dynatrace@10.0.4":
   version "10.0.4"
@@ -3481,7 +3481,7 @@
     lodash "^4.17.21"
     winston "^3.2.1"
 
-"@backstage/backend-dynamic-feature-service@^0.2.8":
+"@backstage/backend-dynamic-feature-service@^0.2.10":
   version "0.2.14"
   resolved "https://registry.yarnpkg.com/@backstage/backend-dynamic-feature-service/-/backend-dynamic-feature-service-0.2.14.tgz#c49c9d094fb48507e93690b785e5ce23f2f8c47c"
   integrity sha512-pn2i8tL1AXGuRfyr7TN/GopvPc5Yq/jn2NXinq8m3pbLcByPYwY8kGpUUmutOiLyOYe4vqkX5DNH7M+r7ANzQQ==
