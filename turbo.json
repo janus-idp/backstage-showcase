@@ -1,16 +1,19 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    ".prettierrc.js",
+    ".eslintrc.js",
+    "tsconfig.json",
+    "yarn.lock"
+  ],
   "pipeline": {
-    "export-dynamic": {
-      "outputs": ["dist-dynamic/**"]
-    },
     "start": {
       "cache": false,
       "persistent": true
     },
     "build": {
       "outputs": ["dist/**"],
-      "dependsOn": ["//#tsc", "^build"]
+      "dependsOn": ["tsc", "^build", "export-dynamic"]
     },
     "app#build": {
       "outputs": ["dist/**"],
@@ -22,13 +25,18 @@
     "test": {
       "outputs": ["coverage/**"]
     },
-    "lint": {},
-    "//#tsc": {
-      "outputs": ["dist-types/**"]
+    "export-dynamic": {
+      "outputs": ["dist-dynamic/**"],
+      "cache": false,
+      "dependsOn": ["tsc"]
     },
+    "lint": {},
     "//#prettier:fix": {
       "cache": false
+    },
+    "tsc": {
+      "outputs": ["../../dist-types/**"],
+      "dependsOn": ["^tsc"]
     }
-  },
-  "globalDependencies": ["tsconfig.json"]
+  }
 }
