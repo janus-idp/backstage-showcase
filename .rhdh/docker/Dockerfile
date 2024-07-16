@@ -255,10 +255,9 @@ ENV SEGMENT_TEST_MODE=false
 # 'global-agent' will use the same HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
 ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
 
-# Enables the usage of the backstage scaffolder on nodejs 20
+# The `--no-node-snapshot` node option enables the usage of the backstage scaffolder on nodejs 20
 # https://github.com/backstage/backstage/issues/20661
-ENV NODE_OPTIONS='--no-node-snapshot'
 
-ENTRYPOINT ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
+ENTRYPOINT ["node", "packages/backend", "--no-node-snapshot", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
