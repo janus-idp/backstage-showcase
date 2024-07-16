@@ -13,7 +13,11 @@
     },
     "build": {
       "outputs": ["dist/**"],
-      "dependsOn": ["tsc", "^build", "export-dynamic"]
+      "dependsOn": ["//#tsc", "^build"]
+    },
+    "export-dynamic": {
+      "outputs": ["dist-dynamic/**"],
+      "dependsOn": ["//#tsc"]
     },
     "app#build": {
       "outputs": ["dist/**"],
@@ -25,17 +29,12 @@
     "test": {
       "outputs": ["coverage/**"]
     },
-    "export-dynamic": {
-      "outputs": ["dist-dynamic/**"],
-      "cache": false,
-      "dependsOn": ["tsc"]
-    },
     "lint": {},
     "//#prettier:fix": {
       "cache": false
     },
-    "tsc": {
-      "outputs": ["../../dist-types/**"],
+    "//#tsc": {
+      "outputs": ["dist-types/**"],
       "dependsOn": ["^tsc"]
     }
   }
