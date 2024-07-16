@@ -148,4 +148,3 @@ test.describe('Test RBAC plugin as a guest user', () => {
     await expect(tabLocator).not.toBeVisible();
   });
 });
-
