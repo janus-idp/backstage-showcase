@@ -23,7 +23,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "@gitbeaker/rest": "^40.0.3",
+    "@gitbeaker/rest": "^40.1.2",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.7",
     "uuid": "^9.0.0"
