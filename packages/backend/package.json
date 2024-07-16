@@ -39,7 +39,7 @@
     "@internal/plugin-dynamic-plugins-info-backend": "*",
     "@internal/plugin-scalprum-backend": "*",
     "@janus-idp/backstage-plugin-audit-log-node": "1.2.0",
-    "@janus-idp/backstage-plugin-rbac-backend": "4.3.0",
+    "@janus-idp/backstage-plugin-rbac-backend": "4.3.2",
     "@janus-idp/backstage-plugin-rbac-node": "1.2.0",
     "@janus-idp/backstage-scaffolder-backend-module-annotator": "1.1.0",
     "@manypkg/get-packages": "1.1.3",
