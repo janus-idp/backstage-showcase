@@ -13,8 +13,13 @@
 # limitations under the License.
 #
 # To transform into Brew-friendly Dockerfile:
+<<<<<<< Updated upstream
 # 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
 # 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
+=======
+# 1. comment out lines with EXTERNAL_SOURCE_NESTED=. and CONTAINER_SOURCE=/opt/app-root/src
+# 2. uncomment lines with EXTERNAL_SOURCE_NESTED and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and "$REMOTE_SOURCES_DIR" instead (Brew defines these paths)
+>>>>>>> Stashed changes
 # 3. uncomment lines with RUN source .../cachito.env
 # 4. add Brew metadata
 
@@ -32,8 +37,7 @@ RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
   dnf update -y && dnf clean all
 
 # Downstream sources
-ENV EXTERNAL_SOURCE=$REMOTE_SOURCES/upstream1/app
-ENV EXTERNAL_SOURCE_NESTED=$EXTERNAL_SOURCE/distgit/containers/rhdh-hub
+ENV EXTERNAL_SOURCE_NESTED=$REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh-hub
 # /remote-source/
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 
@@ -182,6 +186,12 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
 USER 0
 
+<<<<<<< Updated upstream
+=======
+# Downstream sources
+ENV EXTERNAL_SOURCE_NESTED=$REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh-hub
+
+>>>>>>> Stashed changes
 ENV CONTAINER_SOURCE=/opt/app-root/src
 WORKDIR $CONTAINER_SOURCE/
 

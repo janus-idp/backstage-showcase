@@ -13,8 +13,8 @@
 # limitations under the License.
 #
 # To transform into Brew-friendly Dockerfile:
-# 1. comment out lines with EXTERNAL_SOURCE=. and CONTAINER_SOURCE=/opt/app-root/src
-# 2. uncomment lines with EXTERNAL_SOURCE and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
+# 1. comment out lines with EXTERNAL_SOURCE_NESTED=. and CONTAINER_SOURCE=/opt/app-root/src
+# 2. uncomment lines with EXTERNAL_SOURCE_NESTED and CONTAINER_SOURCE pointing at $REMOTE_SOURCES and $REMOTE_SOURCES_DIR instead (Brew defines these paths)
 # 3. uncomment lines with RUN source .../cachito.env
 # 4. add Brew metadata
 
@@ -31,7 +31,6 @@ RUN dnf install -y -q --allowerasing --nobest nodejs-devel nodejs-libs \
   dnf update -y && dnf clean all
 
 # Upstream sources
-ENV EXTERNAL_SOURCE=.
 ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
