@@ -18,7 +18,7 @@
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "tsc; janus-cli package export-dynamic-plugin --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
     "@roadiehq/backstage-plugin-jira": "2.5.8"

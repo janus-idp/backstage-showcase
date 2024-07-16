@@ -133,7 +133,6 @@ RUN \
   cat packages/app/src/build-metadata.json; echo && \
   "$YARN" build --filter=backend && \
   # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
-  "$YARN" --cwd ./dynamic-plugins/imports tsc; \
   "$YARN" --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Downstream only - replace registry refs with cachito ones
   cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
@@ -143,7 +142,6 @@ RUN \
     done; \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
   "$YARN" --cwd ./dynamic-plugins/imports install-dynamic && \
-  "$YARN" tsc; \
   "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
   "$YARN" copy-dynamic-plugins dist
 
