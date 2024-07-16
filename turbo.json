@@ -1,13 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "start": {
-      "cache": false,
-      "persistent": true
-    },
     "export-dynamic": {
       "outputs": ["dist-dynamic/**"],
       "dependsOn": ["//#tsc"]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
     },
     "build": {
       "outputs": ["dist/**"],
