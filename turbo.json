@@ -2,7 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "export-dynamic": {
-      "outputs": ["dist-dynamic/**"]
+      "outputs": ["dist-dynamic/**"],
+      "dependsOn": ["//#tsc"]
     },
     "start": {
       "cache": false,
@@ -24,11 +25,17 @@
     },
     "lint": {},
     "//#tsc": {
-      "outputs": ["dist-types/**"]
+      "outputs": ["dist-types/**"],
+      "dependsOn": ["^tsc"]
     },
     "//#prettier:fix": {
       "cache": false
     }
   },
-  "globalDependencies": ["tsconfig.json"]
+  "globalDependencies": [
+    ".prettierrc.js",
+    ".eslintrc.js",
+    "tsconfig.json",
+    "yarn.lock"
+  ]
 }
