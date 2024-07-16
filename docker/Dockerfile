@@ -79,7 +79,7 @@ RUN \
   "$YARN" --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
   "$YARN" --cwd ./dynamic-plugins/imports install-dynamic && \
-  "$YARN" tsc; \
+  "$YARN" tsc -- --filter=./dynamic-plugins/wrappers/*; \
   "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
   "$YARN" copy-dynamic-plugins dist
 
