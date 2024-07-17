@@ -14,6 +14,10 @@ export class UIhelper {
     await this.verifyRowsInTable(expectedRows);
   }
 
+  async fillTextInputByLabel(label: string, text: string) {
+    await this.page.getByLabel(label).fill(text);
+  }
+
   async searchInputPlaceholder(searchText: string) {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
