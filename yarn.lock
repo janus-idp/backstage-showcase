@@ -7989,10 +7989,10 @@
     express "^4.19.2"
     lodash "^4.17.21"
 
-"@janus-idp/backstage-plugin-rbac-backend@4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.3.0.tgz#4b8976121397278d2df31a25ad79e61137b87cb4"
-  integrity sha512-/WmXd8RL7ucv8qU7EIXbSUPxPLLdO9m1/x1XzPz6RBQZNnANlYSU4MX/dFFdmq7JH9FKZmu6kohwz7CjMZ/r4g==
+"@janus-idp/backstage-plugin-rbac-backend@4.3.3":
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.3.3.tgz#c8eac3be8e9ecc55ce52e8a6be758e98dd6f7b0f"
+  integrity sha512-r3AEdEf80VcaTpIeXdCR4VJF7ttIR/dhMwu5AjGD052K58EFn9GYoDyMWYrs44F37/Vtu8CRlM7mOjrEOw6MpQ==
   dependencies:
     "@backstage/backend-common" "^0.22.0"
     "@backstage/backend-plugin-api" "^0.6.18"
@@ -8008,7 +8008,7 @@
     "@backstage/plugin-permission-node" "^0.7.29"
     "@dagrejs/graphlib" "^2.1.13"
     "@janus-idp/backstage-plugin-audit-log-node" "1.2.0"
-    "@janus-idp/backstage-plugin-rbac-common" "1.6.0"
+    "@janus-idp/backstage-plugin-rbac-common" "1.6.1"
     "@janus-idp/backstage-plugin-rbac-node" "1.2.0"
     casbin "^5.27.1"
     chokidar "^3.6.0"
@@ -8021,10 +8021,10 @@
     typeorm-adapter "^1.6.1"
     yn "^4.0.0"
 
-"@janus-idp/backstage-plugin-rbac-common@1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-common/-/backstage-plugin-rbac-common-1.6.0.tgz#254f6b26daaba1faeb6672d1692c042dacab4db6"
-  integrity sha512-3qyeGkpVa7X2gS8LUmAHtgLyLTEWtfeGvZcLJUuliStW5KWppxFXZbhOlrlY4aZOFWFgVVngs09NO7EbwanqcA==
+"@janus-idp/backstage-plugin-rbac-common@1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-common/-/backstage-plugin-rbac-common-1.6.1.tgz#679a227dd60a003a654f48a32dd45f12fb2588df"
+  integrity sha512-dYmNjluflBChDkhQ0UddNlD7XFBglWwhaETl6O57RphQBWnE1oqGY/DBxRacUyJm73AWXO6WnC3ADi1bFE1NNg==
   dependencies:
     "@backstage/errors" "^1.2.4"
     "@backstage/plugin-permission-common" "^0.7.13"
