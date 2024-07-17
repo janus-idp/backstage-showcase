@@ -23,7 +23,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "adm-zip": "^0.5.9",
+    "adm-zip": "^0.5.14",
     "cross-fetch": "^3.1.4",
     "detect-indent": "^6.1.0",
     "fs-extra": "^10.0.0",
