@@ -20,12 +20,9 @@ export class Clusters {
     );
   }
 
-  async verifyOCMAvailableCardDetails(cpuCores: string, memorySize: string) {
-    await this.uiHelper.verifyTextinCard('Available', `CPU cores${cpuCores}`);
-    await this.uiHelper.verifyTextinCard(
-      'Available',
-      `Memory size${memorySize}`,
-    );
+  async verifyOCMAvailableCardDetails(cpuCores: RegExp, memorySize: RegExp) {
+    await this.uiHelper.verifyTextinCard('Available', cpuCores);
+    await this.uiHelper.verifyTextinCard('Available', memorySize);
   }
 
   async verifyOCMClusterInfo(clusterName: string, status: string) {

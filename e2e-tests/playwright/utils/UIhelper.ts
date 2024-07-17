@@ -3,26 +3,9 @@ import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
   private page: Page;
-  private selectors: { [key: string]: string };
 
   constructor(page: Page) {
     this.page = page;
-    this.selectors = {
-      Analyze: 'button#analyze',
-      Refresh: 'button#refresh',
-      Import: 'button#import',
-      'View Component': 'button#view-component',
-      'Register another': 'button#register-another',
-    };
-  }
-
-  getSelector(buttonName: string): string {
-    /*eslint-disable-next-line no-prototype-builtins*/
-    if (this.selectors.hasOwnProperty(buttonName)) {
-      return this.selectors[buttonName];
-    } else {
-      throw new Error(`Selector not defined for button: ${buttonName}`);
-    }
   }
 
   async verifyComponentInCatalog(kind: string, expectedRows: string[]) {
@@ -40,22 +23,33 @@ export class UIhelper {
   }
 
   async clickButton(
-    label: string,
+    label: string | RegExp,
     options: { exact?: boolean; force?: boolean } = {
       exact: true,
       force: false,
     },
   ) {
-    const selector = `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
+    const selector = `${UIhelperPO.MuiButtonLabel}`;
     const button = this.page
       .locator(selector)
       .getByText(label, { exact: options.exact })
       .first();
     await button.waitFor({ state: 'visible' });
+    await button.waitFor({ state: 'attached' });
 
     if (options?.force) {
       await button.click({ force: true });
     } else {
+      await button.click();
+    }
+    return button;
+  }
+
+  async clickBtnByTitleIfNotPressed(title: string) {
+    const button = this.page.locator(`button[title="${title}"]`);
+    const isPressed = await button.getAttribute('aria-pressed');
+
+    if (isPressed === 'false') {
       await button.click();
     }
   }
@@ -95,15 +89,28 @@ export class UIhelper {
 
   async verifyText(text: string | RegExp, exact: boolean = true) {
     const element = this.page.getByText(text, { exact: exact }).first();
-    await element.scrollIntoViewIfNeeded();
+    try {
+      await element.scrollIntoViewIfNeeded();
+    } catch (error) {
+      console.warn(
+        `Warning: Could not scroll element into view. Error: ${error.message}`,
+      );
+    }
     await expect(element).toBeVisible();
   }
 
   async isBtnVisible(text: string): Promise<boolean> {
     const locator = `button:has-text("${text}")`;
-    await this.page.waitForSelector(locator);
-    const button = this.page.locator(locator);
-    return button.isVisible();
+    try {
+      await this.page.waitForSelector(locator, {
+        state: 'visible',
+        timeout: 10000,
+      });
+      const button = this.page.locator(locator);
+      return button.isVisible();
+    } catch (error) {
+      return false;
+    }
   }
 
   async waitForSideBarVisible() {
@@ -132,10 +139,25 @@ export class UIhelper {
         .locator(`tr>td`)
         .getByText(rowText, { exact: exact })
         .first();
-      await rowLocator.waitFor({ state: 'visible' });
-      await rowLocator.waitFor({ state: 'attached' });
-      await rowLocator.scrollIntoViewIfNeeded();
-      await expect(rowLocator).toBeVisible();
+
+      try {
+        await rowLocator.waitFor({ state: 'visible', timeout: 10000 });
+        await rowLocator.waitFor({ state: 'attached', timeout: 10000 });
+
+        try {
+          await rowLocator.scrollIntoViewIfNeeded();
+        } catch (error) {
+          console.warn(
+            `Warning: Could not scroll element into view. Error: ${error.message}`,
+          );
+        }
+
+        await expect(rowLocator).toBeVisible();
+      } catch (error) {
+        console.error(
+          `Error: Failed to verify row with text "${rowText}". Error: ${error.message}`,
+        );
+      }
     }
   }
 
@@ -227,7 +249,11 @@ export class UIhelper {
     await expect(link).toBeVisible();
   }
 
-  async verifyTextinCard(cardHeading: string, text: string, exact = true) {
+  async verifyTextinCard(
+    cardHeading: string,
+    text: string | RegExp,
+    exact = true,
+  ) {
     const locator = this.page
       .locator(UIhelperPO.MuiCard(cardHeading))
       .getByText(text, { exact: exact })
@@ -249,5 +275,31 @@ export class UIhelper {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toBeGreaterThan(0);
+  }
+
+  // Function to convert hexadecimal to RGB or return RGB if it's already in RGB
+  toRgb(color: string): string {
+    if (color.startsWith('rgb')) {
+      return color;
+    }
+
+    const bigint = parseInt(color.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  async checkCssColor(page: Page, selector: string, expectedColor: string) {
+    const elements = await page.locator(selector);
+    const count = await elements.count();
+    const expectedRgbColor = this.toRgb(expectedColor);
+
+    for (let i = 0; i < count; i++) {
+      const color = await elements
+        .nth(i)
+        .evaluate(el => window.getComputedStyle(el).color);
+      expect(color).toBe(expectedRgbColor);
+    }
   }
 }

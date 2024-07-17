@@ -17,6 +17,10 @@ import {
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules/rbacDynamicPluginsModule';
+import { configureCorporateProxyAgent } from './corporate-proxy';
+
+// RHIDP-2217: adds support for corporate proxy
+configureCorporateProxyAgent();
 
 const backend = createBackend();
 
@@ -88,6 +92,9 @@ backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
 backend.add(import('@backstage/plugin-events-backend/alpha'));
 
 backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
+backend.add(
+  import('@janus-idp/backstage-scaffolder-backend-module-annotator/alpha'),
+);
 backend.add(pluginIDProviderService);
 backend.add(rbacDynamicPluginsProvider);
 

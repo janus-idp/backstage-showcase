@@ -1,7 +1,13 @@
 import { FlatRoutes } from '@backstage/core-app-api';
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { ApiExplorerPage } from '@backstage/plugin-api-docs';
-import { CatalogEntityPage, CatalogIndexPage } from '@backstage/plugin-catalog';
+import {
+  CatalogEntityPage,
+  CatalogIndexPage,
+  CatalogTable,
+  CatalogTableRow,
+  CatalogTableColumnsFunc,
+} from '@backstage/plugin-catalog';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { CatalogImportPage } from '@backstage/plugin-catalog-import';
@@ -21,6 +27,7 @@ import { entityPage } from '../catalog/EntityPage';
 import { HomePage } from '../home/HomePage';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
+import ConfigUpdater from '../Root/ConfigUpdater';
 
 const AppBase = () => {
   const {
@@ -30,11 +37,44 @@ const AppBase = () => {
     entityTabOverrides,
     scaffolderFieldExtensions,
   } = useContext(DynamicRootContext);
+
+  const myCustomColumnsFunc: CatalogTableColumnsFunc = entityListContext => [
+    ...CatalogTable.defaultColumnsFunc(entityListContext),
+    {
+      title: 'Created At',
+      customSort: (a: CatalogTableRow, b: CatalogTableRow): any => {
+        const timestampA =
+          a.entity.metadata.annotations?.['backstage.io/createdAt'];
+        const timestampB =
+          b.entity.metadata.annotations?.['backstage.io/createdAt'];
+
+        const dateA =
+          timestampA && timestampA !== ''
+            ? new Date(timestampA).toISOString()
+            : '';
+        const dateB =
+          timestampB && timestampB !== ''
+            ? new Date(timestampB).toISOString()
+            : '';
+
+        return dateA.localeCompare(dateB);
+      },
+      render: (data: CatalogTableRow) => {
+        const date =
+          data.entity.metadata.annotations?.['backstage.io/createdAt'];
+        return !isNaN(new Date(date || '') as any)
+          ? data.entity.metadata.annotations?.['backstage.io/createdAt']
+          : '';
+      },
+    },
+  ];
+
   return (
     <AppProvider>
       <AlertDisplay />
       <OAuthRequestDialog />
       <AppRouter>
+        <ConfigUpdater />
         <Root>
           <FlatRoutes>
             {dynamicRoutes.filter(({ path }) => path === '/').length === 0 && (
@@ -42,7 +82,12 @@ const AppBase = () => {
                 <HomePage />
               </Route>
             )}
-            <Route path="/catalog" element={<CatalogIndexPage pagination />} />
+            <Route
+              path="/catalog"
+              element={
+                <CatalogIndexPage pagination columns={myCustomColumnsFunc} />
+              }
+            />
             <Route
               path="/catalog/:namespace/:kind/:name"
               element={<CatalogEntityPage />}

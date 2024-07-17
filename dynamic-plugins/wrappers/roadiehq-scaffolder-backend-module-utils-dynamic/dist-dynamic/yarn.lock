@@ -45,9 +45,14 @@
   integrity sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==
 
 adm-zip@^0.5.9:
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.12.tgz#87786328e91d54b37358d8a50f954c4cd73ba60b"
-  integrity sha512-6TVU49mK6KZb4qG6xWaaM4C7sA/sgUMLy/JYMOzkcp3BvVLpW0fXDFQiIzAuxFCt/2+xD7fNIiPFAoLZPhVNLQ==
+  version "0.5.14"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.14.tgz#2c557c0bf12af4311cf6d32970f4060cf8133b2a"
+  integrity sha512-DnyqqifT4Jrcvb8USYjp6FHtBpEIz1mnXu6pTRHZ0RL69LbQYiO+0lDFg5+OKA7U29oWSs3a/i8fhn8ZcceIWg==
+
+argparse@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
+  integrity sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==
 
 async@^3.2.3:
   version "3.2.5"
@@ -150,6 +155,13 @@ is-stream@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.1.tgz#fac1e3d53b97ad5a9d0ae9cef2389f5810a5c077"
   integrity sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==
+
+js-yaml@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
+  integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
+  dependencies:
+    argparse "^2.0.1"
 
 jsonata@^2.0.4:
   version "2.0.5"
@@ -260,9 +272,9 @@ triple-beam@^1.3.0:
   integrity sha512-aZbgViZrg1QNcG+LULa7nhZpJTZSLm/mXnHXnbAbjmN5aSa0y7V+wvv6+4WaBtpISJzThKy+PIPxc1Nq1EJ9mg==
 
 tslib@^2.6.2:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
-  integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
+  integrity sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==
 
 universalify@^2.0.0:
   version "2.0.1"
@@ -313,7 +325,21 @@ winston@^3.2.1:
     triple-beam "^1.3.0"
     winston-transport "^4.7.0"
 
+yaml-js@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/yaml-js/-/yaml-js-0.3.1.tgz#8f6f4300063364c2778be30f220736ae5e92c23c"
+  integrity sha512-LjoIFHCtSfkGzPsmYmfDsW+TShtQBcY7lwH1yLQ5brJHXRhjteUnVE2ThCbz1madq8JUZIAjFiavfnIFeTO8CQ==
+
 yaml@^2.3.4:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.4.2.tgz#7a2b30f2243a5fc299e1f14ca58d475ed4bc5362"
-  integrity sha512-B3VqDZ+JAg1nZpaEmWtTXUlBneoGx6CPM9b0TENK6aoSu5t73dItudwdgmi6tHlIZZId4dZ9skcAQ2UbcyAeVA==
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.4.5.tgz#60630b206dd6d84df97003d33fc1ddf6296cca5e"
+  integrity sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==
+
+yawn-yaml@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/yawn-yaml/-/yawn-yaml-2.2.0.tgz#aa9673725f7c277a8b97e8d12496d2333d701890"
+  integrity sha512-2SJvllxsNXwvbf6s8m7TNDtdn2zakLQpmrwpxIdCInLyEx+/WsZwSTScBOVk3zBbuFPeh7hc+yvUVtyKOgBeKQ==
+  dependencies:
+    js-yaml "^4.1.0"
+    lodash "^4.17.21"
+    yaml-js "^0.3.1"

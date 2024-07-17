@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -23,7 +24,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-http-request --override-interop default"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-module-http-request --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "0.6.17",
@@ -32,12 +33,27 @@
     "@roadiehq/scaffolder-backend-module-http-request": "4.3.2"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.8.6"
+    "@backstage/cli": "0.26.6",
+    "@janus-idp/cli": "1.11.0"
   },
   "files": [
     "dist",
     "dist-dynamic/*.*",
     "dist-dynamic/dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
   ]
 }

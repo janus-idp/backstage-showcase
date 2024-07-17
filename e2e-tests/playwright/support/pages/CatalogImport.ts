@@ -12,35 +12,18 @@ export class CatalogImport {
     this.page = page;
     this.uiHelper = new UIhelper(page);
   }
+
   async registerExistingComponent(url: string) {
     await this.page.fill(CatalogImportPO.componentURL, url);
     await this.uiHelper.clickButton('Analyze');
 
     // Wait for the visibility of either 'Refresh' or 'Import' button
-    try {
-      await this.page
-        .waitForSelector(this.uiHelper.getSelector('Refresh'), {
-          state: 'visible',
-          timeout: 10000,
-        })
-        .then(async () => {
-          await this.uiHelper.clickButton('Refresh');
-          expect(
-            await this.uiHelper.isBtnVisible('Register another'),
-          ).toBeTruthy();
-        })
-        .catch(async () => {
-          // If the 'Refresh' button does not appear, wait for the 'Import' button
-          await this.page.waitForSelector(this.uiHelper.getSelector('Import'), {
-            state: 'visible',
-            timeout: 10000,
-          });
-          await this.uiHelper.clickButton('Import');
-          await this.uiHelper.clickButton('View Component');
-        });
-    } catch (error) {
-      // Handle the general error if neither button can be located
-      console.error('Error while registering component:', error);
+    if (await this.uiHelper.isBtnVisible('Import')) {
+      await this.uiHelper.clickButton('Import');
+      await this.uiHelper.clickButton('View Component');
+    } else {
+      await this.uiHelper.clickButton('Refresh');
+      expect(await this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
     }
   }
 }
@@ -88,10 +71,14 @@ export class BackstageShowcase {
   async clickFirstPage() {
     await this.page.click(BackstageShowcasePO.tableFirstPage);
   }
+
   async verifyPRRowsPerPage(rows, allPRs) {
     await this.selectRowsPerPage(rows);
-    await this.uiHelper.verifyText(allPRs[rows - 1].title);
-    await this.uiHelper.verifyLink(allPRs[rows].number, { notVisible: true });
+    await this.uiHelper.verifyText(allPRs[rows - 1].title, false);
+    await this.uiHelper.verifyLink(allPRs[rows].number, {
+      exact: false,
+      notVisible: false,
+    });
 
     const tableRows = this.page.locator(BackstageShowcasePO.tableRows);
     await expect(tableRows).toHaveCount(rows);

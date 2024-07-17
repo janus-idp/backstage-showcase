@@ -1,4 +1,4 @@
-import { request, APIResponse } from '@playwright/test';
+import { request, APIResponse, expect } from '@playwright/test';
 
 export class APIHelper {
   private static githubAPIVersion = '2022-11-28';
@@ -9,7 +9,7 @@ export class APIHelper {
     body?: string | object,
   ): Promise<APIResponse> {
     const context = await request.newContext();
-    const options = {
+    const options: any = {
       method: method,
       headers: {
         Accept: 'application/vnd.github+json',
@@ -26,10 +26,20 @@ export class APIHelper {
     return response;
   }
 
-  static async getGithubPaginatedRequest(url, pageNo = 1, response = []) {
+  static async getGithubPaginatedRequest(
+    url: string,
+    pageNo = 1,
+    response: any[] = [],
+  ): Promise<any[]> {
     const fullUrl = `${url}&page=${pageNo}`;
     const result = await this.githubRequest('GET', fullUrl);
     const body = await result.json();
+
+    if (!Array.isArray(body)) {
+      throw new Error(
+        `Expected array but got ${typeof body}: ${JSON.stringify(body)}`,
+      );
+    }
 
     if (body.length === 0) {
       return response;
@@ -37,5 +47,21 @@ export class APIHelper {
 
     response = [...response, ...body];
     return await this.getGithubPaginatedRequest(url, pageNo + 1, response);
+  }
+
+  async getGuestToken(): Promise<string> {
+    const context = await request.newContext();
+    const response = await context.post('/api/auth/guest/refresh');
+    expect(response.status()).toBe(200);
+    const data = await response.json();
+    return data.backstageIdentity.token;
+  }
+
+  async getGuestAuthHeader(): Promise<{ [key: string]: string }> {
+    const token = await this.getGuestToken();
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    return headers;
   }
 }

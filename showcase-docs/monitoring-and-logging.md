@@ -73,9 +73,9 @@ spec:
       - ${MY_PROJECT}
   selector:
     matchLabels:
-      janus-idp.io/app: backstage-${CR_NAME}
+      rhdh.redhat.com/app: backstage-${CR_NAME}
   endpoints:
-  - port: http-backend
+  - port: backend
     path: '/metrics'
 EOF
 $ oc apply -f /tmp/${CR_NAME}.ServiceMonitor.yaml

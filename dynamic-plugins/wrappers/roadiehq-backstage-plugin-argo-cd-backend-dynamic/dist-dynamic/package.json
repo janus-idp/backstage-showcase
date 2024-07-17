@@ -11,7 +11,8 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "supported-versions": "1.26.5"
   },
   "exports": {
     ".": {
@@ -33,10 +34,25 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:production",
+    "lifecycle:active"
+  ],
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-common": "0.21.7",
-    "@backstage/backend-plugin-api": "^0.6.12",
+    "@backstage/backend-plugin-api": "0.6.12",
     "@backstage/catalog-client": "^1.6.4",
     "@backstage/config": "^1.2.0"
   },
