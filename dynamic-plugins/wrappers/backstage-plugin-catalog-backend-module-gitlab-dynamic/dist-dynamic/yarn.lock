@@ -10,33 +10,6 @@
     "@smithy/util-buffer-from" "^2.2.0"
     tslib "^2.6.2"
 
-"@gitbeaker/core@^40.1.1":
-  version "40.1.1"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-40.1.1.tgz#4f15a884ed53dda6e77c47c1c4d01e29a07a67b5"
-  integrity sha512-CYOIjDbQDO8F8TZsFpU04XQkFYZpTuzfbWFxEL2n7YmZOPc3WZEb2muLBZCpfbSt2qv9RnEn8t0qy6LCdCzw9g==
-  dependencies:
-    "@gitbeaker/requester-utils" "^40.1.1"
-    qs "^6.12.2"
-    xcase "^2.0.1"
-
-"@gitbeaker/requester-utils@^40.1.1":
-  version "40.1.1"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-40.1.1.tgz#543e52ee61ca9b33d32f14b40d81250b342fddad"
-  integrity sha512-+EWbZmIquQuyahzc4+k5vzYvcikVpEnf/Z8vXFDn0s7vL+EOcPsZXeIcUrXhfebgMWQq7UBb+FAGXtXtP4k2JQ==
-  dependencies:
-    picomatch-browser "^2.2.6"
-    qs "^6.12.2"
-    rate-limiter-flexible "^4.0.1"
-    xcase "^2.0.1"
-
-"@gitbeaker/rest@^40.0.3":
-  version "40.1.1"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-40.1.1.tgz#fb80b0cee6356e3156c29aad8ff9987b65f53a19"
-  integrity sha512-iYDqghGNGhAG6KJnuat4qHCTaXCuSfxDkP42toaMgJpdzey4Mx4AvA/ko89osbOB+cnlg+dvfmP67U5ih9Jijg==
-  dependencies:
-    "@gitbeaker/core" "^40.1.1"
-    "@gitbeaker/requester-utils" "^40.1.1"
-
 "@smithy/is-array-buffer@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@smithy/is-array-buffer/-/is-array-buffer-2.2.0.tgz#f84f0d9f9a36601a9ca9381688bd1b726fd39111"

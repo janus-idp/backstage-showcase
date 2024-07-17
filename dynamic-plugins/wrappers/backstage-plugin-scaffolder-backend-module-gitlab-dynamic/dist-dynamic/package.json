@@ -23,9 +23,8 @@
   },
   "scripts": {},
   "dependencies": {
-    "@gitbeaker/core": "^35.8.0",
-    "@gitbeaker/node": "^35.8.0",
-    "@gitbeaker/rest": "^39.25.0",
+    "@gitbeaker/core": "^40.1.2",
+    "@gitbeaker/rest": "^40.1.2",
     "luxon": "^3.0.0",
     "yaml": "^2.0.0",
     "zod": "^3.22.4"
