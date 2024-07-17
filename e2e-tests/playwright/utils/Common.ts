@@ -171,7 +171,7 @@ export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
       dir: `test-results/${path
         .parse(testInfo.file)
         .name.replace('.spec', '')}`,
-      size: { width: 1280, height: 720 },
+      size: { width: 1920, height: 1080 },
     },
   });
   const page = await context.newPage();
