@@ -491,7 +491,7 @@ octokit-plugin-create-pull-request@^5.0.0:
   dependencies:
     "@octokit/types" "^8.0.0"
 
-octokit@^3.0.0:
+octokit@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/octokit/-/octokit-3.2.1.tgz#d376ca3b12a61c58da02a93c491d2e627069b194"
   integrity sha512-u+XuSejhe3NdIvty3Jod00JvTdAE/0/+XbhIDhefHbu+2OcTRHd80aCiH6TX19ZybJmwPQBKFQmHGxp0i9mJrg==
