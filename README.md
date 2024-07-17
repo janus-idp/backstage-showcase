@@ -81,7 +81,7 @@ Want to know more about Backstage, consult the [documentation](https://backstage
 
 ## Multi-arch support
 
-RHDH is currently only available for amd64/x86_64. 
+RHDH is currently only available for amd64/x86_64.
 
 For additional architecture support, please vote for https://issues.redhat.com/browse/RHIDP-1351 with your reason for needing additional arches.
 
