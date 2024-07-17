@@ -456,14 +456,14 @@
     "@smithy/types" "^3.3.0"
     tslib "^2.6.2"
 
-"@aws-sdk/lib-storage@^3.350.0":
-  version "3.609.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/lib-storage/-/lib-storage-3.609.0.tgz#922beb257f6007b3648be52071ae0acaddb73dc8"
-  integrity sha512-572EZF6x9PtDfRbRAlBx1ZNpolA6Ol3kUmZZT6lStMTsgLiAss7lJlp35eAdPTUMIREcY9E2hEbI7imPS2506g==
+"@aws-sdk/lib-storage@^3.600.0":
+  version "3.614.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/lib-storage/-/lib-storage-3.614.0.tgz#814fb1c6e9691242019dd1d2cf4f51800460c841"
+  integrity sha512-Bzni+r7pS+nRiqcmWPpB/OiQEM4GszGRp1DXpL3rKnwaeu+Qgf2w12DULxWUacIvOc4IzLsv6tpEidQ/P1zKQg==
   dependencies:
     "@smithy/abort-controller" "^3.1.1"
-    "@smithy/middleware-endpoint" "^3.0.4"
-    "@smithy/smithy-client" "^3.1.5"
+    "@smithy/middleware-endpoint" "^3.0.5"
+    "@smithy/smithy-client" "^3.1.7"
     buffer "5.6.0"
     events "3.3.0"
     stream-browserify "3.0.0"
@@ -679,7 +679,7 @@
     "@smithy/types" "^3.3.0"
     tslib "^2.6.2"
 
-"@aws-sdk/util-utf8-browser@npm:@smithy/util-utf8@~2", "@smithy/util-utf8@^2.0.0":
+"@aws-sdk/util-utf8-browser@npm:@smithy/util-utf8@~2":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@smithy/util-utf8/-/util-utf8-2.3.0.tgz#dd96d7640363259924a214313c3cf16e7dd329c5"
   integrity sha512-R8Rdn8Hy72KKcebgLiv8jQcQkXoLMOGGv5uI1/k0l+snqkOzQ1R0ChUBCxWMlBsFMekWjq0wRudIweFs7sKT5A==
@@ -1429,6 +1429,14 @@
   resolved "https://registry.yarnpkg.com/@smithy/util-uri-escape/-/util-uri-escape-3.0.0.tgz#e43358a78bf45d50bb736770077f0f09195b6f54"
   integrity sha512-LqR7qYLgZTD7nWLBecUi4aqolw8Mhza9ArpNEQ881MJJIU2sE5iHCK6TdyqqzcDLy0OPe10IY4T8ctVdtynubg==
   dependencies:
+    tslib "^2.6.2"
+
+"@smithy/util-utf8@^2.0.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@smithy/util-utf8/-/util-utf8-2.3.0.tgz#dd96d7640363259924a214313c3cf16e7dd329c5"
+  integrity sha512-R8Rdn8Hy72KKcebgLiv8jQcQkXoLMOGGv5uI1/k0l+snqkOzQ1R0ChUBCxWMlBsFMekWjq0wRudIweFs7sKT5A==
+  dependencies:
+    "@smithy/util-buffer-from" "^2.2.0"
     tslib "^2.6.2"
 
 "@smithy/util-utf8@^3.0.0":
