@@ -141,8 +141,8 @@ export class Roles {
 
     await this.uiHelper.verifyHeading('Review and create');
     await this.uiHelper.verifyText('Users and groups (2 users, 1 group)');
-    await this.uiHelper.verifyText('Permission policies (0)');
-    await this.uiHelper.verifyText('Conditional permission policies (1)');
+    await this.uiHelper.verifyText('Permission policies (1)');
+    await this.uiHelper.verifyText('3 rules');
 
     await this.uiHelper.clickButton('Create');
     await this.uiHelper.verifyText(
@@ -187,7 +187,8 @@ export class Roles {
     await this.page.getByTestId('save-conditions').click();
     await this.uiHelper.verifyText('Configure access (1 rule)');
     await this.page.getByTestId('nextButton-2').click();
-    await this.uiHelper.verifyText('Conditional permission policies (1)');
+    await this.uiHelper.verifyText('Permission policies (1)');
+    await this.uiHelper.verifyText('1 rule');
     await this.uiHelper.clickButton('Create');
     await this.uiHelper.verifyText('role:default/test-role');
   }

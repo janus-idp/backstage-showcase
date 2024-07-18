@@ -144,6 +144,8 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
 
     await page.fill(RoleFormPO.roleName, 'test-role');
     await uiHelper.clickButton('Next');
+    await page.fill(RoleFormPO.addUsersAndGroups, 'guest user');
+    await page.click(RoleFormPO.selectMember('Guest User'));
     await uiHelper.clickButton('Next');
 
     await page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
