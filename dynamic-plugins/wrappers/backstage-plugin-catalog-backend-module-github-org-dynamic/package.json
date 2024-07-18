@@ -12,7 +12,8 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.26.5"
+    "supported-versions": "1.27.7",
+    "pluginId": "github-org"
   },
   "exports": {
     ".": "./src/index.ts",
