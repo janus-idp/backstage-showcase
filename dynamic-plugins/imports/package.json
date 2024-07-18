@@ -26,7 +26,7 @@
     "@janus-idp/backstage-plugin-ocm": "4.1.8",
     "@janus-idp/backstage-plugin-ocm-backend": "4.0.8",
     "@janus-idp/backstage-plugin-quay": "1.7.8",
-    "@janus-idp/backstage-plugin-rbac": "1.20.14",
+    "@janus-idp/backstage-plugin-rbac": "1.23.2",
     "@janus-idp/backstage-plugin-tekton": "3.7.7",
     "@janus-idp/backstage-plugin-topology": "1.21.10",
     "@janus-idp/backstage-plugin-argocd": "1.2.3",
