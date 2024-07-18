@@ -136,11 +136,11 @@ export class Roles {
     await this.page.getByTestId('save-conditions').click();
 
     await this.uiHelper.verifyText('Configure access (3 rules)');
-
     await this.uiHelper.clickButton('Next');
 
     await this.uiHelper.verifyHeading('Review and create');
     await this.uiHelper.verifyText('Users and groups (2 users, 1 group)');
+
     await this.uiHelper.verifyText('Permission policies (1)');
     await this.uiHelper.verifyText('3 rules');
 
