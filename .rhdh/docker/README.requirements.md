@@ -37,7 +37,7 @@ Finally, MAKE SURE YOU OVERRIDE what's in the .txt files to add in the cachito_h
 
 ```
 mkdocs-techdocs-core @ https://github.com/backstage/mkdocs-techdocs-core/archive/bbdab44e0d3aecfdc4e77b14c72b57791d4902b2.zip#cachito_hash=sha256:40421a5f43b11fd9ea9f92e107f91089b6bfa326967ad497666ab5a451fcf136
-plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/17d348bfaa9112cdd2130e6410ce3a50224db3cf.zip#cachito_hash=sha256:221cc4972c75ba911cad4a56df07f61771c20077f8cbc8966181e30cabf68de1
+plantuml-markdown @ https://github.com/mikitex70/plantuml-markdown/archive/fcf62aa930708368ec1daaad8b5b5dbe1d1b2014.zip#cachito_hash=sha256:a487c2312a53fe47a0947e8624290b2c8ea51e373140d02950531966b1db5caa
 ```
 
 To test in a [container build](https://pkgs.devel.redhat.com/cgit/containers/rhdh-hub/tree/Dockerfile?h=private-nboldt-cachito-pip#n155) in Brew, using something like:
