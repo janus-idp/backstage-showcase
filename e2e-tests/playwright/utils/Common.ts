@@ -50,6 +50,18 @@ export class Common {
     await this.page.fill('#password', process.env.GH_USER_PASS);
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP());
+    if (
+      (await this.uiHelper.isTextVisible(
+        'The two-factor code you entered has already been used',
+      )) ||
+      (await this.uiHelper.isTextVisible(
+        'too many codes have been submitted',
+        3000,
+      ))
+    ) {
+      await this.page.waitForTimeout(30000);
+      await this.page.fill('#app_totp', this.getGitHub2FAOTP());
+    }
     await expect(this.page.locator('#app_totp')).toBeHidden({
       timeout: 120000,
     });
