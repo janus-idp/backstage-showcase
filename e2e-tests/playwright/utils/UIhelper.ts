@@ -91,18 +91,30 @@ export class UIhelper {
     await expect(element).toBeVisible();
   }
 
-  async isBtnVisible(text: string): Promise<boolean> {
-    const locator = `button:has-text("${text}")`;
+  private async isElementVisible(
+    locator: string,
+    timeout = 10000,
+  ): Promise<boolean> {
     try {
       await this.page.waitForSelector(locator, {
         state: 'visible',
-        timeout: 10000,
+        timeout: timeout,
       });
-      const button = this.page.locator(locator);
+      const button = this.page.locator(locator).first();
       return button.isVisible();
     } catch (error) {
       return false;
     }
+  }
+
+  async isBtnVisible(text: string): Promise<boolean> {
+    const locator = `button:has-text("${text}")`;
+    return await this.isElementVisible(locator);
+  }
+
+  async isTextVisible(text: string, timeout = 10000): Promise<boolean> {
+    const locator = `:has-text("${text}")`;
+    return await this.isElementVisible(locator, timeout);
   }
 
   async waitForSideBarVisible() {
