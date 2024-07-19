@@ -14,9 +14,6 @@ import {
 } from '../../hooks/useCustomizationData';
 
 const useStyles = makeStyles()({
-  link: {
-    textDecoration: 'none',
-  },
   infoCard: {
     height: '100%',
     transition: 'all 0.25s linear',
@@ -67,21 +64,19 @@ const LearningPathCards = () => {
 
   return (
     <Grid container justifyContent="center" alignContent="center" spacing={2}>
-      <Grid item xs={12} container justifyContent="center">
-        {data.map(p => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={p.label}>
-            <Link href={p.url} className={classes.link} target="_blank">
-              <InfoCard
-                className={classes.infoCard}
-                title={p.label}
-                subheader={learningPathLengthInfo(p)}
-              >
-                <Typography paragraph>{p.description}</Typography>
-              </InfoCard>
-            </Link>
-          </Grid>
-        ))}
-      </Grid>
+      {data.map(p => (
+        <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={p.label}>
+          <Link href={p.url} target="_blank" underline="none">
+            <InfoCard
+              className={classes.infoCard}
+              title={p.label}
+              subheader={learningPathLengthInfo(p)}
+            >
+              <Typography paragraph>{p.description}</Typography>
+            </InfoCard>
+          </Link>
+        </Grid>
+      ))}
     </Grid>
   );
 };
@@ -89,11 +84,11 @@ const LearningPathCards = () => {
 export const LearningPaths = () => {
   return (
     <SearchContextProvider>
-      <Page themeId="home">
+      <Page themeId="learningpaths">
         <Header title="Learning Paths" />
         <Content>
-          <Grid container justifyContent="center" spacing={6}>
-            <Grid item xs={12}>
+          <Grid container justifyContent="center">
+            <Grid item>
               <LearningPathCards />
             </Grid>
           </Grid>
