@@ -41,7 +41,7 @@
     "@janus-idp/backstage-plugin-rbac-common": "1.6.1",
     "@mui/icons-material": "5.16.1",
     "@mui/material": "5.16.1",
-    "@redhat-developer/red-hat-developer-hub-theme": "0.0.63",
+    "@redhat-developer/red-hat-developer-hub-theme": "0.1.3",
     "@scalprum/core": "0.7.0",
     "@scalprum/react-core": "0.8.0",
     "lodash": "4.17.21",
