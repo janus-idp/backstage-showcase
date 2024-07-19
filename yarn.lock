@@ -3951,7 +3951,7 @@
     uuid "^9.0.0"
     zod "^3.22.4"
 
-"@backstage/backend-test-utils@0.3.8", "@backstage/backend-test-utils@^0.3.7":
+"@backstage/backend-test-utils@0.3.8", "@backstage/backend-test-utils@^0.3.7", "@backstage/backend-test-utils@^0.3.8":
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/@backstage/backend-test-utils/-/backend-test-utils-0.3.8.tgz#fa5c8c3f6996f1f15228b60e9eabff0ab72aa431"
   integrity sha512-L0hVGqbDz6bsmIGlqUzk9LVJ+GVL06y+tbpdijjJoX0WFgIG6YFkYn9rqtSOdFY2IvgIm8BGeKFgrJ5f96QZiw==

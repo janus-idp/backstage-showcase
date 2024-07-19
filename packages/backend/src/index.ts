@@ -80,6 +80,9 @@ backend.add(import('@backstage/plugin-catalog-backend/alpha'));
 // TODO: Probably we should now provide this as a dynamic plugin
 backend.add(import('@backstage/plugin-catalog-backend-module-openapi'));
 
+// TODO: should provide this as a dynamic plugin
+backend.add(import('@backstage/plugin-catalog-backend-module-msgraph/alpha'));
+
 backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 
 // TODO: Check in the Scaffolder new backend plugin why the identity is not passed and the default is built instead.
@@ -104,5 +107,10 @@ backend.add(import('./modules/authProvidersModule'));
 
 backend.add(import('@internal/plugin-dynamic-plugins-info-backend'));
 backend.add(import('@internal/plugin-scalprum-backend'));
+backend.add(
+  import(
+    '@internal/backstage-plugin-catalog-backend-module-msgraph-transformer'
+  ),
+);
 
 backend.start();

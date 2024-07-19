@@ -7,6 +7,8 @@ plugins
 !plugins/dynamic-plugins-info
 !plugins/dynamic-plugins-info-backend
 !plugins/auth-backend-module-oidc-provider
+!plugins/catalog-backend-module-msgraph-transformer
+
 *.local.yaml
 coverage
 dist-types
