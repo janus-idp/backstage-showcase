@@ -113,6 +113,20 @@ export class UIhelper {
     }
   }
 
+  async isBtnVisibleByTitle(text: string): Promise<boolean> {
+    const locator = `BUTTON[title="${text}"]`;
+    try {
+      await this.page.waitForSelector(locator, {
+        state: 'visible',
+        timeout: 10000,
+      });
+      const button = this.page.locator(locator);
+      return button.isVisible();
+    } catch (error) {
+      return false;
+    }
+  }
+
   async isBtnVisible(text: string): Promise<boolean> {
     const locator = `button:has-text("${text}")`;
     return await this.isElementVisible(locator);
@@ -121,6 +135,20 @@ export class UIhelper {
   async isTextVisible(text: string, timeout = 10000): Promise<boolean> {
     const locator = `:has-text("${text}")`;
     return await this.isElementVisible(locator, timeout);
+  }
+
+  async isLinkVisible(text: string): Promise<boolean> {
+    const locator = `a:has-text("${text}")`;
+    try {
+      await this.page.waitForSelector(locator, {
+        state: 'visible',
+        timeout: 10000,
+      });
+      const button = this.page.locator(locator);
+      return button.isVisible();
+    } catch (error) {
+      return false;
+    }
   }
 
   async waitForSideBarVisible() {
@@ -316,5 +344,10 @@ export class UIhelper {
         .evaluate(el => window.getComputedStyle(el).color);
       expect(color).toBe(expectedRgbColor);
     }
+  }
+  async verifyTableEmpty() {
+    const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
+    const rowCount = await this.page.locator(rowSelector).count();
+    expect(rowCount).toEqual(0);
   }
 }
