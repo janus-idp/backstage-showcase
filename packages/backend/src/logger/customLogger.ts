@@ -8,9 +8,11 @@ import {
   createServiceFactory,
   createServiceRef,
 } from '@backstage/backend-plugin-api';
+import { Config } from '@backstage/config';
 import { loadConfigSchema } from '@backstage/config-loader';
 import { getPackages } from '@manypkg/get-packages';
 import * as winston from 'winston';
+import 'winston-daily-rotate-file';
 
 const defaultFormat = winston.format.combine(
   winston.format.timestamp({
@@ -42,15 +44,43 @@ const transports = {
       ),
     }),
   ],
-  auditLog: [
-    new winston.transports.Console({
-      format: winston.format.combine(
-        auditLogFormat({ isAuditLog: true }),
-        defaultFormat,
-        winston.format.json(),
-      ),
-    }),
-  ],
+  auditLog: (config?: Config) => {
+    if (config?.getOptionalBoolean('logToConsole') === false){
+      return [];
+    }
+    return [
+      new winston.transports.Console({
+        format: winston.format.combine(
+          auditLogFormat({ isAuditLog: true }),
+          defaultFormat,
+          winston.format.json(),
+        ),
+      }),
+    ];
+  },
+  auditLogFile: (config?: Config) => {
+    if (!config?.getOptionalBoolean('rotate.enabled')) {
+      return [];
+    }
+    return [
+      new winston.transports.DailyRotateFile({
+        format: winston.format.combine(
+          auditLogFormat({ isAuditLog: true }),
+          defaultFormat,
+          winston.format.json(),
+        ),
+        dirname: config?.getOptionalString('rotate.logFileDirPath') || '/var/log/redhat-developer-hub/audit',
+        filename: config?.getOptionalString('rotate.logFileName') || 'redhat-developer-hub-audit-%DATE%.log',
+        datePattern: config?.getOptionalString('rotate.dateFormat'),
+        frequency: config?.getOptionalString('rotate.frequency'),
+        zippedArchive:
+          config?.getOptionalBoolean('rotate.zippedArchive'),
+        utc: config?.getOptionalBoolean('rotate.utc'),
+        maxSize: config?.getOptionalString('rotate.maxSize'),
+        maxFiles: config?.getOptional('rotate.maxFilesOrDays'),
+      }),
+    ];
+  },
 };
 
 const dynamicPluginsSchemasServiceRef =
@@ -66,13 +96,18 @@ export const customLogger = createServiceFactory({
     schemas: dynamicPluginsSchemasServiceRef,
   },
   async factory({ config, schemas }) {
+    const auditLogConfig = config.getOptionalConfig('auditLog');
     const logger = WinstonLogger.create({
       meta: {
         service: 'backstage',
       },
       level: process.env.LOG_LEVEL ?? 'info',
       format: winston.format.combine(defaultFormat, winston.format.json()),
-      transports: [...transports.log, ...transports.auditLog],
+      transports: [
+        ...transports.log,
+        ...transports.auditLog(auditLogConfig),
+        ...transports.auditLogFile(auditLogConfig),
+      ],
     });
 
     const configSchema = await loadConfigSchema({
