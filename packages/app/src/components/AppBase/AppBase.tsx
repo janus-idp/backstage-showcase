@@ -27,6 +27,7 @@ import { entityPage } from '../catalog/EntityPage';
 import { HomePage } from '../home/HomePage';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
+import ConfigUpdater from '../Root/ConfigUpdater';
 
 const AppBase = () => {
   const {
@@ -73,6 +74,7 @@ const AppBase = () => {
       <AlertDisplay />
       <OAuthRequestDialog />
       <AppRouter>
+        <ConfigUpdater />
         <Root>
           <FlatRoutes>
             {dynamicRoutes.filter(({ path }) => path === '/').length === 0 && (

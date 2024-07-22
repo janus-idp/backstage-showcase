@@ -35,10 +35,7 @@
       href="<%= publicPath %>/safari-pinned-tab.svg"
       color="#5bbad5"
     />
-    <link
-      rel="icon"
-      href="<%= config.getOptionalString('app.branding.iconLogo') %>"
-    />
+    <link rel="icon" id="dynamic-favicon" href="/favicon.ico" />
     <title><%= config.getOptionalString('app.title') ?? 'Backstage' %></title>
   </head>
   <body>

@@ -12,6 +12,7 @@ export class CatalogImport {
     this.page = page;
     this.uiHelper = new UIhelper(page);
   }
+
   async registerExistingComponent(url: string) {
     await this.page.fill(CatalogImportPO.componentURL, url);
     await this.uiHelper.clickButton('Analyze');
@@ -70,10 +71,14 @@ export class BackstageShowcase {
   async clickFirstPage() {
     await this.page.click(BackstageShowcasePO.tableFirstPage);
   }
+
   async verifyPRRowsPerPage(rows, allPRs) {
     await this.selectRowsPerPage(rows);
-    await this.uiHelper.verifyText(allPRs[rows - 1].title);
-    await this.uiHelper.verifyLink(allPRs[rows].number, { notVisible: true });
+    await this.uiHelper.verifyText(allPRs[rows - 1].title, false);
+    await this.uiHelper.verifyLink(allPRs[rows].number, {
+      exact: false,
+      notVisible: false,
+    });
 
     const tableRows = this.page.locator(BackstageShowcasePO.tableRows);
     await expect(tableRows).toHaveCount(rows);
