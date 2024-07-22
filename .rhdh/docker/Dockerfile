@@ -20,7 +20,7 @@
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-44.1716477801 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-44.1717085241 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -179,7 +179,7 @@ RUN $YARN install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-47.1716472878 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-47.1717076367 AS runner
 USER 0
 
 ENV CONTAINER_SOURCE=/opt/app-root/src
@@ -245,7 +245,7 @@ ENV NPM_CONFIG_ignore-scripts='true'
 
 # gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t is key for dev environment
 # Use production key in stable 1.yy.x branch; use dev key in main for CI/next builds
-ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
+ENV SEGMENT_WRITE_KEY=mUr49Tkld5bj1lFFPxxqHrAzkQMRINvF
 ENV SEGMENT_TEST_MODE=false
 
 # RHIDP-2217: corporate proxy support (configured using 'global-agent')
