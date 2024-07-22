@@ -45,7 +45,7 @@ const transports = {
     }),
   ],
   auditLog: (config?: Config) => {
-    if (config?.getOptionalBoolean('logToConsole') === false){
+    if (config?.getOptionalBoolean('logToConsole') === false) {
       return [];
     }
     return [
@@ -69,12 +69,15 @@ const transports = {
           defaultFormat,
           winston.format.json(),
         ),
-        dirname: config?.getOptionalString('rotate.logFileDirPath') || '/var/log/redhat-developer-hub/audit',
-        filename: config?.getOptionalString('rotate.logFileName') || 'redhat-developer-hub-audit-%DATE%.log',
+        dirname:
+          config?.getOptionalString('rotate.logFileDirPath') ||
+          '/var/log/redhat-developer-hub/audit',
+        filename:
+          config?.getOptionalString('rotate.logFileName') ||
+          'redhat-developer-hub-audit-%DATE%.log',
         datePattern: config?.getOptionalString('rotate.dateFormat'),
         frequency: config?.getOptionalString('rotate.frequency'),
-        zippedArchive:
-          config?.getOptionalBoolean('rotate.zippedArchive'),
+        zippedArchive: config?.getOptionalBoolean('rotate.zippedArchive'),
         utc: config?.getOptionalBoolean('rotate.utc'),
         maxSize: config?.getOptionalString('rotate.maxSize'),
         maxFiles: config?.getOptional('rotate.maxFilesOrDays'),
