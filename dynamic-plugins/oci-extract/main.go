@@ -19,8 +19,6 @@ import (
 	"oras.land/oras-go/v2/registry/remote"
 )
 
-var pluginId = "oci://quay.io/gashcrumb/simple-chat-plugin-registry:0.1.0!internal-backstage-plugin-simple-chat-backend-dynamic"
-
 // parsePluginId parses the pluginId and returns the image, tag and pluginPath
 // The pluginId is in the format oci://<image>:<tag>!<pluginPath>
 func parsePluginId(pluginId string) (string, string, string, error) {
@@ -48,8 +46,16 @@ func parsePluginId(pluginId string) (string, string, string, error) {
 
 func main() {
 
+	if len(os.Args) < 3 {
+		fmt.Printf("Usage: %[1]s <pluginId> <dynamic-plugins-root-directory>\nExample: %[1]s 'oci://quay.io/gashcrumb/simple-chat-plugin-registry:0.1.0!internal-backstage-plugin-simple-chat-backend-dynamic' dynamic-plugins-root", os.Args[0])
+		os.Exit(1)
+	}
+
+	pluginId := os.Args[1]
+	outputDir := os.Args[2]
+
 	image, tag, pluginPath, err := parsePluginId(pluginId)
-	fmt.Println(pluginPath)
+	fmt.Println("pluginPath: ", pluginPath)
 
 	if err != nil {
 		panic(err)
@@ -112,7 +118,6 @@ func main() {
 		panic(err)
 	}
 
-	dst := "extracted"
 	tr := tar.NewReader(uncompressedLayer)
 	for {
 		header, err := tr.Next()
@@ -123,9 +128,16 @@ func main() {
 			log.Fatal(err)
 		}
 
-		target := filepath.Join(dst, header.Name)
+		fmt.Println(header.Name, pluginPath)
+
+		// extract only files under the specified pluginPath
+		if !strings.HasPrefix(header.Name, pluginPath) {
+			continue
+		}
+		target := filepath.Join(outputDir, header.Name)
 		switch header.Typeflag {
 		case tar.TypeDir:
+			fmt.Println("Creating directory: ", target)
 			if _, err := os.Stat(target); err != nil {
 				if err := os.MkdirAll(target, 0755); err != nil {
 					panic(err)
