@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "lighthouse"
+    "pluginId": "lighthouse",
+    "pluginPackage": "backstage-plugin-lighthouse"
   },
   "scripts": {
     "build": "backstage-cli package build",

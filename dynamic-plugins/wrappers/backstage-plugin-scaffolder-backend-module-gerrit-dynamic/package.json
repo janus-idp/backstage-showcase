@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "gerrit"
+    "pluginId": "gerrit",
+    "pluginPackage": "backstage-plugin-scaffolder-backend-module-gerrit"
   },
   "exports": {
     ".": "./src/index.ts",

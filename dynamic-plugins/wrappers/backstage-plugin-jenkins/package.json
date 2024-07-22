@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "jenkins"
+    "pluginId": "jenkins",
+    "pluginPackage": "backstage-plugin-jenkins"
   },
   "scripts": {
     "build": "backstage-cli package build",

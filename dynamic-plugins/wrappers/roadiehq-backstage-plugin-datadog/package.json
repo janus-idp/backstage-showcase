@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-datadog"
+    "pluginId": "roadiehq-datadog",
+    "pluginPackage": "roadiehq-backstage-plugin-datadog"
   },
   "scripts": {
     "build": "backstage-cli package build",
