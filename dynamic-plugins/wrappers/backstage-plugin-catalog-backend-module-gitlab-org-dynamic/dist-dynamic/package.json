@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-catalog-backend-module-gitlab-org-dynamic",
-  "version": "0.0.1",
+  "version": "0.4.0",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",
   "license": "Apache-2.0",
