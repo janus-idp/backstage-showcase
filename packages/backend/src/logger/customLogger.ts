@@ -35,7 +35,7 @@ const auditLogFormat = winston.format((info, opts) => {
 });
 
 const auditLogWinstonFormat = winston.format.combine(
-  auditLogFormat({ isAuditLog: false }),
+  auditLogFormat({ isAuditLog: true }),
   defaultFormat,
   winston.format.json(),
 );
@@ -51,7 +51,7 @@ const transports = {
     }),
   ],
   auditLog: (config?: Config) => {
-    if (config?.getOptionalBoolean('logToConsole.enabled') === false) {
+    if (config?.getOptionalBoolean('console.enabled') === false) {
       return [];
     }
     return [

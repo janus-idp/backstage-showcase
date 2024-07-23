@@ -8,7 +8,7 @@ export interface Config {
      * Configuration for the audit logging to console
      * @visibility frontend
      */
-    logToConsole: {
+    console: {
       /**
        * Enables audit logging to console
        * Default: true

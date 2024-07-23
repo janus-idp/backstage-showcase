@@ -10,7 +10,7 @@ By default, the audit logger logs to the console. To disable this, update your a
 
 ```yaml
 auditLog:
-  logToConsole:
+  console:
     enabled: false
 ```
 
