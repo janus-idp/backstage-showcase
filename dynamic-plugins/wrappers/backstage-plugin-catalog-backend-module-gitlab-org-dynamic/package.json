@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "gitlab-org"
+    "pluginId": "gitlab-org",
+    "pluginPackage": "backstage-plugin-catalog-backend-module-gitlab-org"
   },
   "exports": {
     ".": "./src/index.ts",

@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-argocd"
+    "pluginId": "roadiehq-argocd",
+    "pluginPackage": "roadiehq-scaffolder-backend-argocd"
   },
   "exports": {
     ".": "./src/index.ts",

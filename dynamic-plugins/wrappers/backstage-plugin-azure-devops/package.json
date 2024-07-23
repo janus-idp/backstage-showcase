@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "azure-devops"
+    "pluginId": "azure-devops",
+    "pluginPackage": "backstage-plugin-azure-devops"
   },
   "scripts": {
     "build": "backstage-cli package build",

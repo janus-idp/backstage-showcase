@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "jenkins"
+    "pluginId": "jenkins",
+    "pluginPackage": "backstage-plugin-jenkins-backend"
   },
   "exports": {
     ".": "./src/index.ts",

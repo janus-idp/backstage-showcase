@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-security-insights"
+    "pluginId": "roadiehq-security-insights",
+    "pluginPackage": "roadiehq-backstage-plugin-security-insights"
   },
   "scripts": {
     "build": "backstage-cli package build",

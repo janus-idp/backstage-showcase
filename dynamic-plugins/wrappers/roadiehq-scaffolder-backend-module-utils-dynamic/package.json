@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-module-utils"
+    "pluginId": "roadiehq-module-utils",
+    "pluginPackage": "roadiehq-scaffolder-backend-module-utils"
   },
   "exports": {
     ".": "./src/index.ts",

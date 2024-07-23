@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-argo-cd"
+    "pluginId": "roadiehq-argo-cd",
+    "pluginPackage": "roadiehq-backstage-plugin-argo-cd"
   },
   "scripts": {
     "build": "backstage-cli package build",
