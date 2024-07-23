@@ -140,6 +140,14 @@ auditLog:
     maxFilesOrDays: 5d # Deletes logs older than 5 days
 ```
 
+---
+
+**NOTE**
+
+If log deletion is enabled, a `.<sha256 hash>-audit.json` will be generated in the directory where the logs are to track generated logs. Any log file not contained in it will not be subject to automatic deletion.
+
+---
+
 To archive and compress rotated logs using gzip:
 
 ```yaml
