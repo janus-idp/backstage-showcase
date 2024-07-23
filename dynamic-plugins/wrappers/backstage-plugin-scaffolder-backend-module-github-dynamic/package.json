@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "github"
+    "pluginId": "github",
+    "pluginPackage": "backstage-plugin-scaffolder-backend-module-github"
   },
   "exports": {
     ".": "./src/index.ts",

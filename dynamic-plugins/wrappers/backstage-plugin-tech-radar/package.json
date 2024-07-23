@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "tech-radar"
+    "pluginId": "tech-radar",
+    "pluginPackage": "backstage-plugin-tech-radar"
   },
   "scripts": {
     "build": "backstage-cli package build",

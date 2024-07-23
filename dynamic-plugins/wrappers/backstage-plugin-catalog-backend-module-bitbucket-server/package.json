@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "bitbucket-server"
+    "pluginId": "bitbucket-server",
+    "pluginPackage": "backstage-plugin-catalog-backend-module-bitbucket-server"
   },
   "exports": {
     ".": "./src/index.ts",

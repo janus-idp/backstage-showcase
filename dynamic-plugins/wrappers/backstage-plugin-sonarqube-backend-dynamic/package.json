@@ -13,7 +13,8 @@
   "backstage": {
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "sonarqube"
+    "pluginId": "sonarqube",
+    "pluginPackage": "backstage-plugin-sonarqube-backend"
   },
   "exports": {
     ".": "./src/index.ts",

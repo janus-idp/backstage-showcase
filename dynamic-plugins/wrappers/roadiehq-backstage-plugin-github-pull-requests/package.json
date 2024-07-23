@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-github-pull-requests"
+    "pluginId": "roadiehq-github-pull-requests",
+    "pluginPackage": "roadiehq-backstage-plugin-github-pull-requests"
   },
   "scripts": {
     "build": "backstage-cli package build",

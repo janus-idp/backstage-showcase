@@ -12,7 +12,8 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "dynatrace"
+    "pluginId": "dynatrace",
+    "pluginPackage": "backstage-plugin-dynatrace"
   },
   "scripts": {
     "build": "backstage-cli package build",
