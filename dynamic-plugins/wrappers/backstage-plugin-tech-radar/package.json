@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@backstage/core-plugin-api": "1.9.2",
-    "@mui/icons-material": "5.16.1",
+    "@mui/icons-material": "5.16.4",
     "@backstage-community/plugin-tech-radar": "0.7.4"
   },
   "devDependencies": {
