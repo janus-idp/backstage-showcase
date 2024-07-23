@@ -22,7 +22,7 @@ To enable audit logging to a rotating file, set the following in your configurat
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     enabled: true
 ```
 
@@ -41,7 +41,7 @@ To change the directory where log files are stored, specify a custom path (an ab
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     logFileDirPath: /custom-path
 ```
 
@@ -53,13 +53,13 @@ The specified directory will be created automatically if it does not exist.
 
 ---
 
-By default, the audit log files will be in the following format: `redhat-developer-hub-audit-%DATE%.log` where `%DATE%` is the format specified in [`auditLog.rotate.dateFormat`](#configuring-the-file-rotation-frequency).
+By default, the audit log files will be in the following format: `redhat-developer-hub-audit-%DATE%.log` where `%DATE%` is the format specified in [`auditLog.rotateFile.dateFormat`](#configuring-the-file-rotation-frequency).
 
 To customize the log file name format, use:
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     logFileName: custom-audit-log-%DATE%.log
 ```
 
@@ -69,7 +69,7 @@ The default file rotation occurs daily at 00:00 local time. You can adjust the r
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     frequency: '12h' # Default: `custom`
     dateFormat: 'YYYY-MM-DD' # Default: `YYYY-MM-DD`
     utc: false # Default: `false`
@@ -92,15 +92,15 @@ Examples:
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     # If you want rotations to occur every week for some reason and at the start of each month. Example `%DATE$` = '2025-Jul-Week 30'
     dateFormat: 'YYYY-MMM-[Week] ww'
 ```
 
 ```yaml
 auditLog:
-  rotate:
-    # If you want to rotate at noon and midnight
+  rotateFile:
+    # If you want to rotate the file at noon and midnight
     dateFormat: 'YYYY-MM-DD-A'
 ```
 
@@ -108,7 +108,7 @@ To use UTC time for `dateFormat` instead of local time:
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     utc: true # Default: False
 ```
 
@@ -118,7 +118,7 @@ To configure `maxSize`, provide a number followed by one of `k`, `m`, or `g` to 
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     maxSize: 100m # Sets a max file size limit of 100MB for audit log
 ```
 
@@ -128,7 +128,7 @@ By default, log files are not deleted or archived. You can configure the maximum
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     maxFilesOrDays: 14 # Deletes the oldest log when there are more than 14 log files
 ```
 
@@ -136,7 +136,7 @@ Or, configure the maximum number of days to retain logs by appending:
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     maxFilesOrDays: 5d # Deletes logs older than 5 days
 ```
 
@@ -144,6 +144,6 @@ To archive and compress rotated logs using gzip:
 
 ```yaml
 auditLog:
-  rotate:
+  rotateFile:
     zippedArchive: true # Default: false
 ```

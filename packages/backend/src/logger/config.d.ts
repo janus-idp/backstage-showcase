@@ -20,7 +20,7 @@ export interface Config {
      * Configuration for the log rotation file
      * @visibility frontend
      */
-    rotate?: {
+    rotateFile?: {
       /**
        * Enables audit logging to a rotating file
        * Default: false

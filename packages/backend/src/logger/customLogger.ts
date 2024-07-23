@@ -61,24 +61,24 @@ const transports = {
     ];
   },
   auditLogFile: (config?: Config) => {
-    if (!config?.getOptionalBoolean('rotate.enabled')) {
+    if (!config?.getOptionalBoolean('rotateFile.enabled')) {
       return [];
     }
     return [
       new winston.transports.DailyRotateFile({
         format: auditLogWinstonFormat,
         dirname:
-          config?.getOptionalString('rotate.logFileDirPath') ||
+          config?.getOptionalString('rotateFile.logFileDirPath') ||
           '/var/log/redhat-developer-hub/audit',
         filename:
-          config?.getOptionalString('rotate.logFileName') ||
+          config?.getOptionalString('rotateFile.logFileName') ||
           'redhat-developer-hub-audit-%DATE%.log',
-        datePattern: config?.getOptionalString('rotate.dateFormat'),
-        frequency: config?.getOptionalString('rotate.frequency'),
-        zippedArchive: config?.getOptionalBoolean('rotate.zippedArchive'),
-        utc: config?.getOptionalBoolean('rotate.utc'),
-        maxSize: config?.getOptionalString('rotate.maxSize'),
-        maxFiles: config?.getOptional('rotate.maxFilesOrDays'),
+        datePattern: config?.getOptionalString('rotateFile.dateFormat'),
+        frequency: config?.getOptionalString('rotateFile.frequency'),
+        zippedArchive: config?.getOptionalBoolean('rotateFile.zippedArchive'),
+        utc: config?.getOptionalBoolean('rotateFile.utc'),
+        maxSize: config?.getOptionalString('rotateFile.maxSize'),
+        maxFiles: config?.getOptional('rotateFile.maxFilesOrDays'),
       }),
     ];
   },
