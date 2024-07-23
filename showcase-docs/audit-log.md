@@ -1,23 +1,24 @@
 # Audit Logging for Backstage Showcase
 
-Backstage Showcase currently supports audit logging for the catalog and scaffolder. Audit logs are signified by the `isAuditLog: true` field.
+Backstage Showcase supports audit logging for both the catalog and scaffolder. Audit logs can be identified by the `isAuditLog: true` field.
 
 ## Configuring the audit logger
 
-### Configuring the audit logging to console
+### Logging to Console
 
-By default, the audit logger will log to the console. You can disable this behavior by setting the following in your `app-config.yaml`:
+By default, the audit logger logs to the console. To disable this, update your app-config.yaml with:
 
 ```yaml
 auditLog:
-  logToConsole: false
+  logToConsole:
+    enabled: false
 ```
 
-### Configuring the audit logging to a rotating file
+### Logging to a Rotating File
 
-#### Enabling Audit Logging to a rotating file
+#### Enabling Rotating File Logging
 
-Backstage Showcase also supports forwarding the audit logs to a rotating file. By default this is disabled, to enable it set the following:
+To enable audit logging to a rotating file, set the following in your configuration (this feature is disabled by default):
 
 ```yaml
 auditLog:
@@ -25,18 +26,18 @@ auditLog:
     enabled: true
 ```
 
-The default behavior with the above configuration is:
+With this configuration, the default behavior is:
 
-- Rotate at midnight of the local system timezone
-- Output logs to a file with the format of: `redhat-developer-hub-audit-%DATE%.log`
-- Store log files in the `/var/log/redhat-developer-hub/audit` directory
-- Does not remove old logs
-- Does not gzip archived logs
+- Rotate logs at midnight (local system timezone)
+- Log file format: redhat-developer-hub-audit-%DATE%.log
+- Log files stored in /var/log/redhat-developer-hub/audit
+- No automatic log file deletion
+- No gzip compression of archived logs
 - No file size limit
 
-#### Configuring custom location and file name
+#### Customizing Log File Location and Name
 
-By default, the audit logs will be written in the `/var/log/redhat-developer-hub/audit` directory. To customize the destination in which the audit log files will be generated, provide the path to the directory (an absolute path is recommended):
+To change the directory where log files are stored, specify a custom path (an absolute path is recommended): By default, the audit logs are written in the `/var/log/redhat-developer-hub/audit` directory.
 
 ```yaml
 auditLog:
@@ -48,13 +49,13 @@ auditLog:
 
 **NOTE**
 
-If no directory exists in the specified path, the directory will be automatically generated
+The specified directory will be created automatically if it does not exist.
 
 ---
 
 By default, the audit log files will be in the following format: `redhat-developer-hub-audit-%DATE%.log` where `%DATE%` is the format specified in [`auditLog.rotate.dateFormat`](#configuring-the-file-rotation-frequency).
 
-You can customize it by setting your custom file format:
+To customize the log file name format, use:
 
 ```yaml
 auditLog:
@@ -62,9 +63,9 @@ auditLog:
     logFileName: custom-audit-log-%DATE%.log
 ```
 
-#### Configuring the file rotation frequency
+#### Configuring File Rotation Frequency
 
-By default, the file rotation would occur daily at 00:00 of the local timezone of the system the backstage showcase is running on. There are multiple configurations to configure the file rotation frequency:
+The default file rotation occurs daily at 00:00 local time. You can adjust the rotation frequency with the following configurations:
 
 ```yaml
 auditLog:
@@ -75,22 +76,24 @@ auditLog:
     maxSize: 100m # Default: undefined
 ```
 
-The `frequency` configuration supports the following inputs:
+`frequency` options include:
 
-- `daily`: Rotates daily at 00:00 of the local timezone
-- `Xm`: Rotates every X minutes
-- `Xh`: Rotates every X hours
-- `test`: Rotates every 1 minute
-- `custom`: Uses the `dateFormat` to configure the rotation frequency. This is the default configuration if `frequency` is not provided.
+- `daily`: Rotate daily at 00:00 local time
+- `Xm`: Rotate every X minutes
+- `Xh`: Rotate every X hours
+- `test`: Rotate every 1 minute
+- `custom`: Use `dateFormat` to set the rotation frequency (default if frequency is not specified)
 
-The `dateFormat` configuration configures both the `%DATE%` value used by the `logFileName`, as well as the file rotation frequency if `frequency` is set to `custom`. The default format is `YYYY-MM-DD` meaning it will rotate the file whenever the `YYYY-MM-DD` changes (daily rotate). The supported values are those used by [Moment.js](https://momentjs.com/docs/#/displaying/format/). The file will rotate whenever the `%DATE%` in the provided format changes if
+The dateFormat setting configures both the %DATE% in logFileName and the file rotation frequency if frequency is set to `custom`. The default format is `YYYY-MM-DD`, meaning daily rotation. Supported values are based on [Moment.js formats](https://momentjs.com/docs/#/displaying/format/).
+
+If frequency is set to `custom`, then rotations will take place when the date string, represented in the specified `dateFormat`, changes.
 
 Examples:
 
 ```yaml
 auditLog:
   rotate:
-    # If you want rotations to occur every week for some reason. Example `%DATE$` = '2025-Jul-Week 30'
+    # If you want rotations to occur every week for some reason and at the start of each month. Example `%DATE$` = '2025-Jul-Week 30'
     dateFormat: 'YYYY-MMM-[Week] ww'
 ```
 
@@ -101,7 +104,7 @@ auditLog:
     dateFormat: 'YYYY-MM-DD-A'
 ```
 
-By default, the `dateFormat` being used is in the `local` time of the system timezone. If you want to use `utc`, set the following:
+To use UTC time for `dateFormat` instead of local time:
 
 ```yaml
 auditLog:
@@ -109,21 +112,19 @@ auditLog:
     utc: true # Default: False
 ```
 
-We can also set a `maxSize` audit logs can be before a rotation is automatically triggered. The file rotation in this case will add a count (1,2,3,4,...) at the end of the filename when the required size is met. Ex: `redhat-developer-hub-audit-2024-07-22.log.3`.
+To set a maximum log file size before rotation (which would add a count suffix to the filename upon reaching the size limit): Ex: `redhat-developer-hub-audit-2024-07-22.log.3`.
 
-By default no `maxSize` is configured. To configure `maxSize`, provide a number followed by one of `k`, `m`, or `g` to specify the file size in kilobytes, megabytes, or gigabytes.
+To configure `maxSize`, provide a number followed by one of `k`, `m`, or `g` to specify the file size in kilobytes, megabytes, or gigabytes. No `maxSize` is configured by default.
 
 ```yaml
 auditLog:
   rotate:
-    maxSize: 100m
+    maxSize: 100m # Sets a max file size limit of 100MB for audit log
 ```
 
-#### Configuring the file retention policy
+#### Configuring File Retention Policy
 
-By default, no files are deleted and no files are archived.
-
-You can configure the max number of files to keep before log deletion of the oldest log begins by configuring `maxFilesOrDays` with a number:
+By default, log files are not deleted or archived. You can configure the maximum number of files to keep:
 
 ```yaml
 auditLog:
@@ -131,7 +132,7 @@ auditLog:
     maxFilesOrDays: 14 # Deletes the oldest log when there are more than 14 log files
 ```
 
-You can also configure the max number of DAYS to keep files around by appending a `d` after the number. Note: this is mutually exclusive with the number of files configuration:
+Or, configure the maximum number of days to retain logs by appending:
 
 ```yaml
 auditLog:
@@ -139,7 +140,7 @@ auditLog:
     maxFilesOrDays: 5d # Deletes logs older than 5 days
 ```
 
-You can also configure the audit logger to archive and compress rotated audit logs using `gzip` to save space:
+To archive and compress rotated logs using gzip:
 
 ```yaml
 auditLog:

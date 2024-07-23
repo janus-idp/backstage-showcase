@@ -5,11 +5,17 @@ export interface Config {
    */
   auditLog?: {
     /**
-     * Configures whether to log audit logs to the console
-     * Default: true
+     * Configuration for the audit logging to console
      * @visibility frontend
      */
-    logToConsole: boolean;
+    logToConsole: {
+      /**
+       * Enables audit logging to console
+       * Default: true
+       * @visibility frontend
+       */
+      enabled: boolean;
+    };
     /**
      * Configuration for the log rotation file
      * @visibility frontend

@@ -34,6 +34,12 @@ const auditLogFormat = winston.format((info, opts) => {
   return !opts.isAuditLog ? newInfo : false;
 });
 
+const auditLogWinstonFormat = winston.format.combine(
+  auditLogFormat({ isAuditLog: false }),
+  defaultFormat,
+  winston.format.json(),
+);
+
 const transports = {
   log: [
     new winston.transports.Console({
@@ -45,16 +51,12 @@ const transports = {
     }),
   ],
   auditLog: (config?: Config) => {
-    if (config?.getOptionalBoolean('logToConsole') === false) {
+    if (config?.getOptionalBoolean('logToConsole.enabled') === false) {
       return [];
     }
     return [
       new winston.transports.Console({
-        format: winston.format.combine(
-          auditLogFormat({ isAuditLog: true }),
-          defaultFormat,
-          winston.format.json(),
-        ),
+        format: auditLogWinstonFormat,
       }),
     ];
   },
@@ -64,11 +66,7 @@ const transports = {
     }
     return [
       new winston.transports.DailyRotateFile({
-        format: winston.format.combine(
-          auditLogFormat({ isAuditLog: true }),
-          defaultFormat,
-          winston.format.json(),
-        ),
+        format: auditLogWinstonFormat,
         dirname:
           config?.getOptionalString('rotate.logFileDirPath') ||
           '/var/log/redhat-developer-hub/audit',
