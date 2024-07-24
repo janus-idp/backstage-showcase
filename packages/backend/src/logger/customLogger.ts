@@ -68,10 +68,10 @@ const transports = {
       new winston.transports.DailyRotateFile({
         format: auditLogWinstonFormat,
         dirname:
-          config?.getOptionalString('rotateFile.logFileDirPath') ||
+          config?.getOptionalString('rotateFile.logFileDirPath') ??
           '/var/log/redhat-developer-hub/audit',
         filename:
-          config?.getOptionalString('rotateFile.logFileName') ||
+          config?.getOptionalString('rotateFile.logFileName') ??
           'redhat-developer-hub-audit-%DATE%.log',
         datePattern: config?.getOptionalString('rotateFile.dateFormat'),
         frequency: config?.getOptionalString('rotateFile.frequency'),
