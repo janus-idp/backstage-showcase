@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-48.1720017855 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-54 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -106,7 +106,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57 AS runner
 USER 0
 
 # Upstream only
@@ -118,7 +118,7 @@ WORKDIR $CONTAINER_SOURCE/
 # Upstream only - install techdocs dependencies (PyPI source tarballs not required)
 # When updating version of mkdocs-techdocs-core remember to update ../.rhdh/docker/requirement* files too
 # hadolint ignore=DL3041,DL3042
-RUN microdnf update -y && \
+RUN microdnf update --setopt=install_weak_deps=0 -y && \
   microdnf install -y python3 python3-pip && \
   pip3 install mkdocs-techdocs-core~=1.3.3 && \
   microdnf clean all
