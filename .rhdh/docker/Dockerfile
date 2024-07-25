@@ -190,7 +190,7 @@ WORKDIR $CONTAINER_SOURCE/
 # Downstream only - install techdocs dependencies using cachito sources
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
 # hadolint ignore=DL3013,DL3041,SC2086
-RUN microdnf update –setopt=install_weak_deps=0 -y && \
+RUN microdnf update --setopt=install_weak_deps=0 -y && \
   microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip; \
