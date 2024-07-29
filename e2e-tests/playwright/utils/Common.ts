@@ -59,7 +59,7 @@ export class Common {
         3000,
       ))
     ) {
-      await this.page.waitForTimeout(30000);
+      await this.page.waitForTimeout(45000);
       await this.page.fill('#app_totp', this.getGitHub2FAOTP());
     }
     await expect(this.page.locator('#app_totp')).toBeHidden({
