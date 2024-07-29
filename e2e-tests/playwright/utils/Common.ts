@@ -1,6 +1,6 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import test, { Browser, expect, Page, TestInfo } from '@playwright/test';
+import { test, Browser, expect, Page, TestInfo } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
 import path from 'path';
