@@ -1,6 +1,6 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { Browser, expect, Page, TestInfo } from '@playwright/test';
+import { test, Browser, expect, Page, TestInfo } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
 import path from 'path';
@@ -50,6 +50,7 @@ export class Common {
     await this.page.fill('#password', process.env.GH_USER_PASS);
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP());
+    test.setTimeout(130000);
     if (
       (await this.uiHelper.isTextVisible(
         'The two-factor code you entered has already been used',
@@ -59,7 +60,7 @@ export class Common {
         3000,
       ))
     ) {
-      await this.page.waitForTimeout(30000);
+      await this.page.waitForTimeout(60000);
       await this.page.fill('#app_totp', this.getGitHub2FAOTP());
     }
     await expect(this.page.locator('#app_totp')).toBeHidden({
