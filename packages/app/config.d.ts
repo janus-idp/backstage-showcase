@@ -124,4 +124,9 @@ export interface Config {
    * @visibility frontend
    */
   signInPage?: string;
+  /**
+   * The option to allow sign in without existing user in the catalog, defaults to false
+   * @visibility frontend
+   */
+  dangerouslyAllowSignInWithoutUserInCatalog?: boolean;
 }
