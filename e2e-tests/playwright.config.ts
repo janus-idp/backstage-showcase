@@ -48,6 +48,7 @@ export default defineConfig({
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
+        '**/playwright/e2e/guest-user-disabled-check.spec.ts',
       ],
     },
     {
