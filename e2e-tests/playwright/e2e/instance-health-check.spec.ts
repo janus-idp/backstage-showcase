@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('Application health check', async ({ request }) => {
+  //Test e2e.
   const healthCheckEndpoint = '/healthcheck';
 
   const response = await request.get(healthCheckEndpoint);
