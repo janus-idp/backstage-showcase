@@ -8,7 +8,10 @@ import {
   ScannedPluginManifest,
   ScannedPluginPackage,
 } from '@backstage/backend-dynamic-feature-service';
-import { createMockDirectory } from '@backstage/backend-test-utils';
+import {
+  createMockDirectory,
+  mockServices,
+} from '@backstage/backend-test-utils';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 describe('createRouter', () => {
@@ -142,6 +145,7 @@ describe('createRouter', () => {
       debug: jest.fn(),
       child: jest.fn(),
     };
+    const config = mockServices.rootConfig();
 
     const pluginManager = new (DynamicPluginManager as any)(logger, [plugin], {
       logger,
@@ -163,6 +167,7 @@ describe('createRouter', () => {
         getExternalBaseUrl,
       },
       pluginManager,
+      config,
     });
 
     app.use('/scalprum', router);
