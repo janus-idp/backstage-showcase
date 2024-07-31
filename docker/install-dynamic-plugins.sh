@@ -15,4 +15,6 @@
 # limitations under the License.
 #
 
-python install-dynamic-plugins.py $1
+#python install-dynamic-plugins.py $1
+
+./install-dynamic-plugins $1 dynamic-plugins.yaml

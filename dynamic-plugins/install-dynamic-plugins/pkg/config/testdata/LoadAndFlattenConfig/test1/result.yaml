@@ -1,0 +1,16 @@
+plugins:
+  - package: plugin2
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+            plugin2:
+              appIcons:
+                - name: chatIcon
+                  importName: ChatIcon
+  - disabled: false
+    package: plugin3
+  - package: plugin4
+    disabled: true
+  - package: plugin1
+    disabled: true

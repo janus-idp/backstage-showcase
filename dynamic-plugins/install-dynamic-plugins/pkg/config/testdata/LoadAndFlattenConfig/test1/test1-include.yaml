@@ -1,0 +1,24 @@
+plugins:
+  - package: plugin2
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+            plugin2:
+              route: /example
+
+  - disabled: false
+    package: plugin3
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          plugin3:
+            dynamicRoutes:
+              - importName: example
+                menuItem:
+                  icon: example
+                  text: example
+                path: /example
+  - package: plugin4
+    disabled: true
+ 
