@@ -201,6 +201,7 @@ describe('authModuleOidcProvider', () => {
     expect(decodeOAuthState(startUrl.searchParams.get('state')!)).toEqual({
       env: 'development',
       nonce: decodeURIComponent(nonceCookie!.value),
+      scope: '',
     });
   });
 
