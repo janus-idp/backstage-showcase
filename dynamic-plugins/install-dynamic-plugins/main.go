@@ -14,6 +14,7 @@ import (
 	"github.com/janus-idp/backstage-showcase/dynamic-plugins/install-dynamic-plugins/pkg/oci"
 	"github.com/janus-idp/backstage-showcase/dynamic-plugins/install-dynamic-plugins/pkg/tar"
 
+	"dario.cat/mergo"
 	"gopkg.in/yaml.v2"
 )
 
@@ -142,8 +143,17 @@ func main() {
 	// dynamic-plugins-root is mounted in the same place in the initContainer and in the main container
 	// currently the initContainer mounts it to /dynamic-plugins-root and the main container mounts it to /opt/app-root/src/dynamic-plugins-root
 	// this creates inconsistency and makes it hard to use the same path in both places
-	appConfig["dynamicPlugins"] = map[string]interface{}{
-		"rootDirectory": "dynamic-plugins-root",
+	err = mergo.Merge(
+		&appConfig,
+		map[string]interface{}{
+			"dynamicPlugins": map[string]interface{}{
+				"rootDirectory": "dynamic-plugins-root",
+			},
+		},
+		mergo.WithOverride,
+	)
+	if err != nil {
+		log.Fatal("unable to override rootDirectory", err)
 	}
 
 	appConfigBytes, err := yaml.Marshal(appConfig)
