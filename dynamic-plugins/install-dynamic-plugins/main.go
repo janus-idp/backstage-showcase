@@ -136,6 +136,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error generating dynamic plugins: %v", err)
 	}
+
+	// TODO: this is hack to make it compatible with old python scripts that hardcodes the root directory
+	// removing this will require updating Helm Chart default values to make sure that
+	// dynamic-plugins-root is mounted in the same place in the initContainer and in the main container
+	// currently the initContainer mounts it to /dynamic-plugins-root and the main container mounts it to /opt/app-root/src/dynamic-plugins-root
+	// this creates inconsistency and makes it hard to use the same path in both places
+	appConfig["dynamicPlugins"] = map[string]interface{}{
+		"rootDirectory": "dynamic-plugins-root",
+	}
+
 	appConfigBytes, err := yaml.Marshal(appConfig)
 	if err != nil {
 		log.Fatalf("Error marshalling app config: %v", err)
