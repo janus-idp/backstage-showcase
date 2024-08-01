@@ -7,6 +7,8 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
+import { IconComponent, useApp } from '@backstage/core-plugin-api';
+import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -16,13 +18,13 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MuiMenuIcon from '@mui/icons-material/Menu';
+import GroupIcon from '@mui/icons-material/People';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
-import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
-import { SidebarLogo } from './SidebarLogo';
+import { makeStyles } from 'tss-react/mui';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
-import { IconComponent, useApp } from '@backstage/core-plugin-api';
+import { SidebarLogo } from './SidebarLogo';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -68,6 +70,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
             icon={HomeOutlinedIcon as any}
             to="/"
             text="Home"
+          />
+          <MyGroupsSidebarItem
+            icon={GroupIcon as any}
+            singularTitle="My Group"
+            pluralTitle="My Groups"
           />
           <SideBarItemWrapper
             icon={CategoryOutlinedIcon as IconComponent}

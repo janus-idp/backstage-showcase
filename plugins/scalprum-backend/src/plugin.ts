@@ -17,13 +17,15 @@ export const scalprumPlugin = createBackendPlugin({
         discovery: coreServices.discovery,
         logger: coreServices.logger,
         pluginProvider: dynamicPluginsServiceRef,
+        config: coreServices.rootConfig,
       },
-      async init({ http, discovery, logger, pluginProvider }) {
+      async init({ http, discovery, logger, pluginProvider, config }) {
         http.use(
           await createRouter({
             logger,
             pluginManager: pluginProvider as DynamicPluginManager,
             discovery,
+            config,
           }),
         );
         http.addAuthPolicy({

@@ -23,13 +23,13 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@backstage/core-plugin-api": "1.9.2",
+    "@backstage/core-plugin-api": "1.9.3",
     "@mui/icons-material": "5.16.4",
     "@backstage-community/plugin-tech-radar": "0.7.4"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.6",
-    "@janus-idp/cli": "1.11.0"
+    "@backstage/cli": "0.26.11",
+    "@janus-idp/cli": "1.13.0"
   },
   "files": [
     "dist",

@@ -1,12 +1,14 @@
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-const Svg = styled('svg')`
+const Svg: (props: React.ComponentProps<'svg'>) => React.ReactNode = styled(
+  'svg',
+)`
   width: auto;
   height: 35px;
 `;
 
-const LogoFull = (props: React.ComponentProps<typeof Svg>) => {
+const LogoFull = (props: React.ComponentProps<'svg'>) => {
   return (
     <Svg
       viewBox="0 0 1061 340"
