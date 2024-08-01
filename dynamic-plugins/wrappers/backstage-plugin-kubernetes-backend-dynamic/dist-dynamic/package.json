@@ -24,7 +24,7 @@
   "scripts": {},
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.0.0",
-    "@aws-sdk/credential-providers": "^3.350.0",
+    "@aws-sdk/credential-providers": "^3.621.0",
     "@aws-sdk/signature-v4": "^3.347.0",
     "@azure/identity": "^4.0.0",
     "@google-cloud/container": "^5.0.0",
