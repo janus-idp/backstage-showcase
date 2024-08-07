@@ -22,8 +22,6 @@ import {
 } from '@backstage/core-components';
 import { auth0AuthApiRef, oidcAuthApiRef, samlAuthApiRef } from '../../api';
 
-const DEFAULT_PROVIDER = 'github';
-
 /**
  * Key:
  * string - Provider name.
@@ -150,10 +148,8 @@ const PROVIDERS = new Map<string, SignInProviderConfig | string>([
 export function SignInPage(props: SignInPageProps): React.JSX.Element {
   const configApi = useApi(configApiRef);
   const isDevEnv = configApi.getString('auth.environment') === 'development';
-  const provider =
-    configApi.getOptionalString('signInPage') ?? DEFAULT_PROVIDER;
-  const providerConfig =
-    PROVIDERS.get(provider) ?? PROVIDERS.get(DEFAULT_PROVIDER)!;
+  const provider = configApi.getOptionalString('signInPage') ?? '';
+  const providerConfig = PROVIDERS.get(provider) ?? '';
 
   if (typeof providerConfig === 'object') {
     const providers = isDevEnv
@@ -166,6 +162,17 @@ export function SignInPage(props: SignInPageProps): React.JSX.Element {
         title="Select a sign-in method"
         align="center"
         providers={providers}
+      />
+    );
+  }
+
+  if (provider === '') {
+    return (
+      <CCSignInPage
+        {...props}
+        title="Select a sign-in method"
+        align="center"
+        providers={['guest']}
       />
     );
   }
