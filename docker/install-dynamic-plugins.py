@@ -85,23 +85,34 @@ RECOGNIZED_ALGORITHMS = (
     'sha256',
 )
 
-def parseName(name: str):
-    pattern = r'(?P<schema>oci)://(?P<image>[^:]+):(?P<tag>[^!]+)!(?P<path>.+)'
-    match = re.match(pattern, name)
-    if match:
-        schema = match.group('schema')
-        image = match.group('image')
-        tag = match.group('tag')
-        path = match.group('path')
 
-        return {
-            'schema': schema,
-            'image': image,
-            'tag': tag,
-            'path': path
-        }
+# Parse plugin name for plugin packaged in OCI container
+# expects name as oci://<image>:<tag>!<path> or oci://<image>@<sha>!<path>
+# returns directory path, image name, tag or sha, and schema
+def parseName(name: str):
+    tag_re = r'(?P<schema>oci)://(?P<image>[^:]+):(?P<tag>[^!]+)!(?P<path>.+)'
+    sha_re = r'(?P<schema>oci)://(?P<image>[^@]+)@(?P<sha>[^!]+)!(?P<path>.+)'
+
+    match_tag = re.match(tag_re, name)
+    match_sha = re.match(sha_re, name)
+
+    out = {}
+
+    if match_tag:
+        out["tag"] = match_tag.group('tag')
+        match = match_tag
+    elif match_sha:
+        out["sha"] = match_sha.group('sha')
+        match = match_sha
     else:
         raise InstallException(f'Invalid OCI image name: {name}')
+
+    out["schema"] = match.group('schema')
+    out["image"]  = match.group('image')
+    out["path"]  = match.group('path')
+
+    return out
+    
 
 class DynamicPluginImage(oras.provider.Registry):
   @ensure_container
