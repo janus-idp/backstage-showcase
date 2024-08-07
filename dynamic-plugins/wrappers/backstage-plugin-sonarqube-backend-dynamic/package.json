@@ -11,7 +11,10 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "supported-versions": "1.27.7",
+    "pluginId": "sonarqube",
+    "pluginPackage": "backstage-plugin-sonarqube-backend"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -29,12 +32,27 @@
     "@backstage-community/plugin-sonarqube-backend": "0.2.20"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.6",
+    "@janus-idp/cli": "1.11.0"
   },
   "files": [
     "dist",
     "dist-dynamic/*.*",
     "dist-dynamic/dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-sonarqube-backend-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
   ]
 }

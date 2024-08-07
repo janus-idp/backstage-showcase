@@ -10,7 +10,10 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "supported-versions": "1.27.7",
+    "pluginId": "lighthouse",
+    "pluginPackage": "backstage-plugin-lighthouse"
   },
   "scripts": {
     "build": "backstage-cli package build",
@@ -20,12 +23,12 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@mui/icons-material": "5.15.6",
+    "@mui/icons-material": "5.16.4",
     "@backstage-community/plugin-lighthouse": "0.4.20"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.6",
+    "@janus-idp/cli": "1.11.0"
   },
   "files": [
     "dist",
@@ -36,5 +39,20 @@
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-lighthouse"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
+  ]
 }

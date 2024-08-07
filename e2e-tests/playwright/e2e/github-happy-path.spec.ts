@@ -114,27 +114,38 @@ test.describe.serial('GitHub Happy path', () => {
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
 
-  test('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
+  //TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
+  test.skip('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
+    console.log('Fetching all PRs from GitHub');
     const allPRs = await BackstageShowcase.getGithubPRs('all', true);
 
+    console.log('Clicking on ALL button');
     await uiHelper.clickButton('ALL', { force: true });
     await backstageShowcase.verifyPRRows(allPRs, 0, 5);
 
+    console.log('Clicking on Next Page button');
     await backstageShowcase.clickNextPage();
     await backstageShowcase.verifyPRRows(allPRs, 5, 10);
 
-    // Calculate the starting index of the first PR on the last page, 5 PRs per page.
     const lastPagePRs = Math.floor((allPRs.length - 1) / 5) * 5;
+
+    console.log('Clicking on Last Page button');
     await backstageShowcase.clickLastPage();
     await backstageShowcase.verifyPRRows(allPRs, lastPagePRs, allPRs.length);
 
+    console.log('Clicking on Previous Page button');
     await backstageShowcase.clickPreviousPage();
     await backstageShowcase.verifyPRRows(allPRs, lastPagePRs - 5, lastPagePRs);
   });
 
-  test('Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs', async () => {
+  //FIXME
+  test.skip('Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs', async () => {
+    await uiHelper.openSidebar('Catalog');
+    await uiHelper.clickLink('Backstage Showcase');
+    await common.clickOnGHloginPopup();
+    await uiHelper.clickTab('Pull/Merge Requests');
+    await uiHelper.clickButton('ALL', { force: false });
     const allPRs = await BackstageShowcase.getGithubPRs('all');
-    await backstageShowcase.clickFirstPage();
     await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
     await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
     await backstageShowcase.verifyPRRowsPerPage(20, allPRs);

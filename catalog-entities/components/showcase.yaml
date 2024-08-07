@@ -12,8 +12,8 @@ metadata:
       url: https://showcase.janus-idp.io/
     - title: Blog
       url: https://janus-idp.io/blog
-    - title: Slack
-      url: https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg
+    - title: Backstage Discord
+      url: https://discord.com/servers/backstage-687207715902193673
   annotations:
     argocd/app-name: 'janus-idp'
     backstage.io/kubernetes-id: 'janus-idp'

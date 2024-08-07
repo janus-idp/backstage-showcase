@@ -16,6 +16,11 @@ data:
             headerColor1: "rgb(248, 248, 248)"
             headerColor2: "rgb(248, 248, 248)"
             navigationIndicatorColor: "rgb(255,95,21)"
+          dark:
+            primaryColor: '#ab75cf'
+            headerColor1: 'rgb(0, 0, 208)'
+            headerColor2: 'rgb(255, 246, 140)'
+            navigationIndicatorColor: 'rgb(244, 238, 169)'
     backend:
       auth:
         keys:
@@ -32,6 +37,13 @@ data:
               webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
               privateKey: |
                 ${GITHUB_APP_PRIVATE_KEY}
+            - appId: ${GITHUB_APP_JANUS_TEST_APP_ID}
+              clientId: ${GITHUB_APP_JANUS_TEST_CLIENT_ID}
+              clientSecret: ${GITHUB_APP_JANUS_TEST_CLIENT_SECRET}
+              webhookUrl: ${GITHUB_APP_WEBHOOK_URL}
+              webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
+              privateKey: |
+                ${GITHUB_APP_JANUS_TEST_PRIVATE_KEY}
       bitbucketServer:
         - host: bitbucket.com
           apiBaseUrl: temp
@@ -98,7 +110,11 @@ data:
           target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
           rules:
             - allow: [User, Group]
-
+      providers:
+        githubOrg:
+          id: production
+          githubUrl: "${GITHUB_URL}"
+          orgs: ["${GITHUB_ORG}", "${GITHUB_ORG_2}"]
 
     dynatrace:
       baseUrl: temp
@@ -119,4 +135,3 @@ data:
         admin:
           users:
             - name: user:default/rhdh-qe
-

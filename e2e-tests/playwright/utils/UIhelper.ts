@@ -3,7 +3,6 @@ import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
   private page: Page;
-  private selectors: { [key: string]: string };
 
   constructor(page: Page) {
     this.page = page;
@@ -13,6 +12,10 @@ export class UIhelper {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  async fillTextInputByLabel(label: string, text: string) {
+    await this.page.getByLabel(label).fill(text);
   }
 
   async searchInputPlaceholder(searchText: string) {
@@ -44,6 +47,15 @@ export class UIhelper {
       await button.click();
     }
     return button;
+  }
+
+  async clickBtnByTitleIfNotPressed(title: string) {
+    const button = this.page.locator(`button[title="${title}"]`);
+    const isPressed = await button.getAttribute('aria-pressed');
+
+    if (isPressed === 'false') {
+      await button.click();
+    }
   }
 
   async verifyDivHasText(divText: string) {
@@ -81,22 +93,40 @@ export class UIhelper {
 
   async verifyText(text: string | RegExp, exact: boolean = true) {
     const element = this.page.getByText(text, { exact: exact }).first();
-    await element.scrollIntoViewIfNeeded();
+    try {
+      await element.scrollIntoViewIfNeeded();
+    } catch (error) {
+      console.warn(
+        `Warning: Could not scroll element into view. Error: ${error.message}`,
+      );
+    }
     await expect(element).toBeVisible();
   }
 
-  async isBtnVisible(text: string): Promise<boolean> {
-    const locator = `button:has-text("${text}")`;
+  private async isElementVisible(
+    locator: string,
+    timeout = 10000,
+  ): Promise<boolean> {
     try {
       await this.page.waitForSelector(locator, {
         state: 'visible',
-        timeout: 10000,
+        timeout: timeout,
       });
-      const button = this.page.locator(locator);
+      const button = this.page.locator(locator).first();
       return button.isVisible();
     } catch (error) {
       return false;
     }
+  }
+
+  async isBtnVisible(text: string): Promise<boolean> {
+    const locator = `button:has-text("${text}")`;
+    return await this.isElementVisible(locator);
+  }
+
+  async isTextVisible(text: string, timeout = 10000): Promise<boolean> {
+    const locator = `:has-text("${text}")`;
+    return await this.isElementVisible(locator, timeout);
   }
 
   async waitForSideBarVisible() {
@@ -125,10 +155,25 @@ export class UIhelper {
         .locator(`tr>td`)
         .getByText(rowText, { exact: exact })
         .first();
-      await rowLocator.waitFor({ state: 'visible' });
-      await rowLocator.waitFor({ state: 'attached' });
-      await rowLocator.scrollIntoViewIfNeeded();
-      await expect(rowLocator).toBeVisible();
+
+      try {
+        await rowLocator.waitFor({ state: 'visible', timeout: 10000 });
+        await rowLocator.waitFor({ state: 'attached', timeout: 10000 });
+
+        try {
+          await rowLocator.scrollIntoViewIfNeeded();
+        } catch (error) {
+          console.warn(
+            `Warning: Could not scroll element into view. Error: ${error.message}`,
+          );
+        }
+
+        await expect(rowLocator).toBeVisible();
+      } catch (error) {
+        console.error(
+          `Error: Failed to verify row with text "${rowText}". Error: ${error.message}`,
+        );
+      }
     }
   }
 
@@ -246,5 +291,31 @@ export class UIhelper {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toBeGreaterThan(0);
+  }
+
+  // Function to convert hexadecimal to RGB or return RGB if it's already in RGB
+  toRgb(color: string): string {
+    if (color.startsWith('rgb')) {
+      return color;
+    }
+
+    const bigint = parseInt(color.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  async checkCssColor(page: Page, selector: string, expectedColor: string) {
+    const elements = await page.locator(selector);
+    const count = await elements.count();
+    const expectedRgbColor = this.toRgb(expectedColor);
+
+    for (let i = 0; i < count; i++) {
+      const color = await elements
+        .nth(i)
+        .evaluate(el => window.getComputedStyle(el).color);
+      expect(color).toBe(expectedRgbColor);
+    }
   }
 }

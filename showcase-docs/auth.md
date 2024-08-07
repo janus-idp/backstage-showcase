@@ -177,3 +177,13 @@ The guest login is provided by a special authentication provider that must be ex
   ```
 
 - To disable the guest login set `auth.environment` to `production`.
+
+### dangerouslyAllowSignInWithoutUserInCatalog configuration value
+
+This option allows users to sign in even if their profile has not been ingested into the catalog. By default, this option is set to false. Enabling this option is dangerous as it may allow unauthorized users to gain access.
+
+To enable this option:
+
+```yaml
+dangerouslyAllowSignInWithoutUserInCatalog: true
+```

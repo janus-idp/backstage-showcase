@@ -10,7 +10,10 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "supported-versions": "1.27.7",
+    "pluginId": "roadiehq-argo-cd",
+    "pluginPackage": "roadiehq-backstage-plugin-argo-cd"
   },
   "scripts": {
     "build": "backstage-cli package build",
@@ -23,8 +26,8 @@
     "@roadiehq/backstage-plugin-argo-cd": "2.6.5"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.4",
-    "@janus-idp/cli": "1.10.0"
+    "@backstage/cli": "0.26.6",
+    "@janus-idp/cli": "1.11.0"
   },
   "files": [
     "dist",
@@ -35,5 +38,20 @@
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:production",
+    "lifecycle:active"
+  ]
 }
