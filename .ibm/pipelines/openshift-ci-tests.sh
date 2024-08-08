@@ -9,6 +9,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
 
+TAG_NAME="next"
 JOB_NAME="periodic-aks"
 
 cleanup() {
@@ -30,9 +31,9 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
-  elif [[ "$JOB_NAME" == *aks* ]]; then
-    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
-    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
+  # elif [[ "$JOB_NAME" == *aks* ]]; then
+  #   K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
+  #   K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
   fi
 }
 
@@ -254,7 +255,7 @@ run_tests() {
     set -e
     echo "Using PR container image: ${TAG_NAME}"
     yarn "$project"
-  ) |& tee "/tmp/${LOGFILE}"
+  ) | tee "/tmp/${LOGFILE}"
 
   local RESULT=${PIPESTATUS[0]}
 
@@ -404,8 +405,8 @@ main() {
     NAME_SPACE_AKS="showcase-aks-ci-nightly"
   fi
 
-  install_oc
-  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  #install_oc
+  #oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
   echo "OCP version: $(oc version)"
 
   API_SERVER_URL=$(oc whoami --show-server)
