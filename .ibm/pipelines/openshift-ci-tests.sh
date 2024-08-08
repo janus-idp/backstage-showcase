@@ -188,6 +188,8 @@ droute_send() {
   # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
   if [[ "$JOB_NAME" == *ocp-v4* ]]; then
     return 0
+  elif [[ "$JOB_NAME" == *aks* ]]; then
+    return 0
   fi
 
   local release_name=$1
