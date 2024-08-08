@@ -405,7 +405,7 @@ main() {
   fi
 
   install_oc
-  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}" --insecure-skip-tls-verify
   echo "OCP version: $(oc version)"
 
   API_SERVER_URL=$(oc whoami --show-server)
