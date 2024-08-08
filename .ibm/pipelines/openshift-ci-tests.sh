@@ -395,6 +395,7 @@ main() {
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_AKS="showcase-aks-ci-nightly"
   fi
 
   install_oc
@@ -413,8 +414,12 @@ main() {
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
   initiate_deployments
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
-  check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
+  else
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+  fi
   exit "${OVERALL_RESULT}"
 }
 
