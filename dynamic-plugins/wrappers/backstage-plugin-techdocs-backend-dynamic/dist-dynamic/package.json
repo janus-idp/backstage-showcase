@@ -12,7 +12,9 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.26.5"
+    "supported-versions": "1.27.7",
+    "pluginId": "techdocs",
+    "pluginPackage": "backstage-plugin-techdocs-backend"
   },
   "exports": {
     ".": {
@@ -33,9 +35,9 @@
     "fs-extra": "^11.2.0",
     "knex": "^3.0.0",
     "winston": "^3.2.1",
-    "@aws-sdk/client-s3": "^3.621.0",
-    "@aws-sdk/credential-providers": "^3.621.0",
-    "@aws-sdk/lib-storage": "^3.621.0",
+    "@aws-sdk/client-s3": "^3.350.0",
+    "@aws-sdk/credential-providers": "^3.350.0",
+    "@aws-sdk/lib-storage": "^3.350.0",
     "@aws-sdk/types": "^3.347.0",
     "@azure/identity": "^4.0.0",
     "@azure/storage-blob": "^12.5.0",
