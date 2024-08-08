@@ -28,6 +28,9 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
+    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
   fi
 }
 
