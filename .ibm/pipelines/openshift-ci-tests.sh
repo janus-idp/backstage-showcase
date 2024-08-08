@@ -317,29 +317,54 @@ install_pipelines_operator() {
 
 initiate_deployments() {
   add_helm_repos
-  configure_namespace "${NAME_SPACE}"
-  install_pipelines_operator "${DIR}"
-  install_helm
-  uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
-  # Deploy redis cache db.
-  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    initiate_aks_deployment
+  else
+    configure_namespace "${NAME_SPACE}"
+    install_pipelines_operator "${DIR}"
+    install_helm
+    uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
+
+    # Deploy redis cache db.
+    oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
+
+    cd "${DIR}"
+    apply_yaml_files "${DIR}" "${NAME_SPACE}"
+    echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
+    helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+
+    configure_namespace "${NAME_SPACE_POSTGRES_DB}"
+    configure_namespace "${NAME_SPACE_RBAC}"
+    configure_external_postgres_db "${NAME_SPACE_RBAC}"
+    
+    install_pipelines_operator "${DIR}"
+    uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+    apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
+    echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
+    helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  fi
+}
+
+single_deployment_initiation() {
+  local name_space="$1"
+  local release_name="$2"
+  local helm_chart_value_file_name="$3"
+
+  configure_namespace "${name_space}"
+  uninstall_helmchart "${name_space}" "${release_name}"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    install_pipelines_operator "${DIR}"
+  fi
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
-  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  apply_yaml_files "${DIR}" "${name_space}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${name_space}"
+  helm upgrade -i "${release_name}" -n "${name_space}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${helm_chart_value_file_name}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
 
-  configure_namespace "${NAME_SPACE_POSTGRES_DB}"
-  configure_namespace "${NAME_SPACE_RBAC}"
-  configure_external_postgres_db "${NAME_SPACE_RBAC}"
-
-
-  install_pipelines_operator "${DIR}"
-  uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
-  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+initiate_aks_deployment() {
+  single_deployment_initiation "${NAME_SPACE_AKS}" "${RELEASE_NAME}" "${HELM_CHART_AKS_VALUE_FILE_NAME}"
 }
 
 check_and_test() {
