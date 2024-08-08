@@ -279,6 +279,9 @@ check_backstage_running() {
   local release_name=$1
   local namespace=$2
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    local url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  fi
 
   local max_attempts=30
   local wait_seconds=30
@@ -400,6 +403,9 @@ main() {
 
   API_SERVER_URL=$(oc whoami --show-server)
   K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  fi
 
   echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
 
