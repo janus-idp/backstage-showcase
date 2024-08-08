@@ -9,6 +9,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
 
+JOB_NAME="periodic-aks"
+
 cleanup() {
   echo "Cleaning up before exiting"
   rm -rf ~/tmpbin
@@ -26,6 +28,9 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
+    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
   fi
 }
 
@@ -147,14 +152,16 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
-  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
-  oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
+    oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  fi
   oc apply -f "$dir/resources/cluster_role/cluster-role-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-ocm.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml" --namespace="${project}"
 
-  sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  #sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
@@ -168,15 +175,19 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator to be ready
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    sleep 20 # wait for Pipeline Operator to be ready
+    oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+    oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  fi
 }
 
 droute_send() {
   set -x
   # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
   if [[ "$JOB_NAME" == *ocp-v4* ]]; then
+    return 0
+  elif [[ "$JOB_NAME" == *aks* ]]; then
     return 0
   fi
 
@@ -276,6 +287,9 @@ check_backstage_running() {
   local release_name=$1
   local namespace=$2
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    local url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  fi
 
   local max_attempts=30
   local wait_seconds=30
@@ -317,26 +331,50 @@ install_pipelines_operator() {
 
 initiate_deployments() {
   add_helm_repos
-  configure_namespace "${NAME_SPACE}"
-  install_pipelines_operator "${DIR}"
-  install_helm
-  uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    initiate_aks_deployment
+  else
+    configure_namespace "${NAME_SPACE}"
+    install_pipelines_operator "${DIR}"
+    install_helm
+    uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
+
+    cd "${DIR}"
+    apply_yaml_files "${DIR}" "${NAME_SPACE}"
+    echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
+    helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+
+    configure_namespace "${NAME_SPACE_POSTGRES_DB}"
+    configure_namespace "${NAME_SPACE_RBAC}"
+    configure_external_postgres_db "${NAME_SPACE_RBAC}"
+    
+    install_pipelines_operator "${DIR}"
+    uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+    apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
+    echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
+    helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  fi
+}
+
+single_deployment_initiation() {
+  local name_space="$1"
+  local release_name="$2"
+  local helm_chart_value_file_name="$3"
+
+  configure_namespace "${name_space}"
+  uninstall_helmchart "${name_space}" "${release_name}"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    install_pipelines_operator "${DIR}"
+  fi
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
-  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  apply_yaml_files "${DIR}" "${name_space}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${name_space}"
+  helm upgrade -i "${release_name}" -n "${name_space}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${helm_chart_value_file_name}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
 
-  configure_namespace "${NAME_SPACE_POSTGRES_DB}"
-  configure_namespace "${NAME_SPACE_RBAC}"
-  configure_external_postgres_db "${NAME_SPACE_RBAC}"
-
-  
-  install_pipelines_operator "${DIR}"
-  uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
-  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+initiate_aks_deployment() {
+  single_deployment_initiation "${NAME_SPACE_AKS}" "${RELEASE_NAME}" "${HELM_CHART_AKS_VALUE_FILE_NAME}"
 }
 
 check_and_test() {
@@ -360,14 +398,19 @@ main() {
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_AKS="showcase-aks-ci-nightly"
   fi
 
   install_oc
-  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}" --insecure-skip-tls-verify
   echo "OCP version: $(oc version)"
 
   API_SERVER_URL=$(oc whoami --show-server)
-  K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  else
+    K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+  fi
 
   echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
 
@@ -375,8 +418,12 @@ main() {
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
   initiate_deployments
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
-  check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
+  else
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+  fi
   exit "${OVERALL_RESULT}"
 }
 
