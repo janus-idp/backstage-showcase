@@ -152,8 +152,10 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
-  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
-  oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
+    oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  fi
   oc apply -f "$dir/resources/cluster_role/cluster-role-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-ocm.yaml" --namespace="${project}"
@@ -173,9 +175,11 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator to be ready
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    sleep 20 # wait for Pipeline Operator to be ready
+    oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+    oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  fi
 }
 
 droute_send() {
