@@ -20,6 +20,7 @@ test.describe('Test ACR plugin', () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.verifyHeading('My Org Catalog');
     await uiHelper.selectMuiBox('Kind', 'component');
+    await uiHelper.clickByDataTestId('user-picker-all');
     await uiHelper.clickLink('acr-test-entity');
     await uiHelper.clickTab('Image Registry');
     await uiHelper.verifyHeading(
