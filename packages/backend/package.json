@@ -36,6 +36,7 @@
     "@backstage/plugin-scaffolder-backend": "1.22.8",
     "@backstage/plugin-search-backend": "1.5.9",
     "@backstage/plugin-search-backend-module-catalog": "0.1.24",
+    "@internal/backstage-plugin-catalog-backend-module-msgraph-transformer": "*",
     "@internal/plugin-auth-backend-module-oidc-provider": "*",
     "@internal/plugin-dynamic-plugins-info-backend": "*",
     "@internal/plugin-scalprum-backend": "*",
