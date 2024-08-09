@@ -33,7 +33,7 @@ data:
           token: temp
     auth:
       # see https://backstage.io/docs/auth/ to learn about auth providers
-      environment: development
+      environment: production
       providers:
         # Plugin: GitHub
         github:
@@ -108,4 +108,3 @@ data:
         admin:
           users:
             - name: user:default/rhdh-qe
-
