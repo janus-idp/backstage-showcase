@@ -7,87 +7,171 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
-import { SidebarSearchModal } from '@backstage/plugin-search';
-import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+// import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MuiMenuIcon from '@mui/icons-material/Menu';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
-import { makeStyles } from 'tss-react/mui';
 import React, { PropsWithChildren, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
-import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
+import DynamicRootContext, {
+  MountPoints,
+} from '../DynamicRoot/DynamicRootContext';
 import { IconComponent, useApp } from '@backstage/core-plugin-api';
+import Collapse from '@mui/material/Collapse';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
+import PowerOutlinedIcon from '@mui/icons-material/PowerOutlined';
+import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
+import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
 
-const useStyles = makeStyles()({
-  sidebarItem: {
-    textDecorationLine: 'none',
-  },
-});
-
-// Backstage does not expose the props object, pulling it from the component argument
-type SidebarItemProps = Parameters<typeof SidebarItem>[0];
-
-const SideBarItemWrapper = (props: SidebarItemProps) => {
-  const {
-    classes: { sidebarItem },
-  } = useStyles();
+const listItemComponent = (
+  Icon: any,
+  to: string,
+  text: string,
+  isSecondLevel = false,
+) => {
+  const iconComponent = () => <Icon fontSize="small" />;
   return (
     <SidebarItem
-      {...props}
-      className={`${sidebarItem}${props.className ?? ''}`}
+      icon={iconComponent as IconComponent}
+      to={to}
+      text={text}
+      style={{ paddingLeft: isSecondLevel ? '2rem' : '' }}
     />
   );
+};
+
+type MenuItem = {
+  label: string;
+  icon: React.ElementType;
 };
 
 export const MenuIcon = ({ icon }: { icon: string }) => {
   const app = useApp();
 
   const Icon = app.getSystemIcon(icon) || (() => null);
-  return <Icon />;
+  return <Icon fontSize="small" />;
+};
+
+const menuIcons: Record<string, MenuItem> = {
+  rbac: { label: 'RBAC', icon: VpnKeyOutlinedIcon },
+  plugins: { label: 'Plugins', icon: PowerOutlinedIcon },
+  metrics: { label: 'Metrics', icon: QueryStatsOutlinedIcon },
+};
+
+const nestedMenuItems = (scopes: string[], open: boolean) => {
+  const paths = scopes.map(scope => scope.split('/')[0].replace('.page.', '/'));
+  paths.push('admin/metrics');
+  return (
+    <Collapse in={open} timeout="auto" unmountOnExit>
+      <List component="div" disablePadding>
+        {paths
+          .filter(p => p.includes('admin/'))
+          .map(path => {
+            const menuItemName = path.split('/').pop() ?? '';
+            return (
+              <ListItem
+                component={() =>
+                  listItemComponent(
+                    menuIcons[menuItemName]?.icon,
+                    path,
+                    menuIcons[menuItemName]?.label,
+                    true,
+                  )
+                }
+              />
+            );
+          })}
+      </List>
+    </Collapse>
+  );
+};
+
+const dropdownMenuItem = (
+  mountPoints: MountPoints,
+  open: boolean,
+  handleClick: () => void,
+) => {
+  const scopes = Object.keys(mountPoints);
+  const showAdmin = scopes.some(scope => scope.startsWith('admin.page'));
+  return showAdmin ? (
+    <>
+      <ListItemButton
+        onClick={handleClick}
+        sx={{ width: '100%', maxHeight: '3rem', color: '#fff' }}
+      >
+        <ListItemIcon
+          sx={{ minWidth: '0', padding: '0 0.5rem', color: '#fff' }}
+        >
+          <GppMaybeOutlinedIcon sx={{ fontSize: '1.25rem' }} />
+        </ListItemIcon>
+        <ListItemText
+          primary="Administration"
+          primaryTypographyProps={{ fontSize: '14px', fontWeight: '500' }}
+        />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      {nestedMenuItems(scopes, open)}
+    </>
+  ) : (
+    <></>
+  );
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
   const { dynamicRoutes, mountPoints } = useContext(DynamicRootContext);
   return (
     <SidebarPage>
       <Sidebar>
         <SidebarLogo />
-        <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
-          <SidebarSearchModal />
-        </SidebarGroup>
+        <ListItem
+          component={() => listItemComponent(SearchIcon, '/search', 'Search')}
+        />
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
-          <SideBarItemWrapper
-            icon={HomeOutlinedIcon as any}
-            to="/"
-            text="Home"
+          <ListItem
+            component={() => listItemComponent(HomeOutlinedIcon, '/', 'Home')}
           />
-          <SideBarItemWrapper
-            icon={CategoryOutlinedIcon as IconComponent}
-            to="catalog"
-            text="Catalog"
+          <ListItem
+            component={() =>
+              listItemComponent(CategoryOutlinedIcon, 'catalog', 'Catalog')
+            }
           />
-          <SideBarItemWrapper
-            icon={ExtensionOutlinedIcon as IconComponent}
-            to="api-docs"
-            text="APIs"
+          <ListItem
+            component={() =>
+              listItemComponent(ExtensionOutlinedIcon, 'api-docs', 'APIs')
+            }
           />
-          <SideBarItemWrapper
-            icon={SchoolOutlinedIcon as IconComponent}
-            to="learning-paths"
-            text="Learning Paths"
+          <ListItem
+            component={() =>
+              listItemComponent(
+                SchoolOutlinedIcon,
+                'learning-paths',
+                'Learning Paths',
+              )
+            }
           />
-          <SideBarItemWrapper
-            icon={CreateComponentIcon as IconComponent}
-            to="create"
-            text="Create..."
+          <ListItem
+            component={() =>
+              listItemComponent(CreateComponentIcon, 'create', 'Create...')
+            }
           />
           {/* End global nav */}
           <SidebarDivider />
@@ -104,11 +188,15 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                   );
                 }
                 return (
-                  <SideBarItemWrapper
+                  <ListItem
                     key={`${scope}/${path}`}
-                    icon={() => <MenuIcon icon={menuItem.icon} />}
-                    to={path}
-                    text={menuItem.text}
+                    component={() =>
+                      listItemComponent(
+                        () => <MenuIcon icon={menuItem.icon} />,
+                        path,
+                        menuItem.text,
+                      )
+                    }
                   />
                 );
               }
@@ -118,20 +206,17 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
-        {Object.keys(mountPoints).some(scope =>
-          scope.startsWith('admin.page'),
-        ) ? (
-          <SideBarItemWrapper
-            icon={AdminPanelSettingsOutlinedIcon as IconComponent}
-            to="/admin"
-            text="Administration"
-          />
-        ) : (
-          <></>
-        )}
-        <SidebarGroup label="Settings" to="/settings">
-          <SidebarSettings icon={AccountCircleOutlinedIcon as IconComponent} />
-        </SidebarGroup>
+        {dropdownMenuItem(mountPoints, open, handleClick)}
+        <SidebarDivider />
+        <ListItem
+          component={() =>
+            listItemComponent(
+              AccountCircleOutlinedIcon,
+              '/settings',
+              'Settings',
+            )
+          }
+        />
       </Sidebar>
       {children}
     </SidebarPage>
