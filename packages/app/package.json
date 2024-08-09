@@ -38,7 +38,7 @@
     "@emotion/react": "11.13.0",
     "@emotion/styled": "11.13.0",
     "@internal/plugin-dynamic-plugins-info": "*",
-    "@janus-idp/backstage-plugin-rbac-common": "1.6.1",
+    "@janus-idp/backstage-plugin-rbac-common": "1.7.2",
     "@mui/icons-material": "5.16.4",
     "@mui/material": "5.16.4",
     "@redhat-developer/red-hat-developer-hub-theme": "0.1.7",
