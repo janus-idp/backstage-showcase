@@ -16,6 +16,13 @@ app:
         headerColor1: ${HEADER_DARK_COLOR_1}
         headerColor2: ${HEADER_DARK_COLOR_2}
         navigationIndicatorColor: ${NAV_INDICATOR_DARK_COLOR}
+  auth:
+    autologout:
+      enabled: ${AUTO_LOGOUT_ENABLED}
+      idleTimeoutMinutes: ${AUTO_LOGOUT_IDLE_TIMEOUT_MINUTES}
+      promptBeforeIdleSeconds: ${AUTO_LOGOUT_PROMPT_BEFORE_IDLE_SECONDS}
+      useWorkerTimers: ${AUTO_LOGOUT_USE_WORKER_TIMERS}
+      logoutIfDisconnected: ${AUTO_LOGOUT_LOGOUT_IF_DISCONNECTED}
 
 organization:
   name: ${ORGANIZATION_NAME}
