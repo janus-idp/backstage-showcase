@@ -11,7 +11,12 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "dynamic-plugins-info",
+    "pluginPackages": [
+      "@internal/plugin-dynamic-plugins-info",
+      "@internal/plugin-dynamic-plugins-info-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",
