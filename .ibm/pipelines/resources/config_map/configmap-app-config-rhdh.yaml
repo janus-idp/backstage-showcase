@@ -25,6 +25,7 @@ data:
       auth:
         keys:
           - secret: temp
+    signInPage: github
     integrations:
       # Plugin: GitHub
       github:
