@@ -80,6 +80,11 @@ RUN \
   "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
   "$YARN" copy-dynamic-plugins dist
 
+# STAGE 3b - Build Go tools
+FROM registry.access.redhat.com/ubi9/go-toolset:1.21.11-2.1720624888 as go-builder
+COPY dynamic-plugins/install-dynamic-plugins /tmp/src
+RUN /usr/libexec/s2i/assemble
+
 # Stage 4 - Build the actual backend image and install production dependencies
 # Upstream only
 FROM skeleton AS cleanup
@@ -133,6 +138,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
+COPY --from=go-builder /opt/app-root/gobinary ./install-dynamic-plugins
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
   chmod -R a+rx ./install-dynamic-plugins.sh; \
   rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root

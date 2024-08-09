@@ -213,6 +213,12 @@ def main():
             print('\n======= Skipping disabled dynamic plugin', package, flush=True)
             continue
 
+
+        if package.startswith('oci://'):
+            print('\n======= Skipping plugin in OCI image', package, flush=True)
+            print('\t==> This will be handled by a separate process.', flush=True)
+            continue
+
         print('\n======= Installing dynamic plugin', package, flush=True)
 
         package_is_local = package.startswith('./')
