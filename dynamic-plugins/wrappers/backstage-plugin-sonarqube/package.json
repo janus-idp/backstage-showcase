@@ -13,8 +13,13 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "sonarqube",
-    "pluginPackage": "backstage-plugin-sonarqube"
+    "pluginPackage": "backstage-plugin-sonarqube",
+    "pluginPackages": [
+      "backstage-plugin-sonarqube",
+      "backstage-plugin-sonarqube-backend"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",

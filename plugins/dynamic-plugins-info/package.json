@@ -11,8 +11,14 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "dynamic-plugins-info",
+    "pluginPackages": [
+      "@internal/plugin-dynamic-plugins-info",
+      "@internal/plugin-dynamic-plugins-info-backend"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
