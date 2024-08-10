@@ -20,7 +20,7 @@
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-48.1720017855 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-54 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -178,7 +178,7 @@ RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-51 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57 AS runner
 USER 0
 
 # Downstream sources
@@ -190,7 +190,7 @@ WORKDIR $CONTAINER_SOURCE/
 # Downstream only - install techdocs dependencies using cachito sources
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
 # hadolint ignore=DL3013,DL3041,SC2086
-RUN microdnf update -y && \
+RUN microdnf update --setopt=install_weak_deps=0 -y && \
   microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip; \

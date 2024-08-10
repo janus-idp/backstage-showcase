@@ -11,7 +11,12 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "dynamic-plugins-info",
+    "pluginPackages": [
+      "@internal/plugin-dynamic-plugins-info",
+      "@internal/plugin-dynamic-plugins-info-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -36,7 +41,7 @@
     "@backstage/backend-test-utils": "0.3.8",
     "@backstage/cli": "0.26.6",
     "@types/supertest": "6.0.2",
-    "msw": "2.3.1",
+    "msw": "2.3.5",
     "supertest": "6.3.4"
   },
   "files": [

@@ -21,7 +21,7 @@ import {
   oidcAuthenticator,
   oidcSignInResolvers,
 } from '@internal/plugin-auth-backend-module-oidc-provider';
-
+import { ConfigSources } from '@backstage/config-loader';
 /**
  * Function is responsible for signing in a user with the catalog user and
  * creating an entity reference based on the provided name parameter.
@@ -30,11 +30,13 @@ import {
  *
  * @param name
  * @param ctx
+ * @param enableDangerouslyAllowSignInWithoutUserInCatalog
  * @returns
  */
 async function signInWithCatalogUserOptional(
   name: string,
   ctx: AuthResolverContext,
+  enableDangerouslyAllowSignInWithoutUserInCatalog?: boolean,
 ) {
   try {
     const signedInUser = await ctx.signInWithCatalogUser({
@@ -43,6 +45,18 @@ async function signInWithCatalogUserOptional(
 
     return Promise.resolve(signedInUser);
   } catch (e) {
+    const config = await ConfigSources.toConfig(
+      await ConfigSources.default({}),
+    );
+    const dangerouslyAllowSignInWithoutUserInCatalog =
+      config.getOptionalBoolean('dangerouslyAllowSignInWithoutUserInCatalog') ||
+      enableDangerouslyAllowSignInWithoutUserInCatalog ||
+      false;
+    if (!dangerouslyAllowSignInWithoutUserInCatalog) {
+      throw new Error(
+        `Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.`,
+      );
+    }
     const userEntityRef = stringifyEntityRef({
       kind: 'User',
       name: name,
@@ -138,7 +152,8 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `GitHub user profile does not contain a username`,
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            // enable dangerouslyAllowSignInWithoutUserInCatalog option temporarily for GitHub
+            return await signInWithCatalogUserOptional(userId, ctx, true);
           },
         },
       });

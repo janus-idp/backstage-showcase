@@ -11,6 +11,7 @@ test.describe('Verify TLS configuration with external Postgres DB', () => {
     await common.loginAsGithubUser();
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
+    await uiHelper.clickByDataTestId('user-picker-all');
     await uiHelper.verifyRowsInTable(['Backstage Showcase']);
   });
 });

@@ -16,7 +16,9 @@
     "directory": "plugins/auth-backend-module-oidc-provider"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "auth",
+    "pluginPackage": "@backstage/plugin-auth-backend"
   },
   "scripts": {
     "build": "backstage-cli package build",

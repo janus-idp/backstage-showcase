@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -12,6 +12,10 @@ export class UIhelper {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  async fillTextInputByLabel(label: string, text: string) {
+    await this.page.getByLabel(label).fill(text);
   }
 
   async searchInputPlaceholder(searchText: string) {
@@ -54,6 +58,12 @@ export class UIhelper {
     }
   }
 
+  async clickByDataTestId(dataTestId: string) {
+    const element = this.page.getByTestId(dataTestId);
+    await element.waitFor({ state: 'visible' });
+    await element.click();
+  }
+
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
@@ -87,30 +97,30 @@ export class UIhelper {
     }
   }
 
-  async verifyText(text: string | RegExp, exact: boolean = true) {
-    const element = this.page.getByText(text, { exact: exact }).first();
-    try {
-      await element.scrollIntoViewIfNeeded();
-    } catch (error) {
-      console.warn(
-        `Warning: Could not scroll element into view. Error: ${error.message}`,
-      );
-    }
-    await expect(element).toBeVisible();
-  }
-
-  async isBtnVisible(text: string): Promise<boolean> {
-    const locator = `button:has-text("${text}")`;
+  private async isElementVisible(
+    locator: string,
+    timeout = 10000,
+  ): Promise<boolean> {
     try {
       await this.page.waitForSelector(locator, {
         state: 'visible',
-        timeout: 10000,
+        timeout: timeout,
       });
-      const button = this.page.locator(locator);
+      const button = this.page.locator(locator).first();
       return button.isVisible();
     } catch (error) {
       return false;
     }
+  }
+
+  async isBtnVisible(text: string): Promise<boolean> {
+    const locator = `button:has-text("${text}")`;
+    return await this.isElementVisible(locator);
+  }
+
+  async isTextVisible(text: string, timeout = 10000): Promise<boolean> {
+    const locator = `:has-text("${text}")`;
+    return await this.isElementVisible(locator, timeout);
   }
 
   async waitForSideBarVisible() {
@@ -131,34 +141,38 @@ export class UIhelper {
   }
 
   async verifyRowsInTable(
-    rowTexts: string[] | RegExp[],
+    rowTexts: (string | RegExp)[],
     exact: boolean = true,
   ) {
     for (const rowText of rowTexts) {
-      const rowLocator = this.page
-        .locator(`tr>td`)
-        .getByText(rowText, { exact: exact })
-        .first();
-
-      try {
-        await rowLocator.waitFor({ state: 'visible', timeout: 10000 });
-        await rowLocator.waitFor({ state: 'attached', timeout: 10000 });
-
-        try {
-          await rowLocator.scrollIntoViewIfNeeded();
-        } catch (error) {
-          console.warn(
-            `Warning: Could not scroll element into view. Error: ${error.message}`,
-          );
-        }
-
-        await expect(rowLocator).toBeVisible();
-      } catch (error) {
-        console.error(
-          `Error: Failed to verify row with text "${rowText}". Error: ${error.message}`,
-        );
-      }
+      await this.verifyTextInLocator(`tr>td`, rowText, exact);
     }
+  }
+
+  async verifyText(text: string | RegExp, exact: boolean = true) {
+    await this.verifyTextInLocator('', text, exact);
+  }
+
+  private async verifyTextInLocator(
+    locator: string,
+    text: string | RegExp,
+    exact: boolean,
+  ) {
+    const elementLocator = locator
+      ? this.page.locator(locator).getByText(text, { exact }).first()
+      : this.page.getByText(text, { exact }).first();
+
+    await elementLocator.waitFor({ state: 'visible', timeout: 10000 });
+    await elementLocator.waitFor({ state: 'attached', timeout: 10000 });
+
+    try {
+      await elementLocator.scrollIntoViewIfNeeded();
+    } catch (error) {
+      console.warn(
+        `Warning: Could not scroll element into view. Error: ${error.message}`,
+      );
+    }
+    await expect(elementLocator).toBeVisible();
   }
 
   async verifyColumnHeading(

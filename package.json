@@ -43,17 +43,17 @@
     "postinstall-postinstall": "2.1.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.6",
+    "@backstage/cli": "^0.26.11",
     "@smithy/util-utf8": "2.3.0",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
     "ip": "1.1.9",
-    "lint-staged": "15.2.7",
-    "prettier": "3.3.2",
+    "lint-staged": "15.2.8",
+    "prettier": "3.3.3",
     "sanitize-html": "2.13.0",
     "turbo": "1.13.4",
-    "typescript": "5.5.3",
+    "typescript": "5.5.4",
     "undici": "5.28.4"
   },
   "resolutions": {

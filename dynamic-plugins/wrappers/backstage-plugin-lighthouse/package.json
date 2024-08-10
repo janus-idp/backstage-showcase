@@ -11,8 +11,14 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.26.5"
+    "supported-versions": "1.27.7",
+    "pluginId": "lighthouse",
+    "pluginPackage": "backstage-plugin-lighthouse",
+    "pluginPackages": [
+      "backstage-plugin-lighthouse"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
@@ -21,7 +27,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@mui/icons-material": "5.16.1",
+    "@mui/icons-material": "5.16.4",
     "@backstage-community/plugin-lighthouse": "0.4.20"
   },
   "devDependencies": {

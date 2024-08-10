@@ -14,6 +14,7 @@ test.describe('Test Quay.io plugin', () => {
     uiHelper = new UIhelper(page);
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
+    await uiHelper.clickByDataTestId('user-picker-all');
     await uiHelper.clickLink('backstage-janus');
     await uiHelper.clickTab('Image Registry');
   });

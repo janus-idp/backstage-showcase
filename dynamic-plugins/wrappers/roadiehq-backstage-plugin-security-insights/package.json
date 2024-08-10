@@ -11,8 +11,14 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.26.5"
+    "supported-versions": "1.27.7",
+    "pluginId": "roadiehq-security-insights",
+    "pluginPackage": "roadiehq-backstage-plugin-security-insights",
+    "pluginPackages": [
+      "roadiehq-backstage-plugin-security-insights"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
