@@ -1,6 +1,6 @@
 app:
   title: Janus IDP Backstage Showcase
-  baseUrl: http://localhost:3000
+  baseUrl: http://localhost:7007
 
 organization:
   name: My Org
@@ -15,7 +15,6 @@ backend:
       - 'http:'
       - 'https:'
   cors:
-    origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   database:

@@ -82,6 +82,7 @@ test.describe.serial('GitHub Happy path', () => {
   test('Click login on the login popup and verify that Overview tab renders', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
+    await uiHelper.clickByDataTestId('user-picker-all');
     await uiHelper.clickLink('Backstage Showcase');
     await common.clickOnGHloginPopup();
     await uiHelper.verifyLink('Janus Website', { exact: false });

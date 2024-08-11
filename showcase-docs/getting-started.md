@@ -341,6 +341,19 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
 7. Navigate to <http://localhost:3000>
 
+#### Note: Extension to Kubernetes Backend Plugin
+
+The Kubernetes plugin has a default API factory that work right out the box with a few `oidcProviders` for authentication, but `oidc.oidc` is not included. An additional utility API has been added to the `backstage-plugin-kubernetes` plugin to allow the use of `oidcTokenProvider: 'oidc'` in the plugin configuration.
+
+```yaml
+kubernetes:
+  clusterLocatorMethods:
+    - type: 'config'
+      clusters:
+        authProvider: 'oidc'
+        oidcTokenProvider: 'oidc'
+```
+
 ## Running with Helm
 
 COMING SOON

@@ -11,7 +11,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "scalprum",
+    "pluginPackages": [
+      "@internal/plugin-scalprum-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -38,7 +42,7 @@
     "@types/mock-fs": "4.13.4",
     "@types/supertest": "6.0.2",
     "mock-fs": "5.2.0",
-    "msw": "2.3.4",
+    "msw": "2.3.5",
     "supertest": "6.3.4"
   },
   "files": [
