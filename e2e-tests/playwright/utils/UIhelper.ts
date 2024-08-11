@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -58,6 +58,12 @@ export class UIhelper {
     }
   }
 
+  async clickByDataTestId(dataTestId: string) {
+    const element = this.page.getByTestId(dataTestId);
+    await element.waitFor({ state: 'visible' });
+    await element.click();
+  }
+
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
@@ -89,18 +95,6 @@ export class UIhelper {
       await linkLocator.scrollIntoViewIfNeeded();
       await expect(linkLocator).toBeVisible();
     }
-  }
-
-  async verifyText(text: string | RegExp, exact: boolean = true) {
-    const element = this.page.getByText(text, { exact: exact }).first();
-    try {
-      await element.scrollIntoViewIfNeeded();
-    } catch (error) {
-      console.warn(
-        `Warning: Could not scroll element into view. Error: ${error.message}`,
-      );
-    }
-    await expect(element).toBeVisible();
   }
 
   private async isElementVisible(
@@ -147,34 +141,38 @@ export class UIhelper {
   }
 
   async verifyRowsInTable(
-    rowTexts: string[] | RegExp[],
+    rowTexts: (string | RegExp)[],
     exact: boolean = true,
   ) {
     for (const rowText of rowTexts) {
-      const rowLocator = this.page
-        .locator(`tr>td`)
-        .getByText(rowText, { exact: exact })
-        .first();
-
-      try {
-        await rowLocator.waitFor({ state: 'visible', timeout: 10000 });
-        await rowLocator.waitFor({ state: 'attached', timeout: 10000 });
-
-        try {
-          await rowLocator.scrollIntoViewIfNeeded();
-        } catch (error) {
-          console.warn(
-            `Warning: Could not scroll element into view. Error: ${error.message}`,
-          );
-        }
-
-        await expect(rowLocator).toBeVisible();
-      } catch (error) {
-        console.error(
-          `Error: Failed to verify row with text "${rowText}". Error: ${error.message}`,
-        );
-      }
+      await this.verifyTextInLocator(`tr>td`, rowText, exact);
     }
+  }
+
+  async verifyText(text: string | RegExp, exact: boolean = true) {
+    await this.verifyTextInLocator('', text, exact);
+  }
+
+  private async verifyTextInLocator(
+    locator: string,
+    text: string | RegExp,
+    exact: boolean,
+  ) {
+    const elementLocator = locator
+      ? this.page.locator(locator).getByText(text, { exact }).first()
+      : this.page.getByText(text, { exact }).first();
+
+    await elementLocator.waitFor({ state: 'visible', timeout: 10000 });
+    await elementLocator.waitFor({ state: 'attached', timeout: 10000 });
+
+    try {
+      await elementLocator.scrollIntoViewIfNeeded();
+    } catch (error) {
+      console.warn(
+        `Warning: Could not scroll element into view. Error: ${error.message}`,
+      );
+    }
+    await expect(elementLocator).toBeVisible();
   }
 
   async verifyColumnHeading(

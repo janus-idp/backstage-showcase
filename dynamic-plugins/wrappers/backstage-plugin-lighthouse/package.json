@@ -13,8 +13,12 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "lighthouse",
-    "pluginPackage": "backstage-plugin-lighthouse"
+    "pluginPackage": "backstage-plugin-lighthouse",
+    "pluginPackages": [
+      "backstage-plugin-lighthouse"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",

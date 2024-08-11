@@ -11,7 +11,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "scalprum",
+    "pluginPackages": [
+      "@internal/plugin-scalprum-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",

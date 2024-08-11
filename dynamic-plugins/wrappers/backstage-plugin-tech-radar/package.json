@@ -13,8 +13,12 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "tech-radar",
-    "pluginPackage": "backstage-plugin-tech-radar"
+    "pluginPackage": "backstage-plugin-tech-radar",
+    "pluginPackages": [
+      "backstage-plugin-tech-radar"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
