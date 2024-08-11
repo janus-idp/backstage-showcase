@@ -48,6 +48,7 @@ export class Tekton {
 
   async goToBackstageJanusProject() {
     await this.uiHelper.openSidebar('Catalog');
+    await this.uiHelper.clickByDataTestId('user-picker-all');
     await this.uiHelper.clickLink('backstage-janus');
     await this.uiHelper.clickTab('CI');
     await this.page.waitForSelector('h2:text("Pipeline Runs")');

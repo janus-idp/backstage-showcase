@@ -38,7 +38,7 @@
     "@emotion/react": "11.13.0",
     "@emotion/styled": "11.13.0",
     "@internal/plugin-dynamic-plugins-info": "*",
-    "@janus-idp/backstage-plugin-rbac-common": "1.6.1",
+    "@janus-idp/backstage-plugin-rbac-common": "1.7.2",
     "@mui/icons-material": "5.16.4",
     "@mui/material": "5.16.4",
     "@redhat-developer/red-hat-developer-hub-theme": "0.1.7",
@@ -61,7 +61,7 @@
     "@testing-library/react": "14.3.1",
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "14.5.2",
-    "@types/node": "18.19.42",
+    "@types/node": "18.19.43",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0"
   },
