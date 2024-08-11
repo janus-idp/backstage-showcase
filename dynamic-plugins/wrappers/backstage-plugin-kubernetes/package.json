@@ -28,6 +28,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
+    "@backstage/core-plugin-api": "^1.9.3",
     "@backstage/plugin-kubernetes": "0.11.10"
   },
   "devDependencies": {
