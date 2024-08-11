@@ -322,7 +322,3 @@ spec:
         - name: secrets-rhdh
 # --- TRUNCATED ---
 ```
-
-
-
-
