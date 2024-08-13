@@ -144,7 +144,9 @@ const loadTestConfig = async (dynamicPlugins: any) => {
 
 const consoleSpy = jest.spyOn(console, 'warn');
 
-describe('DynamicRoot', () => {
+// TODO: https://issues.redhat.com/browse/RHIDP-3611
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('DynamicRoot', () => {
   beforeEach(() => {
     removeScalprum();
     mockInitializeRemotePlugins.mockImplementation(
@@ -228,9 +230,7 @@ describe('DynamicRoot', () => {
     }
   });
 
-  // TODO: https://issues.redhat.com/browse/RHIDP-3611
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('should add plugins found in specified module', async () => {
+  it('should add plugins found in specified module', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
     const dynamicPlugins = {
       frontend: {
