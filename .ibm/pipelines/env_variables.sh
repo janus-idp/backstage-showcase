@@ -34,6 +34,8 @@ GH_USER_PASS=$(cat /tmp/secrets/GH_USER_PASS)
 GH_2FA_SECRET=$(cat /tmp/secrets/GH_2FA_SECRET)
 GH_RHDH_QE_USER_TOKEN=$(cat /tmp/secrets/GH_RHDH_QE_USER_TOKEN)
 
+GITLAB_TOKEN=$(cat /tmp/secrets/GITLAB_TOKEN)
+
 K8S_CLUSTER_API_SERVER_URL=$(echo -n "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
 K8S_SERVICE_ACCOUNT_TOKEN=$K8S_CLUSTER_TOKEN_ENCODED
 OCM_CLUSTER_URL=$(echo -n "$K8S_CLUSTER_URL" | base64 | tr -d '\n')

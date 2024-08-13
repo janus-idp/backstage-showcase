@@ -45,9 +45,9 @@
   integrity sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==
 
 adm-zip@^0.5.9:
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.14.tgz#2c557c0bf12af4311cf6d32970f4060cf8133b2a"
-  integrity sha512-DnyqqifT4Jrcvb8USYjp6FHtBpEIz1mnXu6pTRHZ0RL69LbQYiO+0lDFg5+OKA7U29oWSs3a/i8fhn8ZcceIWg==
+  version "0.5.15"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.15.tgz#c2c9b3d4f3b1c911e72b2394e84fd91bcc81e08e"
+  integrity sha512-jYPWSeOA8EFoZnucrKCNihqBjoEGQSU4HKgHYQgKNEQ0pQF9a/DYuo/+fAxY76k4qe75LUlLWpAM1QWcBMTOKw==
 
 argparse@^2.0.1:
   version "2.0.1"
@@ -309,9 +309,9 @@ winston-transport@^4.7.0:
     triple-beam "^1.3.0"
 
 winston@^3.2.1:
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-3.13.1.tgz#53ddadb9c2332eb12cff8306413b3480dc82b6c3"
-  integrity sha512-SvZit7VFNvXRzbqGHsv5KSmgbEYR5EiQfDAL9gxYkRqa934Hnk++zze0wANKtMHcy/gI4W/3xmSDwlhf865WGw==
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-3.14.1.tgz#b296f2756e6b46d3b6faac5660d2af878fc3f666"
+  integrity sha512-CJi4Il/msz8HkdDfXOMu+r5Au/oyEjFiOZzbX2d23hRLY0narGjqfE5lFlrT5hfYJhPtM8b85/GNFsxIML/RVA==
   dependencies:
     "@colors/colors" "^1.6.0"
     "@dabh/diagnostics" "^2.0.2"
@@ -336,9 +336,9 @@ yaml@^2.3.4:
   integrity sha512-2wWLbGbYDiSqqIKoPjar3MPgB94ErzCtrNE1FdqGuaO0pi2JGjmE8aW8TDZwzU7vuxcGRdL/4gPQwQ7hD5AMSw==
 
 yawn-yaml@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/yawn-yaml/-/yawn-yaml-2.2.0.tgz#aa9673725f7c277a8b97e8d12496d2333d701890"
-  integrity sha512-2SJvllxsNXwvbf6s8m7TNDtdn2zakLQpmrwpxIdCInLyEx+/WsZwSTScBOVk3zBbuFPeh7hc+yvUVtyKOgBeKQ==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/yawn-yaml/-/yawn-yaml-2.3.0.tgz#79b2cdd58b7abe243c9b0418997795e5754b7135"
+  integrity sha512-hYS8kT4I2ftJyLw6LE/JG8rg+0NKdDmI+c2ncnJ9ZmUTsU0ggo3Zf8yjmhXxKlWINS/ZYkh3MvMIsQlIDtRL4A==
   dependencies:
     js-yaml "^4.1.0"
     lodash "^4.17.21"

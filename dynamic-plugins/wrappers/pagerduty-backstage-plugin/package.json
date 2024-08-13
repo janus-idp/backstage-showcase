@@ -13,8 +13,12 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "pagerduty",
-    "pluginPackage": "pagerduty-backstage-plugin"
+    "pluginPackage": "pagerduty-backstage-plugin",
+    "pluginPackages": [
+      "pagerduty-backstage-plugin"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",

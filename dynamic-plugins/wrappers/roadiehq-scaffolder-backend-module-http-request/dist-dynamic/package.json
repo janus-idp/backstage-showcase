@@ -1,20 +1,21 @@
 {
   "name": "roadiehq-scaffolder-backend-module-http-request-dynamic",
   "version": "4.3.2",
-  "main": "dist/index.cjs.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "roadiehq-module-http-request",
-    "pluginPackage": "roadiehq-scaffolder-backend-module-http-request"
+    "pluginPackage": "roadiehq-scaffolder-backend-module-http-request",
+    "pluginPackages": [
+      "roadiehq-scaffolder-backend-module-http-request"
+    ]
   },
   "exports": {
     ".": {

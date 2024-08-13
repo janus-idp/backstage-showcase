@@ -30,11 +30,13 @@ import { ConfigSources } from '@backstage/config-loader';
  *
  * @param name
  * @param ctx
+ * @param enableDangerouslyAllowSignInWithoutUserInCatalog
  * @returns
  */
 async function signInWithCatalogUserOptional(
   name: string,
   ctx: AuthResolverContext,
+  enableDangerouslyAllowSignInWithoutUserInCatalog?: boolean,
 ) {
   try {
     const signedInUser = await ctx.signInWithCatalogUser({
@@ -48,6 +50,7 @@ async function signInWithCatalogUserOptional(
     );
     const dangerouslyAllowSignInWithoutUserInCatalog =
       config.getOptionalBoolean('dangerouslyAllowSignInWithoutUserInCatalog') ||
+      enableDangerouslyAllowSignInWithoutUserInCatalog ||
       false;
     if (!dangerouslyAllowSignInWithoutUserInCatalog) {
       throw new Error(
@@ -149,7 +152,8 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `GitHub user profile does not contain a username`,
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            // enable dangerouslyAllowSignInWithoutUserInCatalog option temporarily for GitHub
+            return await signInWithCatalogUserOptional(userId, ctx, true);
           },
         },
       });

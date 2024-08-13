@@ -173,3 +173,152 @@ spec:
         - name: secrets-rhdh
 # --- TRUNCATED ---
 ```
+
+# Testing on OpenShift
+
+2. Create a separate proxy project, and deploy a [Squid](https://www.squid-cache.org/)-based proxy application there. The full URL to access the proxy server from within the cluster would be `http://squid-service.proxy.svc.cluster.local:3128`.
+
+```shell
+oc new-project proxy
+
+cat <<EOF | kubectl -n proxy apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: squid-service
+  labels:
+    app: squid
+spec:
+  ports:
+  - port: 3128
+  selector:
+    app: squid
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squid-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "squid"
+  template:
+    metadata:
+      labels:
+        app: squid
+    spec:
+      containers:
+      - name: squid
+        image: registry.redhat.io/rhel9/squid:latest
+        ports:
+        - containerPort: 3128
+          name: squid
+          protocol: TCP
+EOF
+```
+
+3. Create the namespace where the Showcase application will be running, e.g.:
+
+```shell
+oc new-project rhdh
+```
+
+4. Add the network policies in the namespace above. The first one denies all egress traffic except to the DNS resolver and the Squid proxy. The second one allows ingress and egress traffic in the same namespace, because the Showcase app pod needs to contact the local Database pod.
+
+```shell
+cat <<EOF | kubectl -n rhdh apply -f -
+---
+# Deny all egress traffic in this namespace => proxy settings can be used to overcome this.
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-egress-with-exceptions
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  # allow DNS resolution (we need this allowed, otherwise we won't be able to resolve the DNS name of the Squid proxy service)
+  - to:
+    - podSelector: {}
+      namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-dns
+    ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+  # allow traffic to Squid proxy
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: proxy
+    ports:
+    - port: 3128
+      protocol: TCP
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-same-namespace
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
+---
+# allow incoming connections from Ingress controller (to make Route and Ingress work)
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-openshift-ingress
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: ingress
+  policyTypes:
+    - Ingress
+
+EOF
+```
+
+5. Follow the instructions to add the proxy environment variables for an [Operator-based](../showcase-docs/corporate-proxy.md#operator-deployment) or [Helm-based](../showcase-docs/corporate-proxy.md#helm-deployment) deployment.
+
+Example with a Custom Resource:
+
+```yaml
+apiVersion: rhdh.redhat.com/v1alpha1
+kind: Backstage
+metadata:
+  name: my-rhdh
+spec:
+  application:
+    appConfig:
+      configMaps:
+        - name: app-config-rhdh
+    dynamicPluginsConfigMapName: dynamic-plugins-rhdh
+    extraEnvs:
+      envs:
+        - name: HTTP_PROXY
+          value: 'http://squid-service.proxy.svc.cluster.local:3128'
+        - name: HTTPS_PROXY
+          value: 'http://squid-service.proxy.svc.cluster.local:3128'
+        - name: NO_PROXY
+          value: 'localhost'
+        - name: ROARR_LOG
+          # Logs from global-agent (to inspect proxy settings)
+          value: 'true'
+      secrets:
+        - name: secrets-rhdh
+# --- TRUNCATED ---
+```

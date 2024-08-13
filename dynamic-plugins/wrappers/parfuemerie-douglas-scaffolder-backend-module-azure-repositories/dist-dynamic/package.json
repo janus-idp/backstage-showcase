@@ -1,20 +1,21 @@
 {
   "name": "parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic",
-  "version": "0.2.7",
-  "main": "dist/index.cjs.js",
-  "types": "dist/index.d.ts",
+  "version": "0.3.0",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "parfuemerie-douglas-module-azure-repositories",
-    "pluginPackage": "parfuemerie-douglas-scaffolder-backend-module-azure-repositories"
+    "pluginPackage": "parfuemerie-douglas-scaffolder-backend-module-azure-repositories",
+    "pluginPackages": [
+      "parfuemerie-douglas-scaffolder-backend-module-azure-repositories"
+    ]
   },
   "exports": {
     ".": {
@@ -25,7 +26,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "azure-devops-node-api": "^12.1.0",
+    "azure-devops-node-api": "^13.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {},
@@ -52,10 +53,11 @@
     "@backstage/backend-plugin-api": "0.7.0",
     "@backstage/integration": "1.8.0",
     "@backstage/plugin-scaffolder-node": "0.2.9",
-    "@backstage/backend-common": "^0.20.0",
-    "@backstage/config": "^1.1.1",
+    "@backstage/backend-common": "^0.22.0",
+    "@backstage/cli": "^0.26.11",
+    "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-scaffolder-backend": "^1.19.2",
+    "@backstage/plugin-scaffolder-backend": "^1.22.6",
     "@backstage/types": "^1.1.1"
   },
   "overrides": {
