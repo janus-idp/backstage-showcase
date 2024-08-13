@@ -40,7 +40,7 @@
   },
   "peerDependencies": {
     "react": "16.13.1 || ^17.0.0 || ^18.2.0",
-    "react-router-dom": "6.25.1"
+    "react-router-dom": "6.26.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.6",
