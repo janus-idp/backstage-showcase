@@ -42,6 +42,7 @@
     "@mui/icons-material": "5.16.4",
     "@mui/material": "5.16.4",
     "@redhat-developer/red-hat-developer-hub-theme": "0.2.0",
+    "material-icons": "1.13.12",
     "@scalprum/core": "0.7.0",
     "@scalprum/react-core": "0.8.0",
     "lodash": "4.17.21",

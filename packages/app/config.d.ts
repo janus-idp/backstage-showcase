@@ -32,6 +32,27 @@ export interface Config {
         [key: string]: unknown;
       };
     };
+    mainMenu?: {
+      /** @deepVisibility frontend */
+      defaultItems?: {
+        /** @deepVisibility frontend */
+        title: string;
+        path: string;
+        icon: string;
+      }[];
+      /** @deepVisibility frontend */
+      extraItems?: {
+        title: string;
+        name: string;
+        icon: string;
+        /** @deepVisibility frontend */
+        subMenuItems?: {
+          title: string;
+          key: string;
+          icon: string;
+        }[];
+      }[];
+    };
   };
   /** @deepVisibility frontend */
   dynamicPlugins: {

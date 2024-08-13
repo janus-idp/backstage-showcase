@@ -7,41 +7,41 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
-// import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MuiMenuIcon from '@mui/icons-material/Menu';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import SearchIcon from '@mui/icons-material/Search';
-import React, { PropsWithChildren, useContext } from 'react';
+import React, { PropsWithChildren, useCallback, useContext } from 'react';
 import { SidebarLogo } from './SidebarLogo';
-import DynamicRootContext, {
-  MountPoints,
-} from '../DynamicRoot/DynamicRootContext';
-import { IconComponent, useApp } from '@backstage/core-plugin-api';
+import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
+import {
+  configApiRef,
+  IconComponent,
+  useApi,
+  useApp,
+} from '@backstage/core-plugin-api';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
-import PowerOutlinedIcon from '@mui/icons-material/PowerOutlined';
-import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
-import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
+import { Config } from '@backstage/config';
+import MuiIcon from '@mui/material/Icon';
 
 const listItemComponent = (
-  Icon: any,
+  icon: any,
   to: string,
   text: string,
   isSecondLevel = false,
 ) => {
-  const iconComponent = () => <Icon fontSize="small" />;
+  const iconComponent =
+    typeof icon === 'string'
+      ? () => (
+          <MuiIcon
+            style={{ fontSize: 20 }}
+            baseClassName="material-icons-outlined"
+          >
+            {icon}
+          </MuiIcon>
+        )
+      : icon;
   return (
     <SidebarItem
       icon={iconComponent as IconComponent}
@@ -52,11 +52,6 @@ const listItemComponent = (
   );
 };
 
-type MenuItem = {
-  label: string;
-  icon: React.ElementType;
-};
-
 export const MenuIcon = ({ icon }: { icon: string }) => {
   const app = useApp();
 
@@ -64,115 +59,163 @@ export const MenuIcon = ({ icon }: { icon: string }) => {
   return <Icon fontSize="small" />;
 };
 
-const menuIcons: Record<string, MenuItem> = {
-  rbac: { label: 'RBAC', icon: VpnKeyOutlinedIcon },
-  plugins: { label: 'Plugins', icon: PowerOutlinedIcon },
-  metrics: { label: 'Metrics', icon: QueryStatsOutlinedIcon },
-};
-
-const nestedMenuItems = (scopes: string[], open: boolean) => {
-  const paths = scopes.map(scope => scope.split('/')[0].replace('.page.', '/'));
-  paths.push('admin/metrics');
-  return (
-    <Collapse in={open} timeout="auto" unmountOnExit>
-      <List component="div" disablePadding>
-        {paths
-          .filter(p => p.includes('admin/'))
-          .map(path => {
-            const menuItemName = path.split('/').pop() ?? '';
-            return (
-              <ListItem
-                component={() =>
-                  listItemComponent(
-                    menuIcons[menuItemName]?.icon,
-                    path,
-                    menuIcons[menuItemName]?.label,
-                    true,
-                  )
-                }
-              />
-            );
-          })}
-      </List>
-    </Collapse>
-  );
-};
-
-const dropdownMenuItem = (
-  mountPoints: MountPoints,
+const nestedMenuItems = (
+  parentKey: string,
+  subMenuItems: Config[],
   open: boolean,
-  handleClick: () => void,
 ) => {
-  const scopes = Object.keys(mountPoints);
-  const showAdmin = scopes.some(scope => scope.startsWith('admin.page'));
-  return showAdmin ? (
-    <>
-      <ListItemButton
-        onClick={handleClick}
-        sx={{ width: '100%', maxHeight: '3rem', color: '#fff' }}
+  return subMenuItems?.map(subMenuItem => {
+    const subMenuItemConfig = {
+      title: subMenuItem.getString('title'),
+      key: subMenuItem.getString('key'),
+      icon: subMenuItem.getString('icon'),
+    };
+    return (
+      <Collapse
+        key={subMenuItemConfig.key}
+        in={open}
+        timeout="auto"
+        unmountOnExit
       >
-        <ListItemIcon
-          sx={{ minWidth: '0', padding: '0 0.5rem', color: '#fff' }}
-        >
-          <GppMaybeOutlinedIcon sx={{ fontSize: '1.25rem' }} />
-        </ListItemIcon>
-        <ListItemText
-          primary="Administration"
-          primaryTypographyProps={{ fontSize: '14px', fontWeight: '500' }}
-        />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      {nestedMenuItems(scopes, open)}
-    </>
-  ) : (
-    <></>
-  );
+        <List component="div" disablePadding>
+          <ListItem
+            component={() =>
+              listItemComponent(
+                subMenuItemConfig.icon,
+                `${parentKey}/${subMenuItemConfig.key}`,
+                subMenuItemConfig.title,
+                true,
+              )
+            }
+          />
+        </List>
+      </Collapse>
+    );
+  });
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
+  const configApi = useApi(configApiRef);
+  const defaultMenuItems = configApi
+    .getOptionalConfigArray('app.mainMenu.defaultItems')
+    ?.map((item: Config) => ({
+      title: item.getString('title'),
+      path: item.getString('path'),
+      icon: item.getString('icon'),
+    }));
+  const extraMenuItems = configApi
+    .getOptionalConfigArray('app.mainMenu.extraItems')
+    ?.map((item: Config) => ({
+      title: item.getString('title'),
+      name: item.getString('name'),
+      icon: item.getString('icon'),
+      subMenuItems: item.getOptionalConfigArray('subMenuItems') || [],
+    }));
+
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
     setOpen(!open);
   };
   const { dynamicRoutes, mountPoints } = useContext(DynamicRootContext);
+
+  const renderNestedMenuItem = useCallback(
+    (openNestedMenuItems: boolean, handleClickItem: () => void) => {
+      const renderExpandIcon = (openDropdownMenu: boolean) => {
+        return openDropdownMenu ? (
+          <ExpandLess
+            fontSize="small"
+            style={{ display: 'flex', marginLeft: '0.5rem' }}
+          />
+        ) : (
+          <ExpandMore
+            fontSize="small"
+            style={{ display: 'flex', marginLeft: '0.5rem' }}
+          />
+        );
+      };
+
+      const mountedPlugins = Object.keys(mountPoints)
+        .filter(
+          scope =>
+            !scope.startsWith('entity.page') &&
+            !scope.startsWith('search.page'),
+        )
+        .map(scope => scope.split('.')[0])
+        .filter((plugin, index, self) => self.indexOf(plugin) === index);
+
+      return (
+        <>
+          {mountedPlugins.map(plugin => {
+            const extraMenuItem = extraMenuItems?.find(
+              item => item.name === plugin,
+            );
+            if (!extraMenuItem) {
+              return null;
+            }
+
+            const icon = () =>
+              extraMenuItem.icon ? (
+                <MuiIcon
+                  style={{ fontSize: 20 }}
+                  baseClassName="material-icons-outlined"
+                >
+                  {extraMenuItem.icon}
+                </MuiIcon>
+              ) : null;
+
+            return (
+              <React.Fragment key={extraMenuItem.name}>
+                <SidebarItem
+                  icon={icon as IconComponent}
+                  text={extraMenuItem.title}
+                  onClick={handleClickItem}
+                >
+                  {extraMenuItem.subMenuItems?.length > 0 &&
+                    renderExpandIcon(openNestedMenuItems)}
+                </SidebarItem>
+                {extraMenuItem.subMenuItems?.length > 0 &&
+                  nestedMenuItems(
+                    extraMenuItem.name,
+                    extraMenuItem.subMenuItems,
+                    openNestedMenuItems,
+                  )}
+              </React.Fragment>
+            );
+          })}
+        </>
+      );
+    },
+    [extraMenuItems, mountPoints],
+  );
+
   return (
     <SidebarPage>
       <Sidebar>
         <SidebarLogo />
-        <ListItem
-          component={() => listItemComponent(SearchIcon, '/search', 'Search')}
-        />
+        {defaultMenuItems
+          ?.filter(item => item.path === '/search')
+          .map(item => (
+            <ListItem
+              key={item.path}
+              component={() =>
+                listItemComponent(item.icon, item.path, item.title)
+              }
+            />
+          ))}
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
-          <ListItem
-            component={() => listItemComponent(HomeOutlinedIcon, '/', 'Home')}
-          />
-          <ListItem
-            component={() =>
-              listItemComponent(CategoryOutlinedIcon, 'catalog', 'Catalog')
-            }
-          />
-          <ListItem
-            component={() =>
-              listItemComponent(ExtensionOutlinedIcon, 'api-docs', 'APIs')
-            }
-          />
-          <ListItem
-            component={() =>
-              listItemComponent(
-                SchoolOutlinedIcon,
-                'learning-paths',
-                'Learning Paths',
-              )
-            }
-          />
-          <ListItem
-            component={() =>
-              listItemComponent(CreateComponentIcon, 'create', 'Create...')
-            }
-          />
+          {defaultMenuItems
+            ?.filter(
+              item => item.path !== '/search' && item.path !== '/settings',
+            )
+            .map(({ title, path, icon }) => (
+              <ListItem
+                key={path}
+                component={() => listItemComponent(icon, path, title)}
+              />
+            ))}
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
@@ -187,12 +230,13 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                     />
                   );
                 }
+                const icon = () => <MenuIcon icon={menuItem.icon} />;
                 return (
                   <ListItem
                     key={`${scope}/${path}`}
                     component={() =>
                       listItemComponent(
-                        () => <MenuIcon icon={menuItem.icon} />,
+                        icon as IconComponent,
                         path,
                         menuItem.text,
                       )
@@ -206,17 +250,18 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
-        {dropdownMenuItem(mountPoints, open, handleClick)}
+        {renderNestedMenuItem(open, handleClick)}
         <SidebarDivider />
-        <ListItem
-          component={() =>
-            listItemComponent(
-              AccountCircleOutlinedIcon,
-              '/settings',
-              'Settings',
-            )
-          }
-        />
+        {defaultMenuItems
+          ?.filter(item => item.path === '/settings')
+          .map(item => (
+            <ListItem
+              key={item.path}
+              component={() =>
+                listItemComponent(item.icon, item.path, item.title)
+              }
+            />
+          ))}
       </Sidebar>
       {children}
     </SidebarPage>
