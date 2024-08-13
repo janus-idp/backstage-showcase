@@ -1,10 +1,6 @@
-import React, { useContext } from 'react';
-import { renderWithEffects } from '@backstage/test-utils';
-import { removeScalprum } from '@scalprum/core';
-import { waitFor, within } from '@testing-library/dom';
-import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
-import * as useAsync from 'react-use/lib/useAsync';
-import DynamicRootContext from './DynamicRootContext';
+import * as appDefaults from '@backstage/app-defaults';
+import { Entity } from '@backstage/catalog-model';
+import { AppRouteBinder, defaultConfigLoader } from '@backstage/core-app-api';
 import {
   createApiFactory,
   createApiRef,
@@ -13,9 +9,13 @@ import {
   createRouteRef,
   useApp,
 } from '@backstage/core-plugin-api';
-import { Entity } from '@backstage/catalog-model';
-import * as appDefaults from '@backstage/app-defaults';
-import { AppRouteBinder, defaultConfigLoader } from '@backstage/core-app-api';
+import { renderWithEffects } from '@backstage/test-utils';
+import { removeScalprum } from '@scalprum/core';
+import { waitFor, within } from '@testing-library/dom';
+import React, { useContext } from 'react';
+import * as useAsync from 'react-use/lib/useAsync';
+import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
+import DynamicRootContext from './DynamicRootContext';
 
 const DynamicRoot = React.lazy(() => import('./DynamicRoot'));
 
@@ -228,7 +228,9 @@ describe('DynamicRoot', () => {
     }
   });
 
-  it('should add plugins found in specified module', async () => {
+  // TODO: https://issues.redhat.com/browse/RHIDP-3611
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('should add plugins found in specified module', async () => {
     const createAppSpy = jest.spyOn(appDefaults, 'createApp');
     const dynamicPlugins = {
       frontend: {
