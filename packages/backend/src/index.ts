@@ -47,7 +47,7 @@ backend.add(
     },
   }),
 );
-backend.add(dynamicPluginsFeatureDiscoveryServiceFactory()); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
+backend.add(dynamicPluginsFeatureDiscoveryServiceFactory); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
 backend.add(
   dynamicPluginsServiceFactory({
     moduleLoader: logger => new CommonJSModuleLoader(logger),
