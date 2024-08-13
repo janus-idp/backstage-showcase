@@ -67,8 +67,8 @@ backend.add(
     },
   }),
 );
-backend.add(dynamicPluginsFrontendSchemas());
-backend.add(customLogger());
+backend.add(dynamicPluginsFrontendSchemas);
+backend.add(customLogger);
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
 backend.add(
