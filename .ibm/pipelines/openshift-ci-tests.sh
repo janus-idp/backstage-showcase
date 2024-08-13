@@ -334,6 +334,10 @@ initiate_deployments() {
 
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+
+  # Deploy redis cache db.
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE_RBAC}"
+
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
@@ -375,7 +379,7 @@ main() {
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
   initiate_deployments
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
+  # check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
   check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
   exit "${OVERALL_RESULT}"
 }

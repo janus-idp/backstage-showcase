@@ -134,6 +134,7 @@ upstream:
       registry: quay.io
       repository: janus-idp/backstage-showcase
       tag: next
+    replicas: 2
     command: []
     # FIXME (tumido): USE POSTGRES_PASSWORD and POSTGRES_USER instead of POSTGRES_ADMIN_PASSWORD
     # This is a hack. In {fedora,rhel}/postgresql images, regular user is forbidden
