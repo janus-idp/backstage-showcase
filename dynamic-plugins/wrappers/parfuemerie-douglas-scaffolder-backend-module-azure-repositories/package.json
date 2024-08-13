@@ -40,7 +40,7 @@
     "@backstage/backend-plugin-api": "0.6.12",
     "@backstage/integration": "1.8.0",
     "@backstage/plugin-scaffolder-node": "0.2.9",
-    "@parfuemerie-douglas/scaffolder-backend-module-azure-repositories": "0.2.7"
+    "@parfuemerie-douglas/scaffolder-backend-module-azure-repositories": "0.2.8"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.6",
