@@ -6262,7 +6262,7 @@
     zen-observable "^0.10.0"
     zod "^3.22.4"
 
-"@backstage/plugin-scaffolder-backend@^1.19.2":
+"@backstage/plugin-scaffolder-backend@^1.22.6":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.23.0.tgz#35cf0bdcb14aca53c20fbf8f88acffdf3c27532c"
   integrity sha512-naDeEFGHTR87/C+Ut+OfAJJFhWOIaF7gc5YBN5iyl4GIf9fL3l4kQrUo29iiQ/GXd9nskzeLlSulXwDUP5qcJQ==
@@ -10213,19 +10213,21 @@
     react-use "^17.2.4"
     validate-color "^2.2.4"
 
-"@parfuemerie-douglas/scaffolder-backend-module-azure-repositories@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@parfuemerie-douglas/scaffolder-backend-module-azure-repositories/-/scaffolder-backend-module-azure-repositories-0.2.7.tgz#5c0b54492ba88dfd58c720e4efd6c7d0a850b0c9"
-  integrity sha512-J5qHiK95BwvoYeJis85wR677zQesLdA5uILFxCnkUkxLARA3AvVG2EStSkDJkPaauP3114tpfyqm9ePmZrgM4A==
+"@parfuemerie-douglas/scaffolder-backend-module-azure-repositories@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@parfuemerie-douglas/scaffolder-backend-module-azure-repositories/-/scaffolder-backend-module-azure-repositories-0.3.0.tgz#0696707f9bd01ce37a306da5577bdc6394c25bbe"
+  integrity sha512-2g3DnE/6FwHD4VrG4pz8/7BQudgbjqTcP8Uzgci3YKWFPkVEgDoWitETbeuS6ylE2iaGL0XQH1+1lKUKYsr++Q==
   dependencies:
-    "@backstage/backend-common" "^0.20.0"
-    "@backstage/config" "^1.1.1"
+    "@backstage/backend-common" "^0.22.0"
+    "@backstage/backend-plugin-api" "^0.7.0"
+    "@backstage/cli" "^0.26.11"
+    "@backstage/config" "^1.2.0"
     "@backstage/errors" "^1.2.3"
     "@backstage/integration" "^1.8.0"
-    "@backstage/plugin-scaffolder-backend" "^1.19.2"
+    "@backstage/plugin-scaffolder-backend" "^1.22.6"
     "@backstage/plugin-scaffolder-node" "^0.2.9"
     "@backstage/types" "^1.1.1"
-    azure-devops-node-api "^12.1.0"
+    azure-devops-node-api "^13.0.0"
     winston "^3.2.1"
 
 "@pkgjs/parseargs@^0.11.0":
@@ -14945,10 +14947,10 @@ azure-devops-node-api@^12.0.0:
     tunnel "0.0.6"
     typed-rest-client "^1.8.4"
 
-azure-devops-node-api@^12.1.0:
-  version "12.5.0"
-  resolved "https://registry.yarnpkg.com/azure-devops-node-api/-/azure-devops-node-api-12.5.0.tgz#38b9efd7c5ac74354fe4e8dbe42697db0b8e85a5"
-  integrity sha512-R5eFskGvOm3U/GzeAuxRkUsAl0hrAwGgWn6zAd2KrZmrEhWZVqLew4OOupbQlXUuojUzpGtq62SmdhJ06N88og==
+azure-devops-node-api@^13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/azure-devops-node-api/-/azure-devops-node-api-13.0.0.tgz#e2ed2bee2f8f964cbe6acf894854d70033f23d8e"
+  integrity sha512-T/i3pt2Dxb2//1+TJT05Ff5heUmQEWKwa8sdguIhdRYT3Zge9FYw98zpfFvCD7CZsz6AN74SKGgqF3ISVN2TGg==
   dependencies:
     tunnel "0.0.6"
     typed-rest-client "^1.8.4"
