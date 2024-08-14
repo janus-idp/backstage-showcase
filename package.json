@@ -11,6 +11,7 @@
     "ci": "turbo run lint build test",
     "start": "turbo run build --filter=app && turbo run start --filter=backend",
     "start-backend": "turbo run start --filter=backend",
+    "dev": "turbo run start --filter=backend --filter=app",
     "build": "turbo run build",
     "tsc": "tsc",
     "export-dynamic": "turbo run export-dynamic --concurrency 1",
