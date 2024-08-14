@@ -48,7 +48,6 @@ backend:
       # Allow your Jira instance for @roadiehq/backstage-plugin-jira
       - ${JIRA_URL}
   cors:
-    origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   # This is for local development only, it is not recommended to use this in production
