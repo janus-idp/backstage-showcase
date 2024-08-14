@@ -7,6 +7,40 @@ data:
   app-config-rhdh.yaml: |
     app:
       title: Red Hat Developer Hub
+      mainMenu:
+        defaultItems:
+        - title: Search
+          path: '/search'
+          icon: search
+        - title: Home
+          path: '/'
+          icon: home_outlined
+        - title: Catalog
+          path: '/catalog'
+          icon: category_outlined
+        - title: APIs
+          path: '/api-docs'
+          icon: extension_outlined
+        - title: Learning Paths
+          path: '/learning-paths'
+          icon: school_outlined
+        - title: Create...
+          path: '/create'
+          icon: add_circle_outlined
+        - title: settings
+          path: '/settings'
+          icon: account_circle_outlined
+        extraItems:
+        - title: Administration
+          name: admin
+          icon: gpp_maybe_outlined
+          subMenuItems:
+          - title: RBAC
+            key: rbac
+            icon: vpn_key_outlined
+          - title: Plugins
+            key: plugins
+            icon: power_outlined
     backend:
       auth:
         keys:
