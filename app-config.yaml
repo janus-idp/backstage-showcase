@@ -1,6 +1,6 @@
 app:
   title: Janus IDP Backstage Showcase
-  baseUrl: http://localhost:3000
+  baseUrl: http://localhost:7007
   branding:
     fullLogo: ${BASE64_EMBEDDED_FULL_LOGO}
     iconLogo: ${BASE64_EMBEDDED_ICON_LOGO}
