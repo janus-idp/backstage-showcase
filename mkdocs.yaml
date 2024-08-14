@@ -1,7 +1,8 @@
 site_name: backstage-showcase
 site_description: 'Documentation for Janus Showcase'
 repo_url: https://github.com/janus-idp/backstage-showcase
-edit_uri: edit/main/docs
+edit_uri: edit/main/showcase-docs
+docs_dir: showcase-docs
 
 plugins:
   - techdocs-core
