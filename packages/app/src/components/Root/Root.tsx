@@ -20,10 +20,10 @@ import {
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Config } from '@backstage/config';
 import MuiIcon from '@mui/material/Icon';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const listItemComponent = (
   icon: any,
@@ -123,12 +123,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     (openNestedMenuItems: boolean, handleClickItem: () => void) => {
       const renderExpandIcon = (openDropdownMenu: boolean) => {
         return openDropdownMenu ? (
-          <ExpandLess
+          <ExpandMore
             fontSize="small"
             style={{ display: 'flex', marginLeft: '0.5rem' }}
           />
         ) : (
-          <ExpandMore
+          <ChevronRightIcon
             fontSize="small"
             style={{ display: 'flex', marginLeft: '0.5rem' }}
           />
