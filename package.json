@@ -58,7 +58,8 @@
   },
   "resolutions": {
     "@types/react": "18.2.48",
-    "@types/react-dom": "18.2.18"
+    "@types/react-dom": "18.2.18",
+    "@backstage/backend-app-api": "0.7.2"
   },
   "jest": {
     "testTimeout": 20000
