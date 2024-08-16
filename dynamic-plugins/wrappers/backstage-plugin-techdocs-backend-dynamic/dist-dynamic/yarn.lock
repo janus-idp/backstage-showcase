@@ -674,7 +674,6 @@
     tslib "^2.6.2"
 
 "@aws-sdk/util-utf8-browser@npm:@smithy/util-utf8@~2", "@smithy/util-utf8@^2.0.0":
-  name "@aws-sdk/util-utf8-browser"
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@smithy/util-utf8/-/util-utf8-2.3.0.tgz#dd96d7640363259924a214313c3cf16e7dd329c5"
   integrity sha512-R8Rdn8Hy72KKcebgLiv8jQcQkXoLMOGGv5uI1/k0l+snqkOzQ1R0ChUBCxWMlBsFMekWjq0wRudIweFs7sKT5A==
