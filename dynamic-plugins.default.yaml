@@ -873,3 +873,5 @@ plugins:
       catalog:
         providers:
           microsoftGraphOrg: {}
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
+    disabled: true
