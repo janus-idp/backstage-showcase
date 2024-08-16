@@ -25,6 +25,10 @@ data:
       auth:
         keys:
           - secret: temp
+      cache:
+        store: redis
+        connection: redis://admin:password@redis:6379
+        useRedisSets: true
     integrations:
       # Plugin: GitHub
       github:
