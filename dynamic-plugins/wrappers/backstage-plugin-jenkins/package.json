@@ -13,7 +13,6 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "jenkins",
-    "pluginPackage": "backstage-plugin-jenkins",
     "pluginPackages": [
       "backstage-plugin-jenkins",
       "backstage-plugin-jenkins-backend"

@@ -12,7 +12,6 @@
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "sonarqube",
-    "pluginPackage": "backstage-plugin-sonarqube-backend",
     "pluginPackages": [
       "backstage-plugin-sonarqube",
       "backstage-plugin-sonarqube-backend"

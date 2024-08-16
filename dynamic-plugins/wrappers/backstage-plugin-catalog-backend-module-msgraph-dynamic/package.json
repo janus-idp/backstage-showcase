@@ -11,8 +11,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "backstage-plugin-catalog-backend-module-msgraph",
-    "pluginPackage": "@backstage/plugin-catalog-backend-module-msgraph"
+    "pluginId": "catalog",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "exports": {
     ".": "./src/index.ts",

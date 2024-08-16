@@ -12,7 +12,6 @@
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "immobiliarelabs-gitlab",
-    "pluginPackage": "immobiliarelabs-backstage-plugin-gitlab-backend",
     "pluginPackages": [
       "immobiliarelabs-backstage-plugin-gitlab",
       "immobiliarelabs-backstage-plugin-gitlab-backend"

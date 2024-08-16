@@ -11,8 +11,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "gitlab",
-    "pluginPackage": "backstage-plugin-scaffolder-backend-module-gitlab"
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": "./src/index.ts",

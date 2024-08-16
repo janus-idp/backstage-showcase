@@ -13,7 +13,6 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "pagerduty",
-    "pluginPackage": "pagerduty-backstage-plugin",
     "pluginPackages": [
       "pagerduty-backstage-plugin"
     ]

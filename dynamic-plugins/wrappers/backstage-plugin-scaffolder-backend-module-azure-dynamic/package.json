@@ -11,8 +11,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "azure",
-    "pluginPackage": "backstage-plugin-scaffolder-backend-module-azure"
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": "./src/index.ts",

@@ -11,8 +11,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-module-utils",
-    "pluginPackage": "roadiehq-scaffolder-backend-module-utils"
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": "./src/index.ts",

@@ -13,7 +13,6 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "roadiehq-github-pull-requests",
-    "pluginPackage": "roadiehq-backstage-plugin-github-pull-requests",
     "pluginPackages": [
       "roadiehq-backstage-plugin-github-pull-requests"
     ]
