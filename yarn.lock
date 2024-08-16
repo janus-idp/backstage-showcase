@@ -7806,10 +7806,10 @@
     lodash "^4.17.21"
     yaml "^2.0.0"
 
-"@janus-idp/cli@1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.13.0.tgz#acdd10ad3239f3c8951caebd3d4611b6982036f6"
-  integrity sha512-TVAjdCKwKodXKM0ztS6FC5kiHaabDpUxak2zHxqg12SStgthDbckbzS1bt9CoKaWZXhAPG8Xyt+Hw1ISJbHK1g==
+"@janus-idp/cli@1.13.1":
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.13.1.tgz#72d76648ba400f648fd8d286d7706c2409d6599d"
+  integrity sha512-dVUS8S7jvsanELBpMOeRiWOK/VT8w/ZGaB1shTFbn2MlL4To9JpL3pnQ1GhiMKAUgd9OYWDwgGIJNAPY14og5A==
   dependencies:
     "@backstage/cli-common" "^0.1.14"
     "@backstage/cli-node" "^0.2.7"
