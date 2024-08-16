@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { Common, setupBrowser } from '../../../../playwright/utils/Common';
 import { UIhelper } from '../../../../playwright/utils/UIhelper';
 import { Tekton } from '../../../utils/tekton/tekton';
+import { Catalog } from '../../../support/pages/Catalog';
 
 // Pre-req: Enable tekton, kubernetes, kubernetes-backend plugins
 // Pre-req: install Red Hat OpenShift Pipelines Operator
@@ -13,6 +14,7 @@ test.describe('Test Tekton plugin', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let tekton: Tekton;
+  let catalog: Catalog;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     const page = (await setupBrowser(browser, testInfo)).page;
@@ -20,10 +22,11 @@ test.describe('Test Tekton plugin', () => {
     await common.loginAsGuest();
     uiHelper = new UIhelper(page);
     tekton = new Tekton(page);
+    catalog = new Catalog(page);
   });
 
   test('Check Pipeline Run', async () => {
-    await tekton.goToBackstageJanusProject();
+    await catalog.goToBackstageJanusProjectCITab();
     await tekton.ensurePipelineRunsTableIsNotEmpty();
     await uiHelper.verifyHeading('Pipeline Runs');
     await uiHelper.verifyTableHeadingAndRows(
@@ -32,13 +35,13 @@ test.describe('Test Tekton plugin', () => {
   });
 
   test('Check search functionality', async () => {
-    await tekton.goToBackstageJanusProject();
+    await catalog.goToBackstageJanusProjectCITab();
     await tekton.search('hello-world'); //name of the PipelineRun
     await tekton.ensurePipelineRunsTableIsNotEmpty();
   });
 
   test('Check if modal is opened after click on the pipeline stage', async () => {
-    await tekton.goToBackstageJanusProject();
+    await catalog.goToBackstageJanusProjectCITab();
     await tekton.clickOnExpandRowFromPipelineRunsTable();
     await tekton.openModalEchoHelloWorld();
     await tekton.isModalOpened();
