@@ -337,11 +337,13 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
        - `${NEXUS_REPOSITORY_MANAGER_TOKEN}` (Only for private Nexus Repository Manager instances): Nexus instance API token (see [documentation](https://help.sonatype.com/repomanager3/nexus-repository-administration/user-authentication/user-tokens)) with `nx-repository-view-*-*-read` [permissions](https://help.sonatype.com/repomanager3/nexus-repository-administration/access-control/privileges), or read permissions to view all the repositories you want to display in the plugin.
 
-6. Start the application using `yarn start`
+6. Start the application using `yarn start`, please note that the frontend will be served from the backend as static assets
 
-7. Navigate to <http://localhost:3000>
+7. Navigate to <http://localhost:7007>
 
-#### Note: Extension to Kubernetes Backend Plugin
+8. Alternatively, you can start application using `yarn dev` which would run the frontend using webpack, which allows for hot reloads. This will automatically open `http://localhost:3000` in your default browser.
+
+### Note: Extension to Kubernetes Backend Plugin
 
 The Kubernetes plugin has a default API factory that work right out the box with a few `oidcProviders` for authentication, but `oidc.oidc` is not included. An additional utility API has been added to the `backstage-plugin-kubernetes` plugin to allow the use of `oidcTokenProvider: 'oidc'` in the plugin configuration.
 

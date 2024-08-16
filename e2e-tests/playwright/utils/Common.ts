@@ -76,42 +76,6 @@ export class Common {
     await this.checkAndReauthorizeGithubApp();
     await this.uiHelper.waitForSideBarVisible();
   }
-
-  /**
-   * Performs any action with retries.
-   * @param action A function that performs the desired action.
-   * @param retries Number of retries.
-   * @param retryInterval Time to wait between retries in milliseconds.
-   */
-  async performActionWithRetry<T>(
-    action: () => Promise<T>,
-    retries = 3,
-    retryInterval = 5000,
-  ): Promise<T> {
-    let lastError: unknown;
-
-    for (let attempt = 0; attempt < retries; attempt++) {
-      try {
-        return await action();
-      } catch (error) {
-        lastError = error;
-        if (attempt < retries - 1) {
-          console.log(
-            `Attempt ${
-              attempt + 1
-            } failed, retrying after ${retryInterval}ms...`,
-          );
-          await new Promise(resolve => setTimeout(resolve, retryInterval));
-        } else {
-          console.log('All retries failed.');
-        }
-      }
-    }
-
-    // If all attempts fail, throw the last encountered error.
-    throw lastError;
-  }
-
   async checkAndReauthorizeGithubApp() {
     await new Promise<void>(resolve => {
       this.page.once('popup', async popup => {

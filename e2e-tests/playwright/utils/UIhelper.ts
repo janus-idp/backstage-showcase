@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -207,6 +207,7 @@ export class UIhelper {
 
   async clickTab(tabName: string) {
     const tabLocator = this.page.locator(`text="${tabName}"`);
+    await tabLocator.waitFor({ state: 'visible' });
     await tabLocator.click();
   }
 
