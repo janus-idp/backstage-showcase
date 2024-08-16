@@ -322,6 +322,9 @@ initiate_deployments() {
   install_helm
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
+  # Deploy redis cache db.
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
+
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
