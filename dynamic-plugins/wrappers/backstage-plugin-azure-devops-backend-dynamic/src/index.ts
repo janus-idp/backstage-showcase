@@ -1,1 +1,1 @@
-export { default } from '@backstage-community/plugin-azure-devops-backend';
+export { dynamicPluginInstaller } from './dynamic';
