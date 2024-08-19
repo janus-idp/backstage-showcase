@@ -1,1 +1,1 @@
-export { default } from '@backstage-community/plugin-jenkins-backend';
+export { dynamicPluginInstaller } from './dynamic';

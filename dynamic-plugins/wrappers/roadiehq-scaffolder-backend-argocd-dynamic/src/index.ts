@@ -1,1 +1,1 @@
-export { scaffolderBackendModuleArgocd as default } from './plugin';
+export { dynamicPluginInstaller } from './dynamic';
