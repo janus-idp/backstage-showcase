@@ -274,6 +274,7 @@
     "url": "https://developers.redhat.com/learn/openshift-data-science/using-projects-red-hat-openshift-data-science"
   },
   {
+    "paths": 1,
     "minutes": 30,
     "level": "Beginner",
     "type": "Ansible Learning path",
@@ -282,6 +283,7 @@
     "url": "https://red.ht/aap-lp-ansible-basics"
   },
   {
+    "paths": 1,
     "hours": 1,
     "level": "Beginner",
     "type": "Ansible Learning path",
@@ -290,6 +292,7 @@
     "url": "https://red.ht/aap-lp-vscode-essentials"
   },
   {
+    "paths": 1,
     "minutes": 30,
     "level": "Beginner",
     "type": "Ansible Learning path",
@@ -298,6 +301,7 @@
     "url": "https://red.ht/aap-lp-yaml-essentials"
   },
   {
+    "paths": 1,
     "hours": 1,
     "level": "Beginner",
     "type": "Ansible Learning path",
@@ -306,6 +310,7 @@
     "url": "https://red.ht/aap-lp-getting-started-playbooks"
   },
   {
+    "paths": 1,
     "hours": 1,
     "level": "Intermediate",
     "type": "Ansible Learning path",
@@ -314,6 +319,7 @@
     "url": "https://red.ht/aap-lp-getting-started-collections"
   },
   {
+    "paths": 1,
     "minutes": 30,
     "level": "Beginner",
     "type": "Ansible Lab",
@@ -322,6 +328,7 @@
     "url": "https://red.ht/aap-lab-getting-started-navigator"
   },
   {
+    "paths": 1,
     "minutes": 45,
     "level": "Beginner",
     "type": "Ansible Lab",
@@ -330,6 +337,7 @@
     "url": "https://red.ht/aap-lab-getting-started-builder"
   },
   {
+    "paths": 1,
     "hours": 1,
     "level": "Beginner",
     "type": "Ansible Lab",
@@ -338,6 +346,7 @@
     "url": "https://red.ht/aap-lab-getting-started-playbook"
   },
   {
+    "paths": 1,
     "minutes": 30,
     "level": "Beginner",
     "type": "Ansible Lab",
