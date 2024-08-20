@@ -31,8 +31,8 @@
     "@backstage-community/plugin-lighthouse": "0.4.20"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.6",
-    "@janus-idp/cli": "1.11.0"
+    "@backstage/cli": "0.26.11",
+    "@janus-idp/cli": "1.13.1"
   },
   "files": [
     "dist",
