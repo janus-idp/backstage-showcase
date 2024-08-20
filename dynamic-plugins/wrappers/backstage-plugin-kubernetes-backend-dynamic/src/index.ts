@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { default } from '@backstage/plugin-kubernetes-backend/alpha';

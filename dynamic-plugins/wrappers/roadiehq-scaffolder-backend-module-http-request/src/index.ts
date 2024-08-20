@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { scaffolderModuleHttpRequest as default } from './plugin';

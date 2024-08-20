@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { scaffolderBackendModuleUtils as default } from './plugin';

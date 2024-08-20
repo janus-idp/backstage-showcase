@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { default } from '@backstage/plugin-scaffolder-backend-module-gerrit';

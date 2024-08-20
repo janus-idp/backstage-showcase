@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { default } from '@backstage-community/plugin-sonarqube-backend';

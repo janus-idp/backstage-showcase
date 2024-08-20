@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { azureRepositoriesActions as default } from './plugin';

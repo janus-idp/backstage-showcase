@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { argocdPlugin as default } from './plugin';
