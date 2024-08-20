@@ -36,14 +36,11 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-redhat-argocd --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@backstage-community/plugin-redhat-argocd": "^1.6.1",
-    "@backstage/backend-plugin-api": "^0.7.0",
-    "@backstage/plugin-scaffolder-backend": "1.22.5",
-    "@backstage/plugin-scaffolder-node": "0.4.3"
+    "@backstage-community/plugin-redhat-argocd": "^1.6.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.13.0"
+    "@janus-idp/cli": "1.13.1"
   },
   "files": [
     "dist",
