@@ -136,14 +136,14 @@ patch_packages(){
 function display_help() {
 		echo "A utility script to create patches for packages in the backstage/backstage repository for your backstage instance"
 		echo
-    echo "Usage: ./patch-package.sh [src] [dest] [package-name-1] [package-name-2] ..."
+    echo "Usage: $0 [src] [dest] [package-name-1] [package-name-2] ..."
 		echo
     echo "src: The root of the backstage monorepo with the patched changes."
     echo "dest: The root of the target backstage monorepo containing the node_modules that are to be patched."
     echo "package-name-n: a list of package names separated by a space. These should match the package names in the \`node_modules/@backstage\` directory"
     printf "\tIf patching a plugin, append a \`plugin-\` to the package name, ex: \`plugin-scaffolder-backend\`."
     printf "\n\tIf patching a package, just provide the package name that matches the corresponding package name in the \`node_modules\`, ex: \`integration\`\n"
-    echo "Please note that if the resultant package has a dist/cjs directory containing more than 2 files, the user will need to manually update file names and references"
+    echo "Please note that if the resultant package has a dist/cjs directory containing more than 2 files, the user may need to manually update file names and references"
 }
 
 for arg in "$@"

@@ -100,14 +100,14 @@ This guide will show you how to patch a package in Backstage using the `patch-pa
     1. You would need to manually rename the new files to match the old file names in the patched version of the package:
 
        ```bash
-        FILE_NAME=CatalogBuilder-Cu6UKYtc.cjs.js
-        NEWLY_BUILT_FILE_NAME=CatalogBuilder-g0TDave-.cjs.js
+        FILE_NAME=CatalogBuilder-Cu6UKYtc
+        NEWLY_BUILT_FILE_NAME=CatalogBuilder-g0TDave-
         cd path-to-patched-package/plugin-catalog-backend/
-        mv dist/cjs/CatalogBuilder-Cu6UKYtc.cjs.js dist/cjs/CatalogBuilder-g0TDave-.cjs.js
-        mv dist/cjs/CatalogBuilder-Cu6UKYtc.cjs.js.map dist/cjs/CatalogBuilder-g0TDave-.cjs.js.map
+        mv dist/cjs/${FILE_NAME}.cjs.js dist/cjs/${NEWLY_BUILT_FILE_NAME}.cjs.js
+        mv dist/cjs/${FILE_NAME}.cjs.js.map dist/cjs/${NEWLY_BUILT_FILE_NAME}.cjs.js.map
        ```
 
-    2. Update all references to the newly patched file names in the package to point to the old file names. This is automatically done for you by the `patch-package.sh` script when there are only 2 files in the `dist/cjs` directory of the package.
+    2. Update all references to the newly patched file names in the package to point to the old file names. This is automatically done for you by the `patch-package.sh` script when there are only 2 files in the `dist/cjs` directory of the package. It will skip the renaming step if there are more than 2 files in the `dist/cjs` directories, so you will need to manually update the references in those cases:
 
        ```bash
        cd path-to-patched-package/plugin-catalog-backend/
