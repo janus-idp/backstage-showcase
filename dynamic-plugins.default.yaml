@@ -793,6 +793,17 @@ plugins:
                   if:
                     allOf:
                       - isPluginApplicableToEntity
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
+    disabled: true
+    pluginConfig:
+      pagerDuty:
+        accounts:
+          - id: ${PAGERDUTY_ACCOUNT}
+            apiBaseUrl: ${PAGERDUTY_API_BASE}
+            oauth:
+              clientId: ${PAGERDUTY_CLIENT_ID}
+              clientSecret: ${PAGERDUTY_CLIENT_SECRET}
+              subDomain: ${PAGERDUTY_SUBDOMAIN}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
     disabled: true
