@@ -119,7 +119,7 @@ WORKDIR $CONTAINER_SOURCE/
 # When updating version of mkdocs-techdocs-core remember to update ../.rhdh/docker/requirement* files too
 # hadolint ignore=DL3041,DL3042
 RUN microdnf update --setopt=install_weak_deps=0 -y && \
-  microdnf install -y python3 python3-pip && \
+  microdnf install -y python3 python3-pip skopeo && \
   pip3 install mkdocs-techdocs-core~=1.3.3 && \
   microdnf clean all
 
