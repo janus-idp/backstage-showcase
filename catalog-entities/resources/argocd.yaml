@@ -11,7 +11,7 @@ metadata:
     - url: https://argo-cd.readthedocs.io/en/stable/
       title: Documentation
       icon: web
-      
+
 spec:
   type: identity-provider
   lifecycle: production
