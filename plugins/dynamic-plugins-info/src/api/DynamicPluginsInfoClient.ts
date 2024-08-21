@@ -33,7 +33,8 @@ export class DynamicPluginsInfoClient implements DynamicPluginsInfoApi {
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(`${data.message}`);
+      const message = data.error?.message || data.message || data.toString?.();
+      throw new Error(`Failed to load dynamic plugin info: ${message}`);
     }
     return data;
   }
