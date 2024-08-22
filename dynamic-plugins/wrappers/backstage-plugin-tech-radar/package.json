@@ -13,7 +13,6 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "tech-radar",
-    "pluginPackage": "backstage-plugin-tech-radar",
     "pluginPackages": [
       "backstage-plugin-tech-radar"
     ]
