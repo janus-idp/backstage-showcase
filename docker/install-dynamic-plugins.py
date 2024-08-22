@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 
+import copy
 import hashlib
 import json
 import os
@@ -269,6 +270,13 @@ def main():
             if key == 'package':
                 continue
             allPlugins[package][key] = plugin[key]
+
+    # add a hash for each plugin configuration to detect changes
+    for plugin in allPlugins.values():
+        hash_dict = copy.deepcopy(plugin)
+        hash_dict.pop('pluginConfig', None)
+        hash = hashlib.sha256(json.dumps(hash_dict, sort_keys=True).encode('utf-8')).hexdigest()
+        plugin['hash'] = hash
 
     oci_downloader = OciDownloader(dynamicPluginsRoot)
     # iterate through the list of plugins
