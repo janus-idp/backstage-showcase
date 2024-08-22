@@ -582,7 +582,7 @@ plugins:
               baseUrl: '${AAP_BASE_URL}'
               authorization: "${AAP_AUTH_TOKEN}"
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-3scale-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -873,3 +873,6 @@ plugins:
       catalog:
         providers:
           microsoftGraphOrg: {}
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
+    disabled: true

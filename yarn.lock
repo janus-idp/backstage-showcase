@@ -3029,6 +3029,19 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
+"@backstage-community/plugin-3scale-backend@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-3scale-backend/-/plugin-3scale-backend-1.8.2.tgz#2f3edf09e8578e03486d73c72158c9d7efcaadca"
+  integrity sha512-+u7QPAod+faR2ZugnAsxNS91q38fxudr3hPFz/pgK4weMpZiI63s2zXjDhPzDzyEFH5lwO/6R2Rz0dCz+hrfuw==
+  dependencies:
+    "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-dynamic-feature-service" "^0.2.15"
+    "@backstage/backend-plugin-api" "^0.7.0"
+    "@backstage/backend-tasks" "^0.5.27"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/config" "^1.2.0"
+    "@backstage/plugin-catalog-node" "^1.12.4"
+
 "@backstage-community/plugin-azure-devops-backend@0.6.5":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-azure-devops-backend/-/plugin-azure-devops-backend-0.6.5.tgz#838338b9f4f5823e5b559b0337a9a939c11daf56"
