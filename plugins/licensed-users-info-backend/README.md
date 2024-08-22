@@ -1,14 +1,61 @@
-# licensed-users-info
+# Licensed User Info Plugin Documentation
 
-Welcome to the licensed-users-info backend plugin!
+This plugin provides statistical information about logged-in users.
 
-_This plugin was created through the Backstage CLI_
+# Available Endpoints
 
-## Getting started
+The plugin exposes the following endpoints to retrieve data about recorded logged-in users:
 
-Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn
-start` in the root directory, and then navigating to [/licensed-users-info/health](http://localhost:7007/api/licensed-users-info/health).
+1. Retrieve the number of logged-In users
+   use `/users/quantity` endpoint to get the total count of recorded logged-in users:
 
-You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
-This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
-It is only meant for local development, and the setup for it can be found inside the [/dev](./dev) directory.
+```bash
+curl -X GET "http://localhost:7007/api/licensed-users-info/users/quantity" -H "Content-Type: application/json" -H "Authorization: Bearer $token"
+```
+
+Example output:
+
+```json
+{ "quantity": "2" }
+```
+
+2. Retrieve the list of logged-In users
+   use `/users` endpoint to get a list of recorded logged-in users:
+
+```bash
+curl -X GET "http://localhost:7007/api/licensed-users-info/users" -H "Content-Type: application/json" -H "Authorization: Bearer $token"
+```
+
+Example output:
+
+```json
+[
+  {
+    "userEntityRef": "user:default/dev",
+    "lastTimeLogin": "Thu, 22 Aug 2024 16:27:41 GMT",
+    "displayName": "John Leavy",
+    "email": "dev@redhat.com"
+  },
+  {
+    "userEntityRef": "user:default/test-bit",
+    "lastTimeLogin": "Thu, 22 Aug 2024 16:35:28 GMT",
+    "email": "test-bit@gmail.com"
+  }
+]
+```
+
+Retrieve the list of users in CSV format `/users` endpoint also supports returning the list of users in CSV format by setting the Content-Type header to text/csv:
+
+```bash
+curl -X GET "http://localhost:7007/api/licensed-users-info/users" -H "Content-Type: text/csv" -H "Authorization: Bearer $token"
+```
+
+```text
+Example output:
+
+userEntityRef,displayName,email,lastTimeLogin
+user:default/dev,John Leavy,dev@redhat.com,"Thu, 22 Aug 2024 16:27:41 GMT"
+user:default/test-bit,undefined,test-bit@gmail.com,"Thu, 22 Aug 2024 16:35:28 GMT"
+```
+
+> Notice: this plugin can not provide information about logged in users before update showcase to backstage 1.29.2. It relies on features introduced in the backstage-plugin-auth-backend starting from version 1.28.0
