@@ -278,6 +278,17 @@ def main():
         hash = hashlib.sha256(json.dumps(hash_dict, sort_keys=True).encode('utf-8')).hexdigest()
         plugin['hash'] = hash
 
+    # create a dict installed_plugins of all installed plugins in dynamicPluginsRoot
+    installed_plugins = {}
+    for dir_name in os.listdir(dynamicPluginsRoot):
+        dir_path = os.path.join(dynamicPluginsRoot, dir_name)
+        if os.path.isdir(dir_path):
+            hash_file_path = os.path.join(dir_path, 'dynamic-plugin-config.hash')
+            if os.path.isfile(hash_file_path):
+                with open(hash_file_path, 'r') as hash_file:
+                    hash_value = hash_file.read().strip()
+                    installed_plugins[dir_name] = hash_value
+
     oci_downloader = OciDownloader(dynamicPluginsRoot)
     # iterate through the list of plugins
     for plugin in allPlugins.values():
