@@ -9,12 +9,10 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin",
+    "role": "backend-plugin-module",
     "supported-versions": "1.29.2",
-    "pluginId": "backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor",
-    "pluginPackages": [
-      "backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor"
-    ]
+    "pluginId": "catalog",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "exports": {
     ".": "./src/index.ts",
