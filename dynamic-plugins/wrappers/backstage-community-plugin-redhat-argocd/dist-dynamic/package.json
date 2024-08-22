@@ -1,5 +1,5 @@
 {
-  "name": "backstage-community-plugin-redhat-argocd",
+  "name": "backstage-community-plugin-redhat-argocd-dynamic",
   "version": "1.6.1",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
@@ -12,7 +12,6 @@
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "backstage-community-plugin-redhat-argocd",
-    "pluginPackage": "backstage-community-plugin-redhat-argocd",
     "pluginPackages": [
       "backstage-community-plugin-redhat-argocd"
     ]
@@ -25,7 +24,20 @@
     "./package.json": "./package.json"
   },
   "scripts": {},
-  "dependencies": {},
+  "dependencies": {
+    "@janus-idp/backstage-plugin-argocd-common": "1.0.1",
+    "@kubernetes/client-node": "^0.20.0",
+    "@material-ui/core": "^4.9.13",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@patternfly/patternfly": "^5.1.0",
+    "@patternfly/react-charts": "^7.1.1",
+    "@patternfly/react-core": "^5.1.2",
+    "@patternfly/react-icons": "^5.1.1",
+    "@patternfly/react-tokens": "^5.1.2",
+    "moment": "^2.30.1",
+    "react-use": "17.5.1"
+  },
   "devDependencies": {},
   "files": [
     "dist"
@@ -33,7 +45,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-community-redhat-argocd"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
@@ -47,9 +59,12 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^0.7.0",
-    "@backstage/plugin-scaffolder-backend": "1.22.5",
-    "@backstage/plugin-scaffolder-node": "0.4.3"
+    "@backstage/catalog-model": "^1.5.0",
+    "@backstage/core-components": "^0.14.9",
+    "@backstage/core-plugin-api": "^1.9.3",
+    "@backstage/plugin-catalog-react": "^1.12.2",
+    "@backstage/plugin-permission-react": "^0.4.24",
+    "@backstage/theme": "^0.5.6"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
