@@ -12,7 +12,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.27.7"
+    "supported-versions": "1.29.2"
   },
   "exports": {
     ".": "./src/index.ts",
