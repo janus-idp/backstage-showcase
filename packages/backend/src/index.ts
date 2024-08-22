@@ -112,5 +112,6 @@ backend.add(import('./modules/authProvidersModule'));
 
 backend.add(import('@internal/plugin-dynamic-plugins-info-backend'));
 backend.add(import('@internal/plugin-scalprum-backend'));
+backend.add(import('@internal/plugin-licensed-users-info-backend'));
 
 backend.start();
