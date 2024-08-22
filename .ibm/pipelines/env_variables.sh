@@ -60,5 +60,7 @@ DATA_ROUTER_PASSWORD=$(cat /tmp/secrets/DATA_ROUTER_PASSWORD)
 DATA_ROUTER_PROJECT="main"
 REPORTPORTAL_HOSTNAME=$(cat /tmp/secrets/REPORTPORTAL_HOSTNAME)
 NEXUS_HOSTNAME=$(cat /tmp/secrets/NEXUS_HOSTNAME)
+REDIS_TEMP_USER=admin
+REDIS_TEMP_PASS=password
 
 set +a  # Stop automatically exporting variables
