@@ -69,5 +69,5 @@ metadata:
   name: redis-secret
 type: Opaque
 data:
-  username: YWRtaW4=  # base64 encoded
-  password: cGFzc3dvcmQ=  # base64 encoded
+  username: dGVtcA==  # base64 encoded
+  password: dGVzdDEyMw==  # base64 encoded
