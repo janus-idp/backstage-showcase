@@ -34,7 +34,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "^0.7.0",
+    "@backstage/backend-plugin-api": "0.7.0",
     "@backstage/plugin-scaffolder-backend": "1.22.5",
     "@backstage/plugin-scaffolder-node": "0.4.3",
     "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor": "1.2.4"
