@@ -1,9 +1,7 @@
-import {
-  PluginEndpointDiscovery,
-  errorHandler,
-} from '@backstage/backend-common';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
+import { DiscoveryService, LoggerService } from '@backstage/backend-plugin-api';
+import { Config } from '@backstage/config';
 import express, { Router } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -12,11 +10,12 @@ import * as url from 'url';
 export interface RouterOptions {
   logger: LoggerService;
   pluginManager: DynamicPluginManager;
-  discovery: PluginEndpointDiscovery;
+  discovery: DiscoveryService;
+  config: Config;
 }
 
 export async function createRouter(options: RouterOptions): Promise<Router> {
-  const { logger, pluginManager, discovery } = options;
+  const { logger, pluginManager, discovery, config } = options;
 
   const router = Router();
   router.use(express.json());
@@ -85,6 +84,8 @@ export async function createRouter(options: RouterOptions): Promise<Router> {
     response.send(scalprumPlugins);
   });
 
-  router.use(errorHandler({ logger: logger }));
+  const middleware = MiddlewareFactory.create({ logger, config });
+
+  router.use(middleware.error());
   return router;
 }

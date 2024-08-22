@@ -1,18 +1,18 @@
 {
   "name": "backstage-plugin-catalog-backend-module-gitlab-dynamic",
-  "version": "0.3.17",
-  "main": "dist/index.cjs.js",
-  "types": "dist/index.d.ts",
+  "version": "0.3.21",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.27.7"
+    "supported-versions": "1.27.7",
+    "pluginId": "gitlab",
+    "pluginPackage": "backstage-plugin-catalog-backend-module-gitlab"
   },
   "exports": {
     ".": {
@@ -49,15 +49,15 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.22.0",
-    "@backstage/backend-plugin-api": "^0.6.18",
-    "@backstage/backend-tasks": "^0.5.23",
+    "@backstage/backend-common": "^0.23.3",
+    "@backstage/backend-plugin-api": "^0.7.0",
+    "@backstage/backend-tasks": "^0.5.27",
     "@backstage/catalog-model": "^1.5.0",
     "@backstage/config": "^1.2.0",
-    "@backstage/integration": "^1.11.0",
-    "@backstage/plugin-catalog-common": "^1.0.23",
-    "@backstage/plugin-catalog-node": "^1.12.0",
-    "@backstage/plugin-events-node": "^0.3.4"
+    "@backstage/integration": "^1.13.0",
+    "@backstage/plugin-catalog-common": "^1.0.25",
+    "@backstage/plugin-catalog-node": "^1.12.4",
+    "@backstage/plugin-events-node": "^0.3.8"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

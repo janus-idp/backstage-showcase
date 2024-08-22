@@ -310,6 +310,21 @@ While the plugin's default configuration comes from the `dynamic-plugins.default
 
 Note: The plugin's default configuration typically references environment variables, and it is essential to ensure that these variables are set in the Helm chart values.
 
+### Consuming dynamic plugins from a container registry
+
+To install dynamic plugins from a container registry, you can utilize the `oci://` package specification. See [TDB](container build) for more information on how to build and push a container image to a container registry.
+
+```yaml
+global:
+  dynamic:
+    plugins:
+      - disabled: false
+        package: >-
+          oci://quay.io/tkral/simple-chat:v0.0.1!internal-backstage-plugin-simple-chat
+```
+
+For private registries, you can set the `REGISTRY_AUTH_FILE` environment variable to the path of the configuration file containing the authentication details for the registry. This file is typically located at `~/.config/containers/auth.json` or `~/.docker/config.json`.
+
 ### Example of external dynamic backend plugins
 
 If you wish to easily test the installation of dynamic backend plugins from an external NPM registry, you can utilize the example dynamic backend plugins outlined in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins), which have been published to NPMJS for demonstration purposes.

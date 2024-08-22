@@ -1,7 +1,5 @@
-import {
-  createConfigSecretEnumerator,
-  WinstonLogger,
-} from '@backstage/backend-app-api';
+import { createConfigSecretEnumerator } from '@backstage/backend-defaults/rootConfig';
+import { WinstonLogger } from '@backstage/backend-defaults/rootLogger';
 import { DynamicPluginsSchemasService } from '@backstage/backend-dynamic-feature-service';
 import {
   coreServices,

@@ -13,8 +13,11 @@
 # limitations under the License.
 #
 
+import hashlib
+import json
 import os
 import sys
+import tempfile
 import yaml
 import tarfile
 import shutil
@@ -78,6 +81,68 @@ RECOGNIZED_ALGORITHMS = (
     'sha384',
     'sha256',
 )
+
+class OciDownloader:
+    def __init__(self, destination: str):
+        self._skopeo = shutil.which('skopeo')
+        if self._skopeo is None:
+            raise InstallException('skopeo executable not found in PATH')
+
+        self.tmp_dir_obj = tempfile.TemporaryDirectory()
+        self.tmp_dir = self.tmp_dir_obj.name
+        self.image_to_tarball = {}
+        self.destination = destination
+
+    def skopeo(self, command):
+        rv = subprocess.run([self._skopeo] + command, check=True)
+        if rv.returncode != 0:
+            raise InstallException(f'Error while running skopeo command: {rv.stderr}')
+
+    def get_plugin_tar(self, image: str) -> str:
+        if image not in self.image_to_tarball:
+            # run skopeo copy to copy the tar ball to the local filesystem
+            print(f'\t==> Copying image {image} to local filesystem', flush=True)
+            image_digest = hashlib.sha256(image.encode('utf-8'), usedforsecurity=False).hexdigest()
+            local_dir = os.path.join(self.tmp_dir, image_digest)
+            # replace oci:// prefix with docker://
+            image_url = image.replace('oci://', 'docker://')
+            self.skopeo(['copy', image_url, f'dir:{local_dir}'])
+            manifest_path = os.path.join(local_dir, 'manifest.json')
+            manifest = json.load(open(manifest_path))
+            # get the first layer of the image
+            layer = manifest['layers'][0]['digest']
+            (_sha, filename) = layer.split(':')
+            local_path = os.path.join(local_dir, filename)
+            self.image_to_tarball[image] = local_path
+
+        return self.image_to_tarball[image]
+
+    def extract_plugin(self, tar_file: str, plugin_path: str) -> None:
+        with tarfile.open(tar_file, 'r:gz') as tar: # NOSONAR
+            # extract only the files in specified directory
+            filesToExtract = []
+            for member in tar.getmembers():
+                if not member.name.startswith(plugin_path):
+                    continue
+                # zip bomb protection
+                if member.size > int(os.environ.get('MAX_ENTRY_SIZE', 20000000)):
+                    raise InstallException('Zip bomb detected in ' + member.name)
+
+                if member.islnk() or member.issym():
+                    realpath = os.path.realpath(os.path.join(plugin_path, *os.path.split(member.linkname)))
+                    if not realpath.startswith(plugin_path):
+                        print(f'\t==> WARNING: skipping file containing link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
+                        continue
+
+                filesToExtract.append(member)
+            tar.extractall(os.path.abspath(self.destination), members=filesToExtract, filter='tar')
+
+
+    def download(self, package: str) -> None:
+        # split by ! to get the path in the image
+        (image, plugin_path) = package.split('!')
+        tar_file = self.get_plugin_tar(image)
+        self.extract_plugin(tar_file=tar_file, plugin_path=plugin_path)
 
 def verify_package_integrity(plugin: dict, archive: str, working_directory: str) -> None:
     package = plugin['package']
@@ -205,6 +270,7 @@ def main():
                 continue
             allPlugins[package][key] = plugin[key]
 
+    oci_downloader = OciDownloader(dynamicPluginsRoot)
     # iterate through the list of plugins
     for plugin in allPlugins.values():
         package = plugin['package']
@@ -215,76 +281,83 @@ def main():
 
         print('\n======= Installing dynamic plugin', package, flush=True)
 
-        package_is_local = package.startswith('./')
+        package_is_oci = package.startswith('oci://')
+        if package_is_oci:
+            try:
+                oci_downloader.download(package)
+            except Exception as e:
+                raise InstallException(f"Error while adding OCI plugin {package} to downloader: {e}")
+        else:
+            package_is_local = package.startswith('./')
 
-        # If package is not local, then integrity check is mandatory
-        if not package_is_local and not skipIntegrityCheck and not 'integrity' in plugin:
-          raise InstallException(f"No integrity hash provided for Package {package}")
+            # If package is not local, then integrity check is mandatory
+            if not package_is_local and not skipIntegrityCheck and not 'integrity' in plugin:
+                raise InstallException(f"No integrity hash provided for Package {package}")
 
-        if package_is_local:
-            package = os.path.join(os.getcwd(), package[2:])
+            if package_is_local:
+                package = os.path.join(os.getcwd(), package[2:])
 
-        print('\t==> Grabbing package archive through `npm pack`', flush=True)
-        completed = subprocess.run(['npm', 'pack', package], capture_output=True, cwd=dynamicPluginsRoot)
-        if completed.returncode != 0:
-            raise InstallException(f'Error while installing plugin { package } with \'npm pack\' : ' + completed.stderr.decode('utf-8'))
+            print('\t==> Grabbing package archive through `npm pack`', flush=True)
+            completed = subprocess.run(['npm', 'pack', package], capture_output=True, cwd=dynamicPluginsRoot)
+            if completed.returncode != 0:
+                raise InstallException(f'Error while installing plugin { package } with \'npm pack\' : ' + completed.stderr.decode('utf-8'))
 
-        archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
+            archive = os.path.join(dynamicPluginsRoot, completed.stdout.decode('utf-8').strip())
 
-        if not (package_is_local or skipIntegrityCheck):
-          print('\t==> Verifying package integrity', flush=True)
-          verify_package_integrity(plugin, archive, dynamicPluginsRoot)
+            if not (package_is_local or skipIntegrityCheck):
+                print('\t==> Verifying package integrity', flush=True)
+                verify_package_integrity(plugin, archive, dynamicPluginsRoot)
 
-        directory = archive.replace('.tgz', '')
-        directoryRealpath = os.path.realpath(directory)
+            directory = archive.replace('.tgz', '')
+            directoryRealpath = os.path.realpath(directory)
 
-        print('\t==> Removing previous plugin directory', directory, flush=True)
-        shutil.rmtree(directory, ignore_errors=True, onerror=None)
-        os.mkdir(directory)
+            print('\t==> Removing previous plugin directory', directory, flush=True)
+            shutil.rmtree(directory, ignore_errors=True, onerror=None)
+            os.mkdir(directory)
 
-        print('\t==> Extracting package archive', archive, flush=True)
-        file = tarfile.open(archive, 'r:gz') # NOSONAR
-        # extract the archive content but take care of zip bombs
-        for member in file.getmembers():
-            if member.isreg():
-                if not member.name.startswith('package/'):
-                    raise InstallException("NPM package archive archive does not start with 'package/' as it should: " + member.name)
+            print('\t==> Extracting package archive', archive, flush=True)
+            file = tarfile.open(archive, 'r:gz') # NOSONAR
+            # extract the archive content but take care of zip bombs
+            for member in file.getmembers():
+                if member.isreg():
+                    if not member.name.startswith('package/'):
+                        raise InstallException("NPM package archive archive does not start with 'package/' as it should: " + member.name)
 
-                if member.size > maxEntrySize:
-                    raise InstallException('Zip bomb detected in ' + member.name)
+                    if member.size > maxEntrySize:
+                        raise InstallException('Zip bomb detected in ' + member.name)
 
-                member.name = member.name.removeprefix('package/')
-                file.extract(member, path=directory, filter='tar')
-            elif member.isdir():
-                print('\t\tSkipping directory entry', member.name, flush=True)
-            elif member.islnk() or member.issym():
-                if not member.linkpath.startswith('package/'):
-                  raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
+                    member.name = member.name.removeprefix('package/')
+                    file.extract(member, path=directory, filter='tar')
+                elif member.isdir():
+                    print('\t\tSkipping directory entry', member.name, flush=True)
+                elif member.islnk() or member.issym():
+                    if not member.linkpath.startswith('package/'):
+                        raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
 
-                member.name = member.name.removeprefix('package/')
-                member.linkpath = member.linkpath.removeprefix('package/')
+                    member.name = member.name.removeprefix('package/')
+                    member.linkpath = member.linkpath.removeprefix('package/')
 
-                realpath = os.path.realpath(os.path.join(directory, *os.path.split(member.linkname)))
-                if not realpath.startswith(directoryRealpath):
-                  raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
+                    realpath = os.path.realpath(os.path.join(directory, *os.path.split(member.linkname)))
+                    if not realpath.startswith(directoryRealpath):
+                        raise InstallException('NPM package archive contains a link outside of the archive: ' + member.name + ' -> ' + member.linkpath)
 
-                file.extract(member, path=directory, filter='tar')
-            else:
-              if member.type == tarfile.CHRTYPE:
-                  type_str = "character device"
-              elif member.type == tarfile.BLKTYPE:
-                  type_str = "block device"
-              elif member.type == tarfile.FIFOTYPE:
-                  type_str = "FIFO"
-              else:
-                  type_str = "unknown"
+                    file.extract(member, path=directory, filter='tar')
+                else:
+                    if member.type == tarfile.CHRTYPE:
+                        type_str = "character device"
+                    elif member.type == tarfile.BLKTYPE:
+                        type_str = "block device"
+                    elif member.type == tarfile.FIFOTYPE:
+                        type_str = "FIFO"
+                    else:
+                        type_str = "unknown"
 
-              raise InstallException('NPM package archive contains a non regular file: ' + member.name + ' - ' + type_str)
+                    raise InstallException('NPM package archive contains a non regular file: ' + member.name + ' - ' + type_str)
 
-        file.close()
+            file.close()
 
-        print('\t==> Removing package archive', archive, flush=True)
-        os.remove(archive)
+            print('\t==> Removing package archive', archive, flush=True)
+            os.remove(archive)
 
         if 'pluginConfig' not in plugin:
           print('\t==> Successfully installed dynamic plugin', package, flush=True)
