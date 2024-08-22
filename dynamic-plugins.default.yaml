@@ -874,6 +874,9 @@ plugins:
         providers:
           microsoftGraphOrg: {}
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
+    disabled: true
+
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-ldap-dynamic
     disabled: true
     pluginConfig:

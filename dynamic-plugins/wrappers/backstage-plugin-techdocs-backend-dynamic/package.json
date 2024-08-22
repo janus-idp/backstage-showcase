@@ -12,7 +12,6 @@
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "techdocs",
-    "pluginPackage": "backstage-plugin-techdocs-backend",
     "pluginPackages": [
       "backstage-plugin-techdocs",
       "backstage-plugin-techdocs-backend"
