@@ -305,8 +305,12 @@ def main():
 
         plugin_already_installed = False
         if plugin['hash'] in installed_plugins:
-            print('\n======= Skipping download of already installed dynamic plugin', package, flush=True)
-            plugin_already_installed = True
+            force_download = plugin.get('forceDownload', False)
+            if force_download:
+                print('\n======= Forcing download of already installed dynamic plugin', package, flush=True)
+            else:
+                print('\n======= Skipping download of already installed dynamic plugin', package, flush=True)
+                plugin_already_installed = True
             # remove the hash from installed_plugins so that we can detect plugins that have been removed
             installed_plugins.pop(plugin['hash'])
 
