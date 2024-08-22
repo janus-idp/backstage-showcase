@@ -301,7 +301,7 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
     disabled: true
     pluginConfig:
       dynamicPlugins:
