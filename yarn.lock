@@ -3103,6 +3103,18 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
+"@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor@1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor/-/plugin-catalog-backend-module-scaffolder-relation-processor-1.2.6.tgz#264f91b77810c837f06e4cebdc9e422627119941"
+  integrity sha512-rvLSPAzFJhhfS9VCkNlrjuYq4lvpg2Vl6fstx/M91pbzN3z2XQDc8oGnmMeH+c2Vlzf6q5APxTu0J9UL1A725A==
+  dependencies:
+    "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-dynamic-feature-service" "^0.2.15"
+    "@backstage/backend-plugin-api" "^0.7.0"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/plugin-catalog-common" "^1.0.25"
+    "@backstage/plugin-catalog-node" "^1.12.4"
+
 "@backstage-community/plugin-dynatrace@10.0.4":
   version "10.0.4"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-dynatrace/-/plugin-dynatrace-10.0.4.tgz#aa78e837c0d4fa3de774ee8ecd9c6d5c497672ea"
