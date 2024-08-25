@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.29.2",
     "pluginId": "pagerduty",
     "pluginPackages": [
       "@pagerduty/backstage-plugin",
@@ -45,7 +45,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend"
+    "directory": "dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"

@@ -525,6 +525,45 @@ plugins:
                     name: Documentation
                     icon: docs
 
+  # PagerDuty
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          pagerduty.backstage-plugin:
+            appIcons:
+              - name: pagerduty
+                importName: PagerDutyIcon
+            dynamicRoutes:
+              - path: /pagerduty
+                importName: PagerDutyPage
+                menuItem:
+                  icon: pagerduty
+                  text: PagerDuty
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityPagerDutyCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      md: "span 6"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isPluginApplicableToEntity
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin-backend-dynamic
+    disabled: true
+    pluginConfig:
+      pagerDuty:
+        accounts:
+          - id: ${PAGERDUTY_ACCOUNT}
+            apiBaseUrl: ${PAGERDUTY_API_BASE}
+            oauth:
+              clientId: ${PAGERDUTY_CLIENT_ID}
+              clientSecret: ${PAGERDUTY_CLIENT_SECRET}
+              subDomain: ${PAGERDUTY_SUBDOMAIN}
+
   # Standalone plugins
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
@@ -775,35 +814,6 @@ plugins:
                   if:
                     anyOf:
                     - isJfrogArtifactoryAvailable
-
-  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
-    disabled: true
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          pagerduty.backstage-plugin:
-            mountPoints:
-              - mountPoint: entity.page.overview/cards
-                importName: EntityPagerDutyCard
-                config:
-                  layout:
-                    gridColumnEnd:
-                      md: "span 6"
-                      xs: "span 12"
-                  if:
-                    allOf:
-                      - isPluginApplicableToEntity
-  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
-    disabled: true
-    pluginConfig:
-      pagerDuty:
-        accounts:
-          - id: ${PAGERDUTY_ACCOUNT}
-            apiBaseUrl: ${PAGERDUTY_API_BASE}
-            oauth:
-              clientId: ${PAGERDUTY_CLIENT_ID}
-              clientSecret: ${PAGERDUTY_CLIENT_SECRET}
-              subDomain: ${PAGERDUTY_SUBDOMAIN}
 
   - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
     disabled: true
