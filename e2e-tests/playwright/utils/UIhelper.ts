@@ -115,16 +115,7 @@ export class UIhelper {
 
   async isBtnVisibleByTitle(text: string): Promise<boolean> {
     const locator = `BUTTON[title="${text}"]`;
-    try {
-      await this.page.waitForSelector(locator, {
-        state: 'visible',
-        timeout: 10000,
-      });
-      const button = this.page.locator(locator);
-      return button.isVisible();
-    } catch (error) {
-      return false;
-    }
+    return await this.isElementVisible(locator);
   }
 
   async isBtnVisible(text: string): Promise<boolean> {
