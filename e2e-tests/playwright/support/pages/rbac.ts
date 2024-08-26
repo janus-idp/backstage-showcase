@@ -37,8 +37,14 @@ export class Roles {
     return [policies];
   }
 
+  //Depending on the version of the Backstage, it can be 'Permission Policies' or 'Accessible Plugins'
+  // Accepts either term
   static getRolesListColumnsText() {
-    return ['Name', 'Users and groups', 'Permission Policies', 'Actions'];
+    return [
+      /^Name$/,
+      /^Users and groups$/,
+      /Permission Policies|Accessible plugins/,
+    ];
   }
 
   static getUsersAndGroupsListColumnsText() {
