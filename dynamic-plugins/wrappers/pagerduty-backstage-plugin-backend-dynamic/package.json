@@ -31,7 +31,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@pagerduty/backstage-plugin-backend": "0.6.0"
+    "@pagerduty/backstage-plugin-backend": "0.9.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.11",
