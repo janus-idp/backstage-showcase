@@ -22,6 +22,10 @@ export class UIhelper {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
+  async pressTab() {
+    await this.page.keyboard.press('Tab');
+  }
+
   async waitForHeaderTitle() {
     await this.page.waitForSelector('h2[data-testid="header-title"]');
   }
@@ -149,6 +153,10 @@ export class UIhelper {
     }
   }
 
+  async waitForTextDisappear(text: string) {
+    await this.page.waitForSelector(`text=${text}`, { state: 'detached' });
+  }
+
   async verifyText(text: string | RegExp, exact: boolean = true) {
     await this.verifyTextInLocator('', text, exact);
   }
@@ -195,6 +203,7 @@ export class UIhelper {
       .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
+
     await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }

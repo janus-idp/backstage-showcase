@@ -3035,6 +3035,19 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
+"@backstage-community/plugin-3scale-backend@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-3scale-backend/-/plugin-3scale-backend-1.8.2.tgz#2f3edf09e8578e03486d73c72158c9d7efcaadca"
+  integrity sha512-+u7QPAod+faR2ZugnAsxNS91q38fxudr3hPFz/pgK4weMpZiI63s2zXjDhPzDzyEFH5lwO/6R2Rz0dCz+hrfuw==
+  dependencies:
+    "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-dynamic-feature-service" "^0.2.15"
+    "@backstage/backend-plugin-api" "^0.7.0"
+    "@backstage/backend-tasks" "^0.5.27"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/config" "^1.2.0"
+    "@backstage/plugin-catalog-node" "^1.12.4"
+
 "@backstage-community/plugin-azure-devops-backend@0.6.5":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-azure-devops-backend/-/plugin-azure-devops-backend-0.6.5.tgz#838338b9f4f5823e5b559b0337a9a939c11daf56"
@@ -3089,6 +3102,18 @@
     humanize-duration "^3.27.0"
     luxon "^3.0.0"
     react-use "^17.2.4"
+
+"@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor@1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor/-/plugin-catalog-backend-module-scaffolder-relation-processor-1.2.6.tgz#264f91b77810c837f06e4cebdc9e422627119941"
+  integrity sha512-rvLSPAzFJhhfS9VCkNlrjuYq4lvpg2Vl6fstx/M91pbzN3z2XQDc8oGnmMeH+c2Vlzf6q5APxTu0J9UL1A725A==
+  dependencies:
+    "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-dynamic-feature-service" "^0.2.15"
+    "@backstage/backend-plugin-api" "^0.7.0"
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/plugin-catalog-common" "^1.0.25"
+    "@backstage/plugin-catalog-node" "^1.12.4"
 
 "@backstage-community/plugin-dynatrace@10.0.4":
   version "10.0.4"
