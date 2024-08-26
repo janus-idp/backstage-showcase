@@ -27,7 +27,7 @@ data:
           - secret: temp
       cache:
         store: redis
-        connection: redis://temp:test123@redis:6379
+        connection: redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:6379
         useRedisSets: true
     integrations:
       # Plugin: GitHub

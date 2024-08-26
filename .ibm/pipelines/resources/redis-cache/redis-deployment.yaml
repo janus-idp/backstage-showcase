@@ -31,12 +31,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: redis-secret
-              key: username
+              key: REDIS_USERNAME
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: redis-secret
-              key: password
+              key: REDIS_PASSWORD
         command:
         - /bin/sh
         - -c
@@ -69,5 +69,5 @@ metadata:
   name: redis-secret
 type: Opaque
 data:
-  username: dGVtcA==  # base64 encoded
-  password: dGVzdDEyMw==  # base64 encoded
+  REDIS_USERNAME: dGVtcA==  # base64 encoded
+  REDIS_PASSWORD: dGVzdDEyMw==  # base64 encoded
