@@ -327,7 +327,7 @@ export class UIhelper {
       expect(color).toBe(expectedRgbColor);
     }
   }
-  async verifyTableEmpty() {
+  async verifyTableIsEmpty() {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toEqual(0);

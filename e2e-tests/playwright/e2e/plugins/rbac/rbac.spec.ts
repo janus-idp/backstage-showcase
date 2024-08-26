@@ -102,7 +102,7 @@ test.describe.serial('Test RBAC plugin REST API', () => {
   test('Test catalog-entity read is denied', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
-    await uiHelper.verifyTableEmpty();
+    await uiHelper.verifyTableIsEmpty();
     await uiHelper.openSidebar('Create...');
     await uiHelper.verifyText(
       'No templates found that match your filter. Learn more about',
