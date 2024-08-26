@@ -130,16 +130,7 @@ export class UIhelper {
 
   async isLinkVisible(text: string): Promise<boolean> {
     const locator = `a:has-text("${text}")`;
-    try {
-      await this.page.waitForSelector(locator, {
-        state: 'visible',
-        timeout: 10000,
-      });
-      const button = this.page.locator(locator);
-      return button.isVisible();
-    } catch (error) {
-      return false;
-    }
+    return await this.isElementVisible(locator);
   }
 
   async waitForSideBarVisible() {
