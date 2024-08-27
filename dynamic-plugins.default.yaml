@@ -582,7 +582,7 @@ plugins:
               baseUrl: '${AAP_BASE_URL}'
               authorization: "${AAP_AUTH_TOKEN}"
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-3scale-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -864,7 +864,7 @@ plugins:
             maskIP: true # prevents IP addresses from being sent if true
             testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
     disabled: false
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-msgraph-dynamic
@@ -873,3 +873,13 @@ plugins:
       catalog:
         providers:
           microsoftGraphOrg: {}
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
+    disabled: true
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-ldap-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          ldapOrg: {}
