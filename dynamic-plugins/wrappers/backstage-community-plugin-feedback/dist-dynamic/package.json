@@ -9,7 +9,7 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin",
+    "role": "frontend-plugin",
     "supported-versions": "1.29.2",
     "pluginId": "backstage-community-plugin-feedback",
     "pluginPackages": [
