@@ -4,6 +4,16 @@ import request from 'supertest';
 
 import { createRouter } from './router';
 
+jest.mock('@backstage/backend-defaults/database', () => ({
+  DatabaseManager: {
+    fromConfig: jest.fn().mockReturnValue({
+      forPlugin: jest.fn().mockReturnValue({
+        getClient: jest.fn().mockResolvedValue({}),
+      }),
+    }),
+  },
+}));
+
 describe('createRouter', () => {
   let app: express.Express;
 
