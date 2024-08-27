@@ -9,7 +9,7 @@
     "access": "public"
   },
   "backstage": {
-    "role": "frontend-plugin",
+    "role": "backend-plugin",
     "supported-versions": "1.29.2",
     "pluginId": "backstage-community-plugin-feedback-backend",
     "pluginPackages": [
@@ -33,7 +33,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-feedback-backend --no-embed-as-dependencies"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-feedback-backend --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
     "@backstage-community/plugin-feedback-backend": "1.7.0"
