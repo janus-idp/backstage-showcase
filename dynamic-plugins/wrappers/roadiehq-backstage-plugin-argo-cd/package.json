@@ -13,7 +13,6 @@
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "roadiehq-argo-cd",
-    "pluginPackage": "roadiehq-backstage-plugin-argo-cd",
     "pluginPackages": [
       "roadiehq-backstage-plugin-argo-cd",
       "roadiehq-backstage-plugin-argo-cd-backend"
