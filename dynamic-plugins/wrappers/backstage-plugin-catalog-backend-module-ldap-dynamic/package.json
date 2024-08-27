@@ -54,6 +54,5 @@
   "keywords": [
     "support:tech-preview",
     "lifecycle:active"
-  ],
-  "packageManager": "yarn@1.22.22"
+  ]
 }

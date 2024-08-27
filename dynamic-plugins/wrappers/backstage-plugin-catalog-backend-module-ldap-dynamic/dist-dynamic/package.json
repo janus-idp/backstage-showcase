@@ -47,7 +47,6 @@
     "support:tech-preview",
     "lifecycle:active"
   ],
-  "packageManager": "yarn@1.22.22",
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-plugin-api": "^0.7.0",
