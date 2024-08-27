@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 export type UserInfoRow = {
   user_entity_ref: string;
   user_info: string;
-  exp: Date;
+  exp: string;
 };
 
 export class DatabaseUserInfoStore {

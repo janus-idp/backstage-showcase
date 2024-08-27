@@ -22,6 +22,7 @@ import { CatalogClient } from '@backstage/catalog-client';
 import { NotAllowedError } from '@backstage/errors';
 import { AuthorizeResult } from '@backstage/plugin-permission-common';
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+import { DateTime } from 'luxon';
 
 export interface RouterOptions {
   logger: LoggerService;
@@ -112,13 +113,22 @@ export async function createRouter(
 
 export function rowToResponse(
   userInfoRow: UserInfoRow,
-  tokenExpiration: number,
+  tokenExpirationSeconds: number,
 ): UserInfoResponse {
+  const tokenExpirationDate = DateTime.fromSQL(userInfoRow.exp, {
+    zone: 'utc',
+  });
+  // Validate the date
+  if (!tokenExpirationDate.isValid) {
+    throw new Error('Invalid expiration date format in userInfoRow.exp');
+  }
+
+  const tokenExpirationMillis = tokenExpirationSeconds * 1000;
+  const tokenIssuedTime =
+    tokenExpirationDate.toMillis() - tokenExpirationMillis;
   return {
     userEntityRef: userInfoRow.user_entity_ref,
-    lastTimeLogin: new Date(
-      userInfoRow.exp.getTime() - tokenExpiration,
-    ).toUTCString(),
+    lastTimeLogin: new Date(tokenIssuedTime).toUTCString(),
   };
 }
 
