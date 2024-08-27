@@ -1,6 +1,8 @@
 plugins:
   # Group: Github
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+    # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
@@ -121,6 +123,8 @@ plugins:
 
   # Group: Gitlab
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
+    # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
+    disabled: true
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
@@ -329,6 +333,8 @@ plugins:
 
   # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
+    # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
@@ -471,6 +477,7 @@ plugins:
 
   # Techdocs
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+    disabled: false
     pluginConfig:
       # Reference documentation http://backstage.io/docs/features/techdocs/configuration
       # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -483,6 +490,7 @@ plugins:
         publisher:
           type: local
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
@@ -528,14 +536,19 @@ plugins:
   # Standalone plugins
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
+    disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
+    disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
     disabled: true
@@ -613,6 +626,7 @@ plugins:
                   minutes: 50
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true
     pluginConfig:
@@ -631,6 +645,7 @@ plugins:
                   minutes: 3
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic
     disabled: true
     pluginConfig:
@@ -865,7 +880,7 @@ plugins:
             testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
   - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
-    disabled: false
+    disabled: true
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-msgraph-dynamic
     disabled: true
