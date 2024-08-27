@@ -44,9 +44,9 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
   test('Create a React App using the newly registered Template', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.clickButton('Create');
-    await uiHelper.searchInputPlaceholder('Create React');
-
+    await uiHelper.searchInputPlaceholder('Create React App Template');
     await uiHelper.verifyText('Create React App Template');
+    await uiHelper.waitForTextDisappear('Add ArgoCD to an existing project');
     await uiHelper.clickButton('Choose');
 
     await uiHelper.fillTextInputByLabel('Name', reactAppDetails.componentName);
@@ -59,6 +59,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
 
     await uiHelper.fillTextInputByLabel('Owner', reactAppDetails.repoOwner);
     await uiHelper.fillTextInputByLabel('Repository', reactAppDetails.repo);
+    await uiHelper.pressTab();
     await uiHelper.clickButton('Review');
 
     await uiHelper.verifyRowInTableByUniqueText('Owner', [

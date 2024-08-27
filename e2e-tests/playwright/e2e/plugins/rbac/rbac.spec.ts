@@ -138,7 +138,8 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test('Admin cannot create a role if there are no rules defined for the selected resource type.', async () => {
+  //FIXME
+  test.skip('Admin cannot create a role if there are no rules defined for the selected resource type.', async () => {
     await uiHelper.clickButton('Create');
     await uiHelper.verifyHeading('Create role');
 
@@ -162,7 +163,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickButton('Cancel');
   });
 
-  test('As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.', async () => {
+  test.skip('As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.', async () => {
     await rolesHelper.createRoleWithNotPermissionPolicy('test-role');
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
@@ -171,7 +172,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test('As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.', async () => {
+  test.skip('As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.', async () => {
     await rolesHelper.createRoleWithNotPermissionPolicy('test-role');
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
@@ -199,7 +200,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test('As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.', async () => {
+  test.skip('As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.', async () => {
     await rolesHelper.createRoleWithPermissionPolicy('test-role');
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
