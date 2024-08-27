@@ -265,6 +265,7 @@ upstream:
         filename: app-config-rhdh.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
+      - redis-secret
   postgresql:
     enabled: true
     postgresqlDataDir: /var/lib/pgsql/data/userdata
