@@ -3236,6 +3236,13 @@
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     react-use "^17.2.4"
 
+"@backstage-community/plugin-redhat-argocd-common@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd-common/-/plugin-redhat-argocd-common-1.0.3.tgz#755ab8962c8728225a60fe814eef5bb68d1721c8"
+  integrity sha512-cu/u2kk01ueQX5Jy4J88rjDg+8UyXtl7CsaqNX+XbWNaoCLkuHT0O5oC8V75XXQ+v9K+1hFG5HdVXYX7evN/+g==
+  dependencies:
+    "@backstage/plugin-permission-common" "^0.8.1"
+
 "@backstage-community/plugin-redhat-argocd@1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.6.1.tgz#49e739fc41da51997656c64bb6416bf0519e16c0"
@@ -5429,6 +5436,19 @@
     cross-fetch "^4.0.0"
     uuid "^9.0.0"
     zod "^3.22.4"
+
+"@backstage/plugin-permission-common@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-common/-/plugin-permission-common-0.8.1.tgz#797a2e9c26076cf52d69556acdd8e50bc02d522c"
+  integrity sha512-evmQeRdnbGafaU3levBu5znEn9BoZFE/bNSI3B7VtgjTIfGPzECmc31SVF5VD9arY6652zTHS9wWhXKe16YDiQ==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/types" "^1.1.1"
+    cross-fetch "^4.0.0"
+    uuid "^9.0.0"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.20.4"
 
 "@backstage/plugin-permission-node@^0.7.24", "@backstage/plugin-permission-node@^0.7.27":
   version "0.7.32"
