@@ -28,7 +28,7 @@ export class CatalogEntityStore {
 
     const entityMap: Map<string, Entity> = entities.items.reduce(
       (map: Map<string, Entity>, entity: Entity) => {
-        if (entity.kind === 'User' && entity.metadata && entity.metadata.name) {
+        if (entity.kind === 'User' && entity.metadata?.name) {
           map.set(
             `user:default/${(entity.metadata.name as string).toLocaleLowerCase()}`,
             entity,

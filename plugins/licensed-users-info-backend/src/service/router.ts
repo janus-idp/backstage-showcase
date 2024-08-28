@@ -4,10 +4,10 @@ import {
   BackstageCredentials,
   DiscoveryService,
   HttpAuthService,
+  LoggerService,
   PermissionsService,
   RootConfigService,
 } from '@backstage/backend-plugin-api';
-import { LoggerService } from '@backstage/backend-plugin-api';
 import express from 'express';
 import Router from 'express-promise-router';
 import { DatabaseManager } from '@backstage/backend-defaults/database';
@@ -89,7 +89,7 @@ export async function createRouter(
     const userEntities = await catalogEntityStore.getUserEntities();
     for (const userInfo of users) {
       const entity = userEntities.get(userInfo.userEntityRef);
-      if (entity && entity.spec && entity.spec.profile) {
+      if (entity?.spec?.profile) {
         userInfo.displayName = (entity.spec.profile as any)
           .displayName as string;
         userInfo.email = (entity.spec.profile as any).email as string;
