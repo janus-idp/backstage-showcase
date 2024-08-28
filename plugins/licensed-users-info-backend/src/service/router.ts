@@ -60,6 +60,13 @@ export async function createRouter(
   const router = Router();
   router.use(express.json());
 
+  if (await isSqliteInMemory(config)) {
+    logger.error(
+      `Plugin plugin-licensed-users-info-backend was disabled. Plugin doesn't support sqlite in memory database configuration.`,
+    );
+    return router;
+  }
+
   router.get('/health', (_, response) => {
     response.json({ status: 'ok' });
   });
@@ -162,4 +169,22 @@ export async function permissionCheck(
   if (decision.result === AuthorizeResult.DENY) {
     throw new NotAllowedError('Unauthorized');
   }
+}
+
+async function isSqliteInMemory(config: RootConfigService): Promise<boolean> {
+  const databaseConfig = config.getOptionalConfig('backend.database');
+  const dbClient = databaseConfig?.getOptionalString('client');
+
+  const isSqlite =
+    dbClient && (dbClient === 'sqlite3' || dbClient === 'better-sqlite3');
+
+  const connection = databaseConfig?.getOptional('connection')?.valueOf();
+  const isDirectoryStorageEnabled =
+    typeof connection === 'object' &&
+    Object.keys(connection).includes('directory');
+  if (isSqlite && !isDirectoryStorageEnabled) {
+    return true;
+  }
+
+  return false;
 }
