@@ -34,11 +34,11 @@ export interface RouterOptions {
 }
 
 export type UserInfoResponse = {
-  // firstTimeLogin: string;
+  // firstLoginTime: string;
   userEntityRef: string;
   displayName?: string;
   email?: string;
-  lastTimeLogin: string;
+  lastAuthTime: string;
 };
 
 export async function createRouter(
@@ -99,7 +99,7 @@ export async function createRouter(
     if (request.headers['content-type']?.includes('text/csv')) {
       try {
         const csv = await json2csv(users, {
-          keys: ['userEntityRef', 'displayName', 'email', 'lastTimeLogin'],
+          keys: ['userEntityRef', 'displayName', 'email', 'lastAuthTime'],
         });
         response.header('Content-Type', 'text/csv');
         response.attachment('data.csv');
@@ -144,7 +144,7 @@ export function rowToResponse(
     tokenExpirationDate.toMillis() - tokenExpirationMillis;
   return {
     userEntityRef: userInfoRow.user_entity_ref,
-    lastTimeLogin: new Date(tokenIssuedTime).toUTCString(),
+    lastAuthTime: new Date(tokenIssuedTime).toUTCString(),
   };
 }
 
