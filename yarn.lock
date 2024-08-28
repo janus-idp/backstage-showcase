@@ -3134,7 +3134,7 @@
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     react-use "^17.2.4"
 
-"@backstage-community/plugin-feedback-backend@1.7.0":
+"@backstage-community/plugin-feedback-backend@1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-feedback-backend/-/plugin-feedback-backend-1.7.1.tgz#a15ace25c3c7341371160d4ac5bf33bc7640187b"
   integrity sha512-9TfMcDzmUeRK/Cl/UvAmq0RbnKPQQRpv8XWk6uX7j8PkFn5JRsCHKZjSygwCYd3SA85kxOyL65DRRBAH+v7vNg==
@@ -3156,7 +3156,7 @@
     short-uuid "^4.2.2"
     yn "^4.0.0"
 
-"@backstage-community/plugin-feedback@1.6.3":
+"@backstage-community/plugin-feedback@1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-feedback/-/plugin-feedback-1.6.1.tgz#d3e5e5b88299452af28d012ab02565a45a1bbb5f"
   integrity sha512-ri6bnPSc574+V1FVlWkKuM0ezO4JxmPd+CcuVwoitJN8bvDqoTw8ssFlQQQHcnHqFEp/d7fSg28cHamAw+WRng==
