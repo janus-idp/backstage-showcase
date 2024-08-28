@@ -22,6 +22,10 @@ export class UIhelper {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
+  async pressTab() {
+    await this.page.keyboard.press('Tab');
+  }
+
   async waitForHeaderTitle() {
     await this.page.waitForSelector('h2[data-testid="header-title"]');
   }
@@ -113,6 +117,11 @@ export class UIhelper {
     }
   }
 
+  async isBtnVisibleByTitle(text: string): Promise<boolean> {
+    const locator = `BUTTON[title="${text}"]`;
+    return await this.isElementVisible(locator);
+  }
+
   async isBtnVisible(text: string): Promise<boolean> {
     const locator = `button:has-text("${text}")`;
     return await this.isElementVisible(locator);
@@ -121,6 +130,11 @@ export class UIhelper {
   async isTextVisible(text: string, timeout = 10000): Promise<boolean> {
     const locator = `:has-text("${text}")`;
     return await this.isElementVisible(locator, timeout);
+  }
+
+  async isLinkVisible(text: string): Promise<boolean> {
+    const locator = `a:has-text("${text}")`;
+    return await this.isElementVisible(locator);
   }
 
   async waitForSideBarVisible() {
@@ -147,6 +161,10 @@ export class UIhelper {
     for (const rowText of rowTexts) {
       await this.verifyTextInLocator(`tr>td`, rowText, exact);
     }
+  }
+
+  async waitForTextDisappear(text: string) {
+    await this.page.waitForSelector(`text=${text}`, { state: 'detached' });
   }
 
   async verifyText(text: string | RegExp, exact: boolean = true) {
@@ -195,6 +213,7 @@ export class UIhelper {
       .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
+
     await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
@@ -316,5 +335,10 @@ export class UIhelper {
         .evaluate(el => window.getComputedStyle(el).color);
       expect(color).toBe(expectedRgbColor);
     }
+  }
+  async verifyTableIsEmpty() {
+    const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
+    const rowCount = await this.page.locator(rowSelector).count();
+    expect(rowCount).toEqual(0);
   }
 }
