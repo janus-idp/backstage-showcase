@@ -115,12 +115,21 @@ export function rowToResponse(
   userInfoRow: UserInfoRow,
   tokenExpirationSeconds: number,
 ): UserInfoResponse {
-  const tokenExpirationDate = DateTime.fromSQL(userInfoRow.exp, {
+  let tokenExpirationDate = DateTime.fromSQL(userInfoRow.exp, {
     zone: 'utc',
   });
+
+  if (!tokenExpirationDate.isValid) {
+    tokenExpirationDate = DateTime.fromJSDate(new Date(userInfoRow.exp), {
+      zone: 'utc',
+    });
+  }
+
   // Validate the date
   if (!tokenExpirationDate.isValid) {
-    throw new Error('Invalid expiration date format in userInfoRow.exp');
+    throw new Error(
+      'Failed to parse expiration date format in userInfoRow.exp',
+    );
   }
 
   const tokenExpirationMillis = tokenExpirationSeconds * 1000;
