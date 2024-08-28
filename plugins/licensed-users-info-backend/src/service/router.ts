@@ -61,8 +61,8 @@ export async function createRouter(
   router.use(express.json());
 
   if (await isSqliteInMemory(config)) {
-    logger.error(
-      `Plugin plugin-licensed-users-info-backend was disabled. Plugin doesn't support sqlite in memory database configuration.`,
+    logger.warn(
+      `The plugin-licensed-users-info-backend was disabled because it does not support the SQLite in-memory database configuration.`,
     );
     return router;
   }
