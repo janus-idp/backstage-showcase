@@ -10615,10 +10615,10 @@
   resolved "https://registry.yarnpkg.com/@redhat-developer/red-hat-developer-hub-theme/-/red-hat-developer-hub-theme-0.2.0.tgz#b2068953b45a549c0630bf8f42e699afffec4785"
   integrity sha512-Zd69ikw25UAwRhJIaxdH9ptRLwAYkczrmcS4yl9ZCvZddyoE4BYvn/nHM7OEwkFEtcHP7UHYQUlCRoBWSddlbg==
 
-"@remix-run/router@1.19.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.19.0.tgz#745dbffbce67f05386d57ca22c51dfd85c979593"
-  integrity sha512-zDICCLKEwbVYTS6TjYaWtHXxkdoUvD/QXvyVZjGCsWz5vyH7aFeONlPffPdW+Y/t6KT0MgXb2Mfjun9YpWN1dA==
+"@remix-run/router@1.19.1":
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.19.1.tgz#984771bfd1de2715f42394c87fb716c1349e014f"
+  integrity sha512-S45oynt/WH19bHbIXjtli6QmwNYvaz+vtnubvNpNDvUOoA/OWh6j1OikIP3G+v5GHdxyC6EXoChG3HgYGEUfcg==
 
 "@repeaterjs/repeater@^3.0.4":
   version "3.0.5"
@@ -27132,20 +27132,20 @@ react-resizable@^3.0.4, react-resizable@^3.0.5:
     prop-types "15.x"
     react-draggable "^4.0.3"
 
-react-router-dom@6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.26.0.tgz#8debe13295c58605c04f93018d659a763245e58c"
-  integrity sha512-RRGUIiDtLrkX3uYcFiCIxKFWMcWQGMojpYZfcstc63A1+sSnVgILGIm9gNUA6na3Fm1QuPGSBQH2EMbAZOnMsQ==
+react-router-dom@6.26.1:
+  version "6.26.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.26.1.tgz#a408892b41767a49dc94b3564b0e7d8e3959f623"
+  integrity sha512-veut7m41S1fLql4pLhxeSW3jlqs+4MtjRLj0xvuCEXsxusJCbs6I8yn9BxzzDX2XDgafrccY6hwjmd/bL54tFw==
   dependencies:
-    "@remix-run/router" "1.19.0"
-    react-router "6.26.0"
+    "@remix-run/router" "1.19.1"
+    react-router "6.26.1"
 
-react-router@6.26.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.26.0.tgz#d5af4c46835b202348ef2b7ddacd32a2db539fde"
-  integrity sha512-wVQq0/iFYd3iZ9H2l3N3k4PL8EEHcb0XlU2Na8nEwmiXgIUElEH6gaJDtUQxJ+JFzmIXaQjfdpcGWaM6IoQGxg==
+react-router@6.26.1:
+  version "6.26.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.26.1.tgz#88c64837e05ffab6899a49df2a1484a22471e4ce"
+  integrity sha512-kIwJveZNwp7teQRI5QmwWo39A5bXRyqpH0COKKmPnyD2vBvDwgFXSqDUYtt1h+FEyfnE8eXr7oe0MxRzVwCcvQ==
   dependencies:
-    "@remix-run/router" "1.19.0"
+    "@remix-run/router" "1.19.1"
 
 react-side-effect@^2.1.0:
   version "2.1.2"
@@ -30118,10 +30118,10 @@ undici@5.28.4:
   dependencies:
     "@fastify/busboy" "^2.0.0"
 
-undici@6.19.7:
-  version "6.19.7"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.7.tgz#7d4cf26dc689838aa8b6753a3c5c4288fc1e0216"
-  integrity sha512-HR3W/bMGPSr90i8AAp2C4DM3wChFdJPLrWYpIS++LxS8K+W535qftjt+4MyjNYHeWabMj1nvtmLIi7l++iq91A==
+undici@6.19.8:
+  version "6.19.8"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.8.tgz#002d7c8a28f8cc3a44ff33c3d4be4d85e15d40e1"
+  integrity sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
@@ -31076,10 +31076,10 @@ winston-transport@^4.5.0, winston-transport@^4.7.0:
     readable-stream "^3.6.0"
     triple-beam "^1.3.0"
 
-winston@3.14.1:
-  version "3.14.1"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-3.14.1.tgz#b296f2756e6b46d3b6faac5660d2af878fc3f666"
-  integrity sha512-CJi4Il/msz8HkdDfXOMu+r5Au/oyEjFiOZzbX2d23hRLY0narGjqfE5lFlrT5hfYJhPtM8b85/GNFsxIML/RVA==
+winston@3.14.2:
+  version "3.14.2"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-3.14.2.tgz#94ce5fd26d374f563c969d12f0cd9c641065adab"
+  integrity sha512-CO8cdpBB2yqzEf8v895L+GNKYJiEq8eKlHU38af3snQBQ+sdAIUepjMSguOIJC7ICbzm0ZI+Af2If4vIJrtmOg==
   dependencies:
     "@colors/colors" "^1.6.0"
     "@dabh/diagnostics" "^2.0.2"
