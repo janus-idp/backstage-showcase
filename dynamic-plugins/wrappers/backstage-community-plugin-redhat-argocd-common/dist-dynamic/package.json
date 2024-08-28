@@ -11,9 +11,9 @@
   "backstage": {
     "role": "backend-plugin",
     "supported-versions": "1.29.2",
-    "pluginId": "backstage-community-plugin-redhat-argocd-common",
+    "pluginId": "redhat-argocd-common",
     "pluginPackages": [
-      "redhat-argocd-common"
+      "backstage-community-plugin-redhat-argocd-common"
     ]
   },
   "exports": {
@@ -25,7 +25,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "@backstage-community/plugin-argocd-common": "1.0.3",
+    "@backstage-community/plugin-redhat-argocd-common": "1.0.3",
     "@kubernetes/client-node": "^0.20.0",
     "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
