@@ -168,7 +168,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
 4. Start the application using `yarn start`
 
-5. Navigate to <http://localhost:3000>
+5. Navigate to <http://localhost:7007>
 
 ## Running Locally with the Optional Plugins
 
@@ -341,7 +341,23 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
 7. Navigate to <http://localhost:7007>
 
-8. Alternatively, you can start application using `yarn dev` which would run the frontend using webpack, which allows for hot reloads. This will automatically open `http://localhost:3000` in your default browser.
+8. Alternatively, you can start application using `yarn dev` which would run the frontend using webpack, which allows for hot reloads.
+
+To use `yarn dev`, change the following in your app-config.local.yaml:
+
+```yaml
+app:
+  baseUrl: http://localhost:3000
+
+backend:
+  baseUrl: http://localhost:7007
+``cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+```
+
+This will automatically open `http://localhost:3000` in your default browser.
 
 ### Note: Extension to Kubernetes Backend Plugin
 
