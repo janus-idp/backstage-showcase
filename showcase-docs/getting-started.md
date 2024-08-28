@@ -351,7 +351,7 @@ app:
 
 backend:
   baseUrl: http://localhost:7007
-``cors:
+  cors:
     origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
