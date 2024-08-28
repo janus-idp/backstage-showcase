@@ -8450,6 +8450,14 @@
     typeorm-adapter "^1.6.1"
     yn "^4.0.0"
 
+"@janus-idp/backstage-plugin-rbac-common@1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-common/-/backstage-plugin-rbac-common-1.8.2.tgz#9ae045a984d77ef0b2834ae4aec2370cf5d6ad21"
+  integrity sha512-Gfi9xyhR4gFIn9c5ge7b66cB6p5sRMzYoAZWtQKfo6ewkIdsyN0ZRkHY4sO4lAH33CVZghUDSpn6iAbT28HBYg==
+  dependencies:
+    "@backstage/errors" "^1.2.4"
+    "@backstage/plugin-permission-common" "^0.8.0"
+
 "@janus-idp/backstage-plugin-rbac-common@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-common/-/backstage-plugin-rbac-common-1.9.0.tgz#825a24151ec810cf55709156813ce448a52a1d9d"
