@@ -9,6 +9,7 @@ import {
 } from '@backstage/catalog-model';
 import {
   AuthProviderFactory,
+  AuthResolverCatalogUserQuery,
   AuthResolverContext,
   authProvidersExtensionPoint,
   createOAuthProviderFactory,
@@ -34,14 +35,18 @@ import { ConfigSources } from '@backstage/config-loader';
  * @returns
  */
 async function signInWithCatalogUserOptional(
-  name: string,
+  name: string | AuthResolverCatalogUserQuery,
   ctx: AuthResolverContext,
   enableDangerouslyAllowSignInWithoutUserInCatalog?: boolean,
 ) {
   try {
-    const signedInUser = await ctx.signInWithCatalogUser({
-      entityRef: { name },
-    });
+    const query: AuthResolverCatalogUserQuery =
+      typeof name === 'string'
+        ? {
+            entityRef: { name },
+          }
+        : name;
+    const signedInUser = await ctx.signInWithCatalogUser(query);
 
     return Promise.resolve(signedInUser);
   } catch (e) {
@@ -57,9 +62,12 @@ async function signInWithCatalogUserOptional(
         `Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.`,
       );
     }
+    let entityRef: string = name === 'string' ? name : '';
+    if (typeof name !== 'string' && 'annotations' in name)
+      entityRef = Object.values(name.annotations)[0];
     const userEntityRef = stringifyEntityRef({
       kind: 'User',
-      name: name,
+      name: entityRef,
       namespace: DEFAULT_NAMESPACE,
     });
 
@@ -246,7 +254,14 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             if (!userId) {
               throw new Error(`Microsoft user profile does not contain an id`);
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await signInWithCatalogUserOptional(
+              {
+                annotations: {
+                  'graph.microsoft.com/user-id': userId,
+                },
+              },
+              ctx,
+            );
           },
         },
       });
