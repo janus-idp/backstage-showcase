@@ -14,6 +14,7 @@ import {
 import {
   auth0AuthApiRef,
   oidcAuthApiRef,
+  openshiftAuthApiRef,
   samlAuthApiRef,
 } from './api/AuthApiRefs';
 import {
@@ -96,6 +97,27 @@ export const apis: AnyApiFactory[] = [
           title: 'SAML',
           icon: () => null,
         },
+        environment: configApi.getOptionalString('auth.environment'),
+      }),
+  }),
+  // Openshift
+  createApiFactory({
+    api: openshiftAuthApiRef,
+    deps: {
+      discoveryApi: discoveryApiRef,
+      oauthRequestApi: oauthRequestApiRef,
+      configApi: configApiRef,
+    },
+    factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
+      OAuth2.create({
+        discoveryApi,
+        oauthRequestApi,
+        provider: {
+          id: 'openshift',
+          title: 'Openshift',
+          icon: () => null,
+        },
+        defaultScopes: ['user:full'],
         environment: configApi.getOptionalString('auth.environment'),
       }),
   }),

@@ -277,6 +277,7 @@ const authProvidersModule = createBackendModule({
         providersConfig
           .keys()
           .filter(key => key !== 'guest')
+          .filter(key => key !== 'openshift')
           .forEach(providerId => {
             const factory = getAuthProviderFactory(providerId);
             authFactories[providerId] = factory;

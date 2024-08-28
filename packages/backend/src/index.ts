@@ -108,6 +108,7 @@ backend.add(rbacDynamicPluginsProvider);
 
 backend.add(import('@backstage/plugin-auth-backend'));
 backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
+backend.add(import('@internal/backstage-plugin-auth-backend-module-openshift'));
 backend.add(import('./modules/authProvidersModule'));
 
 backend.add(import('@internal/plugin-dynamic-plugins-info-backend'));
