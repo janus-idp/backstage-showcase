@@ -37,11 +37,11 @@ data:
       providers:
         # Plugin: GitHub
         github:
-          development:
+          production:
             clientId: ${GITHUB_APP_CLIENT_ID}
             clientSecret: ${GITHUB_APP_CLIENT_SECRET}
         google:
-          development:
+          production:
             clientId: ${GOOGLE_CLIENT_ID}
             clientSecret: ${GOOGLE_CLIENT_SECRET}
 
