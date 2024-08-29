@@ -2,6 +2,7 @@
 
 set -e
 set -x
+export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 
 LOGFILE="test-log"
 JUNIT_RESULTS="junit-results.xml"
