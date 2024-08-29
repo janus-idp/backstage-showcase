@@ -3243,10 +3243,10 @@
   dependencies:
     "@backstage/plugin-permission-common" "^0.8.1"
 
-"@backstage-community/plugin-redhat-argocd@1.6.6":
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.6.6.tgz#4f0b483fbca70ca9ff579564b6c38b3d90a7b24a"
-  integrity sha512-hc7BaDXpiKat1qYQ/R62ZtiOybNCi3841XkfA3j3FBrsPubMHmc49Gi/ddTlxSVhupoRpsgxhYGu58TtJ/yamA==
+"@backstage-community/plugin-redhat-argocd@1.6.7":
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.6.7.tgz#7519b09e28bc43e732d09b5b0124015492f948cb"
+  integrity sha512-B9LPhth7/qKnkDtmD9l8Vwn9JHmue7MCMyqlKeGraQ19ZczyuR5Mmp6DGdhONVCAGknIfJhNS7iX8kh9znvQHg==
   dependencies:
     "@backstage-community/plugin-redhat-argocd-common" "1.0.3"
     "@backstage/catalog-model" "^1.6.0"
