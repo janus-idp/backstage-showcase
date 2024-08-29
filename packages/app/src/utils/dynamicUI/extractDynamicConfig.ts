@@ -105,6 +105,16 @@ type EntityTabEntry = {
   title: string;
 };
 
+type ThemeEntry = {
+  scope: string;
+  module: string;
+  id: string;
+  title: string;
+  variant: 'light' | 'dark';
+  icon: string;
+  importName: string;
+};
+
 type CustomProperties = {
   pluginModule?: string;
   dynamicRoutes?: (DynamicModuleEntry & {
@@ -123,6 +133,7 @@ type CustomProperties = {
   appIcons?: AppIcon[];
   apiFactories?: ApiFactory[];
   scaffolderFieldExtensions?: ScaffolderFieldExtension[];
+  themes?: ThemeEntry[];
 };
 
 export type FrontendConfig = {
@@ -144,6 +155,7 @@ type DynamicConfig = {
   routeBindings: RouteBinding[];
   routeBindingTargets: BindingTarget[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
+  themes: ThemeEntry[];
 };
 
 /**
@@ -165,6 +177,7 @@ function extractDynamicConfig(
     routeBindings: [],
     routeBindingTargets: [],
     scaffolderFieldExtensions: [],
+    themes: [],
   };
   config.pluginModules = Object.entries(frontend).reduce<PluginModule[]>(
     (pluginSet, [scope, customProperties]) => {
@@ -274,6 +287,19 @@ function extractDynamicConfig(
         })),
       );
       return accEntityTabs;
+    },
+    [],
+  );
+  config.themes = Object.entries(frontend).reduce<ThemeEntry[]>(
+    (accThemeEntries, [scope, { themes }]) => {
+      accThemeEntries.push(
+        ...(themes ?? []).map(theme => ({
+          ...theme,
+          module: theme.module ?? 'PluginRoot',
+          scope,
+        })),
+      );
+      return accThemeEntries;
     },
     [],
   );
