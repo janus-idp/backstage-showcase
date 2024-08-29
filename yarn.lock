@@ -3118,6 +3118,16 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
+"@backstage-community/plugin-catalog-backend-module-pingidentity@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-catalog-backend-module-pingidentity/-/plugin-catalog-backend-module-pingidentity-0.1.1.tgz#00e8bb942fb68bedf26a0154879ece52c61131af"
+  integrity sha512-NV2b59ilCvlCQJ6UjIbWEno7otwfKPxXoCU59/mgt0SHwPZUnp9hlztS3qA7ck5z1REmoK5VwlpMa4FKDFzCDg==
+  dependencies:
+    "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-plugin-api" "^0.7.0"
+    "@backstage/plugin-catalog-node" "^1.12.4"
+    "@janus-idp/cli" "1.13.1"
+
 "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor@1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor/-/plugin-catalog-backend-module-scaffolder-relation-processor-1.2.6.tgz#264f91b77810c837f06e4cebdc9e422627119941"
