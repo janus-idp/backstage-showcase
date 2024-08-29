@@ -4,15 +4,16 @@ retrieve_pod_logs() {
   local pod_name=$1; local container=$2; local namespace=$3
   echo "  Retrieving logs for container: $container"
   # Save logs for the current and previous container
-  kubectl logs $pod_name -c $container -n $namespace > "/tmp/pod_logs/${pod_name}_${container}.log"
-  kubectl logs $pod_name -c $container -n $namespace --previous > "/tmp/pod_logs/${pod_name}_${container}-previous.log" 2>/dev/null || { echo "  Previous logs for container $container not found"; rm -f "/tmp/pod_logs/${pod_name}_${container}-previous.log"; }
+  kubectl logs $pod_name -c $container -n $namespace > "pod_logs/${pod_name}_${container}.log"
+  kubectl logs $pod_name -c $container -n $namespace --previous > "pod_logs/${pod_name}_${container}-previous.log" 2>/dev/null || { echo "  Previous logs for container $container not found"; rm -f "pod_logs/${pod_name}_${container}-previous.log"; }
 }
 
 save_all_pod_logs(){
   local namespace=$1
+  mkdir -p pod_logs
+
   # Get all pod names in the namespace
   pod_names=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].metadata.name}')
-
   for pod_name in $pod_names; do
     echo "Retrieving logs for pod: $pod_name in namespace $namespace"
 
@@ -29,5 +30,5 @@ save_all_pod_logs(){
   done
 
   mkdir -p "${ARTIFACT_DIR}/${namespace}/pod_logs"
-  cp -a /tmp/pod_logs/* "${ARTIFACT_DIR}/${namespace}/pod_logs"
+  cp -a pod_logs/* "${ARTIFACT_DIR}/${namespace}/pod_logs"
 }
