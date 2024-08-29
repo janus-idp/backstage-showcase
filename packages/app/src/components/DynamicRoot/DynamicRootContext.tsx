@@ -1,7 +1,11 @@
 import React, { createContext } from 'react';
 
 import { Entity } from '@backstage/catalog-model';
-import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
+import {
+  AnyApiFactory,
+  AppTheme,
+  BackstagePlugin,
+} from '@backstage/core-plugin-api';
 import { ScalprumComponentProps } from '@scalprum/react-core';
 
 export type RouteBinding = {
@@ -97,6 +101,8 @@ export type EntityTabOverrides = Record<
 >;
 
 export type MountPoints = Record<string, ScalprumMountPoint[]>;
+
+export type AppThemeProvider = Partial<AppTheme> & Omit<AppTheme, 'theme'>;
 
 export type ScaffolderFieldExtension = {
   scope: string;
