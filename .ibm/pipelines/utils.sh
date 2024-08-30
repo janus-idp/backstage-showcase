@@ -9,6 +9,7 @@ retrieve_pod_logs() {
 }
 
 save_all_pod_logs(){
+  set +e
   local namespace=$1
   mkdir -p pod_logs
 
@@ -31,4 +32,5 @@ save_all_pod_logs(){
 
   mkdir -p "${ARTIFACT_DIR}/${namespace}/pod_logs"
   cp -a pod_logs/* "${ARTIFACT_DIR}/${namespace}/pod_logs"
+  set -e
 }
