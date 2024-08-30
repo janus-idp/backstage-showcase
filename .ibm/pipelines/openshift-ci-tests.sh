@@ -299,7 +299,7 @@ check_backstage_running() {
   done
 
   echo "Failed to reach Backstage at ${BASE_URL} after ${max_attempts} attempts." | tee -a "/tmp/${LOGFILE}"
-  cp -a "/tmp/${LOGFILE}" "${ARTIFACT_DIR}"
+  cp -a "/tmp/${LOGFILE}" "${ARTIFACT_DIR}/${namespace}"
   return 1
 }
 
