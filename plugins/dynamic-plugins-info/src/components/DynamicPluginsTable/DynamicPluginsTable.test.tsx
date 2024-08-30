@@ -30,7 +30,7 @@ describe('DynamicPluginsTable', () => {
     // 6 mockapi returned external(enabled) + 53 internal(not enabled)
     // mockapi returns enabled plugins
     // keys from InternalPluginsMap are internal plugins
-    expect(await findByText('Plugins (59)')).toBeInTheDocument();
+    expect(await findByText('Plugins (61)')).toBeInTheDocument();
     expect(
       await findByText('@janus-idp/backstage-plugin-3scale-backend-dynamic'),
     ).toBeInTheDocument();
