@@ -272,7 +272,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isArgocdAvailable
-    janus-idp.backstage-plugin-argocd:
+    backstage-community.plugin-redhat-argocd:
       mountPoints:
         - mountPoint: entity.page.overview/cards
           importName: ArgocdDeploymentSummary
