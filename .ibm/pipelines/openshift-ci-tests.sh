@@ -148,7 +148,7 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
-  # oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
+  oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
   oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
   oc expose svc/test-backstage-customization-provider --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-k8s.yaml" --namespace="${project}"
