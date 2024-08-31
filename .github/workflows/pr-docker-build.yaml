@@ -49,9 +49,10 @@ jobs:
 
       - name: Get the latest commits from base branch
         run: |
+          git remote add base-origin https://github.com/janus-idp/backstage-showcase || true
           echo "Updating PR with latest commits from ${{ github.event.pull_request.base.ref }} ..."
-          git fetch origin ${{ github.event.pull_request.base.ref }}
-          git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+          git fetch base-origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit base-origin/${{ github.event.pull_request.base.ref }}
 
       - name: Get the last commit short SHA of the PR
         run: |
