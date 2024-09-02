@@ -162,7 +162,7 @@ apply_yaml_files() {
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
   sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-2-x" ]]; then
+  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-2-x" || "${project}" == "showcase-rbac-1-3-x" ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
   else
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh.yaml" --namespace="${project}"
