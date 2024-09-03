@@ -10,19 +10,19 @@
     "@smithy/util-buffer-from" "^2.2.0"
     tslib "^2.6.2"
 
-"@gitbeaker/core@^40.1.1":
-  version "40.1.1"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-40.1.1.tgz#4f15a884ed53dda6e77c47c1c4d01e29a07a67b5"
-  integrity sha512-CYOIjDbQDO8F8TZsFpU04XQkFYZpTuzfbWFxEL2n7YmZOPc3WZEb2muLBZCpfbSt2qv9RnEn8t0qy6LCdCzw9g==
+"@gitbeaker/core@^40.1.2":
+  version "40.1.2"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-40.1.2.tgz#27683d535f9025fa873e15596154db8575e994ce"
+  integrity sha512-KjP40EIdPWDX2w+GZUjgc5f9L/a0VsA6A2dkiKdH27m5BUpVrH3eHC3M0h1SsIA5edO3BiebqWFO2ipkGJCBZA==
   dependencies:
-    "@gitbeaker/requester-utils" "^40.1.1"
+    "@gitbeaker/requester-utils" "^40.1.2"
     qs "^6.12.2"
     xcase "^2.0.1"
 
-"@gitbeaker/requester-utils@^40.1.1":
-  version "40.1.1"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-40.1.1.tgz#543e52ee61ca9b33d32f14b40d81250b342fddad"
-  integrity sha512-+EWbZmIquQuyahzc4+k5vzYvcikVpEnf/Z8vXFDn0s7vL+EOcPsZXeIcUrXhfebgMWQq7UBb+FAGXtXtP4k2JQ==
+"@gitbeaker/requester-utils@^40.1.2":
+  version "40.1.2"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-40.1.2.tgz#90122f573570469ea25dde6188b02ea7a1d12dcc"
+  integrity sha512-s3c2TzJpBk3VGujEo/57+TAntg36kEhdob28i2kAEDztFWlNp0sfDT/jlDwUywKF6AbmYIJYe3FikLNyAiv+iA==
   dependencies:
     picomatch-browser "^2.2.6"
     qs "^6.12.2"
@@ -30,12 +30,12 @@
     xcase "^2.0.1"
 
 "@gitbeaker/rest@^40.0.3":
-  version "40.1.1"
-  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-40.1.1.tgz#fb80b0cee6356e3156c29aad8ff9987b65f53a19"
-  integrity sha512-iYDqghGNGhAG6KJnuat4qHCTaXCuSfxDkP42toaMgJpdzey4Mx4AvA/ko89osbOB+cnlg+dvfmP67U5ih9Jijg==
+  version "40.1.2"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/rest/-/rest-40.1.2.tgz#ab7424dd417fdda38266f13378448bd1693266fe"
+  integrity sha512-q9FYEC0SQcEbj1Hu+EOVFGRBjxbUFciK/iVD3BhBx+ZUGIPfHYS32EWL4uqVSBLq/zSUEd2gWjLy7LRVq/Pz3A==
   dependencies:
-    "@gitbeaker/core" "^40.1.1"
-    "@gitbeaker/requester-utils" "^40.1.1"
+    "@gitbeaker/core" "^40.1.2"
+    "@gitbeaker/requester-utils" "^40.1.2"
 
 "@smithy/is-array-buffer@^2.2.0":
   version "2.2.0"
@@ -154,9 +154,9 @@ picomatch-browser@^2.2.6:
   integrity sha512-0ypsOQt9D4e3hziV8O4elD9uN0z/jtUEfxVRtNaAAtXIyUx9m/SzlO020i8YNL2aL/E6blOvvHQcin6HZlFy/w==
 
 qs@^6.12.2:
-  version "6.12.3"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.12.3.tgz#e43ce03c8521b9c7fd7f1f13e514e5ca37727754"
-  integrity sha512-AWJm14H1vVaO/iNZ4/hO+HyaTehuy9nRqVdkTqlJt0HWvBiBIEXFmb4C0DGeYo3Xes9rrEW+TxHsaigCbN5ICQ==
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.13.0.tgz#6ca3bd58439f7e245655798997787b0d88a51906"
+  integrity sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==
   dependencies:
     side-channel "^1.0.6"
 

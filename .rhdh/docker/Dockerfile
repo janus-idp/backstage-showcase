@@ -54,6 +54,7 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/sca
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
 
 # Downstream only - debugging
 # COPY $REMOTE_SOURCES/ ./
@@ -191,7 +192,7 @@ WORKDIR $CONTAINER_SOURCE/
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
 # hadolint ignore=DL3013,DL3041,SC2086
 RUN microdnf update --setopt=install_weak_deps=0 -y && \
-  microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++; \
+  microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++ skopeo; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
   ln -s /usr/bin/pip3.11 /usr/bin/pip; \
   # ls -la $REMOTE_SOURCES_DIR/ $REMOTE_SOURCES_DIR/upstream2/ $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { registerMswTestHooks } from '@backstage/backend-test-utils';
+import { ConfigReader } from '@backstage/config';
 import {
   OAuthAuthenticatorAuthenticateInput,
   OAuthAuthenticatorRefreshInput,
@@ -21,13 +23,11 @@ import {
   decodeOAuthState,
   encodeOAuthState,
 } from '@backstage/plugin-auth-node';
-import { oidcAuthenticator } from './authenticator';
-import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers } from '@backstage/backend-test-utils';
-import { ConfigReader } from '@backstage/config';
+import express from 'express';
 import { JWK, SignJWT, exportJWK, generateKeyPair } from 'jose';
 import { rest } from 'msw';
-import express from 'express';
+import { setupServer } from 'msw/node';
+import { oidcAuthenticator } from './authenticator';
 
 describe('oidcAuthenticator', () => {
   let implementation: any;
@@ -36,7 +36,7 @@ describe('oidcAuthenticator', () => {
   let publicKey: JWK;
 
   const mswServer = setupServer();
-  setupRequestMockHandlers(mswServer);
+  registerMswTestHooks(mswServer);
 
   const issuerMetadata = {
     issuer: 'https://oidc.test',

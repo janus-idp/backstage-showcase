@@ -12,8 +12,7 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.27.7",
-    "pluginId": "github",
-    "pluginPackage": "backstage-plugin-github-actions",
+    "pluginId": "github-actions",
     "pluginPackages": [
       "backstage-plugin-github-actions"
     ]
@@ -30,8 +29,8 @@
     "@backstage-community/plugin-github-actions": "0.6.16"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.6",
-    "@janus-idp/cli": "1.11.0"
+    "@backstage/cli": "0.26.11",
+    "@janus-idp/cli": "1.13.1"
   },
   "files": [
     "dist",

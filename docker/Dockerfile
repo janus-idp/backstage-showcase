@@ -53,6 +53,7 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/sca
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
 
 RUN "$YARN" install --frozen-lockfile --network-timeout 600000
 
@@ -119,7 +120,7 @@ WORKDIR $CONTAINER_SOURCE/
 # When updating version of mkdocs-techdocs-core remember to update ../.rhdh/docker/requirement* files too
 # hadolint ignore=DL3041,DL3042
 RUN microdnf update --setopt=install_weak_deps=0 -y && \
-  microdnf install -y python3 python3-pip && \
+  microdnf install -y python3 python3-pip skopeo && \
   pip3 install mkdocs-techdocs-core~=1.3.3 && \
   microdnf clean all
 

@@ -1,6 +1,6 @@
-import { rootHttpRouterServiceFactory } from '@backstage/backend-app-api';
 import { statusCheckHandler } from '@backstage/backend-common';
 import { createBackend } from '@backstage/backend-defaults';
+import { rootHttpRouterServiceFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import {
   dynamicPluginsFeatureDiscoveryServiceFactory,
   dynamicPluginsFrontendSchemas,
@@ -10,6 +10,7 @@ import {
 import { PackageRoles } from '@backstage/cli-node';
 import { RequestHandler } from 'express';
 import * as path from 'path';
+import { configureCorporateProxyAgent } from './corporate-proxy';
 import { CommonJSModuleLoader } from './loader';
 import { customLogger } from './logger';
 import { metricsHandler } from './metrics';
@@ -17,7 +18,6 @@ import {
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules/rbacDynamicPluginsModule';
-import { configureCorporateProxyAgent } from './corporate-proxy';
 
 // RHIDP-2217: adds support for corporate proxy
 configureCorporateProxyAgent();
@@ -47,7 +47,7 @@ backend.add(
     },
   }),
 );
-backend.add(dynamicPluginsFeatureDiscoveryServiceFactory()); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
+backend.add(dynamicPluginsFeatureDiscoveryServiceFactory); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
 backend.add(
   dynamicPluginsServiceFactory({
     moduleLoader: logger => new CommonJSModuleLoader(logger),
@@ -67,8 +67,8 @@ backend.add(
     },
   }),
 );
-backend.add(dynamicPluginsFrontendSchemas());
-backend.add(customLogger());
+backend.add(dynamicPluginsFrontendSchemas);
+backend.add(customLogger);
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
 backend.add(
@@ -85,6 +85,14 @@ backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 // TODO: Check in the Scaffolder new backend plugin why the identity is not passed and the default is built instead.
 backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
 
+// See https://backstage.io/docs/features/software-catalog/configuration#subscribing-to-catalog-errors
+backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
+
+// search engine
+// See https://backstage.io/docs/features/search/search-engines
+backend.add(import('@backstage/plugin-search-backend-module-pg/alpha'));
+
+// search collators
 backend.add(import('@backstage/plugin-search-backend/alpha'));
 backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
 
@@ -104,5 +112,6 @@ backend.add(import('./modules/authProvidersModule'));
 
 backend.add(import('@internal/plugin-dynamic-plugins-info-backend'));
 backend.add(import('@internal/plugin-scalprum-backend'));
+backend.add(import('@internal/plugin-licensed-users-info-backend'));
 
 backend.start();
