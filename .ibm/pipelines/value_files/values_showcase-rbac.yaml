@@ -54,57 +54,55 @@ global:
                     name: 'my-cluster'
                     serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
                     url: ${K8S_CLUSTER_API_SERVER_URL}
-                type: config
-            customResources:
-              # Add for tekton
-              - apiVersion: 'v1beta1'
-                group: 'tekton.dev'
-                plural: 'pipelines'
-              - apiVersion: v1beta1
-                group: tekton.dev
-                plural: pipelineruns
-              - apiVersion: v1beta1
-                group: tekton.dev
-                plural: taskruns
-              # Add for topology plugin
-              - apiVersion: 'v1'
-                group: 'route.openshift.io'
-                plural: 'routes'
-              # Add to view topology code decorators
-              - group: 'org.eclipse.che'
-                apiVersion: 'v2'
-                plural: 'checlusters'
-            serviceLocatorMethod:
-              type: multiTenant
-      # Enable OCM plugins.
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
-        disabled: false
-        pluginConfig:
-          catalog:
-            providers:
-              ocm:
-                default:
-                  name: testCluster # Can be any arbitrary name supported by kubernetes
-                  url: ${OCM_CLUSTER_URL}
-                  serviceAccountToken: ${OCM_CLUSTER_TOKEN}
-                  skipTLSVerify: true
-                  owner: janus-authors
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
-        disabled: false
-      # Enable Bulk import plugins.
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
-        disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
-        disabled: false
-      # Enable tech-radar plugin.
-      - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
-        disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
-        disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
-        disabled: false
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
-        disabled: true
+                  type: config
+              customResources:
+                # Add for tekton
+                - apiVersion: 'v1beta1'
+                  group: 'tekton.dev'
+                  plural: 'pipelines'
+                - apiVersion: v1beta1
+                  group: tekton.dev
+                  plural: pipelineruns
+                - apiVersion: v1beta1
+                  group: tekton.dev
+                  plural: taskruns
+                # Add for topology plugin
+                - apiVersion: 'v1'
+                  group: 'route.openshift.io'
+                  plural: 'routes'
+                # Add to view topology code decorators
+                - group: 'org.eclipse.che'
+                  apiVersion: 'v2'
+                  plural: 'checlusters'
+              serviceLocatorMethod:
+                type: multiTenant
+        # Enable OCM plugins.
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+          disabled: false
+          pluginConfig:
+            catalog:
+              providers:
+                ocm:
+                  default:
+                    name: testCluster # Can be any arbitrary name supported by kubernetes
+                    url: ${OCM_CLUSTER_URL}
+                    serviceAccountToken: ${OCM_CLUSTER_TOKEN}
+                    skipTLSVerify: true
+                    owner: janus-authors
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+          disabled: false
+        # Enable Bulk import plugins.
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+          disabled: false
+        # Enable tech-radar plugin.
+        - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+          disabled: false
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
   # -- Shorthand for users who do not want to specify a custom HOSTNAME. Used ONLY with the DEFAULT upstream.backstage.appConfig value and with OCP Route enabled.
