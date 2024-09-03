@@ -48,8 +48,8 @@
     providers:
       github:
         development:
-          clientId: ${GITHUB_APP_CLIENT_ID}
-          clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+          clientId: ${GITHUB_APP_2_CLIENT_ID}
+          clientSecret: ${GITHUB_APP_2_CLIENT_SECRET}
   ```
 
   To enable Keycloak Sign in, add the below to the app-config
@@ -60,8 +60,8 @@
     providers:
       github:
         production:
-          clientId: ${GITHUB_APP_CLIENT_ID}
-          clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+          clientId: ${GITHUB_APP_2_CLIENT_ID}
+          clientSecret: ${GITHUB_APP_2_CLIENT_SECRET}
       oauth2Proxy: {}
   ```
 
