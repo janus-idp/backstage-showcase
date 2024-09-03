@@ -91,6 +91,11 @@ global:
                     owner: janus-authors
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
           disabled: false
+        # Enable Bulk import plugins.
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+          disabled: false
         # Enable tech-radar plugin.
         - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
           disabled: false
