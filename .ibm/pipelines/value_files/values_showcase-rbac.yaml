@@ -103,8 +103,6 @@ global:
           disabled: false
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
           disabled: false
-        - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
-          disabled: true
 
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'

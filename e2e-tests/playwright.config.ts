@@ -46,7 +46,7 @@ export default defineConfig({
       },
       testIgnore: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
-        '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-enabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
       ],
     },
@@ -58,7 +58,7 @@ export default defineConfig({
       },
       testMatch: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
-        '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-enabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
       ],
     },
@@ -74,7 +74,7 @@ export default defineConfig({
         '**/playwright/e2e/instance-health-check.spec.ts',
         '**/playwright/e2e/learning-path-page.spec.ts',
         '**/playwright/e2e/plugins/acr.spec.ts',
-        '**/playwright/e2e/plugins/analytics/analytics-enabled.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-disabled.spec.ts',
         '**/playwright/e2e/plugins/dynamic-plugins-info/dynamic-plugins-info.spec.ts',
         '**/playwright/e2e/plugins/keycloak/catalog-users.spec.ts',
         '**/playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts',
