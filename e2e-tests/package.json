@@ -19,7 +19,9 @@
   },
   "devDependencies": {
     "@playwright/test": "1.46.1",
-    "@types/node": "20.16.3",
+    "@microsoft/microsoft-graph-types": "^2.40.0",
+    "@types/isomorphic-fetch": "^0.0.39",
+    "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "eslint": "8.57.0",
@@ -28,6 +30,11 @@
     "typescript": "5.5.4"
   },
   "dependencies": {
-    "node-fetch": "3.3.2"
+    "@azure/identity": "^4.4.1",
+    "@keycloak/keycloak-admin-client": "^25.0.2",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "3.3.2",
+    "winston": "^3.14.2"
   }
 }

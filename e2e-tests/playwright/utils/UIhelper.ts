@@ -218,6 +218,15 @@ export class UIhelper {
     await expect(headingLocator).toBeVisible();
   }
 
+  async verifyParagraph(paragraph: string) {
+    const headingLocator = this.page
+      .locator('p')
+      .filter({ hasText: paragraph })
+      .first();
+    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
+    await expect(headingLocator).toBeVisible();
+  }
+
   async waitForH4Title(text: string) {
     await this.page.waitForSelector(`h4:has-text("${text}")`, {
       timeout: 99999,
@@ -336,9 +345,20 @@ export class UIhelper {
       expect(color).toBe(expectedRgbColor);
     }
   }
+  
   async verifyTableIsEmpty() {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toEqual(0);
+  }
+
+  async waitForCardWithHeader(cardHeading: string) {
+    await this.page.waitForSelector(UIhelperPO.MuiCard(cardHeading));
+  }
+
+  async verifyAlertErrorMessage(message: string | RegExp) {
+    const alert = this.page.getByRole('alert');
+    await alert.waitFor();
+    await expect(alert).toHaveText(message);
   }
 }
