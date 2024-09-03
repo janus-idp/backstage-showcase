@@ -47,10 +47,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - name: Get the latest commits from main
+      - name: Get the latest commits from base branch
         run: |
-          git fetch origin main
-          git merge --no-edit origin/main
+          echo "Updating PR with latest commits from ${{ github.event.pull_request.base.ref }} ..."
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
 
       - name: Get the last commit short SHA of the PR
         run: |
