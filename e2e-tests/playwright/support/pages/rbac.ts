@@ -38,7 +38,12 @@ export class Roles {
   }
 
   static getRolesListColumnsText() {
-    return ['Name', 'Users and groups', 'Permission Policies', 'Actions'];
+    return [
+      /^Name$/,
+      /^Users and groups$/,
+      /Permission Policies|Accessible plugins/,
+      /^Actions$/,
+    ];
   }
 
   static getUsersAndGroupsListColumnsText() {
