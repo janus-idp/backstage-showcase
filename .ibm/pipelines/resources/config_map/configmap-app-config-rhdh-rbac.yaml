@@ -16,13 +16,13 @@ data:
       github:
         - host: github.com
           apps:
-            - appId: ${GITHUB_APP_APP_ID}
-              clientId: ${GITHUB_APP_CLIENT_ID}
-              clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+            - appId: ${GITHUB_APP_2_APP_ID}
+              clientId: ${GITHUB_APP_2_CLIENT_ID}
+              clientSecret: ${GITHUB_APP_2_CLIENT_SECRET}
               webhookUrl: ${GITHUB_APP_WEBHOOK_URL}
               webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
               privateKey: |
-                ${GITHUB_APP_PRIVATE_KEY}
+                ${GITHUB_APP_2_PRIVATE_KEY}
       bitbucketServer:
         - host: bitbucket.com
           apiBaseUrl: temp
@@ -38,8 +38,8 @@ data:
         # Plugin: GitHub
         github:
           development:
-            clientId: ${GITHUB_APP_CLIENT_ID}
-            clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+            clientId: ${GITHUB_APP_2_CLIENT_ID}
+            clientSecret: ${GITHUB_APP_2_CLIENT_SECRET}
         google:
           development:
             clientId: ${GOOGLE_CLIENT_ID}
