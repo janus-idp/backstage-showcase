@@ -1,6 +1,7 @@
-import { test, Page, TestInfo } from '@playwright/test';
+import { test, Page, TestInfo, expect } from '@playwright/test';
 import { Common, setupBrowser } from '../utils/Common';
 import { ThemeVerifier } from '../utils/custom-theme/theme-verifier';
+import { customIcon } from '../support/testData/custom-theme';
 
 let page: Page;
 
@@ -44,5 +45,10 @@ test.describe('CustomTheme should be applied', () => {
       'custom-theme-dark-inspection',
     );
     // await themeVerifier.verifyPrimaryColors('#ab75cf') //TODO: comment out when the primary color issue is fixed (RHIDP-3107)
+  });
+
+  test('Verify that tab icon for Backstage can be customized', async () => {
+    const tabIcon = await page.locator('#dynamic-favicon').getAttribute('href');
+    expect(tabIcon).toEqual(customIcon);
   });
 });

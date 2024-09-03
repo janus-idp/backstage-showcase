@@ -47,6 +47,15 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
+      - name: Get the latest commits from base branch
+        run: |
+          git remote add base-origin https://github.com/janus-idp/backstage-showcase || true
+          git config user.name "${{ github.event.pull_request.user.login }}"
+          git config user.email "${{ github.event.pull_request.user.email }}"
+          echo "Updating PR with latest commits from ${{ github.event.pull_request.base.ref }} ..."
+          git fetch base-origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit base-origin/${{ github.event.pull_request.base.ref }}
+
       - name: Get the last commit short SHA of the PR
         run: |
           SHORT_SHA=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})
