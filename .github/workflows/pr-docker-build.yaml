@@ -47,6 +47,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
+      - name: Get the latest commits from main
+        run: |
+          git fetch origin main
+          git merge --no-edit origin/main
+
       - name: Get the last commit short SHA of the PR
         run: |
           SHORT_SHA=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})
