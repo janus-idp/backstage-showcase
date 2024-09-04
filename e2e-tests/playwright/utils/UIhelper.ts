@@ -147,6 +147,14 @@ export class UIhelper {
     await navLink.click();
   }
 
+  async openSidebarButton(navBarButtonLabel: string) {
+    const navLink = this.page.locator(
+      `nav button[aria-label="${navBarButtonLabel}"]`,
+    );
+    await navLink.waitFor({ state: 'visible' });
+    await navLink.click();
+  }
+
   async selectMuiBox(label: string, value: string) {
     await this.page.click(`div[aria-label="${label}"]`);
     const optionSelector = `li[role="option"]:has-text("${value}")`;
