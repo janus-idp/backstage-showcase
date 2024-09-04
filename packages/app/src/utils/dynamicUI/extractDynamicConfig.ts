@@ -25,6 +25,13 @@ export type DynamicRouteMenuItem =
       };
     };
 
+export type MenuItemConfig = {
+  icon?: string;
+  title?: string;
+  priority?: number;
+  parent?: string;
+};
+
 export type MenuItem = {
   name: string;
   title: string;
@@ -106,7 +113,7 @@ type CustomProperties = {
     path: string;
     menuItem?: DynamicRouteMenuItem;
   })[];
-  menuItems?: { [key: string]: MenuItem };
+  menuItems?: { [key: string]: MenuItemConfig };
   routeBindings?: {
     targets: BindingTarget[];
     bindings: RouteBinding[];

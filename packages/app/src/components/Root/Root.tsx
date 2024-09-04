@@ -33,6 +33,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import MuiIcon from '@mui/material/Icon';
 import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
+import { usePermission } from '@backstage/plugin-permission-react';
+import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -120,6 +122,12 @@ const renderExpandIcon = (expand: boolean, isSecondLevelMenuItem = false) => {
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
+
+  const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
+    usePermission({
+      permission: policyEntityReadPermission,
+      resourceRef: policyEntityReadPermission.resourceType,
+    });
 
   const handleClick = (itemName: string) => {
     setOpenItems(prevOpenItems => ({
@@ -224,6 +232,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     const menuItemArray = isBottomMenuSection
       ? menuItems.filter(mi => mi.name === 'admin')
       : menuItems.filter(mi => mi.name !== 'admin');
+
+    if (isBottomMenuSection && !canDisplayRBACMenuItem && !loadingPermission) {
+      menuItemArray[0].children = menuItemArray[0].children?.filter(
+        mi => mi.name !== 'rbac',
+      );
+    }
     return (
       <>
         {menuItemArray.map(menuItem => {

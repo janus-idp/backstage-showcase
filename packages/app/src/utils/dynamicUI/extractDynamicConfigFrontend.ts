@@ -1,7 +1,11 @@
-import { FrontendConfig, MenuItem } from './extractDynamicConfig';
+import {
+  FrontendConfig,
+  MenuItem,
+  MenuItemConfig,
+} from './extractDynamicConfig';
 
 function getNameFromPath(path: string): string {
-  return path.split('/').pop()?.replace('/', '.') ?? '';
+  return path.split('/').pop() ?? '';
 }
 
 function isStaticPath(path: string): boolean {
@@ -13,12 +17,16 @@ export function compareMenuItems(a: MenuItem, b: MenuItem) {
 }
 
 function convertMenuItemsRecordToArray(
-  menuItemsRecord: Record<string, MenuItem>,
+  menuItemsRecord: Record<string, MenuItemConfig>,
 ): MenuItem[] {
-  return Object.keys(menuItemsRecord).map(key => ({
-    ...menuItemsRecord[key],
-    name: key,
-  }));
+  return Object.keys(menuItemsRecord).map(
+    key =>
+      ({
+        ...menuItemsRecord[key],
+        children: [],
+        name: key,
+      }) as MenuItem,
+  );
 }
 
 function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
@@ -67,7 +75,6 @@ export function extractMenuItems(frontend: FrontendConfig): MenuItem[] {
             icon: mi && 'icon' in mi && mi.icon ? mi.icon : '',
             title: mi && 'text' in mi && mi.text ? mi.text : '',
             to: dr.path ?? '',
-            priority: 0,
             children: [],
           });
         }
