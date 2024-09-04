@@ -332,7 +332,6 @@ install_pipelines_operator() {
 initiate_deployments() {
   add_helm_repos
 
-
   if [[ "$JOB_NAME" == *aks* ]]; then
     initiate_aks_deployment
   else
@@ -361,24 +360,16 @@ initiate_deployments() {
   fi
 }
 
-single_deployment_initiation() {
-  local name_space="$1"
-  local release_name="$2"
-  local helm_chart_value_file_name="$3"
-
-  configure_namespace "${name_space}"
-  uninstall_helmchart "${name_space}" "${release_name}"
+initiate_aks_deployment() {
+  configure_namespace "${NAME_SPACE_AKS}"
+  uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   if [[ "$JOB_NAME" != *aks* ]]; then
     install_pipelines_operator "${DIR}"
   fi
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${name_space}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${name_space}"
-  helm upgrade -i "${release_name}" -n "${name_space}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${helm_chart_value_file_name}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
-}
-
-initiate_aks_deployment() {
-  single_deployment_initiation "${NAME_SPACE_AKS}" "${RELEASE_NAME}" "${HELM_CHART_AKS_VALUE_FILE_NAME}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_AKS}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" -f "${DIR}/value_files/${HELM_CHART_AKS_DIFF_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
