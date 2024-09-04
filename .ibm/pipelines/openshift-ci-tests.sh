@@ -363,9 +363,6 @@ initiate_deployments() {
 initiate_aks_deployment() {
   configure_namespace "${NAME_SPACE_AKS}"
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
-  if [[ "$JOB_NAME" != *aks* ]]; then
-    install_pipelines_operator "${DIR}"
-  fi
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_AKS}"
