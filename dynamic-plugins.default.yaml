@@ -305,12 +305,12 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-argocd:
+          backstage-community.plugin-redhat-argocd:
             mountPoints:
               - mountPoint: entity.page.overview/cards
                 importName: ArgocdDeploymentSummary
