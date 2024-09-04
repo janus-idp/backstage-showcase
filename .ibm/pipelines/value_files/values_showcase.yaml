@@ -12,6 +12,8 @@ global:
     # an optional `pluginConfig` with plugin-specific backstage configuration, and an optional `disabled` flag to disable/enable a plugin
     # listed in `includes` files. It also includes an `integrity` field that is used to verify the plugin package [integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description).
     plugins:
+        - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+          disabled: false
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
           disabled: false
           pluginConfig:
@@ -95,6 +97,8 @@ global:
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
           disabled: true
         - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
           disabled: false
         - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
           disabled: false
@@ -265,6 +269,7 @@ upstream:
         filename: app-config-rhdh.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
+      - redis-secret
   postgresql:
     enabled: true
     postgresqlDataDir: /var/lib/pgsql/data/userdata

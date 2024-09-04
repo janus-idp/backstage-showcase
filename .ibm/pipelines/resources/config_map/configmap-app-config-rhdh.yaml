@@ -25,18 +25,22 @@ data:
       auth:
         keys:
           - secret: temp
+      cache:
+        store: redis
+        connection: redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:6379
+        useRedisSets: true
     integrations:
       # Plugin: GitHub
       github:
         - host: github.com
           apps:
-            - appId: ${GITHUB_APP_APP_ID}
-              clientId: ${GITHUB_APP_CLIENT_ID}
-              clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+            - appId: ${GITHUB_APP_2_APP_ID}
+              clientId: ${GITHUB_APP_2_CLIENT_ID}
+              clientSecret: ${GITHUB_APP_2_CLIENT_SECRET}
               webhookUrl: ${GITHUB_APP_WEBHOOK_URL}
               webhookSecret: ${GITHUB_APP_WEBHOOK_SECRET}
               privateKey: |
-                ${GITHUB_APP_PRIVATE_KEY}
+                ${GITHUB_APP_2_PRIVATE_KEY}
             - appId: ${GITHUB_APP_JANUS_TEST_APP_ID}
               clientId: ${GITHUB_APP_JANUS_TEST_CLIENT_ID}
               clientSecret: ${GITHUB_APP_JANUS_TEST_CLIENT_SECRET}
@@ -59,8 +63,8 @@ data:
         # Plugin: GitHub
         github:
           development:
-            clientId: ${GITHUB_APP_CLIENT_ID}
-            clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+            clientId: ${GITHUB_APP_2_CLIENT_ID}
+            clientSecret: ${GITHUB_APP_2_CLIENT_SECRET}
         google:
           development:
             clientId: ${GOOGLE_CLIENT_ID}

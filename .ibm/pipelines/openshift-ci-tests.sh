@@ -1,7 +1,7 @@
 #!/bin/sh
 
-set -e
-set -x
+set -xe
+export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 
 LOGFILE="test-log"
 JUNIT_RESULTS="junit-results.xml"
@@ -15,6 +15,8 @@ cleanup() {
 }
 
 trap cleanup EXIT
+
+source "${DIR}/utils.sh"
 
 set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
@@ -139,7 +141,7 @@ apply_yaml_files() {
 
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: ${K8S_PLUGIN_ANNOTATION}/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
+  for key in GITHUB_APP_2_APP_ID GITHUB_APP_2_CLIENT_ID GITHUB_APP_2_PRIVATE_KEY GITHUB_APP_2_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -160,7 +162,7 @@ apply_yaml_files() {
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
   sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-2-x" ]]; then
+  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-3-x" ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
   else
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh.yaml" --namespace="${project}"
@@ -174,7 +176,6 @@ apply_yaml_files() {
 }
 
 droute_send() {
-  set -x
   # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
   if [[ "$JOB_NAME" == *ocp-v4* ]]; then
     return 0
@@ -228,7 +229,6 @@ droute_send() {
     --attachments '/tmp/droute/attachments' \
     --verbose"
 
-  set +x
 }
 
 run_tests() {
@@ -299,7 +299,7 @@ check_backstage_running() {
   done
 
   echo "Failed to reach Backstage at ${BASE_URL} after ${max_attempts} attempts." | tee -a "/tmp/${LOGFILE}"
-  cp -a "/tmp/${LOGFILE}" "${ARTIFACT_DIR}"
+  cp -a "/tmp/${LOGFILE}" "${ARTIFACT_DIR}/${namespace}/"
   return 1
 }
 
@@ -321,6 +321,9 @@ initiate_deployments() {
   install_pipelines_operator "${DIR}"
   install_helm
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
+
+  # Deploy redis cache db.
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}"
@@ -350,6 +353,7 @@ check_and_test() {
     echo "Backstage is not running. Exiting..."
     OVERALL_RESULT=1
   fi
+  save_all_pod_logs $namespace
 }
 
 main() {

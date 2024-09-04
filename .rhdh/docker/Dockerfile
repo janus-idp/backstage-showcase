@@ -54,6 +54,7 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/sca
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
 
 # Downstream only - debugging
 # COPY $REMOTE_SOURCES/ ./
@@ -247,7 +248,7 @@ ENV NPM_CONFIG_ignore-scripts='true'
 
 # gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t is key for dev environment
 # Use production key in stable 1.yy.x branch; use dev key in main for CI/next builds
-ENV SEGMENT_WRITE_KEY=gGVM6sYRK0D0ndVX22BOtS7NRcxPej8t
+ENV SEGMENT_WRITE_KEY=mUr49Tkld5bj1lFFPxxqHrAzkQMRINvF
 ENV SEGMENT_TEST_MODE=false
 
 # RHIDP-2217: corporate proxy support (configured using 'global-agent')
