@@ -29,7 +29,6 @@
     "@backstage/plugin-auth-backend-module-guest-provider": "0.1.8",
     "@backstage/plugin-auth-node": "0.4.17",
     "@backstage/plugin-catalog-backend": "1.24.0",
-    "@backstage/plugin-catalog-backend-module-logs": "0.0.1",
     "@backstage/plugin-catalog-backend-module-openapi": "0.1.40",
     "@backstage/plugin-catalog-backend-module-scaffolder-entity-model": "0.1.20",
     "@backstage/plugin-events-backend": "0.3.9",
