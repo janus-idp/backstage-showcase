@@ -85,9 +85,6 @@ backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 // TODO: Check in the Scaffolder new backend plugin why the identity is not passed and the default is built instead.
 backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
 
-// See https://backstage.io/docs/features/software-catalog/configuration#subscribing-to-catalog-errors
-backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
-
 // search engine
 // See https://backstage.io/docs/features/search/search-engines
 backend.add(import('@backstage/plugin-search-backend-module-pg/alpha'));
