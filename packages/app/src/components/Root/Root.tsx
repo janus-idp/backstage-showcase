@@ -155,6 +155,8 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                 disablePadding
                 sx={{
                   paddingLeft: '4rem',
+                  fontSize: 12,
+                  '& span.MuiTypography-subtitle2': { fontSize: 12 },
                   '& div': { width: '36px', boxShadow: '-1px 0 0 0 #3c3f42' },
                 }}
               >
