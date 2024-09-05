@@ -919,3 +919,10 @@ plugins:
       catalog:
         providers:
           ldapOrg: {}
+
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          pingIdentityOrg: {}
