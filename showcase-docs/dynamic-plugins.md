@@ -515,21 +515,12 @@ Order and parent-children relationship of plugin menu items which are in main si
 dynamicPlugins:
   frontend:
     <package_name>: # same as `scalprum.name` key in plugin's `package.json`
-      dynamicRoutes: # exposes full routes
-        - path: /my-plugin # unique path in the app, can override `/`
-          module: CustomModule # optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
-          importName: FooPluginPage # optional, actual component name that should be rendered
-          menuItem: # optional, allows you to populate main sidebar navigation
-            icon: fooIcon # Backstage system icon
-            text: Foo Plugin Page # menu item text
-          config:
-            props: ... # optional, React props to pass to the component
       menuItems: # optional, allows you to configure plugin menu items in the main sidebar navigation
         <menu_item_name>: # unique name in the plugin menu items list
-          icon: fooIcon # optional, same as `dynamicRoute.menuItem.icon`
-          title: Foo Plugin Page # optional, same as `dynamicRoute.menuItem.text`
+          icon: fooIcon # optional, same as `menuItem.icon` in `dynamicRoutes`
+          title: Foo Plugin Page # optional, same as `menuItem.text` in `dynamicRoutes`
           priority: 10 # optional, defines the order of menu items in the sidebar
-          parent: favirotes # optional, defines parent-child relationships for nested menu items
+          parent: favorites # optional, defines parent-child relationships for nested menu items
 ```
 
 Up to 3 levels of nested menu items are supported.
@@ -555,10 +546,10 @@ dynamicPlugins:
       menuItems:
         my-plugin: # matches `path` in `dynamicRoutes`
           priority: 10 # controls order of plugins under the parent menu item
-          parent: favirotes # nests this plugin under the `favorites` parent menu item
-        favirotes: # configuration for the parent menu item
-          icon: favirote # icon from RHDH system icons
-          title: Favirotes # title for the parent menu item
+          parent: favorites # nests this plugin under the `favorites` parent menu item
+        favorites: # configuration for the parent menu item
+          icon: favorite # icon from RHDH system icons
+          title: Favorites # title for the parent menu item
           priority: 100 # controls the order of this top-level menu item
 ```
 
