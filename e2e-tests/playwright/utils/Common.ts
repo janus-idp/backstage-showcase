@@ -49,7 +49,9 @@ export class Common {
     await this.page.fill('#login_field', userid);
     await this.page.fill(
       '#password',
-      userid === process.env.GH_USER_ID ? process.env.GH_USER_PASS : process.env.GH_USER2_PASS
+      userid === process.env.GH_USER_ID
+        ? process.env.GH_USER_PASS
+        : process.env.GH_USER2_PASS,
     );
 
     await this.page.click('[value="Sign in"]');
@@ -136,8 +138,11 @@ export class Common {
   }
 
   getGitHub2FAOTP(userid: string): string {
-    return authenticator.generate(userid === process.env.GH_USER_ID ? 
-      process.env.GH_2FA_SECRET : process.env.GH_USER2_2FA_SECRET);
+    return authenticator.generate(
+      userid === process.env.GH_USER_ID
+        ? process.env.GH_2FA_SECRET
+        : process.env.GH_USER2_2FA_SECRET,
+    );
   }
 
   getGoogle2FAOTP(): string {

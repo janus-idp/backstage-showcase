@@ -281,18 +281,17 @@ test.describe.serial('Test RBAC plugin REST API', () => {
   );
 });
 
-test.describe.serial('Test RBAC plugin: loading permission policies and conditions from files', () => {
+test.describe
+  .serial('Test RBAC plugin: loading permission policies and conditions from files', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
-  let rolesHelper: Roles;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    rolesHelper = new Roles(page);
     await common.loginAsGithubUser();
     await uiHelper.openSidebar('Administration');
     await uiHelper.verifyHeading('Administration');
@@ -301,13 +300,12 @@ test.describe.serial('Test RBAC plugin: loading permission policies and conditio
   });
 
   test('Check if permission policies defined in files are loaded and effective', async () => {
-
-    const testRole: string = "role:default/test2-role";
+    const testRole: string = 'role:default/test2-role';
 
     await uiHelper.verifyHeading('All roles (3)');
     await uiHelper.verifyLink(testRole);
     await uiHelper.clickLink(testRole);
-    
+
     await uiHelper.verifyHeading(testRole);
     await uiHelper.clickTab('Overview');
 
@@ -322,19 +320,23 @@ test.describe.serial('Test RBAC plugin: loading permission policies and conditio
     const permissionPoliciesCellsIdentifier =
       Roles.getPermissionPoliciesListCellsIdentifier();
     await uiHelper.verifyCellsInTable(permissionPoliciesCellsIdentifier);
-    
+
     await expect(page.getByRole('article')).toContainText('catalog-entity');
     await expect(page.getByRole('article')).toContainText('Read, Update');
     await expect(page.getByRole('article')).toContainText('Delete');
-    
+
     await page.getByTestId('update-members').getByLabel('Update').click();
     await expect(page.locator('tbody')).toContainText('rhdh-qe-2-team');
     await uiHelper.clickButton('Next');
     await page.getByLabel('configure-access').first().click();
-    await expect(page.getByPlaceholder('string, string')).toHaveValue('group:janus-qe/rhdh-qe-2-team,$currentUser');
+    await expect(page.getByPlaceholder('string, string')).toHaveValue(
+      'group:janus-qe/rhdh-qe-2-team,$currentUser',
+    );
     await page.getByTestId('cancel-conditions').click();
     await page.getByLabel('configure-access').nth(1).click();
-    await expect(page.getByPlaceholder('string, string')).toHaveValue('$currentUser');
+    await expect(page.getByPlaceholder('string, string')).toHaveValue(
+      '$currentUser',
+    );
     await page.getByTestId('cancel-conditions').click();
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Cancel');
@@ -345,18 +347,17 @@ test.describe.serial('Test RBAC plugin: loading permission policies and conditio
   });
 });
 
-test.describe.serial('Test RBAC plugin: Aliases used in conditional access policies', () => {
+test.describe
+  .serial('Test RBAC plugin: Aliases used in conditional access policies', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
-  let rolesHelper: Roles;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    rolesHelper = new Roles(page);
     await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
@@ -364,21 +365,27 @@ test.describe.serial('Test RBAC plugin: Aliases used in conditional access polic
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
 
-    await uiHelper.searchInputPlaceholder('test-rhdh-qe-2');   
-    await page.getByRole('link', { name: 'test-rhdh-qe-2', exact: true }).click();
+    await uiHelper.searchInputPlaceholder('test-rhdh-qe-2');
+    await page
+      .getByRole('link', { name: 'test-rhdh-qe-2', exact: true })
+      .click();
 
     await expect(page.locator('header')).toContainText('user:rhdh-qe-2');
     await page.getByTestId('menu-button').click();
     const unregisterUserOwned = await page.getByText('Unregister entity');
     await expect(unregisterUserOwned).toBeEnabled();
-    
+
     await page.getByText('Unregister entity').click();
-    await expect(page.getByRole('heading')).toContainText('Are you sure you want to unregister this entity?');
+    await expect(page.getByRole('heading')).toContainText(
+      'Are you sure you want to unregister this entity?',
+    );
     await page.getByRole('button', { name: 'Cancel' }).click();
-    
+
     await uiHelper.openSidebar('Catalog');
     await page.getByRole('link', { name: 'test-rhdh-qe-2-team-owned' }).click();
-    await expect(page.locator('header')).toContainText('janus-qe/rhdh-qe-2-team');
+    await expect(page.locator('header')).toContainText(
+      'janus-qe/rhdh-qe-2-team',
+    );
     await page.getByTestId('menu-button').click();
     const unregisterGroupOwned = await page.getByText('Unregister entity');
     await expect(unregisterGroupOwned).toBeDisabled();

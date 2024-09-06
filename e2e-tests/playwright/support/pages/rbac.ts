@@ -341,7 +341,6 @@ export class Response {
         }
       ]
     `;
-
   }
 
   editPolicyRequest(oldPolicy: Policy[], newPolicy: Policy[]) {
