@@ -33,16 +33,16 @@ env:
 jobs:
   pr-docker-build:
     name: PR Docker Build
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
       packages: write
       pull-requests: write
-    strategy:
-      matrix:
-        platform:
-          - "linux/amd64"
-          - "linux/arm64"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
