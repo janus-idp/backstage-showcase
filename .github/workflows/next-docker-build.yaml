@@ -28,6 +28,11 @@ env:
 
 jobs:
   next-docker-build:
+    strategy:
+      matrix:
+        platform:
+          - "linux/amd64"
+          - "linux/arm64"
     name: Next Docker Build
     runs-on: ubuntu-latest
     permissions:
@@ -63,3 +68,4 @@ jobs:
               type=sha,prefix=next-
             imageLabels: quay.expires-after=14d
             push: true
+            platforms: ${{ matrix.platform }}

@@ -29,6 +29,11 @@ env:
 
 jobs:
   versioned-docker-build:
+    strategy:
+      matrix:
+        platform:
+          - "linux/amd64"
+          - "linux/arm64"
     name: Versioned Docker Build
     runs-on: ubuntu-latest
     permissions:
@@ -66,3 +71,4 @@ jobs:
               type=semver,pattern={{major}}.{{minor}}
               type=semver,pattern={{major}}
             push: true
+            platforms: ${{ matrix.platform }}
