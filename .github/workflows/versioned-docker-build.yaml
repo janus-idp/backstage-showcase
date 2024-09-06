@@ -54,15 +54,15 @@ jobs:
           echo "is_latest=$is_latest" >> "$GITHUB_ENV"
 
       - name: Build and Push with Buildx
-        uses: ./.github/actions/docker-build
+        uses: ./.github/workflows/build-image.yaml
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
-          imageTags: |
-            type=raw,value=latest,enable=${{ env.is_latest }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-          push: true
+            registry: ${{ env.REGISTRY }}
+            username: ${{ vars.QUAY_USERNAME }}
+            password: ${{ secrets.QUAY_TOKEN }}
+            imageName: ${{ github.repository }}
+            imageTags: |
+              type=raw,value=latest,enable=${{ env.is_latest }}
+              type=semver,pattern={{version}}
+              type=semver,pattern={{major}}.{{minor}}
+              type=semver,pattern={{major}}
+            push: true

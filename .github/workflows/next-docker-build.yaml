@@ -52,14 +52,14 @@ jobs:
           fi
 
       - name: Build and Push with Buildx
-        uses: ./.github/actions/docker-build
+        uses: ./.github/workflows/build-image.yaml
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
-          imageTags: |
-            type=raw,value=next
-            type=sha,prefix=next-
-          imageLabels: quay.expires-after=14d
-          push: true
+            registry: ${{ env.REGISTRY }}
+            username: ${{ vars.QUAY_USERNAME }}
+            password: ${{ secrets.QUAY_TOKEN }}
+            imageName: ${{ github.repository }}
+            imageTags: |
+              type=raw,value=next
+              type=sha,prefix=next-
+            imageLabels: quay.expires-after=14d
+            push: true

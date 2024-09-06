@@ -33,12 +33,7 @@ env:
 jobs:
   pr-docker-build:
     name: PR Docker Build
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -72,7 +67,7 @@ jobs:
           fi
 
       - name: Build and Push with Buildx
-        uses: ./.github/actions/docker-build
+        uses: ./.github/workflows/build-image.yaml
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ vars.QUAY_USERNAME }}
@@ -83,7 +78,6 @@ jobs:
             type=ref,prefix=pr-,suffix=-${{ env.SHORT_SHA }},event=pr
           # to autodelete PR image tags, set an expiry date
           imageLabels: quay.expires-after=14d
-          platform: ${{ matrix.platform }}
           push: true
 
       - name: Comment the image pull link
@@ -94,5 +88,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'The image (${{ matrix.platform }}) is available at: `quay.io/${{ github.repository }}:pr-${{ github.event.number }}`!'
+              body: 'The image is  available at: `quay.io/${{ github.repository }}:pr-${{ github.event.number }}`!'
             })
