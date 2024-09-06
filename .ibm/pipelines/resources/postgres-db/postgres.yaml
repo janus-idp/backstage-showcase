@@ -1,7 +1,7 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: postgress-external-db
+  name: postgres-external-db
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-16.3-1
   postgresVersion: 16

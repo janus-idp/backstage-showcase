@@ -7,14 +7,14 @@ HELM_CHART_RBAC_VALUE_FILE_NAME="values_showcase-rbac.yaml"
 HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
-K8S_CLUSTER_TOKEN_ENCODED=$(echo -n $K8S_CLUSTER_TOKEN | base64 | tr -d '\n')
+K8S_CLUSTER_TOKEN_ENCODED=$(printf "%s" $K8S_CLUSTER_TOKEN | base64 | tr -d '\n')
 QUAY_REPO="${QUAY_REPO:-janus-idp/backstage-showcase}"
 
 RELEASE_NAME=rhdh
 RELEASE_NAME_RBAC=rhdh-rbac
 NAME_SPACE="${NAME_SPACE:-showcase}"
 NAME_SPACE_RBAC="${NAME_SPACE_RBAC:-showcase-rbac}"
-NAME_SPACE_POSTGRES_DB="${NAME_SPACE_POSTGRES_DB:-postgress-external-db}"
+NAME_SPACE_POSTGRES_DB="${NAME_SPACE_POSTGRES_DB:-postgres-external-db}"
 CHART_VERSION="2.15.2"
 GITHUB_APP_APP_ID=Mzc2ODY2
 GITHUB_APP_CLIENT_ID=SXYxLjdiZDNlZDFmZjY3MmY3ZDg=
@@ -32,13 +32,16 @@ GITHUB_ORG_2=amFudXMtdGVzdA==
 GH_USER_ID=$(cat /tmp/secrets/GH_USER_ID)
 GH_USER_PASS=$(cat /tmp/secrets/GH_USER_PASS)
 GH_2FA_SECRET=$(cat /tmp/secrets/GH_2FA_SECRET)
+GH_USER2_ID=$(cat /tmp/secrets/GH_USER2_ID)
+GH_USER2_PASS=$(cat /tmp/secrets/GH_USER2_PASS)
+GH_USER2_2FA_SECRET=$(cat /tmp/secrets/GH_USER2_2FA_SECRET)
 GH_RHDH_QE_USER_TOKEN=$(cat /tmp/secrets/GH_RHDH_QE_USER_TOKEN)
 
 GITLAB_TOKEN=$(cat /tmp/secrets/GITLAB_TOKEN)
 
-K8S_CLUSTER_API_SERVER_URL=$(echo -n "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
+K8S_CLUSTER_API_SERVER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
 K8S_SERVICE_ACCOUNT_TOKEN=$K8S_CLUSTER_TOKEN_ENCODED
-OCM_CLUSTER_URL=$(echo -n "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
+OCM_CLUSTER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
 OCM_CLUSTER_TOKEN=$K8S_CLUSTER_TOKEN_ENCODED
 KEYCLOAK_BASE_URL='https://keycloak-keycloak.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud'
 KEYCLOAK_LOGIN_REALM='myrealm'

@@ -20,3 +20,5 @@ data:
     p, role:default/rbac_admin, catalog.location.read, read, allow
     p, role:default/rbac_admin, policy-entity, read, allow
     p, role:default/rbac_admin, policy-entity, create, allow
+
+    g, group:janus-qe/rhdh-qe-2-team, role:default/test2-role
