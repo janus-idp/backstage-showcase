@@ -8,7 +8,7 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
-import { IconComponent, useApp } from '@backstage/core-plugin-api';
+import { IconComponent } from '@backstage/core-plugin-api';
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
@@ -31,10 +31,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import MuiIcon from '@mui/material/Icon';
 import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
 import { usePermission } from '@backstage/plugin-permission-react';
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+import { MenuIcon } from './MenuIcon';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -54,46 +54,6 @@ const SideBarItemWrapper = (props: SidebarItemProps) => {
       {...props}
       className={`${sidebarItem}${props.className ?? ''}`}
     />
-  );
-};
-
-export const MenuIcon = ({ icon }: { icon: string }) => {
-  const app = useApp();
-  if (!icon) {
-    return null;
-  }
-
-  const SystemIcon = app.getSystemIcon(icon);
-
-  if (SystemIcon) {
-    return <SystemIcon fontSize="small" />;
-  }
-
-  if (icon.startsWith('<svg')) {
-    const svgDataUri = `data:image/svg+xml;base64,${btoa(icon)}`;
-    return (
-      <MuiIcon style={{ fontSize: 20 }}>
-        <img src={svgDataUri} alt="" />
-      </MuiIcon>
-    );
-  }
-
-  if (
-    icon.startsWith('https://') ||
-    icon.startsWith('http://') ||
-    icon.startsWith('/')
-  ) {
-    return (
-      <MuiIcon style={{ fontSize: 20 }} baseClassName="material-icons-outlined">
-        <img src={icon} alt="" />
-      </MuiIcon>
-    );
-  }
-
-  return (
-    <MuiIcon style={{ fontSize: 20 }} baseClassName="material-icons-outlined">
-      {icon}
-    </MuiIcon>
   );
 };
 
