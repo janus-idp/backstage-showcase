@@ -11,8 +11,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "bitbucket-cloud",
-    "pluginPackage": "backstage-plugin-catalog-backend-module-bitbucket-cloud"
+    "pluginId": "catalog",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "exports": {
     ".": {
