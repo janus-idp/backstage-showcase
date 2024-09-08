@@ -142,7 +142,9 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    const navLink = this.page.locator(`nav a[aria-label="${navBarText}"]`);
+    const navLink = this.page
+      .locator(`nav a:has-text("${navBarText}")`)
+      .first();
     await navLink.waitFor({ state: 'visible' });
     await navLink.click();
   }
