@@ -430,6 +430,7 @@ dynamicPlugins:
   frontend:
     <package_name>: # same as `scalprum.name` key in plugin's `package.json`
       dynamicRoutes: ...
+      menuItems: ...
       mountPoints: ...
       routeBindings: ...
       appIcons: ...
@@ -504,6 +505,53 @@ Each plugin can expose multiple routes and each route is required to define its 
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
 - `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
 - `config.props` - Optional. Additionally you can pass React props to the component.
+
+#### Menu items
+
+Order and parent-children relationship of plugin menu items which are in main sidebar navigation can be customized with menu items configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      menuItems: # optional, allows you to configure plugin menu items in the main sidebar navigation
+        <menu_item_name>: # unique name in the plugin menu items list
+          icon: fooIcon # optional, same as `menuItem.icon` in `dynamicRoutes`
+          title: Foo Plugin Page # optional, same as `menuItem.text` in `dynamicRoutes`
+          priority: 10 # optional, defines the order of menu items in the sidebar
+          parent: favorites # optional, defines parent-child relationships for nested menu items
+```
+
+Up to 3 levels of nested menu items are supported.
+
+- <menu_item_name> - A unique name in the main sidebar navigation. This can represent either a standalone menu item or a parent menu item. If it represents a plugin menu item, the name must match the corresponding path in dynamicRoutes.path. For example, if dynamicRoutes defines `path: /my-plugin`, the `menu_item_name` must be `my-plugin`.
+- `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](../packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
+- `title` - Optional. Specifies the display title of the menu item. This can also be omitted if it has already been defined in the `dynamicRoutes` configuration under `menuItem.text`.
+- `priority` - Optional. Defines the order in which menu items appear. The default priority is `0`, which places the item at the bottom of the list. A higher priority value will position the item higher in the sidebar.
+- `parent` - Optional. Defines the parent menu item to nest the current item under. If specified, the parent menu item must be defined somewhere else in the `menuItems` configuration of any enabled plugin.
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:
+      dynamicRoutes:
+        - path: /my-plugin
+          module: CustomModule
+          importName: FooPluginPage
+          menuItem:
+            icon: fooIcon
+            text: Foo Plugin Page
+      menuItems:
+        my-plugin: # matches `path` in `dynamicRoutes`
+          priority: 10 # controls order of plugins under the parent menu item
+          parent: favorites # nests this plugin under the `favorites` parent menu item
+        favorites: # configuration for the parent menu item
+          icon: favorite # icon from RHDH system icons
+          title: Favorites # title for the parent menu item
+          priority: 100 # controls the order of this top-level menu item
+```
 
 #### Bind to existing plugins
 

@@ -73,6 +73,7 @@ const ScalprumRoot = ({
   const scalprumApiHolder = {
     dynamicRootConfig: {
       dynamicRoutes: [],
+      menuItems: [],
       entityTabOverrides: {},
       mountPoints: {},
       scaffolderFieldExtensions: [],

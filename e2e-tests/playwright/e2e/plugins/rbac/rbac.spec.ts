@@ -409,13 +409,12 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     common = new Common(page);
     rolesHelper = new Roles(page);
     await common.loginAsGithubUser();
-    await uiHelper.openSidebar('Administration');
-    await uiHelper.verifyHeading('Administration');
-    await uiHelper.verifyLink('RBAC');
-    await uiHelper.clickTab('RBAC');
+    await uiHelper.openSidebarButton('Administration');
+    await uiHelper.openSidebar('RBAC');
+    await uiHelper.verifyHeading('RBAC');
   });
 
-  test('Check if Administration side nav is present with RBAC tab', async () => {
+  test('Check if Administration side nav is present with RBAC plugin', async () => {
     await uiHelper.verifyHeading('All roles (3)');
     const allGridColumnsText = Roles.getRolesListColumnsText();
     await uiHelper.verifyColumnHeading(allGridColumnsText);
@@ -623,12 +622,12 @@ test.describe('Test RBAC plugin as a guest user', () => {
     await common.loginAsGuest();
   });
 
-  test('Check if Administration side nav is present with no RBAC tab', async ({
+  test('Check if Administration side nav is present with no RBAC plugin', async ({
     page,
   }) => {
     const uiHelper = new UIhelper(page);
-    await uiHelper.openSidebar('Administration');
-    const tabLocator = page.locator(`text="RBAC"`);
-    await expect(tabLocator).not.toBeVisible();
+    await uiHelper.openSidebarButton('Administration');
+    const dropdownMenuLocator = page.locator(`text="RBAC"`);
+    await expect(dropdownMenuLocator).not.toBeVisible();
   });
 });
