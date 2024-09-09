@@ -75,7 +75,7 @@ export class UIhelper {
   }
 
   async clickLink(linkText: string) {
-    await this.page.locator(`a`).filter({ hasText: linkText }).click();
+    await this.page.locator(`a`).filter({ hasText: linkText }).first().click();
   }
 
   async verifyLink(
@@ -142,7 +142,17 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
+    const navLink = this.page
+      .locator(`nav a:has-text("${navBarText}")`)
+      .first();
+    await navLink.waitFor({ state: 'visible' });
+    await navLink.click();
+  }
+
+  async openSidebarButton(navBarButtonLabel: string) {
+    const navLink = this.page.locator(
+      `nav button[aria-label="${navBarButtonLabel}"]`,
+    );
     await navLink.waitFor({ state: 'visible' });
     await navLink.click();
   }
