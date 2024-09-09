@@ -14,21 +14,28 @@ const baseFrontendConfig = {
     dynamicPlugins: {
       frontend: {
         '@internal/plugin-dynamic-plugins-info': {
-          dynamicRoutes: [
-            { path: '/admin/plugins', importName: 'DynamicPluginsInfo' },
+          appIcons: [
+            { name: 'pluginsInfoIcon', importName: 'PluginsInfoIcon' },
+            { name: 'adminIcon', importName: 'AdminIcon' },
           ],
-          mountPoints: [
+          dynamicRoutes: [
             {
-              mountPoint: 'admin.page.plugins/cards',
+              path: '/plugins',
               importName: 'DynamicPluginsInfo',
-              config: {
-                layout: {
-                  gridColumn: '1 / -1',
-                  width: '100vw',
-                },
-              },
+              menuItem: { text: 'Plugins', icon: 'pluginsInfoIcon' },
             },
           ],
+          menuItems: {
+            admin: {
+              title: 'Administration',
+              icon: 'adminIcon',
+            },
+            plugins: {
+              parent: 'admin',
+              title: 'Plugins',
+              icon: 'pluginsInfoIcon',
+            },
+          },
         },
       },
     },

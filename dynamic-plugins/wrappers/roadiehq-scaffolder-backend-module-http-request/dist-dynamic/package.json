@@ -9,13 +9,10 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin",
+    "role": "backend-plugin-module",
     "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-module-http-request",
-    "pluginPackage": "roadiehq-scaffolder-backend-module-http-request",
-    "pluginPackages": [
-      "roadiehq-scaffolder-backend-module-http-request"
-    ]
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": {

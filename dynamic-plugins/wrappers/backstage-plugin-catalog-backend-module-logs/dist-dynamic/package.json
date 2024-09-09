@@ -12,7 +12,7 @@
     "role": "backend-plugin-module",
     "supported-versions": "1.29.2",
     "pluginId": "catalog",
-    "pluginPackage": "@backstage/plugin-catalog-backend-module-logs"
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "exports": {
     ".": {
