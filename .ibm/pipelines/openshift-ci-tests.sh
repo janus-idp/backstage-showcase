@@ -331,6 +331,22 @@ az_aks_stop() {
   az aks stop --name $name --resource-group $resource_group
 }
 
+az_aks_approuting_enable() {
+  local name=$1
+  local resource_group=$2
+  local output=$(az aks approuting enable --name $name --resource-group $resource_group 2>&1)
+  exit_status=$?
+
+  if [ $exit_status -ne 0 ]; then
+      if [[ "$output" == *"App Routing is already enabled"* ]]; then
+          echo "App Routing is already enabled. Continuing..."
+      else
+          echo "Error: $output"
+          exit 1
+      fi
+  fi
+}
+
 check_and_test() {
   local release_name=$1
   local namespace=$2
@@ -358,6 +374,7 @@ main() {
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
     az_aks_start "bsCluster" "bsRG"
+    az_aks_approuting_enable "bsCluster" "bsRG"
   fi
 
   install_oc
