@@ -21,6 +21,27 @@ app:
 ![Default Icon Logo when side bar is collapsed](images/default-collapsed-icon.png)
 ![Default Full Logo when side bar is expanded](images/default-expanded-logo.png)
 
+## Customizing the Sidebar Menu Items
+
+Order and parent-children relationship of default sidebar menu items can be customized using the `dynamicPlugins.frontend.default.main-menu-items.menuItems` field in the `app-config.yaml`:
+
+```yaml title="app-config.yaml"
+dynamicPlugins:
+  frontend:
+    default.main-menu-items: # key for configuring static main menu items
+      <menu_item_name>: # key of the menu item configuration
+        parent: my_menu_group # optional, specifies the parent menu item for this item
+        priority: 10 # optional, specifies the order of this menu item within its menu level
+      <menu_group_parent_item_name>: # must be configured if it is specified as the parent of any menu items
+        icon: my_menu_group_icon # required for parent menu items, defines the icon for the menu group
+        title: my_menu_group_title # required for parent menu items, defines the icon for the menu group
+        priority: 100 # optional, specifies the order of the parent menu item in the sidebar
+```
+
+See [Menu items](dynamic-plugins.md#menu-items) from dynamic-plugins documentation for more details.
+
+See [DefaultMainMenuItems](../packages/app/src/consts.ts#L1) for a list of main menu items, including their default priorities.
+
 ## Changing the favicon and tab title
 
 Currently, the favicon customization utilizes the same Base64 encoded image as the icon logo provided via `app.branding.iconLogo` in the `app-config.yaml`
