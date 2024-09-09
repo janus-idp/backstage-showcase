@@ -13,6 +13,9 @@ JOB_NAME="periodic-aks"
 
 cleanup() {
   echo "Cleaning up before exiting"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_aks_stop "bsCluster" "bsRG"
+  fi
   rm -rf ~/tmpbin
 }
 
@@ -311,6 +314,23 @@ initiate_aks_deployment() {
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" -f "${DIR}/value_files/${HELM_CHART_AKS_DIFF_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
+az_login() {
+  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+  az account set --subscription $ARM_SUBSCRIPTION_ID
+}
+
+az_aks_start() {
+  local name=$1
+  local resource_group=$2
+  az aks start --name $name --resource-group $resource_group
+}
+
+az_aks_stop() {
+  local name=$1
+  local resource_group=$2
+  az aks stop --name $name --resource-group $resource_group
+}
+
 check_and_test() {
   local release_name=$1
   local namespace=$2
@@ -334,6 +354,10 @@ main() {
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
     NAME_SPACE_AKS="showcase-aks-ci-nightly"
+  fi
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_login
+    az_aks_start "bsCluster" "bsRG"
   fi
 
   install_oc

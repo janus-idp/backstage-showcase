@@ -68,4 +68,11 @@ NEXUS_HOSTNAME=$(cat /tmp/secrets/NEXUS_HOSTNAME)
 REDIS_TEMP_USER=temp
 REDIS_TEMP_PASS=test123
 
+ARM_TENANT_ID=$(cat /tmp/secrets/ARM_TENANT_ID)
+ARM_SUBSCRIPTION_ID=$(cat /tmp/secrets/ARM_SUBSCRIPTION_ID)
+ARM_CLIENT_ID=$(cat /tmp/secrets/ARM_CLIENT_ID)
+ARM_CLIENT_SECRET=$(cat /tmp/secrets/ARM_CLIENT_SECRET)
+AKS_NIGHTLY_CLUSTER_NAME="bsCluster"
+AKS_NIGHTLY_CLUSTER_RESOURCEGROUP="bsRG"
+
 set +a  # Stop automatically exporting variables
