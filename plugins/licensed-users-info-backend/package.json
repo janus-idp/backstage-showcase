@@ -11,7 +11,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "licensed-users-info",
+    "pluginPackages": [
+      "@internal/plugin-licensed-users-info-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",
