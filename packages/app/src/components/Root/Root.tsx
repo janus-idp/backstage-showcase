@@ -13,13 +13,7 @@ import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MuiMenuIcon from '@mui/icons-material/Menu';
-import GroupIcon from '@mui/icons-material/People';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from 'tss-react/mui';
 import { SidebarLogo } from './SidebarLogo';
@@ -35,6 +29,7 @@ import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
 import { usePermission } from '@backstage/plugin-permission-react';
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 import { MenuIcon } from './MenuIcon';
+import Box from '@mui/material/Box';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -75,6 +70,31 @@ const renderExpandIcon = (expand: boolean, isSecondLevelMenuItem = false) => {
         display: 'flex',
         marginLeft: isSecondLevelMenuItem ? '' : '0.5rem',
       }}
+    />
+  );
+};
+
+const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
+  if (!menuItem.icon) return null;
+  const menuItemStyle = {
+    paddingLeft: isNestedMenuItem ? '2rem' : '',
+  };
+  return menuItem.name === 'default.my-group' ? (
+    <Box key={menuItem.name} sx={{ '& a': menuItemStyle }}>
+      <MyGroupsSidebarItem
+        key={menuItem.name}
+        icon={renderIcon(menuItem.icon)}
+        singularTitle={menuItem.title}
+        pluralTitle={`${menuItem.title}s`}
+      />
+    </Box>
+  ) : (
+    <SideBarItemWrapper
+      key={menuItem.name}
+      icon={renderIcon(menuItem.icon)}
+      to={menuItem.to ?? ''}
+      text={menuItem.title}
+      style={menuItemStyle}
     />
   );
 };
@@ -120,7 +140,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                   '& div': { width: '36px', boxShadow: '-1px 0 0 0 #3c3f42' },
                 }}
               >
-                <SidebarItem
+                <SideBarItemWrapper
                   icon={() => null}
                   text={child.title}
                   to={child.to ?? ''}
@@ -153,12 +173,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                     child.children &&
                     child.children.length === 0 && (
                       <ListItem disableGutters disablePadding>
-                        <SidebarItem
-                          icon={renderIcon(child.icon)}
-                          text={child.title}
-                          to={child.to ?? ''}
-                          style={{ paddingLeft: '2rem' }}
-                        />
+                        {getMenuItem(child, true)}
                       </ListItem>
                     )}
                   {child.children && child.children.length > 0 && (
@@ -170,7 +185,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                         '& .MuiButton-label': { paddingLeft: '2rem' },
                       }}
                     >
-                      <SidebarItem
+                      <SideBarItemWrapper
                         key={child.name}
                         icon={renderIcon(child.icon ?? '')}
                         text={child.title}
@@ -178,7 +193,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                       >
                         {child.children.length > 0 &&
                           renderExpandIcon(isNestedMenuOpen, true)}
-                      </SidebarItem>
+                      </SideBarItemWrapper>
                       {renderExpandableNestedMenuItems(child, isNestedMenuOpen)}
                     </ListItem>
                   )}
@@ -190,10 +205,17 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     );
   };
 
-  const renderMenuItems = (isBottomMenuSection: boolean) => {
-    const menuItemArray = isBottomMenuSection
-      ? menuItems.filter(mi => mi.name === 'admin')
-      : menuItems.filter(mi => mi.name !== 'admin');
+  const renderMenuItems = (
+    isDefaultMenuSection: boolean,
+    isBottomMenuSection: boolean,
+  ) => {
+    let menuItemArray = isDefaultMenuSection
+      ? menuItems.filter(mi => mi.name.startsWith('default.'))
+      : menuItems.filter(mi => !mi.name.startsWith('default.'));
+
+    menuItemArray = isBottomMenuSection
+      ? menuItemArray.filter(mi => mi.name === 'admin')
+      : menuItemArray.filter(mi => mi.name !== 'admin');
 
     if (isBottomMenuSection && !canDisplayRBACMenuItem && !loadingPermission) {
       menuItemArray[0].children = menuItemArray[0].children?.filter(
@@ -206,22 +228,16 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           const isOpen = openItems[menuItem.name] || false;
           return (
             <>
-              {menuItem.to && (
-                <SidebarItem
-                  icon={renderIcon(menuItem.icon ?? '')}
-                  text={menuItem.title}
-                  to={menuItem.to}
-                />
-              )}
+              {menuItem.children!.length === 0 && getMenuItem(menuItem)}
               {menuItem.children!.length > 0 && (
-                <SidebarItem
+                <SideBarItemWrapper
                   key={menuItem.name}
                   icon={renderIcon(menuItem.icon ?? '')}
                   text={menuItem.title}
                   onClick={() => handleClick(menuItem.name)}
                 >
                   {menuItem.children!.length > 0 && renderExpandIcon(isOpen)}
-                </SidebarItem>
+                </SideBarItemWrapper>
               )}
               {menuItem.children!.length > 0 &&
                 renderExpandableMenuItems(menuItem, isOpen)}
@@ -241,40 +257,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
-          <SideBarItemWrapper
-            icon={HomeOutlinedIcon as any}
-            to="/"
-            text="Home"
-          />
-          <MyGroupsSidebarItem
-            icon={GroupIcon as any}
-            singularTitle="My Group"
-            pluralTitle="My Groups"
-          />
-          <SideBarItemWrapper
-            icon={CategoryOutlinedIcon as IconComponent}
-            to="catalog"
-            text="Catalog"
-          />
-          <SideBarItemWrapper
-            icon={ExtensionOutlinedIcon as IconComponent}
-            to="api-docs"
-            text="APIs"
-          />
-          <SideBarItemWrapper
-            icon={SchoolOutlinedIcon as IconComponent}
-            to="learning-paths"
-            text="Learning Paths"
-          />
-          <SideBarItemWrapper
-            icon={CreateComponentIcon as IconComponent}
-            to="create"
-            text="Create..."
-          />
+          {renderMenuItems(true, false)}
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
-            {renderMenuItems(false)}
+            {renderMenuItems(false, false)}
             {dynamicRoutes.map(({ scope, menuItem, path }) => {
               if (menuItem && 'Component' in menuItem) {
                 return (
@@ -292,7 +279,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarSpace />
         <SidebarDivider />
         <SidebarGroup label="Administration" icon={<AdminIcon />}>
-          {renderMenuItems(true)}
+          {renderMenuItems(false, true)}
         </SidebarGroup>
         <SidebarDivider />
         <SidebarGroup

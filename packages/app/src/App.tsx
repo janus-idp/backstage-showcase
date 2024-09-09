@@ -1,6 +1,7 @@
 import React from 'react';
 import { apis } from './apis';
 import DynamicRoot from './components/DynamicRoot';
+import { DefaultMainMenuItems } from './consts';
 
 // Statically integrated frontend plugins
 const { dynamicPluginsInfoPlugin, ...dynamicPluginsInfoPluginModule } =
@@ -13,6 +14,7 @@ const baseFrontendConfig = {
   data: {
     dynamicPlugins: {
       frontend: {
+        'default.main-menu-items': DefaultMainMenuItems,
         '@internal/plugin-dynamic-plugins-info': {
           appIcons: [
             { name: 'pluginsInfoIcon', importName: 'PluginsInfoIcon' },
