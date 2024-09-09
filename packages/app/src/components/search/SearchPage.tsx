@@ -14,7 +14,7 @@ import {
 } from '@backstage/plugin-search-react';
 import { makeStyles } from 'tss-react/mui';
 import getMountPointData from '../../utils/dynamicUI/getMountPointData';
-import { MenuIcon } from '../Root/Root';
+import { MenuIcon } from '../Root/MenuIcon';
 
 const useStyles = makeStyles()(theme => ({
   searchBar: {

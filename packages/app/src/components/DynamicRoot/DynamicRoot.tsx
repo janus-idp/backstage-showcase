@@ -10,7 +10,7 @@ import { useScalprum } from '@scalprum/react-core';
 import DynamicRootContext, {
   ComponentRegistry,
   ResolvedDynamicRoute,
-  ResolvedMenuItem,
+  ResolvedDynamicRouteMenuItem,
   EntityTabOverrides,
   MountPoints,
   RemotePlugins,
@@ -26,6 +26,7 @@ import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugi
 import defaultAppComponents from './defaultAppComponents';
 import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import Loader from './Loader';
+import CommonIcons from './CommonIcons';
 
 export type StaticPlugins = Record<
   string,
@@ -68,6 +69,7 @@ export const DynamicRoot = ({
       apiFactories,
       appIcons,
       dynamicRoutes,
+      menuItems,
       entityTabs,
       mountPoints,
       routeBindings,
@@ -158,7 +160,7 @@ export const DynamicRoot = ({
       ),
     );
 
-    const icons = Object.fromEntries(
+    let icons = Object.fromEntries(
       appIcons.reduce<[string, React.ComponentType<{}>][]>(
         (acc, { scope, module, importName, name }) => {
           const Component = allPlugins[scope]?.[module]?.[importName];
@@ -176,6 +178,8 @@ export const DynamicRoot = ({
         [],
       ),
     );
+
+    icons = { ...CommonIcons, ...icons };
 
     const remoteApis = apiFactories.reduce<AnyApiFactory[]>(
       (acc, { scope, module, importName }) => {
@@ -270,7 +274,7 @@ export const DynamicRoot = ({
     >((acc, route) => {
       function resolveMenuItem(
         route: DynamicRoute,
-      ): ResolvedMenuItem | undefined {
+      ): ResolvedDynamicRouteMenuItem | undefined {
         if (route.menuItem === undefined) {
           return undefined;
         }
@@ -365,9 +369,12 @@ export const DynamicRoot = ({
       });
     }
 
+    const dynamicRoutesMenuItems = Object.values(menuItems);
+
     // make the dynamic UI configuration available via Scalprum if possible
     const dynamicRootConfig = scalprumApi ? scalprumApi.dynamicRootConfig : {};
     dynamicRootConfig.dynamicRoutes = dynamicRoutesComponents;
+    dynamicRootConfig.menuItems = dynamicRoutesMenuItems;
     dynamicRootConfig.entityTabOverrides = entityTabOverrides;
     dynamicRootConfig.mountPoints = mountPointComponents;
     dynamicRootConfig.scaffolderFieldExtensions =
@@ -378,6 +385,7 @@ export const DynamicRoot = ({
       AppProvider: app.current.getProvider(),
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
+      menuItems: dynamicRoutesMenuItems,
       entityTabOverrides,
       mountPoints: mountPointComponents,
       scaffolderFieldExtensions: scaffolderFieldExtensionComponents,
