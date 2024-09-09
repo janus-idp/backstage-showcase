@@ -16,13 +16,13 @@ You can use either Azure Database for PostgreSQL - Flexible Server or Amazon RDS
 
 ### Database Connection
 
-Define the values for the database connection in the `postgres-cred-secret.yaml` file. Here is a template:
+Define the values for the database connection in the `postgress-cred-secret.yaml` file. Here is a template:
 
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: postgres-cred-secret
+  name: postgress-cred-secret
 type: Opaque
 data:
   POSTGRES_PASSWORD: ''

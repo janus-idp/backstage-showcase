@@ -14,7 +14,7 @@ RELEASE_NAME=rhdh
 RELEASE_NAME_RBAC=rhdh-rbac
 NAME_SPACE="${NAME_SPACE:-showcase}"
 NAME_SPACE_RBAC="${NAME_SPACE_RBAC:-showcase-rbac}"
-NAME_SPACE_POSTGRES_DB="${NAME_SPACE_POSTGRES_DB:-postgres-external-db}"
+NAME_SPACE_POSTGRES_DB="${NAME_SPACE_POSTGRES_DB:-postgress-external-db}"
 CHART_VERSION="2.15.2"
 GITHUB_APP_APP_ID=Mzc2ODY2
 GITHUB_APP_CLIENT_ID=SXYxLjdiZDNlZDFmZjY3MmY3ZDg=
@@ -32,10 +32,9 @@ GITHUB_ORG_2=amFudXMtdGVzdA==
 GH_USER_ID=$(cat /tmp/secrets/GH_USER_ID)
 GH_USER_PASS=$(cat /tmp/secrets/GH_USER_PASS)
 GH_2FA_SECRET=$(cat /tmp/secrets/GH_2FA_SECRET)
-# FIXME: test secrets
-GH_USER2_ID=$(cat /tmp/secrets/GH_USER_ID)
-GH_USER2_PASS=$(cat /tmp/secrets/GH_USER_PASS)
-GH_USER2_2FA_SECRET=$(cat /tmp/secrets/GH_2FA_SECRET)
+GH_USER2_ID=$(cat /tmp/secrets/GH_USER2_ID)
+GH_USER2_PASS=$(cat /tmp/secrets/GH_USER2_PASS)
+GH_USER2_2FA_SECRET=$(cat /tmp/secrets/GH_USER2_2FA_SECRET)
 GH_RHDH_QE_USER_TOKEN=$(cat /tmp/secrets/GH_RHDH_QE_USER_TOKEN)
 
 GITLAB_TOKEN=$(cat /tmp/secrets/GITLAB_TOKEN)
