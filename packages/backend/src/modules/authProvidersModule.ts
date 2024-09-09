@@ -62,7 +62,7 @@ async function signInWithCatalogUserOptional(
         `Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.`,
       );
     }
-    let entityRef: string = name === 'string' ? name : '';
+    let entityRef: string = typeof name === 'string' ? name : '';
     if (typeof name !== 'string' && 'annotations' in name)
       entityRef = Object.values(name.annotations)[0];
     const userEntityRef = stringifyEntityRef({
