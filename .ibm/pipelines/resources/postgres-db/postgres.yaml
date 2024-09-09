@@ -9,7 +9,7 @@ spec:
     - name: instance1
       dataVolumeClaimSpec:
         accessModes:
-          - 'ReadWriteOnce'
+          - "ReadWriteOnce"
         resources:
           requests:
             storage: 2Gi
@@ -30,7 +30,7 @@ spec:
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.51-1
       global:
         # Save backups for 7 days, this means 1 full backups with 6 differential ones in between
-        repo1-retention-full: '1'
+        repo1-retention-full: "1"
         repo1-retention-full-type: count
       repoHost:
         resources:
@@ -42,13 +42,13 @@ spec:
         - name: repo1
           schedules:
             # Every sunday at 01:00 full backup
-            full: '0 1 * * 0'
+            full: "0 1 * * 0"
             # Monday through saturday at 01:00 differential backup
-            differential: '0 1 * * 1-6'
+            differential: "0 1 * * 1-6"
           volume:
             volumeClaimSpec:
               accessModes:
-                - 'ReadWriteOnce'
+                - "ReadWriteOnce"
               resources:
                 requests:
                   storage: 2Gi
@@ -67,8 +67,8 @@ spec:
               cpu: 200m
   users:
     - name: janus-idp
-      options: 'SUPERUSER'
+      options: "SUPERUSER"
     - name: sonarqube
       databases:
         - sonarqube
-      options: 'NOSUPERUSER'
+      options: "NOSUPERUSER"
