@@ -605,20 +605,21 @@ plugins:
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-rbac:
-            mountPoints:
-              - mountPoint: admin.page.rbac/cards
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
                 module: RbacPlugin
-                importName: RbacPage
-                config:
-                  layout:
-                    gridColumn: "1 / -1"
-                    width: 100vw
-                  props:
-                    useHeader: false
             dynamicRoutes:
-              - path: /admin/rbac
+              - path: /rbac
                 module: RbacPlugin
                 importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: admin
+                icon: rbacIcon
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true

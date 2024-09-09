@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Content, Header, HeaderTabs, Page } from '@backstage/core-components';
 import { createDevApp } from '@backstage/dev-utils';
 import { TestApiProvider } from '@backstage/test-utils';
 
@@ -20,25 +19,7 @@ createDevApp()
   .addPage({
     element: (
       <TestApiProvider apis={[[dynamicPluginsInfoApiRef, mockedApi]]}>
-        <Page themeId="theme">
-          <Header title="Administration" />
-          <HeaderTabs
-            selectedIndex={1}
-            tabs={[
-              {
-                id: 'rbac',
-                label: 'RBAC',
-              },
-              {
-                id: 'plugins',
-                label: 'Plugins',
-              },
-            ]}
-          />
-          <Content>
-            <DynamicPluginsInfoContent />
-          </Content>
-        </Page>
+        <DynamicPluginsInfoContent />
       </TestApiProvider>
     ),
     title: 'Root Page',
