@@ -12,7 +12,7 @@ OVERALL_RESULT=0
 cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
-    az_aks_stop "bsCluster" "bsRG"
+    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
   rm -rf ~/tmpbin
 }
@@ -371,8 +371,8 @@ main() {
   fi
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
-    az_aks_start "bsCluster" "bsRG"
-    az_aks_approuting_enable "bsCluster" "bsRG"
+    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
   install_oc
