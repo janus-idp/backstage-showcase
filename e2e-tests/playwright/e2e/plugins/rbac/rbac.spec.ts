@@ -293,10 +293,9 @@ test.describe
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();
-    await uiHelper.openSidebar('Administration');
-    await uiHelper.verifyHeading('Administration');
-    await uiHelper.verifyLink('RBAC');
-    await uiHelper.clickTab('RBAC');
+    await uiHelper.openSidebarButton('Administration');
+    await uiHelper.openSidebar('RBAC');
+    await uiHelper.verifyHeading('RBAC');
   });
 
   test('Check if permission policies defined in files are loaded and effective', async () => {
