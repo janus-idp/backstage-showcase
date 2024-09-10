@@ -554,6 +554,34 @@ plugins:
                     name: Documentation
                     icon: docs
 
+  # PagerDuty
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          pagerduty.backstage-plugin:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityPagerDutyCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      md: "span 6"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isPluginApplicableToEntity
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin-backend-dynamic
+    disabled: true
+    pluginConfig:
+      pagerDuty:
+        apiBaseUrl: ${PAGERDUTY_API_BASE}
+        oauth:
+          clientId: ${PAGERDUTY_CLIENT_ID}
+          clientSecret: ${PAGERDUTY_CLIENT_SECRET}
+          subDomain: ${PAGERDUTY_SUBDOMAIN}
+
   # Standalone plugins
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
@@ -577,20 +605,21 @@ plugins:
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-rbac:
-            mountPoints:
-              - mountPoint: admin.page.rbac/cards
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
                 module: RbacPlugin
-                importName: RbacPage
-                config:
-                  layout:
-                    gridColumn: "1 / -1"
-                    width: 100vw
-                  props:
-                    useHeader: false
             dynamicRoutes:
-              - path: /admin/rbac
+              - path: /rbac
                 module: RbacPlugin
                 importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: admin
+                icon: rbacIcon
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true
@@ -812,24 +841,6 @@ plugins:
                     anyOf:
                     - isJfrogArtifactoryAvailable
 
-  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
-    disabled: true
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          pagerduty.backstage-plugin:
-            mountPoints:
-              - mountPoint: entity.page.overview/cards
-                importName: EntityPagerDutyCard
-                config:
-                  layout:
-                    gridColumnEnd:
-                      md: "span 6"
-                      xs: "span 12"
-                  if:
-                    allOf:
-                      - isPluginApplicableToEntity
-
   - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
     disabled: true
     pluginConfig:
@@ -919,3 +930,10 @@ plugins:
       catalog:
         providers:
           ldapOrg: {}
+
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          pingIdentityOrg: {}

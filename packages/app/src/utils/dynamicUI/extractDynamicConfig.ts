@@ -8,11 +8,14 @@ import {
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
 import { ApiHolder } from '@backstage/core-plugin-api';
+import { extractMenuItems } from './extractDynamicConfigFrontend';
 
-export type MenuItem =
+export type DynamicRouteMenuItem =
   | {
       text: string;
       icon: string;
+      parent?: string;
+      priority?: number;
     }
   | {
       module?: string;
@@ -22,12 +25,29 @@ export type MenuItem =
       };
     };
 
+export type MenuItemConfig = {
+  icon?: string;
+  title?: string;
+  priority?: number;
+  parent?: string;
+};
+
+export type MenuItem = {
+  name: string;
+  title: string;
+  icon: string;
+  children: MenuItem[];
+  priority?: number;
+  to?: string;
+  parent?: string;
+};
+
 export type DynamicRoute = {
   scope: string;
   module: string;
   importName: string;
   path: string;
-  menuItem?: MenuItem;
+  menuItem?: DynamicRouteMenuItem;
   config?: {
     props?: Record<string, any>;
   };
@@ -91,7 +111,9 @@ type CustomProperties = {
     importName?: string;
     module?: string;
     path: string;
+    menuItem?: DynamicRouteMenuItem;
   })[];
+  menuItems?: { [key: string]: MenuItemConfig };
   routeBindings?: {
     targets: BindingTarget[];
     bindings: RouteBinding[];
@@ -103,7 +125,7 @@ type CustomProperties = {
   scaffolderFieldExtensions?: ScaffolderFieldExtension[];
 };
 
-type FrontendConfig = {
+export type FrontendConfig = {
   [key: string]: CustomProperties;
 };
 
@@ -116,6 +138,7 @@ type DynamicConfig = {
   apiFactories: ApiFactory[];
   appIcons: AppIcon[];
   dynamicRoutes: DynamicRoute[];
+  menuItems: MenuItem[];
   entityTabs: EntityTabEntry[];
   mountPoints: MountPoint[];
   routeBindings: RouteBinding[];
@@ -136,6 +159,7 @@ function extractDynamicConfig(
     apiFactories: [],
     appIcons: [],
     dynamicRoutes: [],
+    menuItems: [],
     entityTabs: [],
     mountPoints: [],
     routeBindings: [],
@@ -166,6 +190,7 @@ function extractDynamicConfig(
     },
     [],
   );
+  config.menuItems = extractMenuItems(frontend);
   config.routeBindings = Object.entries(frontend).reduce<RouteBinding[]>(
     (pluginSet, [_, customProperties]) => {
       pluginSet.push(...(customProperties.routeBindings?.bindings ?? []));
