@@ -24,7 +24,7 @@ export const DefaultMainMenuItems = {
       priority: 70,
     },
     'default.learning-path': {
-      title: 'Learning Path',
+      title: 'Learning Paths',
       icon: 'school',
       to: 'learning-paths',
       priority: 60,
