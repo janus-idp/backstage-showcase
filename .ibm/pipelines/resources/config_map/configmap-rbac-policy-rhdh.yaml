@@ -7,6 +7,7 @@ data:
     p, role:default/guests, catalog.entity.create, create, allow
     p, role:default/team_a, catalog-entity, read, allow
     g, user:xyz/user, role:xyz/team_a
+    g, group:janus-qe/rhdh-qe-2-team, role:default/test2-role
 
     p, role:xyz/team_a, catalog-entity, read, allow
     p, role:xyz/team_a, catalog.entity.create, create, allow
@@ -20,5 +21,3 @@ data:
     p, role:default/rbac_admin, catalog.location.read, read, allow
     p, role:default/rbac_admin, policy-entity, read, allow
     p, role:default/rbac_admin, policy-entity, create, allow
-
-    g, group:janus-qe/rhdh-qe-2-team, role:default/test2-role
