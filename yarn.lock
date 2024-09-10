@@ -8701,12 +8701,13 @@
     express "^4.19.2"
     lodash "^4.17.21"
 
-"@janus-idp/backstage-plugin-rbac-backend@4.10.1":
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.1.tgz#381917269527a1982d7382db68ad030321b5cc5f"
-  integrity sha512-98eHr00t353+1xPGBRwrLdzl1ragG+z9RZpDPUC7k2Wqi1jhv08NiChyniA/svDrYf3I+DMuIQozH2ENn1nW9w==
+"@janus-idp/backstage-plugin-rbac-backend@4.10.3":
+  version "4.10.3"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.3.tgz#1c2010b133f925979c9b7760719c9039bc651286"
+  integrity sha512-GiApITOFt1wHXGslTCQhTDIEVlOvF12VOWsbDR3Hy7VvZu8Kz3ZwHklSalCIDAovnEYO+0LzR9yfGCi1+17p2A==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-defaults" "^0.4.1"
     "@backstage/backend-plugin-api" "^0.7.0"
     "@backstage/catalog-client" "^1.6.5"
     "@backstage/catalog-model" "^1.5.0"
@@ -8757,10 +8758,10 @@
   dependencies:
     "@backstage/backend-plugin-api" "^0.7.0"
 
-"@janus-idp/backstage-scaffolder-backend-module-annotator@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-scaffolder-backend-module-annotator/-/backstage-scaffolder-backend-module-annotator-1.3.0.tgz#e98ab356536008396337bfced4d4d9f11fff41cf"
-  integrity sha512-E8AvgkClod6MxRSEbbq5kAwm3kKOIL4TAC7roP51uM3OflkzrF9Smj/D3cJidTlneaY1WAae7eHXOsq8TZjEQg==
+"@janus-idp/backstage-scaffolder-backend-module-annotator@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-scaffolder-backend-module-annotator/-/backstage-scaffolder-backend-module-annotator-1.3.1.tgz#97b1df38a83bb336ae2a346e0eecb47bfa324cb1"
+  integrity sha512-MfrYt5NYJJGEPu/E5TlS396MBEMUD/0Sz4OD+jIHl6r/51JeduFJwWDiPSIeU6qmqmrH3glkMA4pu6THro2AfQ==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
     "@backstage/backend-dynamic-feature-service" "^0.2.15"
