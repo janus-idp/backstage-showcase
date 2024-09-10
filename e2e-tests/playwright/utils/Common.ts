@@ -47,12 +47,17 @@ export class Common {
     await this.page.goto('https://github.com/login');
     await this.page.waitForSelector('#login_field');
     await this.page.fill('#login_field', userid);
-    await this.page.fill(
-      '#password',
-      userid === process.env.GH_USER_ID
-        ? process.env.GH_USER_PASS
-        : process.env.GH_USER2_PASS,
-    );
+
+    switch (userid) {
+      case process.env.GH_USER_ID:
+        await this.page.fill('#password', process.env.GH_USER_PASS);
+        break;
+      case process.env.GH_USER2_ID:
+        await this.page.fill('#password', process.env.GH_USER2_PASS);
+        break;
+      default:
+        throw new Error('Invalid User ID');
+    }
 
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
@@ -138,11 +143,17 @@ export class Common {
   }
 
   getGitHub2FAOTP(userid: string): string {
-    return authenticator.generate(
-      userid === process.env.GH_USER_ID
-        ? process.env.GH_2FA_SECRET
-        : process.env.GH_USER2_2FA_SECRET,
-    );
+    const secrets: { [key: string]: string | undefined } = {
+      [process.env.GH_USER_ID]: process.env.GH_2FA_SECRET,
+      [process.env.GH_USER2_ID]: process.env.GH_USER2_2FA_SECRET,
+    };
+
+    const secret = secrets[userid];
+    if (!secret) {
+      throw new Error('Invalid User ID');
+    }
+
+    return authenticator.generate(secret);
   }
 
   getGoogle2FAOTP(): string {
