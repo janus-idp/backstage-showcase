@@ -81,6 +81,20 @@ export default defineConfig({
         '**/playwright/e2e/plugins/keycloak/catalog-users.spec.ts',
         '**/playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts',
         '**/playwright/e2e/techdocs.spec.ts',
+        '**/playwright/e2e/github-happy-path.spec.ts',
+        '**/playwright/e2e/catalog-scaffoldedfromLink.spec.ts',
+        '**/playwright/e2e/github-integration-org-fetch.spec.ts',
+      ],
+    },
+    {
+      name: 'showcase-rbac-aks',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
+      testMatch: [
+        '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-enabled-rbac.spec.ts',
       ],
     },
 

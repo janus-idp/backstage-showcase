@@ -92,12 +92,17 @@ uninstall_helmchart() {
 
 configure_namespace() {
   local project=$1
-  if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists! refreshing namespace"
-    oc delete namespace "${project}"
-  fi
+  delete_namespace $project
   oc create namespace "${project}"
   oc config set-context --current --namespace="${project}"
+}
+
+delete_namespace() {
+  local project=$1
+  if oc get namespace "${project}" >/dev/null 2>&1; then
+    echo "Namespace ${project} already exists! deleting namespace"
+    oc delete namespace "${project}"
+  fi
 }
 
 configure_external_postgres_db() {
@@ -167,7 +172,7 @@ apply_yaml_files() {
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
   sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-2-x" ]]; then
+  if [[ "${project}" == *rbac* ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
   else
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh.yaml" --namespace="${project}"
@@ -271,42 +276,51 @@ install_pipelines_operator() {
 
 initiate_deployments() {
   add_helm_repos
+  install_helm
 
-  if [[ "$JOB_NAME" == *aks* ]]; then
-    initiate_aks_deployment
-  else
-    configure_namespace "${NAME_SPACE}"
-    install_pipelines_operator "${DIR}"
-    install_helm
-    uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
+  configure_namespace "${NAME_SPACE}"
+  install_pipelines_operator "${DIR}"
+  uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
-    # Deploy redis cache db.
-    oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
+  # Deploy redis cache db.
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
-    cd "${DIR}"
-    apply_yaml_files "${DIR}" "${NAME_SPACE}"
-    echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
-    helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
-    configure_namespace "${NAME_SPACE_POSTGRES_DB}"
-    configure_namespace "${NAME_SPACE_RBAC}"
-    configure_external_postgres_db "${NAME_SPACE_RBAC}"
-    
-    install_pipelines_operator "${DIR}"
-    uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
-    apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
-    echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
-    helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
-  fi
+  configure_namespace "${NAME_SPACE_POSTGRES_DB}"
+  configure_namespace "${NAME_SPACE_RBAC}"
+  configure_external_postgres_db "${NAME_SPACE_RBAC}"
+  
+  install_pipelines_operator "${DIR}"
+  uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
+  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 initiate_aks_deployment() {
+  add_helm_repos
+  install_helm
   configure_namespace "${NAME_SPACE_AKS}"
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_AKS}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" -f "${DIR}/value_files/${HELM_CHART_AKS_DIFF_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_rbac_aks_deployment() {
+  add_helm_repos
+  install_helm
+  configure_namespace "${NAME_SPACE_RBAC_AKS}"
+  uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_RBAC_AKS}"
+  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" -f "${DIR}/value_files/${HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 az_login() {
@@ -365,6 +379,7 @@ main() {
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
     NAME_SPACE_AKS="showcase-aks-ci-nightly"
+    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
   fi
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
@@ -392,10 +407,15 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
-  initiate_deployments
   if [[ "$JOB_NAME" == *aks* ]]; then
+    initiate_aks_deployment
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
+    delete_namespace "${NAME_SPACE_AKS}"
+    initiate_rbac_aks_deployment
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
+    delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else
+    initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
   fi
