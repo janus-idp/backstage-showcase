@@ -270,6 +270,15 @@ export class UIhelper {
     return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
   }
 
+  /**
+   * Verifies that a table row, identified by unique text, contains specific cell texts.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {Array<string | RegExp>} cellTexts - An array of cell texts or regular expressions to match against the cells within the identified row.
+   * @example
+   * // Example usage to verify that a row containing "Developer-hub" has cells with the texts "service" and "active":
+   * await verifyRowInTableByUniqueText('Developer-hub', ['service', 'active']);
+   */
+
   async verifyRowInTableByUniqueText(
     uniqueRowText: string,
     cellTexts: string[] | RegExp[],
@@ -281,6 +290,45 @@ export class UIhelper {
         row.locator('td').filter({ hasText: cellText }).first(),
       ).toBeVisible();
     }
+  }
+
+  /**
+   * Clicks on a link within a table row that contains a unique text and matches a link's text.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string | RegExp} linkText - The text of the link, can be a string or a regular expression.
+   * @param {boolean} [exact=true] - Whether to match the link text exactly. By default, this is set to true.
+   */
+  async clickOnLinkInTableByUniqueText(
+    uniqueRowText: string,
+    linkText: string | RegExp,
+    exact = true,
+  ) {
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
+    await row
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first()
+      .click();
+  }
+
+  /**
+   * Clicks on a button within a table row that contains a unique text and matches a button's label or aria-label.
+   * @param {string} UniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string | RegExp} textOrLabel - The text of the button or the `aria-label` attribute, can be a string or a regular expression.
+   */
+  async clickOnButtonInTableByUniqueText(
+    UniqueRowText: string,
+    textOrLabel: string | RegExp,
+  ) {
+    const row = this.page.locator(UIhelperPO.rowByText(UniqueRowText));
+    await row.waitFor();
+    await row
+      .locator(
+        `button:has-text("${textOrLabel}"), button[aria-label="${textOrLabel}"]`,
+      )
+      .first()
+      .click();
   }
 
   async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
