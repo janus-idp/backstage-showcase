@@ -5,6 +5,7 @@ set -a  # Automatically export all variables
 HELM_CHART_VALUE_FILE_NAME="values_showcase.yaml"
 HELM_CHART_RBAC_VALUE_FILE_NAME="values_showcase-rbac.yaml"
 HELM_CHART_AKS_DIFF_VALUE_FILE_NAME="diff-values_showcase_AKS.yaml"
+HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME="diff-values_showcase-rbac_AKS.yaml"
 HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
