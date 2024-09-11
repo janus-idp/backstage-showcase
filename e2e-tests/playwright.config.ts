@@ -48,6 +48,7 @@ export default defineConfig({
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
+        '**/playwright/e2e/authProviders/**/*.spec.ts',
       ],
     },
     {
@@ -61,6 +62,14 @@ export default defineConfig({
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
       ],
+    },
+    {
+      name: 'showcase-auth-providers',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
+      testMatch: ['**/playwright/e2e/authProviders/*.spec.ts'],
     },
 
     // {

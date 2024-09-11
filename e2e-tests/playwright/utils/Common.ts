@@ -76,6 +76,7 @@ export class Common {
     await this.checkAndReauthorizeGithubApp();
     await this.uiHelper.waitForSideBarVisible();
   }
+
   async checkAndReauthorizeGithubApp() {
     await new Promise<void>(resolve => {
       this.page.once('popup', async popup => {
@@ -146,18 +147,29 @@ export class Common {
     await this.page.waitForSelector('p:has-text("Sign in using OIDC")');
     await this.uiHelper.clickButton('Sign In');
 
-    await new Promise<void>(resolve => {
+    return await new Promise<string>(resolve => {
       this.page.once('popup', async popup => {
         await popup.waitForLoadState();
         if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active microsoft session is already logged in and the popup will automatically close
-          resolve();
+          // an active rhsso session is already logged in and the popup will automatically close
+          resolve('Already logged in');
         } else {
           await popup.waitForTimeout(3000);
-          await popup.locator('#username').fill(username);
-          await popup.locator('#password').fill(password);
-          await popup.locator('[name=login]').click({ timeout: 5000 });
-          resolve();
+          try {
+            await popup.locator('#username').fill(username);
+            await popup.locator('#password').fill(password);
+            await popup.locator('[name=login]').click({ timeout: 5000 });
+            await popup.waitForEvent('close', { timeout: 2000 });
+            resolve('Login successful');
+          } catch (e) {
+            const usernameError = popup.locator('id=input-error');
+            if (await usernameError.isVisible()) {
+              await popup.close();
+              resolve('User does not exist');
+            } else {
+              throw e;
+            }
+          }
         }
       });
     });
@@ -168,40 +180,46 @@ export class Common {
     await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
     await this.uiHelper.clickButton('Sign In');
 
-    await new Promise<void>(resolve => {
+    return await new Promise<string>(resolve => {
       this.page.once('popup', async popup => {
         await popup.waitForLoadState();
         if (popup.url().startsWith(process.env.BASE_URL)) {
           // an active microsoft session is already logged in and the popup will automatically close
-          resolve();
+          resolve('Already logged in');
         } else {
-          await popup.locator('[name=loginfmt]').fill(username);
-          await popup
-            .locator('[type=submit]:has-text("Next")')
-            .click({ timeout: 5000 });
+          try {
+            await popup.locator('[name=loginfmt]').fill(username);
+            await popup
+              .locator('[type=submit]:has-text("Next")')
+              .click({ timeout: 5000 });
 
-          const usernameError = popup.locator('#usernameError');
-          await expect(usernameError, 'User does not exist').toHaveCount(0);
-
-          await popup.locator('[name=passwd]').fill(password);
-          await popup
-            .locator('[type=submit]:has-text("Sign in")')
-            .click({ timeout: 5000 });
-          await popup
-            .locator('[type=button]:has-text("No")')
-            .click({ timeout: 15000 });
-          resolve();
+            await popup.locator('[name=passwd]').fill(password);
+            await popup
+              .locator('[type=submit]:has-text("Sign in")')
+              .click({ timeout: 5000 });
+            await popup
+              .locator('[type=button]:has-text("No")')
+              .click({ timeout: 15000 });
+            resolve('Login successful');
+          } catch (e) {
+            const usernameError = popup.locator('id=usernameError');
+            if (await usernameError.isVisible()) {
+              resolve('User does not exist');
+            } else {
+              throw e;
+            }
+          }
         }
       });
     });
   }
 
-  async GetParentGroupDisplayed(): Promise<string> {
+  async GetParentGroupDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Parent Group')");
     const parent = await this.page
       .locator("p:has-text('Parent Group')")
       .locator('..');
-    const group = await parent.locator('a').first().innerText();
+    const group = await parent.locator('a').allInnerTexts();
     return group;
   }
 
@@ -225,8 +243,10 @@ export class Common {
   }
 
   async GoToGroupPageAndGetDisplayedData(groupDisplayName: string) {
-    await this.page.goto('/catalog?filters[kind]=group&filters[user]=all');
-    await this.uiHelper.verifyHeading('All groups');
+    await this.page.goto('/');
+    await this.uiHelper.openSidebar('Catalog');
+    await this.uiHelper.selectMuiBox('Kind', 'Group');
+    await this.uiHelper.verifyHeading('All group');
 
     await this.uiHelper.clickLink(groupDisplayName);
     await this.uiHelper.verifyHeading(groupDisplayName);
@@ -242,7 +262,9 @@ export class Common {
   }
 
   async UnregisterUserEnittyFromCatalog(user: string) {
-    await this.page.goto('/catalog?filters[kind]=user&filters[user]=all');
+    await this.page.goto('/');
+    await this.uiHelper.openSidebar('Catalog');
+    await this.uiHelper.selectMuiBox('Kind', 'User');
     await this.uiHelper.verifyHeading('All users');
 
     await this.uiHelper.clickLink(user);
@@ -271,7 +293,9 @@ export class Common {
   }
 
   async UnregisterGroupEnittyFromCatalog(group: string) {
-    await this.page.goto('/catalog?filters[kind]=group&filters[user]=all');
+    await this.page.goto('/');
+    await this.uiHelper.openSidebar('Catalog');
+    await this.uiHelper.selectMuiBox('Kind', 'Group');
     await this.uiHelper.verifyHeading('All groups');
 
     await this.uiHelper.clickLink(group);
@@ -300,13 +324,17 @@ export class Common {
   }
 
   async CheckGroupIsShowingInCatalog(groups: string[]) {
-    await this.page.goto('/catalog?filters[kind]=group&filters[user]=all');
+    await this.page.goto('/');
+    await this.uiHelper.openSidebar('Catalog');
+    await this.uiHelper.selectMuiBox('Kind', 'Group');
     await this.uiHelper.verifyHeading('All groups');
     await this.uiHelper.verifyCellsInTable(groups);
   }
 
   async CheckUserIsShowingInCatalog(users: string[]) {
-    await this.page.goto('/catalog?filters[kind]=user&filters[user]=all');
+    await this.page.goto('/');
+    await this.uiHelper.openSidebar('Catalog');
+    await this.uiHelper.selectMuiBox('Kind', 'User');
     await this.uiHelper.verifyHeading('All user');
     await this.uiHelper.verifyCellsInTable(users);
   }
@@ -314,7 +342,6 @@ export class Common {
 
 export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
   const context = await browser.newContext({
-    viewport: { width: 1280, height: 1024 },
     recordVideo: {
       dir: `test-results/${path
         .parse(testInfo.file)

@@ -18,8 +18,8 @@
     "postinstall": "playwright install"
   },
   "devDependencies": {
-    "@playwright/test": "1.46.1",
     "@microsoft/microsoft-graph-types": "^2.40.0",
+    "@playwright/test": "1.46.1",
     "@types/isomorphic-fetch": "^0.0.39",
     "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "6.21.0",
@@ -32,6 +32,7 @@
   "dependencies": {
     "@azure/identity": "^4.4.1",
     "@keycloak/keycloak-admin-client": "^25.0.2",
+    "@kubernetes/client-node": "^0.21.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "isomorphic-fetch": "^3.0.0",
     "node-fetch": "3.3.2",

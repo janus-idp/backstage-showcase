@@ -7,7 +7,7 @@ import { User, Group } from '@microsoft/microsoft-graph-types';
 export const RHSSO76_ADMIN_USERNAME = process.env.RHSSO76_ADMIN_USERNAME;
 export const RHSSO76_ADMIN_PASSWORD = process.env.RHSSO76_ADMIN_PASSWORD;
 export const RHSSO76_DEFAULT_PASSWORD = process.env.RHSSO76_DEFAULT_PASSWORD;
-export const RHSSO76_BASE_URL = process.env.RHSSO76_BASE_URL;
+export const RHSSO76_URL = process.env.RHSSO76_URL;
 export const RHSSO76_CLIENT_SECRET = process.env.RHSSO76_CLIENT_SECRET;
 export const AZURE_LOGIN_USERNAME = process.env.AZURE_LOGIN_USERNAME;
 export const AZURE_LOGIN_PASSWORD = process.env.AZURE_LOGIN_PASSWORD;
@@ -29,23 +29,49 @@ export const AUTH_PROVIDERS_VALUES_FILE =
   '../.ibm/pipelines/value_files/values-showcase_auth-providers.yaml';
 export const AUTH_PROVIDERS_POD_STRING =
   AUTH_PROVIDERS_RELEASE + '-' + AUTH_PROVIDERS_CHART.split('/')[1];
+export const BASE_URL = `https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${process.env.K8S_CLUSTER_ROUTER_BASE}`;
 
 export const RHSSO76_GROUPS: { [key: string]: GroupRepresentation } = {
   group_1: {
-    name: 'group_1',
+    name: 'rhsso_group_1',
   },
   group_2: {
-    name: 'group_2',
+    name: 'rhsso_group_2',
   },
   group_3: {
-    name: 'group_3',
+    name: 'rhsso_group_3',
   },
   group_4: {
-    name: 'group_4',
+    name: 'rhsso_group_4',
+  },
+  location_admin: {
+    name: 'rhsso_group_location_reader',
   },
 };
 
+export const RHSSO76_NESTED_GROUP: GroupRepresentation = {
+  name: 'rhsso_group_nested',
+};
+
 export const RHSSO76_USERS: { [key: string]: UserRepresentation } = {
+  admin: {
+    username: 'rhsso_admin',
+    email: 'rhsso_admin@rhdh.test',
+    firstName: 'Admin',
+    lastName: 'RHSSO',
+    emailVerified: true,
+    enabled: true,
+    attributes: {
+      key: 'value',
+    },
+    credentials: [
+      {
+        temporary: false,
+        type: 'password',
+        value: RHSSO76_DEFAULT_PASSWORD,
+      },
+    ],
+  },
   user_1: {
     username: 'rhsso_testuser1',
     email: 'rhsso_testuser1@rhdh.test',
@@ -82,7 +108,45 @@ export const RHSSO76_USERS: { [key: string]: UserRepresentation } = {
         value: RHSSO76_DEFAULT_PASSWORD,
       },
     ],
-    groups: [RHSSO76_GROUPS.group_1.name, RHSSO76_GROUPS.group_2.name],
+    groups: [RHSSO76_GROUPS['group_2'].name],
+  },
+  user_3: {
+    username: 'rhsso_testuser3',
+    email: 'rhsso_testuser3@rhdh.test',
+    firstName: 'Testuser 3',
+    lastName: 'RHSSO',
+    emailVerified: true,
+    enabled: true,
+    attributes: {
+      key: 'value',
+    },
+    credentials: [
+      {
+        temporary: false,
+        type: 'password',
+        value: RHSSO76_DEFAULT_PASSWORD,
+      },
+    ],
+    groups: [RHSSO76_GROUPS.group_4.name],
+  },
+  user_4: {
+    username: 'rhsso_testuser4',
+    email: 'rhsso_testuser4@rhdh.test',
+    firstName: 'Testuser 4',
+    lastName: 'RHSSO',
+    emailVerified: true,
+    enabled: true,
+    attributes: {
+      key: 'value',
+    },
+    credentials: [
+      {
+        temporary: false,
+        type: 'password',
+        value: RHSSO76_DEFAULT_PASSWORD,
+      },
+    ],
+    groups: [RHSSO76_GROUPS.group_4.name],
   },
   jenny_doe: {
     username: 'rhsso_jennydoe',
@@ -105,7 +169,7 @@ export const RHSSO76_USERS: { [key: string]: UserRepresentation } = {
 };
 
 export const RHSSO76_CLIENT: ClientRepresentation = {
-  clientId: 'myclient',
+  clientId: RHSSO76_CLIENTID,
   redirectUris: ['*', '/*'],
   webOrigins: ['/*'],
   serviceAccountsEnabled: true,
@@ -128,6 +192,17 @@ export interface AppSettings {
 }
 
 export const MSGRAPH_USERS: { [key: string]: User } = {
+  admin: {
+    accountEnabled: true,
+    displayName: 'QE Admin',
+    mailNickname: 'Admin',
+    mail: 'qeadmin@rhdhtesting.onmicrosoft.com',
+    userPrincipalName: 'qeadmin@rhdhtesting.onmicrosoft.com',
+    passwordProfile: {
+      forceChangePasswordNextSignIn: false,
+      password: RHSSO76_DEFAULT_PASSWORD,
+    },
+  },
   user_1: {
     accountEnabled: true,
     displayName: 'QE Test 1',
@@ -256,4 +331,49 @@ export const MSGRAPH_GROUPS: { [key: string]: Group } = {
     mailNickname: 'rhdh_test_group_6',
     securityEnabled: true,
   },
+  location_admin: {
+    description: 'Group for RHDH test automation - DO NOT USE/EDIT/DELETE',
+    displayName: 'rhdh_test_group_location_reader',
+    groupTypes: [],
+    mailEnabled: false,
+    mailNickname: 'rhdh_test_group_location_reader',
+    securityEnabled: true,
+  },
 };
+
+export const RBAC_POLICY_ROLES: string = `
+p, role:default/admin, catalog-entity, read, allow
+p, role:default/admin, catalog-entity, update, allow
+p, role:default/admin, catalog-entity, delete, allow
+p, role:default/admin, catalog.entity.create, create, allow
+p, role:default/admin, catalog.entity.read, read, allow
+p, role:default/admin, catalog.entity.refresh, update, allow
+p, role:default/admin, catalog.entity.delete, delete, allow
+p, role:default/admin, kubernetes.proxy, use, allow
+p, role:default/admin, catalog.location.create, create, allow
+p, role:default/admin, catalog.location.read, read, allow
+p, role:default/admin, policy-entity, read, allow
+p, role:default/admin, policy-entity, create, allow
+p, role:default/reader, catalog-entity, read, allow
+p, role:default/reader, catalog.entity.read, read, allow
+p, role:default/reader, catalog.location.read, read, allow
+p, role:default/location_admin, catalog.location.read, read, allow
+p, role:default/location_admin, catalog.location.create, create, allow
+p, role:default/location_admin, catalog.location.delete, delete, allow
+p, role:default/location_admin, catalog.entity.read, read, allow
+p, role:default/location_admin, catalog.entity.refresh, update, allow
+p, role:default/location_admin, catalog.entity.delete, delete, allow
+g, group:default/rhdh_test_group_1, role:default/reader
+g, group:default/rhdh_test_group_2, role:default/reader
+g, group:default/rhdh_test_group_3, role:default/reader
+g, group:default/rhdh_test_group_4, role:default/reader
+g, group:default/rhdh_test_group_5, role:default/reader
+g, group:default/rhdh_test_group_6, role:default/reader
+g, group:default/rhdh_test_group_location_reader, role:default/location_admin
+g, user:default/qeadmin_rhdhtesting.onmicrosoft.com, role:default/admin
+g, group:default/rhsso_group_1, role:default/reader
+g, group:default/rhsso_group_2, role:default/reader
+g, group:default/rhsso_group_3, role:default/reader
+g, group:default/rhsso_group_4, role:default/reader
+g, group:default/rhsso_group_2, role:default/location_admin
+`;

@@ -9,6 +9,8 @@ global:
         disabled: true
       - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-msgraph-dynamic
         disabled: true
+      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+        disabled: true
 upstream:
   backstage:
     appConfig:
@@ -43,6 +45,9 @@ upstream:
               prompt: auto 
               callbackUrl: ${RHSSO76_CALLBACK_URL}
       catalog:
+        locations:
+          - type: url
+            target: https://github.com/albarbaro-org/some-test/blob/main/location.yaml
         rules:
           - allow: [Component, Group, User, Resource, Location, Template]          
         providers:
@@ -59,33 +64,40 @@ upstream:
                   and mailEnabled eq false
                   and startswith(displayName,'rhdh_test_group_')
               schedule:
-                frequency: PT5M
+                frequency: PT1M
                 timeout: PT1M
           githubOrg:
             id: production
             githubUrl: https://github.com
             orgs: ['${AUTH_PROVIDERS_GH_ORG_NAME}']
             schedule:
-              frequency: { minutes: 3 }
+              frequency: { minutes: 1 }
               timeout: { minutes: 1 }
-              initialDelay: { seconds: 15 }
           keycloakOrg:
             default:
-              baseUrl: ${RHSSO76_BASE_URL}
+              baseUrl: ${RHSSO76_URL}
               loginRealm: ${AUTH_PROVIDERS_REALM_NAME}
               realm: ${AUTH_PROVIDERS_REALM_NAME}
               clientId: ${RHSSO76_CLIENT_ID}
               clientSecret: ${RHSSO76_CLIENT_SECRET}
               schedule:
-                frequency: { minutes: 3 }
+                frequency: { minutes: 1 }
                 timeout: { minutes: 1 }
-                initialDelay: { seconds: 15 }
+      permission:
+        enabled: true
+        rbac:
+          policyFileReload: true
+          policies-csv-file: './rbac/rbac-policy.csv'
+          admin:
+            users:
+              - name: user:default/qeadmin@rhdhtesting.onmicrosoft.com
+              - name: user:default/rhsso_admin
     extraEnvVarsSecrets:
       - rhdh-secrets
     image:
       registry: quay.io
       repository: rhdh/rhdh-hub-rhel9
-      tag: next
+      tag: '1.3'
     readinessProbe:
       failureThreshold: 3
       httpGet:
@@ -129,6 +141,8 @@ upstream:
     extraVolumeMounts:
       - mountPath: /opt/app-root/src/dynamic-plugins-root
         name: dynamic-plugins-root
+      - name: rbac-policy
+        mountPath: /opt/app-root/src/rbac
     extraVolumes:
       - ephemeral:
           volumeClaimTemplate:
@@ -139,6 +153,10 @@ upstream:
                 requests:
                   storage: 2Gi
         name: dynamic-plugins-root
+      - name: rbac-policy
+        configMap:
+          defaultMode: 420
+          name: rbac-policy
       - configMap:
           defaultMode: 420
           name: dynamic-plugins
