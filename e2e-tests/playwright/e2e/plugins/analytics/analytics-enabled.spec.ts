@@ -13,5 +13,5 @@ test('Check "analytics-provider-segment" plugin is enabled', async () => {
     '@janus-idp/backstage-plugin-analytics-provider-segment',
   );
 
-  expect(isPluginListed).toBe(false);
+  expect(isPluginListed).toBe(true);
 });
