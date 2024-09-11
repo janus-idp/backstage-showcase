@@ -184,7 +184,7 @@ droute_send() {
   local release_name=$1
   local project=$2
   local droute_project="droute"
-  local droute_pod_name="ubi9-cert-rsync"
+  local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
   METEDATA_OUTPUT="data_router_metadata_output.json"
 
   # Remove properties (only used for skipped test and invalidates the file if empty)
