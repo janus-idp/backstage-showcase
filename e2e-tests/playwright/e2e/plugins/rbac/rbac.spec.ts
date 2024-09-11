@@ -282,7 +282,7 @@ test.describe.serial('Test RBAC plugin REST API', () => {
 });
 
 test.describe
-  .serial('Test RBAC plugin: loading permission policies and conditions from files', () => {
+  .serial('Test RBAC plugin: load permission policies and conditions from files', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;

@@ -38,7 +38,7 @@ test.describe('Test timestamp column on Catalog', () => {
 
   test('Verify `Created At` column and value in the Catalog Page', async () => {
     await uiHelper.verifyColumnHeading(['Created At'], true);
-    await uiHelper.verifyRowInTableByUniqueText('timestamp-test', [
+    await uiHelper.verifyRowInTableByUniqueText('backstage-test-123', [
       /^\d{1,2}\/\d{1,2}\/\d{1,4}, \d:\d{1,2}:\d{1,2} (AM|PM)$/g,
     ]);
   });
