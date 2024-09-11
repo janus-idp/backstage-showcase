@@ -1,6 +1,6 @@
 #!/bin/bash
 # Guide: https://docs.redhat.com/en/documentation/red_hat_build_of_keycloak/22.0/html-single/operator_guide/index#basic-deployment-database
-# Prerequisite: Install Keycloak Operator
+# Prerequisite: Install Keycloak Operator (https://docs.redhat.com/en/documentation/red_hat_build_of_keycloak/22.0/html-single/operator_guide/index#installation-)
 
 set -e
 
@@ -8,8 +8,26 @@ KEYCLOAK_NAMESPACE=keycloak
 CERT_HOSTNAME="" # Ex: keycloak.apps-crc.testing
 DELETE=false
 
+# TODO: add method to deploy without operator for ARM systems that don't have access to the keycloak operator.
+usage() {
+  echo "
+This script uses the Red Hat Keycloak operator to quickly setup an instance of keycloak with TLS enabled and a persistent postgresql database on Openshift Container Platform (OCP).
+Prerequisites:
+  - Keycloak Operator needs to be installed on the cluster (https://docs.redhat.com/en/documentation/red_hat_build_of_keycloak/22.0/html-single/operator_guide/index#installation-)
+  - Be logged in to the cluster on the CLI
+Usage:
+  $0 [OPTIONS]
+
+OPTIONS:
+  -gc,  --generate-certificates <hostname> : Generates an SSL certificate for the specified hostname. Returns a key.pem and a certificate.pem file in the ${PWD}/tls directory
+  -n,   --namespace <namespace>            : The namespace the keycloak resources are installed onto. Default: keycloak
+        --uninstall <options>              : Uninstall specified keycloak resources. Options:  database, keycloak, secrets, all
+  -h,   --help                             : Prints this help message and exits
+
+"
+}
 PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "$PWD"
+echo "${PWD}"
 
 deployDB(){
   oc apply -f ${PWD}/database/postgres.yaml -n ${KEYCLOAK_NAMESPACE}
@@ -23,7 +41,7 @@ deployTLSKeys(){
 }
 
 deploySecrets(){
-  oc apply -f ${PWD}/auth/database-secrets.yaml -n ${KEYCLOAK_NAMESPACE}
+  oc apply -f ${PWD}/auth/database-secrets.local.yaml -n ${KEYCLOAK_NAMESPACE}
 }
 
 deployKeyCloak(){
@@ -57,18 +75,6 @@ deployAll(){
   deployKeyCloak
 }
 
-# Create Namespace and switch to it
-oc new-project ${KEYCLOAK_NAMESPACE}
-if [ $? -ne 0 ]; then
-  # Switch to it if it already exists
-  oc project ${KEYCLOAK_NAMESPACE}
-fi
-
-if [ "$1" == "uninstall" ]; then
-    deleteAll
-    exit 0
-fi
-
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --generate-certs | -gc)
@@ -80,9 +86,10 @@ while [[ "$#" -gt 0 ]]; do
             shift
             ;;
         --uninstall)
-            DELETE="true"
+            DELETE="$2"
+            shift
             ;;
-        --help)
+        --help | -h)
             usage
             exit 0
             ;;
@@ -90,13 +97,44 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-if [ "$DELETE" == "true" ]; then
-  deleteAll
-  exit 0
+# Create Namespace and switch to it
+oc new-project ${KEYCLOAK_NAMESPACE}
+if [ $? -ne 0 ]; then
+  # Switch to it if it already exists
+  oc project ${KEYCLOAK_NAMESPACE}
 fi
 
-if [[ -n "$CERT_HOSTNAME" ]]; then
+case "${DELETE}" in
+  "")
+    : # noop if $DELETE is empty
+    ;;
+  keycloak)
+    deleteKeyCloak
+    exit 0
+    ;;
+  database)
+    deleteDB
+    exit 0
+    ;;
+  secrets)
+    deleteSecrets
+    exit 0
+    ;;
+  all)
+    deleteAll
+    exit 0
+    ;;
+  *)
+    echo "Invalid option, please provide one of: keycloak, database, secrets, all"
+    exit 1
+    ;;
+esac
+
+if [[ -n "${CERT_HOSTNAME}" ]]; then
   generateSSLCerts
+else
+  echo "Please provide a valid hostname for the SSL certificate"
+  exit 1
 fi
 
 deployAll
