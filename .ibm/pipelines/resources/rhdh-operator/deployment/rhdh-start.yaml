@@ -1,0 +1,15 @@
+kind: Backstage
+apiVersion: rhdh.redhat.com/v1alpha1
+metadata: 
+  name: rhdh
+spec:
+  application:
+    appConfig:
+      configMaps:
+        - name: app-config-rhdh
+      mountPath: /opt/app-root/src
+    dynamicPluginsConfigMapName: dynamic-plugins
+    extraEnvs:
+      secrets:
+        - name: rhdh-secrets
+      mountPath: /opt/app-root/src/rbac
