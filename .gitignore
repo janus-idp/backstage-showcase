@@ -63,7 +63,5 @@ dynamic-plugins/*/dist-dynamic/src
 .idea/
 .idea/
 
-techdocs/
-
 # Private Keys
 *.pem
