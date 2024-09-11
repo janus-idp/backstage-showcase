@@ -157,6 +157,16 @@ delete_namespace() {
   fi
 }
 
+configure_namespace_if_nonexistent() {
+  local project=$1
+  if oc get namespace "${project}" >/dev/null 2>&1; then
+    echo "Namespace ${project} already exists!"
+  else
+    oc create namespace "${project}"
+    oc config set-context --current --namespace="${project}"
+  fi
+}
+
 configure_external_postgres_db() {
   local project=$1
   oc apply -f "${DIR}/resources/postgres-db/postgres.yaml" --namespace="${NAME_SPACE_POSTGRES_DB}"
@@ -182,6 +192,13 @@ configure_external_postgres_db() {
 apply_yaml_files() {
   local dir=$1
   local project=$2
+  local release_name=$3
+  if [[ "${namespace}" == "showcase-operator-rbac-nightly" || "${namespace}" == "showcase-operator-nightly" ]]; then
+    local base_url="https://backstage-${release_name}-${project}.${K8S_CLUSTER_ROUTER_BASE}"
+  else
+    local base_url="https://${release_name}-backstage-${project}.${K8S_CLUSTER_ROUTER_BASE}"
+  fi
+  local encoded_base_url="$(echo -n $base_url | base64 -w 0)"
   echo "Applying YAML files to namespace ${project}"
 
   oc config set-context --current --namespace="${project}"
@@ -230,6 +247,7 @@ apply_yaml_files() {
   if [[ "$JOB_NAME" != *aks* ]]; then # Skip for AKS, because of strange `sed: -e expression #1, char 136: unterminated `s' command`
     sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   fi
+  sed -i "s/BASE_URL:.*/BASE_URL: ${encoded_base_url}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   set +x
@@ -253,6 +271,14 @@ apply_yaml_files() {
   # Renable when namespace termination issue is solved
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+
+  if [[ "${project}" == "showcase-operator-nightly" ]]; then
+    oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins.yaml" --namespace="${project}"
+  fi
+
+  if [[ "${project}" == "showcase-operator-rbac-nightly" ]]; then
+    oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins-rbac.yaml" --namespace="${project}"
+  fi
 }
 
 run_tests() {
@@ -306,6 +332,8 @@ check_backstage_running() {
   local namespace=$2
   if [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke*  ]]; then
     local url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  elif [[ "${namespace}" == "showcase-operator-rbac-nightly" || "${namespace}" == "showcase-operator-nightly" ]]; then
+    local url="https://backstage-${release_name}-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   else
     local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   fi
@@ -359,6 +387,39 @@ install_pipelines_operator() {
   fi
 }
 
+apply_operator_group_if_nonexistent() {
+  if [[ $(oc get OperatorGroup -n rhdh-operator  2>/dev/null | wc -l) -ge 1 ]]; then 
+    echo "Red Hat Developer Hub operator group is already installed."
+  else
+    echo "Red Hat Developer Hub operator group does not exist. adding..."
+    oc apply -f "${dir}/resources/rhdh-operator/installation/rhdh-operator-group.yaml" -n "${namespace}"
+  fi
+}
+
+install_rhdh_operator() {
+  local dir=$1
+  local namespace=$2
+  CSV_NAME="Red Hat Developer Hub Operator"
+
+  if oc get csv -n "${namespace}" | grep -q "${CSV_NAME}"; then
+    echo "Red Hat Developer Hub operator is already installed."
+  elsedeploy_rhexistent "${namespace}"
+    apply_operator_group_if_nonexistent
+    oc apply -f "${dir}/resources/rhdh-operator/installation/rhdh-subscription.yaml" -n "${namespace}"
+  fi
+}
+
+deploy_rhdh_operator() {
+  local dir=$1
+  local namespace=$2
+
+  if [[ "${namespace}" == "showcase-operator-rbac-nightly" ]]; then
+    oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start-rbac.yaml" -n "${namespace}"
+  else 
+    oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start.yaml" -n "${namespace}"
+  fi
+}
+
 initiate_deployments() {
 
   #install_pipelines_operator
@@ -373,8 +434,8 @@ initiate_deployments() {
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
@@ -382,8 +443,8 @@ initiate_deployments() {
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
@@ -399,6 +460,17 @@ initiate_rds_deployment() {
   oc apply -f "$DIR/resources/postgres-db/postgres-cred.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${namespace}"
   helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_deployments_operator() {
+  install_rhdh_operator "${DIR}" "${OPERATOR_MANAGER}"
+  configure_namespace "${NAME_SPACE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
+  deploy_rhdh_operator "${DIR}" "${NAME_SPACE}"
+
+  configure_namespace "${NAME_SPACE_RBAC}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
 }
 
 check_and_test() {
@@ -494,7 +566,12 @@ main() {
   elif [[ "$JOB_NAME" == *auth-providers* ]]; then
     run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
   else
-    initiate_deployments
+    if [[ "$JOB_NAME" == *operator* ]]; then
+      initiate_deployments_operator
+    else
+      initiate_deployments
+    fi
+    
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
     # Only test TLS config with RDS and Change configuration at runtime in nightly jobs
