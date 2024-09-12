@@ -38,7 +38,7 @@ test.describe('Test timestamp column on Catalog', () => {
     await uiHelper.selectMuiBox('Kind', 'Component');
     await uiHelper.searchInputPlaceholder('timestamp-test');
     await uiHelper.verifyColumnHeading(['Created At'], true);
-    await uiHelper.verifyRowInTableByUniqueText('timestamp-test', [
+    await uiHelper.verifyRowInTableByUniqueText('timestamp-test-created', [
       /^\d{1,2}\/\d{1,2}\/\d{1,4}, \d:\d{1,2}:\d{1,2} (AM|PM)$/g,
     ]);
   });
