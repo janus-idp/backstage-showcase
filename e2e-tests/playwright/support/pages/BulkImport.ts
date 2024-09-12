@@ -24,7 +24,6 @@ export class BulkImport {
   }
 
   async newGitHubRepo(owner: string, repoName: string) {
-    await APIHelper.deleteGitHubRepo(owner, repoName);
     await APIHelper.createGitHubRepo(owner, repoName);
     await APIHelper.initCommit(owner, repoName);
   }
@@ -34,5 +33,11 @@ export class BulkImport {
       .locator(UIhelperPO.rowByText(repoName))
       .getByRole('checkbox')
       .check();
+  }
+
+  async fillTextInputByNameAtt(label: string, text: string) {
+    await this.page
+      .locator(`input[name*="${label}"], textarea[name*="${label}"]`)
+      .fill(text);
   }
 }
