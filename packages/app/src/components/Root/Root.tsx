@@ -75,7 +75,6 @@ const renderExpandIcon = (expand: boolean, isSecondLevelMenuItem = false) => {
 };
 
 const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
-  if (!menuItem.icon) return null;
   const menuItemStyle = {
     paddingLeft: isNestedMenuItem ? '2rem' : '',
   };
@@ -83,7 +82,7 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
     <Box key={menuItem.name} sx={{ '& a': menuItemStyle }}>
       <MyGroupsSidebarItem
         key={menuItem.name}
-        icon={renderIcon(menuItem.icon)}
+        icon={renderIcon(menuItem.icon ?? '')}
         singularTitle={menuItem.title}
         pluralTitle={`${menuItem.title}s`}
       />
@@ -91,7 +90,7 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   ) : (
     <SideBarItemWrapper
       key={menuItem.name}
-      icon={renderIcon(menuItem.icon)}
+      icon={renderIcon(menuItem.icon ?? '')}
       to={menuItem.to ?? ''}
       text={menuItem.title}
       style={menuItemStyle}
