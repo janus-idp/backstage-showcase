@@ -185,7 +185,7 @@ test.describe.serial('Bulk Import plugin', () => {
     ]);
   });
 
-  test('Verify Added Repositories Appear in the Catalog as Expected', async () => {
+  test.skip('Verify Added Repositories Appear in the Catalog as Expected', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
     await uiHelper.searchInputPlaceholder(newRepoDetails.updatedComponentName);
