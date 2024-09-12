@@ -430,7 +430,7 @@ plugins:
             default:
               name: "${OCM_HUB_NAME}"
               url: "${OCM_HUB_URL}"
-              serviceAccountToken: "${moc_infra_token}"
+              serviceAccountToken: "${OCM_SA_TOKEN}"
               owner: janus-authors
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
     disabled: true
