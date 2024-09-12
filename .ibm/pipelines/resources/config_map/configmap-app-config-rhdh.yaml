@@ -146,8 +146,3 @@ data:
               token: temp
     permission:
       enabled: false
-      rbac:
-        policies-csv-file: './rbac/rbac-policy.csv'
-        admin:
-          users:
-            - name: user:default/rhdh-qe

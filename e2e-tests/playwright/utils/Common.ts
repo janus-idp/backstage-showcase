@@ -43,13 +43,24 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
   }
 
-  private async logintoGithub() {
+  private async logintoGithub(userid: string) {
     await this.page.goto('https://github.com/login');
     await this.page.waitForSelector('#login_field');
-    await this.page.fill('#login_field', process.env.GH_USER_ID);
-    await this.page.fill('#password', process.env.GH_USER_PASS);
+    await this.page.fill('#login_field', userid);
+
+    switch (userid) {
+      case process.env.GH_USER_ID:
+        await this.page.fill('#password', process.env.GH_USER_PASS);
+        break;
+      case process.env.GH_USER2_ID:
+        await this.page.fill('#password', process.env.GH_USER2_PASS);
+        break;
+      default:
+        throw new Error('Invalid User ID');
+    }
+
     await this.page.click('[value="Sign in"]');
-    await this.page.fill('#app_totp', this.getGitHub2FAOTP());
+    await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
     test.setTimeout(130000);
     if (
       (await this.uiHelper.isTextVisible(
@@ -61,15 +72,15 @@ export class Common {
       ))
     ) {
       await this.page.waitForTimeout(60000);
-      await this.page.fill('#app_totp', this.getGitHub2FAOTP());
+      await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
     }
     await expect(this.page.locator('#app_totp')).toBeHidden({
       timeout: 120000,
     });
   }
 
-  async loginAsGithubUser() {
-    await this.logintoGithub();
+  async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
+    await this.logintoGithub(userid);
     await this.page.goto('/');
     await this.waitForLoad(240000);
     await this.uiHelper.clickButton('Sign In');
@@ -131,8 +142,17 @@ export class Common {
     });
   }
 
-  getGitHub2FAOTP(): string {
-    const secret = process.env.GH_2FA_SECRET;
+  getGitHub2FAOTP(userid: string): string {
+    const secrets: { [key: string]: string | undefined } = {
+      [process.env.GH_USER_ID]: process.env.GH_2FA_SECRET,
+      [process.env.GH_USER2_ID]: process.env.GH_USER2_2FA_SECRET,
+    };
+
+    const secret = secrets[userid];
+    if (!secret) {
+      throw new Error('Invalid User ID');
+    }
+
     return authenticator.generate(secret);
   }
 
