@@ -41,6 +41,7 @@ test.describe('Test timestamp column on Catalog', () => {
     await uiHelper.verifyRowInTableByUniqueText('timestamp-test', [
       /^\d{1,2}\/\d{1,2}\/\d{1,4}, \d:\d{1,2}:\d{1,2} (AM|PM)$/g,
     ]);
+    await uiHelper.searchInputPlaceholder('');
   });
 
   test('Toggle ‘CREATED AT’ to see if the component list can be sorted in ascending/decending order', async () => {
