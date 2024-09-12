@@ -11,6 +11,10 @@ export class Catalog {
     this.uiHelper = new UIhelper(page);
   }
 
+  async go() {
+    await this.uiHelper.openSidebar('Catalog');
+  }
+
   async goToBackstageJanusProjectCITab() {
     await this.goToBackstageJanusProject();
     await this.uiHelper.clickTab('CI');
@@ -22,5 +26,9 @@ export class Catalog {
     await this.uiHelper.openSidebar('Catalog');
     await this.uiHelper.clickByDataTestId('user-picker-all');
     await this.uiHelper.clickLink('backstage-janus');
+  }
+
+  async search(s: string) {
+    await this.page.locator('#input-with-icon-adornment').fill(s);
   }
 }
