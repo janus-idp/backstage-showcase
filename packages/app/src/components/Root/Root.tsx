@@ -169,13 +169,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
                 unmountOnExit
               >
                 <List disablePadding>
-                  {child.icon &&
-                    child.children &&
-                    child.children.length === 0 && (
-                      <ListItem disableGutters disablePadding>
-                        {getMenuItem(child, true)}
-                      </ListItem>
-                    )}
+                  {child.children && child.children.length === 0 && (
+                    <ListItem disableGutters disablePadding>
+                      {getMenuItem(child, true)}
+                    </ListItem>
+                  )}
                   {child.children && child.children.length > 0 && (
                     <ListItem
                       disableGutters

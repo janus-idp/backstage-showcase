@@ -4,8 +4,17 @@ import {
   MenuItemConfig,
 } from './extractDynamicConfig';
 
-function getNameFromPath(path: string): string {
-  return path.split('/').pop() ?? '';
+export function getNameFromPath(path: string): string {
+  const trimmedPath = path.trim();
+  const noLeadingTrailingSlashes = trimmedPath.startsWith('/')
+    ? trimmedPath.slice(1)
+    : trimmedPath;
+
+  const cleanedPath = noLeadingTrailingSlashes.endsWith('/')
+    ? noLeadingTrailingSlashes.slice(0, -1)
+    : noLeadingTrailingSlashes;
+
+  return cleanedPath.split('/').join('.');
 }
 
 function isStaticPath(path: string): boolean {
