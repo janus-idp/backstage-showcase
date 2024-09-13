@@ -5,6 +5,7 @@ import { UIhelper } from '../../utils/UIhelper';
 export class Catalog {
   private page: Page;
   private uiHelper: UIhelper;
+  private searchInput = '#input-with-icon-adornment';
 
   constructor(page: Page) {
     this.page = page;
@@ -29,6 +30,17 @@ export class Catalog {
   }
 
   async search(s: string) {
-    await this.page.locator('#input-with-icon-adornment').fill(s);
+    const searchField = this.page.locator(this.searchInput);
+
+    await searchField.clear();
+    const searchResponse = this.page.waitForResponse(
+      new RegExp(`${process.env.BASE_URL}/api/catalog/entities/by-query/*`),
+    );
+    await searchField.fill(s);
+    await searchResponse;
+  }
+
+  async tableRow(content: string) {
+    return this.page.locator(`tr >> text="${content}"`);
   }
 }

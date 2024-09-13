@@ -18,6 +18,7 @@ export enum PRStatus {
 }
 
 export class GithubApi {
+  public static URL = 'https://github.com/';
   private static API_URL = 'https://api.github.com/';
   private static API_VERSION = '2022-11-28';
   private static AUTH_HEADER = {
