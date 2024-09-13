@@ -109,7 +109,7 @@ RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57.1724037293 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-63.1725851021 AS runner
 USER 0
 
 # Upstream only
