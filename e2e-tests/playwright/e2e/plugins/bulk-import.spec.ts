@@ -3,15 +3,18 @@ import { UIhelper } from '../../utils/UIhelper';
 import { Common, setupBrowser } from '../../utils/Common';
 import { APIHelper } from '../../utils/APIHelper';
 import { BulkImport } from '../../support/pages/BulkImport';
-import { BackstageShowcase } from '../../support/pages/CatalogImport';
+import {
+  BackstageShowcase,
+  CatalogImport,
+} from '../../support/pages/CatalogImport';
 import {
   defaultCatalogInfoYaml,
   updatedCatalogInfoYaml,
 } from '../../support/testData/BulkImport';
 
 // Pre-req : Plugin backstage-plugin-catalog-backend-module-github-org-dynamic should not have org janus-test configured.
-let page: Page;
 test.describe.serial('Bulk Import plugin', () => {
+  let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
   let bulkimport: BulkImport;
@@ -222,6 +225,59 @@ test.describe.serial('Bulk Import plugin', () => {
     await APIHelper.deleteGitHubRepo(
       newRepoDetails.owner,
       newRepoDetails.repoName,
+    );
+  });
+});
+
+test.describe
+  .serial('Bulk Import - Verify existing repo are displayed in bulk import Added repositories', () => {
+  let page: Page;
+  let uiHelper: UIhelper;
+  let common: Common;
+  let bulkimport: BulkImport;
+  let catalogImport: CatalogImport;
+  const existingRepoFromAppConfig = 'acr-catalog';
+
+  const existingComponentDetails = {
+    name: 'janus-test-2-bulk-import-test',
+    repoName: 'janus-test-2-bulk-import-test',
+    url: 'https://github.com/janus-test/janus-test-2-bulk-import-test/blob/main/catalog-info.yaml',
+  };
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
+
+    uiHelper = new UIhelper(page);
+    common = new Common(page);
+    bulkimport = new BulkImport(page);
+    catalogImport = new CatalogImport(page);
+    await common.loginAsGithubUser();
+  });
+
+  // Select two repos: one with an existing catalog.yaml file and another without it
+  test('Verify existing repo from app-config is displayed in bulk import Added repositories', async () => {
+    await uiHelper.openSidebar('Bulk import');
+    await bulkimport.filterAddedRepo(existingRepoFromAppConfig);
+    await uiHelper.verifyRowInTableByUniqueText(existingRepoFromAppConfig, [
+      'Added',
+    ]);
+  });
+
+  test('Verify repo from "register existing component"  are displayed in bulk import Added repositories', async () => {
+    // Register Existing Component
+    await uiHelper.openSidebar('Catalog');
+    await uiHelper.clickButton('Create');
+    await uiHelper.clickButton('Register Existing Component');
+    await catalogImport.registerExistingComponent(
+      existingComponentDetails.url,
+      true,
+    );
+
+    // Verify in bulk import's Added Repositories
+    await uiHelper.openSidebar('Bulk import');
+    await bulkimport.filterAddedRepo(existingComponentDetails.repoName);
+    await uiHelper.verifyRowInTableByUniqueText(
+      existingComponentDetails.repoName,
+      ['Added'],
     );
   });
 });
