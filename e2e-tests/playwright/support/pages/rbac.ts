@@ -264,6 +264,10 @@ export class Response {
         {
           "memberReferences": ["group:janus-qe/rhdh-qe-2-team"],
           "name": "role:default/test2-role"
+        },
+        {
+          "memberReferences": ["user:default/rhdh-qe"],
+          "name": "role:default/qe_admin"
         }
       ]
     `;
@@ -294,7 +298,7 @@ export class Response {
           "entityReference": "role:default/rbac_admin",
           "permission": "policy-entity",
           "policy": "update",
-          "effect": "allow"
+          "effect": "allow" 
         },
         {
           "entityReference": "role:default/rbac_admin",
@@ -336,6 +340,12 @@ export class Response {
           "entityReference": "role:xyz/team_a",
           "permission": "catalog.location.read",
           "policy": "read",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/qe_admin",
+          "permission": "bulk.import",
+          "policy": "use",
           "effect": "allow"
         }
       ]
