@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { Analytics } from '../../../utils/analytics/analytics';
-import { APIHelper } from '../../../utils/APIHelper';
+import { RhdhApi } from '../../../support/api/rhdh';
 
 test('Check "analytics-provider-segment" plugin is enabled', async () => {
   const analytics = new Analytics();
-  const apihelper = new APIHelper();
+  const rhdhApi = new RhdhApi();
 
-  const authHeader = await apihelper.getGuestAuthHeader();
+  const authHeader = await rhdhApi.auth().getGuestAuthHeader();
   const pluginsList = await analytics.getDynamicPluginsList(authHeader);
   const isPluginListed = analytics.checkPluginListed(
     pluginsList,

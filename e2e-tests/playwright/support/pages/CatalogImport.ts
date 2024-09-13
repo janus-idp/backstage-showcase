@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import { BackstageShowcasePO, CatalogImportPO } from '../pageObjects/page-obj';
 import { APIHelper } from '../../utils/APIHelper';
-import { githubAPIEndpoints } from '../../utils/APIEndpoints';
+import { GithubApi, PRStatus } from '../api/github';
 
 export class CatalogImport {
   private page: Page;
@@ -54,15 +54,12 @@ export class BackstageShowcase {
     return rep.filter((issue: any) => !issue.pull_request);
   }
 
-  static async getGithubPRs(
-    state: 'open' | 'closed' | 'all',
-    paginated = false,
-  ) {
+  static async getGithubPRs(state: PRStatus, paginated = false) {
     const url = githubAPIEndpoints.pull(state);
     if (paginated) {
       return APIHelper.getGithubPaginatedRequest(url);
     }
-    const response = await APIHelper.githubRequest('GET', url);
+    const response = await new GithubApi().repository().getPullRequests(state);
     return response.json();
   }
 
@@ -100,10 +97,7 @@ export class BackstageShowcase {
   }
 
   async getWorkflowRuns() {
-    const response = await APIHelper.githubRequest(
-      'GET',
-      githubAPIEndpoints.workflowRuns,
-    );
+    const response = await new GithubApi().repository().actions().runs().get();
     const responseBody = await response.json();
     return responseBody.workflow_runs;
   }
