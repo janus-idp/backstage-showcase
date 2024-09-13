@@ -17,7 +17,7 @@
         "tfa": {
           "add_attributes": true,
           "auto_finalize_defect_type": true
-      }
+        }
       }
     }
   }
