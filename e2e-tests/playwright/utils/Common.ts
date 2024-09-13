@@ -75,7 +75,7 @@ export class Common {
       await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
     }
     await expect(this.page.locator('#app_totp')).toBeHidden({
-      timeout: 120000,
+      timeout: 240000,
     });
   }
 
