@@ -17,7 +17,7 @@ export enum PRStatus {
   all = 'all',
 }
 
-export class GithubApi {
+export default class GithubApi {
   public static URL = 'https://github.com/';
   private static API_URL = 'https://api.github.com/';
   private static API_VERSION = '2022-11-28';

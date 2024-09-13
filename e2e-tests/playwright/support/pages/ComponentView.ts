@@ -1,17 +1,15 @@
 import { expect, Page } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
-import { GithubApi } from '../api/github';
+import GithubApi from '../api/github';
 
 export class ComponentView {
   private page: Page;
-  private uiHelper: UIhelper;
+
   githubLink = (path: string): string => {
     return `a[href*="${GithubApi.URL}${path}"]`;
   };
 
   constructor(page: Page) {
     this.page = page;
-    this.uiHelper = new UIhelper(page);
   }
 
   async validateGithubLink(s: string) {

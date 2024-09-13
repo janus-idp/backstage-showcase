@@ -2,7 +2,7 @@ import { Page, test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common, setupBrowser } from '../utils/Common';
 import { CatalogImport } from '../support/pages/CatalogImport';
-import { GithubApi } from '../support/api/github';
+import GithubApi from '../support/api/github';
 
 let page: Page;
 test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {

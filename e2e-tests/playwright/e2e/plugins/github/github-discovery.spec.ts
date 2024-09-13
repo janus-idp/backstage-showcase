@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { GithubApi } from '../../../support/api/github';
+import GithubApi from '../../../support/api/github';
 import { Common } from '../../../utils/Common';
 import { Catalog } from '../../../support/pages/Catalog';
 import { ComponentView } from '../../../support/pages/ComponentView';

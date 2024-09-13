@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import { BackstageShowcasePO, CatalogImportPO } from '../pageObjects/page-obj';
-import { GithubApi, PRStatus } from '../api/github';
+import GithubApi from '../api/github';
 
 export class CatalogImport {
   private page: Page;
@@ -49,20 +49,6 @@ export class BackstageShowcase {
   constructor(page: Page) {
     this.page = page;
     this.uiHelper = new UIhelper(page);
-  }
-
-  async getGithubOpenIssues() {
-    const gitHubApi = new GithubApi();
-    const rep = gitHubApi.repository().issues(1);
-    return rep.filter((issue: any) => !issue.pull_request);
-  }
-
-  static async getGithubPRs(state: PRStatus, paginated = false) {
-    const gitHubApi = new GithubApi();
-    const result = paginated
-      ? gitHubApi.repository().pullRequests(1)
-      : gitHubApi.repository().pullRequests();
-    return await result;
   }
 
   async clickNextPage() {
