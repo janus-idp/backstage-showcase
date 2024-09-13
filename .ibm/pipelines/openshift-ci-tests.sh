@@ -180,6 +180,7 @@ droute_send() {
   if [[ "$JOB_NAME" == *ocp-v4* ]]; then
     return 0
   fi
+  set +e
 
   local release_name=$1
   local project=$2
@@ -229,6 +230,7 @@ droute_send() {
     --attachments '/tmp/droute/attachments' \
     --verbose"
 
+  set -e
 }
 
 run_tests() {
