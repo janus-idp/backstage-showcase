@@ -33,7 +33,6 @@ data:
       # Plugin: GitHub
       github:
         - host: github.com
-          # token:
           apps:
             - appId: ${GITHUB_APP_APP_ID}
               clientId: ${GITHUB_APP_CLIENT_ID}

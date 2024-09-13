@@ -54,58 +54,64 @@ export class GithubApi {
     const path = 'repos/' + repo;
 
     return {
-      pullRequests: async (state = PRStatus.open, perPage = 100) => {
-        const payload = `/pulls?per_page=${perPage}&state=${state}`;
-        const url = path + payload;
-        const response = await this.myAxios.get(url);
-        return response.data;
-      },
-      pullRequestsPaginated: async (
+      pullRequests: async (
+        pageNo: false | number = false,
         state = PRStatus.open,
         perPage = 100,
-        pageNo = 1,
         response: any[] = [],
       ) => {
-        const payload = `/pulls?per_page=${perPage}&state=${state}&page=${pageNo}`;
-        const responseData = (await this.myAxios.get(payload)).data;
-        if (responseData.length === 0) {
-          return response;
-        }
-        response = [...response, ...responseData];
-        return await this.repository().pullRequestsPaginated(
-          state,
-          perPage,
-          pageNo + 1,
-          response,
-        );
-      },
-      issues: async (state: PRStatus, perPage = 100, sort = 'updated') => {
-        const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}`;
+        if (pageNo) {
+          const payload = `/pulls?per_page=${perPage}&state=${state}&page=${pageNo}`;
 
-        const url = path + payload;
-        const response = await this.myAxios.get(url);
-        return response.data;
+          const responseData = (await this.myAxios.get(payload)).data;
+
+          if (responseData.length === 0) {
+            return response;
+          }
+
+          return await this.repository().pullRequests(
+            pageNo + 1,
+            state,
+            perPage,
+            [...response, ...responseData],
+          );
+        } else {
+          const payload = `/pulls?per_page=${perPage}&state=${state}`;
+
+          const url = path + payload;
+
+          const reqResponse = await this.myAxios.get(url);
+
+          return reqResponse.data;
+        }
       },
-      issuesPaginated: async (
-        state = PRStatus.open,
+      issues: async (
+        pageNo: false | number = false,
+        state: PRStatus = PRStatus.open,
         perPage = 100,
         sort = 'updated',
-        pageNo = 1,
         response: any[] = [],
       ) => {
-        const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}&page=${pageNo}`;
-        const responseData = (await this.myAxios.get(payload)).data;
-        if (responseData.length === 0) {
-          return response;
+        if (pageNo) {
+          const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}&page=${pageNo}`;
+          const responseData = (await this.myAxios.get(payload)).data;
+          if (responseData.length === 0) {
+            return response;
+          }
+          response = [...response, ...responseData];
+          return await this.repository().issues(
+            pageNo + 1,
+            state,
+            perPage,
+            sort,
+            response,
+          );
+        } else {
+          const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}`;
+          const url = path + payload;
+          const myResponse = await this.myAxios.get(url);
+          return myResponse.data;
         }
-        response = [...response, ...responseData];
-        return await this.repository().issuesPaginated(
-          state,
-          perPage,
-          sort,
-          pageNo + 1,
-          response,
-        );
       },
       detelete: async () => {
         const response = await this.myAxios.delete(path);

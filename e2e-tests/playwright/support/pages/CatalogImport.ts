@@ -53,14 +53,14 @@ export class BackstageShowcase {
 
   async getGithubOpenIssues() {
     const gitHubApi = new GithubApi();
-    const rep = gitHubApi.repository().issuesPaginated();
+    const rep = gitHubApi.repository().issues(1);
     return rep.filter((issue: any) => !issue.pull_request);
   }
 
   static async getGithubPRs(state: PRStatus, paginated = false) {
     const gitHubApi = new GithubApi();
     const result = paginated
-      ? gitHubApi.repository().pullRequestsPaginated()
+      ? gitHubApi.repository().pullRequests(1)
       : gitHubApi.repository().pullRequests();
     return await result;
   }
