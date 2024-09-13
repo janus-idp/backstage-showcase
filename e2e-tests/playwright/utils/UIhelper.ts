@@ -351,4 +351,13 @@ export class UIhelper {
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toEqual(0);
   }
+
+  async clickById(id: string) {
+    await this.page.click(`#${id}`);
+  }
+
+  async clickSpanByText(text: string) {
+    await this.verifyText(text);
+    await this.page.click(`span:has-text("${text}")`);
+  }
 }

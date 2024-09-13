@@ -19,7 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-54 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-54.1724038439 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -107,7 +107,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57.1724037293 AS runner
 USER 0
 
 # Upstream only
@@ -135,8 +135,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
-  chmod -R a+rx ./install-dynamic-plugins.sh; \
-  rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+  chmod -R a+rx ./install-dynamic-plugins.sh;
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

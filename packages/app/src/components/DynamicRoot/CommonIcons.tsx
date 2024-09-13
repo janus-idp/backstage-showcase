@@ -1,3 +1,9 @@
+import Home from '@mui/icons-material/HomeOutlined';
+import People from '@mui/icons-material/People';
+import Category from '@mui/icons-material/CategoryOutlined';
+import Extension from '@mui/icons-material/ExtensionOutlined';
+import School from '@mui/icons-material/SchoolOutlined';
+import AddCircle from '@mui/icons-material/AddCircleOutline';
 import List from '@mui/icons-material/List';
 import Layers from '@mui/icons-material/Layers';
 import Star from '@mui/icons-material/Star';
@@ -17,6 +23,12 @@ import GppGood from '@mui/icons-material/GppGoodOutlined';
 const CommonIcons: {
   [k: string]: React.ComponentType<{}>;
 } = {
+  home: Home,
+  group: People,
+  category: Category,
+  extension: Extension,
+  school: School,
+  add: AddCircle,
   list: List,
   layers: Layers,
   star: Star,
