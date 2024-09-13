@@ -12,7 +12,7 @@ import {
   updatedCatalogInfoYaml,
 } from '../../support/testData/BulkImport';
 
-// Pre-req : Plugin backstage-plugin-catalog-backend-module-github-org-dynamic should not have org janus-test configured.
+// Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial('Bulk Import plugin', () => {
   let page: Page;
   let uiHelper: UIhelper;

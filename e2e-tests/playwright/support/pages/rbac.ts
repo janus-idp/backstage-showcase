@@ -298,7 +298,7 @@ export class Response {
           "entityReference": "role:default/rbac_admin",
           "permission": "policy-entity",
           "policy": "update",
-          "effect": "allow" 
+          "effect": "allow"
         },
         {
           "entityReference": "role:default/rbac_admin",
