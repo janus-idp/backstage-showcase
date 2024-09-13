@@ -19,6 +19,7 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
+# https://registry.access.redhat.com/ubi9/nodejs-20
 FROM registry.access.redhat.com/ubi9/nodejs-20:1-54.1724038439 AS skeleton
 # hadolint ignore=DL3002
 USER 0
@@ -107,6 +108,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
+# https://registry.access.redhat.com/ubi9/nodejs-20-minimal
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57.1724037293 AS runner
 USER 0
 
