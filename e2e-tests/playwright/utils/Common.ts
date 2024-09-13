@@ -61,7 +61,7 @@ export class Common {
 
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
-    test.setTimeout(130000);
+    test.setTimeout(240000);
     if (
       (await this.uiHelper.isTextVisible(
         'The two-factor code you entered has already been used',
