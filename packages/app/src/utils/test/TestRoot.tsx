@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useRef } from 'react';
+import React, { PropsWithChildren, useMemo, useRef } from 'react';
 
 import { createApp } from '@backstage/app-defaults';
 import { BackstageApp } from '@backstage/core-app-api';
@@ -33,17 +33,21 @@ const TestRoot = ({ children }: PropsWithChildren<{}>) => {
       },
     }),
   );
+  const value = useMemo(
+    () => ({
+      AppProvider: current.getProvider(),
+      AppRouter: current.getRouter(),
+      dynamicRoutes: [],
+      menuItems: [],
+      mountPoints: {},
+      entityTabOverrides: {},
+      scaffolderFieldExtensions: [],
+    }),
+    [current],
+  );
+
   return (
-    <DynamicRootContext.Provider
-      value={{
-        AppProvider: current.getProvider(),
-        AppRouter: current.getRouter(),
-        dynamicRoutes: [],
-        mountPoints: {},
-        entityTabOverrides: {},
-        scaffolderFieldExtensions: [],
-      }}
-    >
+    <DynamicRootContext.Provider value={value}>
       {children}
     </DynamicRootContext.Provider>
   );

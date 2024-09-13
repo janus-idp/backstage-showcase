@@ -11,10 +11,9 @@ test.describe('dynamic-plugins-info UI tests', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
-    await uiHelper.openSidebar('Administration');
-    await uiHelper.verifyHeading('Administration');
-    await uiHelper.verifyLink('Plugins');
-    await uiHelper.clickTab('Plugins');
+    await uiHelper.openSidebarButton('Administration');
+    await uiHelper.openSidebar('Plugins');
+    await uiHelper.verifyHeading('Plugins');
   });
 
   test('it should show a table, and the table should contain techdocs plugins', async ({

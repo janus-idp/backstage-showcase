@@ -28,6 +28,11 @@ export class CatalogImport {
     }
   }
 
+  async analyzeComponent(url: string) {
+    await this.page.fill(CatalogImportPO.componentURL, url);
+    await this.uiHelper.clickButton('Analyze');
+  }
+
   async inspectEntityAndVerifyYaml(text: string) {
     await this.page.getByTitle('More').click();
     await this.page.getByRole('menuitem').getByText('Inspect entity').click();

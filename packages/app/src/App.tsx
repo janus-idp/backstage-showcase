@@ -1,6 +1,7 @@
 import React from 'react';
 import { apis } from './apis';
 import DynamicRoot from './components/DynamicRoot';
+import { DefaultMainMenuItems } from './consts';
 
 // Statically integrated frontend plugins
 const { dynamicPluginsInfoPlugin, ...dynamicPluginsInfoPluginModule } =
@@ -13,22 +14,30 @@ const baseFrontendConfig = {
   data: {
     dynamicPlugins: {
       frontend: {
+        'default.main-menu-items': DefaultMainMenuItems,
         '@internal/plugin-dynamic-plugins-info': {
-          dynamicRoutes: [
-            { path: '/admin/plugins', importName: 'DynamicPluginsInfo' },
+          appIcons: [
+            { name: 'pluginsInfoIcon', importName: 'PluginsInfoIcon' },
+            { name: 'adminIcon', importName: 'AdminIcon' },
           ],
-          mountPoints: [
+          dynamicRoutes: [
             {
-              mountPoint: 'admin.page.plugins/cards',
+              path: '/plugins',
               importName: 'DynamicPluginsInfo',
-              config: {
-                layout: {
-                  gridColumn: '1 / -1',
-                  width: '100vw',
-                },
-              },
+              menuItem: { text: 'Plugins', icon: 'pluginsInfoIcon' },
             },
           ],
+          menuItems: {
+            admin: {
+              title: 'Administration',
+              icon: 'adminIcon',
+            },
+            plugins: {
+              parent: 'admin',
+              title: 'Plugins',
+              icon: 'pluginsInfoIcon',
+            },
+          },
         },
       },
     },
