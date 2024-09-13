@@ -1,7 +1,6 @@
 import { Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import { BackstageShowcasePO, CatalogImportPO } from '../pageObjects/page-obj';
-import { APIHelper } from '../../utils/APIHelper';
 import { GithubApi, PRStatus } from '../api/github';
 
 export class CatalogImport {
@@ -48,19 +47,17 @@ export class BackstageShowcase {
   }
 
   async getGithubOpenIssues() {
-    const rep = await APIHelper.getGithubPaginatedRequest(
-      githubAPIEndpoints.issues('open'),
-    );
+    const gitHubApi = new GithubApi();
+    const rep = gitHubApi.repository().issuesPaginated();
     return rep.filter((issue: any) => !issue.pull_request);
   }
 
   static async getGithubPRs(state: PRStatus, paginated = false) {
-    const url = githubAPIEndpoints.pull(state);
-    if (paginated) {
-      return APIHelper.getGithubPaginatedRequest(url);
-    }
-    const response = await new GithubApi().repository().getPullRequests(state);
-    return response.json();
+    const gitHubApi = new GithubApi();
+    const result = paginated
+      ? gitHubApi.repository().pullRequestsPaginated()
+      : gitHubApi.repository().pullRequests();
+    return await result;
   }
 
   async clickNextPage() {
@@ -97,7 +94,7 @@ export class BackstageShowcase {
   }
 
   async getWorkflowRuns() {
-    const response = await new GithubApi().repository().actions().runs().get();
+    const response = await new GithubApi().repository().actions().runs();
     const responseBody = await response.json();
     return responseBody.workflow_runs;
   }

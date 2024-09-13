@@ -18,7 +18,7 @@ export enum PRStatus {
 }
 
 export class GithubApi {
-  private static API_URL: string = 'https://api.github.com/';
+  private static API_URL = 'https://api.github.com/';
   private static API_VERSION = '2022-11-28';
   private static AUTH_HEADER = {
     Accept: 'application/vnd.github+json',
@@ -53,24 +53,58 @@ export class GithubApi {
     const path = 'repos/' + repo;
 
     return {
-      getPullRequests: async (state: PRStatus, perPage = 100) => {
+      pullRequests: async (state = PRStatus.open, perPage = 100) => {
         const payload = `/pulls?per_page=${perPage}&state=${state}`;
         const url = path + payload;
         const response = await this.myAxios.get(url);
         return response.data;
       },
-      getIssues: async (
-        state: PRStatus,
+      pullRequestsPaginated: async (
+        state = PRStatus.open,
         perPage = 100,
-        sort = 'updated',
-        paginated = -1,
+        pageNo = 1,
+        response: any[] = [],
       ) => {
-        let payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}`;
-        if (paginated > 0) payload += `&page=${paginated}`;
+        const payload = `/pulls?per_page=${perPage}&state=${state}&page=${pageNo}`;
+        const responseData = (await this.myAxios.get(payload)).data;
+        if (responseData.length === 0) {
+          return response;
+        }
+        response = [...response, ...responseData];
+        return await this.repository().pullRequestsPaginated(
+          state,
+          perPage,
+          pageNo + 1,
+          response,
+        );
+      },
+      issues: async (state: PRStatus, perPage = 100, sort = 'updated') => {
+        const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}`;
 
         const url = path + payload;
         const response = await this.myAxios.get(url);
         return response.data;
+      },
+      issuesPaginated: async (
+        state = PRStatus.open,
+        perPage = 100,
+        sort = 'updated',
+        pageNo = 1,
+        response: any[] = [],
+      ) => {
+        const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}&page=${pageNo}`;
+        const responseData = (await this.myAxios.get(payload)).data;
+        if (responseData.length === 0) {
+          return response;
+        }
+        response = [...response, ...responseData];
+        return await this.repository().issuesPaginated(
+          state,
+          perPage,
+          sort,
+          pageNo + 1,
+          response,
+        );
       },
       detelete: async () => {
         const response = await this.myAxios.delete(path);
@@ -79,15 +113,11 @@ export class GithubApi {
       actions() {
         const actionsPath = 'actions/';
         return {
-          runs: () => {
+          runs: async (perPage = 100) => {
             const runsPath = actionsPath + 'runs/';
-            return {
-              get: async (perPage = 100) => {
-                const url = runsPath + `?per_page=${perPage}`;
-                const response = await this.myAxios.get(url);
-                return response.data;
-              },
-            };
+            const url = runsPath + `?per_page=${perPage}`;
+            const response = await this.myAxios.get(url);
+            return response.data;
           },
         };
       },
