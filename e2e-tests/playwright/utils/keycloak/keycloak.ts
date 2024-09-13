@@ -1,9 +1,9 @@
-import fetch from 'node-fetch';
 import User from './user';
 import Group from './group';
 import { expect, Page } from '@playwright/test';
 import { UIhelper } from '../UIhelper';
 import { CatalogUsersPO } from '../../support/pageObjects/catalog/catalog-users-obj';
+import axios, { Axios } from 'axios';
 
 interface AuthResponse {
   access_token: string;
@@ -13,19 +13,22 @@ class Keycloak {
   private readonly realm: string;
   private readonly clientId: string;
   private readonly clientSecret: string;
+  private readonly myAxios: Axios;
 
   constructor() {
     this.baseURL = process.env.KEYCLOAK_BASE_URL;
     this.realm = process.env.KEYCLOAK_REALM;
     this.clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
     this.clientId = process.env.KEYCLOAK_CLIENT_ID;
+    this.myAxios = axios.create({
+      baseURL: this.baseURL,
+    });
   }
 
   async getAuthenticationToken(): Promise<string> {
-    const response = await fetch(
-      `${this.baseURL}/realms/${this.realm}/protocol/openid-connect/token`,
+    const response = await axios.post(
+      `/realms/${this.realm}/protocol/openid-connect/token`,
       {
-        method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           grant_type: 'client_credentials',
@@ -36,15 +39,14 @@ class Keycloak {
     );
 
     if (response.status !== 200) throw new Error('Failed to authenticate');
-    const data = (await response.json()) as AuthResponse;
+    const data = (await response.data.json()) as AuthResponse;
     return data.access_token;
   }
 
   async getUsers(authToken: string): Promise<User[]> {
-    const response = await fetch(
-      `${this.baseURL}/admin/realms/${this.realm}/users`,
+    const response = await this.myAxios.get(
+      `/admin/realms/${this.realm}/users`,
       {
-        method: 'GET',
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -52,14 +54,13 @@ class Keycloak {
     );
 
     if (response.status !== 200) throw new Error('Failed to get users');
-    return response.json() as Promise<User[]>;
+    return response.data.json() as Promise<User[]>;
   }
 
   async getGroupsOfUser(authToken: string, userId: string): Promise<Group[]> {
-    const response = await fetch(
-      `${this.baseURL}/admin/realms/${this.realm}/users/${userId}/groups`,
+    const response = await this.myAxios.get(
+      `/admin/realms/${this.realm}/users/${userId}/groups`,
       {
-        method: 'GET',
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -68,7 +69,7 @@ class Keycloak {
 
     if (response.status !== 200)
       throw new Error('Failed to get groups of user');
-    return response.json() as Promise<Group[]>;
+    return response.data.json() as Promise<Group[]>;
   }
 
   async checkUserDetails(
