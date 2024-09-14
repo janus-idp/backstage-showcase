@@ -46,15 +46,6 @@ export class Tekton {
     await expect(this.page.locator('#pipelinerun-logs')).toBeVisible();
   }
 
-  async goToBackstageJanusProject() {
-    await this.uiHelper.openSidebar('Catalog');
-    await this.uiHelper.clickByDataTestId('user-picker-all');
-    await this.uiHelper.clickLink('backstage-janus');
-    await this.uiHelper.clickTab('CI');
-    await this.page.waitForSelector('h2:text("Pipeline Runs")');
-    await this.uiHelper.verifyHeading('Pipeline Runs');
-  }
-
   async checkPipelineStages(texts: string[]) {
     for (const text of texts) {
       await this.uiHelper.verifyHeading(text);

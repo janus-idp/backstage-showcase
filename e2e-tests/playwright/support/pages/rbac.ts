@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { APIResponse, Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import {
   DeleteRolePO,
@@ -37,8 +37,14 @@ export class Roles {
     return [policies];
   }
 
+  //Depending on the version of the Backstage, it can be 'Permission Policies' or 'Accessible Plugins'
+  // Accepts either term
   static getRolesListColumnsText() {
-    return ['Name', 'Users and groups', 'Permission Policies', 'Actions'];
+    return [
+      /^Name$/,
+      /^Users and groups$/,
+      /Permission Policies|Accessible plugins/,
+    ];
   }
 
   static getUsersAndGroupsListColumnsText() {
@@ -194,8 +200,7 @@ export class Roles {
   }
 
   async deleteRole(name: string) {
-    await this.uiHelper.openSidebar('Administration');
-    await this.uiHelper.clickTab('RBAC');
+    await this.uiHelper.openSidebar('RBAC');
     const button = this.page.locator(RoleListPO.deleteRole(name));
     await button.waitFor({ state: 'visible' });
     await button.click();
@@ -207,5 +212,191 @@ export class Roles {
     await this.uiHelper.verifyText(`Role ${name} deleted successfully`);
     await this.page.locator(HomePagePO.searchBar).fill(name);
     await this.uiHelper.verifyHeading('All roles (0)');
+  }
+}
+
+interface PolicyComplete {
+  entityReference: string;
+  permission: string;
+  policy: string;
+  effect: string;
+}
+
+interface Policy {
+  permission: string;
+  policy: string;
+  effect: string;
+}
+
+interface Role {
+  memberReferences: string[];
+  name: string;
+}
+
+export class Response {
+  private authToken: string;
+  private simpleRequest;
+
+  constructor(authToken: string) {
+    this.authToken = authToken;
+    this.simpleRequest = {
+      headers: {
+        authorization: authToken,
+      },
+    };
+  }
+
+  getSimpleRequest() {
+    return this.simpleRequest;
+  }
+
+  getExpectedRoles() {
+    return `
+      [
+        {
+          "memberReferences": ["user:default/rhdh-qe"],
+          "name": "role:default/rbac_admin"
+        },
+        {
+          "memberReferences": ["user:xyz/user"],
+          "name": "role:xyz/team_a"
+        },
+        {
+          "memberReferences": ["group:janus-qe/rhdh-qe-2-team"],
+          "name": "role:default/test2-role"
+        }
+      ]
+    `;
+  }
+
+  getExpectedPolicies() {
+    return `
+      [
+        {
+          "entityReference": "role:default/rbac_admin",
+          "permission": "policy-entity",
+          "policy": "read",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/rbac_admin",
+          "permission": "policy-entity",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/rbac_admin",
+          "permission": "policy-entity",
+          "policy": "delete",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/rbac_admin",
+          "permission": "policy-entity",
+          "policy": "update",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/rbac_admin",
+          "permission": "catalog-entity",
+          "policy": "read",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/guests",
+          "permission": "catalog.entity.create",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/team_a",
+          "permission": "catalog-entity",
+          "policy": "read",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:xyz/team_a",
+          "permission": "catalog-entity",
+          "policy": "read",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:xyz/team_a",
+          "permission": "catalog.entity.create",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:xyz/team_a",
+          "permission": "catalog.location.create",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:xyz/team_a",
+          "permission": "catalog.location.read",
+          "policy": "read",
+          "effect": "allow"
+        }
+      ]
+    `;
+  }
+
+  editPolicyRequest(oldPolicy: Policy[], newPolicy: Policy[]) {
+    return {
+      data: {
+        oldPolicy,
+        newPolicy,
+      },
+      headers: {
+        authorization: this.authToken,
+      },
+    };
+  }
+
+  createOrDeletePolicyRequest(additions: PolicyComplete[]) {
+    return {
+      data: additions,
+      headers: {
+        authorization: this.authToken,
+      },
+    };
+  }
+
+  editRoleRequest(oldRole: Role, newRole: Role) {
+    return {
+      data: {
+        oldRole,
+        newRole,
+      },
+      headers: {
+        authorization: this.authToken,
+      },
+    };
+  }
+
+  createRoleRequest(role: Role) {
+    return {
+      data: role,
+      headers: {
+        authorization: this.authToken,
+        'Content-Type': 'application/json',
+      },
+    };
+  }
+
+  async removeMetadataFromResponse(response: APIResponse) {
+    const responseJson = await response.json();
+    const responseClean = responseJson.map((list: any) => {
+      delete list.metadata;
+      return list;
+    });
+    return responseClean;
+  }
+
+  async checkResponse(response: APIResponse, expected: string) {
+    const cleanResponse = await this.removeMetadataFromResponse(response);
+    const expectedJson = JSON.parse(expected);
+    expect(cleanResponse).toEqual(expectedJson);
   }
 }

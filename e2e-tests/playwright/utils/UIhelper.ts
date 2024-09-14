@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -20,6 +20,10 @@ export class UIhelper {
 
   async searchInputPlaceholder(searchText: string) {
     await this.page.fill('input[placeholder="Search"]', searchText);
+  }
+
+  async pressTab() {
+    await this.page.keyboard.press('Tab');
   }
 
   async waitForHeaderTitle() {
@@ -71,7 +75,7 @@ export class UIhelper {
   }
 
   async clickLink(linkText: string) {
-    await this.page.locator(`a`).filter({ hasText: linkText }).click();
+    await this.page.locator(`a`).filter({ hasText: linkText }).first().click();
   }
 
   async verifyLink(
@@ -113,6 +117,11 @@ export class UIhelper {
     }
   }
 
+  async isBtnVisibleByTitle(text: string): Promise<boolean> {
+    const locator = `BUTTON[title="${text}"]`;
+    return await this.isElementVisible(locator);
+  }
+
   async isBtnVisible(text: string): Promise<boolean> {
     const locator = `button:has-text("${text}")`;
     return await this.isElementVisible(locator);
@@ -123,12 +132,27 @@ export class UIhelper {
     return await this.isElementVisible(locator, timeout);
   }
 
+  async isLinkVisible(text: string): Promise<boolean> {
+    const locator = `a:has-text("${text}")`;
+    return await this.isElementVisible(locator);
+  }
+
   async waitForSideBarVisible() {
     await this.page.waitForSelector('nav a', { timeout: 120000 });
   }
 
   async openSidebar(navBarText: string) {
-    const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
+    const navLink = this.page
+      .locator(`nav a:has-text("${navBarText}")`)
+      .first();
+    await navLink.waitFor({ state: 'visible' });
+    await navLink.click();
+  }
+
+  async openSidebarButton(navBarButtonLabel: string) {
+    const navLink = this.page.locator(
+      `nav button[aria-label="${navBarButtonLabel}"]`,
+    );
     await navLink.waitFor({ state: 'visible' });
     await navLink.click();
   }
@@ -147,6 +171,10 @@ export class UIhelper {
     for (const rowText of rowTexts) {
       await this.verifyTextInLocator(`tr>td`, rowText, exact);
     }
+  }
+
+  async waitForTextDisappear(text: string) {
+    await this.page.waitForSelector(`text=${text}`, { state: 'detached' });
   }
 
   async verifyText(text: string | RegExp, exact: boolean = true) {
@@ -195,6 +223,7 @@ export class UIhelper {
       .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
+
     await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
@@ -207,6 +236,7 @@ export class UIhelper {
 
   async clickTab(tabName: string) {
     const tabLocator = this.page.locator(`text="${tabName}"`);
+    await tabLocator.waitFor({ state: 'visible' });
     await tabLocator.click();
   }
 
@@ -315,5 +345,19 @@ export class UIhelper {
         .evaluate(el => window.getComputedStyle(el).color);
       expect(color).toBe(expectedRgbColor);
     }
+  }
+  async verifyTableIsEmpty() {
+    const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
+    const rowCount = await this.page.locator(rowSelector).count();
+    expect(rowCount).toEqual(0);
+  }
+
+  async clickById(id: string) {
+    await this.page.click(`#${id}`);
+  }
+
+  async clickSpanByText(text: string) {
+    await this.verifyText(text);
+    await this.page.click(`span:has-text("${text}")`);
   }
 }

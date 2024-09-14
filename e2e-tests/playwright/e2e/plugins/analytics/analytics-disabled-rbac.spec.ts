@@ -11,10 +11,9 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();
-    await uiHelper.openSidebar('Administration');
-    await uiHelper.verifyHeading('Administration');
-    await uiHelper.verifyLink('Plugins');
-    await uiHelper.clickTab('Plugins');
+    await uiHelper.openSidebarButton('Administration');
+    await uiHelper.openSidebar('Plugins');
+    await uiHelper.verifyHeading('Plugins');
   });
 
   test('is disabled', async ({ page }) => {

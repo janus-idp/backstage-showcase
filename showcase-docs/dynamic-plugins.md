@@ -310,6 +310,21 @@ While the plugin's default configuration comes from the `dynamic-plugins.default
 
 Note: The plugin's default configuration typically references environment variables, and it is essential to ensure that these variables are set in the Helm chart values.
 
+### Consuming dynamic plugins from a container registry
+
+To install dynamic plugins from a container registry, you can utilize the `oci://` package specification. See [TDB](container build) for more information on how to build and push a container image to a container registry.
+
+```yaml
+global:
+  dynamic:
+    plugins:
+      - disabled: false
+        package: >-
+          oci://quay.io/tkral/simple-chat:v0.0.1!internal-backstage-plugin-simple-chat
+```
+
+For private registries, you can set the `REGISTRY_AUTH_FILE` environment variable to the path of the configuration file containing the authentication details for the registry. This file is typically located at `~/.config/containers/auth.json` or `~/.docker/config.json`.
+
 ### Example of external dynamic backend plugins
 
 If you wish to easily test the installation of dynamic backend plugins from an external NPM registry, you can utilize the example dynamic backend plugins outlined in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins), which have been published to NPMJS for demonstration purposes.
@@ -415,6 +430,7 @@ dynamicPlugins:
   frontend:
     <package_name>: # same as `scalprum.name` key in plugin's `package.json`
       dynamicRoutes: ...
+      menuItems: ...
       mountPoints: ...
       routeBindings: ...
       appIcons: ...
@@ -489,6 +505,61 @@ Each plugin can expose multiple routes and each route is required to define its 
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
 - `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
 - `config.props` - Optional. Additionally you can pass React props to the component.
+
+#### Menu items
+
+Order and parent-children relationship of plugin menu items which are in main sidebar navigation can be customized with menu items configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      menuItems: # optional, allows you to configure plugin menu items in the main sidebar navigation
+        <menu_item_name>: # unique name in the plugin menu items list
+          icon: fooIcon # optional, same as `menuItem.icon` in `dynamicRoutes`
+          title: Foo Plugin Page # optional, same as `menuItem.text` in `dynamicRoutes`
+          priority: 10 # optional, defines the order of menu items in the sidebar
+          parent: favorites # optional, defines parent-child relationships for nested menu items
+```
+
+Up to 3 levels of nested menu items are supported.
+
+- <menu_item_name> - A unique name in the main sidebar navigation. This can represent either a standalone menu item or a parent menu item. If it represents a plugin menu item, the name must match the corresponding path in `dynamicRoutes`. For example, if dynamicRoutes defines `path: /my-plugin`, the `menu_item_name` must be `my-plugin`.
+
+  - Handling Complex Paths:
+    - For simple paths like `path: /my-plugin`, the `menu_item_name` should be `my-plugin`.
+    - For more complex paths, such as multi-segment paths like `path: /metrics/users/info`, the `menu_item_name` should represent the full path in dot notation (e.g., `metrics.users.info`).
+    - Trailing and leading slashes in paths are ignored. For example:
+      - For `path: /docs`, the `menu_item_name` should be `docs`.
+      - For `path: /metrics/users`, the `menu_item_name` should be `metrics.users`.
+
+- `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](../packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
+- `title` - Optional. Specifies the display title of the menu item. This can also be omitted if it has already been defined in the `dynamicRoutes` configuration under `menuItem.text`.
+- `priority` - Optional. Defines the order in which menu items appear. The default priority is `0`, which places the item at the bottom of the list. A higher priority value will position the item higher in the sidebar.
+- `parent` - Optional. Defines the parent menu item to nest the current item under. If specified, the parent menu item must be defined somewhere else in the `menuItems` configuration of any enabled plugin.
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:
+      dynamicRoutes:
+        - path: /my-plugin
+          module: CustomModule
+          importName: FooPluginPage
+          menuItem:
+            icon: fooIcon
+            text: Foo Plugin Page
+      menuItems:
+        my-plugin: # matches `path` in `dynamicRoutes`
+          priority: 10 # controls order of plugins under the parent menu item
+          parent: favorites # nests this plugin under the `favorites` parent menu item
+        favorites: # configuration for the parent menu item
+          icon: favorite # icon from RHDH system icons
+          title: Favorites # title for the parent menu item
+          priority: 100 # controls the order of this top-level menu item
+```
 
 #### Bind to existing plugins
 
@@ -690,6 +761,34 @@ Each plugin can expose multiple API Factories and each factory is required to de
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 
+There are a set of [API factories](../packages/app/src/apis.ts) already initialized by the Developer Hub application shell. These API factories can be overridden by an API factory provided by a dynamic plugin by specifying the same API ref ID, for example a dynamic plugin could export the following `AnyApiFactory<{}>` to cater for some specific use case:
+
+```typescript
+export const customScmAuthApiFactory = createApiFactory({
+  api: scmAuthApiRef,
+  deps: { githubAuthApi: githubAuthApiRef },
+  factory: ({ githubAuthApi }) =>
+    ScmAuth.merge(
+      ScmAuth.forGithub(githubAuthApi, { host: 'github.someinstance.com' }),
+      ScmAuth.forGithub(githubAuthApi, {
+        host: 'github.someotherinstance.com',
+      }),
+    ),
+});
+```
+
+And the corresponding YAML configuration would look like:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:
+      apiFactories:
+        - importName: customScmAuthApiFactory
+```
+
+which would override the default ScmAuth API factory that DeveloperHub defaults to.
+
 ### Provide custom Scaffolder field extensions
 
 The Backstage scaffolder component supports specifying [custom form fields](https://backstage.io/docs/features/software-templates/writing-custom-field-extensions/#creating-a-field-extension) for the software template wizard, for example:
@@ -718,3 +817,50 @@ A plugin can specify multiple field extensions, in which case each field extensi
 
 - `importName` is an optional import name that should reference the value returned the scaffolder field extension API
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+
+### Add a custom Backstage theme or replace the provided theme
+
+The look and feel of a Backstage application is handled by Backstage theming. Out of the box Developer Hub provides a theme with a number of [configuration overrides](./customization.md) that allow for user customization. It's also possible to provide additional Backstage themes as well as replace the out of box Developer Hub themes from a dynamic plugin.
+
+A dynamic plugin would export a theme provider function with a signature of `({ children }: { children: ReactNode }): React.JSX.Element`, for example:
+
+```typescript
+import { lightTheme } from './lightTheme';
+import { darkTheme } from './darkTheme';
+import { UnifiedThemeProvider } from '@backstage/theme';
+
+export const lightThemeProvider = ({ children }: { children: ReactNode }) => (
+  <UnifiedThemeProvider theme={lightTheme} children={children} />
+);
+
+export const darkThemeProvider = ({ children }: { children: ReactNode }) => (
+  <UnifiedThemeProvider theme={darkTheme} children={children} />
+);
+```
+
+And then the theme can be declared via the `themes` configuration:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in a plugins `package.json`
+      themes:
+        - id: light # Using 'light' overrides the app-provided light theme
+          title: Light
+          variant: light
+          icon: someIconReference
+          importName: lightThemeProvider
+        - id: dark # Using 'dark' overrides the app-provided dark theme
+          title: Dark
+          variant: dark
+          icon: someIconReference
+          importName: darkThemeProvider
+```
+
+The required options mirror the [AppTheme](https://backstage.io/docs/reference/core-plugin-api.apptheme/) interface:
+
+- `id` A required ID value for the theme; use values of `light` or `dark` to replace the default provided themes.
+- `title` The theme name displayed to the user on the Settings page.
+- `variant` Whether the theme is `light` or `dark`, can only be one of these values.
+- `icon` a string reference to a system or [app icon](#extend-internal-library-of-available-icons)
+- `importName` name of the exported theme provider function, the function signature should match `({ children }: { children: ReactNode }): React.JSX.Element`

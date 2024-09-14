@@ -1,18 +1,21 @@
 {
   "name": "immobiliarelabs-backstage-plugin-gitlab-backend-dynamic",
-  "version": "6.5.1",
-  "main": "dist/index.cjs.js",
-  "types": "dist/index.d.ts",
+  "version": "6.6.0",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.27.7"
+    "supported-versions": "1.27.7",
+    "pluginId": "immobiliarelabs-gitlab",
+    "pluginPackages": [
+      "immobiliarelabs-backstage-plugin-gitlab",
+      "immobiliarelabs-backstage-plugin-gitlab-backend"
+    ]
   },
   "exports": {
     ".": {
@@ -51,10 +54,10 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.22.0",
-    "@backstage/backend-plugin-api": "^0.6.18",
+    "@backstage/backend-common": "^0.23.3",
+    "@backstage/backend-plugin-api": "^0.7.0",
     "@backstage/config": "^1.2.0",
-    "@backstage/integration": "^1.11.0"
+    "@backstage/integration": "^1.13.0"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

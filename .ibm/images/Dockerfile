@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.45.3-jammy
+FROM mcr.microsoft.com/playwright:v1.47.0-jammy
 
 ENV CI=1 \
   QT_X11_NO_MITSHM=1 \

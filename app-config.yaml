@@ -58,84 +58,84 @@ backend:
     connection: ':memory:'
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
-proxy:
-  endpoints:
-    # Plugin: Quay
-    '/quay/api':
-      target: https://quay.io/
-      headers:
-        X-Requested-With: 'XMLHttpRequest'
-        # Uncomment the following line to access a private Quay Repository using a token
-        # Authorization: 'Bearer <YOUR TOKEN>'
-      changeOrigin: true
-      secure: true
+# proxy:
+#   endpoints:
+#     # Plugin: Quay
+#     '/quay/api':
+#       target: https://quay.io/
+#       headers:
+#         X-Requested-With: 'XMLHttpRequest'
+#         # Uncomment the following line to access a private Quay Repository using a token
+#         # Authorization: 'Bearer <YOUR TOKEN>'
+#       changeOrigin: true
+#       secure: true
 
-    # Plugin: SonarQube
-    '/sonarqube':
-      # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
-      # target: https://sonarcloud.io/api
-      target: ${SONARQUBE_URL}/api
-      allowedMethods: ['GET']
-      auth: ${SONARQUBE_TOKEN}
+#     # Plugin: SonarQube
+#     '/sonarqube':
+#       # if not using sonarqube, assign SONARQUBE_URL to https://sonarcloud.io
+#       # target: https://sonarcloud.io/api
+#       target: ${SONARQUBE_URL}/api
+#       allowedMethods: ['GET']
+#       auth: ${SONARQUBE_TOKEN}
 
-    # Plugin: Jenkins
-    '/jenkins/api':
-      target: ${JENKINS_URL}
-      headers:
-        Authorization: ${JENKINS_TOKEN}
+#     # Plugin: Jenkins
+#     '/jenkins/api':
+#       target: ${JENKINS_URL}
+#       headers:
+#         Authorization: ${JENKINS_TOKEN}
 
-    # Plugin: Jira
-    '/jira/api':
-      target: ${JIRA_URL}
-      headers:
-        Authorization: ${JIRA_TOKEN}
-        Accept: 'application/json'
-        Content-Type: 'application/json'
-        X-Atlassian-Token: 'no-check'
-        User-Agent: ${JIRA_USER_AGENT}
+#     # Plugin: Jira
+#     '/jira/api':
+#       target: ${JIRA_URL}
+#       headers:
+#         Authorization: ${JIRA_TOKEN}
+#         Accept: 'application/json'
+#         Content-Type: 'application/json'
+#         X-Atlassian-Token: 'no-check'
+#         User-Agent: ${JIRA_USER_AGENT}
 
-    # Plugin: ACR
-    '/acr/api':
-      target: ${ACR_URL}
-      changeOrigin: true
-      headers:
-        # If you use Bearer Token for authorization, please replace the 'Basic' with 'Bearer' in the following line.
-        Authorization: 'Bearer ${ACR_AUTH_TOKEN}'
-      # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
-      secure: true
+#     # Plugin: ACR
+#     '/acr/api':
+#       target: ${ACR_URL}
+#       changeOrigin: true
+#       headers:
+#         # If you use Bearer Token for authorization, please replace the 'Basic' with 'Bearer' in the following line.
+#         Authorization: 'Bearer ${ACR_AUTH_TOKEN}'
+#       # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
+#       secure: true
 
-    # Plugin: Jfrog Artifactory
-    '/jfrog-artifactory/api':
-      target: ${ARTIFACTORY_URL}
-      headers:
-        Authorization: Bearer ${ARTIFACTORY_TOKEN}
-      # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
-      secure: ${ARTIFACTORY_SECURE}
+#     # Plugin: Jfrog Artifactory
+#     '/jfrog-artifactory/api':
+#       target: ${ARTIFACTORY_URL}
+#       headers:
+#         Authorization: Bearer ${ARTIFACTORY_TOKEN}
+#       # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
+#       secure: ${ARTIFACTORY_SECURE}
 
-    # Plugin: PagerDuty
-    '/pagerduty':
-      target: https://api.pagerduty.com
-      headers:
-        Authorization: Token token=${PAGERDUTY_TOKEN}
+#     # Plugin: PagerDuty
+#     '/pagerduty':
+#       target: https://api.pagerduty.com
+#       headers:
+#         Authorization: Token token=${PAGERDUTY_TOKEN}
 
-    # Plugin: Dynatrace
-    '/dynatrace':
-      target: ${DYNATRACE_API_URL}
-      headers:
-        # This API access token requires entities.read and problems.read permissions
-        # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
-        Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
+#     # Plugin: Dynatrace
+#     '/dynatrace':
+#       target: ${DYNATRACE_API_URL}
+#       headers:
+#         # This API access token requires entities.read and problems.read permissions
+#         # For more info on how to generate this token: https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication
+#         Authorization: 'Api-Token ${DYNATRACE_ACCESS_TOKEN}'
 
-    # Plugin: Nexus Repository Manager
-    '/nexus-repository-manager':
-      target: ${NEXUS_REPOSITORY_MANAGER_URL}
-      headers:
-        X-Requested-With: 'XMLHttpRequest'
-        # Uncomment the following line to access a private Nexus Repository Manager using a token
-        # Authorization: 'Bearer <NEXUS_REPOSITORY_MANAGER_TOKEN>'
-      changeOrigin: true
-      # Change to "false" in case of using self hosted Nexus Repository Manager instance with a self-signed certificate
-      secure: ${NEXUS_REPOSITORY_MANAGER_SECURE}
+#     # Plugin: Nexus Repository Manager
+#     '/nexus-repository-manager':
+#       target: ${NEXUS_REPOSITORY_MANAGER_URL}
+#       headers:
+#         X-Requested-With: 'XMLHttpRequest'
+#         # Uncomment the following line to access a private Nexus Repository Manager using a token
+#         # Authorization: 'Bearer <NEXUS_REPOSITORY_MANAGER_TOKEN>'
+#       changeOrigin: true
+#       # Change to "false" in case of using self hosted Nexus Repository Manager instance with a self-signed certificate
+#       secure: ${NEXUS_REPOSITORY_MANAGER_SECURE}
 
 scaffolder:
   {}

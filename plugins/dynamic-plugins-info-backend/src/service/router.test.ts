@@ -17,6 +17,8 @@ describe('createRouter', () => {
       pluginProvider: pluginManager,
       discovery: mockServices.discovery(),
       httpAuth: mockServices.httpAuth(),
+      config: mockServices.rootConfig(),
+      logger: mockServices.logger.mock(),
     });
 
     app = express();

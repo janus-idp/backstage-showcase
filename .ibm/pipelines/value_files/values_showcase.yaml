@@ -12,6 +12,8 @@ global:
     # an optional `pluginConfig` with plugin-specific backstage configuration, and an optional `disabled` flag to disable/enable a plugin
     # listed in `includes` files. It also includes an `integrity` field that is used to verify the plugin package [integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description).
     plugins:
+        - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+          disabled: false
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
           disabled: false
           pluginConfig:
@@ -87,6 +89,11 @@ global:
                     owner: janus-authors
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
           disabled: false
+        # Enable bulk import plugins.
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+          disabled: false
         # Enable tech-radar plugin.
         - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
           disabled: false
@@ -96,9 +103,13 @@ global:
           disabled: true
         - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
           disabled: false
+        - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
+          disabled: false
         - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
           disabled: false
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
           disabled: false
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
@@ -200,19 +211,12 @@ upstream:
       # The initContainer below will install dynamic plugins in this volume mount.
       - name: dynamic-plugins-root
         mountPath: /opt/app-root/src/dynamic-plugins-root
-      - name: rbac-policy
-        mountPath: /opt/app-root/src/rbac
     extraVolumes:
       # -- Ephemeral volume that will contain the dynamic plugins installed by the initContainer below at start.
       # To have more control on underlying storage, the [emptyDir](https://docs.openshift.com/container-platform/4.13/storage/understanding-ephemeral-storage.html)
       # could be changed to a [generic ephemeral volume](https://docs.openshift.com/container-platform/4.13/storage/generic-ephemeral-vols.html#generic-ephemeral-vols-procedure_generic-ephemeral-volumes).
       - name: dynamic-plugins-root
         emptyDir: {}
-      - name: rbac-policy
-        configMap:
-          defaultMode: 420
-          name: rbac-policy
-
       # Volume that will expose the `dynamic-plugins.yaml` file from the `dynamic-plugins` config map.
       # The `dynamic-plugins` config map is created by the helm chart from the content of the `global.dynamic` field.
       - name: dynamic-plugins
@@ -263,6 +267,7 @@ upstream:
         filename: app-config-rhdh.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
+      - redis-secret
   postgresql:
     enabled: true
     postgresqlDataDir: /var/lib/pgsql/data/userdata

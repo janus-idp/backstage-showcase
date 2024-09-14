@@ -123,6 +123,8 @@ export const DynamicPluginsTable = () => {
       setCount(totalCount);
       return { data: data.slice(start, end), page, totalCount };
     } catch (loadingError) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to load plugins', loadingError);
       setError(loadingError as Error);
       return { data: [], totalCount: 0, page: 0 };
     }

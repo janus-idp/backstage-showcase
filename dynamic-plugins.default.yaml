@@ -1,6 +1,8 @@
 plugins:
   # Group: Github
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+    # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
     disabled: true
     pluginConfig:
@@ -121,6 +123,8 @@ plugins:
 
   # Group: Gitlab
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
+    # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
+    disabled: true
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
     disabled: true
     pluginConfig:
@@ -301,12 +305,12 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-argocd
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-argocd:
+          backstage-community.plugin-redhat-argocd:
             mountPoints:
               - mountPoint: entity.page.overview/cards
                 importName: ArgocdDeploymentSummary
@@ -329,6 +333,8 @@ plugins:
 
   # Group: Azure Devops
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
+    # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
@@ -424,7 +430,7 @@ plugins:
             default:
               name: "${OCM_HUB_NAME}"
               url: "${OCM_HUB_URL}"
-              serviceAccountToken: "${moc_infra_token}"
+              serviceAccountToken: "${OCM_SA_TOKEN}"
               owner: janus-authors
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
     disabled: true
@@ -469,8 +475,30 @@ plugins:
                     - isKind: resource
                     - isType: kubernetes-cluster
 
+  # Group: Bulk import
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          janus-idp.backstage-plugin-bulk-import:
+            appIcons:
+              - name: bulkImportIcon
+                module: BulkImportPlugin
+                importName: BulkImportIcon
+            dynamicRoutes:
+              - path: /bulk-import/repositories
+                importName: BulkImportPage
+                module: BulkImportPlugin
+                menuItem:
+                  icon: bulkImportIcon
+                  text: Bulk import
+
   # Techdocs
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
+    disabled: false
     pluginConfig:
       # Reference documentation http://backstage.io/docs/features/techdocs/configuration
       # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -483,6 +511,7 @@ plugins:
         publisher:
           type: local
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
@@ -525,17 +554,50 @@ plugins:
                     name: Documentation
                     icon: docs
 
+  # PagerDuty
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          pagerduty.backstage-plugin:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityPagerDutyCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      md: "span 6"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isPluginApplicableToEntity
+  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin-backend-dynamic
+    disabled: true
+    pluginConfig:
+      pagerDuty:
+        apiBaseUrl: ${PAGERDUTY_API_BASE}
+        oauth:
+          clientId: ${PAGERDUTY_CLIENT_ID}
+          clientSecret: ${PAGERDUTY_CLIENT_SECRET}
+          subDomain: ${PAGERDUTY_SUBDOMAIN}
+
   # Standalone plugins
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gerrit-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
+    disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
+    disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
     disabled: true
@@ -543,20 +605,21 @@ plugins:
       dynamicPlugins:
         frontend:
           janus-idp.backstage-plugin-rbac:
-            mountPoints:
-              - mountPoint: admin.page.rbac/cards
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
                 module: RbacPlugin
-                importName: RbacPage
-                config:
-                  layout:
-                    gridColumn: "1 / -1"
-                    width: 100vw
-                  props:
-                    useHeader: false
             dynamicRoutes:
-              - path: /admin/rbac
+              - path: /rbac
                 module: RbacPlugin
                 importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: admin
+                icon: rbacIcon
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
     disabled: true
@@ -582,7 +645,7 @@ plugins:
               baseUrl: '${AAP_BASE_URL}'
               authorization: "${AAP_AUTH_TOKEN}"
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-3scale-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -613,6 +676,7 @@ plugins:
                   minutes: 50
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic
     disabled: true
     pluginConfig:
@@ -631,6 +695,7 @@ plugins:
                   minutes: 3
 
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic
+    disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic
     disabled: true
     pluginConfig:
@@ -776,24 +841,6 @@ plugins:
                     anyOf:
                     - isJfrogArtifactoryAvailable
 
-  - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
-    disabled: true
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          pagerduty.backstage-plugin:
-            mountPoints:
-              - mountPoint: entity.page.overview/cards
-                importName: EntityPagerDutyCard
-                config:
-                  layout:
-                    gridColumnEnd:
-                      md: "span 6"
-                      xs: "span 12"
-                  if:
-                    allOf:
-                      - isPluginApplicableToEntity
-
   - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
     disabled: true
     pluginConfig:
@@ -864,8 +911,8 @@ plugins:
             maskIP: true # prevents IP addresses from being sent if true
             testMode: ${SEGMENT_TEST_MODE} # prevents data from being sent if true
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
-    disabled: false
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
+    disabled: true
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-msgraph-dynamic
     disabled: true
@@ -873,3 +920,20 @@ plugins:
       catalog:
         providers:
           microsoftGraphOrg: {}
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
+    disabled: true
+
+  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-ldap-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          ldapOrg: {}
+
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          pingIdentityOrg: {}

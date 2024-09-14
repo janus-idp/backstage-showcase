@@ -25,6 +25,10 @@ data:
       auth:
         keys:
           - secret: temp
+      cache:
+        store: redis
+        connection: redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:6379
+        useRedisSets: true
     integrations:
       # Plugin: GitHub
       github:
@@ -142,8 +146,3 @@ data:
               token: temp
     permission:
       enabled: false
-      rbac:
-        policies-csv-file: './rbac/rbac-policy.csv'
-        admin:
-          users:
-            - name: user:default/rhdh-qe
