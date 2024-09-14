@@ -1,5 +1,23 @@
 import { MenuItem } from './extractDynamicConfig';
-import { compareMenuItems } from './extractDynamicConfigFrontend';
+import {
+  getNameFromPath,
+  compareMenuItems,
+} from './extractDynamicConfigFrontend';
+
+describe('getNameFromPath', () => {
+  test.each([
+    ['/', ''],
+    ['/item1/page1', 'item1.page1'],
+    [' /item2/page1/ ', 'item2.page1'],
+    ['/item3/page1/subpage1', 'item3.page1.subpage1'],
+    ['/item4/page1-info', 'item4.page1-info'],
+    ['catalog', 'catalog'],
+    ['/docs', 'docs'],
+  ])('should return %s when input is %s', (input, expected) => {
+    const result = getNameFromPath(input);
+    expect(result).toBe(expected);
+  });
+});
 
 describe('compareMenuItems', () => {
   it('should correctly order items based on priority', () => {
