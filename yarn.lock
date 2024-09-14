@@ -11470,10 +11470,10 @@
     "@scalprum/core" "^0.7.0"
     lodash "^4.17.0"
 
-"@scalprum/react-test-utils@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@scalprum/react-test-utils/-/react-test-utils-0.2.0.tgz#97481705517398bb928297db1b229b1249b62f0a"
-  integrity sha512-JAYDUCbPpUC+y1j1f9Yk7su0EqQZnGcu2uLEBOb8HxZCkLIcRT+Xse9i42g4tfWk87jSGwiNKoCcIvAZGmc3pA==
+"@scalprum/react-test-utils@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-test-utils/-/react-test-utils-0.2.2.tgz#aa3cb5126611212b57e1799f26a7934fe45dba21"
+  integrity sha512-Z0M5C23a0XyLMIPJywh1yelleYb1sn5sygDeGu/PTHocCmEwxrUx3LHu4YURyMM5d5/lHdkSdp7AN6Om1pWtIw==
   dependencies:
     "@openshift/dynamic-plugin-sdk" "^5.0.1"
     "@scalprum/core" "^0.7.0"
