@@ -8,7 +8,7 @@ import {
 } from '../support/pages/CatalogImport';
 import { templates } from '../support/testData/templates';
 import GithubApi from '../support/api/github';
-import { PRStatus } from '../support/api/github_structures';
+import { ItemStatus } from '../support/api/github-structures';
 
 let page: Page;
 test.describe.serial('GitHub Happy path', () => {
@@ -94,7 +94,7 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify that the Issues tab renders all the open github issues in the repository', async () => {
     await uiHelper.clickTab('Issues');
-    const openIssues = await new GithubApi().getIssuesFromRepo(PRStatus.open);
+    const openIssues = await new GithubApi().getIssuesFromRepo(ItemStatus.open);
     const issuesCountText = `All repositories (${openIssues.length} Issues)*`;
     await expect(page.locator(`text=${issuesCountText}`)).toBeVisible();
 
@@ -106,7 +106,7 @@ test.describe.serial('GitHub Happy path', () => {
   test('Verify that the Pull/Merge Requests tab renders the 5 most recently updated Open Pull Requests', async () => {
     await uiHelper.clickTab('Pull/Merge Requests');
     const openPRs = await new GithubApi().getPullRequestsFromRepo(
-      PRStatus.closed,
+      ItemStatus.open,
     );
     await backstageShowcase.verifyPRRows(openPRs, 0, 5);
   });
@@ -114,7 +114,7 @@ test.describe.serial('GitHub Happy path', () => {
   test('Click on the CLOSED filter and verify that the 5 most recently updated Closed PRs are rendered (same with ALL)', async () => {
     await uiHelper.clickButton('CLOSED', { force: true });
     const closedPRs = await new GithubApi().getPullRequestsFromRepo(
-      PRStatus.closed,
+      ItemStatus.closed,
     );
     await common.waitForLoad();
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
@@ -123,7 +123,10 @@ test.describe.serial('GitHub Happy path', () => {
   //TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
   test.skip('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
     console.log('Fetching all PRs from GitHub');
-    const allPRs = await new GithubApi().getPullRequestsFromRepo(PRStatus.all);
+    //TODO: Nil, this requires pagination
+    const allPRs = await new GithubApi().getPullRequestsFromRepo(
+      ItemStatus.all,
+    );
 
     console.log('Clicking on ALL button');
     await uiHelper.clickButton('ALL', { force: true });
@@ -151,7 +154,7 @@ test.describe.serial('GitHub Happy path', () => {
     await common.clickOnGHloginPopup();
     await uiHelper.clickTab('Pull/Merge Requests');
     await uiHelper.clickButton('ALL', { force: false });
-    const allPRs = new GithubApi().getPullRequestsFromRepo();
+    const allPRs = new GithubApi().getPullRequestsFromRepo(ItemStatus.all);
     await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
     await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
     await backstageShowcase.verifyPRRowsPerPage(20, allPRs);

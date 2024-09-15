@@ -8,7 +8,7 @@ export class getOrganizationResponse {
   }
 }
 
-export enum PRStatus {
+export enum ItemStatus {
   open = 'open',
   closed = 'closed',
   all = 'all',

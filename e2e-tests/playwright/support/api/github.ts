@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
-import { getOrganizationResponse, PRStatus } from './github_structures';
+import { getOrganizationResponse, ItemStatus } from './github-structures';
 import { JANUS_ORG, SHOWCASE_REPO } from '../../utils/constants';
 
 export default class GithubApi {
-  private static API_URL = 'https://api.github.com/';
+  private static API_URL = 'https://api.github.com';
   private static API_VERSION = '2022-11-28';
   private static AUTH_HEADER = {
     Accept: 'application/vnd.github+json',
@@ -24,16 +24,20 @@ export default class GithubApi {
   }
 
   public async getPullRequestsFromRepo(
-    prStatus: PRStatus,
+    prStatus: ItemStatus,
     repo = SHOWCASE_REPO,
+    itemsPerPage = 100,
   ) {
-    const req = await this._repository(repo).pullRequests();
+    const req = await this._repository(repo).pullRequests(
+      prStatus,
+      itemsPerPage,
+    );
     return req.data;
   }
 
   public async getIssuesFromRepo(repo = SHOWCASE_REPO) {
     const req = await this._repository(repo).issues();
-    return req.data;
+    return req.data.filter((issue: any) => !issue.pull_request);
   }
 
   public async deleteRepo(repo = SHOWCASE_REPO) {
@@ -52,7 +56,7 @@ export default class GithubApi {
   });
 
   private _organization(organization: string) {
-    const url = 'orgs/';
+    const url = '/orgs/';
 
     return {
       get: async (): Promise<AxiosResponse> => {
@@ -70,11 +74,11 @@ export default class GithubApi {
   }
 
   private _repository(repo: string) {
-    const path = 'repos/' + repo;
+    const path = '/repos/' + repo;
 
     return {
       pullRequests: async (
-        state: PRStatus,
+        state: ItemStatus,
         perPage: number,
       ): Promise<AxiosResponse> => {
         const payload = `/pulls?per_page=${perPage}&state=${state}`;
@@ -82,7 +86,7 @@ export default class GithubApi {
       },
 
       issues: async (
-        state: PRStatus = PRStatus.open,
+        state: ItemStatus = ItemStatus.open,
         perPage = 100,
         sort = 'updated',
       ) => {
@@ -96,10 +100,10 @@ export default class GithubApi {
         return response.data;
       },
       actions() {
-        const actionsPath = 'actions/';
+        const actionsPath = '/actions/';
         return {
           runs: async (perPage = 100) => {
-            const runsPath = actionsPath + 'runs/';
+            const runsPath = actionsPath + 'runs';
             const url = runsPath + `?per_page=${perPage}`;
             const response = await this.myAxios.get(url);
             return response.data;
