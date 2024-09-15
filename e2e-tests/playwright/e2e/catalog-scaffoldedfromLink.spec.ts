@@ -107,9 +107,9 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
   });
 
   test.afterAll(async () => {
-    await new GithubApi()
-      .repository(`${reactAppDetails.repoOwner}/${reactAppDetails.repo}`)
-      .detelete();
+    await new GithubApi().deleteRepo(
+      `${reactAppDetails.repoOwner}/${reactAppDetails.repo}`,
+    );
     await page.close();
   });
 });

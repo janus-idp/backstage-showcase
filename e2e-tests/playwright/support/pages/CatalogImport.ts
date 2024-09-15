@@ -85,7 +85,7 @@ export class BackstageShowcase {
   }
 
   async getWorkflowRuns() {
-    const response = await new GithubApi().repository().actions().runs();
+    const response = await new GithubApi().getRunsFromAction();
     const responseBody = await response.json();
     return responseBody.workflow_runs;
   }
