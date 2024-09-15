@@ -105,17 +105,17 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify that the Pull/Merge Requests tab renders the 5 most recently updated Open Pull Requests', async () => {
     await uiHelper.clickTab('Pull/Merge Requests');
-    const openPRs = await new GithubApi().getPullRequestsFromRepo(
-      ItemStatus.open,
-    );
+    const openPRs = (
+      await new GithubApi().getPullRequestsFromRepo(ItemStatus.open)
+    ).data;
     await backstageShowcase.verifyPRRows(openPRs, 0, 5);
   });
 
   test('Click on the CLOSED filter and verify that the 5 most recently updated Closed PRs are rendered (same with ALL)', async () => {
     await uiHelper.clickButton('CLOSED', { force: true });
-    const closedPRs = await new GithubApi().getPullRequestsFromRepo(
-      ItemStatus.closed,
-    );
+    const closedPRs = (
+      await new GithubApi().getPullRequestsFromRepo(ItemStatus.closed)
+    ).data;
     await common.waitForLoad();
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
@@ -123,10 +123,9 @@ test.describe.serial('GitHub Happy path', () => {
   //TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
   test.skip('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
     console.log('Fetching all PRs from GitHub');
-    //TODO: Nil, this requires pagination
-    const allPRs = await new GithubApi().getPullRequestsFromRepo(
-      ItemStatus.all,
-    );
+    const allPRs = (
+      await new GithubApi().getPullRequestsFromRepo(ItemStatus.all)
+    ).data;
 
     console.log('Clicking on ALL button');
     await uiHelper.clickButton('ALL', { force: true });

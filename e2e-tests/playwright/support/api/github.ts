@@ -28,16 +28,16 @@ export default class GithubApi {
     repo = SHOWCASE_REPO,
     itemsPerPage = 100,
   ) {
-    const req = await this._repository(repo).pullRequests(
-      prStatus,
-      itemsPerPage,
-    );
-    return req.data;
+    return this._repository(repo).pullRequests(prStatus, itemsPerPage).get();
   }
 
   public async getIssuesFromRepo(repo = SHOWCASE_REPO) {
-    const req = await this._repository(repo).issues();
-    return req.data.filter((issue: any) => !issue.pull_request);
+    const req = await this._repository(repo).issues().get();
+    return req.data;
+  }
+
+  public async getIssuesFromRepoPaginated(repo = SHOWCASE_REPO) {
+    return this._repository(repo).issues().getPaginated();
   }
 
   public async deleteRepo(repo = SHOWCASE_REPO) {
@@ -54,6 +54,24 @@ export default class GithubApi {
     baseURL: GithubApi.API_URL,
     headers: GithubApi.AUTH_HEADER,
   });
+
+  private async _paginate(url: string, page = 1, response: any[] = []) {
+    const res = await this.myAxios.get(url + `&page=${page}`);
+    const body = res.data;
+
+    if (!Array.isArray(body)) {
+      throw new Error(
+        `Expected array but got ${typeof body}: ${JSON.stringify(body)}`,
+      );
+    }
+
+    if (body.length === 0) {
+      return response;
+    }
+
+    response = [...response, ...body];
+    this._paginate(url, page + 1, response);
+  }
 
   private _organization(organization: string) {
     const url = '/orgs/';
@@ -77,36 +95,44 @@ export default class GithubApi {
     const path = '/repos/' + repo;
 
     return {
-      pullRequests: async (
-        state: ItemStatus,
-        perPage: number,
-      ): Promise<AxiosResponse> => {
+      pullRequests: (state: ItemStatus, perPage: number) => {
         const payload = `/pulls?per_page=${perPage}&state=${state}`;
-        return this.myAxios.get(path + payload);
+        return {
+          get: () => {
+            return this.myAxios.get(path + payload);
+          },
+          getPaginated: async (): Promise<any[]> => {
+            return this._paginate(path + payload);
+          },
+        };
       },
 
-      issues: async (
+      issues: (
         state: ItemStatus = ItemStatus.open,
         perPage = 100,
         sort = 'updated',
       ) => {
         const payload = `/issues?per_page=${perPage}&sort=${sort}&state=${state}`;
-        const url = path + payload;
-        const myResponse = await this.myAxios.get(url);
-        return myResponse.data;
+        return {
+          get: async (): Promise<AxiosResponse> => {
+            const url = path + payload;
+            return await this.myAxios.get(url);
+          },
+          getPaginated: (): Promise<any[]> => {
+            return this._paginate(path + payload);
+          },
+        };
       },
-      detelete: async () => {
-        const response = await this.myAxios.delete(path);
-        return response.data;
+      detelete: async (): Promise<AxiosResponse> => {
+        return await this.myAxios.delete(path);
       },
-      actions() {
+      actions: () => {
         const actionsPath = '/actions/';
         return {
-          runs: async (perPage = 100) => {
+          runs: async (perPage = 100): Promise<AxiosResponse> => {
             const runsPath = actionsPath + 'runs';
             const url = runsPath + `?per_page=${perPage}`;
-            const response = await this.myAxios.get(url);
-            return response.data;
+            return await this.myAxios.get(url);
           },
         };
       },
