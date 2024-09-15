@@ -39,7 +39,7 @@ class Keycloak {
     );
 
     if (response.status !== 200) throw new Error('Failed to authenticate');
-    const data = (await response.data.json()) as AuthResponse;
+    const data = (await response.data) as AuthResponse;
     return data.access_token;
   }
 
@@ -54,7 +54,7 @@ class Keycloak {
     );
 
     if (response.status !== 200) throw new Error('Failed to get users');
-    return response.data.json() as Promise<User[]>;
+    return response.data as Promise<User[]>;
   }
 
   async getGroupsOfUser(authToken: string, userId: string): Promise<Group[]> {
@@ -69,7 +69,7 @@ class Keycloak {
 
     if (response.status !== 200)
       throw new Error('Failed to get groups of user');
-    return response.data.json() as Promise<Group[]>;
+    return response.data as Promise<Group[]>;
   }
 
   async checkUserDetails(
