@@ -41,7 +41,7 @@ export default class GithubApi {
         const organizationResponse = await new GithubApi()
           ._organization(organization)
           .get();
-        return this.myAxios.get(organizationResponse['repos_url']);
+        return this.myAxios.get(organizationResponse.data['repos_url']);
       },
     };
   }
