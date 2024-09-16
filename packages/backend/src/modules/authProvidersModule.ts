@@ -59,7 +59,7 @@ async function signInWithCatalogUserOptional(
       false;
     if (!dangerouslyAllowSignInWithoutUserInCatalog) {
       throw new Error(
-        `Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.`,
+        `Sign in failed: User not found in the RHDH software catalog. Verify that users/groups are synced to the software catalog via the appropriate entity provider. For non-production environments, manually provision the user or disable the user provisioning requirement. Refer to the RHDH Authentication documentation for further details.`,
       );
     }
     let entityRef: string = name === 'string' ? name : '';
