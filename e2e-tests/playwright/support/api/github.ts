@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
 import { getOrganizationResponse } from './github-structures';
 import { JANUS_ORG } from '../../utils/constants';
+import { APIResponse, request } from '@playwright/test';
 
 export default class GithubApi {
   private static API_URL = 'https://api.github.com';
@@ -15,33 +15,35 @@ export default class GithubApi {
     org = JANUS_ORG,
   ): Promise<getOrganizationResponse> {
     const req = await this._organization(org).get();
-    return new getOrganizationResponse(req.data);
+    return new getOrganizationResponse(req.json());
   }
 
   public async getReposFromOrg(org = JANUS_ORG) {
     const req = await this._organization(org).repos();
-    return req.data;
+    return req.json();
   }
 
-  private myAxios = axios.create({
+  private _myContext = request.newContext({
     baseURL: GithubApi.API_URL,
-    headers: GithubApi.AUTH_HEADER,
+    extraHTTPHeaders: GithubApi.AUTH_HEADER,
   });
 
   private _organization(organization: string) {
     const url = '/orgs/';
 
     return {
-      get: async (): Promise<AxiosResponse> => {
+      get: async (): Promise<APIResponse> => {
         const path: string = url + organization;
-        return this.myAxios.get(path);
+        const context = await this._myContext;
+        return context.get(path);
       },
 
-      repos: async (): Promise<AxiosResponse> => {
+      repos: async (): Promise<APIResponse> => {
+        const context = await this._myContext;
         const organizationResponse = await new GithubApi()
           ._organization(organization)
           .get();
-        return this.myAxios.get(organizationResponse.data['repos_url']);
+        return context.get((await organizationResponse.json()).repos_url);
       },
     };
   }

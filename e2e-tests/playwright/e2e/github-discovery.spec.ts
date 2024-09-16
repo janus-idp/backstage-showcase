@@ -21,7 +21,6 @@ test.describe('Github discovery UI tests', () => {
     const organizationRepos = await new GithubApi().getReposFromOrg(testOrg);
     const reposNames: string[] = organizationRepos.map(e => e['name']);
     // some repos may not be Components, so let's check
-    let fail = 0;
     let pass = 0;
 
     for (let i = 0; i != reposNames.length; i++) {
@@ -35,13 +34,9 @@ test.describe('Github discovery UI tests', () => {
         await component.validateGithubLink(`${testOrg}/${repo}`);
         await page.goBack();
         pass++;
-      } else {
-        fail++;
       }
     }
 
-    console.log('Valid and Listed components: ' + pass);
-    console.log('Ignored components: ' + fail);
     //At least 1/5 are valid and listed components
     expect(pass).toBeGreaterThanOrEqual(organizationRepos.length / 5);
   });
