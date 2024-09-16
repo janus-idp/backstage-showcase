@@ -22,20 +22,15 @@ test.describe('Test timestamp column on Catalog', () => {
 
     await common.loginAsGithubUser();
   });
-  test('Register an existing component', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.selectMuiBox('Kind', 'Component');
+  test('Register an existing component and verify `Created At` column and value in the Catalog Page', async () => {
     await uiHelper.clickButton('Create');
     await uiHelper.clickButton('Register Existing Component');
     await catalogImport.registerExistingComponent(component);
-  });
-
-  test('Verify `Created At` column and value in the Catalog Page', async () => {
     await uiHelper.openSidebar('Catalog');
-    await uiHelper.verifyHeading('My Org Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
+    await uiHelper.searchInputPlaceholder('timestamp-test');
     await uiHelper.verifyColumnHeading(['Created At'], true);
-    await uiHelper.verifyRowInTableByUniqueText('timestamp-test', [
+    await uiHelper.verifyRowInTableByUniqueText('timestamp-test-created', [
       /^\d{1,2}\/\d{1,2}\/\d{1,4}, \d:\d{1,2}:\d{1,2} (AM|PM)$/g,
     ]);
   });
