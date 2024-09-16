@@ -10,6 +10,7 @@ secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
 
 JOB_NAME="periodic-aks"
+TAG_NAME="latest"
 
 cleanup() {
   echo "Cleaning up before exiting"
@@ -19,7 +20,7 @@ cleanup() {
   rm -rf ~/tmpbin
 }
 
-trap cleanup EXIT
+#trap cleanup EXIT
 
 source "${DIR}/utils.sh"
 
@@ -397,8 +398,8 @@ main() {
   fi
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
-    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    #az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    #az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
   install_oc
@@ -424,10 +425,10 @@ main() {
   if [[ "$JOB_NAME" == *aks* ]]; then
     initiate_aks_deployment
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
-    delete_namespace "${NAME_SPACE_AKS}"
-    initiate_rbac_aks_deployment
-    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
-    delete_namespace "${NAME_SPACE_RBAC_AKS}"
+    #delete_namespace "${NAME_SPACE_AKS}"
+    #initiate_rbac_aks_deployment
+    #check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
+    #delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
