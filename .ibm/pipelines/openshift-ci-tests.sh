@@ -33,6 +33,9 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
+    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
   fi
 }
 
@@ -175,11 +178,11 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/cluster_role/cluster-role-ocm.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml" --namespace="${project}"
 
-  sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
-  sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  sed -i "s|K8S_CLUSTER_API_SERVER_URL:.*|K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  sed -i "s|K8S_CLUSTER_NAME:.*|K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
-  sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
+  sed -i "s|OCM_CLUSTER_TOKEN: .*|OCM_CLUSTER_TOKEN: ${token}|" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   if [[ "${project}" == *rbac* ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
@@ -354,7 +357,7 @@ az_aks_stop() {
 az_aks_approuting_enable() {
   local name=$1
   local resource_group=$2
-  local output=$(az aks approuting enable --name $name --resource-group $resource_group 2>&1)
+  local output=$(az aks approuting enable --name $name --resource-group $resource_group 2>&1 | sed 's/^ERROR: //')
   exit_status=$?
 
   if [ $exit_status -ne 0 ]; then

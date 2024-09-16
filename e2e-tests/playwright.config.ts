@@ -8,6 +8,14 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const useCommonDeviceAndViewportConfig = {
+  use: {
+    ...devices['Desktop Chrome'],
+    viewport: { width: 1920, height: 1080 },
+  },
+};
+
 export default defineConfig({
   timeout: 80000,
   testDir: './playwright',
@@ -40,10 +48,7 @@ export default defineConfig({
   projects: [
     {
       name: 'showcase',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testIgnore: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
@@ -53,10 +58,7 @@ export default defineConfig({
     },
     {
       name: 'showcase-rbac',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
@@ -66,10 +68,7 @@ export default defineConfig({
     },
     {
       name: 'showcase-aks',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         '**/playwright/e2e/custom-theme.spec.ts',
         '**/playwright/e2e/guest-signin-happy-path.spec.ts',
@@ -88,10 +87,7 @@ export default defineConfig({
     },
     {
       name: 'showcase-rbac-aks',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-enabled-rbac.spec.ts',
