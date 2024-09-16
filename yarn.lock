@@ -3252,24 +3252,17 @@
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     react-use "^17.2.4"
 
-"@backstage-community/plugin-redhat-argocd-common@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd-common/-/plugin-redhat-argocd-common-1.0.3.tgz#755ab8962c8728225a60fe814eef5bb68d1721c8"
-  integrity sha512-cu/u2kk01ueQX5Jy4J88rjDg+8UyXtl7CsaqNX+XbWNaoCLkuHT0O5oC8V75XXQ+v9K+1hFG5HdVXYX7evN/+g==
-  dependencies:
-    "@backstage/plugin-permission-common" "^0.8.1"
-
-"@backstage-community/plugin-redhat-argocd-common@^1.0.5":
+"@backstage-community/plugin-redhat-argocd-common@1.0.5", "@backstage-community/plugin-redhat-argocd-common@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd-common/-/plugin-redhat-argocd-common-1.0.5.tgz#13f2f32236a6a4e810e67a14635aadb553948a3d"
   integrity sha512-1NcTNojvW2rP7gcx+4lbaNla+7Cq3M/zq7wm5XcZcm2staecvtWjcbztV1eyHjp0/IcHmq8+AaETJzlV4+JNtw==
   dependencies:
     "@backstage/plugin-permission-common" "^0.8.1"
 
-"@backstage-community/plugin-redhat-argocd@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.8.0.tgz#ca3b8651db70f6e69878a1bc37337094e311bc10"
-  integrity sha512-GYhuahr/VHEoU6hV2ilo25/E7huy+MZUQMkjAyfbxSabaMJ93AVLQR4wTE75A9iSenvwKjR7U9soLGEcwH9VjQ==
+"@backstage-community/plugin-redhat-argocd@1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.8.3.tgz#bd5b9374028a42be1a1ea3e8f5aaa68696dbd1ee"
+  integrity sha512-QdyY9c4YFpbaydjdsQzaKH3qTsgtzHtnDoz7uYF8KsCj8LZDFc0E3I+DD4xS0q7N4jT1U8LKehN9QNe3fXpw4g==
   dependencies:
     "@backstage-community/plugin-redhat-argocd-common" "^1.0.5"
     "@backstage/catalog-model" "^1.6.0"
