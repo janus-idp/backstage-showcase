@@ -8,4 +8,4 @@ contact_links:
     about: Please report any issues with https://github.com/janus-idp/backstage-plugins in JIRA - https://issues.redhat.com/browse/RHIDP
   - name: ❓ Backstage Community Plugins
     url: https://github.com/backstage/community-plugins/issues
-    about: Please report any plugin issues or feature requests to https://github.com/backstage/community-plugins/issues
+    about: Please report any plugin issues or feature requests in https://github.com/backstage/community-plugins/issues
