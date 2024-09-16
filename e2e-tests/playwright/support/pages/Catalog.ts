@@ -5,15 +5,10 @@ import { UIhelper } from '../../utils/UIhelper';
 export class Catalog {
   private page: Page;
   private uiHelper: UIhelper;
-  private searchInput = '#input-with-icon-adornment';
 
   constructor(page: Page) {
     this.page = page;
     this.uiHelper = new UIhelper(page);
-  }
-
-  async go() {
-    await this.uiHelper.openSidebar('Catalog');
   }
 
   async goToBackstageJanusProjectCITab() {
@@ -27,20 +22,5 @@ export class Catalog {
     await this.uiHelper.openSidebar('Catalog');
     await this.uiHelper.clickByDataTestId('user-picker-all');
     await this.uiHelper.clickLink('backstage-janus');
-  }
-
-  async search(s: string) {
-    const searchField = this.page.locator(this.searchInput);
-
-    await searchField.clear();
-    const searchResponse = this.page.waitForResponse(
-      new RegExp(`${process.env.BASE_URL}/api/catalog/entities/by-query/*`),
-    );
-    await searchField.fill(s);
-    await searchResponse;
-  }
-
-  async tableRow(content: string) {
-    return this.page.locator(`tr >> text="${content}"`);
   }
 }
