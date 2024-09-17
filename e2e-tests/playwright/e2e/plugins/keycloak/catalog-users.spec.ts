@@ -4,7 +4,8 @@ import { UIhelper } from '../../../utils/UIhelper';
 import { Common } from '../../../utils/Common';
 import { test, expect } from '@playwright/test';
 
-test.describe('Test Keycloak plugin', () => {
+// TODO: Unskip once keycloak instance is up again
+test.describe.skip('Test Keycloak plugin', () => {
   let uiHelper: UIhelper;
   let keycloak: Keycloak;
   let common: Common;
