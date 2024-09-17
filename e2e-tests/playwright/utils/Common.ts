@@ -61,7 +61,7 @@ export class Common {
 
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
-    test.setTimeout(240000);
+    test.setTimeout(130000);
     if (
       (await this.uiHelper.isTextVisible(
         'The two-factor code you entered has already been used',
@@ -75,7 +75,7 @@ export class Common {
       await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
     }
     await expect(this.page.locator('#app_totp')).toBeHidden({
-      timeout: 240000,
+      timeout: 120000,
     });
   }
 
