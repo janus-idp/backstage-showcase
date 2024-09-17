@@ -44,6 +44,7 @@ export class Roles {
       /^Name$/,
       /^Users and groups$/,
       /Permission Policies|Accessible plugins/,
+      /^Actions$/
     ];
   }
 
