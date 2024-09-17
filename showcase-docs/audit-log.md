@@ -79,14 +79,33 @@ auditLog:
 `frequency` options include:
 
 - `daily`: Rotate daily at 00:00 local time
-- `Xm`: Rotate every X minutes
-- `Xh`: Rotate every X hours
+- `Xm`: Rotate every X minutes (where X is a number between 0 and 59)
+- `Xh`: Rotate every X hours (where X is a number between 0 and 23)
 - `test`: Rotate every 1 minute
 - `custom`: Use `dateFormat` to set the rotation frequency (default if frequency is not specified)
 
-The dateFormat setting configures both the %DATE% in logFileName and the file rotation frequency if frequency is set to `custom`. The default format is `YYYY-MM-DD`, meaning daily rotation. Supported values are based on [Moment.js formats](https://momentjs.com/docs/#/displaying/format/).
+---
 
-If frequency is set to `custom`, then rotations will take place when the date string, represented in the specified `dateFormat`, changes.
+**NOTE**
+If `frequency` is set to `Xh`, `Xm` or `test`, the `dateFormat` setting must be configured in a format that includes the specified time component. Otherwise, the rotation will not work as expected.
+
+For example, `dateFormat: 'YYYY-MM-DD-HH'` for hourly rotation. `dateFormat: 'YYYY-MM-DD-HH-mm'` for minute rotation.
+
+---
+
+Examples:
+
+```yaml
+auditLog:
+  rotateFile:
+    # If you want to rotate the file every 17 minutes
+    dateFormat: 'YYYY-MM-DD-HH-mm'
+    frequency: '17m'
+```
+
+The `dateFormat` setting configures both the %DATE% in logFileName and the file rotation frequency if frequency is set to `custom`. The default format is `YYYY-MM-DD`, meaning daily rotation. Supported values are based on [Moment.js formats](https://momentjs.com/docs/#/displaying/format/).
+
+If `frequency` is set to `custom`, then rotations will take place when the date string, represented in the specified `dateFormat`, changes.
 
 Examples:
 
@@ -145,6 +164,8 @@ auditLog:
 **NOTE**
 
 If log deletion is enabled, a `.<sha256 hash>-audit.json` will be generated in the directory where the logs are to track generated logs. Any log file not contained in it will not be subject to automatic deletion.
+
+Currently, a new `.<sha256 hash>-audit.json` file is generated every time the backend is started. This means old audit logs will no longer be tracked/deleted with the exception of any log files reused by the current backend.
 
 ---
 
