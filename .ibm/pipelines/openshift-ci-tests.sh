@@ -22,7 +22,7 @@ set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
 
-  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
+  if [[ "$JOB_NAME" == *ocp-v4-14 || "$JOB_NAME" == *pull-*1.3.x-e2e-tests* ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
@@ -176,6 +176,7 @@ apply_yaml_files() {
 }
 
 droute_send() {
+  set +e
   # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
   if [[ "$JOB_NAME" == *ocp-v4* ]]; then
     return 0
@@ -228,7 +229,7 @@ droute_send() {
     --results '/tmp/droute/${JUNIT_RESULTS}' \
     --attachments '/tmp/droute/attachments' \
     --verbose"
-
+  set -e
 }
 
 run_tests() {
