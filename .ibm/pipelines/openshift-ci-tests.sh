@@ -176,6 +176,7 @@ apply_yaml_files() {
 }
 
 droute_send() {
+  set +e
   # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
   if [[ "$JOB_NAME" == *ocp-v4* ]]; then
     return 0
@@ -228,7 +229,7 @@ droute_send() {
     --results '/tmp/droute/${JUNIT_RESULTS}' \
     --attachments '/tmp/droute/attachments' \
     --verbose"
-
+  set -e
 }
 
 run_tests() {
