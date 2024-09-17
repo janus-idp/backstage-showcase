@@ -156,6 +156,7 @@ describe('extractDynamicConfig', () => {
       routeBindingTargets: [],
       apiFactories: [],
       scaffolderFieldExtensions: [],
+      themes: [],
     });
   });
 
@@ -556,6 +557,7 @@ describe('extractDynamicConfig', () => {
       appIcons: [],
       apiFactories: [],
       scaffolderFieldExtensions: [],
+      themes: [],
       ...output,
     });
   });
