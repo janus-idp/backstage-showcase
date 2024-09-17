@@ -371,4 +371,13 @@ export class UIhelper {
     await alert.waitFor();
     await expect(alert).toHaveText(message);
   }
+
+  async clickById(id: string) {
+    await this.page.click(`#${id}`);
+  }
+
+  async clickSpanByText(text: string) {
+    await this.verifyText(text);
+    await this.page.click(`span:has-text("${text}")`);
+  }
 }

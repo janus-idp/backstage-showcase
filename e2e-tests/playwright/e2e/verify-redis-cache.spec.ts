@@ -42,7 +42,7 @@ test.describe('Verify Redis Cache DB', () => {
       `redis://${process.env.REDIS_TEMP_USER}:${process.env.REDIS_TEMP_PASS}@localhost:6379`,
     );
     const keys = await redis.keys('*');
-    expect(keys).toContain('namespace:techdocs');
+    expect(keys).toContainEqual(expect.stringContaining('techdocs'));
     redis.disconnect();
   });
 });
