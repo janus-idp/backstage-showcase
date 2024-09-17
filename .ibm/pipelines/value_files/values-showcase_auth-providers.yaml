@@ -90,7 +90,7 @@ upstream:
           policies-csv-file: './rbac/rbac-policy.csv'
           admin:
             users:
-              - name: user:default/qeadmin@rhdhtesting.onmicrosoft.com
+              - name: user:default/qeadmin_rhdhtesting.onmicrosoft.com
               - name: user:default/rhsso_admin
     extraEnvVarsSecrets:
       - rhdh-secrets

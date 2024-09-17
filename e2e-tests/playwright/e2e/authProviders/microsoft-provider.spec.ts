@@ -8,31 +8,16 @@ import * as graphHelper from '../../utils/authenticationProviders/msgraphHelper'
 import { BrowserContext } from '@playwright/test';
 import GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation';
 import {
-  k8sClient,
   upgradeHelmChartWithWait,
-  ensureEnvSecretExists,
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
-  ensureNewPolicyConfigMapExists,
 } from '../../utils/authenticationProviders/helper';
 
 let page: Page;
 
-test.beforeAll('Prepare environment for Microsoft EntraID ', async () => {
-  await k8sClient.createNamespaceIfNotExists(
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
-  await ensureNewPolicyConfigMapExists(
-    'rbac-policy',
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
-  await ensureEnvSecretExists(
-    'rhdh-secrets',
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
-});
-
 test.describe('Standard authentication providers: Micorsoft Azure EntraID', () => {
+  test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
+
   let common: Common;
   let context: BrowserContext;
   let uiHelper: UIhelper;
@@ -41,11 +26,8 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
   const SYNC_TIME = 60;
 
   test.beforeAll(async ({ browser }, testInfo) => {
-    if (testInfo.retry > 0) {
-      logger.info(`Retry #${testInfo.retry}.`);
-    }
     logger.info(
-      'Staring scenario: Standard authentication providers: Micorsoft Azure EntraID',
+      `Staring scenario: Standard authentication providers: Micorsoft Azure EntraID: attemp #${testInfo.retry}`,
     );
 
     const browserSetup = await setupBrowser(browser, testInfo);
@@ -102,7 +84,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     );
 
     // check no entities are in the catalog
-    logger.info('Check users in the catalog');
     await page.goto('/');
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'User');
@@ -110,10 +91,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     await uiHelper.verifyCellsInTable([
       constants.MSGRAPH_USERS['user_1'].displayName,
     ]);
-    logger.info(
-      `User ${constants.MSGRAPH_USERS['user_1'].displayName} found in catalog.`,
-    );
-
     await uiHelper.openSidebar('Settings');
     await common.signOut();
   });
@@ -131,17 +108,11 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     const usersDisplayNames = Object.values(constants.MSGRAPH_USERS).map(
       u => u.displayName,
     );
-    logger.info(
-      `Check users are in the catalog: ${usersDisplayNames.join(', ')}`,
-    );
     await common.CheckUserIsShowingInCatalog(usersDisplayNames);
 
     // check groups are nested correctly and display all members
     const groupsDisplayNames = Object.values(constants.MSGRAPH_GROUPS).map(
       g => g.displayName,
-    );
-    logger.info(
-      `Check groups are in the catalog: ${groupsDisplayNames.join(', ')}`,
     );
     await common.CheckGroupIsShowingInCatalog(groupsDisplayNames);
 
@@ -151,11 +122,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['group_1'].displayName,
     );
-    logger.log({
-      level: 'info',
-      message: `Checking group ${constants.MSGRAPH_GROUPS['group_1'].displayName} is created correctly`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).toContain(
       constants.MSGRAPH_USERS['user_1'].displayName,
     );
@@ -168,11 +134,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['group_2'].displayName,
     );
-    logger.log({
-      message: `Checking group ${constants.MSGRAPH_GROUPS['group_2'].displayName} is created correctly`,
-      level: `info`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).toContain(
       constants.MSGRAPH_USERS['user_2'].displayName,
     );
@@ -184,11 +145,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['group_3'].displayName,
     );
-    logger.log({
-      message: `Checking group ${constants.MSGRAPH_GROUPS['group_3'].displayName} is created correctly`,
-      level: `info`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).toContain(
       constants.MSGRAPH_USERS['user_3'].displayName,
     );
@@ -200,11 +156,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['group_4'].displayName,
     );
-    logger.log({
-      message: `Checking group ${constants.MSGRAPH_GROUPS['group_4'].displayName} is created correctly`,
-      level: `info`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).toContain(
       constants.MSGRAPH_USERS['user_4'].displayName,
     );
@@ -234,9 +185,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
       constants.MSGRAPH_USERS['user_1'].userPrincipalName,
     );
     expect(user).toBeNull();
-    logger.info(
-      `User ${constants.MSGRAPH_USERS['user_1'].userPrincipalName} deleted.`,
-    );
 
     await page.waitForTimeout(10000); // Azure needs a couple of seconds to process the user deletion or random errors will be returned
 
@@ -272,11 +220,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     const displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['group_1'].displayName,
     );
-    logger.log({
-      level: 'info',
-      message: `Checking group ${constants.MSGRAPH_GROUPS['group_1'].displayName} does not show user_1 anymore`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).not.toContain(
       constants.MSGRAPH_USERS['user_1'].displayName,
     );
@@ -308,6 +251,7 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
       constants.MSGRAPH_USERS['user_2'].userPrincipalName,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
+
     await page.goto('/');
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Location');
@@ -340,11 +284,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     const displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['location_admin'].displayName,
     );
-    logger.log({
-      level: 'info',
-      message: `Checking group ${constants.MSGRAPH_GROUPS['location_admin'].displayName} now shows user_2`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).toContain(
       constants.MSGRAPH_USERS['user_2'].displayName,
     );
@@ -402,11 +341,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     const displayed = await common.GoToGroupPageAndGetDisplayedData(
       constants.MSGRAPH_GROUPS['group_3'].displayName,
     );
-    logger.log({
-      message: `Checking group ${constants.MSGRAPH_GROUPS['group_3'].displayName} is created correctly`,
-      level: `info`,
-      dump: displayed,
-    });
     expect(displayed.groupMembers).toContain(
       constants.MSGRAPH_USERS['user_3'].displayName,
     );
@@ -489,12 +423,10 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
       timeout: 20 * 1000,
     });
 
-    logger.info('Logging out');
     await uiHelper.openSidebar('Settings');
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
-    logger.info('Login user 3');
     const loginSucceded = await common.MicrosoftAzureLogin(
       constants.MSGRAPH_USERS['user_3'].userPrincipalName,
       constants.RHSSO76_DEFAULT_PASSWORD,
@@ -505,8 +437,6 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
       /users\/groups have not been ingested into the catalog/gm,
     );
 
-    // clear user sessions
-    logger.info('Clear user 3');
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
     // waiting for next sync
@@ -636,7 +566,9 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     // user should see the entities again
     await expect(async () => {
       await page.reload();
-      console.log('page reloaded');
+      logger.info(
+        'Reloading page, permission should be updated automatically.',
+      );
       await expect(page.locator(`nav a:has-text("My Group")`)).toBeVisible({
         timeout: 2000,
       });

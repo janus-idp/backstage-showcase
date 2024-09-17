@@ -18,10 +18,11 @@ export async function runShellCmd(command: string) {
     process.stderr.on('data', data => {
       logger.log({
         level: 'error',
-        message: `Error executing command ${command}`,
+        message: `Error occurred while running command`,
         dump: data,
       });
       reject();
+      throw Error('Error executing shell command');
     });
     process.on('exit', () => resolve(result));
   });
@@ -34,9 +35,7 @@ export async function upgradeHelmChartWithWait(
   VALUES: string,
   FLAGS: Array<string>,
 ) {
-  logger.info(
-    `Upgrading helm release ${RELEASE}: using chart ${CHART} in namespace ${NAMESPACE} with values file ${VALUES} applying flags ${FLAGS.join(' ')}`,
-  );
+  logger.info(`Upgrading helm release ${RELEASE}`);
   const upgradeOutput = await runShellCmd(`helm upgrade \
     -i ${RELEASE} ${CHART} \
     --wait --timeout 300s -n ${NAMESPACE} \
@@ -49,16 +48,17 @@ export async function upgradeHelmChartWithWait(
     dump: upgradeOutput,
   });
 
-  logger.info('Getting applied configmap for release upgrade');
-  const configmap = await runShellCmd(
-    `oc get configmap ${RELEASE}-backstage-app-config -n ${NAMESPACE} -o jsonpath='{.data.app-config\\.yaml}'`,
+  const configmap = await k8sClient.getCongifmap(
+    `${RELEASE}-backstage-app-config`,
+    NAMESPACE,
   );
-
   logger.log({
     level: 'info',
-    message: `Applied configMap for release upgrade: `,
-    dump: configmap,
+    message: `Applied confguration for release upgrade: `,
+    dump: configmap.body.data,
   });
+
+  //TBD: get dynamic plugins configmap
 }
 
 export async function deleteHelmReleaseWithWait(
@@ -102,6 +102,7 @@ export async function getLastSyncTimeFromLogs(
   }
 
   try {
+    // TBD: change this to use kube api
     const podName = await runShellCmd(
       `oc get pods -n ${constants.AUTH_PROVIDERS_NAMESPACE} | awk '{print $1}' | grep '^${constants.AUTH_PROVIDERS_POD_STRING}'`,
     );
@@ -124,13 +125,10 @@ export async function WaitForNextSync(SYNC__TIME: number, provider: string) {
       syncTime = _syncTime;
     }
     logger.info(
-      `-> ${new Date(syncTime).toUTCString()} ${new Date(_syncTime).toUTCString()}`,
+      `Last registered sync time was: ${new Date(syncTime).toUTCString()}; last detected in logs:${new Date(_syncTime).toUTCString()}`,
     );
     expect(_syncTime).not.toBeNull();
     expect(_syncTime).toBeGreaterThan(syncTime);
-    logger.info(
-      `Last sync was detected at ${new Date(_syncTime).toUTCString()}.`,
-    );
   }).toPass({
     intervals: [1_000, 2_000, 10_000],
     timeout: SYNC__TIME * 2 * 1000,
@@ -142,6 +140,9 @@ export async function appendRBACPolicyToFileConfigMap(
   namespace: string,
   policies: string,
 ) {
+  logger.info(
+    `Appending data to configmap ${configMap} in namespace ${namespace}`,
+  );
   const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
   const patched = cm.body.data['rbac-policy.csv'] + policies;
   const patch = [
@@ -162,6 +163,9 @@ export async function replaceInRBACPolicyFileConfigMap(
   match: RegExp | string,
   value: string,
 ) {
+  logger.info(
+    `Replacing ${match} with ${value} in existing configmap ${configMap} in namespace ${namespace}`,
+  );
   const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
   const patched = cm.body.data['rbac-policy.csv'].replace(match, value);
   const patch = [
@@ -181,6 +185,9 @@ export async function ensureNewPolicyConfigMapExists(
   namespace: string,
 ) {
   try {
+    logger.info(
+      `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
+    );
     await k8sClient.getCongifmap(configMap, namespace);
     const patch = [
       {
@@ -195,6 +202,9 @@ export async function ensureNewPolicyConfigMapExists(
     return await k8sClient.getCongifmap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
+      logger.info(
+        `Configmap ${configMap} did not exsist in namespace ${namespace}. Creating it..`,
+      );
       const cmBody: V1ConfigMap = {
         metadata: {
           name: configMap,
@@ -215,8 +225,9 @@ export async function ensureEnvSecretExists(
   secretName: string,
   namespace: string,
 ) {
+  logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
-    BASE_URL: Buffer.from(constants.BASE_URL).toString('base64'),
+    BASE_URL: Buffer.from(process.env.BASE_URL).toString('base64'),
     AUTH_PROVIDERS_AZURE_CLIENT_SECRET: Buffer.from(
       constants.AUTH_PROVIDERS_AZURE_CLIENT_SECRET,
     ).toString('base64'),
@@ -258,7 +269,7 @@ export async function ensureEnvSecretExists(
       constants.RHSSO76_ADMIN_PASSWORD,
     ).toString('base64'),
     RHSSO76_CALLBACK_URL: Buffer.from(
-      `${constants.BASE_URL}/api/auth/oidc/handler/frame`,
+      `${process.env.BASE_URL}/api/auth/oidc/handler/frame`,
     ).toString('base64'),
     RHSSO76_CLIENT_SECRET: Buffer.from(
       constants.RHSSO76_CLIENT_SECRET,
@@ -279,6 +290,9 @@ export async function ensureEnvSecretExists(
     return await k8sClient.getSecret(secretName, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
+      logger.info(
+        `Secret ${secretName} did not exist yet in namespace ${namespace}. Creating it..`,
+      );
       await k8sClient.createSecret(secret, namespace);
     } else {
       throw e;

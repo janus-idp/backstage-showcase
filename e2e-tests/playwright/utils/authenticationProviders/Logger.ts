@@ -1,7 +1,18 @@
 import { createLogger, transports, format } from 'winston';
 
+function dumpData(dump) {
+  if (!dump) {
+    return '';
+  }
+  if (typeof dump == 'string') {
+    return dump;
+  } else if (typeof dump == 'object') {
+    return JSON.stringify(dump);
+  }
+}
+
 const myFormat = format.printf(({ level, message, timestamp, dump }) => {
-  return `${timestamp} ${level}: ${message} ${dump ? dump : ''}`;
+  return `${timestamp} ${level}: ${message} ${dumpData(dump)}`;
 });
 
 export const logger = createLogger({

@@ -1,4 +1,4 @@
-import k8s from '@kubernetes/client-node';
+import k8s, { V1ConfigMap } from '@kubernetes/client-node';
 import { logger } from './Logger';
 
 export class kubeCLient {
@@ -7,21 +7,41 @@ export class kubeCLient {
   kc: k8s.KubeConfig;
 
   constructor() {
-    this.kc = new k8s.KubeConfig();
-    this.kc.loadFromDefault();
-    this.appsApi = this.kc.makeApiClient(k8s.AppsV1Api);
-    this.coreV1Api = this.kc.makeApiClient(k8s.CoreV1Api);
+    logger.info(`Initializing Kubernetes API client`);
+    try {
+      this.kc = new k8s.KubeConfig();
+      this.kc.loadFromDefault();
+      this.appsApi = this.kc.makeApiClient(k8s.AppsV1Api);
+      this.coreV1Api = this.kc.makeApiClient(k8s.CoreV1Api);
+    } catch (e) {
+      logger.info(e);
+      throw e;
+    }
   }
 
   async getCongifmap(configmapName: string, namespace: string) {
-    return await this.coreV1Api.readNamespacedConfigMap(
-      configmapName,
-      namespace,
-    );
+    try {
+      logger.info(
+        `Getting configmap ${configmapName} from namespace ${namespace}`,
+      );
+      return await this.coreV1Api.readNamespacedConfigMap(
+        configmapName,
+        namespace,
+      );
+    } catch (e) {
+      logger.error(e.body.message);
+      throw e;
+    }
   }
 
   async getSecret(secretName: string, namespace: string) {
-    return await this.coreV1Api.readNamespacedSecret(secretName, namespace);
+    try {
+      logger.info(`Getting secret ${secretName} from namespace ${namespace}`);
+      return await this.coreV1Api.readNamespacedSecret(secretName, namespace);
+    } catch (e) {
+      logger.error(e.body.message);
+      throw e;
+    }
   }
 
   async updateCongifmap(
@@ -33,7 +53,9 @@ export class kubeCLient {
       const options = {
         headers: { 'Content-type': k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
       };
-
+      logger.info(
+        `Updating configmap ${configmapName} in namespace ${namespace}`,
+      );
       await this.coreV1Api.patchNamespacedConfigMap(
         configmapName,
         namespace,
@@ -46,7 +68,8 @@ export class kubeCLient {
         options,
       );
     } catch (e) {
-      console.log(e.statusCode, e);
+      logger.error(e.statusCode, e);
+      throw e;
     }
   }
 
@@ -57,7 +80,7 @@ export class kubeCLient {
           'Content-type': k8s.PatchUtils.PATCH_FORMAT_JSON_MERGE_PATCH,
         },
       };
-
+      logger.info(`Updating secret ${secretName} in namespace ${namespace}`);
       await this.coreV1Api.patchNamespacedSecret(
         secretName,
         namespace,
@@ -70,12 +93,21 @@ export class kubeCLient {
         options,
       );
     } catch (e) {
-      console.log(e.statusCode, e);
+      logger.error(e.statusCode, e.body.message);
+      throw e;
     }
   }
 
-  async createCongifmap(namespace: string, body: object) {
-    return await this.coreV1Api.createNamespacedConfigMap(namespace, body);
+  async createCongifmap(namespace: string, body: V1ConfigMap) {
+    try {
+      logger.info(
+        `Creating configmap ${body.metadata.name} in namespace ${namespace}`,
+      );
+      return await this.coreV1Api.createNamespacedConfigMap(namespace, body);
+    } catch (err) {
+      logger.error(err.body.message);
+      throw err;
+    }
   }
 
   async deleteNamespaceAndWait(namespace: string) {
@@ -90,23 +122,25 @@ export class kubeCLient {
           {},
           type => {
             if (type === 'DELETED') {
-              console.log(`Namespace '${namespace}' has been deleted.`);
+              logger.info(`Namespace '${namespace}' has been deleted.`);
               resolve();
             }
           },
           err => {
             if (err && err.statusCode === 404) {
               // Namespace was already deleted or does not exist
-              console.log(`Namespace '${namespace}' is already deleted.`);
+              logger.info(`Namespace '${namespace}' is already deleted.`);
               resolve();
             } else {
               reject(err);
+              throw err;
             }
           },
         );
       });
     } catch (err) {
-      console.error('Error deleting or waiting for namespace deletion:', err);
+      logger.error('Error deleting or waiting for namespace deletion:', err);
+      throw err;
     }
   }
 
@@ -138,9 +172,12 @@ export class kubeCLient {
 
   async createSecret(secret: k8s.V1Secret, namespace: string) {
     try {
+      logger.info(
+        `Creating secret ${secret.metadata.name} in namespace ${namespace}`,
+      );
       await this.coreV1Api.createNamespacedSecret(namespace, secret);
     } catch (err) {
-      logger.error(err.body);
+      logger.error(err.body.message);
       throw err;
     }
   }

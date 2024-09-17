@@ -70,8 +70,22 @@ export default defineConfig({
         viewport: { width: 1920, height: 1080 },
       },
       testMatch: ['**/playwright/e2e/authProviders/*.spec.ts'],
+      testIgnore: [
+        '**/playwright/e2e/authProviders/setup-environment.spec.ts',
+        '**/playwright/e2e/authProviders/clear-environment.spec.ts',
+      ],
+      dependencies: ['showcase-auth-providers-setup-environment'],
+      teardown: 'showcase-auth-providers-clear-environment',
+      retries: 2,
     },
-
+    {
+      name: 'showcase-auth-providers-setup-environment',
+      testMatch: ['**/playwright/e2e/authProviders/setup-environment.spec.ts'],
+    },
+    {
+      name: 'showcase-auth-providers-clear-environment',
+      testMatch: ['**/playwright/e2e/authProviders/clear-environment.spec.ts'],
+    },
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },

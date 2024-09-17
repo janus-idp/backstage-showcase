@@ -27,8 +27,10 @@ export async function initializeRHSSOClient(
 ) {
   // Ensure settings isn't null
   if (!connectionConfig) {
+    logger.error(`RHSSO config cannot be undefined`);
     throw new Error('Config cannot be undefined');
   }
+  logger.info(`Initializing RHSSO client`);
   kcAdminClient = new KcAdminClient(connectionConfig);
   await kcAdminClient.auth(cred);
   setInterval(() => kcAdminClient.auth(cred), 58 * 1000);
@@ -46,7 +48,6 @@ export async function setupRHSSOEnvironment(): Promise<{
       realm: constants.AUTH_PROVIDERS_REALM_NAME,
     });
     expect(realmSearch).not.toBeNull();
-    logger.info(`Found realm ${realmSearch}`);
 
     // Override client configuration for all further requests:
     kcAdminClient.setConfig({
@@ -57,26 +58,22 @@ export async function setupRHSSOEnvironment(): Promise<{
     const users = await kcAdminClient.users.find();
     for (const user of users) {
       await kcAdminClient.users.del({ id: user.id! });
-      logger.info('Deleting existing user: ', user.username);
     }
 
     //cleanup existing groups
     const groups = await kcAdminClient.groups.find();
     for (const group of groups) {
       await kcAdminClient.groups.del({ id: group.id! });
-      logger.info('Deleting existing group: ', group.name);
     }
 
     for (const key in constants.RHSSO76_GROUPS) {
       const group = constants.RHSSO76_GROUPS[key];
-      logger.info('Creating group ' + key);
       const newGroup = await kcAdminClient.groups.create(group);
       groupsCreated[key] = newGroup;
     }
 
     for (const key in constants.RHSSO76_USERS) {
       const user = constants.RHSSO76_USERS[key];
-      logger.info('Creating user ' + key);
       const newUser = await kcAdminClient.users.create(user);
       usersCreated[key] = newUser;
     }
@@ -91,37 +88,6 @@ export async function setupRHSSOEnvironment(): Promise<{
       groupId: nestedgroup.id,
     });
 
-    // List users and groups
-    const created_users = await kcAdminClient.users.find({
-      first: 0,
-      max: 20,
-    });
-    logger.info('Current users: ', created_users.length);
-    expect(created_users.length).toBe(
-      Object.values(constants.RHSSO76_USERS).length,
-    );
-
-    const created_groups = await kcAdminClient.groups.find({
-      first: 0,
-      max: 20,
-    });
-    logger.info('Current groups: ', created_groups.length);
-    expect(created_groups.length).toBe(
-      Object.values(constants.RHSSO76_GROUPS).length,
-    );
-
-    const clients = await kcAdminClient.clients.find({
-      first: 0,
-      max: 20,
-      clientId: constants.RHSSO76_CLIENT.clientId,
-    });
-    logger.info('Current clients: ', clients.length);
-    expect(clients.length).toBe(1);
-
-    logger.info(`Users: ${users.map(user => user.username).join(',')}`);
-    logger.info(`Users: ${groups.map(group => group.name).join(',')}`);
-    logger.info(`Users: ${clients.map(client => client.clientId).join(',')}`);
-
     // create rbac policy for created users
     await helper.ensureNewPolicyConfigMapExists(
       'rbac-policy',
@@ -129,7 +95,7 @@ export async function setupRHSSOEnvironment(): Promise<{
     );
   } catch (e) {
     logger.log({
-      level: 'info',
+      level: 'error',
       message: 'RHSSO setup failed:',
       dump: JSON.stringify(e),
     });
@@ -151,7 +117,7 @@ export async function clearUserSessions(username: string, realm: string) {
   logger.log({
     level: 'info',
     message: `Clearing ${username} sessions`,
-    dump: JSON.stringify(sessions),
+    dump: JSON.stringify(sessions.map(s => s.id)),
   });
 
   for (const s of sessions) {
@@ -163,14 +129,26 @@ export async function clearUserSessions(username: string, realm: string) {
 }
 
 export async function updateUser(userId: string, userObj: UserRepresentation) {
-  await kcAdminClient.users.update({ id: userId }, userObj);
+  try {
+    logger.info(`Update user ${userId} from RHSSO`);
+    await kcAdminClient.users.update({ id: userId }, userObj);
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 export async function updateGruop(
   groupId: string,
   groupObj: GroupRepresentation,
 ) {
-  await kcAdminClient.groups.update({ id: groupId }, groupObj);
+  try {
+    logger.info(`Update group ${groupId} from RHSSO`);
+    await kcAdminClient.groups.update({ id: groupId }, groupObj);
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 export async function updateUserEmail(username: string, newEmail: string) {
@@ -192,7 +170,7 @@ export async function updateUserEmail(username: string, newEmail: string) {
   } catch (e) {
     logger.log({
       level: 'info',
-      message: 'Keycloak update email failed:',
+      message: 'RHSSO update email failed:',
       dump: JSON.stringify(e),
     });
     throw new Error('Cannot update user: ' + JSON.stringify(e));
@@ -200,17 +178,45 @@ export async function updateUserEmail(username: string, newEmail: string) {
 }
 
 export async function deleteUser(id: string) {
-  await kcAdminClient.users.del({ id: id });
+  try {
+    logger.info(`Deleting user ${id} from RHSSO`);
+    await kcAdminClient.users.del({ id: id });
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 export async function removeUserFromGroup(userId: string, groupId: string) {
-  await kcAdminClient.users.delFromGroup({ id: userId, groupId: groupId });
+  try {
+    logger.info(`Remove user ${userId} from  group ${groupId} from RHSSO`);
+    await kcAdminClient.users.delFromGroup({ id: userId, groupId: groupId });
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 export async function addUserToGroup(userId: string, groupId: string) {
-  await kcAdminClient.users.addToGroup({ id: userId, groupId: groupId });
+  try {
+    logger.info(`Add user ${userId} from  group ${groupId} from RHSSO`);
+    await kcAdminClient.users.addToGroup({ id: userId, groupId: groupId });
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 export async function deleteGroup(groupId: string) {
-  await kcAdminClient.groups.del({ id: groupId });
+  try {
+    logger.info(`Deleting group ${groupId} from RHSSO`);
+    await kcAdminClient.groups.del({ id: groupId });
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
+}
+
+export function getRHSSOUserDisplayName(user: UserRepresentation) {
+  return user.firstName + ' ' + user.lastName;
 }

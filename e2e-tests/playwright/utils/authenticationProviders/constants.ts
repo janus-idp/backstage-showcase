@@ -29,7 +29,7 @@ export const AUTH_PROVIDERS_VALUES_FILE =
   '../.ibm/pipelines/value_files/values-showcase_auth-providers.yaml';
 export const AUTH_PROVIDERS_POD_STRING =
   AUTH_PROVIDERS_RELEASE + '-' + AUTH_PROVIDERS_CHART.split('/')[1];
-export const BASE_URL = `https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${process.env.K8S_CLUSTER_ROUTER_BASE}`;
+export const AUTH_PROVIDERS_BASE_URL = `https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${process.env.K8S_CLUSTER_ROUTER_BASE}`;
 
 export const RHSSO76_GROUPS: { [key: string]: GroupRepresentation } = {
   group_1: {
@@ -375,5 +375,6 @@ g, group:default/rhsso_group_1, role:default/reader
 g, group:default/rhsso_group_2, role:default/reader
 g, group:default/rhsso_group_3, role:default/reader
 g, group:default/rhsso_group_4, role:default/reader
-g, group:default/rhsso_group_2, role:default/location_admin
+g, group:default/rhsso_group_location_reader, role:default/location_admin
+g, user:default/rhsso_admin, role:default/admin
 `;

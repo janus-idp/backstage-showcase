@@ -3,56 +3,25 @@ import { Common, setupBrowser } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import * as constants from '../../utils/authenticationProviders/constants';
 import { logger } from '../../utils/authenticationProviders/Logger';
-import {
-  k8sClient,
-  ensureEnvSecretExists,
-  ensureNewPolicyConfigMapExists,
-  upgradeHelmChartWithWait,
-  deleteHelmReleaseWithWait,
-} from '../../utils/authenticationProviders/helper';
+import { upgradeHelmChartWithWait } from '../../utils/authenticationProviders/helper';
 
 let page: Page;
 
-test.beforeAll('Prepare environment for Basic Authentication', async () => {
-  await k8sClient.createNamespaceIfNotExists(
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
-  await ensureNewPolicyConfigMapExists(
-    'rbac-policy',
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
-  await ensureEnvSecretExists(
-    'rhdh-secrets',
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
-});
-
 test.describe('Standard authentication providers: Basic authentication', () => {
+  test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
+
   let common: Common;
   let uiHelper: UIhelper;
 
   test.beforeAll(async ({ browser }, testInfo) => {
-    if (testInfo.retry > 0) {
-      logger.info(`Retry #${testInfo.retry}.`);
-    }
     page = (await setupBrowser(browser, testInfo)).page;
     common = new Common(page);
     uiHelper = new UIhelper(page);
     expect(process.env.BASE_URL).not.toBeNull();
     logger.info(`Base Url is ${process.env.BASE_URL}`);
     logger.info(
-      'Starting scenario: Standard authentication providers: Basic authentication',
+      `Starting scenario: Standard authentication providers: Basic authentication: attemp #${testInfo.retry}`,
     );
-  });
-
-  test.afterAll(async () => {
-    // DUMP LOGS TO FILE
-    // source .ibm/pipelines/openshift-ci-tests.sh && save_all_pod_logs $namespace
-    // or run script
-    //#!/bin/bash
-    //. ~/lib/testlib.src
-    //one
-    //two
   });
 
   test('1. Verify guest login can work when no auth provider is configured (dangerouslyAllowSignInWithoutUserInCatalog is enabled by default but it should not conflict with the guest login).', async () => {
@@ -153,11 +122,35 @@ test.describe('Standard authentication providers: Basic authentication', () => {
     await uiHelper.openSidebar('Settings');
     await common.signOut();
   });
-});
 
-test.afterAll('After all, delete release (if any)', async () => {
-  await deleteHelmReleaseWithWait(
-    constants.AUTH_PROVIDERS_RELEASE,
-    constants.AUTH_PROVIDERS_NAMESPACE,
-  );
+  test('3. Ensure Guest login is disabled when setting environment to production', async () => {
+    // Set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog = true
+    // The Microsoft login should now be successful
+
+    test.setTimeout(30 * 1000);
+    logger.info(
+      'Execute testcase: Ensure Guest login is disabled when setting environment to production',
+    );
+
+    await upgradeHelmChartWithWait(
+      constants.AUTH_PROVIDERS_RELEASE,
+      constants.AUTH_PROVIDERS_CHART,
+      constants.AUTH_PROVIDERS_NAMESPACE,
+      constants.AUTH_PROVIDERS_VALUES_FILE,
+      [
+        '--set upstream.backstage.appConfig.auth.environment=production',
+        '--set upstream.backstage.appConfig.signInPage=microsoft',
+        '--set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog=true',
+        '--set upstream.backstage.appConfig.catalog.providers=null',
+      ],
+    );
+
+    await page.goto('/');
+    await uiHelper.verifyHeading('Select a sign-in method');
+    const singInMethods = await page
+      .locator("div[class^='MuiCardHeader-root']")
+      .allInnerTexts();
+    console.log(singInMethods);
+    expect(singInMethods).not.toContain('Guest');
+  });
 });
