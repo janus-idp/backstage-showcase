@@ -1,24 +1,40 @@
-import { expect, test } from '@playwright/test';
-import { Common } from '../utils/Common';
+import { expect, test as base } from '@playwright/test';
 import { Catalog } from '../support/pages/Catalog';
 import GithubApi from '../support/api/github';
 import { CatalogItem } from '../support/pages/catalog-item';
 import { JANUS_QE_ORG } from '../utils/constants';
+import { Common } from '../utils/Common';
 
-test.describe('Github discovery UI tests', () => {
-  let common: Common;
-  let catalog: Catalog;
-  const testOrg = JANUS_QE_ORG;
+type GithubDiscoveryFixture = {
+  catalogPage: Catalog;
+  catalogItem: CatalogItem;
+  testOrganization: string;
+};
 
-  test.beforeEach(async ({ page }) => {
-    common = new Common(page);
-    await common.loginAsGithubUser();
-    catalog = new Catalog(page);
+const test = base.extend<GithubDiscoveryFixture>({
+  catalogPage: async ({ page }, use) => {
+    await new Common(page).loginAsGithubUser();
+    const catalog = new Catalog(page);
     await catalog.go();
-  });
+    use(catalog);
+  },
+  catalogItem: async ({ page }, use) => {
+    const catalogItem = new CatalogItem(page);
+    use(catalogItem);
+  },
+  testOrganization: JANUS_QE_ORG,
+});
 
-  test(`Discover Organization's Catalog`, async ({ page }) => {
-    const organizationRepos = await new GithubApi().getReposFromOrg(testOrg);
+test.describe('Github Discovery Catalog', () => {
+  test(`Discover Organization's Catalog`, async ({
+    catalogPage,
+    catalogItem,
+    testOrganization,
+    page,
+  }) => {
+    const organizationRepos = await new GithubApi().getReposFromOrg(
+      testOrganization,
+    );
     const reposNames: string[] = organizationRepos.map(e => e['name']);
     // some repos may not be Components, so let's check
     let pass = 0;
@@ -26,17 +42,15 @@ test.describe('Github discovery UI tests', () => {
     for (let i = 0; i != reposNames.length; i++) {
       const repo = reposNames[i];
 
-      await catalog.search(repo);
-      const row = await catalog.tableRow(repo);
+      await catalogPage.search(repo);
+      const row = await catalogPage.tableRow(repo);
       if (await row.isVisible()) {
         await row.click();
-        const component = new CatalogItem(page);
-        await component.validateGithubLink(`${testOrg}/${repo}`);
+        await catalogItem.validateGithubLink(`${testOrganization}/${repo}`);
         await page.goBack();
         pass++;
       }
     }
-
     //At least 1/5 are valid and listed components
     expect(pass).toBeGreaterThanOrEqual(organizationRepos.length / 5);
   });
