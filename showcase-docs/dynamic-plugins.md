@@ -753,6 +753,34 @@ Each plugin can expose multiple API Factories and each factory is required to de
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 
+There are a set of [API factories](../packages/app/src/apis.ts) already initialized by the Developer Hub application shell. These API factories can be overridden by an API factory provided by a dynamic plugin by specifying the same API ref ID, for example a dynamic plugin could export the following `AnyApiFactory<{}>` to cater for some specific use case:
+
+```typescript
+export const customScmAuthApiFactory = createApiFactory({
+  api: scmAuthApiRef,
+  deps: { githubAuthApi: githubAuthApiRef },
+  factory: ({ githubAuthApi }) =>
+    ScmAuth.merge(
+      ScmAuth.forGithub(githubAuthApi, { host: 'github.someinstance.com' }),
+      ScmAuth.forGithub(githubAuthApi, {
+        host: 'github.someotherinstance.com',
+      }),
+    ),
+});
+```
+
+And the corresponding YAML configuration would look like:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:
+      apiFactories:
+        - importName: customScmAuthApiFactory
+```
+
+which would override the default ScmAuth API factory that DeveloperHub defaults to.
+
 ### Provide custom Scaffolder field extensions
 
 The Backstage scaffolder component supports specifying [custom form fields](https://backstage.io/docs/features/software-templates/writing-custom-field-extensions/#creating-a-field-extension) for the software template wizard, for example:
@@ -781,3 +809,50 @@ A plugin can specify multiple field extensions, in which case each field extensi
 
 - `importName` is an optional import name that should reference the value returned the scaffolder field extension API
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+
+### Add a custom Backstage theme or replace the provided theme
+
+The look and feel of a Backstage application is handled by Backstage theming. Out of the box Developer Hub provides a theme with a number of [configuration overrides](./customization.md) that allow for user customization. It's also possible to provide additional Backstage themes as well as replace the out of box Developer Hub themes from a dynamic plugin.
+
+A dynamic plugin would export a theme provider function with a signature of `({ children }: { children: ReactNode }): React.JSX.Element`, for example:
+
+```typescript
+import { lightTheme } from './lightTheme';
+import { darkTheme } from './darkTheme';
+import { UnifiedThemeProvider } from '@backstage/theme';
+
+export const lightThemeProvider = ({ children }: { children: ReactNode }) => (
+  <UnifiedThemeProvider theme={lightTheme} children={children} />
+);
+
+export const darkThemeProvider = ({ children }: { children: ReactNode }) => (
+  <UnifiedThemeProvider theme={darkTheme} children={children} />
+);
+```
+
+And then the theme can be declared via the `themes` configuration:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in a plugins `package.json`
+      themes:
+        - id: light # Using 'light' overrides the app-provided light theme
+          title: Light
+          variant: light
+          icon: someIconReference
+          importName: lightThemeProvider
+        - id: dark # Using 'dark' overrides the app-provided dark theme
+          title: Dark
+          variant: dark
+          icon: someIconReference
+          importName: darkThemeProvider
+```
+
+The required options mirror the [AppTheme](https://backstage.io/docs/reference/core-plugin-api.apptheme/) interface:
+
+- `id` A required ID value for the theme; use values of `light` or `dark` to replace the default provided themes.
+- `title` The theme name displayed to the user on the Settings page.
+- `variant` Whether the theme is `light` or `dark`, can only be one of these values.
+- `icon` a string reference to a system or [app icon](#extend-internal-library-of-available-icons)
+- `importName` name of the exported theme provider function, the function signature should match `({ children }: { children: ReactNode }): React.JSX.Element`

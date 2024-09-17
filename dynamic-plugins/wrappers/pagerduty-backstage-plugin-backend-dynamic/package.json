@@ -1,32 +1,38 @@
 {
-  "name": "roadiehq-backstage-plugin-github-pull-requests",
-  "version": "2.5.29",
+  "name": "pagerduty-backstage-plugin-backend",
+  "version": "0.6.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
+  "private": true,
   "publishConfig": {
     "access": "public",
     "main": "dist/index.cjs.js",
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin",
-    "supported-versions": "1.27.7",
-    "pluginId": "roadiehq-github-pull-requests",
+    "role": "backend-plugin",
+    "supported-versions": "1.29.2",
+    "pluginId": "pagerduty",
     "pluginPackages": [
-      "roadiehq-backstage-plugin-github-pull-requests"
+      "@pagerduty/backstage-plugin",
+      "@pagerduty/backstage-plugin-backend"
     ]
   },
-  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
+    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-github-pull-requests": "2.5.27"
+    "@pagerduty/backstage-plugin-backend": "0.6.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.11",
@@ -34,18 +40,13 @@
   },
   "files": [
     "dist",
-    "dist-scalprum"
+    "dist-dynamic/*.*",
+    "dist-dynamic/dist/**"
   ],
-  "scalprum": {
-    "name": "roadiehq.backstage-plugin-github-pull-requests",
-    "exposedModules": {
-      "PluginRoot": "./src/index.ts"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/roadiehq-backstage-plugin-github-pull-requests"
+    "directory": "dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
