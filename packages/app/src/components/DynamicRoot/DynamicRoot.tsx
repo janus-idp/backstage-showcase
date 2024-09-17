@@ -16,6 +16,7 @@ import DynamicRootContext, {
   RemotePlugins,
   ScaffolderFieldExtension,
   ScalprumMountPointConfig,
+  AppThemeProvider,
 } from './DynamicRootContext';
 import extractDynamicConfig, {
   DynamicPluginConfig,
@@ -27,6 +28,7 @@ import defaultAppComponents from './defaultAppComponents';
 import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import Loader from './Loader';
 import CommonIcons from './CommonIcons';
+import { MenuIcon } from '../Root/MenuIcon';
 
 export type StaticPlugins = Record<
   string,
@@ -75,6 +77,7 @@ export const DynamicRoot = ({
       routeBindings,
       routeBindingTargets,
       scaffolderFieldExtensions,
+      themes: pluginThemes,
     } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
       ...pluginModules.map(({ scope, module }) => ({
@@ -102,6 +105,10 @@ export const DynamicRoot = ({
         module,
       })),
       ...scaffolderFieldExtensions.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...pluginThemes.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -353,9 +360,40 @@ export const DynamicRoot = ({
       return acc;
     }, []);
 
+    const dynamicThemeProviders = pluginThemes.reduce<AppThemeProvider[]>(
+      (acc, { scope, module, importName, icon, ...rest }) => {
+        const provider = allPlugins[scope]?.[module]?.[importName];
+        if (provider) {
+          acc.push({
+            ...rest,
+            icon: <MenuIcon icon={icon} />,
+            Provider: provider as (props: {
+              children: React.ReactNode;
+            }) => JSX.Element | null,
+          });
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring theme: ${importName}`,
+          );
+        }
+        return acc;
+      },
+      [],
+    );
+
     if (!app.current) {
+      const filteredStaticThemes = themes.filter(
+        theme =>
+          !dynamicThemeProviders.some(
+            dynamicTheme => dynamicTheme.id === theme.id,
+          ),
+      );
+      const filteredStaticApis = staticApis.filter(
+        api => !remoteApis.some(remoteApi => remoteApi.api.id === api.api.id),
+      );
       app.current = createApp({
-        apis: [...staticApis, ...remoteApis],
+        apis: [...filteredStaticApis, ...remoteApis],
         bindRoutes({ bind }) {
           bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
@@ -364,7 +402,7 @@ export const DynamicRoot = ({
           ...Object.values(staticPluginStore).map(entry => entry.plugin),
           ...remoteBackstagePlugins,
         ],
-        themes,
+        themes: [...filteredStaticThemes, ...dynamicThemeProviders],
         components: defaultAppComponents,
       });
     }
