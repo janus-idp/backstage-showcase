@@ -1,2 +1,2 @@
 export * from './AuthApiRefs';
-export * from './CustomDataApiClient';
+export * from './LearningPathApiClient';
