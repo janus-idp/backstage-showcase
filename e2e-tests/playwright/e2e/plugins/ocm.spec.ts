@@ -12,7 +12,7 @@ const clusterDetails = {
   status: 'Ready',
   platform: 'IBM',
   cpuCores: /CPU cores\d+/,
-  memorySize: /Memory size\d+ (Gi|Mi)/,
+  memorySize: /Memory size\d.*(Gi|Mi)/,
   ocVersion: /^\d+\.\d+\.\d+$/,
 };
 let page: Page;
