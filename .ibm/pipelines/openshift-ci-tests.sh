@@ -318,6 +318,7 @@ initiate_deployments() {
 initiate_aks_deployment() {
   add_helm_repos
   install_helm
+  delete_namespace "${NAME_SPACE_RBAC_AKS}"
   configure_namespace "${NAME_SPACE_AKS}"
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   cd "${DIR}"
@@ -330,6 +331,7 @@ initiate_aks_deployment() {
 initiate_rbac_aks_deployment() {
   add_helm_repos
   install_helm
+  delete_namespace "${NAME_SPACE_AKS}"
   configure_namespace "${NAME_SPACE_RBAC_AKS}"
   uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
   cd "${DIR}"
