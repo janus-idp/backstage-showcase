@@ -4,6 +4,7 @@ import {
   configApiRef,
   createApiFactory,
   discoveryApiRef,
+  identityApiRef,
   oauthRequestApiRef,
 } from '@backstage/core-plugin-api';
 import {
@@ -33,9 +34,10 @@ export const apis: AnyApiFactory[] = [
     deps: {
       discoveryApi: discoveryApiRef,
       configApi: configApiRef,
+      identityApi: identityApiRef,
     },
-    factory: ({ discoveryApi, configApi }) =>
-      new CustomDataApiClient({ discoveryApi, configApi }),
+    factory: ({ discoveryApi, configApi, identityApi }) =>
+      new CustomDataApiClient({ discoveryApi, configApi, identityApi }),
   }),
   // OIDC
   createApiFactory({
