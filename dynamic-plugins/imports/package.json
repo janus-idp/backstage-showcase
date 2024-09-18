@@ -28,7 +28,7 @@
     "@janus-idp/backstage-plugin-rbac": "1.29.5",
     "@janus-idp/backstage-plugin-tekton": "3.12.7",
     "@janus-idp/backstage-plugin-bulk-import": "1.4.9",
-    "@janus-idp/backstage-plugin-bulk-import-backend": "1.5.3",
+    "@janus-idp/backstage-plugin-bulk-import-backend": "1.5.4",
     "@janus-idp/backstage-plugin-topology": "1.27.5",
     "@janus-idp/backstage-scaffolder-backend-module-quay": "1.7.1",
     "@janus-idp/backstage-scaffolder-backend-module-regex": "1.7.1",
