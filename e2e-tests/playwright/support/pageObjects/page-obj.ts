@@ -1,8 +1,3 @@
-export const HomePagePO = {
-  searchBar: 'input[aria-label="Search"]',
-  MuiAccordion: 'div[class*="MuiAccordion-root-"]',
-};
-
 export const CatalogImportPO = {
   componentURL: 'input[name="url"]',
 };

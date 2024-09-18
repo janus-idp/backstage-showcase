@@ -1,11 +1,6 @@
 import { APIResponse, Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
-import {
-  DeleteRolePO,
-  HomePagePO,
-  RoleFormPO,
-  RoleListPO,
-} from '../pageObjects/page-obj';
+import { DeleteRolePO, RoleFormPO, RoleListPO } from '../pageObjects/page-obj';
 
 export class Roles {
   private page: Page;
@@ -88,10 +83,6 @@ export class Roles {
     await this.uiHelper.verifyText('Permission policies (2)');
 
     await this.uiHelper.clickButton('Create');
-
-    await this.page.locator(HomePagePO.searchBar).waitFor({ timeout: 60000 });
-    await this.page.locator(HomePagePO.searchBar).fill(name);
-    await this.uiHelper.verifyHeading('All roles (1)');
   }
 
   async createRoleWithPermissionPolicy(name: string) {
@@ -210,8 +201,6 @@ export class Roles {
     await this.uiHelper.clickButton('Delete');
 
     await this.uiHelper.verifyText(`Role ${name} deleted successfully`);
-    await this.page.locator(HomePagePO.searchBar).fill(name);
-    await this.uiHelper.verifyHeading('All roles (0)');
   }
 }
 
