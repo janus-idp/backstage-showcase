@@ -36,8 +36,8 @@ save_all_pod_logs(){
 }
 
 droute_send() {
-  # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
-  if [[ "$JOB_NAME" == *ocp-v4* ]]; then
+  # Skipping ReportPortal for nightly jobs on OCP v4.14, v4.13 and AKS for now, as new clusters are not behind the RH VPN.
+  if [[ "$JOB_NAME" == *ocp-v4* || "$JOB_NAME" == *aks* ]]; then
     return 0
   fi
 

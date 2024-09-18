@@ -81,7 +81,6 @@ export default defineConfig({
         '**/playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts',
         '**/playwright/e2e/techdocs.spec.ts',
         '**/playwright/e2e/github-happy-path.spec.ts',
-        '**/playwright/e2e/catalog-scaffoldedfromLink.spec.ts',
         '**/playwright/e2e/github-integration-org-fetch.spec.ts',
       ],
     },
