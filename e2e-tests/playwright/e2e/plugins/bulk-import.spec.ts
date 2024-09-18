@@ -44,14 +44,13 @@ test.describe.serial('Bulk Import plugin', () => {
       newRepoDetails.owner,
       newRepoDetails.repoName,
     );
-    await common.loginAsGithubUser();
+    await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
   test('Add a Repository from the Repository Tab and Confirm its Preview', async () => {
     await uiHelper.openSidebar('Bulk import');
     await uiHelper.clickButton('Add');
-    await backstageShowcase.selectRowsPerPage(100); //FIXME remove it when RHIDP-3859 is resolved.
     await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
     await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
       'Not Generated',
@@ -66,7 +65,7 @@ test.describe.serial('Bulk Import plugin', () => {
       catalogRepoDetails.name,
       'Preview file',
     );
-    await uiHelper.clickButton('Save');
+    await expect(await uiHelper.clickButton('Save')).not.toBeVisible();
   });
 
   test('Add a Repository from the Organization Tab and Confirm its Preview', async () => {
@@ -78,7 +77,6 @@ test.describe.serial('Bulk Import plugin', () => {
       /Ready Preview file/,
     ]);
     await uiHelper.clickOnLinkInTableByUniqueText(newRepoDetails.owner, 'Edit');
-    await backstageShowcase.selectRowsPerPage(100); //FIXME remove it when RHIDP-3859 is resolved.
     await bulkimport.searchInOrg(newRepoDetails.repoName);
     await bulkimport.selectRepoInTable(newRepoDetails.repoName);
     await uiHelper.clickButton('Select');
@@ -87,10 +85,13 @@ test.describe.serial('Bulk Import plugin', () => {
       /2\/(\d+) Edit/,
       /Ready Preview files/,
     ]);
-    await uiHelper.clickButton('Create pull requests');
+    await expect(
+      await uiHelper.clickButton('Create pull requests'),
+    ).not.toBeVisible();
   });
 
   test('Verify that the two selected repositories are listed: one with the status "Added" and another with the status "WAIT_PR_APPROVAL."', async () => {
+    await common.waitForLoad();
     await bulkimport.filterAddedRepo(catalogRepoDetails.name);
     await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
       catalogRepoDetails.url,
@@ -112,7 +113,7 @@ test.describe.serial('Bulk Import plugin', () => {
     const expectedCatalogInfoYaml = defaultCatalogInfoYaml(
       newRepoDetails.repoName,
       `${newRepoDetails.owner}/${newRepoDetails.repoName}`,
-      process.env.GH_USER_ID,
+      process.env.GH_USER2_ID,
     );
     expect(prCatalogInfoYaml).toEqual(expectedCatalogInfoYaml);
   });
@@ -141,7 +142,7 @@ test.describe.serial('Bulk Import plugin', () => {
       newRepoDetails.updatedComponentName,
       `${newRepoDetails.owner}/${newRepoDetails.repoName}`,
       newRepoDetails.labels,
-      process.env.GH_USER_ID,
+      process.env.GH_USER2_ID,
     );
     expect(prCatalogInfoYaml).toEqual(expectedCatalogInfoYaml);
   });
@@ -149,7 +150,6 @@ test.describe.serial('Bulk Import plugin', () => {
   test("Verify Selected repositories shows catalog-info.yaml status as 'Added' and 'WAIT_PR_APPROVAL'", async () => {
     await uiHelper.openSidebar('Bulk import');
     await uiHelper.clickButton('Add');
-    await backstageShowcase.selectRowsPerPage(100); //FIXME remove it when RHIDP-3859 is resolved.
     await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
     await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
       'Added',
@@ -188,25 +188,26 @@ test.describe.serial('Bulk Import plugin', () => {
     ]);
   });
 
-  test.skip('Verify Added Repositories Appear in the Catalog as Expected', async () => {
+  test('Verify Added Repositories Appear in the Catalog as Expected', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
-    await uiHelper.searchInputPlaceholder(newRepoDetails.updatedComponentName);
-    await uiHelper.verifyRowInTableByUniqueText(
-      newRepoDetails.updatedComponentName,
-      ['other', 'unknown'],
-    );
+    await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
+    await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
+      'other',
+      'unknown',
+    ]);
   });
 
   test("Delete a Bulk Import Repository and Verify It's No Longer Visible in the UI", async () => {
     await uiHelper.openSidebar('Bulk import');
-    await bulkimport.filterAddedRepo(newRepoDetails.repoName);
+    await common.waitForLoad();
+    await bulkimport.filterAddedRepo(catalogRepoDetails.name);
     await uiHelper.clickOnButtonInTableByUniqueText(
-      newRepoDetails.repoName,
+      catalogRepoDetails.name,
       'Delete',
     );
     await page.getByRole('button', { name: 'Remove' }).click();
-    await uiHelper.verifyLink(newRepoDetails.repoUrl, {
+    await uiHelper.verifyLink(catalogRepoDetails.url, {
       exact: false,
       notVisible: true,
     });
@@ -215,8 +216,8 @@ test.describe.serial('Bulk Import plugin', () => {
   test('Verify Deleted Bulk Import Repositories Does not Appear in the Catalog', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
-    await uiHelper.searchInputPlaceholder(newRepoDetails.updatedComponentName);
-    await uiHelper.verifyLink(newRepoDetails.updatedComponentName, {
+    await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
+    await uiHelper.verifyLink(catalogRepoDetails.name, {
       notVisible: true,
     });
   });
@@ -236,7 +237,7 @@ test.describe
   let common: Common;
   let bulkimport: BulkImport;
   let catalogImport: CatalogImport;
-  const existingRepoFromAppConfig = 'acr-catalog';
+  const existingRepoFromAppConfig = 'janus-test-3-bulk-import';
 
   const existingComponentDetails = {
     name: 'janus-test-2-bulk-import-test',
@@ -250,12 +251,12 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await common.loginAsGithubUser();
+    await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
-  // Select two repos: one with an existing catalog.yaml file and another without it
   test('Verify existing repo from app-config is displayed in bulk import Added repositories', async () => {
     await uiHelper.openSidebar('Bulk import');
+    await common.waitForLoad();
     await bulkimport.filterAddedRepo(existingRepoFromAppConfig);
     await uiHelper.verifyRowInTableByUniqueText(existingRepoFromAppConfig, [
       'Added',
@@ -274,10 +275,31 @@ test.describe
 
     // Verify in bulk import's Added Repositories
     await uiHelper.openSidebar('Bulk import');
+    await common.waitForLoad();
     await bulkimport.filterAddedRepo(existingComponentDetails.repoName);
     await uiHelper.verifyRowInTableByUniqueText(
       existingComponentDetails.repoName,
       ['Added'],
     );
+  });
+});
+
+test.describe
+  .serial('Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin', () => {
+  let page: Page;
+  let uiHelper: UIhelper;
+  let common: Common;
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
+
+    uiHelper = new UIhelper(page);
+    common = new Common(page);
+    await common.loginAsGithubUser();
+  });
+
+  test('Bulk Import - Verify users without permission cannot access', async () => {
+    await uiHelper.openSidebar('Bulk import');
+    await uiHelper.verifyText('Permission required');
+    expect(await uiHelper.isBtnVisible('Add')).toBeFalsy();
   });
 });

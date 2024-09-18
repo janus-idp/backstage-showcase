@@ -266,8 +266,8 @@ export class Response {
           "name": "role:default/test2-role"
         },
         {
-          "memberReferences": ["user:default/rhdh-qe"],
-          "name": "role:default/qe_admin"
+          "memberReferences": ["group:janus-qe/rhdh-qe-2-team"],
+          "name": "role:default/bulk_import"
         }
       ]
     `;
@@ -343,9 +343,21 @@ export class Response {
           "effect": "allow"
         },
         {
-          "entityReference": "role:default/qe_admin",
+          "entityReference": "role:default/bulk_import",
           "permission": "bulk.import",
           "policy": "use",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/bulk_import",
+          "permission": "catalog.location.create",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/bulk_import",
+          "permission": "catalog.entity.create",
+          "policy": "create",
           "effect": "allow"
         }
       ]
