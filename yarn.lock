@@ -8793,12 +8793,13 @@
     express "^4.19.2"
     lodash "^4.17.21"
 
-"@janus-idp/backstage-plugin-rbac-backend@4.10.1":
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.1.tgz#381917269527a1982d7382db68ad030321b5cc5f"
-  integrity sha512-98eHr00t353+1xPGBRwrLdzl1ragG+z9RZpDPUC7k2Wqi1jhv08NiChyniA/svDrYf3I+DMuIQozH2ENn1nW9w==
+"@janus-idp/backstage-plugin-rbac-backend@4.10.5":
+  version "4.10.5"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.5.tgz#b09a096cb9ab34e8e93cc07ebd128be89432bcf5"
+  integrity sha512-Gl6Z3NwN4uemA8ZBMf6g3dIQ5IGHsD1yYaitUNeD/hwAsQURJiKX6pXipgvOTaftDZz9g90PURT7k8uFpSnAgg==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-defaults" "^0.4.1"
     "@backstage/backend-plugin-api" "^0.7.0"
     "@backstage/catalog-client" "^1.6.5"
     "@backstage/catalog-model" "^1.5.0"
