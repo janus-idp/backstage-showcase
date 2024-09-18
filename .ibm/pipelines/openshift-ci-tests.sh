@@ -22,7 +22,7 @@ set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
 
-  if [[ "$JOB_NAME" == *ocp-v4-14 || "$JOB_NAME" == *pull-*1.3.x-e2e-tests* ]]; then
+  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
