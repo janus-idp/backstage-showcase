@@ -8800,10 +8800,10 @@
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.3.tgz#e45e384e4b8ec16bce2fd903af78450f6bf7ec98"
   integrity sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
 
-"@janus-idp/backstage-plugin-audit-log-node@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-audit-log-node/-/backstage-plugin-audit-log-node-1.4.0.tgz#5fa861bd25c6073024a0935297b14f7ade68c957"
-  integrity sha512-qqxb9DzBeL9BQRk3x5QNBKRV1woHHqEEPvrNKJl56ycZv60EFDN6HHqSsPljc4LLzQc15au9RDYp9Ji5M2ZH+A==
+"@janus-idp/backstage-plugin-audit-log-node@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-audit-log-node/-/backstage-plugin-audit-log-node-1.4.1.tgz#0e52cd4905efcd26a49c59b709c3ec463cc2806f"
+  integrity sha512-vN/4txkvfPHccSNs+A50JOlvsNAZKDkhhu2y42CZfP6XgzMRE7wMaCW6BZtTZtbnYosczMhq+OMEXn+AUbOsvg==
   dependencies:
     "@backstage/backend-plugin-api" "^0.7.0"
     "@backstage/errors" "^1.2.4"
@@ -8811,10 +8811,10 @@
     express "^4.19.2"
     lodash "^4.17.21"
 
-"@janus-idp/backstage-plugin-rbac-backend@4.10.5":
-  version "4.10.5"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.5.tgz#b09a096cb9ab34e8e93cc07ebd128be89432bcf5"
-  integrity sha512-Gl6Z3NwN4uemA8ZBMf6g3dIQ5IGHsD1yYaitUNeD/hwAsQURJiKX6pXipgvOTaftDZz9g90PURT7k8uFpSnAgg==
+"@janus-idp/backstage-plugin-rbac-backend@4.10.6":
+  version "4.10.6"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.6.tgz#8ec82d75080010d09fbd8d52c3c15ec1e8dd7e35"
+  integrity sha512-Xr0INQBrYaj/Ohay3YyRE/AsDrGsWpuZrjX+cZPVlVadDz+I6E82CHOVHfEHwwQeeEbldjt0fn+PwkbjLuOCyg==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
     "@backstage/backend-defaults" "^0.4.1"
@@ -8830,14 +8830,13 @@
     "@backstage/plugin-permission-node" "^0.8.0"
     "@backstage/types" "^1.1.1"
     "@dagrejs/graphlib" "^2.1.13"
-    "@janus-idp/backstage-plugin-audit-log-node" "1.4.0"
+    "@janus-idp/backstage-plugin-audit-log-node" "1.4.1"
     "@janus-idp/backstage-plugin-rbac-common" "1.9.0"
     "@janus-idp/backstage-plugin-rbac-node" "1.5.0"
     casbin "^5.27.1"
     chokidar "^3.6.0"
     csv-parse "^5.5.5"
     express "^4.18.2"
-    express-promise-router "^4.1.1"
     js-yaml "^4.1.0"
     knex "^3.0.0"
     lodash "^4.17.21"
@@ -19682,7 +19681,7 @@ express-prom-bundle@6.6.0:
     on-finished "^2.3.0"
     url-value-parser "^2.0.0"
 
-express-promise-router@4.1.1, express-promise-router@^4.1.0, express-promise-router@^4.1.1:
+express-promise-router@4.1.1, express-promise-router@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/express-promise-router/-/express-promise-router-4.1.1.tgz#8fac102060b9bcc868f84d34fbb12fd8fa494291"
   integrity sha512-Lkvcy/ZGrBhzkl3y7uYBHLMtLI4D6XQ2kiFg9dq7fbktBch5gjqJ0+KovX0cvCAvTJw92raWunRLM/OM+5l4fA==
