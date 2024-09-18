@@ -89,7 +89,7 @@ export default defineConfig({
       name: 'showcase-rbac-aks',
       ...useCommonDeviceAndViewportConfig,
       testMatch: [
-        '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+        // '**/playwright/e2e/plugins/rbac/**/*.spec.ts', // tests broken on AKS by https://github.com/janus-idp/backstage-showcase/pull/1565
         '**/playwright/e2e/plugins/analytics/analytics-enabled-rbac.spec.ts',
       ],
     },
