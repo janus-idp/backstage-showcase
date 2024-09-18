@@ -31,13 +31,11 @@ import { ConfigSources } from '@backstage/config-loader';
  *
  * @param name
  * @param ctx
- * @param enableDangerouslyAllowSignInWithoutUserInCatalog
  * @returns
  */
 async function signInWithCatalogUserOptional(
   name: string | AuthResolverCatalogUserQuery,
   ctx: AuthResolverContext,
-  enableDangerouslyAllowSignInWithoutUserInCatalog?: boolean,
 ) {
   try {
     const query: AuthResolverCatalogUserQuery =
@@ -55,11 +53,10 @@ async function signInWithCatalogUserOptional(
     );
     const dangerouslyAllowSignInWithoutUserInCatalog =
       config.getOptionalBoolean('dangerouslyAllowSignInWithoutUserInCatalog') ||
-      enableDangerouslyAllowSignInWithoutUserInCatalog ||
       false;
     if (!dangerouslyAllowSignInWithoutUserInCatalog) {
       throw new Error(
-        `Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.`,
+        `Sign in failed: User not found in the RHDH software catalog. Verify that users/groups are synchronized to the software catalog. For non-production environments, manually provision the user or disable the user provisioning requirement. Refer to the RHDH Authentication documentation for further details.`,
       );
     }
     let entityRef: string = name === 'string' ? name : '';
@@ -160,8 +157,7 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `GitHub user profile does not contain a username`,
               );
             }
-            // enable dangerouslyAllowSignInWithoutUserInCatalog option temporarily for GitHub
-            return await signInWithCatalogUserOptional(userId, ctx, true);
+            return await signInWithCatalogUserOptional(userId, ctx);
           },
         },
       });
