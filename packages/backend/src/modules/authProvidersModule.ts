@@ -59,7 +59,7 @@ async function signInWithCatalogUserOptional(
         `Sign in failed: User not found in the RHDH software catalog. Verify that users/groups are synchronized to the software catalog. For non-production environments, manually provision the user or disable the user provisioning requirement. Refer to the RHDH Authentication documentation for further details.`,
       );
     }
-    let entityRef: string = name === 'string' ? name : '';
+    let entityRef: string = typeof name === 'string' ? name : '';
     if (typeof name !== 'string' && 'annotations' in name)
       entityRef = Object.values(name.annotations)[0];
     const userEntityRef = stringifyEntityRef({
