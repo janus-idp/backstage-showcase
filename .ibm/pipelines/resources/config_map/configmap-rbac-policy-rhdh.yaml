@@ -21,3 +21,9 @@ data:
     p, role:default/rbac_admin, catalog.location.read, read, allow
     p, role:default/rbac_admin, policy-entity, read, allow
     p, role:default/rbac_admin, policy-entity, create, allow
+    
+    p, role:default/bulk_import, bulk.import, use, allow
+    p, role:default/bulk_import, catalog.location.create, create, allow
+    p, role:default/bulk_import, catalog.entity.create, create, allow
+    g, group:janus-qe/rhdh-qe-2-team, role:default/bulk_import
+    
