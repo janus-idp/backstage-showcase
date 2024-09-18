@@ -525,7 +525,15 @@ dynamicPlugins:
 
 Up to 3 levels of nested menu items are supported.
 
-- <menu_item_name> - A unique name in the main sidebar navigation. This can represent either a standalone menu item or a parent menu item. If it represents a plugin menu item, the name must match the corresponding path in dynamicRoutes.path. For example, if dynamicRoutes defines `path: /my-plugin`, the `menu_item_name` must be `my-plugin`.
+- <menu_item_name> - A unique name in the main sidebar navigation. This can represent either a standalone menu item or a parent menu item. If it represents a plugin menu item, the name must match the corresponding path in `dynamicRoutes`. For example, if dynamicRoutes defines `path: /my-plugin`, the `menu_item_name` must be `my-plugin`.
+
+  - Handling Complex Paths:
+    - For simple paths like `path: /my-plugin`, the `menu_item_name` should be `my-plugin`.
+    - For more complex paths, such as multi-segment paths like `path: /metrics/users/info`, the `menu_item_name` should represent the full path in dot notation (e.g., `metrics.users.info`).
+    - Trailing and leading slashes in paths are ignored. For example:
+      - For `path: /docs`, the `menu_item_name` should be `docs`.
+      - For `path: /metrics/users`, the `menu_item_name` should be `metrics.users`.
+
 - `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](../packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
 - `title` - Optional. Specifies the display title of the menu item. This can also be omitted if it has already been defined in the `dynamicRoutes` configuration under `menuItem.text`.
 - `priority` - Optional. Defines the order in which menu items appear. The default priority is `0`, which places the item at the bottom of the list. A higher priority value will position the item higher in the sidebar.

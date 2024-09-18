@@ -3243,24 +3243,17 @@
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     react-use "^17.2.4"
 
-"@backstage-community/plugin-redhat-argocd-common@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd-common/-/plugin-redhat-argocd-common-1.0.3.tgz#755ab8962c8728225a60fe814eef5bb68d1721c8"
-  integrity sha512-cu/u2kk01ueQX5Jy4J88rjDg+8UyXtl7CsaqNX+XbWNaoCLkuHT0O5oC8V75XXQ+v9K+1hFG5HdVXYX7evN/+g==
-  dependencies:
-    "@backstage/plugin-permission-common" "^0.8.1"
-
-"@backstage-community/plugin-redhat-argocd-common@^1.0.5":
+"@backstage-community/plugin-redhat-argocd-common@1.0.5", "@backstage-community/plugin-redhat-argocd-common@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd-common/-/plugin-redhat-argocd-common-1.0.5.tgz#13f2f32236a6a4e810e67a14635aadb553948a3d"
   integrity sha512-1NcTNojvW2rP7gcx+4lbaNla+7Cq3M/zq7wm5XcZcm2staecvtWjcbztV1eyHjp0/IcHmq8+AaETJzlV4+JNtw==
   dependencies:
     "@backstage/plugin-permission-common" "^0.8.1"
 
-"@backstage-community/plugin-redhat-argocd@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.8.0.tgz#ca3b8651db70f6e69878a1bc37337094e311bc10"
-  integrity sha512-GYhuahr/VHEoU6hV2ilo25/E7huy+MZUQMkjAyfbxSabaMJ93AVLQR4wTE75A9iSenvwKjR7U9soLGEcwH9VjQ==
+"@backstage-community/plugin-redhat-argocd@1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd/-/plugin-redhat-argocd-1.8.3.tgz#bd5b9374028a42be1a1ea3e8f5aaa68696dbd1ee"
+  integrity sha512-QdyY9c4YFpbaydjdsQzaKH3qTsgtzHtnDoz7uYF8KsCj8LZDFc0E3I+DD4xS0q7N4jT1U8LKehN9QNe3fXpw4g==
   dependencies:
     "@backstage-community/plugin-redhat-argocd-common" "^1.0.5"
     "@backstage/catalog-model" "^1.6.0"
@@ -8800,12 +8793,13 @@
     express "^4.19.2"
     lodash "^4.17.21"
 
-"@janus-idp/backstage-plugin-rbac-backend@4.10.1":
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.1.tgz#381917269527a1982d7382db68ad030321b5cc5f"
-  integrity sha512-98eHr00t353+1xPGBRwrLdzl1ragG+z9RZpDPUC7k2Wqi1jhv08NiChyniA/svDrYf3I+DMuIQozH2ENn1nW9w==
+"@janus-idp/backstage-plugin-rbac-backend@4.10.5":
+  version "4.10.5"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.5.tgz#b09a096cb9ab34e8e93cc07ebd128be89432bcf5"
+  integrity sha512-Gl6Z3NwN4uemA8ZBMf6g3dIQ5IGHsD1yYaitUNeD/hwAsQURJiKX6pXipgvOTaftDZz9g90PURT7k8uFpSnAgg==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
+    "@backstage/backend-defaults" "^0.4.1"
     "@backstage/backend-plugin-api" "^0.7.0"
     "@backstage/catalog-client" "^1.6.5"
     "@backstage/catalog-model" "^1.5.0"
