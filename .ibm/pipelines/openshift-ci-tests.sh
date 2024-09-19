@@ -13,9 +13,9 @@ JOB_NAME="periodic-aks"
 
 cleanup() {
   echo "Cleaning up before exiting"
-  if [[ "$JOB_NAME" == *aks* ]]; then
-    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  fi
+  #if [[ "$JOB_NAME" == *aks* ]]; then
+    #az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  #fi
   rm -rf ~/tmpbin
 }
 
@@ -403,7 +403,7 @@ main() {
   fi
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
-    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    #az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
     az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
