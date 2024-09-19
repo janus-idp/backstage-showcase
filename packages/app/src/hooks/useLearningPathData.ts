@@ -1,47 +1,28 @@
 import { useApi } from '@backstage/core-plugin-api';
 import { useCallback, useEffect, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
-import { customDataApiRef } from '../api';
-import { CustomzationDataLinks } from '../types/types';
+import { learningPathApiRef } from '../api/LearningPathApiClient';
+import { LearningPathLink } from '../types/types';
 
-const homePage = 'homePage';
-export const learningPathPage = 'learningPathPage';
-
-const supportedCustomizationFallbackData = {
-  [homePage]: {
-    fallback: '/homepage/data.json',
-  },
-  [learningPathPage]: {
-    fallback: '/learning-paths/data.json',
-  },
-};
-
-export const useCustomizationData = (
-  selectedCustomizationPage: 'homePage' | 'learningPathPage' = homePage,
-): {
-  data: CustomzationDataLinks | undefined;
+export const useLearningPathData = (): {
+  data: LearningPathLink[] | undefined;
   error: Error | undefined;
   isLoading: boolean;
 } => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [data, setData] = useState<CustomzationDataLinks>();
+  const [data, setData] = useState<LearningPathLink[]>();
   const [error, setError] = useState<Error>();
-  const client = useApi(customDataApiRef);
+  const client = useApi(learningPathApiRef);
   const {
     value,
     error: apiError,
     loading,
   } = useAsync(() => {
-    if (selectedCustomizationPage === learningPathPage) {
-      return client.getLearningPathDataJson();
-    }
-    return client.getHomeDataJson();
+    return client.getLearningPathData();
   });
 
   const fetchData = useCallback(async () => {
-    const res = await fetch(
-      supportedCustomizationFallbackData[selectedCustomizationPage].fallback,
-    );
+    const res = await fetch('/learning-paths/data.json');
     const qsData = await res.json();
     setData(qsData);
     setIsLoading(false);
