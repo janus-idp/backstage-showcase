@@ -41,6 +41,7 @@
     "@janus-idp/backstage-plugin-rbac-common": "1.9.0",
     "@mui/icons-material": "5.16.7",
     "@mui/material": "5.16.7",
+    "@mui/styled-engine": "5.16.6",
     "@redhat-developer/red-hat-developer-hub-theme": "0.3.0",
     "@scalprum/core": "0.7.0",
     "@scalprum/react-core": "0.8.0",
@@ -54,7 +55,7 @@
   "devDependencies": {
     "@backstage/cli": "0.26.11",
     "@backstage/test-utils": "1.5.9",
-    "@janus-idp/cli": "1.13.1",
+    "@janus-idp/cli": "1.13.2",
     "@scalprum/react-test-utils": "0.2.0",
     "@testing-library/dom": "9.3.4",
     "@testing-library/jest-dom": "6.5.0",
