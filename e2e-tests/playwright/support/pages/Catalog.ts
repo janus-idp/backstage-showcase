@@ -33,7 +33,7 @@ export class Catalog {
   async search(s: string) {
     await this.searchField.clear();
     const searchResponse = this.page.waitForResponse(
-      new RegExp(`https://*/api/catalog/entities/by-query/*`),
+      new RegExp(`${process.env.BASE_URL}/api/catalog/entities/by-query/*`),
     );
     await this.searchField.fill(s);
     await searchResponse;

@@ -119,7 +119,6 @@ data:
           providerId:
             organization: '${GITHUB_ORG}'
             schedule:
-              organization: "${GITHUB_ORG}"
               frequency: { minutes: 30}
               timeout: { minutes: 3}
               initialDelay: { seconds: 15}
