@@ -37,9 +37,10 @@ export async function upgradeHelmChartWithWait(
 ) {
   logger.info(`Upgrading helm release ${RELEASE}`);
   const upgradeOutput = await runShellCmd(`helm upgrade \
-    -i ${RELEASE} ${CHART} \
+    -i ${RELEASE} ${CHART} --version 2.15.2  \
     --wait --timeout 300s -n ${NAMESPACE} \
     --values ${VALUES} \
+    --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
     ${FLAGS.join(' ')}`);
 
   logger.log({
@@ -168,6 +169,7 @@ export async function replaceInRBACPolicyFileConfigMap(
   );
   const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
   const patched = cm.body.data['rbac-policy.csv'].replace(match, value);
+  logger.info(`Patch ${patched}`);
   const patch = [
     {
       op: 'replace',
@@ -240,12 +242,6 @@ export async function ensureEnvSecretExists(
     AUTH_PROVIDERS_REALM_NAME: Buffer.from(
       constants.AUTH_PROVIDERS_REALM_NAME,
     ).toString('base64'),
-    AUTH_PROVIDERS_GH_ORG_NAME:
-      Buffer.from('originalString').toString('base64'),
-    AUTH_PROVIDERS_GH_ORG_CLIENT_SECRET:
-      Buffer.from('originalString').toString('base64'),
-    AUTH_PROVIDERS_GH_ORG_CLIENT_ID:
-      Buffer.from('originalString').toString('base64'),
     AZURE_LOGIN_USERNAME: Buffer.from(constants.AZURE_LOGIN_USERNAME).toString(
       'base64',
     ),
@@ -273,6 +269,22 @@ export async function ensureEnvSecretExists(
     ).toString('base64'),
     RHSSO76_CLIENT_SECRET: Buffer.from(
       constants.RHSSO76_CLIENT_SECRET,
+    ).toString('base64'),
+    AUTH_ORG_APP_ID: Buffer.from(constants.AUTH_ORG_APP_ID).toString('base64'),
+    AUTH_ORG_CLIENT_ID: Buffer.from(constants.AUTH_ORG_CLIENT_ID).toString(
+      'base64',
+    ),
+    AUTH_ORG_CLIENT_SECRET: Buffer.from(
+      constants.AUTH_ORG_CLIENT_SECRET,
+    ).toString('base64'),
+    AUTH_ORG1_PRIVATE_KEY: Buffer.from(
+      constants.AUTH_ORG1_PRIVATE_KEY,
+    ).toString('base64'),
+    AUTH_ORG_WEBHOOK_SECRET: Buffer.from(
+      constants.AUTH_ORG_WEBHOOK_SECRET,
+    ).toString('base64'),
+    AUTH_PROVIDERS_GH_ORG_NAME: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_ORG_NAME,
     ).toString('base64'),
   };
   const secret: V1Secret = {

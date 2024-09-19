@@ -20,10 +20,20 @@ export const AUTH_PROVIDERS_AZURE_TENANT_ID =
 export const AUTH_PROVIDERS_REALM_NAME = process.env.AUTH_PROVIDERS_REALM_NAME;
 export const RHSSO76_CLIENTID = process.env.RHSSO76_CLIENT_ID;
 
+export const AUTH_PROVIDERS_GH_ORG_NAME =
+  process.env.AUTH_PROVIDERS_GH_ORG_NAME;
+export const AUTH_ORG_APP_ID = process.env.AUTH_ORG_APP_ID;
+export const AUTH_ORG_CLIENT_ID = process.env.AUTH_ORG_CLIENT_ID;
+export const AUTH_ORG_CLIENT_SECRET = process.env.AUTH_ORG_CLIENT_SECRET;
+export const AUTH_ORG1_PRIVATE_KEY = process.env.AUTH_ORG1_PRIVATE_KEY;
+export const AUTH_ORG_PK = process.env.AUTH_ORG_PK;
+export const AUTH_ORG_WEBHOOK_SECRET = process.env.AUTH_ORG_WEBHOOK_SECRET;
+export const GH_USER_PASSWORD = process.env.GH_USER_PASSWORD;
+
 export const JDOE_NEW_EMAIL = 'jenny-doe-new-email@example.com';
 export const AZURE_LOGIN_FIRSTNAME = 'QE RHDH Testing Admin';
-export const AUTH_PROVIDERS_NAMESPACE = 'albarbaro';
-export const AUTH_PROVIDERS_RELEASE = 'rhdh-albarbaro';
+export const AUTH_PROVIDERS_NAMESPACE = 'showcase-auth-providers';
+export const AUTH_PROVIDERS_RELEASE = 'rhdh-auth-providers';
 export const AUTH_PROVIDERS_CHART = 'rhdh-chart/backstage';
 export const AUTH_PROVIDERS_VALUES_FILE =
   '../.ibm/pipelines/value_files/values-showcase_auth-providers.yaml';
@@ -341,6 +351,33 @@ export const MSGRAPH_GROUPS: { [key: string]: Group } = {
   },
 };
 
+export const GH_TEAMS: { [key: string]: { name: string } } = {
+  team_1: {
+    name: 'gh_team_1',
+  },
+  team_2: {
+    name: 'gh_team_2',
+  },
+  team_3: {
+    name: 'gh_team_3',
+  },
+  team_4: {
+    name: 'gh_team_4',
+  },
+  location_admin: {
+    name: 'gh_team_location_reader',
+  },
+};
+
+export const GH_USERS: { [key: string]: { name: string } } = {
+  user_1: {
+    name: 'rhdhqeauth1',
+  },
+  admin: {
+    name: 'rhdhqeauthadmin',
+  },
+};
+
 export const RBAC_POLICY_ROLES: string = `
 p, role:default/admin, catalog-entity, read, allow
 p, role:default/admin, catalog-entity, update, allow
@@ -377,4 +414,10 @@ g, group:default/rhsso_group_3, role:default/reader
 g, group:default/rhsso_group_4, role:default/reader
 g, group:default/rhsso_group_location_reader, role:default/location_admin
 g, user:default/rhsso_admin, role:default/admin
+g, user:default/rhdhqeauthadmin, role:default/admin
+g, group:default/gh_team_1, role:default/reader
+g, group:default/gh_team_2, role:default/reader
+g, group:default/gh_team_3, role:default/reader
+g, group:default/gh_team_4, role:default/reader
+g, group:default/gh_team_location_reader, role:default/location_admin
 `;

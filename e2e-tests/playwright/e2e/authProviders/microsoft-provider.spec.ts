@@ -474,6 +474,7 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     await common.UnregisterGroupEnittyFromCatalog(
       constants.MSGRAPH_GROUPS['group_5'].displayName,
     );
+    await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
     await uiHelper.openSidebar('Settings');
     await common.signOut();
 

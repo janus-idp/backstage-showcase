@@ -35,8 +35,8 @@ upstream:
               domainHint: ${AUTH_PROVIDERS_AZURE_TENANT_ID}
           github:
             production:
-              clientSecret: ${AUTH_PROVIDERS_GH_ORG_CLIENT_SECRET}
-              clientId: ${AUTH_PROVIDERS_GH_ORG_CLIENT_ID}
+              clientSecret: ${AUTH_ORG_CLIENT_SECRET}
+              clientId: ${AUTH_ORG_CLIENT_ID}
           oidc:
             production:
               metadataUrl: ${RHSSO76_METADATA_URL}
@@ -44,6 +44,15 @@ upstream:
               clientSecret: ${RHSSO76_CLIENT_SECRET}
               prompt: auto 
               callbackUrl: ${RHSSO76_CALLBACK_URL}
+      integrations:
+        github:
+          - host: github.com
+            apps:
+              - appId: ${AUTH_ORG_APP_ID}
+                clientId: ${AUTH_ORG_CLIENT_ID}
+                clientSecret: ${AUTH_ORG_CLIENT_SECRET}
+                privateKey: ${AUTH_ORG1_PRIVATE_KEY}
+                webhookSecret: ${AUTH_ORG_WEBHOOK_SECRET}
       catalog:
         locations:
           - type: url
@@ -51,6 +60,14 @@ upstream:
         rules:
           - allow: [Component, Group, User, Resource, Location, Template]          
         providers:
+          githubOrg:
+            - id: github
+              githubUrl: https://github.com
+              orgs: ['${AUTH_PROVIDERS_GH_ORG_NAME}']
+              schedule:
+                initialDelay: { seconds: 10 }
+                frequency: { minutes: 1 }
+                timeout: { minutes: 1 }
           microsoftGraphOrg:
             default:
               tenantId: ${AUTH_PROVIDERS_AZURE_TENANT_ID}
@@ -66,13 +83,6 @@ upstream:
               schedule:
                 frequency: PT1M
                 timeout: PT1M
-          githubOrg:
-            id: production
-            githubUrl: https://github.com
-            orgs: ['${AUTH_PROVIDERS_GH_ORG_NAME}']
-            schedule:
-              frequency: { minutes: 1 }
-              timeout: { minutes: 1 }
           keycloakOrg:
             default:
               baseUrl: ${RHSSO76_URL}
@@ -92,6 +102,7 @@ upstream:
             users:
               - name: user:default/qeadmin_rhdhtesting.onmicrosoft.com
               - name: user:default/rhsso_admin
+              - name: user:default/rhdhqeauthadmin
     extraEnvVarsSecrets:
       - rhdh-secrets
     image:

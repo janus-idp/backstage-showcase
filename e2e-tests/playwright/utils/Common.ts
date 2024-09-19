@@ -195,6 +195,42 @@ export class Common {
     });
   }
 
+  async githubLogin(username: string, password: string) {
+    await this.page.goto('/');
+    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
+    await this.uiHelper.clickButton('Sign In');
+
+    return await new Promise<string>(resolve => {
+      this.page.once('popup', async popup => {
+        await popup.waitForLoadState();
+        if (popup.url().startsWith(process.env.BASE_URL)) {
+          // an active rhsso session is already logged in and the popup will automatically close
+          resolve('Already logged in');
+        } else {
+          await popup.waitForTimeout(3000);
+          try {
+            await popup.locator('#login_field').fill(username);
+            await popup.locator('#password').fill(password);
+            await popup.locator("[type='submit']").click({ timeout: 5000 });
+            //await this.checkAndReauthorizeGithubApp()
+            await popup.waitForEvent('close', { timeout: 2000 });
+            resolve('Login successful');
+          } catch (e) {
+            const authorization = popup.locator(
+              'button.js-oauth-authorize-btn',
+            );
+            if (await authorization.isVisible()) {
+              authorization.click();
+              resolve('Login successful with app authorization');
+            } else {
+              throw e;
+            }
+          }
+        }
+      });
+    });
+  }
+
   async MicrosoftAzureLogin(username: string, password: string) {
     await this.page.goto('/');
     await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
@@ -263,10 +299,12 @@ export class Common {
   }
 
   async GoToGroupPageAndGetDisplayedData(groupDisplayName: string) {
-    await this.page.goto('/');
-    await this.uiHelper.openSidebar('Catalog');
-    await this.uiHelper.selectMuiBox('Kind', 'Group');
-    await this.uiHelper.verifyHeading('All group');
+    await this.page.goto(
+      '/catalog?filters%5Bkind%5D=group&filters%5Buser%5D=all',
+    );
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(
+      'My Org Catalog',
+    );
 
     await this.uiHelper.clickLink(groupDisplayName);
     await this.uiHelper.verifyHeading(groupDisplayName);
@@ -344,17 +382,23 @@ export class Common {
   }
 
   async CheckGroupIsShowingInCatalog(groups: string[]) {
-    await this.page.goto('/');
-    await this.uiHelper.openSidebar('Catalog');
-    await this.uiHelper.selectMuiBox('Kind', 'Group');
+    await this.page.goto(
+      '/catalog?filters%5Bkind%5D=group&filters%5Buser%5D=all',
+    );
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(
+      'My Org Catalog',
+    );
     await this.uiHelper.verifyHeading('All groups');
     await this.uiHelper.verifyCellsInTable(groups);
   }
 
   async CheckUserIsShowingInCatalog(users: string[]) {
-    await this.page.goto('/');
-    await this.uiHelper.openSidebar('Catalog');
-    await this.uiHelper.selectMuiBox('Kind', 'User');
+    await this.page.goto(
+      '/catalog?filters%5Bkind%5D=user&filters%5Buser%5D=all',
+    );
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveText(
+      'My Org Catalog',
+    );
     await this.uiHelper.verifyHeading('All user');
     await this.uiHelper.verifyCellsInTable(users);
   }
