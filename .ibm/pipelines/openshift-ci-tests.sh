@@ -105,7 +105,7 @@ configure_namespace() {
 delete_namespace() {
   local project=$1
   if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists! deleting namespace"
+    echo "Namespace ${project} already exists! Deleting namespace."
     oc delete namespace "${project}"
   fi
 }
@@ -179,12 +179,12 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml" --namespace="${project}"
 
   if [[ "$JOB_NAME" != *aks* ]]; then # Skip for AKS, because of strange `sed: -e expression #1, char 136: unterminated `s' command`
-    sed -i "s|K8S_CLUSTER_API_SERVER_URL:.*|K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
+    sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   fi
-  sed -i "s|K8S_CLUSTER_NAME:.*|K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
-  sed -i "s|OCM_CLUSTER_TOKEN: .*|OCM_CLUSTER_TOKEN: ${token}|" "$dir/auth/secrets-rhdh-secrets.yaml"
+  sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   if [[ "${project}" == *rbac* ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
@@ -197,7 +197,6 @@ apply_yaml_files() {
   sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
-
 }
 
 run_tests() {
