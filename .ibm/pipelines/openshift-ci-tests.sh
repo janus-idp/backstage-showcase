@@ -290,7 +290,7 @@ install_pipelines_operator() {
 install_tekton_pipelines() {
   local dir=$1
 
-  if oc get csv -n "tekton-pipelines" | grep -q "tekton-pipelines"; then
+  if oc get pods -n "tekton-pipelines" | grep -q "tekton-pipelines"; then
     echo "Tekton Pipelines are already installed."
   else
     echo "Tekton Pipelines is not installed. Installing..."
