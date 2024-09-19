@@ -20,7 +20,12 @@ import {
   ProxiedSignInPage,
   type SignInProviderConfig,
 } from '@backstage/core-components';
-import { auth0AuthApiRef, oidcAuthApiRef, samlAuthApiRef } from '../../api';
+import {
+  auth0AuthApiRef,
+  oidcAuthApiRef,
+  samlAuthApiRef,
+  openshiftAuthApiRef,
+} from '../../api';
 
 const DEFAULT_PROVIDER = 'github';
 
@@ -134,6 +139,15 @@ const PROVIDERS = new Map<string, SignInProviderConfig | string>([
       title: 'OneLogin',
       message: 'Sign in using OneLogin',
       apiRef: oneloginAuthApiRef,
+    },
+  ],
+  [
+    'openshift',
+    {
+      id: 'openshift-auth-provider',
+      title: 'OpenShift',
+      message: 'Sign in using OpenShift',
+      apiRef: openshiftAuthApiRef,
     },
   ],
   [
