@@ -194,11 +194,10 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  if [[ "$JOB_NAME" != *aks* ]]; then
-    sleep 20 # wait for Pipeline Operator to be ready
-    oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-    oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
-  fi
+  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
+  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+
 }
 
 run_tests() {
@@ -288,6 +287,17 @@ install_pipelines_operator() {
   fi
 }
 
+install_tekton_pipelines() {
+  local dir=$1
+
+  if oc get csv -n "tekton-pipelines" | grep -q "tekton-pipelines"; then
+    echo "Tekton Pipelines are already installed."
+  else
+    echo "Tekton Pipelines is not installed. Installing..."
+    kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+  fi
+}
+
 initiate_deployments() {
   add_helm_repos
   install_helm
@@ -320,6 +330,7 @@ initiate_aks_deployment() {
   install_helm
   delete_namespace "${NAME_SPACE_RBAC_AKS}"
   configure_namespace "${NAME_SPACE_AKS}"
+  install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
@@ -333,6 +344,7 @@ initiate_rbac_aks_deployment() {
   install_helm
   delete_namespace "${NAME_SPACE_AKS}"
   configure_namespace "${NAME_SPACE_RBAC_AKS}"
+  install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
