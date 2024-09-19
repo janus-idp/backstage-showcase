@@ -20,8 +20,16 @@ test.describe('Test timestamp column on Catalog', () => {
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
 
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
+
+  test.beforeEach(async () => {
+    await uiHelper.openSidebar('Catalog');
+    await uiHelper.verifyHeading('My Org Catalog');
+    await uiHelper.selectMuiBox('Kind', 'Component');
+    await uiHelper.clickByDataTestId('user-picker-all');
+  });
+
   test('Register an existing component and verify `Created At` column and value in the Catalog Page', async () => {
     await uiHelper.clickButton('Create');
     await uiHelper.clickButton('Register Existing Component');

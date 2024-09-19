@@ -46,6 +46,12 @@ export class UIhelper {
     return button;
   }
 
+  async clickByDataTestId(dataTestId: string) {
+    const element = this.page.getByTestId(dataTestId);
+    await element.waitFor({ state: 'visible' });
+    await element.click();
+  }
+
   async verifyDivHasText(divText: string) {
     await expect(
       this.page.locator(`div`).filter({ hasText: divText }),
