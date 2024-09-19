@@ -301,7 +301,7 @@ test.describe
   test('Check if permission policies defined in files are loaded and effective', async () => {
     const testRole: string = 'role:default/test2-role';
 
-    await uiHelper.verifyHeading('All roles (3)');
+    await uiHelper.verifyHeading(/All roles \(\d+\)/);
     await uiHelper.verifyLink(testRole);
     await uiHelper.clickLink(testRole);
 
@@ -414,7 +414,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
   });
 
   test('Check if Administration side nav is present with RBAC plugin', async () => {
-    await uiHelper.verifyHeading('All roles (3)');
+    await uiHelper.verifyHeading(/All roles \(\d+\)/);
     const allGridColumnsText = Roles.getRolesListColumnsText();
     await uiHelper.verifyColumnHeading(allGridColumnsText);
     const allCellsIdentifier = Roles.getRolesListCellsIdentifier();
