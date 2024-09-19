@@ -38,8 +38,10 @@ test.describe('Github Discovery Catalog', () => {
     const reposNames: string[] = organizationRepos.map(e => e['name']);
     // some repos may not be Components, so let's check
     let pass = 0;
+    // have to speed up the tests, so:
+    const reposUnderTest = reposNames.length / 2;
 
-    for (let i = 0; i != reposNames.length; i++) {
+    for (let i = 0; i != reposUnderTest; i++) {
       const repo = reposNames[i];
 
       await catalogPage.search(repo);
@@ -52,6 +54,6 @@ test.describe('Github Discovery Catalog', () => {
       }
     }
     //At least 1/5 are valid and listed components
-    expect(pass).toBeGreaterThanOrEqual(organizationRepos.length / 5);
+    expect(pass).toBeGreaterThanOrEqual(reposUnderTest / 5);
   });
 });

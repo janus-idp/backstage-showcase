@@ -40,6 +40,6 @@ export class Catalog {
   }
 
   async tableRow(content: string) {
-    return this.page.locator(`tr >> text="${content}"`);
+    return this.page.locator(`tr >> a >> text="${content}"`);
   }
 }
