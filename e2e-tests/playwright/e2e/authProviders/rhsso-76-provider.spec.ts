@@ -52,6 +52,9 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set global.dynamic.plugins[0].disabled=false',
         '--set upstream.postgresql.primary.persistence.enabled=false',
@@ -104,6 +107,9 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set global.dynamic.plugins[0].disabled=false',
         '--set global.dynamic.plugins[1].disabled=true',
@@ -164,6 +170,9 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set global.dynamic.plugins[0].disabled=false',
         '--set global.dynamic.plugins[1].disabled=true',

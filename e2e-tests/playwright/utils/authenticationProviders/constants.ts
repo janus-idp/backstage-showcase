@@ -19,7 +19,6 @@ export const AUTH_PROVIDERS_AZURE_TENANT_ID =
   process.env.AUTH_PROVIDERS_AZURE_TENANT_ID;
 export const AUTH_PROVIDERS_REALM_NAME = process.env.AUTH_PROVIDERS_REALM_NAME;
 export const RHSSO76_CLIENTID = process.env.RHSSO76_CLIENT_ID;
-
 export const AUTH_PROVIDERS_GH_ORG_NAME =
   process.env.AUTH_PROVIDERS_GH_ORG_NAME;
 export const AUTH_ORG_APP_ID = process.env.AUTH_ORG_APP_ID;
@@ -28,18 +27,22 @@ export const AUTH_ORG_CLIENT_SECRET = process.env.AUTH_ORG_CLIENT_SECRET;
 export const AUTH_ORG1_PRIVATE_KEY = process.env.AUTH_ORG1_PRIVATE_KEY;
 export const AUTH_ORG_PK = process.env.AUTH_ORG_PK;
 export const AUTH_ORG_WEBHOOK_SECRET = process.env.AUTH_ORG_WEBHOOK_SECRET;
-export const GH_USER_PASSWORD = process.env.GH_USER_PASSWORD;
+export const AUTH_PROVIDERS_NAMESPACE = process.env.AUTH_PROVIDERS_NAMESPACE;
+export const AUTH_PROVIDERS_RELEASE = process.env.AUTH_PROVIDERS_RELEASE;
+export const AUTH_PROVIDERS_CHART = process.env.AUTH_PROVIDERS_CHART;
+export const CHART_VERSION = process.env.CHART_VERSION;
+export const QUAY_REPO = process.env.QUAY_REPO;
+export const TAG_NAME = process.env.TAG_NAME;
 
-export const JDOE_NEW_EMAIL = 'jenny-doe-new-email@example.com';
-export const AZURE_LOGIN_FIRSTNAME = 'QE RHDH Testing Admin';
-export const AUTH_PROVIDERS_NAMESPACE = 'showcase-auth-providers';
-export const AUTH_PROVIDERS_RELEASE = 'rhdh-auth-providers';
-export const AUTH_PROVIDERS_CHART = 'rhdh-chart/backstage';
 export const AUTH_PROVIDERS_VALUES_FILE =
   '../.ibm/pipelines/value_files/values-showcase_auth-providers.yaml';
 export const AUTH_PROVIDERS_POD_STRING =
   AUTH_PROVIDERS_RELEASE + '-' + AUTH_PROVIDERS_CHART.split('/')[1];
 export const AUTH_PROVIDERS_BASE_URL = `https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${process.env.K8S_CLUSTER_ROUTER_BASE}`;
+
+export const GH_USER_PASSWORD = process.env.GH_USER_PASSWORD;
+export const JDOE_NEW_EMAIL = 'jenny-doe-new-email@example.com';
+export const AZURE_LOGIN_FIRSTNAME = 'QE RHDH Testing Admin';
 
 export const RHSSO76_GROUPS: { [key: string]: GroupRepresentation } = {
   group_1: {

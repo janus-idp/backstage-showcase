@@ -33,13 +33,17 @@ export async function upgradeHelmChartWithWait(
   CHART: string,
   NAMESPACE: string,
   VALUES: string,
+  CHART_VERSION: string,
+  QUAY_REPO: string,
+  TAG_NAME: string,
   FLAGS: Array<string>,
 ) {
   logger.info(`Upgrading helm release ${RELEASE}`);
   const upgradeOutput = await runShellCmd(`helm upgrade \
-    -i ${RELEASE} ${CHART} --version 2.15.2  \
+    -i ${RELEASE} ${CHART}  \
     --wait --timeout 300s -n ${NAMESPACE} \
     --values ${VALUES} \
+    --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
     ${FLAGS.join(' ')}`);
 

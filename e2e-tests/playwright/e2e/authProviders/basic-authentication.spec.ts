@@ -35,6 +35,9 @@ test.describe('Standard authentication providers: Basic authentication', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set upstream.backstage.appConfig.auth.providers=null',
         '--set upstream.backstage.appConfig.auth.environment=development',
@@ -67,6 +70,9 @@ test.describe('Standard authentication providers: Basic authentication', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set upstream.backstage.appConfig.auth.environment=development',
         '--set upstream.backstage.appConfig.signInPage=microsoft',
@@ -98,6 +104,9 @@ test.describe('Standard authentication providers: Basic authentication', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set upstream.backstage.appConfig.auth.environment=development',
         '--set upstream.backstage.appConfig.signInPage=microsoft',
@@ -137,6 +146,9 @@ test.describe('Standard authentication providers: Basic authentication', () => {
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
       constants.AUTH_PROVIDERS_VALUES_FILE,
+      constants.CHART_VERSION,
+      constants.QUAY_REPO,
+      constants.TAG_NAME,
       [
         '--set upstream.backstage.appConfig.auth.environment=production',
         '--set upstream.backstage.appConfig.signInPage=microsoft',
