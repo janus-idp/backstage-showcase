@@ -35,8 +35,8 @@ export type StaticPlugins = Record<
   {
     plugin: BackstagePlugin;
     module:
-      | React.ComponentType<{}>
-      | { [importName: string]: React.ComponentType<{}> };
+      | React.ComponentType<any>
+      | { [importName: string]: React.ComponentType<any> };
   }
 >;
 
