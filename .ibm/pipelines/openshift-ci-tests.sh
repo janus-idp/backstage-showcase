@@ -16,6 +16,8 @@ cleanup() {
 
 trap cleanup EXIT
 
+source "${DIR}/utils.sh"
+
 set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
