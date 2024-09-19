@@ -1,13 +1,13 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useApi } from '@backstage/core-plugin-api';
-import { useCustomizationData } from './useCustomizationData';
+import { useLearningPathData } from './useLearningPathData';
 
 jest.mock('@backstage/core-plugin-api', () => ({
   ...jest.requireActual('@backstage/core-plugin-api'),
   useApi: jest.fn(),
 }));
 
-describe('useCustomizationData', () => {
+describe('useLearningPathData', () => {
   const learningPathData = [
     {
       paths: 6,
@@ -26,23 +26,9 @@ describe('useCustomizationData', () => {
       url: 'https://developers.redhat.com/learn/openshift-data-science/configure-jupyter-notebook-use-gpus-aiml-modeling',
     },
   ];
-  const homePageData = [
-    {
-      title: 'Community',
-      isExpanded: false,
-      links: [
-        {
-          iconUrl: '/homepage/icons/icons8/web.png',
-          label: 'Website',
-          url: 'https://janus-idp.io/community',
-        },
-      ],
-    },
-  ];
   beforeEach(() => {
     (useApi as jest.Mock).mockReturnValue({
-      getHomeDataJson: jest.fn(() => Promise.resolve(homePageData)),
-      getLearningPathDataJson: jest.fn(() => Promise.resolve(learningPathData)),
+      getLearningPathData: jest.fn(() => Promise.resolve(learningPathData)),
     });
   });
 
@@ -50,36 +36,8 @@ describe('useCustomizationData', () => {
     jest.restoreAllMocks();
   });
 
-  it('should return homepage data if no prop is provided', async () => {
-    const { result } = renderHook(() => useCustomizationData());
-
-    expect(result.current.isLoading).toBe(true);
-
-    await waitFor(() => {
-      expect(result.current.data).toBeDefined();
-      expect(result.current.data).toStrictEqual(homePageData);
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBeUndefined();
-    });
-  });
-
-  it('should return homepage data if prop is provided', async () => {
-    const { result } = renderHook(() => useCustomizationData());
-
-    expect(result.current.isLoading).toBe(true);
-
-    await waitFor(() => {
-      expect(result.current.data).toBeDefined();
-      expect(result.current.data).toStrictEqual(homePageData);
-      expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBeUndefined();
-    });
-  });
-
-  it('should return learning path data if prop is provided', async () => {
-    const { result } = renderHook(() =>
-      useCustomizationData('learningPathPage'),
-    );
+  it('should return learning path data', async () => {
+    const { result } = renderHook(() => useLearningPathData());
 
     expect(result.current.isLoading).toBe(true);
 
@@ -94,7 +52,7 @@ describe('useCustomizationData', () => {
   it('handles API error properly', async () => {
     (useApi as jest.Mock).mockReturnValue({
       getHomeDataJson: jest.fn(() => Promise.reject(new Error('API Error'))),
-      getLearningPathDataJson: jest.fn(() =>
+      getLearningPathData: jest.fn(() =>
         Promise.reject(new Error('API Error')),
       ),
     });
@@ -105,7 +63,7 @@ describe('useCustomizationData', () => {
         Promise.reject(new Error('Fallback data fetch Error')),
       );
 
-    const { result } = renderHook(() => useCustomizationData());
+    const { result } = renderHook(() => useLearningPathData());
 
     expect(result.current.isLoading).toBe(true);
 
@@ -114,43 +72,6 @@ describe('useCustomizationData', () => {
       expect(result.current.error).toEqual(
         new Error('Fallback data fetch Error'),
       );
-    });
-  });
-
-  it('fetches home page data from fallback if API fails', async () => {
-    const homePageDataFallback = [
-      {
-        title: 'Community Link',
-        isExpanded: false,
-        links: [
-          {
-            iconUrl: '/homepage/icons/icons8/web.png',
-            label: 'Website',
-            url: 'https://janus-idp.io/community',
-          },
-        ],
-      },
-    ];
-    (useApi as jest.Mock).mockReturnValue({
-      getHomeDataJson: jest.fn(() => Promise.reject(new Error('API Error'))),
-      getLearningPathDataJson: jest.fn(() =>
-        Promise.reject(new Error('API Error')),
-      ),
-    });
-
-    jest
-      .spyOn(global, 'fetch')
-      .mockImplementationOnce(() =>
-        Promise.resolve(new Response(JSON.stringify(homePageDataFallback))),
-      );
-
-    const { result } = renderHook(() => useCustomizationData());
-
-    expect(result.current.isLoading).toBe(true);
-    await waitFor(() => {
-      expect(result.current.data).toBeDefined();
-      expect(result.current.data).toStrictEqual(homePageDataFallback);
-      expect(result.current.isLoading).toBe(false);
     });
   });
 
@@ -167,7 +88,7 @@ describe('useCustomizationData', () => {
     ];
     (useApi as jest.Mock).mockReturnValue({
       getHomeDataJson: jest.fn(() => Promise.reject(new Error('API Error'))),
-      getLearningPathDataJson: jest.fn(() =>
+      getLearningPathData: jest.fn(() =>
         Promise.reject(new Error('API Error')),
       ),
     });
@@ -178,7 +99,7 @@ describe('useCustomizationData', () => {
         Promise.resolve(new Response(JSON.stringify(learningPathDataFallback))),
       );
 
-    const { result } = renderHook(() => useCustomizationData());
+    const { result } = renderHook(() => useLearningPathData());
 
     expect(result.current.isLoading).toBe(true);
     await waitFor(() => {
