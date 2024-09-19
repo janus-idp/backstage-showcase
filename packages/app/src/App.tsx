@@ -1,11 +1,17 @@
 import React from 'react';
+
+import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';
+import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
 import { apis } from './apis';
-import DynamicRoot from './components/DynamicRoot';
 import { DefaultMainMenuItems } from './consts';
 
 // Statically integrated frontend plugins
 const { dynamicPluginsInfoPlugin, ...dynamicPluginsInfoPluginModule } =
   await import('@internal/plugin-dynamic-plugins-info');
+
+const { dynamicHomePagePlugin, ...dynamicHomePagePluginModule } = await import(
+  '@janus-idp/backstage-plugin-dynamic-home-page'
+);
 
 // The base UI configuration, these values can be overridden by values
 // specified in external configuration files
@@ -15,7 +21,8 @@ const baseFrontendConfig = {
     dynamicPlugins: {
       frontend: {
         'default.main-menu-items': DefaultMainMenuItems,
-        '@internal/plugin-dynamic-plugins-info': {
+        // please keep this in sync with plugins/dynamic-plugins-info/app-config.janus-idp.yaml
+        'internal.plugin-dynamic-plugins-info': {
           appIcons: [
             { name: 'pluginsInfoIcon', importName: 'PluginsInfoIcon' },
             { name: 'adminIcon', importName: 'AdminIcon' },
@@ -39,25 +46,85 @@ const baseFrontendConfig = {
             },
           },
         },
+        // please keep this in sync with plugins/dynamic-home-page/app-config.janus-idp.yaml
+        'janus-idp.backstage-plugin-dynamic-home-page': {
+          dynamicRoutes: [
+            {
+              path: '/',
+              importName: 'DynamicHomePage',
+            },
+          ],
+          mountPoints: [
+            {
+              mountPoint: 'home.page/cards',
+              importName: 'SearchBar',
+              config: {
+                // prettier-ignore
+                layouts: {
+                  xl:  { w: 10, h: 1, x: 1 },
+                  lg:  { w: 10, h: 1, x: 1 },
+                  md:  { w: 10, h: 1, x: 1 },
+                  sm:  { w: 10, h: 1, x: 1 },
+                  xs:  { w: 12, h: 1 },
+                  xxs: { w: 12, h: 1 },
+                },
+              },
+            },
+            {
+              mountPoint: 'home.page/cards',
+              importName: 'QuickAccessCard',
+              config: {
+                // prettier-ignore
+                layouts: {
+                  xl:  { w:  7, h: 8 },
+                  lg:  { w:  7, h: 8 },
+                  md:  { w:  7, h: 8 },
+                  sm:  { w: 12, h: 8 },
+                  xs:  { w: 12, h: 8 },
+                  xxs: { w: 12, h: 8 },
+                },
+              },
+            },
+            {
+              mountPoint: 'home.page/cards',
+              importName: 'CatalogStarredEntitiesCard',
+              config: {
+                // prettier-ignore
+                layouts: {
+                  xl:  { w:  5, h: 4, x: 7 },
+                  lg:  { w:  5, h: 4, x: 7 },
+                  md:  { w:  5, h: 4, x: 7 },
+                  sm:  { w: 12, h: 4 },
+                  xs:  { w: 12, h: 4 },
+                  xxs: { w: 12, h: 4 },
+                },
+              },
+            },
+          ],
+        },
       },
     },
   },
 };
 
 // The map of static plugins by package name
-const staticPluginMap = {
-  '@internal/plugin-dynamic-plugins-info': {
+const staticPlugins: StaticPlugins = {
+  'internal.plugin-dynamic-plugins-info': {
     plugin: dynamicPluginsInfoPlugin,
     module: dynamicPluginsInfoPluginModule,
+  },
+  'janus-idp.backstage-plugin-dynamic-home-page': {
+    plugin: dynamicHomePagePlugin,
+    module: dynamicHomePagePluginModule,
   },
 };
 
 const AppRoot = () => (
-  <DynamicRoot
+  <ScalprumRoot
     apis={apis}
     afterInit={() => import('./components/AppBase')}
     baseFrontendConfig={baseFrontendConfig}
-    plugins={staticPluginMap}
+    plugins={staticPlugins}
   />
 );
 
