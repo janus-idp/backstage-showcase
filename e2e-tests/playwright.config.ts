@@ -88,9 +88,8 @@ export default defineConfig({
       name: 'showcase-rbac-aks',
       ...useCommonDeviceAndViewportConfig,
       testMatch: [
-        '**/playwright/e2e/instance-health-check.spec.ts',
-        // '**/playwright/e2e/plugins/rbac/**/*.spec.ts', // tests broken on AKS by https://github.com/janus-idp/backstage-showcase/pull/1565
-        // '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts', // tests broken on AKS by https://github.com/janus-idp/backstage-showcase/pull/1565
+        // '**/playwright/e2e/plugins/rbac/**/*.spec.ts', // GH login broken https://issues.redhat.com/browse/RHIDP-4113
+        // '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts', // GH login broken https://issues.redhat.com/browse/RHIDP-4113
       ],
     },
 
