@@ -1,0 +1,32 @@
+# please keep this in sync with packages/app/src/App.tsx
+dynamicPlugins:
+  frontend:
+    janus-idp.backstage-plugin-dynamic-home-page:
+      dynamicRoutes:
+        - path: /
+          importName: DynamicHomePage
+      mountPoints:
+        - mountPoint: home.page/cards
+          importName: SearchBar
+          config:
+            layout:
+              width:
+                defaultColumns: 7
+              height:
+                defaultRows: 3
+        - mountPoint: home.page/cards
+          importName: QuickAccessCard
+          config:
+            layout:
+              width:
+                defaultColumns: 7
+              height:
+                defaultRows: 10
+        - mountPoint: home.page/cards
+          importName: CatalogStarredEntitiesCard
+          config:
+            layout:
+              width:
+                defaultColumns: 5
+              height:
+                defaultRows: 3

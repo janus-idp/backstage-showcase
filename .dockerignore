@@ -3,11 +3,12 @@
 **/dist
 **/node_modules
 plugins
-!plugins/scalprum-backend
+!plugins/auth-backend-module-oidc-provider
+!plugins/dynamic-home-page
 !plugins/dynamic-plugins-info
 !plugins/dynamic-plugins-info-backend
-!plugins/auth-backend-module-oidc-provider
 !plugins/licensed-users-info-backend
+!plugins/scalprum-backend
 *.local.yaml
 coverage
 dist-types

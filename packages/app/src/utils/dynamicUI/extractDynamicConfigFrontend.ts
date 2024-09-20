@@ -78,7 +78,7 @@ export function extractMenuItems(frontend: FrontendConfig): MenuItem[] {
       customProperties.dynamicRoutes.forEach(dr => {
         const itemName = getNameFromPath(dr.path);
         const mi = dr.menuItem;
-        if (isStaticPath(dr.path)) {
+        if (mi && isStaticPath(dr.path)) {
           items.push({
             name: itemName,
             icon: mi && 'icon' in mi && mi.icon ? mi.icon : '',
