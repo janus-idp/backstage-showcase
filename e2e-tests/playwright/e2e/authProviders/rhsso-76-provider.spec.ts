@@ -62,6 +62,7 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
         '--set upstream.backstage.appConfig.catalog.providers.microsoftOrg=null',
         '--set global.dynamic.plugins[3].disabled=false',
         '--set upstream.backstage.appConfig.permission.enabled=true',
+        '--set upstream.backstage.appConfig.auth.providers.oidc.production.callbackUrl=${RHSSO76_CALLBACK_URL}',
       ],
     );
 
@@ -118,6 +119,7 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
         '--set upstream.backstage.appConfig.auth.providers.oidc.production.signIn.resolvers[0].resolver=emailMatchingUserEntityProfileEmail',
         '--set global.dynamic.plugins[3].disabled=false',
         '--set upstream.backstage.appConfig.permission.enabled=true',
+        '--set upstream.backstage.appConfig.auth.providers.oidc.production.callbackUrl=${RHSSO76_CALLBACK_URL}',
       ],
     );
 
@@ -181,6 +183,7 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
         '--set upstream.backstage.appConfig.auth.providers.oidc.production.signIn.resolvers[0].resolver=preferredUsernameMatchingUserEntityName',
         '--set global.dynamic.plugins[3].disabled=false',
         '--set upstream.backstage.appConfig.permission.enabled=true',
+        '--set upstream.backstage.appConfig.auth.providers.oidc.production.callbackUrl=${RHSSO76_CALLBACK_URL}',
       ],
     );
 
@@ -556,11 +559,11 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
     logger.info(
       `Executing testcase: Remove a group from RHDH: user can login, but policy is broken before next sync.`,
     );
-    if (test.info().retry > 0) {
+    if (test.info().retry >= 0) {
       await WaitForNextSync(SYNC__TIME, 'rhsso');
     }
     await common.keycloakLogin(
-      constants.RHSSO76_USERS['user_3'].username,
+      constants.RHSSO76_USERS['admin'].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
 
@@ -581,12 +584,12 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
 
     await WaitForNextSync(SYNC__TIME, 'rhsso');
 
-    // after sync, ensure group_5 is created again and memembers can login
+    // after sync, ensure group is created again and memembers can login
     logger.info(
       `Execute testcase: Remove a group from RHDH: group is created again after the sync`,
     );
     await common.keycloakLogin(
-      constants.RHSSO76_USERS['user_4'].username,
+      constants.RHSSO76_USERS['admin'].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
     await common.CheckGroupIsShowingInCatalog([

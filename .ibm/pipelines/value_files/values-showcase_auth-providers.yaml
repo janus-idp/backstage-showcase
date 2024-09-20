@@ -70,6 +70,8 @@ upstream:
                 timeout: { minutes: 1 }
           microsoftGraphOrg:
             default:
+              target: https://graph.microsoft.com/v1.0
+              authority: https://login.microsoftonline.com
               tenantId: ${AUTH_PROVIDERS_AZURE_TENANT_ID}
               clientId: ${AUTH_PROVIDERS_AZURE_CLIENT_ID}
               clientSecret: ${AUTH_PROVIDERS_AZURE_CLIENT_SECRET}

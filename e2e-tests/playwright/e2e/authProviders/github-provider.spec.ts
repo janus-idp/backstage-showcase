@@ -195,7 +195,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
 
     await uiHelper.openSidebar('Settings');
     await common.signOut();
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await context.clearCookies();
 
     const loginSucceded = await common.githubLogin(
       constants.GH_USERS['user_1'].name,
@@ -205,7 +205,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
 
     await uiHelper.verifyAlertErrorMessage(/User not found/gm);
 
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await context.clearCookies();
 
     // waiting for next sync
     await WaitForNextSync(SYNC_TIME, 'github');
@@ -221,7 +221,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     );
     await uiHelper.openSidebar('Settings');
     await common.signOut();
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await context.clearCookies();
   });
 
   test('Remove a group from RHDH', async () => {

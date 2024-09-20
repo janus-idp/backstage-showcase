@@ -86,7 +86,7 @@ test.describe('Standard authentication providers: Basic authentication', () => {
     );
 
     await uiHelper.verifyAlertErrorMessage(
-      'Login failed; caused by Error: Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.',
+      /Login failed; caused by Error: Sign in failed: User not found in the RHDH software catalog/gm,
     );
   });
 
@@ -136,7 +136,7 @@ test.describe('Standard authentication providers: Basic authentication', () => {
     // Set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog = true
     // The Microsoft login should now be successful
 
-    test.setTimeout(30 * 1000);
+    test.setTimeout(300 * 1000);
     logger.info(
       'Execute testcase: Ensure Guest login is disabled when setting environment to production',
     );

@@ -38,6 +38,9 @@ export async function upgradeHelmChartWithWait(
   TAG_NAME: string,
   FLAGS: Array<string>,
 ) {
+  logger.info(`Deleting any exisitng helm release ${RELEASE}`);
+  await deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
+
   logger.info(`Upgrading helm release ${RELEASE}`);
   const upgradeOutput = await runShellCmd(`helm upgrade \
     -i ${RELEASE} ${CHART}  \
@@ -72,7 +75,7 @@ export async function deleteHelmReleaseWithWait(
 ) {
   logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
   const result = await runShellCmd(
-    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE}`,
+    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
   );
   logger.log({
     level: 'info',

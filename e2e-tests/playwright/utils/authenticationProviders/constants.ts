@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation';
 import GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation';
 import ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientRepresentation';

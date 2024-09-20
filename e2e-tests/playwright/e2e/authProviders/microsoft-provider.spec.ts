@@ -45,6 +45,36 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
 
   test('Setup RHDH with Microsoft EntraID ingestion and eventually wait for the first sync', async () => {
     test.setTimeout(600 * 1000);
+    const oidcFlow = false;
+    const oauthFlags = [
+      '--set upstream.backstage.appConfig.auth.providers.github=null',
+      '--set upstream.backstage.appConfig.signInPage=microsoft',
+      '--set upstream.backstage.appConfig.auth.environment=production',
+      '--set upstream.backstage.appConfig.catalog.providers.githubOrg=null',
+      '--set upstream.backstage.appConfig.catalog.providers.keycloakOrg=null',
+      '--set global.dynamic.plugins[2].disabled=false',
+      '--set global.dynamic.plugins[3].disabled=false',
+      '--set upstream.backstage.appConfig.permission.enabled=true',
+    ];
+
+    const oidcFlags = [
+      '--set upstream.backstage.appConfig.auth.providers.github=null',
+      '--set upstream.backstage.appConfig.signInPage=oidc',
+      '--set upstream.backstage.appConfig.auth.environment=production',
+      '--set upstream.backstage.appConfig.catalog.providers.githubOrg=null',
+      '--set upstream.backstage.appConfig.catalog.providers.keycloakOrg=null',
+      '--set global.dynamic.plugins[2].disabled=false',
+      '--set global.dynamic.plugins[3].disabled=false',
+      '--set upstream.backstage.appConfig.permission.enabled=true',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.metadataUrl=https://login.microsoftonline.com/${AUTH_PROVIDERS_AZURE_TENANT_ID}/.well-known/openid-configuration',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.tenantId=${AUTH_PROVIDERS_AZURE_TENANT_ID}',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.clientId=${AUTH_PROVIDERS_AZURE_CLIENT_ID}',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.clientSecret=${AUTH_PROVIDERS_AZURE_CLIENT_SECRET}',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.prompt=auto',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.callbackUrl=${BASE_URL}/api/auth/oidc/handler/frame',
+      '--set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog=true',
+      '--set upstream.backstage.appConfig.auth.providers.oidc.production.signIn.resolvers[0].resolver=emailMatchingUserEntityProfileEmail',
+    ];
     // setup RHSSO provider with user ingestion
     await upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
@@ -54,16 +84,7 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
       constants.CHART_VERSION,
       constants.QUAY_REPO,
       constants.TAG_NAME,
-      [
-        '--set upstream.backstage.appConfig.auth.providers.github=null',
-        '--set upstream.backstage.appConfig.signInPage=microsoft',
-        '--set upstream.backstage.appConfig.auth.environment=production',
-        '--set upstream.backstage.appConfig.catalog.providers.githubOrg=null',
-        '--set upstream.backstage.appConfig.catalog.providers.keycloakOrg=null',
-        '--set global.dynamic.plugins[2].disabled=false',
-        '--set global.dynamic.plugins[3].disabled=false',
-        '--set upstream.backstage.appConfig.permission.enabled=true',
-      ],
+      oidcFlow ? oidcFlags : oauthFlags,
     );
 
     await WaitForNextSync(SYNC_TIME, 'microsoft');
@@ -437,7 +458,7 @@ test.describe('Standard authentication providers: Micorsoft Azure EntraID', () =
     expect(loginSucceded).toContain('Login successful');
 
     await uiHelper.verifyAlertErrorMessage(
-      /users\/groups have not been ingested into the catalog/gm,
+      /User not found in the RHDH software catalog/gm,
     );
 
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user

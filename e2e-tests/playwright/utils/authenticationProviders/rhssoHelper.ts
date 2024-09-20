@@ -40,6 +40,7 @@ export async function setupRHSSOEnvironment(): Promise<{
   usersCreated: Map<string, UserRepresentation>;
   groupsCreated: Map<string, GroupRepresentation>;
 }> {
+  logger.info('Setting up RHSSO environment');
   const usersCreated = new Map<string, UserRepresentation>();
   const groupsCreated = new Map<string, GroupRepresentation>();
 
