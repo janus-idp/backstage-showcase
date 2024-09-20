@@ -51,6 +51,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-home-page/package.json ./plugins/dynamic-home-page/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json

@@ -4,17 +4,16 @@ import {
   DiscoveryApi,
   IdentityApi,
 } from '@backstage/core-plugin-api';
-import { LearningPathLinks, QuickAccessLinks } from '../types/types';
+import { LearningPathLink } from '../types/types';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';
 
-export interface CustomDataApi {
-  getHomeDataJson(): Promise<QuickAccessLinks[]>;
-  getLearningPathDataJson(): Promise<LearningPathLinks[]>;
+export interface LearningPathApi {
+  getLearningPathData(): Promise<LearningPathLink[]>;
 }
 
-export const customDataApiRef = createApiRef<CustomDataApi>({
-  id: 'app.developer-hub.service',
+export const learningPathApiRef = createApiRef<LearningPathApi>({
+  id: 'app.developer-hub.learning-path.service',
 });
 
 export type Options = {
@@ -23,7 +22,7 @@ export type Options = {
   identityApi: IdentityApi;
 };
 
-export class CustomDataApiClient implements CustomDataApi {
+export class LearningPathApiClient implements LearningPathApi {
   private readonly discoveryApi: DiscoveryApi;
   private readonly configApi: ConfigApi;
   private readonly identityApi: IdentityApi;
@@ -36,7 +35,7 @@ export class CustomDataApiClient implements CustomDataApi {
 
   private async getBaseUrl() {
     const proxyPath =
-      this.configApi.getOptionalString('developerHub.proxyPath') ||
+      this.configApi.getOptionalString('developerHub.proxyPath') ??
       DEFAULT_PROXY_PATH;
     return `${await this.discoveryApi.getBaseUrl('proxy')}${proxyPath}`;
   }
@@ -57,13 +56,7 @@ export class CustomDataApiClient implements CustomDataApi {
     return await response.json();
   }
 
-  async getHomeDataJson() {
-    const proxyUrl = await this.getBaseUrl();
-    const data = await this.fetcher(`${proxyUrl}`);
-    return data;
-  }
-
-  async getLearningPathDataJson() {
+  async getLearningPathData() {
     const proxyUrl = await this.getBaseUrl();
     const data = await this.fetcher(`${proxyUrl}/learning-paths`);
     return data;
