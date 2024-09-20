@@ -1,6 +1,5 @@
 #!/bin/sh
 echo "Enable e2e-tests on release-1.3"
-exit 0 #temp change revert once /pj-rehearse auto-ack pass on relase PR:56923
 set -xe
 export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 
