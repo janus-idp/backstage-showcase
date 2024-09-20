@@ -8793,10 +8793,10 @@
     lodash "^4.17.21"
     yaml "^2.0.0"
 
-"@janus-idp/cli@1.13.1":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.13.1.tgz#72d76648ba400f648fd8d286d7706c2409d6599d"
-  integrity sha512-dVUS8S7jvsanELBpMOeRiWOK/VT8w/ZGaB1shTFbn2MlL4To9JpL3pnQ1GhiMKAUgd9OYWDwgGIJNAPY14og5A==
+"@janus-idp/cli@1.13.2":
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.13.2.tgz#ff63fc07442999ea45286ee4a16a79e271d8a6bc"
+  integrity sha512-2UsvnIJgx1v9BgVrroz8pjn4OBpUvpZ7/Xl3sPWCkQh4KI0Rj50MWHP1B8W65WwBC1Zh/naANKBdGKtX4VAsmg==
   dependencies:
     "@backstage/cli-common" "^0.1.14"
     "@backstage/cli-node" "^0.2.7"
@@ -9802,20 +9802,20 @@
     "@mui/utils" "^5.16.6"
     prop-types "^15.8.1"
 
-"@mui/styled-engine@^5.16.4":
-  version "5.16.4"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.16.4.tgz#a7a8c9079c307bab91ccd65ed5dd1496ddf2a3ab"
-  integrity sha512-0+mnkf+UiAmTVB8PZFqOhqf729Yh0Cxq29/5cA3VAyDVTRIUUQ8FXQhiAhUIbijFmM72rY80ahFPXIm4WDbzcA==
+"@mui/styled-engine@5.16.6", "@mui/styled-engine@^5.16.6":
+  version "5.16.6"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.16.6.tgz#60110c106dd482dfdb7e2aa94fd6490a0a3f8852"
+  integrity sha512-zaThmS67ZmtHSWToTiHslbI8jwrmITcN93LQaR2lKArbvS7Z3iLkwRoiikNWutx9MBs8Q6okKvbZq1RQYB3v7g==
   dependencies:
     "@babel/runtime" "^7.23.9"
     "@emotion/cache" "^11.11.0"
     csstype "^3.1.3"
     prop-types "^15.8.1"
 
-"@mui/styled-engine@^5.16.6":
-  version "5.16.6"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.16.6.tgz#60110c106dd482dfdb7e2aa94fd6490a0a3f8852"
-  integrity sha512-zaThmS67ZmtHSWToTiHslbI8jwrmITcN93LQaR2lKArbvS7Z3iLkwRoiikNWutx9MBs8Q6okKvbZq1RQYB3v7g==
+"@mui/styled-engine@^5.16.4":
+  version "5.16.4"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.16.4.tgz#a7a8c9079c307bab91ccd65ed5dd1496ddf2a3ab"
+  integrity sha512-0+mnkf+UiAmTVB8PZFqOhqf729Yh0Cxq29/5cA3VAyDVTRIUUQ8FXQhiAhUIbijFmM72rY80ahFPXIm4WDbzcA==
   dependencies:
     "@babel/runtime" "^7.23.9"
     "@emotion/cache" "^11.11.0"
