@@ -4,7 +4,7 @@ import { UIhelper } from '../../../utils/UIhelper';
 import { Common } from '../../../utils/Common';
 import { test, expect } from '@playwright/test';
 
-test.describe.skip('Test Keycloak plugin', () => {
+test.describe('Test Keycloak plugin', () => {
   let uiHelper: UIhelper;
   let keycloak: Keycloak;
   let common: Common;
