@@ -1,5 +1,5 @@
 #!/bin/sh
-
+echo "Enable e2e-tests on release-1.3"
 set -xe
 export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 
