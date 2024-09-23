@@ -62,13 +62,16 @@ export class CommonJSModuleLoader implements ModuleLoader {
       }
 
       const mostProbablyCallingResolvePackagePath =
-        // Are we searching for the folder of a backstage package by calling @backstage/backend-common/resolvePackagePath ?
+        // Are we searching for the folder of a backstage package by calling @backstage/backend-plugin-api/resolvePackagePath ?
         // => are we trying to resolve a `package.json` ...
         request?.endsWith('/package.json') &&
-        //    ... from the `backend-common` core backstage application module
+        // ... from an originating module of the core backstage application (not directly from a dynamic plugin folder)
         mod?.path &&
         !dynamicPluginsPaths.some(p => mod.path.startsWith(p)) &&
-        mod.path.includes(`backend-common`);
+        // ... and the originating module is `backend-plugin-api`
+        (mod.path.includes(`backend-plugin-api`) ||
+          // or `backend-common` (when using the deprecated `@backstage/backend-common/resolvepackagePath`)
+          mod.path.includes(`backend-common`));
 
       if (!mostProbablyCallingResolvePackagePath) {
         throw errorToThrow;

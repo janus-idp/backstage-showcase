@@ -18,9 +18,9 @@ import {
   samlAuthApiRef,
 } from './api/AuthApiRefs';
 import {
-  CustomDataApiClient,
-  customDataApiRef,
-} from './api/CustomDataApiClient';
+  LearningPathApiClient,
+  learningPathApiRef,
+} from './api/LearningPathApiClient';
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -30,14 +30,14 @@ export const apis: AnyApiFactory[] = [
   }),
   ScmAuth.createDefaultApiFactory(),
   createApiFactory({
-    api: customDataApiRef,
+    api: learningPathApiRef,
     deps: {
       discoveryApi: discoveryApiRef,
       configApi: configApiRef,
       identityApi: identityApiRef,
     },
     factory: ({ discoveryApi, configApi, identityApi }) =>
-      new CustomDataApiClient({ discoveryApi, configApi, identityApi }),
+      new LearningPathApiClient({ discoveryApi, configApi, identityApi }),
   }),
   // OIDC
   createApiFactory({
