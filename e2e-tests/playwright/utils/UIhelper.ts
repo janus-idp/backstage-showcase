@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -12,6 +12,10 @@ export class UIhelper {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  getSideBarMenuItem(menuItem: string): Locator {
+    return this.page.getByTestId('login-button').getByText(menuItem);
   }
 
   async fillTextInputByLabel(label: string, text: string) {

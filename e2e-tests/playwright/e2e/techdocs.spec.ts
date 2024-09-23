@@ -13,12 +13,14 @@ test.describe('TechDocs', () => {
   });
 
   test('Verify that TechDocs is visible in sidebar', async () => {
+    await uiHelper.openSidebarButton('Favorites');
     await uiHelper.openSidebar('Docs');
   });
 
   test('Verify that TechDocs for Backstage Showcase works', async ({
     page,
   }) => {
+    await uiHelper.openSidebarButton('Favorites');
     await uiHelper.openSidebar('Docs');
     await page.getByRole('link', { name: 'Backstage Showcase' }).click();
   });
