@@ -157,16 +157,6 @@ delete_namespace() {
   fi
 }
 
-configure_namespace_if_nonexistent() {
-  local project=$1
-  if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists!"
-  else
-    oc create namespace "${project}"
-    oc config set-context --current --namespace="${project}"
-  fi
-}
-
 configure_external_postgres_db() {
   local project=$1
   oc apply -f "${DIR}/resources/postgres-db/postgres.yaml" --namespace="${NAME_SPACE_POSTGRES_DB}"
@@ -518,7 +508,11 @@ main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info
   source "${DIR}/env_variables.sh"
-
+  ############# REMOVE ONCE PR IS READY ############################
+  NAME_SPACE="showcase-operator-nightly"
+  NAME_SPACE_RBAC="showcase-operator-rbac-nightly"
+  JOB_NAME=e2e-tests-operator-nightly
+  ##################################################################
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
