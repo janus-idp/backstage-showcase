@@ -440,9 +440,9 @@ main() {
     initiate_aks_deployment
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
     delete_namespace "${NAME_SPACE_AKS}"
-    # initiate_rbac_aks_deployment #  GH login broken https://issues.redhat.com/browse/RHIDP-4113
-    # check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
-    # delete_namespace "${NAME_SPACE_RBAC_AKS}"
+    initiate_rbac_aks_deployment
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
+    delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
