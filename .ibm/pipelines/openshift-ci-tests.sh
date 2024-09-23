@@ -183,10 +183,11 @@ apply_yaml_files() {
   local dir=$1
   local project=$2
   local release_name=$3
-  if [[ "${namespace}" == "showcase-operator-rbac-nightly" || "${namespace}" == "showcase-operator-nightly" ]]; then
-    local base_url="https://backstage-${release_name}-${project}.${K8S_CLUSTER_ROUTER_BASE}"
-  else
-    local base_url="https://${release_name}-backstage-${project}.${K8S_CLUSTER_ROUTER_BASE}"
+  local base_url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    local base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  elif [[ "$JOB_NAME" == *operator* ]]; then
+    local base_url="https://backstage-${release_name}-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   fi
   local encoded_base_url="$(echo -n $base_url | base64 -w 0)"
   echo "Applying YAML files to namespace ${project}"
@@ -322,7 +323,7 @@ check_backstage_running() {
   local namespace=$2
   if [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke*  ]]; then
     local url="https://${K8S_CLUSTER_ROUTER_BASE}"
-  elif [[ "${namespace}" == "showcase-operator-rbac-nightly" || "${namespace}" == "showcase-operator-nightly" ]]; then
+  elif [[ "$JOB_NAME" == *operator* ]]; then
     local url="https://backstage-${release_name}-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   else
     local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
