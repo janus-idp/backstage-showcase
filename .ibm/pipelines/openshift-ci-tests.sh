@@ -13,9 +13,9 @@ JOB_NAME="periodic-aks"
 
 cleanup() {
   echo "Cleaning up before exiting"
-  #if [[ "$JOB_NAME" == *aks* ]]; then
-    #az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  #fi
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  fi
   rm -rf ~/tmpbin
 }
 
@@ -414,7 +414,7 @@ main() {
   fi
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
-    #az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
     az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
@@ -442,9 +442,9 @@ main() {
     initiate_aks_deployment
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
     delete_namespace "${NAME_SPACE_AKS}"
-    #initiate_rbac_aks_deployment
-    #check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
-    #delete_namespace "${NAME_SPACE_RBAC_AKS}"
+    # initiate_rbac_aks_deployment #  GH login broken https://issues.redhat.com/browse/RHIDP-4113
+    # check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
+    # delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
