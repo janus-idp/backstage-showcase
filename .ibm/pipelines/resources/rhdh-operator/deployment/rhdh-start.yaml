@@ -12,4 +12,3 @@ spec:
     extraEnvs:
       secrets:
         - name: rhdh-secrets
-      mountPath: /opt/app-root/src/rbac
