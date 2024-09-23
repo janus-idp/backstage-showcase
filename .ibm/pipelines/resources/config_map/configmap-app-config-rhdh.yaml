@@ -140,8 +140,7 @@ data:
             organization: '${GITHUB_ORG}'
             schedule:
               frequency: { minutes: 30}
-              timeout: { minutes: 3}
-              initialDelay: { seconds: 15}
+              timeout: { minutes: 30}
         githubOrg:
           id: production
           githubUrl: "${GITHUB_URL}"

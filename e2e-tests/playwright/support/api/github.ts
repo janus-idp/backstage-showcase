@@ -2,6 +2,7 @@ import { getOrganizationResponse } from './github-structures';
 import { JANUS_ORG } from '../../utils/constants';
 import { APIResponse, request } from '@playwright/test';
 
+// https://docs.github.com/en/rest?apiVersion=2022-11-28
 export default class GithubApi {
   private static API_URL = 'https://api.github.com';
   private static API_VERSION = '2022-11-28';
@@ -40,8 +41,7 @@ export default class GithubApi {
   private _repo(repo: string) {
     const url = `/repos/${repo}/`;
     return {
-      // https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
-      getContent: async (path = 'catalog-info.yaml') => {
+      getContent: async (path: string) => {
         path = url + path;
         const context = await this._myContext;
         return context.get(path);

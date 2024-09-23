@@ -2,7 +2,7 @@ import { test as base } from '@playwright/test';
 import { Catalog } from '../support/pages/Catalog';
 import GithubApi from '../support/api/github';
 import { CatalogItem } from '../support/pages/catalog-item';
-import { JANUS_QE_ORG } from '../utils/constants';
+import { CATALOG_FILE, JANUS_QE_ORG } from '../utils/constants';
 import { Common } from '../utils/Common';
 
 type GithubDiscoveryFixture = {
@@ -35,13 +35,17 @@ test.describe('Github Discovery Catalog', () => {
     const organizationRepos = await new GithubApi().getReposFromOrg(
       testOrganization,
     );
-    const reposNames: string[] = organizationRepos.map(e => e['name']);
+    const reposNames: string[] = organizationRepos.map(repo => repo['name']);
     const realComponents: string[] = reposNames.filter(
-      async e => await new GithubApi().fileExistsOnRepo(testOrganization, e),
+      async repo =>
+        await new GithubApi().fileExistsOnRepo(
+          `${testOrganization}/${repo}`,
+          CATALOG_FILE,
+        ),
     );
 
     for (let i = 0; i != realComponents.length; i++) {
-      const repo = reposNames[i];
+      const repo = realComponents[i];
 
       await catalogPage.search(repo);
       const row = await catalogPage.tableRow(repo);
