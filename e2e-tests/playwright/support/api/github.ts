@@ -23,10 +23,31 @@ export default class GithubApi {
     return req.json();
   }
 
+  public async fileExistsOnRepo(repo: string, file: string): Promise<boolean> {
+    const req = await this._repo(repo).getContent(file);
+    const status = req.status();
+    if (status == 403) {
+      throw Error('You don-t have permissions to see this path');
+    }
+    return [200, 302, 304].includes(status);
+  }
+
   private _myContext = request.newContext({
     baseURL: GithubApi.API_URL,
     extraHTTPHeaders: GithubApi.AUTH_HEADER,
   });
+
+  private _repo(repo: string) {
+    const url = `/repos/${repo}/`;
+    return {
+      // https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+      getContent: async (path = 'catalog-info.yaml') => {
+        path = url + path;
+        const context = await this._myContext;
+        return context.get(path);
+      },
+    };
+  }
 
   private _organization(organization: string) {
     const url = '/orgs/';

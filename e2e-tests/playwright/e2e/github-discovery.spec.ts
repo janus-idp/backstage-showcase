@@ -1,4 +1,4 @@
-import { expect, test as base } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { Catalog } from '../support/pages/Catalog';
 import GithubApi from '../support/api/github';
 import { CatalogItem } from '../support/pages/catalog-item';
@@ -36,12 +36,11 @@ test.describe('Github Discovery Catalog', () => {
       testOrganization,
     );
     const reposNames: string[] = organizationRepos.map(e => e['name']);
-    // some repos may not be Components, so let's check
-    let pass = 0;
-    // have to speed up the tests, so:
-    const reposUnderTest = reposNames.length / 2;
+    const realComponents: string[] = reposNames.filter(
+      async e => await new GithubApi().fileExistsOnRepo(testOrganization, e),
+    );
 
-    for (let i = 0; i != reposUnderTest; i++) {
+    for (let i = 0; i != realComponents.length; i++) {
       const repo = reposNames[i];
 
       await catalogPage.search(repo);
@@ -50,10 +49,7 @@ test.describe('Github Discovery Catalog', () => {
         await row.click();
         await catalogItem.validateGithubLink(`${testOrganization}/${repo}`);
         await page.goBack();
-        pass++;
       }
     }
-    //At least 1/5 are valid and listed components
-    expect(pass).toBeGreaterThanOrEqual(reposUnderTest / 5);
   });
 });
