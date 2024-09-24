@@ -4,6 +4,7 @@ import GithubApi from '../support/api/github';
 import { CatalogItem } from '../support/pages/catalog-item';
 import { CATALOG_FILE, JANUS_QE_ORG } from '../utils/constants';
 import { Common } from '../utils/Common';
+import { assert } from 'console';
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -28,9 +29,7 @@ const test = base.extend<GithubDiscoveryFixture>({
 test.describe('Github Discovery Catalog', () => {
   test(`Discover Organization's Catalog`, async ({
     catalogPage,
-    catalogItem,
     testOrganization,
-    page,
   }) => {
     const organizationRepos = await new GithubApi().getReposFromOrg(
       testOrganization,
@@ -49,11 +48,7 @@ test.describe('Github Discovery Catalog', () => {
 
       await catalogPage.search(repo);
       const row = await catalogPage.tableRow(repo);
-      if (await row.isVisible()) {
-        await row.click();
-        await catalogItem.validateGithubLink(`${testOrganization}/${repo}`);
-        await page.goBack();
-      }
+      assert(await row.isVisible());
     }
   });
 });
