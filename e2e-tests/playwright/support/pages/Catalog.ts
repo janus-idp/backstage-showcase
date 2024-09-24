@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
+import playwrightConfig from '../../../playwright.config';
 
 //${BASE_URL}/catalog page
 export class Catalog {
@@ -33,7 +34,9 @@ export class Catalog {
   async search(s: string) {
     await this.searchField.clear();
     const searchResponse = this.page.waitForResponse(
-      new RegExp(`${process.env.BASE_URL}/api/catalog/entities/by-query/*`),
+      new RegExp(
+        `${playwrightConfig.use.baseURL}/api/catalog/entities/by-query/*`,
+      ),
     );
     await this.searchField.fill(s);
     await searchResponse;
