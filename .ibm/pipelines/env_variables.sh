@@ -53,7 +53,6 @@ GH_USER2_ID=$(cat /tmp/secrets/GH_USER2_ID)
 GH_USER2_PASS=$(cat /tmp/secrets/GH_USER2_PASS)
 GH_USER2_2FA_SECRET=$(cat /tmp/secrets/GH_USER2_2FA_SECRET)
 GH_RHDH_QE_USER_TOKEN=$(cat /tmp/secrets/GH_RHDH_QE_USER_TOKEN)
-
 GITLAB_TOKEN=$(cat /tmp/secrets/GITLAB_TOKEN)
 
 RHDH_PR_OS_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)

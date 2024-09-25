@@ -56,5 +56,9 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     apt-get install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Set working directory
+# Install skopeo
+RUN apt-get update -y && \
+    apt-get install -y skopeo
+
+# Set working directory    
 WORKDIR /tmp/
