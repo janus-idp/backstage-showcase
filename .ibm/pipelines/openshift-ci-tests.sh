@@ -183,11 +183,11 @@ apply_yaml_files() {
   local dir=$1
   local project=$2
   local release_name=$3
-  local base_url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+  local base_url="https://${release_name}-backstage-${project}.${K8S_CLUSTER_ROUTER_BASE}"
   if [[ "$JOB_NAME" == *aks* ]]; then
-    local base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
+    base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
   elif [[ "$JOB_NAME" == *operator* ]]; then
-    local base_url="https://backstage-${release_name}-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+    base_url="https://backstage-${release_name}-${project}.${K8S_CLUSTER_ROUTER_BASE}"
   fi
   local encoded_base_url="$(echo -n $base_url | base64 -w 0)"
   echo "Applying YAML files to namespace ${project}"
@@ -217,12 +217,18 @@ apply_yaml_files() {
     GITHUB_APP_CLIENT_ID=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_ID)
     GITHUB_APP_PRIVATE_KEY=$(cat /tmp/secrets/GITHUB_APP_4_PRIVATE_KEY)
     GITHUB_APP_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_SECRET)
+  elif [[ "$JOB_NAME" == *operator* ]]; then
+    GITHUB_APP_APP_ID=$GITHUB_APP_3_APP_ID
+    GITHUB_APP_CLIENT_ID=$GITHUB_APP_3_CLIENT_ID
+    GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_3_PRIVATE_KEY
+    GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_3_CLIENT_SECRET
   fi
 
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
+  fi
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
@@ -267,7 +273,7 @@ apply_yaml_files() {
     oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins.yaml" --namespace="${project}"
   fi
 
-  if [[ "${project}" == "showcase-operator-rbac-nightly" ]]; then
+  if [[ "${project}" == "showcase-op-rbac-nightly" ]]; then
     oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins-rbac.yaml" --namespace="${project}"
   fi
 }
@@ -378,33 +384,24 @@ install_pipelines_operator() {
   fi
 }
 
-apply_operator_group_if_nonexistent() {
-  if [[ $(oc get OperatorGroup -n rhdh-operator  2>/dev/null | wc -l) -ge 1 ]]; then 
-    echo "Red Hat Developer Hub operator group is already installed."
-  else
-    echo "Red Hat Developer Hub operator group does not exist. adding..."
-    oc apply -f "${dir}/resources/rhdh-operator/installation/rhdh-operator-group.yaml" -n "${namespace}"
-  fi
-}
-
 install_rhdh_operator() {
   local dir=$1
   local namespace=$2
-  CSV_NAME="Red Hat Developer Hub Operator"
 
-  if oc get csv -n "${namespace}" | grep -q "${CSV_NAME}"; then
-    echo "Red Hat Developer Hub operator is already installed."
-  elsedeploy_rhexistent "${namespace}"
-    apply_operator_group_if_nonexistent
-    oc apply -f "${dir}/resources/rhdh-operator/installation/rhdh-subscription.yaml" -n "${namespace}"
-  fi
+  configure_namespace $namespace
+  
+  # Make sure script is up to date
+  rm -f /tmp/install-rhdh-catalog-source.sh
+  curl -L https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/main/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
+  chmod +x /tmp/install-rhdh-catalog-source.sh
+  /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
 }
 
 deploy_rhdh_operator() {
   local dir=$1
   local namespace=$2
 
-  if [[ "${namespace}" == "showcase-operator-rbac-nightly" ]]; then
+  if [[ "${namespace}" == "showcase-op-rbac-nightly" ]]; then
     oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start-rbac.yaml" -n "${namespace}"
   else 
     oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start.yaml" -n "${namespace}"
@@ -566,7 +563,6 @@ main() {
     else
       initiate_deployments
     fi
-    
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
     # Only test TLS config with RDS and Change configuration at runtime in nightly jobs
