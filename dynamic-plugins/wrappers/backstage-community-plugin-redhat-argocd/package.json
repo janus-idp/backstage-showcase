@@ -6,7 +6,9 @@
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
   },
   "backstage": {
     "role": "frontend-plugin",
@@ -34,7 +36,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-redhat-argocd --override-interop default --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
     "@backstage-community/plugin-redhat-argocd": "1.8.3"
@@ -45,9 +47,14 @@
   },
   "files": [
     "dist",
-    "dist-dynamic/*.*",
-    "dist-dynamic/dist/**"
+    "dist-scalprum"
   ],
+  "scalprum": {
+    "name": "backstage.community-plugin-redhat-argocd",
+    "exposedModules": {
+      "PluginRoot": "./src/index.ts"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
