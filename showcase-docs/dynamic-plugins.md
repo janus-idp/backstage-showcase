@@ -5,17 +5,16 @@
 - **[Overview](#overview)**
 - **[How it Works](#how-it-works)**
   - [**Preparing Dynamic Plugins for the Showcase**](#preparing-dynamic-plugins-for-the-showcase)
-    _ [**Backend Plugins**](#backend-plugins)
-    _ **[Add the Dynamic Plugin Script](#add-the-dynamic-plugin-script)**
-    _ **[Required Entry Points](#required-entry-points)**
-    _ **[Exporting the Backend Plugin as a Dynamic Plugin Package](#exporting-the-backend-plugin-as-a-dynamic-plugin-package)**
-    _ **[Publishing the Dynamic Backend Plugin Package to an NPM Registry](#publishing-the-dynamic-backend-plugin-package-to-an-npm-registry)**
-    _ **[About Embedding Dependencies in the Plugin Package](#about-embedding-dependencies-in-the-plugin-package)**
-    _ **[Wrapping a Third-Party Backend Plugin to Add Dynamic Plugin
-    Support](#wrapping-a-third-party-backend-plugin-to-add-dynamic-plugin-support)**
-    _ [**Frontend Plugins**](#frontend-plugins)
-    _ **[Required Code Changes](#required-code-changes)**
-    _ **[Exporting the Plugin as a Dynamic Plugin Package](#exporting-the-plugin-as-a-dynamic-plugin-package)** \* **[Wrapping a Third-Party Frontend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-frontend-plugin-to-add-dynamic-plugin-support)**
+    [**Backend Plugins**](#backend-plugins)
+    - **[Add the Dynamic Plugin Script](#add-the-dynamic-plugin-script)**
+    - **[Required Entry Points](#required-entry-points)**
+    - **[Exporting the Backend Plugin as a Dynamic Plugin Package](#exporting-the-backend-plugin-as-a-dynamic-plugin-package)**
+    - **[Publishing the Dynamic Backend Plugin Package to an NPM Registry](#publishing-the-dynamic-backend-plugin-package-to-an-npm-registry)**
+    - **[About Embedding Dependencies in the Plugin Package](#about-embedding-dependencies-in-the-plugin-package)**
+    - **[Wrapping a Third-Party Backend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-backend-plugin-to-add-dynamic-plugin-support)**
+    - [**Frontend Plugins**](#frontend-plugins)
+    - **[Required Code Changes](#required-code-changes)**
+    - **[Exporting the Plugin as a Dynamic Plugin Package](#exporting-the-plugin-as-a-dynamic-plugin-package)** \* **[Wrapping a Third-Party Frontend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-frontend-plugin-to-add-dynamic-plugin-support)**
   - [**Exporting dynamic plugins with npx**](#exporting-dynamic-plugins-with-npx)
   - [**Exporting dynamic plugins as container images**](#exporting-dynamic-plugins-as-container-images)
 - **[Installing a Dynamic Plugin Package in the Showcase](#installing-a-dynamic-plugin-package-in-the-showcase)**
