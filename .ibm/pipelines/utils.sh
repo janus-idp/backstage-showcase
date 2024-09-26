@@ -94,3 +94,29 @@ droute_send() {
     --verbose"
 
 }
+
+# Merge the base YAML value file with the differences file for Kubernetes
+yq_merge_value_files() {
+  local base_file=$1
+  local diff_file=$2
+  local step_1_file="/tmp/step-without-plugins.yaml"
+  local step_2_file="/tmp/step-only-plugins.yaml"
+  local final_file=$3
+  # Step 1: Merge files, excluding the .global.dynamic.plugins key
+  # Values from `diff_file` override those in `base_file`
+  yq eval-all '
+    select(fileIndex == 0) * select(fileIndex == 1) |
+    del(.global.dynamic.plugins)
+  ' "${base_file}" "${diff_file}" > "${step_1_file}"
+  # Step 2: Merge files, combining the .global.dynamic.plugins key
+  # Values from `diff_file` take precedence; plugins are merged and deduplicated by the .package field
+  yq eval-all '
+    select(fileIndex == 0) *+ select(fileIndex == 1) |
+    .global.dynamic.plugins |= (reverse | unique_by(.package) | reverse)
+  ' "${base_file}" "${diff_file}" > "${step_2_file}"
+  # Step 3: Combine results from the previous steps and remove null values
+  # Values from `step_2_file` override those in `step_1_file`
+  yq eval-all '
+    select(fileIndex == 0) * select(fileIndex == 1) | del(.. | select(. == null))
+  ' "${step_2_file}" "${step_1_file}" > "${final_file}"
+}
