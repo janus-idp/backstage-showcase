@@ -1,0 +1,28 @@
+# This file is for AKS installation only. 
+# It is applied by `helm upgrade` after the `values-showcase.yaml` is applied and only contains complementary differences for AKS.
+# Note, that it overwrites the whole key that is present in this file. 
+#   e.g. global.dynamic.plugins key is completely overwritten by the content of this file.
+route:
+  enabled: false
+global:
+  dynamic:
+    plugins:
+      - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+        disabled: true
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
+        disabled: true
+upstream:
+  backstage:
+    extraEnvVarsSecrets:
+      - rhdh-secrets
+  postgresql:
+    primary:
+      podSecurityContext:
+        enabled: true
+        fsGroup: 3000
+  volumePermissions:
+    enabled: true
+  ingress:
+    enabled: true
+    className: webapprouting.kubernetes.azure.com
+    host: ''
