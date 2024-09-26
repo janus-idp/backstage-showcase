@@ -73,11 +73,13 @@ export default defineConfig({
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
+        '**/playwright/e2e/plugins/bulk-import.spec.ts',
         '**/playwright/e2e/plugins/tekton/tekton.spec.ts',
-        '**/playwright/e2e/catalog-timestamp.spec.ts',
-        '**/playwright/e2e/plugins/quay/quay.spec.ts',
         '**/playwright/e2e/catalog-scaffoldedfromLink.spec.ts',
         '**/playwright/e2e/plugins/ocm.spec.ts',
+        '**/playwright/e2e/audit-log/**/*.spec.ts',
+        '**/playwright/e2e/verify-redis-cache.spec.ts',
+        '**/playwright/e2e/plugins/topology/topology.spec.ts'
       ],
     },
     {
@@ -86,6 +88,7 @@ export default defineConfig({
       testMatch: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+        '**/playwright/e2e/plugins/bulk-import.spec.ts',
       ],
     },
 
