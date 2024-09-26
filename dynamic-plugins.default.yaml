@@ -809,12 +809,12 @@ plugins:
                     anyOf:
                     - isNexusRepositoryManagerAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-acr:
+          backstage-community.plugin-acr:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: AcrPage
