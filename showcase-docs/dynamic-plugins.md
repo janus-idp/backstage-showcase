@@ -14,7 +14,7 @@
     - **[Wrapping a Third-Party Backend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-backend-plugin-to-add-dynamic-plugin-support)**
     - [**Frontend Plugins**](#frontend-plugins)
     - **[Required Code Changes](#required-code-changes)**
-    - **[Exporting the Plugin as a Dynamic Plugin Package](#exporting-the-plugin-as-a-dynamic-plugin-package)** \* **[Wrapping a Third-Party Frontend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-frontend-plugin-to-add-dynamic-plugin-support)**
+    - **[Wrapping a Third-Party Frontend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-frontend-plugin-to-add-dynamic-plugin-support)**
   - [**Exporting dynamic plugins with npx**](#exporting-dynamic-plugins-with-npx)
   - [**Exporting dynamic plugins as container images**](#exporting-dynamic-plugins-as-container-images)
 - **[Installing a Dynamic Plugin Package in the Showcase](#installing-a-dynamic-plugin-package-in-the-showcase)**
