@@ -50,7 +50,7 @@
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "backstage.community-plugin-redhat-argocd",
+    "name": "backstage-community.plugin-redhat-argocd",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
