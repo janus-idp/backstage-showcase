@@ -79,7 +79,7 @@ export default defineConfig({
         '**/playwright/e2e/plugins/ocm.spec.ts',
         '**/playwright/e2e/audit-log/**/*.spec.ts',
         '**/playwright/e2e/verify-redis-cache.spec.ts',
-        '**/playwright/e2e/plugins/topology/topology.spec.ts'
+        '**/playwright/e2e/plugins/topology/topology.spec.ts',
       ],
     },
     {
