@@ -350,41 +350,6 @@ initiate_rbac_aks_deployment() {
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
-az_login() {
-  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
-  az account set --subscription $ARM_SUBSCRIPTION_ID
-}
-
-az_aks_start() {
-  local name=$1
-  local resource_group=$2
-  az aks start --name $name --resource-group $resource_group
-}
-
-az_aks_stop() {
-  local name=$1
-  local resource_group=$2
-  az aks stop --name $name --resource-group $resource_group
-}
-
-az_aks_approuting_enable() {
-  local name=$1
-  local resource_group=$2
-  set +xe
-  local output=$(az aks approuting enable --name $name --resource-group $resource_group 2>&1 | sed 's/^ERROR: //')
-  set -xe
-  exit_status=$?
-
-  if [ $exit_status -ne 0 ]; then
-      if [[ "$output" == *"App Routing is already enabled"* ]]; then
-          echo "App Routing is already enabled. Continuing..."
-      else
-          echo "Error: $output"
-          exit 1
-      fi
-  fi
-}
-
 check_and_test() {
   local release_name=$1
   local namespace=$2
