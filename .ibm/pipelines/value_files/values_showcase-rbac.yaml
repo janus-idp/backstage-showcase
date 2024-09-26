@@ -50,10 +50,10 @@ global:
           kubernetes:
             clusterLocatorMethods:
               - clusters:
-                  - authProvider: serviceAccount
-                    name: 'my-cluster'
-                    serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
-                    url: ${K8S_CLUSTER_API_SERVER_URL}
+                - authProvider: serviceAccount
+                  name: 'my-cluster'
+                  serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
+                  url: ${K8S_CLUSTER_API_SERVER_URL}
                 type: config
             customResources:
               # Add for tekton
@@ -103,7 +103,7 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
         disabled: false
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
         disabled: true
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
