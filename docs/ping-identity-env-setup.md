@@ -32,7 +32,7 @@ This script adds the following users and groups by default, modify the script as
 2. Navigate to the Roles tab
 3. Grant the following roles to the application: `Environment Admin` & `Identity Data Admin`
 
-![Ping identity grant application roles](./resources/ping-identity-grant-app-roles.png)
+![Ping identity grant application roles](./images/ping-identity-grant-app-roles.png)
 
 ### Running the script
 
