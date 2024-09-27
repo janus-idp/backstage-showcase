@@ -38,6 +38,7 @@
     ]
   },
   "dependencies": {
+    "body-parser": "^1.20.3",
     "node-gyp": "9.4.1",
     "patch-package": "8.0.0",
     "postinstall-postinstall": "2.1.0"
@@ -58,7 +59,8 @@
   },
   "resolutions": {
     "@types/react": "18.2.48",
-    "@types/react-dom": "18.2.18"
+    "@types/react-dom": "18.2.18",
+    "body-parser": "^1.20.3"
   },
   "jest": {
     "testTimeout": 20000
