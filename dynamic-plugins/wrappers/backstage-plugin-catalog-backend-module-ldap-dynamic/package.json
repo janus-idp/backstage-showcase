@@ -40,7 +40,7 @@
   "devDependencies": {
     "@backstage/cli": "0.26.11",
     "@janus-idp/cli": "1.14.0",
-    "typescript": "5.5.3"
+    "typescript": "5.6.2"
   },
   "files": [
     "dist",
