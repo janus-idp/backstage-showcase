@@ -32,7 +32,7 @@ describe('DynamicPluginsTable', () => {
     // keys from InternalPluginsMap are internal plugins
     expect(await findByText('Plugins (61)')).toBeInTheDocument();
     expect(
-      await findByText('@janus-idp/backstage-plugin-3scale-backend-dynamic'),
+      await findByText('@backstage-community/plugin-3scale-backend'),
     ).toBeInTheDocument();
     const nameCells = Array.from(
       container.querySelectorAll('tbody tr > td:first-child'),
@@ -48,7 +48,7 @@ describe('DynamicPluginsTable', () => {
     );
     expect(nameCells.length).toBe(5);
     expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      '@backstage-community/plugin-3scale-backend',
     );
     expect(nameCells[3].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
@@ -85,7 +85,7 @@ describe('DynamicPluginsTable', () => {
     );
     expect(nameCells.length).toBe(5);
     expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      '@backstage-community/plugin-3scale-backend',
     );
     expect(nameCells[3].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
