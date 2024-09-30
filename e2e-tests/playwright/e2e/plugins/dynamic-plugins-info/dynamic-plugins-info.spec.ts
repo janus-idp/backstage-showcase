@@ -60,7 +60,7 @@ test.describe('dynamic-plugins-info UI tests', () => {
         delay: 300,
       });
     const row = await page.locator(
-      UIhelperPO.rowByText('@backstage-community/plugin-3scale-backend'),
+      UIhelperPO.rowByText('backstage-community-plugin-3scale-backend'),
     );
     expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
     expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
