@@ -135,6 +135,12 @@ data:
           rules:
             - allow: [User, Group]
       providers:
+        github:
+          providerId:
+            organization: '${GITHUB_ORG}'
+            schedule:
+              frequency: { minutes: 30}
+              timeout: { minutes: 30}
         githubOrg:
           id: production
           githubUrl: "${GITHUB_URL}"
