@@ -1,17 +1,7 @@
 site_name: backstage-showcase
-site_description: 'User documentation for Janus Showcase'
+site_description: 'Documentation for Janus Showcase'
 repo_url: https://github.com/janus-idp/backstage-showcase
 edit_uri: edit/main/docs
 
 plugins:
   - techdocs-core
-
-# Note for content editors, edit only the section below
-nav:
-  - Onboard a developer to OpenShift: index.md
-  - Application Migration:
-      - Migration Process Overview: application-migration/migration-process-overview.md
-      - Migration Process Steps: application-migration/migration-process-steps.md
-      - Learning Path for Developers: application-migration/learning-path-for-developers.md
-  - Provider Setup:
-      - Ping Identity Environment Setup: provider-setup/ping-identity-env-setup.md

@@ -3063,6 +3063,22 @@
     "@backstage/config" "^1.2.0"
     "@backstage/plugin-catalog-node" "^1.12.4"
 
+"@backstage-community/plugin-acr@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-acr/-/plugin-acr-1.8.1.tgz#a7a8a9447cd4852371147be646ea0bdcf164c8da"
+  integrity sha512-v7UB+FybVFx0CcLqImCLyJLIwY1NwJw7QopZvrbu9/oQpbHUtz6Ujb4xHdCGvWF0hjegV/ElqocC24cQLZle5g==
+  dependencies:
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/core-components" "^0.14.9"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-catalog-react" "^1.12.2"
+    "@backstage/theme" "^0.5.6"
+    "@janus-idp/shared-react" "2.10.3"
+    "@material-ui/core" "^4.9.13"
+    "@material-ui/icons" "^4.11.3"
+    "@material-ui/lab" "^4.0.0-alpha.45"
+    react-use "^17.4.0"
+
 "@backstage-community/plugin-azure-devops-backend@0.6.5":
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-azure-devops-backend/-/plugin-azure-devops-backend-0.6.5.tgz#838338b9f4f5823e5b559b0337a9a939c11daf56"
@@ -9077,6 +9093,23 @@
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/@janus-idp/shared-react/-/shared-react-2.10.0.tgz#17818a94fcf484b76e53f1a4f3773df4a4eb46d2"
   integrity sha512-rjhpg8xmK+yQWytu/5MmhjjpB+7LMfjlGOiy1yZLphyqKNlJgD+ATGpId85rqNwwDa8U/KG+EzFz+OTd+YlQdA==
+  dependencies:
+    "@backstage/catalog-model" "1.5.0"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-kubernetes-common" "0.8.0"
+    "@backstage/plugin-kubernetes-react" "0.4.0"
+    "@kubernetes/client-node" "^0.20.0"
+    classnames "^2.3.2"
+    date-fns "^2.30.0"
+    file-saver "^2.0.5"
+    lodash "^4.17.21"
+    mathjs "^11.11.2"
+    react-use "^17.5.0"
+
+"@janus-idp/shared-react@2.10.3":
+  version "2.10.3"
+  resolved "https://registry.yarnpkg.com/@janus-idp/shared-react/-/shared-react-2.10.3.tgz#9c4e80cdc93838edd44165a9392f5199fc2b206a"
+  integrity sha512-XkGymQUplgdrslEWSg7tVU3VZUWZgyQjI26fe2KfgZ7c3Tl8YevgvnGv2JtD0WklWRLKHqpfhRZ8RizW2f/3XA==
   dependencies:
     "@backstage/catalog-model" "1.5.0"
     "@backstage/core-plugin-api" "^1.9.3"

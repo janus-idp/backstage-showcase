@@ -99,8 +99,6 @@ global:
       # Enable tech-radar plugin.
       - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
-        disabled: false
       - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
         disabled: false
       - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
