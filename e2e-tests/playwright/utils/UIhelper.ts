@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -12,6 +12,10 @@ export class UIhelper {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  getSideBarMenuItem(menuItem: string): Locator {
+    return this.page.getByTestId('login-button').getByText(menuItem);
   }
 
   async fillTextInputByLabel(label: string, text: string) {
@@ -75,7 +79,7 @@ export class UIhelper {
   }
 
   async clickLink(linkText: string) {
-    await this.page.locator(`a`).filter({ hasText: linkText }).click();
+    await this.page.locator(`a`).filter({ hasText: linkText }).first().click();
   }
 
   async verifyLink(
@@ -142,7 +146,17 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
+    const navLink = this.page
+      .locator(`nav a:has-text("${navBarText}")`)
+      .first();
+    await navLink.waitFor({ state: 'visible' });
+    await navLink.click();
+  }
+
+  async openSidebarButton(navBarButtonLabel: string) {
+    const navLink = this.page.locator(
+      `nav button[aria-label="${navBarButtonLabel}"]`,
+    );
     await navLink.waitFor({ state: 'visible' });
     await navLink.click();
   }
@@ -208,7 +222,7 @@ export class UIhelper {
     }
   }
 
-  async verifyHeading(heading: string) {
+  async verifyHeading(heading: string | RegExp) {
     const headingLocator = this.page
       .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
@@ -260,6 +274,15 @@ export class UIhelper {
     return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
   }
 
+  /**
+   * Verifies that a table row, identified by unique text, contains specific cell texts.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {Array<string | RegExp>} cellTexts - An array of cell texts or regular expressions to match against the cells within the identified row.
+   * @example
+   * // Example usage to verify that a row containing "Developer-hub" has cells with the texts "service" and "active":
+   * await verifyRowInTableByUniqueText('Developer-hub', ['service', 'active']);
+   */
+
   async verifyRowInTableByUniqueText(
     uniqueRowText: string,
     cellTexts: string[] | RegExp[],
@@ -271,6 +294,45 @@ export class UIhelper {
         row.locator('td').filter({ hasText: cellText }).first(),
       ).toBeVisible();
     }
+  }
+
+  /**
+   * Clicks on a link within a table row that contains a unique text and matches a link's text.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string | RegExp} linkText - The text of the link, can be a string or a regular expression.
+   * @param {boolean} [exact=true] - Whether to match the link text exactly. By default, this is set to true.
+   */
+  async clickOnLinkInTableByUniqueText(
+    uniqueRowText: string,
+    linkText: string | RegExp,
+    exact = true,
+  ) {
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
+    await row
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first()
+      .click();
+  }
+
+  /**
+   * Clicks on a button within a table row that contains a unique text and matches a button's label or aria-label.
+   * @param {string} UniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string | RegExp} textOrLabel - The text of the button or the `aria-label` attribute, can be a string or a regular expression.
+   */
+  async clickOnButtonInTableByUniqueText(
+    UniqueRowText: string,
+    textOrLabel: string | RegExp,
+  ) {
+    const row = this.page.locator(UIhelperPO.rowByText(UniqueRowText));
+    await row.waitFor();
+    await row
+      .locator(
+        `button:has-text("${textOrLabel}"), button[aria-label="${textOrLabel}"]`,
+      )
+      .first()
+      .click();
   }
 
   async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
@@ -340,5 +402,14 @@ export class UIhelper {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toEqual(0);
+  }
+
+  async clickById(id: string) {
+    await this.page.click(`#${id}`);
+  }
+
+  async clickSpanByText(text: string) {
+    await this.verifyText(text);
+    await this.page.click(`span:has-text("${text}")`);
   }
 }

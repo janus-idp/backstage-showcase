@@ -14,13 +14,14 @@ test.describe('Verify Redis Cache DB', () => {
   });
 
   test('Open techdoc and verify the cache generated in redis db', async () => {
+    await uiHelper.openSidebarButton('Favorites');
     await uiHelper.openSidebar('Docs');
     await uiHelper.clickLink('Backstage Showcase');
 
     const portForward = spawn('/bin/sh', [
       '-c',
       `
-      oc login --token="${process.env.K8S_CLUSTER_TOKEN}" --server="${process.env.K8S_CLUSTER_URL}" && 
+      oc login --token="${process.env.K8S_CLUSTER_TOKEN}" --server="${process.env.K8S_CLUSTER_URL}" &&
       kubectl port-forward service/redis 6379:6379 -n ${process.env.NAME_SPACE}
     `,
     ]);
@@ -42,7 +43,7 @@ test.describe('Verify Redis Cache DB', () => {
       `redis://${process.env.REDIS_TEMP_USER}:${process.env.REDIS_TEMP_PASS}@localhost:6379`,
     );
     const keys = await redis.keys('*');
-    expect(keys).toContain('namespace:techdocs');
+    expect(keys).toContainEqual(expect.stringContaining('techdocs'));
     redis.disconnect();
   });
 });

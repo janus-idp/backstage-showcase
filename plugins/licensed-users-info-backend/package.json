@@ -11,7 +11,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "licensed-users-info",
+    "pluginPackages": [
+      "@internal/plugin-licensed-users-info-backend"
+    ]
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -34,7 +38,7 @@
     "@backstage/plugin-auth-backend": "^0.22.5",
     "@backstage/plugin-permission-common": "0.8.1",
     "@backstage/types": "^1.1.1",
-    "express": "4.19.2",
+    "express": "4.21.0",
     "express-promise-router": "4.1.1",
     "json-2-csv": "5.5.5",
     "knex": "3.1.0",

@@ -12,7 +12,6 @@
     "role": "backend-plugin",
     "supported-versions": "1.27.7",
     "pluginId": "kubernetes",
-    "pluginPackage": "backstage-plugin-kubernetes-backend",
     "pluginPackages": [
       "backstage-plugin-kubernetes",
       "backstage-plugin-kubernetes-backend"

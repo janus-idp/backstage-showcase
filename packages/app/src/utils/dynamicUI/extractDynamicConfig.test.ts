@@ -150,11 +150,13 @@ describe('extractDynamicConfig', () => {
       routeBindings: [],
       dynamicRoutes: [],
       entityTabs: [],
+      menuItems: [],
       mountPoints: [],
       appIcons: [],
       routeBindingTargets: [],
       apiFactories: [],
       scaffolderFieldExtensions: [],
+      themes: [],
     });
   });
 
@@ -236,6 +238,15 @@ describe('extractDynamicConfig', () => {
             path: '/foo',
             scope: 'janus-idp.plugin-foo',
             menuItem: { icon: 'foo', text: 'Foo' },
+          },
+        ],
+        menuItems: [
+          {
+            children: [],
+            icon: 'foo',
+            name: 'foo',
+            title: 'Foo',
+            to: '/foo',
           },
         ],
       },
@@ -498,10 +509,12 @@ describe('extractDynamicConfig', () => {
       routeBindingTargets: [],
       dynamicRoutes: [],
       entityTabs: [],
+      menuItems: [],
       mountPoints: [],
       appIcons: [],
       apiFactories: [],
       scaffolderFieldExtensions: [],
+      themes: [],
       ...output,
     });
   });

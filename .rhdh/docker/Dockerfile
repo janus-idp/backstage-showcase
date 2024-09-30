@@ -20,7 +20,8 @@
 
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-54 AS build
+# https://registry.access.redhat.com/ubi9/nodejs-20
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-59.1725906894 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -51,6 +52,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-home-page/package.json ./plugins/dynamic-home-page/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
@@ -179,7 +181,8 @@ RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57 AS runner
+# https://registry.access.redhat.com/ubi9/nodejs-20-minimal
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-63.1725851021 AS runner
 USER 0
 
 # Downstream sources
@@ -225,8 +228,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
-  chmod -R a+rx ./install-dynamic-plugins.sh; \
-  rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+  chmod -R a+rx ./install-dynamic-plugins.sh;
 
 # Downstream only - fix for https://issues.redhat.com/browse/RHIDP-728
 RUN mkdir /opt/app-root/src/.npm

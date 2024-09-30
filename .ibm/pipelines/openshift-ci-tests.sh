@@ -11,6 +11,9 @@ OVERALL_RESULT=0
 
 cleanup() {
   echo "Cleaning up before exiting"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  fi
   rm -rf ~/tmpbin
 }
 
@@ -28,6 +31,9 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
+    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
   fi
 }
 
@@ -89,12 +95,17 @@ uninstall_helmchart() {
 
 configure_namespace() {
   local project=$1
-  if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists! refreshing namespace"
-    oc delete namespace "${project}"
-  fi
+  delete_namespace $project
   oc create namespace "${project}"
   oc config set-context --current --namespace="${project}"
+}
+
+delete_namespace() {
+  local project=$1
+  if oc get namespace "${project}" >/dev/null 2>&1; then
+    echo "Namespace ${project} already exists! Deleting namespace."
+    oc delete namespace "${project}"
+  fi
 }
 
 configure_external_postgres_db() {
@@ -141,6 +152,13 @@ apply_yaml_files() {
 
   sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: ${K8S_PLUGIN_ANNOTATION}/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    GITHUB_APP_APP_ID=$GITHUB_APP_2_APP_ID
+    GITHUB_APP_CLIENT_ID=$GITHUB_APP_2_CLIENT_ID
+    GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_2_PRIVATE_KEY
+    GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_2_CLIENT_SECRET
+  fi
+
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
@@ -149,20 +167,24 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
-  oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
-  oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  if [[ "$JOB_NAME" != *aks* ]]; then
+    oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
+    oc expose svc/test-backstage-customization-provider --namespace="${project}"
+  fi
   oc apply -f "$dir/resources/cluster_role/cluster-role-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role/cluster-role-ocm.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml" --namespace="${project}"
 
-  sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  if [[ "$JOB_NAME" != *aks* ]]; then # Skip for AKS, because of strange `sed: -e expression #1, char 136: unterminated `s' command`
+    sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  fi
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
   sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-  if [[ "${project}" == "showcase-rbac" || "${project}" == "showcase-rbac-nightly" || "${project}" == "showcase-rbac-1-2-x" ]]; then
+  if [[ "${project}" == *rbac* ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
   else
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh.yaml" --namespace="${project}"
@@ -170,65 +192,9 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator to be ready
+  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
-}
-
-droute_send() {
-  # Skipping ReportPortal for nightly jobs on OCP v4.14 and v4.13 for now, as new clusters are not behind the RH VPN.
-  if [[ "$JOB_NAME" == *ocp-v4* ]]; then
-    return 0
-  fi
-
-  local release_name=$1
-  local project=$2
-  local droute_project="droute"
-  local droute_pod_name="droute-centos"
-  METEDATA_OUTPUT="data_router_metadata_output.json"
-
-  # Remove properties (only used for skipped test and invalidates the file if empty)
-  sed -i '/<properties>/,/<\/properties>/d' "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
-
-  JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
-  if [ -n "${PULL_NUMBER:-}" ]; then
-    JOB_URL="${JOB_BASE_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}"
-  else
-    JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
-  fi
-
-  jq \
-    --arg hostname "$REPORTPORTAL_HOSTNAME" \
-    --arg project "$DATA_ROUTER_PROJECT" \
-    --arg name "$JOB_NAME" \
-    --arg description "[View job run details](${JOB_URL})" \
-    --arg key1 "job_type" \
-    --arg value1 "$JOB_TYPE" \
-    --arg key2 "pr" \
-    --arg value2 "$GIT_PR_NUMBER" \
-    '.targets.reportportal.config.hostname = $hostname |
-     .targets.reportportal.config.project = $project |
-     .targets.reportportal.processing.launch.name = $name |
-     .targets.reportportal.processing.launch.description = $description |
-     .targets.reportportal.processing.launch.attributes += [
-        {"key": $key1, "value": $value1},
-        {"key": $key2, "value": $value2}
-      ]' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
-
-  oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute"
-
-  oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-    curl -fsSLk -o /tmp/droute-linux-amd64 'https://${NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/1.1/droute-linux-amd64' && chmod +x /tmp/droute-linux-amd64"
-
-  oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-    /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
-    --url '${DATA_ROUTER_URL}' \
-    --username '${DATA_ROUTER_USERNAME}' \
-    --password '${DATA_ROUTER_PASSWORD}' \
-    --results '/tmp/droute/${JUNIT_RESULTS}' \
-    --attachments '/tmp/droute/attachments' \
-    --verbose"
-
 }
 
 run_tests() {
@@ -245,7 +211,7 @@ run_tests() {
     set -e
     echo "Using PR container image: ${TAG_NAME}"
     yarn "$project"
-  ) |& tee "/tmp/${LOGFILE}"
+  ) 2>&1 | tee "/tmp/${LOGFILE}"
 
   local RESULT=${PIPESTATUS[0]}
 
@@ -276,6 +242,9 @@ check_backstage_running() {
   local release_name=$1
   local namespace=$2
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    local url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  fi
 
   local max_attempts=30
   local wait_seconds=30
@@ -315,11 +284,23 @@ install_pipelines_operator() {
   fi
 }
 
+install_tekton_pipelines() {
+  local dir=$1
+
+  if oc get pods -n "tekton-pipelines" | grep -q "tekton-pipelines"; then
+    echo "Tekton Pipelines are already installed."
+  else
+    echo "Tekton Pipelines is not installed. Installing..."
+    kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+  fi
+}
+
 initiate_deployments() {
   add_helm_repos
+  install_helm
+
   configure_namespace "${NAME_SPACE}"
   install_pipelines_operator "${DIR}"
-  install_helm
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
   # Deploy redis cache db.
@@ -327,19 +308,46 @@ initiate_deployments() {
 
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
-
-
+  
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_aks_deployment() {
+  add_helm_repos
+  install_helm
+  delete_namespace "${NAME_SPACE_RBAC_AKS}"
+  configure_namespace "${NAME_SPACE_AKS}"
+  install_tekton_pipelines
+  uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
+  yq_merge_value_files "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_AKS_MERGED_VALUE_FILE_NAME}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_AKS}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_rbac_aks_deployment() {
+  add_helm_repos
+  install_helm
+  delete_namespace "${NAME_SPACE_AKS}"
+  configure_namespace "${NAME_SPACE_RBAC_AKS}"
+  install_tekton_pipelines
+  uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
+  yq_merge_value_files "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_RBAC_AKS}"
+  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
@@ -364,23 +372,47 @@ main() {
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_AKS="showcase-aks-ci-nightly"
+    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
+  fi
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_login
+    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
   install_oc
-  oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az aks get-credentials --name="${AKS_NIGHTLY_CLUSTER_NAME}" --resource-group="${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}" --overwrite-existing
+  else
+    oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+  fi
   echo "OCP version: $(oc version)"
 
   API_SERVER_URL=$(oc whoami --show-server)
-  K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  else
+    K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+  fi
 
   echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
 
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
-  initiate_deployments
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
-  check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    initiate_aks_deployment
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
+    delete_namespace "${NAME_SPACE_AKS}"
+    initiate_rbac_aks_deployment
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
+    delete_namespace "${NAME_SPACE_RBAC_AKS}"
+  else
+    initiate_deployments
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+  fi
   exit "${OVERALL_RESULT}"
 }
 

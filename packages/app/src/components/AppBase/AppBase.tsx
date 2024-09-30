@@ -11,7 +11,6 @@ import {
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { CatalogImportPage } from '@backstage/plugin-catalog-import';
-import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
@@ -22,9 +21,7 @@ import { Route } from 'react-router-dom';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { Root } from '../Root';
 import { settingsPage } from '../UserSettings/SettingsPages';
-import { AdminPage } from '../admin/AdminPage';
 import { entityPage } from '../catalog/EntityPage';
-import { HomePage } from '../home/HomePage';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { SearchPage } from '../search/SearchPage';
 import ConfigUpdater from '../Root/ConfigUpdater';
@@ -77,11 +74,6 @@ const AppBase = () => {
         <ConfigUpdater />
         <Root>
           <FlatRoutes>
-            {dynamicRoutes.filter(({ path }) => path === '/').length === 0 && (
-              <Route path="/" element={<HomepageCompositionRoot />}>
-                <HomePage />
-              </Route>
-            )}
             <Route
               path="/catalog"
               element={
@@ -128,16 +120,6 @@ const AppBase = () => {
             </Route>
             <Route path="/catalog-graph" element={<CatalogGraphPage />} />
             <Route path="/learning-paths" element={<LearningPaths />} />
-            <Route path="/admin" element={<AdminPage />} />
-            {dynamicRoutes
-              .filter(({ path }) => path.startsWith('/admin'))
-              .map(({ path }) => (
-                <Route
-                  key={`admin-path-${path}`}
-                  path={path}
-                  element={<AdminPage />}
-                />
-              ))}
             {dynamicRoutes.map(
               ({ Component, staticJSXContent, path, config: { props } }) => (
                 <Route

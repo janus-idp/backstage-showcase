@@ -21,6 +21,27 @@ data:
             headerColor1: 'rgb(0, 0, 208)'
             headerColor2: 'rgb(255, 246, 140)'
             navigationIndicatorColor: 'rgb(244, 238, 169)'
+    dynamicPlugins:
+      rootDirectory: dynamic-plugins-root
+      frontend:
+        default.main-menu-items:
+          menuItems:
+            default.list:
+              title: References
+              icon: bookmarks
+            default.apis:
+              parent: default.list
+            default.learning-path:
+              parent: default.list
+        backstage.plugin-techdocs:
+          menuItems:
+            favorites:
+              title: Favorites
+              icon: star
+              priority: 10
+            docs:
+              parent: favorites
+              priority: 1
     backend:
       auth:
         keys:
@@ -57,9 +78,10 @@ data:
         - host: gitlab.com
           token: ${GITLAB_TOKEN}
     auth:
-      # see https://backstage.io/docs/auth/ to learn about auth providers
       environment: development
       providers:
+        guest:
+          dangerouslyAllowOutsideDevelopment: true
         # Plugin: GitHub
         github:
           development:
@@ -69,8 +91,6 @@ data:
           development:
             clientId: ${GOOGLE_CLIENT_ID}
             clientSecret: ${GOOGLE_CLIENT_SECRET}
-        guest:
-          dangerouslyAllowOutsideDevelopment: true
 
     proxy:
       skipInvalidProxies: true
@@ -115,6 +135,12 @@ data:
           rules:
             - allow: [User, Group]
       providers:
+        github:
+          providerId:
+            organization: '${GITHUB_ORG}'
+            schedule:
+              frequency: { minutes: 30}
+              timeout: { minutes: 30}
         githubOrg:
           id: production
           githubUrl: "${GITHUB_URL}"
@@ -146,8 +172,3 @@ data:
               token: temp
     permission:
       enabled: false
-      rbac:
-        policies-csv-file: './rbac/rbac-policy.csv'
-        admin:
-          users:
-            - name: user:default/rhdh-qe
