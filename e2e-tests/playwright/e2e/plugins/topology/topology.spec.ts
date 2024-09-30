@@ -38,8 +38,8 @@ test.describe('Test Topology Plugin', () => {
     await page.getByLabel('Pod').click();
     await page.getByLabel('Pod').getByText('1', { exact: true }).click();
     await uiHelper.clickTab('Details');
-    await uiHelper.isTextVisible('Status');
-    await uiHelper.isTextVisible('Active');
+    await uiHelper.verifyText('Status');
+    await uiHelper.verifyText('Active');
     await uiHelper.clickTab('Resources');
     await uiHelper.verifyHeading('Pods');
     await uiHelper.verifyHeading('Services');
