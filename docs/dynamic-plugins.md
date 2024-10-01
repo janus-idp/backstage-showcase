@@ -250,7 +250,7 @@ Notice that you can provide additional options according to the type of the plug
 
 Starting on version `1.15.0` Janus CLI allows users to pubsh plugin contents to images by using the command `package package-dynamic-plugins -t <tag>`. This command requires a container tool to be installed and by default it uses `podman`. Steps to use this command:
 
-- Go to your plugin directory or to your reposityory of plugins (e.g. [backstage-plugins](https://github.com/janus-idp/backstage-plugins))
+- Go to your plugin directory or to your repository of plugins (e.g. [backstage-plugins](https://github.com/janus-idp/backstage-plugins))
 - Export the dynamic package plugin or run the `package-dynamic-plugins` command with the option `--force-build`
 - Run `package-dynamic-plugins`. Here's an example using `npx`:
 
@@ -305,7 +305,7 @@ rm -fr "$finalName"
 mv package "$finalName"
 ```
 
-It will create a sub-folder named after the package name, and containing the dynamic plugin package.
+It will create a sub-folder containing the dynamic plugin package that is named after the package name.
 
 - Start the showcase application. During the initialization step it should have a log entry similar to the following:
 
@@ -483,7 +483,7 @@ By sequentially adding these plugins and allowing for a deployment restart after
 ### Using a custom NPM registry
 
 > [!WARNING]  
-> Using a custom NPM Registry and/or NPMJS is not recommended. Using [Container Registry](#consuming-dynamic-plugins-from-a-container-registry) or [Local Configuration](#local-configuration) is recommended and supported for dynamic plugins production environments.
+> Using a custom NPM Registry and/or NPMJS is not recommended. A dynamic plugin is a runtime artifact, and that it is not the best usage of an NPM registry to deliver runtime artifacts, especially in a container-based environment such as OCP. Using [Container Registry](#consuming-dynamic-plugins-from-a-container-registry) or [Local Configuration](#local-configuration) is recommended and supported for dynamic plugins production environments.
 
 To configure the NPM registry URL and authentication information for dynamic plugin packages obtained through `npm pack`, you can utilize a `.npmrc` file. When using the Helm chart, you can add this file by creating a secret named `dynamic-plugins-npmrc` with the following content:
 
