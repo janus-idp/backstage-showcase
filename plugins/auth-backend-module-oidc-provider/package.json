@@ -46,8 +46,8 @@
     "cookie-parser": "1.4.6",
     "express-promise-router": "4.1.1",
     "express-session": "1.18.0",
-    "jose": "5.7.0",
-    "msw": "1.3.3",
+    "jose": "5.9.3",
+    "msw": "1.3.4",
     "supertest": "6.3.4"
   },
   "configSchema": "config.d.ts",

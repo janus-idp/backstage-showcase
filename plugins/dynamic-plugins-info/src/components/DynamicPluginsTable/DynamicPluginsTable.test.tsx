@@ -30,9 +30,10 @@ describe('DynamicPluginsTable', () => {
     // 6 mockapi returned external(enabled) + 53 internal(not enabled)
     // mockapi returns enabled plugins
     // keys from InternalPluginsMap are internal plugins
+
     expect(await findByText('Plugins (61)')).toBeInTheDocument();
     expect(
-      await findByText('@janus-idp/backstage-plugin-3scale-backend-dynamic'),
+      await findByText('@janus-idp/backstage-plugin-aap-backend-dynamic'),
     ).toBeInTheDocument();
     const nameCells = Array.from(
       container.querySelectorAll('tbody tr > td:first-child'),
@@ -48,17 +49,17 @@ describe('DynamicPluginsTable', () => {
     );
     expect(nameCells.length).toBe(5);
     expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      '@janus-idp/backstage-plugin-aap-backend-dynamic',
     );
-    expect(nameCells[4].textContent).toBe(
+    expect(nameCells[2].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
     );
     expect(versionCells[0].textContent).toBe('');
-    expect(versionCells[4].textContent).toBe('');
+    expect(versionCells[2].textContent).toBe('');
     expect(enabledCells[0].textContent).toBe('No');
-    expect(enabledCells[4].textContent).toBe('No');
+    expect(enabledCells[2].textContent).toBe('No');
     expect(internalCells[0].textContent).toBe('Yes');
-    expect(internalCells[4].textContent).toBe('Yes');
+    expect(internalCells[2].textContent).toBe('Yes');
   });
 
   it('supports filtering by a simple text search', async () => {
@@ -85,9 +86,9 @@ describe('DynamicPluginsTable', () => {
     );
     expect(nameCells.length).toBe(5);
     expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      '@janus-idp/backstage-plugin-aap-backend-dynamic',
     );
-    expect(nameCells[4].textContent).toBe(
+    expect(nameCells[2].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
     );
     await act(() => findByText('Name').then(el => el.click()));
