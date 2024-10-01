@@ -153,7 +153,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isGitlabAvailable
-    janus-idp.backstage-plugin-acr:
+    backstage-community.plugin-acr:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: AcrPage
