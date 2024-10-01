@@ -39,6 +39,7 @@
     ]
   },
   "dependencies": {
+    "@backstage/plugin-techdocs-backend": "1.10.13",
     "node-gyp": "9.4.1",
     "patch-package": "8.0.0",
     "postinstall-postinstall": "2.1.0"
