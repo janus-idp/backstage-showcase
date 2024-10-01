@@ -51,15 +51,15 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-aap-backend-dynamic',
     );
-    expect(nameCells[3].textContent).toBe(
+    expect(nameCells[2].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
     );
     expect(versionCells[0].textContent).toBe('');
-    expect(versionCells[3].textContent).toBe('');
+    expect(versionCells[2].textContent).toBe('');
     expect(enabledCells[0].textContent).toBe('No');
-    expect(enabledCells[3].textContent).toBe('No');
+    expect(enabledCells[2].textContent).toBe('No');
     expect(internalCells[0].textContent).toBe('Yes');
-    expect(internalCells[3].textContent).toBe('Yes');
+    expect(internalCells[2].textContent).toBe('Yes');
   });
 
   it('supports filtering by a simple text search', async () => {
@@ -88,7 +88,7 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-aap-backend-dynamic',
     );
-    expect(nameCells[3].textContent).toBe(
+    expect(nameCells[2].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
     );
     await act(() => findByText('Name').then(el => el.click()));
