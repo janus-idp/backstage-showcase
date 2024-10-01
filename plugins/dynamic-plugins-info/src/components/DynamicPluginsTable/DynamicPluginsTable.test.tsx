@@ -50,7 +50,7 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-3scale-backend-dynamic',
     );
-    expect(nameCells[4].textContent).toBe(
+    expect(nameCells[3].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
     );
     expect(versionCells[0].textContent).toBe('');
@@ -87,7 +87,7 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-3scale-backend-dynamic',
     );
-    expect(nameCells[4].textContent).toBe(
+    expect(nameCells[3].textContent).toBe(
       '@janus-idp/backstage-plugin-bulk-import',
     );
     await act(() => findByText('Name').then(el => el.click()));
