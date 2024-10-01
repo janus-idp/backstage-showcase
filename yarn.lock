@@ -11301,10 +11301,10 @@
   resolved "https://registry.yarnpkg.com/@redhat-developer/red-hat-developer-hub-theme/-/red-hat-developer-hub-theme-0.3.0.tgz#be90c97b06301ef7ef28857cde38640f5ded590d"
   integrity sha512-uF5KDxhZPIhTVekeMlkorb9UwY9tAiPTVmwVob3/Fk353geT8DR5w4oYlmWC9G8qHrKqxUUqjGpoMvx+bY+GcA==
 
-"@remix-run/router@1.19.1":
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.19.1.tgz#984771bfd1de2715f42394c87fb716c1349e014f"
-  integrity sha512-S45oynt/WH19bHbIXjtli6QmwNYvaz+vtnubvNpNDvUOoA/OWh6j1OikIP3G+v5GHdxyC6EXoChG3HgYGEUfcg==
+"@remix-run/router@1.19.2":
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.19.2.tgz#0c896535473291cb41f152c180bedd5680a3b273"
+  integrity sha512-baiMx18+IMuD1yyvOGaHM9QrVUPGGG0jC+z+IPHnRJWUAUvaKuWKyE8gjDj2rzv3sz9zOGoRSPgeBVHRhZnBlA==
 
 "@repeaterjs/repeater@^3.0.4":
   version "3.0.5"
@@ -11755,7 +11755,15 @@
     "@sagold/json-pointer" "^5.1.2"
     ebnf "^1.9.1"
 
-"@scalprum/core@0.7.0", "@scalprum/core@^0.7.0":
+"@scalprum/core@0.8.1", "@scalprum/core@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.8.1.tgz#7c3d6bb67f70052a6929cbf8fccf8a13dca02a63"
+  integrity sha512-bRbquESsjUvgu3QHA9aDIK5uTu7XoXjzqoxAmDmytnedzg8LFk/iNKs/bx4lSP2rufxx8iFkdVVvN3sM1W6a4A==
+  dependencies:
+    "@openshift/dynamic-plugin-sdk" "^5.0.1"
+    tslib "^2.6.2"
+
+"@scalprum/core@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.7.0.tgz#9775a9c87a6afafbd9a0bb41c6d22df0a6524e2c"
   integrity sha512-zvrPXexI+bxHGFY/teuwPI5yjnOuiq8uT+RDsrm3gnpr1AqZQVUiGdskl1ON/ci5lSs1kNadmXceF1BTKlicwg==
@@ -11763,13 +11771,13 @@
     "@openshift/dynamic-plugin-sdk" "^5.0.1"
     tslib "^2.6.2"
 
-"@scalprum/react-core@0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.8.0.tgz#34bdec81af62fa4f87741169b2721729b3dd69ee"
-  integrity sha512-ADqL6GdjT0ihVfTtIqu8vvYgwUb3IiUGXj9md1+h6tL8yshbq+FAezwuD9jhX7qcjfgL1Sl3g/faO2/SE9jPvw==
+"@scalprum/react-core@0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.9.3.tgz#e1f804e93125fdb782f0f97354b819a638ff4705"
+  integrity sha512-AnBoFLZl+qYB9XnAJBHYZJTHHRFWCW6iYAojGkiqtD4luyiEMmd6SaCv2s8xs/b6l/KKkG2FU272sIYqb/FkAQ==
   dependencies:
     "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    "@scalprum/core" "^0.7.0"
+    "@scalprum/core" "^0.8.1"
     lodash "^4.17.0"
 
 "@scalprum/react-core@^0.7.1":
@@ -22849,12 +22857,7 @@ jose@^4.15.4:
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.5.tgz#6475d0f467ecd3c630a1b5dadd2735a7288df706"
   integrity sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==
 
-jose@^4.15.5:
-  version "4.15.7"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.7.tgz#96ad68d786632bd03c9068aa281810dbbe1b60d8"
-  integrity sha512-L7ioP+JAuZe8v+T5+zVI9Tx8LtU8BL7NxkyDFVMv+Qr3JW0jSoYDedLtodaXwfqMpeCyx4WXFNyu9tJt4WvC1A==
-
-jose@^4.6.0:
+jose@^4.15.9, jose@^4.6.0:
   version "4.15.9"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.9.tgz#9b68eda29e9a0614c042fa29387196c7dd800100"
   integrity sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==
@@ -23014,10 +23017,10 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
-json-2-csv@5.5.5:
-  version "5.5.5"
-  resolved "https://registry.yarnpkg.com/json-2-csv/-/json-2-csv-5.5.5.tgz#4e6000fa173c2027f40740e7f04256ca39658274"
-  integrity sha512-xLeiOE+jtDMX4SMn9JlD6BVI9c5SYVFmtlsNBSelGlq9iUHdVmwlxQ/uUI/BEVQuKDVLlxNrsOfwlI3rfYy1zA==
+json-2-csv@5.5.6:
+  version "5.5.6"
+  resolved "https://registry.yarnpkg.com/json-2-csv/-/json-2-csv-5.5.6.tgz#6c1220ab063ed4e9cc33bc2f42e0e044e80e083e"
+  integrity sha512-N673XbJgHwUq9JreKpk530jSywPF/rEAQ08dV99QQpkluP/4HTwshpoP9hmDz26iSFqu7eNAPgyJfu/77HvPGA==
   dependencies:
     deeks "3.1.0"
     doc-path "4.1.1"
@@ -26166,12 +26169,12 @@ openapi3-ts@^3.1.2:
   dependencies:
     yaml "^2.2.1"
 
-openid-client@5.6.5:
-  version "5.6.5"
-  resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-5.6.5.tgz#c149ad07b9c399476dc347097e297bbe288b8b00"
-  integrity sha512-5P4qO9nGJzB5PI0LFlhj4Dzg3m4odt0qsJTfyEtZyOlkgpILwEioOhVVJOrS1iVH494S4Ee5OCjjg6Bf5WOj3w==
+openid-client@5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-5.7.0.tgz#61dbea7251f561e82342278063ce37c5c05347f2"
+  integrity sha512-4GCCGZt1i2kTHpwvaC/sCpTpQqDnBzDzuJcJMbH+y1Q5qI8U8RBvoSh28svarXszZHR5BAMXbJPX1PGPRE3VOA==
   dependencies:
-    jose "^4.15.5"
+    jose "^4.15.9"
     lru-cache "^6.0.0"
     object-hash "^2.2.0"
     oidc-token-hash "^5.0.3"
@@ -27976,20 +27979,20 @@ react-resizable@^3.0.4, react-resizable@^3.0.5:
     prop-types "15.x"
     react-draggable "^4.0.3"
 
-react-router-dom@6.26.1:
-  version "6.26.1"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.26.1.tgz#a408892b41767a49dc94b3564b0e7d8e3959f623"
-  integrity sha512-veut7m41S1fLql4pLhxeSW3jlqs+4MtjRLj0xvuCEXsxusJCbs6I8yn9BxzzDX2XDgafrccY6hwjmd/bL54tFw==
+react-router-dom@6.26.2:
+  version "6.26.2"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.26.2.tgz#a6e3b0cbd6bfd508e42b9342099d015a0ac59680"
+  integrity sha512-z7YkaEW0Dy35T3/QKPYB1LjMK2R1fxnHO8kWpUMTBdfVzZrWOiY9a7CtN8HqdWtDUWd5FY6Dl8HFsqVwH4uOtQ==
   dependencies:
-    "@remix-run/router" "1.19.1"
-    react-router "6.26.1"
+    "@remix-run/router" "1.19.2"
+    react-router "6.26.2"
 
-react-router@6.26.1:
-  version "6.26.1"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.26.1.tgz#88c64837e05ffab6899a49df2a1484a22471e4ce"
-  integrity sha512-kIwJveZNwp7teQRI5QmwWo39A5bXRyqpH0COKKmPnyD2vBvDwgFXSqDUYtt1h+FEyfnE8eXr7oe0MxRzVwCcvQ==
+react-router@6.26.2:
+  version "6.26.2"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.26.2.tgz#2f0a68999168954431cdc29dd36cec3b6fa44a7e"
+  integrity sha512-tvN1iuT03kHgOFnLPfLJ8V95eijteveqdOSk+srqfePtQvqCExB8eHOYnlilbOcyJyKnYkr1vJvf7YqotAJu1A==
   dependencies:
-    "@remix-run/router" "1.19.1"
+    "@remix-run/router" "1.19.2"
 
 react-side-effect@^2.1.0:
   version "2.1.2"
@@ -30641,10 +30644,10 @@ tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.2.0, tslib@^2.3.0, tslib@^2.3
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.3.tgz#0438f810ad7a9edcde7a241c3d80db693c8cbfe0"
   integrity sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==
 
-tss-react@4.9.12:
-  version "4.9.12"
-  resolved "https://registry.yarnpkg.com/tss-react/-/tss-react-4.9.12.tgz#beaae5459cae2dd966af4c97f6dc6dd6655e183d"
-  integrity sha512-bsREJF9opq8OEZKibw7Awao2g16ZSlsBavmIxzKVF7EMcJ1d0Uc/Z2lJEKlZwYoct6g1C0dxd5XI+RwPhTrlUA==
+tss-react@4.9.13:
+  version "4.9.13"
+  resolved "https://registry.yarnpkg.com/tss-react/-/tss-react-4.9.13.tgz#e6ac0bfea3977e58b5ef5a261cd0b035e6bd8254"
+  integrity sha512-Gu19qqPH8/SAyKVIgDE5qHygirEDnNIQcXhiEc+l4Q9T7C1sfvUnbVWs+yBpmN26/wyk4FTOupjYS2wq4vH0yA==
   dependencies:
     "@emotion/cache" "*"
     "@emotion/serialize" "*"
