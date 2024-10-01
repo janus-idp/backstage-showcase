@@ -100,16 +100,38 @@ az_login() {
   az account set --subscription $ARM_SUBSCRIPTION_ID
 }
 
-az_aks_start() {
-  local name=$1
-  local resource_group=$2
-  az aks start --name $name --resource-group $resource_group
+mapt_aks_create() {
+  podman run -d --arch=amd64 --rm --name create-aks \
+      -v ${PWD}:/workspace:z \
+      -e ARM_TENANT_ID=${ARM_TENANT_ID} \
+      -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
+      -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
+      -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
+      quay.io/rhqp/mapt:v0.7.0-dev azure \
+          aks create \
+          --project-name "aks" \
+          --backed-url "file:///workspace" \
+          --conn-details-output "/workspace" \
+          --spot
+  log_output=$(podman logs -f create-aks | tee /dev/tty)
+  set +x
+  export AKS_NIGHTLY_CLUSTER_RESOURCEGROUP=$(echo "$log_output" | grep -Eo 'mapt[0-9a-z]+' | head -n 1)
+  export AKS_NIGHTLY_CLUSTER_NAME=$(echo "$log_output" | grep -Eo 'aks-aaks-cluster[0-9a-z]+' | head -n 1)
+  set -x
 }
 
-az_aks_stop() {
-  local name=$1
-  local resource_group=$2
-  az aks stop --name $name --resource-group $resource_group
+mapt_aks_destroy() {
+  podman run -d --rm --name destroy-aks \
+      -v ${PWD}:/workspace:z \
+      -e ARM_TENANT_ID=${ARM_TENANT_ID} \
+      -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
+      -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
+      -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
+      quay.io/rhqp/mapt:v0.7.0-dev azure \
+          aks destroy \
+          --project-name "aks" \
+          --backed-url "file:///workspace" 
+  podman logs -f destroy-aks 
 }
 
 az_aks_approuting_enable() {

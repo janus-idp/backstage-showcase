@@ -62,3 +62,7 @@ dynamic-plugins/*/dist-dynamic/src
 .webpack-cache
 .idea/
 .idea/
+
+# mapt temporary files
+.ibm/pipelines/.pulumi
+.ibm/pipelines/kubeconfig
