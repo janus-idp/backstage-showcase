@@ -6,7 +6,7 @@ import {
   RoleListPO,
   RoleOverviewPO,
 } from '../../../support/pageObjects/page-obj';
-import { Roles, Response } from '../../../support/pages/rbac';
+import { Roles } from '../../../support/pages/rbac';
 import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 
@@ -14,53 +14,15 @@ test.describe.serial('Test RBAC plugin Frontend', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
-  let responseHelper: Response;
 
-  test.beforeAll(async ({ baseURL }) => {
+  test.beforeAll(async () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
 
     await common.loginAsGithubUser();
 
-    await uiHelper.openSidebar('Catalog');
-    const requestPromise = page.waitForRequest(
-      request =>
-        request.url() === `${baseURL}/api/search/query?term=` &&
-        request.method() === 'GET',
-    );
     await uiHelper.openSidebar('Home');
-    const getRequest = await requestPromise;
-    const authToken = await getRequest.headerValue('Authorization');
-
-    responseHelper = new Response(authToken);
   });
-
-  test.afterAll(
-    'Cleanup by deleting all new policies and roles',
-    async ({ request }) => {
-      const remainingPoliciesResponse = await request.get(
-        '/api/permission/policies/role/default/test',
-        responseHelper.getSimpleRequest(),
-      );
-
-      const remainingPolicies = await responseHelper.removeMetadataFromResponse(
-        remainingPoliciesResponse,
-      );
-
-      const deleteRemainingPolicies = await request.delete(
-        '/api/permission/policies/role/default/test',
-        responseHelper.createOrDeletePolicyRequest(remainingPolicies),
-      );
-
-      const deleteRole = await request.delete(
-        '/api/permission/roles/role/default/test',
-        responseHelper.getSimpleRequest(),
-      );
-
-      expect(deleteRemainingPolicies.ok()).toBeTruthy();
-      expect(deleteRole.ok()).toBeTruthy();
-    },
-  );
 
   test('Test catalog-entity read is denied', async () => {
     await uiHelper.openSidebar('Catalog');
