@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { Common, setupBrowser } from '../../../../playwright/utils/Common';
+import { Common } from '../../../../playwright/utils/Common';
 import { UIhelper } from '../../../../playwright/utils/UIhelper';
 import { Tekton } from '../../../utils/tekton/tekton';
 import { Catalog } from '../../../support/pages/Catalog';
@@ -16,9 +16,8 @@ test.describe('Test Tekton plugin', () => {
   let tekton: Tekton;
   let catalog: Catalog;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    const page = (await setupBrowser(browser, testInfo)).page;
-    common = new Common(page);
+  test.beforeAll(async () => {
+    const common = new Common(page);
     await common.loginAsGuest();
     uiHelper = new UIhelper(page);
     tekton = new Tekton(page);

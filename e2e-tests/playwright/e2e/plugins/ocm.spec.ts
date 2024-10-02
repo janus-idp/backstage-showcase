@@ -1,5 +1,5 @@
 import { Page, test } from '@playwright/test';
-import { Common, setupBrowser } from '../../utils/Common';
+import { Common } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import { Clusters } from '../../support/pages/Clusters';
 
@@ -21,9 +21,7 @@ test.describe.serial('Test OCM plugin', () => {
   let clusters: Clusters;
   let common: Common;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     clusters = new Clusters(page);

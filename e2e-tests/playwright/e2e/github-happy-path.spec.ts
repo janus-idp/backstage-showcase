@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
-import { Common, setupBrowser } from '../utils/Common';
+import { Common } from '../utils/Common';
 import { resources } from '../support/testData/resources';
 import {
   BackstageShowcase,
@@ -18,9 +18,7 @@ test.describe.serial('GitHub Happy path', () => {
   const component =
     'https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml';
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     catalogImport = new CatalogImport(page);

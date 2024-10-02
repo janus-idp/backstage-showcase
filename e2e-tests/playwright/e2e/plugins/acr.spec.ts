@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
-import { Common, setupBrowser } from '../../utils/Common';
+import { Common } from '../../utils/Common';
 
 let page;
 test.describe('Test ACR plugin', () => {
@@ -8,9 +8,7 @@ test.describe('Test ACR plugin', () => {
   let common: Common;
   const dateRegex =
     /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{1,2},\s\d{4}/gm;
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();

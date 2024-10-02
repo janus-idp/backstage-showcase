@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
-import { Common, setupBrowser } from '../../utils/Common';
+import { Common } from '../../utils/Common';
 import { APIHelper } from '../../utils/APIHelper';
 import { BulkImport } from '../../support/pages/BulkImport';
 import {
@@ -33,9 +33,7 @@ test.describe.serial('Bulk Import plugin', () => {
     labels: `bulkimport1: test1;bulkimport2: test2`,
     repoUrl: `github.com/janus-test/${newRepoName}`,
   };
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
@@ -244,9 +242,7 @@ test.describe
     repoName: 'janus-test-2-bulk-import-test',
     url: 'https://github.com/janus-test/janus-test-2-bulk-import-test/blob/main/catalog-info.yaml',
   };
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
@@ -289,9 +285,7 @@ test.describe
   let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();

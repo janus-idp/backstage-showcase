@@ -1,5 +1,5 @@
 import { test, Page, TestInfo, expect } from '@playwright/test';
-import { Common, setupBrowser } from '../utils/Common';
+import { Common } from '../utils/Common';
 import { ThemeVerifier } from '../utils/custom-theme/theme-verifier';
 import {
   customTabIcon,
@@ -12,8 +12,7 @@ test.describe('CustomTheme should be applied', () => {
   let common: Common;
   let themeVerifier: ThemeVerifier;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
+  test.beforeAll(async () => {
     common = new Common(page);
     themeVerifier = new ThemeVerifier(page);
 

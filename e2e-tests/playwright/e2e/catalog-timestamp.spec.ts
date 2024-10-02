@@ -1,6 +1,6 @@
 import { Page, expect, test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
-import { Common, setupBrowser } from '../utils/Common';
+import { Common } from '../utils/Common';
 import { CatalogImport } from '../support/pages/CatalogImport';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
@@ -13,9 +13,7 @@ test.describe('Test timestamp column on Catalog', () => {
   const component =
     'https://github.com/janus-qe/custom-catalog-entities/blob/main/timestamp-catalog-info.yaml';
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeAll(async () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
