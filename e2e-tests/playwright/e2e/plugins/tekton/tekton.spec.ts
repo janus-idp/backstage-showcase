@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { Page, test } from '@playwright/test';
 import { Common } from '../../../../playwright/utils/Common';
 import { UIhelper } from '../../../../playwright/utils/UIhelper';
 import { Tekton } from '../../../utils/tekton/tekton';
@@ -11,10 +11,10 @@ import { Catalog } from '../../../support/pages/Catalog';
 // Pre-req: A catalog entity with the matching backstage.io/kubernetes-id: developer-hub annotation as well as the janus-idp.io/tekton : <BACKSTAGE_ENTITY_NAME> annotation
 
 test.describe('Test Tekton plugin', () => {
-  let common: Common;
   let uiHelper: UIhelper;
   let tekton: Tekton;
   let catalog: Catalog;
+  let page: Page;
 
   test.beforeAll(async () => {
     const common = new Common(page);
