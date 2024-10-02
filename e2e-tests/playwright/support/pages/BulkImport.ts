@@ -3,7 +3,7 @@ import { UIhelper } from '../../utils/UIhelper';
 import { APIHelper } from '../../utils/APIHelper';
 import { UIhelperPO } from '../pageObjects/global-obj';
 
-export class BulkImport {
+export class BulkImportPage {
   private page: Page;
   private uiHelper: UIhelper;
 
