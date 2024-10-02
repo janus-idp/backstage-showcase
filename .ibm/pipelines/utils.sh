@@ -101,6 +101,8 @@ az_login() {
 }
 
 mapt_aks_create() {
+  cat /etc/subuid
+  cat /etc/subgid
   podman run --user podman --privileged -d --platform=linux/amd64 --rm --name create-aks \
       -v ${DIR}:/workspace:z \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
