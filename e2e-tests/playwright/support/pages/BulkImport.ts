@@ -1,15 +1,12 @@
 import { Page } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
 import { APIHelper } from '../../utils/APIHelper';
 import { UIhelperPO } from '../pageObjects/global-obj';
 
 export class BulkImport {
   private page: Page;
-  private uiHelper: UIhelper;
 
   constructor(page: Page) {
     this.page = page;
-    this.uiHelper = new UIhelper(page);
   }
 
   async searchInOrg(searchText: string) {
