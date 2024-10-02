@@ -1,11 +1,10 @@
-import { Page, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common } from '../utils/Common';
 import { CatalogImport } from '../support/pages/CatalogImport';
 import { APIHelper } from '../utils/APIHelper';
 import { githubAPIEndpoints } from '../utils/APIEndpoints';
 
-let page: Page;
 test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
   let uiHelper: UIhelper;
   let common: Common;
@@ -25,7 +24,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     ).toString('utf8'), // Default repoOwner janus-qe
   };
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
@@ -105,7 +104,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     await uiHelper.verifyText('Provide some simple information');
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page }) => {
     await APIHelper.githubRequest(
       'DELETE',
       githubAPIEndpoints.deleteRepo(

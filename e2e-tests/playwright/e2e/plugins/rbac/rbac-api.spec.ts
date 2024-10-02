@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { Response } from '../../../support/pages/rbac';
 import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
@@ -6,10 +6,10 @@ import { UIhelper } from '../../../utils/UIhelper';
 test.describe.serial('Test RBAC plugin REST API', () => {
   let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
+
   let responseHelper: Response;
 
-  test.beforeAll(async ({ baseURL }) => {
+  test.beforeAll(async ({ baseURL, page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
 

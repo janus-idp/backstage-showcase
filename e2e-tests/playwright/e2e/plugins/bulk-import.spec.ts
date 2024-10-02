@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import { Common } from '../../utils/Common';
 import { APIHelper } from '../../utils/APIHelper';
@@ -11,7 +11,6 @@ import {
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial('Bulk Import plugin', () => {
-  let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
   let bulkimport: BulkImport;
@@ -30,7 +29,7 @@ test.describe.serial('Bulk Import plugin', () => {
     labels: `bulkimport1: test1;bulkimport2: test2`,
     repoUrl: `github.com/janus-test/${newRepoName}`,
   };
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
@@ -193,7 +192,9 @@ test.describe.serial('Bulk Import plugin', () => {
     ]);
   });
 
-  test("Delete a Bulk Import Repository and Verify It's No Longer Visible in the UI", async () => {
+  test("Delete a Bulk Import Repository and Verify It's No Longer Visible in the UI", async ({
+    page,
+  }) => {
     await uiHelper.openSidebar('Bulk import');
     await common.waitForLoad();
     await bulkimport.filterAddedRepo(catalogRepoDetails.name);
@@ -227,7 +228,6 @@ test.describe.serial('Bulk Import plugin', () => {
 
 test.describe
   .serial('Bulk Import - Verify existing repo are displayed in bulk import Added repositories', () => {
-  let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
   let bulkimport: BulkImport;
@@ -239,7 +239,7 @@ test.describe
     repoName: 'janus-test-2-bulk-import-test',
     url: 'https://github.com/janus-test/janus-test-2-bulk-import-test/blob/main/catalog-info.yaml',
   };
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
@@ -279,10 +279,9 @@ test.describe
 
 test.describe
   .serial('Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin', () => {
-  let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();

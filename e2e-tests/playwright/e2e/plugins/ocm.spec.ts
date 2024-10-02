@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { Common } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import { Clusters } from '../../support/pages/Clusters';
@@ -15,13 +15,13 @@ const clusterDetails = {
   memorySize: /Memory size\d.*(Gi|Mi)/,
   ocVersion: /^\d+\.\d+\.\d+$/,
 };
-let page: Page;
+
 test.describe.serial('Test OCM plugin', () => {
   let uiHelper: UIhelper;
   let clusters: Clusters;
   let common: Common;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     clusters = new Clusters(page);

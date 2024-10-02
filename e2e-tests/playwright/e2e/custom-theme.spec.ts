@@ -1,4 +1,4 @@
-import { test, Page, TestInfo, expect } from '@playwright/test';
+import { test, TestInfo, expect } from '@playwright/test';
 import { Common } from '../utils/Common';
 import { ThemeVerifier } from '../utils/custom-theme/theme-verifier';
 import {
@@ -6,13 +6,11 @@ import {
   customBrandIcon,
 } from '../support/testData/custom-theme';
 
-let page: Page;
-
 test.describe('CustomTheme should be applied', () => {
   let common: Common;
   let themeVerifier: ThemeVerifier;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     common = new Common(page);
     themeVerifier = new ThemeVerifier(page);
 
@@ -49,19 +47,25 @@ test.describe('CustomTheme should be applied', () => {
     await themeVerifier.verifyPrimaryColors('#ab75cf');
   });
 
-  test('Verify that tab icon for Backstage can be customized', async () => {
+  test('Verify that tab icon for Backstage can be customized', async ({
+    page,
+  }) => {
     expect(await page.locator('#dynamic-favicon').getAttribute('href')).toEqual(
       customTabIcon,
     );
   });
 
-  test('Verify that brand icon for Backstage can be customized', async () => {
+  test('Verify that brand icon for Backstage can be customized', async ({
+    page,
+  }) => {
     expect(await page.getByTestId('home-logo').getAttribute('src')).toEqual(
       customBrandIcon,
     );
   });
 
-  test('Verify that title for Backstage can be customized', async () => {
+  test('Verify that title for Backstage can be customized', async ({
+    page,
+  }) => {
     await expect(page).toHaveTitle(/Red Hat Developer Hub/);
   });
 });

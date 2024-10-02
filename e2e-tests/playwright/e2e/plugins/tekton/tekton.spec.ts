@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { Common } from '../../../../playwright/utils/Common';
 import { UIhelper } from '../../../../playwright/utils/UIhelper';
 import { Tekton } from '../../../utils/tekton/tekton';
@@ -14,9 +14,8 @@ test.describe('Test Tekton plugin', () => {
   let uiHelper: UIhelper;
   let tekton: Tekton;
   let catalog: Catalog;
-  let page: Page;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     const common = new Common(page);
     await common.loginAsGuest();
     uiHelper = new UIhelper(page);

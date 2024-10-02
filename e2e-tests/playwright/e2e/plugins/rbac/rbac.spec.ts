@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { UIhelperPO } from '../../../support/pageObjects/global-obj';
 import {
   HomePagePO,
@@ -13,9 +13,8 @@ import { UIhelper } from '../../../utils/UIhelper';
 test.describe.serial('Test RBAC plugin Frontend', () => {
   let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
 
@@ -81,9 +80,8 @@ test.describe
   .serial('Test RBAC plugin: load permission policies and conditions from files', () => {
   let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();
@@ -92,7 +90,9 @@ test.describe
     await uiHelper.verifyHeading('RBAC');
   });
 
-  test('Check if permission policies defined in files are loaded and effective', async () => {
+  test('Check if permission policies defined in files are loaded and effective', async ({
+    page,
+  }) => {
     const testRole: string = 'role:default/test2-role';
 
     await uiHelper.verifyHeading(/All roles \(\d+\)/);
@@ -135,7 +135,7 @@ test.describe
     await uiHelper.clickButton('Cancel');
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page }) => {
     await page.close();
   });
 });
@@ -144,15 +144,16 @@ test.describe
   .serial('Test RBAC plugin: Aliases used in conditional access policies', () => {
   let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
-  test('Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.', async () => {
+  test('Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.', async ({
+    page,
+  }) => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Component');
 
@@ -182,7 +183,7 @@ test.describe
     await expect(unregisterGroupOwned).toBeDisabled();
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page }) => {
     await page.close();
   });
 });
@@ -190,10 +191,10 @@ test.describe
 test.describe.serial('Test RBAC plugin as an admin user', () => {
   let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
+
   let rolesHelper: Roles;
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     rolesHelper = new Roles(page);
@@ -237,7 +238,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickLink('RBAC');
   });
 
-  test('Create and edit a role from the roles list page', async () => {
+  test('Create and edit a role from the roles list page', async ({ page }) => {
     await rolesHelper.createRole('test-role');
     await page.click(RoleListPO.editRole('role:default/test-role'));
     await uiHelper.verifyHeading('Edit Role');
@@ -264,7 +265,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test('Edit users and groups and update policies of a role from the overview page', async () => {
+  test('Edit users and groups and update policies of a role from the overview page', async ({
+    page,
+  }) => {
     await rolesHelper.createRole('test-role1');
     await uiHelper.clickLink('role:default/test-role1');
 
@@ -303,7 +306,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role1');
   });
 
-  test('Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.', async () => {
+  test('Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.', async ({
+    page,
+  }) => {
     await rolesHelper.createRoleWithPermissionPolicy('test-role');
 
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
@@ -313,7 +318,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
   });
 
   //FIXME
-  test.skip('Admin cannot create a role if there are no rules defined for the selected resource type.', async () => {
+  test.skip('Admin cannot create a role if there are no rules defined for the selected resource type.', async ({
+    page,
+  }) => {
     await uiHelper.clickButton('Create');
     await uiHelper.verifyHeading('Create role');
 
@@ -337,7 +344,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickButton('Cancel');
   });
 
-  test.skip('As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.', async () => {
+  test.skip('As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.', async ({
+    page,
+  }) => {
     await rolesHelper.createRoleWithNotPermissionPolicy('test-role');
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
@@ -346,7 +355,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test.skip('As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.', async () => {
+  test.skip('As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.', async ({
+    page,
+  }) => {
     await rolesHelper.createRoleWithNotPermissionPolicy('test-role');
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
@@ -374,7 +385,9 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test.skip('As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.', async () => {
+  test.skip('As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.', async ({
+    page,
+  }) => {
     await rolesHelper.createRoleWithPermissionPolicy('test-role');
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
@@ -400,7 +413,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page }) => {
     await page.close();
   });
 });

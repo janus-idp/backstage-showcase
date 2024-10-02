@@ -1,10 +1,9 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common } from '../utils/Common';
 import { CatalogImport } from '../support/pages/CatalogImport';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
-let page: Page;
 test.describe('Test timestamp column on Catalog', () => {
   let uiHelper: UIhelper;
   let common: Common;
@@ -13,7 +12,7 @@ test.describe('Test timestamp column on Catalog', () => {
   const component =
     'https://github.com/janus-qe/custom-catalog-entities/blob/main/timestamp-catalog-info.yaml';
 
-  test.beforeAll(async () => {
+  test.beforeAll(async ({ page }) => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
@@ -41,7 +40,9 @@ test.describe('Test timestamp column on Catalog', () => {
     ]);
   });
 
-  test('Toggle ‘CREATED AT’ to see if the component list can be sorted in ascending/decending order', async () => {
+  test('Toggle ‘CREATED AT’ to see if the component list can be sorted in ascending/decending order', async ({
+    page,
+  }) => {
     const createdAtFirstRow =
       'table > tbody > tr:nth-child(1) > td:nth-child(8)';
     //Verify by default Rows are in ascending
@@ -54,7 +55,7 @@ test.describe('Test timestamp column on Catalog', () => {
     await expect(page.locator(createdAtFirstRow)).not.toBeEmpty();
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page }) => {
     await page.close();
   });
 });

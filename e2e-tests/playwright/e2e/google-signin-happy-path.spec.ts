@@ -1,14 +1,13 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { Common } from '../utils/Common';
 import { UIhelper } from '../utils/UIhelper';
 
-let page: Page;
 test.describe.skip('Google signin happy path', () => {
   let uiHelper: UIhelper;
   let common: Common;
   const google_user_id = process.env.GOOGLE_USER_ID;
 
-  test.beforeAll(async ({ browser }) => {
+  test.beforeAll(async ({ browser, page }) => {
     const cookiesBase64 = process.env.GOOGLE_ACC_COOKIE;
     const cookiesString = Buffer.from(cookiesBase64, 'base64').toString('utf8');
     const cookies = JSON.parse(cookiesString);
@@ -25,7 +24,7 @@ test.describe.skip('Google signin happy path', () => {
     await common.loginAsGuest();
   });
 
-  test('Verify Google Sign in', async () => {
+  test('Verify Google Sign in', async ({ page }) => {
     await uiHelper.openSidebar('Settings');
     await uiHelper.clickTab('Authentication Providers');
     await page.getByTitle('Sign in to Google').click();
@@ -34,7 +33,7 @@ test.describe.skip('Google signin happy path', () => {
     await uiHelper.verifyText(google_user_id, false);
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page }) => {
     await page.close();
   });
 });
