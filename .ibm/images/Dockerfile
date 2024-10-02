@@ -81,9 +81,15 @@ RUN wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd6
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# Install podman
+# Install podman and required settings: https://www.redhat.com/sysadmin/podman-inside-container
 RUN apt-get update -y && \
-    apt-get install -y podman
+    apt-get install -y podman fuse-overlayfs
+RUN useradd podman; \
+    echo podman:10000:5000 > /etc/subuid; \
+    echo podman:10000:5000 > /etc/subgid;
+VOLUME /var/lib/containers
+VOLUME /home/podman/.local/share/containers
+RUN chown podman:podman -R /home/podman
 
 # Set environment variables to make Go work correctly
 ENV GOPATH /go
