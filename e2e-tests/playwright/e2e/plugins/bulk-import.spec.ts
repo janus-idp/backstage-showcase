@@ -29,7 +29,6 @@ const test = base.extend<BulkImportFixture>({
   uiHelper: async ({ page }, use) => use(new UIhelper(page)),
   common: async ({ page }, use) => {
     const common = new Common(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
     use(common);
   },
   bulkImport: async ({ page }, use) => {
@@ -56,13 +55,17 @@ const test = base.extend<BulkImportFixture>({
 });
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
-test.describe.serial('Bulk Import plugin', () => {
+test.describe('Bulk Import plugin', () => {
   const catalogRepoDetails = {
     name: 'janus-test-1-bulk-import-test',
     url: 'github.com/janus-test/janus-test-1-bulk-import-test',
     org: 'github.com/janus-test',
     owner: 'janus-test',
   };
+
+  test.beforeEach(async ({ common }) => {
+    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+  });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
   test('Add a Repository from the Repository Tab and Confirm its Preview', async ({
@@ -295,8 +298,7 @@ test.describe.serial('Bulk Import plugin', () => {
   });
 });
 
-test.describe
-  .serial('Bulk Import - Verify existing repo are displayed in bulk import Added repositories', () => {
+test.describe('Bulk Import - Verify existing repo are displayed in bulk import Added repositories', () => {
   const existingRepoFromAppConfig = 'janus-test-3-bulk-import';
 
   const existingComponentDetails = {
@@ -346,8 +348,7 @@ test.describe
   });
 });
 
-test.describe
-  .serial('Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin', () => {
+test.describe('Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin', () => {
   test('Bulk Import - Verify users without permission cannot access', async ({
     uiHelper,
   }) => {
