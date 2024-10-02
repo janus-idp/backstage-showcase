@@ -83,7 +83,7 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # Install podman and required settings: https://github.com/containers/image_build/tree/main/podman & https://www.redhat.com/sysadmin/podman-inside-container
 RUN apt-get update -y && \
-    apt-get install -y podman fuse-overlayfs
+    apt-get install -y podman fuse-overlayfs containers-storage
     RUN useradd podman && \
     echo -e "podman:1:999\npodman:1001:64535" > /etc/subuid && \
     echo -e "podman:1:999\npodman:1001:64535" > /etc/subgid
