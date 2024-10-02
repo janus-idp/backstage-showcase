@@ -12,7 +12,6 @@ import { defineConfig, devices } from '@playwright/test';
 const useCommonDeviceAndViewportConfig = {
   use: {
     ...devices['Desktop Chrome'],
-    viewport: { width: 1920, height: 1080 },
   },
 };
 
@@ -31,6 +30,7 @@ export default defineConfig({
     ['list'],
     ['junit', { outputFile: 'junit-results.xml' }],
   ],
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: process.env.BASE_URL,
@@ -38,9 +38,9 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    viewport: { width: 1920, height: 1080 },
     video: {
       mode: 'on',
-      size: { width: 1920, height: 1080 },
     },
   },
 

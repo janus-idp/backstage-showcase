@@ -1,9 +1,8 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { test, Browser, expect, Page, TestInfo } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
-import path from 'path';
 
 export class Common {
   page: Page;
@@ -160,17 +159,4 @@ export class Common {
     const secret = process.env.GOOGLE_2FA_SECRET;
     return authenticator.generate(secret);
   }
-}
-
-export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
-  const context = await browser.newContext({
-    recordVideo: {
-      dir: `test-results/${path
-        .parse(testInfo.file)
-        .name.replace('.spec', '')}`,
-      size: { width: 1920, height: 1080 },
-    },
-  });
-  const page = await context.newPage();
-  return { page, context };
 }
