@@ -7,7 +7,7 @@ test.describe.skip('Google signin happy path', () => {
   let common: Common;
   const google_user_id = process.env.GOOGLE_USER_ID;
 
-  test.beforeAll(async ({ browser, page }) => {
+  test.beforeAll(async ({ browser }) => {
     const cookiesBase64 = process.env.GOOGLE_ACC_COOKIE;
     const cookiesString = Buffer.from(cookiesBase64, 'base64').toString('utf8');
     const cookies = JSON.parse(cookiesString);
@@ -16,7 +16,7 @@ test.describe.skip('Google signin happy path', () => {
       storageState: cookies,
       locale: 'en-US',
     });
-    page = await context.newPage();
+    const page = await context.newPage();
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
