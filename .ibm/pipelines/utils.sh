@@ -102,7 +102,7 @@ az_login() {
 
 mapt_aks_create() {
   podman run -d --privileged --platform=linux/amd64 --rm --name create-aks \
-      -v ${PWD}:/workspace:z \
+      -v ${DIR}:/workspace:z \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
       -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
       -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
@@ -122,7 +122,7 @@ mapt_aks_create() {
 
 mapt_aks_destroy() {
   podman run -d --privileged --platform=linux/amd64 --rm --name destroy-aks \
-      -v ${PWD}:/workspace:z \
+      -v ${DIR}:/workspace:z \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
       -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
       -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
