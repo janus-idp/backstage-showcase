@@ -101,7 +101,7 @@ az_login() {
 }
 
 mapt_aks_create() {
-  podman run --security-opt label=disable -d --platform=linux/amd64 --rm --name create-aks \
+  podman run --security-opt label=disable --privileged -d --platform=linux/amd64 --rm --name create-aks \
       -v ${DIR}:/workspace:z \
       --userns=keep-id \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
@@ -122,7 +122,7 @@ mapt_aks_create() {
 }
 
 mapt_aks_destroy() {
-  podman run --security-opt label=disable -d --platform=linux/amd64 --rm --name destroy-aks \
+  podman run --security-opt label=disable --privileged -d --platform=linux/amd64 --rm --name destroy-aks \
       -v ${DIR}:/workspace:z \
       --userns=keep-id \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
