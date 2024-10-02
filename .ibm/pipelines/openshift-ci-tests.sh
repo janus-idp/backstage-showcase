@@ -376,7 +376,6 @@ main() {
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
     mapt_aks_create
-    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
   install_oc

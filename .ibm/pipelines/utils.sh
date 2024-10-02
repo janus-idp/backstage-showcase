@@ -107,17 +107,14 @@ mapt_aks_create() {
       -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
       -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
       -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
-      quay.io/rhqp/mapt:v0.7.0-dev azure \
+      quay.io/rhqp/mapt:v0.7.0 azure \
           aks create \
           --project-name "aks" \
           --backed-url "file:///workspace" \
           --conn-details-output "/workspace" \
-          --spot
-  local log_output=$(podman logs -f create-aks | tee /dev/tty)
-  set +x
-  export AKS_NIGHTLY_CLUSTER_RESOURCEGROUP=$(echo "$log_output" | grep -Eo 'mapt[0-9a-z]+' | head -n 1)
-  export AKS_NIGHTLY_CLUSTER_NAME=$(echo "$log_output" | grep -Eo 'aks-aaks-cluster[0-9a-z]+' | head -n 1)
-  set -x
+          --spot \
+          --enable-app-routing
+  podman logs -f create-aks
 }
 
 mapt_aks_destroy() {
@@ -127,7 +124,7 @@ mapt_aks_destroy() {
       -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
       -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
       -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
-      quay.io/rhqp/mapt:v0.7.0-dev azure \
+      quay.io/rhqp/mapt:v0.7.0 azure \
           aks destroy \
           --project-name "aks" \
           --backed-url "file:///workspace" 
