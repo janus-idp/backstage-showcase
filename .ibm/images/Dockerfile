@@ -81,15 +81,38 @@ RUN wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd6
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# Install podman and required settings: https://www.redhat.com/sysadmin/podman-inside-container
+# Install podman and required settings: https://github.com/containers/image_build/tree/main/podman & https://www.redhat.com/sysadmin/podman-inside-container
 RUN apt-get update -y && \
     apt-get install -y podman fuse-overlayfs
-RUN useradd podman; \
-    echo podman:10000:5000 > /etc/subuid; \
-    echo podman:10000:5000 > /etc/subgid;
+    RUN useradd podman && \
+    echo -e "podman:1:999\npodman:1001:64535" > /etc/subuid && \
+    echo -e "podman:1:999\npodman:1001:64535" > /etc/subgid
+ADD https://raw.githubusercontent.com/containers/image_build/refs/heads/main/podman/containers.conf /etc/containers/containers.conf
+ADD https://raw.githubusercontent.com/containers/image_build/refs/heads/main/podman/podman-containers.conf /home/podman/.config/containers/containers.conf
+RUN mkdir -p /home/podman/.local/share/containers && \
+    chown podman:podman -R /home/podman && \
+    chmod 644 /etc/containers/containers.conf
+    RUN mkdir -p /home/podman/.local/share/containers && \
+    chown podman:podman -R /home/podman && \
+    chmod 644 /etc/containers/containers.conf
+RUN sed -e 's|^#mount_program|mount_program|g' \
+           -e '/additionalimage.*/a "/var/lib/shared",' \
+           -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' \
+           /usr/share/containers/storage.conf \
+           > /etc/containers/storage.conf
+RUN printf '/run/secrets/etc-pki-entitlement:/run/secrets/etc-pki-entitlement\n/run/secrets/rhsm:/run/secrets/rhsm\n' > /etc/containers/mounts.conf
 VOLUME /var/lib/containers
 VOLUME /home/podman/.local/share/containers
-RUN chown podman:podman -R /home/podman
+RUN mkdir -p /var/lib/shared/overlay-images \
+             /var/lib/shared/overlay-layers \
+             /var/lib/shared/vfs-images \
+             /var/lib/shared/vfs-layers && \
+    touch /var/lib/shared/overlay-images/images.lock && \
+    touch /var/lib/shared/overlay-layers/layers.lock && \
+    touch /var/lib/shared/vfs-images/images.lock && \
+    touch /var/lib/shared/vfs-layers/layers.lock
+ENV _CONTAINERS_USERNS_CONFIGURED="" \
+    BUILDAH_ISOLATION=chroot
 
 # Set environment variables to make Go work correctly
 ENV GOPATH /go
