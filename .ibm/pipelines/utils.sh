@@ -101,7 +101,7 @@ az_login() {
 }
 
 mapt_aks_create() {
-  podman run -d --arch=amd64 --rm --name create-aks \
+  podman run -d --privileged --platform=linux/amd64 --rm --name create-aks \
       -v ${PWD}:/workspace:z \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
       -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
@@ -113,7 +113,7 @@ mapt_aks_create() {
           --backed-url "file:///workspace" \
           --conn-details-output "/workspace" \
           --spot
-  log_output=$(podman logs -f create-aks | tee /dev/tty)
+  local log_output=$(podman logs -f create-aks | tee /dev/tty)
   set +x
   export AKS_NIGHTLY_CLUSTER_RESOURCEGROUP=$(echo "$log_output" | grep -Eo 'mapt[0-9a-z]+' | head -n 1)
   export AKS_NIGHTLY_CLUSTER_NAME=$(echo "$log_output" | grep -Eo 'aks-aaks-cluster[0-9a-z]+' | head -n 1)
@@ -121,7 +121,7 @@ mapt_aks_create() {
 }
 
 mapt_aks_destroy() {
-  podman run -d --rm --name destroy-aks \
+  podman run -d --privileged --platform=linux/amd64 --rm --name destroy-aks \
       -v ${PWD}:/workspace:z \
       -e ARM_TENANT_ID=${ARM_TENANT_ID} \
       -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
