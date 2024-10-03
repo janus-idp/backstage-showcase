@@ -7,12 +7,15 @@ import {
   createRoutableExtension,
   discoveryApiRef,
   identityApiRef,
+  storageApiRef,
 } from '@backstage/core-plugin-api';
 
-import type {
-  StarredEntitiesProps,
-  VisitedByTypeProps,
-  FeaturedDocsCardProps,
+import {
+  type StarredEntitiesProps,
+  type VisitedByTypeProps,
+  type FeaturedDocsCardProps,
+  visitsApiRef,
+  VisitsStorageApi,
 } from '@backstage/plugin-home';
 
 import { rootRouteRef } from './routes';
@@ -33,6 +36,15 @@ export const dynamicHomePagePlugin = createPlugin({
       },
       factory: ({ discoveryApi, configApi, identityApi }) =>
         new QuickAccessApiClient({ discoveryApi, configApi, identityApi }),
+    }),
+    createApiFactory({
+      api: visitsApiRef,
+      deps: {
+        storageApi: storageApiRef,
+        identityApi: identityApiRef,
+      },
+      factory: ({ storageApi, identityApi }) =>
+        VisitsStorageApi.create({ storageApi, identityApi }),
     }),
   ],
 });
@@ -140,7 +152,7 @@ export const FeaturedDocsCard: React.ComponentType<FeaturedDocsCardProps> =
       name: 'FeaturedDocsCard',
       component: {
         lazy: () =>
-          import('@backstage/plugin-home').then(m => m.FeaturedDocsCard),
+          import('./components/FeaturedDocsCard').then(m => m.FeaturedDocsCard),
       },
     }),
   );
@@ -153,6 +165,16 @@ export const JokeCard: React.ComponentType<{
     component: {
       lazy: () =>
         import('@backstage/plugin-home').then(m => m.HomePageRandomJoke),
+    },
+  }),
+);
+
+export const VisitListener = dynamicHomePagePlugin.provide(
+  createComponentExtension({
+    name: 'VisitListener',
+    component: {
+      lazy: () =>
+        import('./components/VisitListener').then(m => m.VisitListener),
     },
   }),
 );
