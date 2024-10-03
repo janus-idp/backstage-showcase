@@ -38,7 +38,7 @@ function convertMenuItemsRecordToArray(
   );
 }
 
-function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
+export function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
   const itemMap: Record<string, MenuItem> = {};
 
   menuItemsArray.forEach(item => {
@@ -53,8 +53,12 @@ function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
     }
   });
 
+  const filteredItemMap = Object.fromEntries(
+    Object.entries(itemMap).filter(([_, item]) => item.title),
+  );
+
   const tree: MenuItem[] = [];
-  Object.values(itemMap).forEach(item => {
+  Object.values(filteredItemMap).forEach(item => {
     if (item.parent) {
       const parentItem = itemMap[item.parent];
       if (parentItem) {
