@@ -146,7 +146,7 @@ export const FeaturedDocsCard: React.ComponentType<FeaturedDocsCardProps> =
   );
 
 export const JokeCard: React.ComponentType<{
-  defaultCategory?: 'any' | 'programming' | undefined;
+  defaultCategory?: 'any' | 'programming';
 }> = dynamicHomePagePlugin.provide(
   createComponentExtension({
     name: 'JokeCard',

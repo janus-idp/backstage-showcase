@@ -81,8 +81,8 @@ export function extractMenuItems(frontend: FrontendConfig): MenuItem[] {
         if (mi && isStaticPath(dr.path)) {
           items.push({
             name: itemName,
-            icon: mi && 'icon' in mi && mi.icon ? mi.icon : '',
-            title: mi && 'text' in mi && mi.text ? mi.text : '',
+            icon: 'icon' in mi && mi.icon ? mi.icon : '',
+            title: 'text' in mi && mi.text ? mi.text : '',
             to: dr.path ?? '',
             children: [],
           });
