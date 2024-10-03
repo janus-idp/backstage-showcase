@@ -192,19 +192,6 @@ plugins:
     disabled: true
     pluginConfig:
       kubernetes:
-        customResources:
-          - group: 'tekton.dev'
-            apiVersion: 'v1beta1'
-            plural: 'pipelines'
-          - group: 'tekton.dev'
-            apiVersion: 'v1beta1'
-            plural: 'pipelineruns'
-          - group: 'tekton.dev'
-            apiVersion: 'v1beta1'
-            plural: 'taskruns'
-          - group: 'route.openshift.io'
-            apiVersion: 'v1'
-            plural: 'routes'
         serviceLocatorMethod:
           type: 'multiTenant'
         clusterLocatorMethods:
@@ -809,12 +796,12 @@ plugins:
                     anyOf:
                     - isNexusRepositoryManagerAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-acr:
+          backstage-community.plugin-acr:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: AcrPage

@@ -8,6 +8,14 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const useCommonDeviceAndViewportConfig = {
+  use: {
+    ...devices['Desktop Chrome'],
+    viewport: { width: 1920, height: 1080 },
+  },
+};
+
 export default defineConfig({
   timeout: 80000,
   testDir: './playwright',
@@ -40,10 +48,7 @@ export default defineConfig({
   projects: [
     {
       name: 'showcase',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testIgnore: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
@@ -54,10 +59,7 @@ export default defineConfig({
     },
     {
       name: 'showcase-rbac',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
@@ -88,6 +90,32 @@ export default defineConfig({
       name: 'showcase-auth-providers-clear-environment',
       testMatch: ['**/playwright/e2e/authProviders/clear-environment.spec.ts'],
     },
+    {
+      name: 'showcase-aks',
+      ...useCommonDeviceAndViewportConfig,
+      testIgnore: [
+        '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+        '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
+        '**/playwright/e2e/plugins/bulk-import.spec.ts',
+        '**/playwright/e2e/plugins/tekton/tekton.spec.ts',
+        '**/playwright/e2e/catalog-scaffoldedfromLink.spec.ts',
+        '**/playwright/e2e/plugins/ocm.spec.ts',
+        '**/playwright/e2e/audit-log/**/*.spec.ts',
+        '**/playwright/e2e/verify-redis-cache.spec.ts',
+        '**/playwright/e2e/plugins/topology/topology.spec.ts',
+      ],
+    },
+    {
+      name: 'showcase-rbac-aks',
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: [
+        '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
+        '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
+        '**/playwright/e2e/plugins/bulk-import.spec.ts',
+      ],
+    },
+
     // {
     //   name: 'firefox',
     //   use: { ...devices['Desktop Firefox'] },
