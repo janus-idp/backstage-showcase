@@ -6,7 +6,7 @@ import { AppSettings } from './constants';
 import { User, Group } from '@microsoft/microsoft-graph-types';
 import { logger } from './Logger';
 import * as constants from './constants';
-import * as helper from '../../utils/authenticationProviders/helper';
+import * as helper from '../helper';
 
 let _settings: AppSettings | undefined = undefined;
 let _clientSecretCredential: ClientSecretCredential | undefined = undefined;

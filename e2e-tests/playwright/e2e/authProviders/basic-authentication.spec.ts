@@ -3,7 +3,7 @@ import { Common, setupBrowser } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import * as constants from '../../utils/authenticationProviders/constants';
 import { logger } from '../../utils/authenticationProviders/Logger';
-import { upgradeHelmChartWithWait } from '../../utils/authenticationProviders/helper';
+import { upgradeHelmChartWithWait } from '../../utils/helper';
 
 let page: Page;
 

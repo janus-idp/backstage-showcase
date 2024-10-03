@@ -6,7 +6,7 @@ import UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRep
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 import { ConnectionConfig } from '@keycloak/keycloak-admin-client/lib/client';
 import { Credentials } from '@keycloak/keycloak-admin-client/lib/utils/auth';
-import * as helper from '../../utils/authenticationProviders/helper';
+import * as helper from '../helper';
 
 let kcAdminClient: KcAdminClient | undefined;
 

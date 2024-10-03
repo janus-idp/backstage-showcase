@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import { App } from 'octokit';
 import { logger } from './Logger';
-import * as helper from '../../utils/authenticationProviders/helper';
+import * as helper from '../helper';
 
 const app = new App({
   appId: constants.AUTH_ORG_APP_ID,

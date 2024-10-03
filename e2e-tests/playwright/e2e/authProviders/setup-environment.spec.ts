@@ -4,7 +4,7 @@ import {
   k8sClient,
   ensureEnvSecretExists,
   ensureNewPolicyConfigMapExists,
-} from '../../utils/authenticationProviders/helper';
+} from '../../utils/helper';
 
 test.describe('Setup namespace and configure environment for RHDH', () => {
   test('Create namespace', async () => {

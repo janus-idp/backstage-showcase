@@ -9,7 +9,7 @@ import {
   upgradeHelmChartWithWait,
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
-} from '../../utils/authenticationProviders/helper';
+} from '../../utils/helper';
 import * as rhssoHelper from '../../utils/authenticationProviders/rhssoHelper';
 
 let page: Page;

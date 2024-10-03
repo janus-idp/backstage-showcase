@@ -1,5 +1,5 @@
 import k8s, { V1ConfigMap } from '@kubernetes/client-node';
-import { logger } from './Logger';
+import { logger } from './authenticationProviders/Logger';
 
 export class kubeCLient {
   coreV1Api: k8s.CoreV1Api;

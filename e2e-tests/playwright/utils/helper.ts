@@ -1,6 +1,6 @@
-import { logger } from './Logger';
+import { logger } from './authenticationProviders/Logger';
 import { exec } from 'child_process';
-import * as constants from './constants';
+import * as constants from './authenticationProviders/constants';
 import { expect } from '@playwright/test';
 import { kubeCLient } from './k8sHelper';
 import { V1ConfigMap, V1Secret } from '@kubernetes/client-node';

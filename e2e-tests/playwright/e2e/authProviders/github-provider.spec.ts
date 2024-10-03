@@ -7,7 +7,7 @@ import {
   upgradeHelmChartWithWait,
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
-} from '../../utils/authenticationProviders/helper';
+} from '../../utils/helper';
 import { BrowserContext } from '@playwright/test';
 import * as ghHelper from '../../utils/authenticationProviders/githubHelper';
 
