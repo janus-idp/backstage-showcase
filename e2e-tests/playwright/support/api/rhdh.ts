@@ -3,7 +3,7 @@ import { RhdhAuthHack } from './rhdh-auth-hack';
 import playwrightConfig from '../../../playwright.config';
 
 export class RhdhApi {
-  private static API_URL = `${playwrightConfig.use.baseURL}/api/`;
+  private readonly API_URL = `${playwrightConfig.use.baseURL}/api/`;
 
   async getRoles() {
     const req = await this._permission().roles();
@@ -18,7 +18,7 @@ export class RhdhApi {
   private async _myContext() {
     const auth = await new RhdhAuthHack().getApiToken();
     return request.newContext({
-      baseURL: RhdhApi.API_URL,
+      baseURL: this.API_URL,
       extraHTTPHeaders: {
         authorization: auth,
       },
