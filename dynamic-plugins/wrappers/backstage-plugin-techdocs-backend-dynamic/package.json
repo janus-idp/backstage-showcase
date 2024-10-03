@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "0.7.0",
-    "@backstage/plugin-techdocs-backend": "1.10.9",
+    "@backstage/plugin-techdocs-backend": "1.10.13",
     "@backstage/plugin-search-backend-module-techdocs": "0.1.27"
   },
   "devDependencies": {
