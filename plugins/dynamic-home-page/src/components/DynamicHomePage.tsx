@@ -23,9 +23,8 @@ export const DynamicHomePage = (props: DynamicHomePageProps) => {
         (!card.config?.priority || card.config.priority >= 0),
     );
 
-    // TODO: check if we want have priories with small or big numbers first...
     filteredAndSorted.sort(
-      (a, b) => (a.config?.priority ?? 0) - (b.config?.priority ?? 0),
+      (a, b) => (b.config?.priority ?? 0) - (a.config?.priority ?? 0),
     );
 
     return filteredAndSorted;
