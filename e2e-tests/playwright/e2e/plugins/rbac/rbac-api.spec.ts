@@ -23,15 +23,15 @@ test.describe.serial('Test RBAC plugin REST API', () => {
 
   test('Test that roles and policies from GET request are what expected', async () => {
     const rhdhApi = new RhdhApi();
-    const rolesResponse = await rhdhApi.getRoles();
-    const policiesResponse = await rhdhApi.getPolicies();
+    const rolesJson = await rhdhApi.getRoles();
+    const policiesJson = await rhdhApi.getPolicies();
 
     await responseHelper.checkResponse(
-      rolesResponse,
+      rolesJson,
       RbacConstants.getExpectedRoles(),
     );
     await responseHelper.checkResponse(
-      policiesResponse,
+      policiesJson,
       RbacConstants.getExpectedPolicies(),
     );
   });
@@ -240,7 +240,7 @@ test.describe.serial('Test RBAC plugin REST API', () => {
         responseHelper.getSimpleRequest(),
       );
 
-      const remainingPolicies = await responseHelper.removeMetadataFromResponse(
+      const remainingPolicies = await responseHelper.removeMetadataFromJson(
         remainingPoliciesResponse,
       );
 

@@ -5,12 +5,12 @@ import playwrightConfig from '../../../playwright.config';
 export class RhdhApi {
   private readonly API_URL = `${playwrightConfig.use.baseURL}/api/`;
 
-  async getRoles() {
+  async getRoles(): Promise<any> {
     const req = await this._permission().roles();
     return req.json();
   }
 
-  async getPolicies() {
+  async getPolicies(): Promise<any> {
     const req = await this._permission().policies();
     return req.json();
   }
