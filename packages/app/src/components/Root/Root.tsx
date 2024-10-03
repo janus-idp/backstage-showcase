@@ -224,7 +224,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         {menuItemArray.map(menuItem => {
           const isOpen = openItems[menuItem.name] || false;
           return (
-            <>
+            <React.Fragment key={menuItem.name}>
               {menuItem.children!.length === 0 && getMenuItem(menuItem)}
               {menuItem.children!.length > 0 && (
                 <SideBarItemWrapper
@@ -238,7 +238,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
               )}
               {menuItem.children!.length > 0 &&
                 renderExpandableMenuItems(menuItem, isOpen)}
-            </>
+            </React.Fragment>
           );
         })}
       </>
