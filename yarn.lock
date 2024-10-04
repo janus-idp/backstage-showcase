@@ -3187,17 +3187,18 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
-"@backstage-community/plugin-github-issues@0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-github-issues/-/plugin-github-issues-0.4.2.tgz#cef373b450d7934a57ea77795a577e05e53dd52c"
-  integrity sha512-CL5a37WuAErS58gKMhWa1KQSCNVwqNS9oz+eNdPil0jQQjDjx6HsgEQBcC0dxi3lr0FAj4eXJzRejuTyYXbq9w==
+"@backstage-community/plugin-github-issues@0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-github-issues/-/plugin-github-issues-0.4.5.tgz#5df2e0922b67fe205885f3dac8e64596be6e5b51"
+  integrity sha512-duCumh8VTRB//hM1m8NNNuvoPFzbA6emAL8S1bAHKOoyEkQJfivJTr5WRD0QBUI00lO/8CChy9LprDYeDgehKQ==
   dependencies:
-    "@backstage/catalog-model" "^1.4.5"
-    "@backstage/core-components" "^0.14.4"
-    "@backstage/core-plugin-api" "^1.9.2"
+    "@backstage/catalog-model" "^1.6.0"
+    "@backstage/core-components" "^0.14.10"
+    "@backstage/core-plugin-api" "^1.9.3"
     "@backstage/errors" "^1.2.4"
-    "@backstage/integration" "^1.10.0"
-    "@backstage/plugin-catalog-react" "^1.11.3"
+    "@backstage/integration" "^1.14.0"
+    "@backstage/integration-react" "^1.1.30"
+    "@backstage/plugin-catalog-react" "^1.12.3"
     "@material-ui/core" "^4.12.4"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/lab" "4.0.0-alpha.61"
