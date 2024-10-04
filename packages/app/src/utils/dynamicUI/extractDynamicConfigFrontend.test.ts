@@ -2,6 +2,7 @@ import { MenuItem } from './extractDynamicConfig';
 import {
   getNameFromPath,
   compareMenuItems,
+  buildTree,
 } from './extractDynamicConfigFrontend';
 
 describe('getNameFromPath', () => {
@@ -93,5 +94,79 @@ describe('compareMenuItems', () => {
     };
 
     expect(compareMenuItems(item1, item2)).toBe(0);
+  });
+});
+
+const createMenuItem = (
+  name: string,
+  title: string,
+  icon: string,
+  parent?: string,
+  children = [],
+) => ({
+  name,
+  title,
+  icon,
+  parent,
+  children,
+});
+
+describe('buildTree', () => {
+  const testCases = [
+    {
+      description:
+        'should return an empty array when given an empty menuItemsArray',
+      input: [],
+      expectedOutput: [],
+    },
+    {
+      description:
+        'should return a flat list of menu items if no parent-child relationship exists',
+      input: [
+        createMenuItem('item1', 'Item 1', 'icon1'),
+        createMenuItem('item2', 'Item 2', 'icon2'),
+      ],
+      expectedOutput: [
+        createMenuItem('item1', 'Item 1', 'icon1'),
+        createMenuItem('item2', 'Item 2', 'icon2'),
+      ],
+    },
+    {
+      description:
+        'should build a tree from a flat list with parent-child relationships',
+      input: [
+        createMenuItem('item1', 'Item 1', 'icon1'),
+        createMenuItem('item2', 'Item 2', 'icon2', 'item1'),
+        createMenuItem('item3', 'Item 3', 'icon3', 'item1'),
+      ],
+      expectedOutput: [
+        {
+          name: 'item1',
+          title: 'Item 1',
+          icon: 'icon1',
+          children: [
+            createMenuItem('item2', 'Item 2', 'icon2', 'item1'),
+            createMenuItem('item3', 'Item 3', 'icon3', 'item1'),
+          ],
+        },
+      ],
+    },
+    {
+      description: 'should filter out items with no title',
+      input: [
+        createMenuItem('item1', 'Item 1', 'icon1'),
+        createMenuItem('item2', '', 'icon2'),
+        createMenuItem('item3', 'Item 3', 'icon3'),
+      ],
+      expectedOutput: [
+        createMenuItem('item1', 'Item 1', 'icon1'),
+        createMenuItem('item3', 'Item 3', 'icon3'),
+      ],
+    },
+  ];
+
+  it.each(testCases)('$description', ({ input, expectedOutput }) => {
+    const result = buildTree(input);
+    expect(result).toEqual(expectedOutput);
   });
 });

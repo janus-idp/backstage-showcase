@@ -3,9 +3,9 @@ import { useScalprum } from '@scalprum/react-core';
 import { HomePageCardMountPoint } from '../types';
 
 interface ScalprumState {
-  api: {
-    dynamicRootConfig: {
-      mountPoints: {
+  api?: {
+    dynamicRootConfig?: {
+      mountPoints?: {
         'home.page/cards': HomePageCardMountPoint[];
       };
     };

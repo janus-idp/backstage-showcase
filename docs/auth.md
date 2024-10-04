@@ -186,4 +186,7 @@ To enable this option:
 
 ```yaml
 dangerouslyAllowSignInWithoutUserInCatalog: true
+auth:
+  providers:
+    # provider configs ...
 ```

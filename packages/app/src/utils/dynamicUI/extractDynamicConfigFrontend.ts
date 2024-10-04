@@ -38,7 +38,7 @@ function convertMenuItemsRecordToArray(
   );
 }
 
-function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
+export function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
   const itemMap: Record<string, MenuItem> = {};
 
   menuItemsArray.forEach(item => {
@@ -53,8 +53,12 @@ function buildTree(menuItemsArray: MenuItem[]): MenuItem[] {
     }
   });
 
+  const filteredItemMap = Object.fromEntries(
+    Object.entries(itemMap).filter(([_, item]) => item.title),
+  );
+
   const tree: MenuItem[] = [];
-  Object.values(itemMap).forEach(item => {
+  Object.values(filteredItemMap).forEach(item => {
     if (item.parent) {
       const parentItem = itemMap[item.parent];
       if (parentItem) {
@@ -81,8 +85,8 @@ export function extractMenuItems(frontend: FrontendConfig): MenuItem[] {
         if (mi && isStaticPath(dr.path)) {
           items.push({
             name: itemName,
-            icon: mi && 'icon' in mi && mi.icon ? mi.icon : '',
-            title: mi && 'text' in mi && mi.text ? mi.text : '',
+            icon: 'icon' in mi && mi.icon ? mi.icon : '',
+            title: 'text' in mi && mi.text ? mi.text : '',
             to: dr.path ?? '',
             children: [],
           });
