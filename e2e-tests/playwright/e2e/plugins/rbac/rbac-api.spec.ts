@@ -5,7 +5,7 @@ import { UIhelper } from '../../../utils/UIhelper';
 import { RhdhApi } from '../../../support/api/rhdh';
 import { RbacConstants } from '../../../data/rbac-constants';
 
-test.describe.serial('Test RBAC plugin REST API', () => {
+test.describe('Test RBAC plugin REST API', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -21,8 +21,11 @@ test.describe.serial('Test RBAC plugin REST API', () => {
     await uiHelper.openSidebar('Home');
   });
 
-  test('Test that roles and policies from GET request are what expected', async () => {
-    const rhdhApi = new RhdhApi();
+  test('Test that roles and policies from GET request are what expected', async ({
+    browser,
+  }) => {
+    const browserContext = await browser.newContext();
+    const rhdhApi = new RhdhApi(browserContext);
     const rolesJson = await rhdhApi.getRoles();
     const policiesJson = await rhdhApi.getPolicies();
 

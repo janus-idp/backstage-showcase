@@ -1,13 +1,27 @@
-import { request } from '@playwright/test';
+import { BrowserContext } from '@playwright/test';
+import { UIhelper } from '../../utils/UIhelper';
 import playwrightConfig from '../../../playwright.config';
+import { Common } from '../../utils/Common';
 
 //https://redhatquickcourses.github.io/devhub-admin/devhub-admin/1/chapter2/rbac.html#_lab_rbac_rest_api
 export class RhdhAuthHack {
-  async getApiToken() {
-    const context = await request.newContext({
-      baseURL: playwrightConfig.use.baseURL,
-    });
-    const res = context.get('/catalog');
-    return (await res).headers['Authorization'];
+  async getApiToken(context: BrowserContext) {
+    const page = await context.newPage();
+    const uiHelper = new UIhelper(page);
+    const common = new Common(page);
+    await common.loginAsGithubUser();
+
+    await uiHelper.openSidebar('Catalog');
+    const requestPromise = page.waitForRequest(
+      request =>
+        request.url() ===
+          `${playwrightConfig.use.baseURL}/api/search/query?term=` &&
+        request.method() === 'GET',
+    );
+    await uiHelper.openSidebar('Home');
+    const getRequest = await requestPromise;
+    const authToken = await getRequest.headerValue('Authorization');
+    page.close();
+    return authToken;
   }
 }
