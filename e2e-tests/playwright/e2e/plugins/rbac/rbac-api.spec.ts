@@ -4,6 +4,7 @@ import { Common, setupBrowser } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { RhdhApi } from '../../../support/api/rhdh';
 import { RbacConstants } from '../../../data/rbac-constants';
+import { RhdhAuthHack } from '../../../support/api/rhdh-auth-hack';
 
 test.describe('Test RBAC plugin REST API', () => {
   let common: Common;
@@ -19,6 +20,9 @@ test.describe('Test RBAC plugin REST API', () => {
 
     await common.loginAsGithubUser();
     await uiHelper.openSidebar('Home');
+    responseHelper = new Response(
+      await new RhdhAuthHack().getApiToken(await browser.newContext()),
+    );
   });
 
   test('Test that roles and policies from GET request are what expected', async ({
