@@ -21,7 +21,9 @@ export class RhdhApi {
   }
 
   private async _myContext() {
-    const auth = await new RhdhAuthHack().getApiToken(this.browserContext);
+    const auth = await RhdhAuthHack.getInstance().getApiToken(
+      this.browserContext,
+    );
     return request.newContext({
       baseURL: this.API_URL,
       extraHTTPHeaders: {

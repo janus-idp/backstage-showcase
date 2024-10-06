@@ -21,7 +21,7 @@ test.describe('Test RBAC plugin REST API', () => {
     await common.loginAsGithubUser();
     await uiHelper.openSidebar('Home');
     responseHelper = new Response(
-      await new RhdhAuthHack().getApiToken(await browser.newContext()),
+      await RhdhAuthHack.getInstance().getApiToken(await browser.newContext()),
     );
   });
 
