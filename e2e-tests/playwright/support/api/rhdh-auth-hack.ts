@@ -1,4 +1,4 @@
-import { BrowserContext } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import playwrightConfig from '../../../playwright.config';
 import { Common } from '../../utils/Common';
@@ -17,16 +17,15 @@ export class RhdhAuthHack {
     return RhdhAuthHack.instance;
   }
 
-  async getApiToken(context: BrowserContext): Promise<string> {
+  async getApiToken(page: Page): Promise<string> {
     if (!this.token) {
-      const _t = await this._getApiToken(context);
+      const _t = await this._getApiToken(page);
       this.token = _t;
     }
     return this.token;
   }
 
-  private async _getApiToken(context: BrowserContext) {
-    const page = await context.newPage();
+  private async _getApiToken(page: Page) {
     const uiHelper = new UIhelper(page);
     const common = new Common(page);
     await common.loginAsGithubUser();

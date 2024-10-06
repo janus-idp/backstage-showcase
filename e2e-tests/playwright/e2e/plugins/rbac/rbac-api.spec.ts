@@ -2,7 +2,6 @@ import { Page, expect, test } from '@playwright/test';
 import { Response } from '../../../support/pages/rbac';
 import { Common, setupBrowser } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
-import { RhdhApi } from '../../../support/api/rhdh';
 import { RbacConstants } from '../../../data/rbac-constants';
 import { RhdhAuthHack } from '../../../support/api/rhdh-auth-hack';
 
@@ -21,24 +20,28 @@ test.describe('Test RBAC plugin REST API', () => {
     await common.loginAsGithubUser();
     await uiHelper.openSidebar('Home');
     responseHelper = new Response(
-      await RhdhAuthHack.getInstance().getApiToken(await browser.newContext()),
+      await RhdhAuthHack.getInstance().getApiToken(page),
     );
   });
 
   test('Test that roles and policies from GET request are what expected', async ({
-    browser,
+    request,
   }) => {
-    const browserContext = await browser.newContext();
-    const rhdhApi = new RhdhApi(browserContext);
-    const rolesJson = await rhdhApi.getRoles();
-    const policiesJson = await rhdhApi.getPolicies();
+    const rolesResponse = await request.get(
+      '/api/permission/roles',
+      responseHelper.getSimpleRequest(),
+    );
+    const policiesResponse = await request.get(
+      '/api/permission/policies',
+      responseHelper.getSimpleRequest(),
+    );
 
     await responseHelper.checkResponse(
-      rolesJson,
+      await rolesResponse,
       RbacConstants.getExpectedRoles(),
     );
     await responseHelper.checkResponse(
-      policiesJson,
+      await policiesResponse,
       RbacConstants.getExpectedPolicies(),
     );
   });
