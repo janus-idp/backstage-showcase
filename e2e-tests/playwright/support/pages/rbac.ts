@@ -228,7 +228,7 @@ interface Policy {
   effect: string;
 }
 
-interface Role {
+export interface Role {
   memberReferences: string[];
   name: string;
 }

@@ -1,4 +1,4 @@
-import { BrowserContext, request } from '@playwright/test';
+import { APIResponse, BrowserContext, request } from '@playwright/test';
 import { RhdhAuthHack } from './rhdh-auth-hack';
 import playwrightConfig from '../../../playwright.config';
 import { Role } from '../pages/rbac';
@@ -11,12 +11,12 @@ export class RhdhApi {
     this.browserContext = browserContext;
   }
 
-  async getRoles(): Promise<any> {
+  async getRoles(): Promise<APIResponse> {
     const req = await this._permission().roles().get();
     return req.json();
   }
 
-  async getPolicies(): Promise<any> {
+  async getPolicies(): Promise<APIResponse> {
     const req = await this._permission().policies().get();
     return req.json();
   }
@@ -38,24 +38,23 @@ export class RhdhApi {
   private _permission() {
     let url = `permission/`;
     return {
-      roles: () => {
+      roles: (): { get; post } => {
+        url += 'roles';
         return {
-          get: async () => {
-            url += 'roles';
+          get: async (): Promise<APIResponse> => {
             return (await this._myContext()).get(url);
           },
-          post: async (role: Role) => {
-            url += 'roles';
+          post: async (role: Role): Promise<APIResponse> => {
             return (
               await this._myContext({ 'Content-Type': 'application/json' })
             ).post(url, { data: role });
           },
         };
       },
-      policies() {
+      policies: (): { get } => {
+        url += 'policies';
         return {
-          get: async () => {
-            url += 'policies';
+          get: async (): Promise<APIResponse> => {
             return (await this._myContext()).get(url);
           },
         };
