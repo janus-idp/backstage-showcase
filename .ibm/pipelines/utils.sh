@@ -36,7 +36,10 @@ save_all_pod_logs(){
 }
 
 droute_send() {
-  ( # Use subshell
+  temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
+  ( # Open subshell
+    export KUBECONFIG="$temp_kubeconfig"
+
     oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
     oc whoami --show-server
 
@@ -95,7 +98,8 @@ droute_send() {
       --results '/tmp/droute/${JUNIT_RESULTS}' \
       --attachments '/tmp/droute/attachments' \
       --verbose"
-  )
+  ) # Close subshell
+  rm "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
 }
 
