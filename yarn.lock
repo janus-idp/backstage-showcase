@@ -11700,10 +11700,10 @@
     "@react-spring/shared" "~9.7.3"
     "@react-spring/types" "~9.7.3"
 
-"@redhat-developer/red-hat-developer-hub-theme@0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@redhat-developer/red-hat-developer-hub-theme/-/red-hat-developer-hub-theme-0.3.0.tgz#be90c97b06301ef7ef28857cde38640f5ded590d"
-  integrity sha512-uF5KDxhZPIhTVekeMlkorb9UwY9tAiPTVmwVob3/Fk353geT8DR5w4oYlmWC9G8qHrKqxUUqjGpoMvx+bY+GcA==
+"@redhat-developer/red-hat-developer-hub-theme@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@redhat-developer/red-hat-developer-hub-theme/-/red-hat-developer-hub-theme-0.4.0.tgz#5325fffd038021bfb676eae6a5cf5849f2702d40"
+  integrity sha512-y1ljmIgq9SlMZA2SNR7fseU7FmCIqqdrQypEKSqjqIZQ9Un/YpdJTwpst9+RzZd/SdG+LmF5YEifeNGtO7Ke6Q==
 
 "@remix-run/router@1.19.1":
   version "1.19.1"
