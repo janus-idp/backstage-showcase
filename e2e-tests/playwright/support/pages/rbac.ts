@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { APIResponse, Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
 import {
   DeleteRolePO,
@@ -293,17 +293,18 @@ export class Response {
     };
   }
 
-  async removeMetadataFromJson(response: any) {
-    const responseClean = response.map((list: any) => {
+  async removeMetadataFromResponse(response: APIResponse) {
+    const responseJson = await response.json();
+    const responseClean = responseJson.map((list: any) => {
       delete list.metadata;
       return list;
     });
     return responseClean;
   }
 
-  async checkResponse(response: any, expected: string) {
-    response = this.removeMetadataFromJson(response);
+  async checkResponse(response: APIResponse, expected: string) {
+    const cleanResponse = await this.removeMetadataFromResponse(response);
     const expectedJson = JSON.parse(expected);
-    expect(response).toEqual(expectedJson);
+    expect(cleanResponse).toEqual(expectedJson);
   }
 }

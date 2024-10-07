@@ -19,9 +19,8 @@ test.describe('Test RBAC plugin REST API', () => {
 
     await common.loginAsGithubUser();
     await uiHelper.openSidebar('Home');
-    responseHelper = new Response(
-      await RhdhAuthHack.getInstance().getApiToken(page),
-    );
+    const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+    responseHelper = new Response(apiToken);
   });
 
   test('Test that roles and policies from GET request are what expected', async ({
@@ -37,11 +36,11 @@ test.describe('Test RBAC plugin REST API', () => {
     );
 
     await responseHelper.checkResponse(
-      await rolesResponse,
+      rolesResponse,
       RbacConstants.getExpectedRoles(),
     );
     await responseHelper.checkResponse(
-      await policiesResponse,
+      policiesResponse,
       RbacConstants.getExpectedPolicies(),
     );
   });
@@ -250,7 +249,7 @@ test.describe('Test RBAC plugin REST API', () => {
         responseHelper.getSimpleRequest(),
       );
 
-      const remainingPolicies = await responseHelper.removeMetadataFromJson(
+      const remainingPolicies = await responseHelper.removeMetadataFromResponse(
         remainingPoliciesResponse,
       );
 
