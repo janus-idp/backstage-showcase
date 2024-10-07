@@ -1,4 +1,4 @@
-## Ping Identity Application Setup
+# Ping Identity Environment and Application Setup
 
 This script populates the Ping Identity environment with desired users/groups to test the [Ping Identity catalog plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/pingidentity/plugins/catalog-backend-module-pingidentity). This would avoid the need to manually set up the environment each time the Ping Identity trial expires and a new account is required.
 
