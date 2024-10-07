@@ -87,6 +87,7 @@ droute_send() {
     ; /tmp/droute-linux-amd64 version"
 
   oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+    ls /tmp/droute ; \
     /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
     --url '${DATA_ROUTER_URL}' \
     --username '${DATA_ROUTER_USERNAME}' \
