@@ -40,6 +40,7 @@ droute_send() {
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
     oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+    oc whoami --show-server
 
     local droute_version="latest"
     local release_name=$1
@@ -97,6 +98,7 @@ droute_send() {
       --attachments '/tmp/droute/attachments' \
       --verbose"
   )
+  oc whoami --show-server
 }
 
 az_login() {
