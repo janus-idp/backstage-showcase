@@ -92,6 +92,7 @@ droute_send() {
     --username '${DATA_ROUTER_USERNAME}' \
     --password '${DATA_ROUTER_PASSWORD}' \
     --results '/tmp/droute/${JUNIT_RESULTS}' \
+    --attachments '/tmp/droute/test-results' \
     --verbose"
 
 }
