@@ -82,7 +82,7 @@ droute_send() {
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
 
     oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}" "${droute_project}/${droute_pod_name}:/tmp/droute"
-    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results"
+    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results" --exclude="*.webm"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
       curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
