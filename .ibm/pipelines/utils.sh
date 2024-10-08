@@ -84,6 +84,7 @@ droute_send() {
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mkdir -p /tmp/droute/results/ /tmp/droute/attachments/test-results/"
+    oc rsync --include="${METEDATA_OUTPUT}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute/"
     oc rsync --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute/results/"
     oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results/" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results/"
 
