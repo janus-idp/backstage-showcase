@@ -61,7 +61,6 @@ droute_send() {
 
     # Remove properties (only used for skipped test and invalidates the file if empty)
     sed -i '/<properties>/,/<\/properties>/d' "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
-    sed -iE "s#\[\[ATTACHMENT\|(.*)\]\]#${ARTIFACTS_URL}/\1#g" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
     jq \
       --arg hostname "$REPORTPORTAL_HOSTNAME" \
