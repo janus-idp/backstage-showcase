@@ -1,6 +1,6 @@
 {
   "name": "showcase-app",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "Showcase E2E test",
   "main": "index.js",
   "type": "module",
