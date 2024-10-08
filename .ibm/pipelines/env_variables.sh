@@ -67,6 +67,7 @@ GOOGLE_USER_ID=$(cat /tmp/secrets/GOOGLE_USER_ID)
 GOOGLE_USER_PASS=$(cat /tmp/secrets/GOOGLE_USER_PASS)
 GOOGLE_2FA_SECRET=$(cat /tmp/secrets/GOOGLE_2FA_SECRET)
 
+JUNIT_RESULTS="junit-results.xml"
 DATA_ROUTER_URL=$(cat /tmp/secrets/DATA_ROUTER_URL)
 DATA_ROUTER_USERNAME=$(cat /tmp/secrets/DATA_ROUTER_USERNAME)
 DATA_ROUTER_PASSWORD=$(cat /tmp/secrets/DATA_ROUTER_PASSWORD)
