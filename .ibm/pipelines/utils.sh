@@ -43,7 +43,7 @@ droute_send() {
     oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
     oc whoami --show-server
 
-    local droute_version="latest"
+    local droute_version="1.2.1"
     local release_name=$1
     local project=$2
     local droute_project="droute"
@@ -82,7 +82,7 @@ droute_send() {
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
 
     oc rsync --include="junit-results.xml" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute/"
-    oc rsync --exclude="*.webm" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results/"
+    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results/"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
       curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
