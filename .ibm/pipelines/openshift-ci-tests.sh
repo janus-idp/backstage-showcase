@@ -7,6 +7,7 @@ LOGFILE="test-log"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
+JOB_NAME=periodic-aks
 
 cleanup() {
   echo "Cleaning up before exiting"
