@@ -50,15 +50,18 @@ droute_send() {
     local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
     METEDATA_OUTPUT="data_router_metadata_output.json"
 
-    # Remove properties (only used for skipped test and invalidates the file if empty)
-    sed -i '/<properties>/,/<\/properties>/d' "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
-
     JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
     if [ -n "${PULL_NUMBER:-}" ]; then
       JOB_URL="${JOB_BASE_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}"
+      ARTIFACTS_URL="${JOB_URL}/artifacts/e2e-tests/janus-idp-backstage-showcase/artifacts/showcase"
     else
       JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
+      ARTIFACTS_URL="${JOB_URL}/artifacts/e2e-tests/janus-idp-backstage-showcase/artifacts/showcase"
     fi
+
+    # Remove properties (only used for skipped test and invalidates the file if empty)
+    sed -i '/<properties>/,/<\/properties>/d' "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+    sed -iE "s#\[\[ATTACHMENT\|(.*)\]\]#${ARTIFACTS_URL}/\1#g" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
     jq \
       --arg hostname "$REPORTPORTAL_HOSTNAME" \
@@ -90,7 +93,6 @@ droute_send() {
       ; /tmp/droute-linux-amd64 version"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      ls /tmp/droute ; \
       /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
       --url '${DATA_ROUTER_URL}' \
       --username '${DATA_ROUTER_USERNAME}' \
