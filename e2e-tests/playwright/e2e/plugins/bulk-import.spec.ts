@@ -3,10 +3,7 @@ import { UIhelper } from '../../utils/UIhelper';
 import { Common, setupBrowser } from '../../utils/Common';
 import { APIHelper } from '../../utils/APIHelper';
 import { BulkImport } from '../../support/pages/BulkImport';
-import {
-  BackstageShowcase,
-  CatalogImport,
-} from '../../support/pages/CatalogImport';
+import { CatalogImport } from '../../support/pages/CatalogImport';
 import {
   defaultCatalogInfoYaml,
   updatedCatalogInfoYaml,
@@ -18,7 +15,7 @@ test.describe.serial('Bulk Import plugin', () => {
   let uiHelper: UIhelper;
   let common: Common;
   let bulkimport: BulkImport;
-  let backstageShowcase: BackstageShowcase;
+
   const catalogRepoDetails = {
     name: 'janus-test-1-bulk-import-test',
     url: 'github.com/janus-test/janus-test-1-bulk-import-test',
@@ -39,7 +36,7 @@ test.describe.serial('Bulk Import plugin', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
-    backstageShowcase = new BackstageShowcase(page);
+
     await bulkimport.newGitHubRepo(
       newRepoDetails.owner,
       newRepoDetails.repoName,
