@@ -89,15 +89,14 @@ droute_send() {
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
       curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
       && chmod +x /tmp/droute-linux-amd64 \
-      ; /tmp/droute-linux-amd64 version"
-
-    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
+      ; /tmp/droute-linux-amd64 version \
+      ; /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
       --url '${DATA_ROUTER_URL}' \
       --username '${DATA_ROUTER_USERNAME}' \
       --password '${DATA_ROUTER_PASSWORD}' \
       --results '/tmp/droute/${JUNIT_RESULTS}' \
-      --verbose"
+      --verbose \
+      ; rm -r /tmp/droute/*"
   ) # Close subshell
   rm "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
