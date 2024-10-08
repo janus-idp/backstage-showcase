@@ -83,8 +83,9 @@ droute_send() {
       .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
 
+    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mkdir -p /tmp/droute/results/ /tmp/droute/attachments/test-results/"
     oc rsync --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute/results/"
-    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results/"
+    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results/" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results/"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
       curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
@@ -95,7 +96,7 @@ droute_send() {
       --username '${DATA_ROUTER_USERNAME}' \
       --password '${DATA_ROUTER_PASSWORD}' \
       --results '/tmp/droute/results/${JUNIT_RESULTS}' \
-      --attachments '/tmp/droute/attachments' \
+      --attachments '/tmp/droute/attachments/' \
       --verbose \
       ; rm -r /tmp/droute/*"
   ) # Close subshell
