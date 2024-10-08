@@ -124,7 +124,7 @@ test.describe
   });
 });
 
-test.describe.serial('Test RBAC plugin as an admin user', () => {
+test.describe('Test RBAC plugin as an admin user', () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
