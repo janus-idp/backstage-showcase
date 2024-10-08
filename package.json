@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "1.4.0",
+  "version": "1.2.5",
   "private": true,
   "engines": {
     "node": "18 || 20"
@@ -9,9 +9,8 @@
     "prepare": "husky install",
     "postinstall": "patch-package",
     "ci": "turbo run lint build test",
-    "start": "turbo run build --filter=app && NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
+    "start": "turbo run start --parallel",
     "start-backend": "turbo run start --filter=backend",
-    "dev": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend --filter=app",
     "build": "turbo run build",
     "tsc": "tsc",
     "export-dynamic": "turbo run export-dynamic --concurrency 1",
@@ -25,7 +24,7 @@
     "prettier:fix": "prettier --ignore-unknown --write .",
     "new": "backstage-cli new --scope internal",
     "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
-    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
+    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,roadiehq,immobiliarelabs,janus-idp,pagerduty}/*",
     "versions:metadata": "node ./scripts/update-metadata.mjs",
     "versions:all": "node ./scripts/update-backstage.mjs"
   },
@@ -39,23 +38,23 @@
     ]
   },
   "dependencies": {
-    "@backstage/plugin-techdocs-backend": "1.10.13",
+    "body-parser": "^1.20.3",
     "node-gyp": "9.4.1",
     "patch-package": "8.0.0",
     "postinstall-postinstall": "2.1.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
+    "@backstage/cli": "0.26.4",
     "@smithy/util-utf8": "2.3.0",
     "@spotify/prettier-config": "15.0.0",
     "cross-var": "1.1.0",
     "husky": "8.0.3",
     "ip": "1.1.9",
-    "lint-staged": "15.2.10",
-    "prettier": "3.3.3",
+    "lint-staged": "15.2.5",
+    "prettier": "3.2.5",
     "sanitize-html": "2.13.0",
-    "turbo": "1.13.4",
-    "typescript": "5.6.2",
+    "turbo": "1.13.3",
+    "typescript": "5.4.5",
     "undici": "5.28.4"
   },
   "resolutions": {
@@ -72,5 +71,5 @@
     "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
     "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@1.22.21"
 }
