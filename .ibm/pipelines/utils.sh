@@ -42,6 +42,7 @@ droute_send() {
 
     oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
     oc whoami --show-server
+    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf /tmp/droute/*"
 
     local droute_version="1.2.1"
     local release_name=$1
@@ -99,9 +100,9 @@ droute_send() {
       --results '/tmp/droute/results/${JUNIT_RESULTS}' \
       --attachments '/tmp/droute/attachments/' \
       --verbose \
-      ; rm -r /tmp/droute/*"
+      ; rm -rf /tmp/droute/*"
   ) # Close subshell
-  rm "$temp_kubeconfig" # Destroy temporary KUBECONFIG
+  rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
 }
 
