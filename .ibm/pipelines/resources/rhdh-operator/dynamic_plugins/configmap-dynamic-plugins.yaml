@@ -1,0 +1,96 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins
+data:
+  dynamic-plugins.yaml: |
+    includes:
+      - 'dynamic-plugins.default.yaml'
+
+    plugins:
+        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+          disabled: false
+          pluginConfig:
+            catalog:
+              providers:
+                github:
+                  my-test-org:
+                    organization: janus-qe
+                    catalogPath: '/catalog-info.yaml'
+                    schedule:
+                      frequency:
+                        minutes: 1
+                      timeout:
+                        minutes: 1
+                      initialDelay:
+                        seconds: 15
+        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+          disabled: false
+        - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
+          disabled: false
+        - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+          disabled: false
+          pluginConfig:
+            kubernetes:
+              clusterLocatorMethods:
+                - clusters:
+                  - authProvider: serviceAccount
+                    name: 'my-cluster'
+                    serviceAccountToken: ${K8S_CLUSTER_TOKEN_ENCODED}
+                    url: ${K8S_CLUSTER_API_SERVER_URL}
+                  type: config
+              customResources:
+                - apiVersion: 'v1beta1'
+                  group: 'tekton.dev'
+                  plural: 'pipelines'
+                - apiVersion: v1beta1
+                  group: tekton.dev
+                  plural: pipelineruns
+                - apiVersion: v1beta1
+                  group: tekton.dev
+                  plural: taskruns
+                - apiVersion: 'v1'
+                  group: 'route.openshift.io'
+                  plural: 'routes'
+              serviceLocatorMethod:
+                type: multiTenant
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+          disabled: false
+          pluginConfig:
+            catalog:
+              providers:
+                ocm:
+                  default:
+                    name: testCluster # Can be any arbitrary name supported by kubernetes
+                    url: ${OCM_CLUSTER_URL}
+                    serviceAccountToken: ${OCM_CLUSTER_TOKEN}
+                    skipTLSVerify: true
+                    owner: janus-authors
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+          disabled: true
+        - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+          disabled: false

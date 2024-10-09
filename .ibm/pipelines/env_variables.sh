@@ -19,6 +19,7 @@ RELEASE_NAME_RBAC=rhdh-rbac
 NAME_SPACE="${NAME_SPACE:-showcase}"
 NAME_SPACE_RBAC="${NAME_SPACE_RBAC:-showcase-rbac}"
 NAME_SPACE_POSTGRES_DB="${NAME_SPACE_POSTGRES_DB:-postgress-external-db}"
+OPERATOR_MANAGER='rhdh-operator'
 CHART_VERSION="2.15.2"
 GITHUB_APP_APP_ID=$(cat /tmp/secrets/GITHUB_APP_APP_ID)
 GITHUB_APP_CLIENT_ID=$(cat /tmp/secrets/GITHUB_APP_CLIENT_ID)
@@ -44,7 +45,8 @@ GH_USER2_ID=$(cat /tmp/secrets/GH_USER2_ID)
 GH_USER2_PASS=$(cat /tmp/secrets/GH_USER2_PASS)
 GH_USER2_2FA_SECRET=$(cat /tmp/secrets/GH_USER2_2FA_SECRET)
 GH_RHDH_QE_USER_TOKEN=$(cat /tmp/secrets/GH_RHDH_QE_USER_TOKEN)
-
+GITHUB_APP_3_CLIENT_ID=$(cat /tmp/secrets/GITHUB_APP_3_CLIENT_ID)
+GITHUB_APP_3_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_3_CLIENT_SECRET)
 GITLAB_TOKEN=$(cat /tmp/secrets/GITLAB_TOKEN)
 
 K8S_CLUSTER_API_SERVER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')

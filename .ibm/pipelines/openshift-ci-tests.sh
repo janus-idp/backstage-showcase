@@ -108,6 +108,16 @@ delete_namespace() {
   fi
 }
 
+configure_namespace_if_nonexistent() {
+  local project=$1
+  if oc get namespace "${project}" >/dev/null 2>&1; then
+    echo "Namespace ${project} already exists!"
+  else
+    oc create namespace "${project}"
+    oc config set-context --current --namespace="${project}"
+  fi
+}
+
 configure_external_postgres_db() {
   local project=$1
   oc apply -f "${DIR}/resources/postgres-db/postgres.yaml" --namespace="${NAME_SPACE_POSTGRES_DB}"
@@ -133,6 +143,14 @@ configure_external_postgres_db() {
 apply_yaml_files() {
   local dir=$1
   local project=$2
+  local release_name=$3
+  local base_url="https://${release_name}-backstage-${project}.${K8S_CLUSTER_ROUTER_BASE}"
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    local base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  elif [[ "$JOB_NAME" == *operator* ]]; then
+    local base_url="https://backstage-${release_name}-${project}.${K8S_CLUSTER_ROUTER_BASE}"
+  fi
+  local encoded_base_url="$(echo -n $base_url | base64 -w 0)"
   echo "Applying YAML files to namespace ${project}"
 
   oc config set-context --current --namespace="${project}"
@@ -159,7 +177,13 @@ apply_yaml_files() {
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
-
+  if [[ "$JOB_NAME" == *operator* ]]; then
+    sed -i "s/GITHUB_APP_CLIENT_ID_FLEX:.*/GITHUB_APP_CLIENT_ID_FLEX: ${GITHUB_APP_3_CLIENT_ID}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+    sed -i "s/GITHUB_APP_CLIENT_SECRET_FLEX:.*/GITHUB_APP_CLIENT_SECRET_FLEX: ${GITHUB_APP_3_CLIENT_SECRET}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  else
+    sed -i "s/GITHUB_APP_CLIENT_ID_FLEX:.*/GITHUB_APP_CLIENT_ID_FLEX: ${GITHUB_APP_CLIENT_ID}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+    sed -i "s/GITHUB_APP_CLIENT_SECRET_FLEX:.*/GITHUB_APP_CLIENT_SECRET_FLEX: ${GITHUB_APP_CLIENT_SECRET}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+  fi
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
@@ -175,6 +199,7 @@ apply_yaml_files() {
   if [[ "$JOB_NAME" != *aks* ]]; then # Skip for AKS, because of strange `sed: -e expression #1, char 136: unterminated `s' command`
     sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   fi
+  sed -i "s/BASE_URL:.*/BASE_URL: ${encoded_base_url}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
@@ -191,6 +216,14 @@ apply_yaml_files() {
   sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+
+  if [[ "${project}" == "showcase-operator-nightly" ]]; then
+    oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins.yaml" --namespace="${project}"
+  fi
+
+  if [[ "${project}" == "showcase-op-rbac-nightly" ]]; then
+    oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins-rbac.yaml" --namespace="${project}"
+  fi
 }
 
 run_tests() {
@@ -240,6 +273,8 @@ check_backstage_running() {
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   if [[ "$JOB_NAME" == *aks* ]]; then
     local url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  elif [[ "$JOB_NAME" == *operator* ]]; then
+    local url="https://backstage-${release_name}-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   fi
 
   local max_attempts=30
@@ -291,6 +326,41 @@ install_tekton_pipelines() {
   fi
 }
 
+apply_operator_group_if_nonexistent() {
+  if [[ $(oc get OperatorGroup -n rhdh-operator  2>/dev/null | wc -l) -ge 1 ]]; then 
+    echo "Red Hat Developer Hub operator group is already installed."
+  else
+    echo "Red Hat Developer Hub operator group does not exist. adding..."
+    oc apply -f "${dir}/resources/rhdh-operator/installation/rhdh-operator-group.yaml" -n "${namespace}"
+  fi
+}
+
+install_rhdh_operator() {
+  local dir=$1
+  local namespace=$2
+  CSV_NAME="Red Hat Developer Hub Operator"
+
+  if oc get csv -n "${namespace}" | grep -q "${CSV_NAME}"; then
+    echo "Red Hat Developer Hub operator is already installed."
+  else
+    echo "Red Hat Developer Hub operator is not installed. Installing..."
+    configure_namespace_if_nonexistent "${namespace}"
+    apply_operator_group_if_nonexistent
+    oc apply -f "${dir}/resources/rhdh-operator/installation/rhdh-subscription.yaml" -n "${namespace}"
+  fi
+}
+
+deploy_rhdh_operator() {
+  local dir=$1
+  local namespace=$2
+
+  if [[ "${namespace}" == "showcase-op-rbac-nightly" ]]; then
+    oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start-rbac.yaml" -n "${namespace}"
+  else 
+    oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start.yaml" -n "${namespace}"
+  fi
+}
+
 initiate_deployments() {
   add_helm_repos
   install_helm
@@ -303,8 +373,8 @@ initiate_deployments() {
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
@@ -313,8 +383,8 @@ initiate_deployments() {
   
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
@@ -326,7 +396,7 @@ initiate_aks_deployment() {
   install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   yq_merge_value_files "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_AKS_MERGED_VALUE_FILE_NAME}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_AKS}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
@@ -340,10 +410,21 @@ initiate_rbac_aks_deployment() {
   install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
   yq_merge_value_files "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_RBAC_AKS}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_deployments_operator() {
+  install_rhdh_operator "${DIR}" "${OPERATOR_MANAGER}"
+  configure_namespace "${NAME_SPACE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
+  deploy_rhdh_operator "${DIR}" "${NAME_SPACE}"
+
+  configure_namespace "${NAME_SPACE_RBAC}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
 }
 
 check_and_test() {
@@ -377,6 +458,12 @@ main() {
     az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
 
+  ############# REMOVE ONCE PR IS READY ############################
+  NAME_SPACE="showcase-operator-nightly"
+  NAME_SPACE_RBAC="showcase-op-rbac-nightly"
+  JOB_NAME=e2e-tests-operator-nightly
+  ##################################################################
+
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
     az aks get-credentials --name="${AKS_NIGHTLY_CLUSTER_NAME}" --resource-group="${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}" --overwrite-existing
@@ -405,10 +492,17 @@ main() {
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
     delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else
-    initiate_deployments
+    if [[ "$JOB_NAME" == *operator* ]]; then
+      initiate_deployments_operator
+    else
+      initiate_deployments
+    fi
+    
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
   fi
+  
+  
   exit "${OVERALL_RESULT}"
 }
 

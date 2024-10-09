@@ -6,8 +6,12 @@ metadata:
 data:
   app-config-rhdh.yaml: |
     app:
+      baseUrl: ${BASE_URL}
       title: Red Hat Developer Hub
     backend:
+      baseUrl: ${BASE_URL}
+      cors:
+        origin: ${BASE_URL}
       auth:
         keys:
           - secret: temp
@@ -38,8 +42,8 @@ data:
         # Plugin: GitHub
         github:
           development:
-            clientId: ${GITHUB_APP_CLIENT_ID}
-            clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+            clientId: ${GITHUB_APP_CLIENT_ID_FLEX}
+            clientSecret: ${GITHUB_APP_CLIENT_SECRET_FLEX}
         google:
           development:
             clientId: ${GOOGLE_CLIENT_ID}
