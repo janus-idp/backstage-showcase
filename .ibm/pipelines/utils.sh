@@ -39,17 +39,17 @@ droute_send() {
   temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
   ( # Open subshell
     export KUBECONFIG="$temp_kubeconfig"
-
-    oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
-    oc whoami --show-server
-    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf /tmp/droute/*"
-
     local droute_version="1.2.1"
     local release_name=$1
     local project=$2
     local droute_project="droute"
-    local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
     METEDATA_OUTPUT="data_router_metadata_output.json"
+    
+    oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
+    oc whoami --show-server
+    local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
+    local temp_droute=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mktemp")
+
 
     JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
     if [ -n "${PULL_NUMBER:-}" ]; then
@@ -84,23 +84,23 @@ droute_send() {
       .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
 
-    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mkdir -p /tmp/droute/results/ /tmp/droute/attachments/test-results/"
-    oc rsync --include="${METEDATA_OUTPUT}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute/"
-    oc rsync --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute/results/"
-    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results/" "${droute_project}/${droute_pod_name}:/tmp/droute/attachments/test-results/"
+    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mkdir -p ${temp_droute}/results/ ${temp_droute}/attachments/test-results/"
+    oc rsync --include="${METEDATA_OUTPUT}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
+    oc rsync --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/results/"
+    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results/" "${droute_project}/${droute_pod_name}:${temp_droute}/attachments/test-results/"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
       curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
       && chmod +x /tmp/droute-linux-amd64 \
       && /tmp/droute-linux-amd64 version \
-      && /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
+      && /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
       --url '${DATA_ROUTER_URL}' \
       --username '${DATA_ROUTER_USERNAME}' \
       --password '${DATA_ROUTER_PASSWORD}' \
-      --results '/tmp/droute/results/${JUNIT_RESULTS}' \
-      --attachments '/tmp/droute/attachments/' \
+      --results '${temp_droute}/results/${JUNIT_RESULTS}' \
+      --attachments '${temp_droute}/attachments/' \
       --verbose \
-      ; rm -rf /tmp/droute/*"
+      ; rm -rf ${temp_droute}/*"
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
