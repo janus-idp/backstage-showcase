@@ -234,6 +234,9 @@ RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
 RUN mkdir /opt/app-root/src/.npm
 RUN chown -R 1001:1001 /opt/app-root/src/.npm
 
+# default npm config to the default registry, not the cachito one
+RUN npm config set registry=https://registry.npmjs.org/; npm config get registry; npm config set cafile /opt/app-root/src/registry-ca.pem
+
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
 RUN fix-permissions ./
