@@ -93,7 +93,7 @@ droute_send() {
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mkdir -p ${temp_droute}/results/ ${temp_droute}/attachments/test-results/"
     oc rsync --include="${METEDATA_OUTPUT}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
     oc rsync --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/results/"
-    oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results/" "${droute_project}/${droute_pod_name}:${temp_droute}/attachments/test-results/"
+    oc rsync --exclude="*.webm" --exclude="*.zip" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/test-results/" "${droute_project}/${droute_pod_name}:${temp_droute}/attachments/test-results/"
 
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
       curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
