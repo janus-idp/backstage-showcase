@@ -4,7 +4,7 @@ import { Client, PageCollection } from '@microsoft/microsoft-graph-client';
 import { TokenCredentialAuthenticationProvider } from '@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials/index.js';
 import { AppSettings } from './constants';
 import { User, Group } from '@microsoft/microsoft-graph-types';
-import { logger } from './Logger';
+import { logger } from '../Logger';
 import * as constants from './constants';
 import * as helper from '../helper';
 

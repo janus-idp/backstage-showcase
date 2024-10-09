@@ -27,7 +27,7 @@ export const logger = createLogger({
   ),
   transports: [
     new transports.File({
-      filename: `authentication-providers.log`,
+      filename: `test-logs.log`,
       dirname: process.env.CI ? process.env.ARTIFACTS_DIR : '/tmp',
     }),
   ],

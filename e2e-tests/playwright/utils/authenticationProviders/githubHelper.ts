@@ -1,6 +1,6 @@
 import * as constants from './constants';
 import { App } from 'octokit';
-import { logger } from './Logger';
+import { logger } from '../Logger';
 import * as helper from '../helper';
 
 const app = new App({

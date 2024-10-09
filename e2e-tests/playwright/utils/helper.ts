@@ -1,4 +1,4 @@
-import { logger } from './authenticationProviders/Logger';
+import { logger } from './Logger';
 import { exec } from 'child_process';
 import * as constants from './authenticationProviders/constants';
 import { expect } from '@playwright/test';
@@ -8,7 +8,7 @@ import { V1ConfigMap, V1Secret } from '@kubernetes/client-node';
 export const k8sClient = new kubeCLient();
 
 export async function runShellCmd(command: string) {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<string>(resolve => {
     logger.info(`Executing command ${command}`);
     const process = exec(command);
     let result: string;
@@ -16,15 +16,16 @@ export async function runShellCmd(command: string) {
       result = data;
     });
     process.stderr.on('data', data => {
-      logger.log({
-        level: 'error',
-        message: `Error occurred while running command`,
-        dump: data,
-      });
-      reject();
-      throw Error('Error executing shell command');
+      result = data;
     });
-    process.on('exit', () => resolve(result));
+    process.on('exit', code => {
+      logger.info(`Process ended with exit code ${code}: `);
+      if (code == 0) {
+        resolve(result);
+      } else {
+        throw Error(`Error executing shell command; exit code ${code}`);
+      }
+    });
   });
 }
 

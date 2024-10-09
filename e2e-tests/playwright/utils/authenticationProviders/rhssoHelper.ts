@@ -1,4 +1,4 @@
-import { logger } from './Logger';
+import { logger } from '../Logger';
 import { expect } from '@playwright/test';
 import * as constants from './constants';
 import GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation';
