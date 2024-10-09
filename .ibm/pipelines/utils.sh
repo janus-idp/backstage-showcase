@@ -39,7 +39,7 @@ droute_send() {
   temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
   ( # Open subshell
     export KUBECONFIG="$temp_kubeconfig"
-    local droute_version="1.2.1"
+    local droute_version="1.2.2"
     local release_name=$1
     local project=$2
     local droute_project="droute"
