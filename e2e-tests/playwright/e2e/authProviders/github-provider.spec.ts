@@ -2,7 +2,7 @@ import { test, Page, expect } from '@playwright/test';
 import { Common, setupBrowser } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import * as constants from '../../utils/authenticationProviders/constants';
-import { logger } from '../../utils/authenticationProviders/Logger';
+import { logger } from '../../utils/Logger';
 import {
   upgradeHelmChartWithWait,
   WaitForNextSync,

@@ -3,7 +3,7 @@ import { Common, setupBrowser } from '../../utils/Common';
 import { UIhelper } from '../../utils/UIhelper';
 import UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation';
 import * as constants from '../../utils/authenticationProviders/constants';
-import { logger } from '../../utils/authenticationProviders/Logger';
+import { logger } from '../../utils/Logger';
 import GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation';
 import {
   upgradeHelmChartWithWait,
