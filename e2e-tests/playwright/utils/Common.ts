@@ -167,7 +167,7 @@ export async function setupBrowser(browser: Browser, testInfo: TestInfo) {
     recordVideo: {
       dir: `test-results/${path
         .parse(testInfo.file)
-        .name.replace('.spec', '')}`,
+        .name.replace('.spec', '')}/${testInfo.title}`,
       size: { width: 1920, height: 1080 },
     },
   });

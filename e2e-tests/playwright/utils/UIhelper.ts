@@ -46,8 +46,6 @@ export class UIhelper {
       .locator(selector)
       .getByText(label, { exact: options.exact })
       .first();
-    await button.waitFor({ state: 'visible' });
-    await button.waitFor({ state: 'attached' });
 
     if (options?.force) {
       await button.click({ force: true });

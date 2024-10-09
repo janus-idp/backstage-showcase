@@ -142,15 +142,12 @@ apply_yaml_files() {
     "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml"
     "$dir/resources/cluster_role/cluster-role-k8s.yaml"
     "$dir/resources/cluster_role/cluster-role-ocm.yaml"
-    "$dir/resources/deployment/deployment-test-app-component.yaml"
     "$dir/auth/secrets-rhdh-secrets.yaml"
   )
 
   for file in "${files[@]}"; do
     sed -i "s/namespace:.*/namespace: ${project}/g" "$file"
   done
-
-  sed -i "s/backstage.io\/kubernetes-id:.*/backstage.io\/kubernetes-id: ${K8S_PLUGIN_ANNOTATION}/g" "$dir/resources/deployment/deployment-test-app-component.yaml"
 
   if [[ "$JOB_NAME" == *aks* ]]; then
     GITHUB_APP_APP_ID=$GITHUB_APP_2_APP_ID
@@ -166,7 +163,6 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
-  oc apply -f "$dir/resources/deployment/deployment-test-app-component.yaml" --namespace="${project}"
   if [[ "$JOB_NAME" != *aks* ]]; then
     oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
     oc expose svc/test-backstage-customization-provider --namespace="${project}"
