@@ -72,6 +72,10 @@ droute_send() {
       --arg value1 "$JOB_TYPE" \
       --arg key2 "pr" \
       --arg value2 "$GIT_PR_NUMBER" \
+      --arg key3 "job_name" \
+      --arg value3 "$JOB_NAME" \
+      --arg key4 "tag_name" \
+      --arg value4 "$TAG_NAME" \
       --arg auto_finalization_treshold $DATA_ROUTER_AUTO_FINALIZATION_TRESHOLD \
       '.targets.reportportal.config.hostname = $hostname |
       .targets.reportportal.config.project = $project |
@@ -79,7 +83,9 @@ droute_send() {
       .targets.reportportal.processing.launch.description = $description |
       .targets.reportportal.processing.launch.attributes += [
           {"key": $key1, "value": $value1},
-          {"key": $key2, "value": $value2}
+          {"key": $key2, "value": $value2},
+          {"key": $key3, "value": $value3},
+          {"key": $key4, "value": $value4}
         ] |
       .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
