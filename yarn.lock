@@ -4375,6 +4375,23 @@
     openapi-merge "^1.3.2"
     openapi3-ts "^3.1.2"
 
+"@backstage/backend-openapi-utils@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@backstage/backend-openapi-utils/-/backend-openapi-utils-0.1.18.tgz#a00fab35fc6647b264cc6b29495e7f601e77d855"
+  integrity sha512-dTXdxomvuXDTaTCkfC15lF4nk8D8jh25Lbx4swuu9LXxlYT3rD4f67mcM8pXMuEAoxwE/7EFG+sts68zxnVvLw==
+  dependencies:
+    "@backstage/backend-plugin-api" "^1.0.0"
+    "@backstage/errors" "^1.2.4"
+    "@types/express" "^4.17.6"
+    "@types/express-serve-static-core" "^4.17.5"
+    express "^4.17.1"
+    express-openapi-validator "^5.0.4"
+    express-promise-router "^4.1.0"
+    json-schema-to-ts "^3.0.0"
+    lodash "^4.17.21"
+    openapi-merge "^1.3.2"
+    openapi3-ts "^3.1.2"
+
 "@backstage/backend-plugin-api@0.6.17":
   version "0.6.17"
   resolved "https://registry.yarnpkg.com/@backstage/backend-plugin-api/-/backend-plugin-api-0.6.17.tgz#3d00b167cccb36e2341ae5cc4026352904938322"
@@ -6065,7 +6082,48 @@
     "@backstage/plugin-catalog-node" "^1.12.4"
     "@backstage/plugin-scaffolder-common" "^1.5.4"
 
-"@backstage/plugin-catalog-backend@1.24.0", "@backstage/plugin-catalog-backend@^1.24.0":
+"@backstage/plugin-catalog-backend@1.26.0":
+  version "1.26.0"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-1.26.0.tgz#d4093265bab3f90859f78d9070f8acff4eacb671"
+  integrity sha512-C3QWjg6uHPnLNLNYbJgCFmXdpwigS9WH/bKpslMpeghSo6utb9Vjl4Wq3M8iT1uIGx37RI3+812oNP+XXT+l2g==
+  dependencies:
+    "@backstage/backend-common" "^0.25.0"
+    "@backstage/backend-openapi-utils" "^0.1.18"
+    "@backstage/backend-plugin-api" "^1.0.0"
+    "@backstage/catalog-client" "^1.7.0"
+    "@backstage/catalog-model" "^1.7.0"
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/integration" "^1.15.0"
+    "@backstage/plugin-catalog-common" "^1.1.0"
+    "@backstage/plugin-catalog-node" "^1.13.0"
+    "@backstage/plugin-events-node" "^0.4.0"
+    "@backstage/plugin-permission-common" "^0.8.1"
+    "@backstage/plugin-permission-node" "^0.8.3"
+    "@backstage/plugin-search-backend-module-catalog" "^0.2.2"
+    "@backstage/types" "^1.1.1"
+    "@opentelemetry/api" "^1.3.0"
+    "@types/express" "^4.17.6"
+    codeowners-utils "^1.0.2"
+    core-js "^3.6.5"
+    express "^4.17.1"
+    fast-json-stable-stringify "^2.1.0"
+    fs-extra "^11.2.0"
+    git-url-parse "^14.0.0"
+    glob "^7.1.6"
+    knex "^3.0.0"
+    lodash "^4.17.21"
+    luxon "^3.0.0"
+    minimatch "^9.0.0"
+    node-fetch "^2.7.0"
+    p-limit "^3.0.2"
+    prom-client "^15.0.0"
+    uuid "^9.0.0"
+    yaml "^2.0.0"
+    yn "^4.0.0"
+    zod "^3.22.4"
+
+"@backstage/plugin-catalog-backend@^1.24.0":
   version "1.24.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-1.24.0.tgz#50aeeac3e997edfc37cd9d8008fd6b7bf6400190"
   integrity sha512-ioKDnGXByKlJOQ68Tqt9wol+xZTibPdRwbMLi32o8MKTyb2I/ySfNfO87cAI/DSdz9o/MF3NdH2uZkM4pOKtpw==
@@ -7362,6 +7420,23 @@
     "@backstage/plugin-permission-common" "^0.8.0"
     "@backstage/plugin-search-backend-node" "^1.2.27"
     "@backstage/plugin-search-common" "^1.2.13"
+
+"@backstage/plugin-search-backend-module-catalog@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-search-backend-module-catalog/-/plugin-search-backend-module-catalog-0.2.2.tgz#9016b795ef9a0cbade8ee857baa3d15324d8a644"
+  integrity sha512-jJwfFtFTzqwM+fG2AmcMmmIa3KxvnM/Xw6BnQWU/RRyPo6+sRlaFuGnWOlWqa7cicv0PMAwW5EtWXog01QD4TA==
+  dependencies:
+    "@backstage/backend-common" "^0.25.0"
+    "@backstage/backend-plugin-api" "^1.0.0"
+    "@backstage/catalog-client" "^1.7.0"
+    "@backstage/catalog-model" "^1.7.0"
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/plugin-catalog-common" "^1.1.0"
+    "@backstage/plugin-catalog-node" "^1.13.0"
+    "@backstage/plugin-permission-common" "^0.8.1"
+    "@backstage/plugin-search-backend-node" "^1.3.2"
+    "@backstage/plugin-search-common" "^1.2.14"
 
 "@backstage/plugin-search-backend-module-pg@0.5.32":
   version "0.5.32"
