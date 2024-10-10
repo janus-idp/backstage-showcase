@@ -8,11 +8,12 @@ JUNIT_RESULTS="junit-results.xml"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
+JOB_NAME=periodic-aks
 
 cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
-    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    mapt_aks_destroy
   fi
   rm -rf ~/tmpbin
 }
@@ -31,9 +32,6 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
-  elif [[ "$JOB_NAME" == *aks* ]]; then
-    K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
-    K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
   fi
 }
 
@@ -310,7 +308,7 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
-  
+
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
@@ -373,13 +371,12 @@ main() {
   fi
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_login
-    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    mapt_aks_create
   fi
 
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
-    az aks get-credentials --name="${AKS_NIGHTLY_CLUSTER_NAME}" --resource-group="${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}" --overwrite-existing
+    export KUBECONFIG="${DIR}/kubeconfig"
   else
     oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
   fi

@@ -99,16 +99,37 @@ az_login() {
   az account set --subscription $ARM_SUBSCRIPTION_ID
 }
 
-az_aks_start() {
-  local name=$1
-  local resource_group=$2
-  az aks start --name $name --resource-group $resource_group
+mapt_aks_create() {
+  cat /etc/subuid
+  cat /etc/subgid
+  podman run --user podman --privileged -d --platform=linux/amd64 --rm --name create-aks \
+      -v ${DIR}:/workspace:z \
+      -e ARM_TENANT_ID=${ARM_TENANT_ID} \
+      -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
+      -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
+      -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
+      quay.io/rhqp/mapt:v0.7.0 azure \
+          aks create \
+          --project-name "aks" \
+          --backed-url "file:///workspace" \
+          --conn-details-output "/workspace" \
+          --spot \
+          --enable-app-routing
+  podman logs -f create-aks
 }
 
-az_aks_stop() {
-  local name=$1
-  local resource_group=$2
-  az aks stop --name $name --resource-group $resource_group
+mapt_aks_destroy() {
+  podman run --user podman --privileged -d --platform=linux/amd64 --rm --name destroy-aks \
+      -v ${DIR}:/workspace:z \
+      -e ARM_TENANT_ID=${ARM_TENANT_ID} \
+      -e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
+      -e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
+      -e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
+      quay.io/rhqp/mapt:v0.7.0 azure \
+          aks destroy \
+          --project-name "aks" \
+          --backed-url "file:///workspace" 
+  podman logs -f destroy-aks 
 }
 
 az_aks_approuting_enable() {
