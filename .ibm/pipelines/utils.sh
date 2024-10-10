@@ -54,10 +54,10 @@ droute_send() {
     JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
     if [ -n "${PULL_NUMBER:-}" ]; then
       JOB_URL="${JOB_BASE_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}"
-      ARTIFACTS_URL="${JOB_URL}/artifacts/e2e-tests/janus-idp-backstage-showcase/artifacts/showcase"
+      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}/artifacts/e2e-tests/${REPO_OWNER}-${REPO_NAME}/artifacts/${release_name}"
     else
       JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
-      ARTIFACTS_URL="${JOB_URL}/artifacts/e2e-tests/janus-idp-backstage-showcase/artifacts/showcase"
+      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/${JOB_NAME}/${BUILD_ID}/artifacts/${JOB_NAME##periodic-ci-janus-idp-backstage-showcase-main-}/${REPO_OWNER}-${REPO_NAME}/artifacts/${release_name}"
     fi
 
     # Remove properties (only used for skipped test and invalidates the file if empty)
