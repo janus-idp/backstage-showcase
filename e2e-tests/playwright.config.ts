@@ -53,6 +53,7 @@ export default defineConfig({
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
+        '**/playwright/e2e/authProviders/**/*.spec.ts',
         '**/playwright/e2e/plugins/bulk-import.spec.ts',
       ],
     },
@@ -65,6 +66,29 @@ export default defineConfig({
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
         '**/playwright/e2e/plugins/bulk-import.spec.ts',
       ],
+    },
+    {
+      name: 'showcase-auth-providers',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
+      },
+      testMatch: ['**/playwright/e2e/authProviders/*.spec.ts'],
+      testIgnore: [
+        '**/playwright/e2e/authProviders/setup-environment.spec.ts',
+        '**/playwright/e2e/authProviders/clear-environment.spec.ts',
+      ],
+      dependencies: ['showcase-auth-providers-setup-environment'],
+      teardown: 'showcase-auth-providers-clear-environment',
+      retries: 2,
+    },
+    {
+      name: 'showcase-auth-providers-setup-environment',
+      testMatch: ['**/playwright/e2e/authProviders/setup-environment.spec.ts'],
+    },
+    {
+      name: 'showcase-auth-providers-clear-environment',
+      testMatch: ['**/playwright/e2e/authProviders/clear-environment.spec.ts'],
     },
     {
       name: 'showcase-aks',
