@@ -179,8 +179,9 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 # hadolint ignore=DL3059
 RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
-# default npm config to the default registry, not the cachito one
-RUN npm config set registry=https://registry.npmjs.org/; \
+# default npm config to the default registry, not the cachito one - delete all the nested .npmrc files and set default values
+RUN find . -type f -name .npmrc -exec rm -Rf {} \;
+    npm config set registry=https://registry.npmjs.org/; \
     npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # Stage 5 - Build the runner image
