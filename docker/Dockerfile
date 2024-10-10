@@ -108,9 +108,10 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 # hadolint ignore=DL3059
 RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
-# default npm config to the default registry, not the cachito one - delete all the nested .npmrc files and set default values
-RUN find . -type f -name .npmrc -exec rm -Rf {} \;
-    npm config set registry=https://registry.npmjs.org/; \
+# delete all the nested .npmrc files and set default values
+RUN find . -type f -name .npmrc -exec rm -Rf {} \; && \
+    # reset npm config to the default registry and absolute path to .pem file
+    npm config set registry=https://registry.npmjs.org/ && \
     npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # Stage 5 - Build the runner image
