@@ -56,7 +56,7 @@ upstream:
       catalog:
         locations:
           - type: url
-            target: https://github.com/albarbaro-org/some-test/blob/main/location.yaml
+            target: https://github.com/janus-qe/auth-providers/blob/main/location.yaml
         rules:
           - allow: [Component, Group, User, Resource, Location, Template]          
         providers:
