@@ -1,5 +1,5 @@
 import { logger } from './Logger';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import * as constants from './authenticationProviders/constants';
 import { expect } from '@playwright/test';
 import { kubeCLient } from './k8sHelper';
@@ -10,7 +10,7 @@ export const k8sClient = new kubeCLient();
 export async function runShellCmd(command: string) {
   return new Promise<string>(resolve => {
     logger.info(`Executing command ${command}`);
-    const process = exec(command);
+    const process = spawn('/bin/sh', ['-c', command]);
     let result: string;
     process.stdout.on('data', data => {
       result = data;

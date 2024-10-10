@@ -233,7 +233,7 @@ export class Common {
 
   async MicrosoftAzureLogin(username: string, password: string) {
     await this.page.goto('/');
-    await this.page.waitForSelector('p:has-text("Sign in using OIDC")');
+    await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
     await this.uiHelper.clickButton('Sign In');
 
     return await new Promise<string>(resolve => {
