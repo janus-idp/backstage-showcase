@@ -108,6 +108,10 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 # hadolint ignore=DL3059
 RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
 
+# default npm config to the default registry, not the cachito one
+RUN npm config set registry=https://registry.npmjs.org/; \
+    npm config set cafile /opt/app-root/src/registry-ca.pem
+
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
 FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-63.1725851021 AS runner
@@ -139,9 +143,6 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
   chmod -R a+rx ./install-dynamic-plugins.sh;
-
-# default npm config to the default registry, not the cachito one
-RUN npm config set registry=https://registry.npmjs.org/; npm config get registry; npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.
