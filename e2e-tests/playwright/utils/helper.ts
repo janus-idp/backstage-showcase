@@ -86,18 +86,6 @@ export async function deleteHelmReleaseWithWait(
   return result;
 }
 
-export async function dumpPodLog(POD: string, NAMESPACE: string) {
-  logger.info(`Getting dump of logs for pod ${POD} in ${NAMESPACE}`);
-  const logs = await runShellCmd(
-    `oc logs ${POD} -n ${NAMESPACE} --all-containers`,
-  );
-  logger.log({
-    level: 'info',
-    message: `Pod ${POD} logs dump:`,
-    dump: logs,
-  });
-}
-
 export async function getLastSyncTimeFromLogs(
   provider: string,
 ): Promise<number> {
@@ -142,28 +130,6 @@ export async function WaitForNextSync(SYNC__TIME: number, provider: string) {
     intervals: [1_000, 2_000, 10_000],
     timeout: SYNC__TIME * 2 * 1000,
   });
-}
-
-export async function appendRBACPolicyToFileConfigMap(
-  configMap: string,
-  namespace: string,
-  policies: string,
-) {
-  logger.info(
-    `Appending data to configmap ${configMap} in namespace ${namespace}`,
-  );
-  const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
-  const patched = cm.body.data['rbac-policy.csv'] + policies;
-  const patch = [
-    {
-      op: 'replace',
-      path: '/data',
-      value: {
-        'rbac-policy.csv': patched,
-      },
-    },
-  ];
-  await k8sClient.updateCongifmap(configMap, namespace, patch);
 }
 
 export async function replaceInRBACPolicyFileConfigMap(
