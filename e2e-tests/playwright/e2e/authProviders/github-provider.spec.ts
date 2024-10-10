@@ -334,29 +334,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     // after the sync, ensure the permission also reflect the user move
     // check RBAC permissions are updated after group update
     // new group should allow user to schedule location refresh and unregister the entity
-    await page.goto('/');
-    await uiHelper.openSidebar('Catalog');
-    await page.reload(); // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
-    await uiHelper.selectMuiBox('Kind', 'Location');
-    await uiHelper.verifyHeading('All locations');
-    await uiHelper.verifyCellsInTable(['example']);
-    await uiHelper.clickLink('example');
-    await uiHelper.verifyHeading('example');
-    await page.locator(`button[title="Schedule entity refresh"]`).click();
-    await uiHelper.verifyAlertErrorMessage('Refresh scheduled');
-
-    const moreButton = await page.locator("button[aria-label='more']").first();
-    await moreButton.waitFor({ state: 'visible' });
-    await moreButton.waitFor({ state: 'attached' });
-    await moreButton.click();
-
-    const unregisterItem = await page
-      .locator("li[role='menuitem']")
-      .filter({ hasText: 'Unregister entity' })
-      .first();
-    await unregisterItem.waitFor({ state: 'visible' });
-    await unregisterItem.waitFor({ state: 'attached' });
-    expect(unregisterItem).not.toBeDisabled();
+    await uiHelper.verifyLocationRefreshButtonIsEnabled('example');
 
     await page.goto('/');
     await uiHelper.openSidebar('Settings');

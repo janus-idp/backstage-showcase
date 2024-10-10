@@ -430,4 +430,54 @@ export class UIhelper {
     await this.verifyText(text);
     await this.page.click(`span:has-text("${text}")`);
   }
+
+  async verifyLocationRefreshButtonIsEnabled(locationName: string) {
+    await this.page.goto('/');
+    await this.openSidebar('Catalog');
+    await this.selectMuiBox('Kind', 'Location');
+    await this.verifyHeading('All locations');
+    await this.verifyCellsInTable([locationName]);
+    await this.clickLink(locationName);
+    await this.verifyHeading(locationName);
+    await this.page.locator(`button[title="Schedule entity refresh"]`).click();
+    await this.verifyAlertErrorMessage('Refresh scheduled');
+
+    const moreButton = await this.page
+      .locator("button[aria-label='more']")
+      .first();
+    await moreButton.waitFor({ state: 'visible' });
+    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.click();
+
+    const unregisterItem = await this.page
+      .locator("li[role='menuitem']")
+      .filter({ hasText: 'Unregister entity' })
+      .first();
+    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.waitFor({ state: 'attached' });
+    expect(unregisterItem).not.toBeDisabled();
+  }
+
+  async clickUnregisterButtonForDisplayedEntity() {
+    const moreButton = await this.page
+      .locator("button[aria-label='more']")
+      .first();
+    await moreButton.waitFor({ state: 'visible' });
+    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.click();
+
+    const unregisterItem = await this.page
+      .locator("li[role='menuitem']")
+      .filter({ hasText: 'Unregister entity' })
+      .first();
+    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.click();
+
+    const deleteButton = await this.page.getByRole('button', {
+      name: 'Delete Entity',
+    });
+    await deleteButton.waitFor({ state: 'visible' });
+    await deleteButton.waitFor({ state: 'attached' });
+    await deleteButton.click();
+  }
 }

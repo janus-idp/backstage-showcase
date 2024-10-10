@@ -399,26 +399,8 @@ test.describe('Standard authentication providers: OIDC with RHSSO 7.6', () => {
       page.viewportSize().width / 2,
       page.viewportSize().height / 2,
     );
-    await uiHelper.selectMuiBox('Kind', 'Location');
-    await uiHelper.verifyHeading('All locations');
-    await uiHelper.verifyCellsInTable(['example']);
-    await uiHelper.clickLink('example');
-    await uiHelper.verifyHeading('example');
-    await page.locator(`button[title="Schedule entity refresh"]`).click();
-    await uiHelper.verifyAlertErrorMessage('Refresh scheduled');
 
-    const moreButton = await page.locator("button[aria-label='more']").first();
-    await moreButton.waitFor({ state: 'visible' });
-    await moreButton.waitFor({ state: 'attached' });
-    await moreButton.click();
-
-    const unregisterItem = await page
-      .locator("li[role='menuitem']")
-      .filter({ hasText: 'Unregister entity' })
-      .first();
-    await unregisterItem.waitFor({ state: 'visible' });
-    await unregisterItem.waitFor({ state: 'attached' });
-    expect(unregisterItem).not.toBeDisabled();
+    await await uiHelper.verifyLocationRefreshButtonIsEnabled('example');
 
     await page.goto('/');
     await uiHelper.openSidebar('Settings');
