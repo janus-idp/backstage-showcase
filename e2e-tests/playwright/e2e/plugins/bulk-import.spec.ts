@@ -15,6 +15,7 @@ test.describe.serial('Bulk Import plugin', () => {
   let uiHelper: UIhelper;
   let common: Common;
   let bulkimport: BulkImport;
+
   const catalogRepoDetails = {
     name: 'janus-test-1-bulk-import-test',
     url: 'github.com/janus-test/janus-test-1-bulk-import-test',
@@ -35,6 +36,7 @@ test.describe.serial('Bulk Import plugin', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
+
     await bulkimport.newGitHubRepo(
       newRepoDetails.owner,
       newRepoDetails.repoName,

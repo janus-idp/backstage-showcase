@@ -20,10 +20,8 @@
     "postinstall": "playwright install"
   },
   "devDependencies": {
-    "@microsoft/microsoft-graph-types": "^2.40.0",
-    "@playwright/test": "1.46.1",
-    "@types/isomorphic-fetch": "^0.0.39",
-    "@types/node": "^22.5.0",
+    "@playwright/test": "1.48.0",
+    "@types/node": "20.16.5",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
     "eslint": "8.57.1",

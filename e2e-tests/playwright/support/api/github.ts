@@ -4,12 +4,12 @@ import { APIResponse, request } from '@playwright/test';
 
 // https://docs.github.com/en/rest?apiVersion=2022-11-28
 export default class GithubApi {
-  private static API_URL = 'https://api.github.com';
-  private static API_VERSION = '2022-11-28';
-  private static AUTH_HEADER = {
+  private readonly API_URL = 'https://api.github.com';
+  private readonly API_VERSION = '2022-11-28';
+  private readonly AUTH_HEADER = {
     Accept: 'application/vnd.github+json',
     Authorization: `Bearer ${process.env.GH_RHDH_QE_USER_TOKEN}`,
-    'X-GitHub-Api-Version': GithubApi.API_VERSION,
+    'X-GitHub-Api-Version': this.API_VERSION,
   };
 
   public async getOrganization(
@@ -34,8 +34,8 @@ export default class GithubApi {
   }
 
   private _myContext = request.newContext({
-    baseURL: GithubApi.API_URL,
-    extraHTTPHeaders: GithubApi.AUTH_HEADER,
+    baseURL: this.API_URL,
+    extraHTTPHeaders: this.AUTH_HEADER,
   });
 
   private _repo(repo: string) {

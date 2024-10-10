@@ -39,7 +39,6 @@
     ]
   },
   "dependencies": {
-    "@backstage/plugin-techdocs-backend": "1.10.13",
     "node-gyp": "9.4.1",
     "patch-package": "8.0.0",
     "postinstall-postinstall": "2.1.0"
@@ -53,14 +52,15 @@
     "ip": "1.1.9",
     "lint-staged": "15.2.10",
     "prettier": "3.3.3",
-    "sanitize-html": "2.13.0",
+    "sanitize-html": "2.13.1",
     "turbo": "1.13.4",
     "typescript": "5.6.2",
     "undici": "5.28.4"
   },
   "resolutions": {
     "@types/react": "18.3.7",
-    "@types/react-dom": "18.3.0"
+    "@types/react-dom": "18.3.0",
+    "@backstage/cli/**/ws": "8.17.1"
   },
   "jest": {
     "testTimeout": 20000

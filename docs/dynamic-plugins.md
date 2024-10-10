@@ -1,5 +1,42 @@
 # Dynamic Plugins support
 
+## Table of Contents
+
+- **[Overview](#overview)**
+- **[How it Works](#how-it-works)**
+  - [**Preparing Dynamic Plugins for the Showcase**](#preparing-dynamic-plugins-for-the-showcase)
+    [**Backend Plugins**](#backend-plugins)
+    - **[Add the Dynamic Plugin Script](#add-the-dynamic-plugin-script)**
+    - **[Required Entry Points](#required-entry-points)**
+    - **[Exporting the Backend Plugin as a Dynamic Plugin Package](#exporting-the-backend-plugin-as-a-dynamic-plugin-package)**
+    - **[Publishing the Dynamic Backend Plugin Package to an NPM Registry](#publishing-the-dynamic-backend-plugin-package-to-an-npm-registry)**
+    - **[About Embedding Dependencies in the Plugin Package](#about-embedding-dependencies-in-the-plugin-package)**
+    - **[Wrapping a Third-Party Backend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-backend-plugin-to-add-dynamic-plugin-support)**
+    - [**Frontend Plugins**](#frontend-plugins)
+    - **[Required Code Changes](#required-code-changes)**
+    - **[Wrapping a Third-Party Frontend Plugin to Add Dynamic Plugin Support](#wrapping-a-third-party-frontend-plugin-to-add-dynamic-plugin-support)**
+  - [**Exporting dynamic plugins with npx**](#exporting-dynamic-plugins-with-npx)
+  - [**Exporting dynamic plugins as container images**](#exporting-dynamic-plugins-as-container-images)
+- **[Installing a Dynamic Plugin Package in the Showcase](#installing-a-dynamic-plugin-package-in-the-showcase)**
+  - **[Local Configuration](#local-configuration)**
+  - **[Helm Deployment](#helm-deployment)**
+  - **[Dynamic Plugins Included in the Showcase Container Image](#dynamic-plugins-included-in-the-showcase-container-image)**
+  - **[Consuming Dynamic Plugins from a Container Registry](#consuming-dynamic-plugins-from-a-container-registry)**
+  - **[Example of External Dynamic Backend Plugins](#example-of-external-dynamic-backend-plugins)**
+  - **[Using a Custom NPM Registry](#using-a-custom-npm-registry)**
+  - **[Air Gapped Environment](#air-gapped-environment)**
+- **[Plugin Configuration](#plugin-configuration)**
+  - [**Frontend Layout Configuration**](frontend-layout-configuration)
+    - **[Extend Internal Library of Available Icons](#extend-internal-library-of-available-icons)**
+    - **[Dynamic Routes](#dynamic-routes)**
+    - **[Menu Items](#menu-items)**
+    - **[Bind to Existing Plugins](#bind-to-existing-plugins)**
+    - **[Using Mount Points](#using-mount-points)**
+    - **[Customizing and Adding Entity Tabs](#customizing-and-adding-entity-tabs)**
+- [**Provide Additional Utility APIs**](#provide-additional-utility-apis)
+- [**Provide Custom Scaffolder Field Extensions**](#provide-custom-scaffolder-field-extensions)
+- [**Add a Custom Backstage Theme or Replace the Provided Theme** ](#add-a-custom-backstage-theme-or-replace-the-provided-theme)
+
 ## Overview
 
 This document describes how to enable the dynamic plugins feature in the Janus Backstage showcase application.
@@ -36,9 +73,12 @@ These recommended changes to the `package.json` are summarized below:
   }
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.7.7"
+    "@janus-idp/cli": "^1.15.0"
   }
 ```
+
+> [!NOTE]  
+>  The option `--embed-as-dependencies` includes embedded packages as private dependencies of backend plugins. When value is `false` (using `--no-embed-as-dependencies`), source code of embedded plugins is merged with the generated code, so that the embedded plugin packages are completly erased (only available for legacy reasons: use with care).
 
 #### Required entry points
 
@@ -114,7 +154,7 @@ These recommended changes to the `package.json` are summarized below:
   },
   ...
   "devDependencies": {
-    "@janus-idp/cli": "^1.7.7"
+    "@janus-idp/cli": "^1.15.0"
   },
   ...
   "files": [
@@ -123,6 +163,9 @@ These recommended changes to the `package.json` are summarized below:
   ]
   ...
 ```
+
+> [!NOTE]  
+> The option `--in-place` can be used to add frontend dynamic plugin assets to the `dist-scalprum` folder of the original plugin package.
 
 Our CLI can generate the default configuration for Scalprum on the fly. For generated defaults see logs when running `yarn export-dynamic`. We default to the following configuration:
 
@@ -193,6 +236,51 @@ In order to add dynamic plugin support to a third-party front plugin, without to
 - include the additions to the `package.json` described above,
 - export it as a dynamic plugin.
 
+### Exporting dynamic plugins with npx
+
+Dynamic plugins packages can be exported using [`npx`](https://docs.npmjs.com/cli/v8/commands/npx). In this case the dependency `janus-idp/cli` and the script `export-dynamic` are not required. Here's sample usage:
+
+```
+npx --yes @janus-idp/cli@1.15.0 package export-dynamic-plugin <options>
+```
+
+Notice that you can provide additional options according to the type of the plugin being exported.
+
+### Exporting dynamic plugins as container images
+
+Starting on version `1.15.0` Janus CLI allows users to pubsh plugin contents to images by using the command `package package-dynamic-plugins -t <tag>`. This command requires a container tool to be installed and by default it uses `podman`. Steps to use this command:
+
+- Go to your plugin directory or to your repository of plugins (e.g. [backstage-plugins](https://github.com/janus-idp/backstage-plugins))
+- Export the dynamic package plugin or run the `package-dynamic-plugins` command with the option `--force-build`
+- Run `package-dynamic-plugins`. Here's an example using `npx`:
+
+```bash
+npx --yes @janus-idp/cli@1.15.0 package package-dynamic-plugins -t <tag>
+```
+
+The command will publish your plugins to a container and print the information about the exported plugins. Here's an example with tag `plugins:1.0`:
+
+```
+Successfully built image plugins:0.1 with following plugins:
+  janus-idp-backstage-plugin-3scale-backend-dynamic
+  janus-idp-backstage-plugin-aap-backend-dynamic
+...
+
+Configuration example for the dynamic-plugins.yaml:
+
+packages:
+- package: oci://plugins:0.1!janus-idp-backstage-plugin-3scale-backend-dynamic
+  disabled: false
+  pluginConfig:
+    # add required plugin configuration here
+
+- package: oci://plugins:0.1!janus-idp-backstage-plugin-aap-backend-dynamic
+  disabled: false
+  pluginConfig:
+    # add required plugin configuration here
+...
+```
+
 ## Installing a dynamic plugin package in the showcase
 
 ### Local configuration
@@ -206,22 +294,37 @@ In order to add dynamic plugin support to a third-party front plugin, without to
     rootDirectory: dynamic-plugins-root
   ```
 
-- Copy the dynamic plugin package to the `dynamic-plugins-root` folder with the following commands:
+- Copy the dynamic plugin package to the `dynamic-plugins-root`. The following commands can be helpful:
 
-  ```bash
-  pkg=<local dist-dynamic sub-folder or external package name of the dynamic plugin package>
-  archive=$(npm pack $pkg)
-  tar -xzf "$archive" && rm "$archive"
-  mv package $(echo $archive | sed -e 's:\.tgz$::')
-  ```
+```bash
+pkg=<local dist-dynamic sub-folder or external package name of the dynamic plugin package>
+archive=$(npm pack --silent $pkg )
+tar -xzf "$archive" && rm "$archive"
+finalName=$(echo $archive | sed -e 's:\.tgz$::')
+rm -fr "$finalName"
+mv package "$finalName"
+```
 
-  It will create a sub-folder named after the package name, and containing the dynamic plugin package.
+It will create a sub-folder containing the dynamic plugin package that is named after the package name.
 
 - Start the showcase application. During the initialization step it should have a log entry similar to the following:
 
-  ```bash
-  backstage info loaded dynamic backend plugin '@scope/some-plugin-dynamic' from 'file:///showacase-root/dynamic-plugins-root/scope-some-plugin-dynamic-0.0.1'
-  ```
+```bash
+backstage info loaded dynamic backend plugin '@scope/some-plugin-dynamic' from 'file:///showacase-root/dynamic-plugins-root/scope-some-plugin-dynamic-0.0.1'
+```
+
+```bash
+backend:start: {"level":"info","message":"Loaded dynamic frontend plugin '<plugin-id>' from '<plugin path>' ","plugin":"scalprum","service":"backstage","timestamp":"2024-09-18 14:33:36"}
+
+```
+
+For frontend plugins you should see that the plugin is enabled and loaded on the Web Console:
+
+```
+Loading plugin <plugin-id> version <version>
+Plugin <plugin-id> has been loaded
+Plugin <plugin-id> will be enabled
+```
 
 ### Helm deployment
 
@@ -236,17 +339,21 @@ Note: 2.12 is the last version released from <https://github.com/janus-idp/helm-
 
 - To incorporate a dynamic plugin into the showcase, add an entry to the `global.dynamic.plugins` list. Each entry should include the following fields:
 
-  - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) indicating the dynamic plugin package to install (can be from a local path or an NPM repository).
+  - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) indicating the dynamic plugin package to install (can be from a local path, OCI registry path or an NPM repository).
   - `integrity`: (required for external packages) An integrity checksum in the [format of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) specific to the package. Supported algorithms include `sha256`, `sha384`, and `sha512`.
 
-    You can easily obtain the integrity checksum using the following command:
+> [!NOTE]  
+> For OCI images paths the integratiy field can be ommited and the [image digest](https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests) can be used in the plugin package path.
 
-    ```console
-    npm view <package name>@<version> dist.integrity
-    ```
+> [!NOTE]  
+> For NPM packages You can easily obtain the integrity checksum using the following command:
+>
+> ```console
+> npm view <package name>@<version> dist.integrity
+> ```
 
-  - `pluginConfig`: an optional plugin-specific `app-config` YAML fragment. Refer to [plugin configuration](#plugin-configuration) for more details.
-  - `disabled`: if set to `true`, disables the dynamic plugin. Default: `false`.
+- `pluginConfig`: an optional plugin-specific `app-config` YAML fragment. Refer to [plugin configuration](#plugin-configuration) for more details.
+- `disabled`: if set to `true`, disables the dynamic plugin. Default: `false`.
 
 - To include two plugins, one from a local source and another from an external source, where the latter requires a specific app-config, the configuration would be as follows:
 
@@ -325,7 +432,21 @@ global:
 
 For private registries, you can set the `REGISTRY_AUTH_FILE` environment variable to the path of the configuration file containing the authentication details for the registry. This file is typically located at `~/.config/containers/auth.json` or `~/.docker/config.json`.
 
+For integratity check one may use [image digest](https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests), making it possible to refer to the image diggest in the dynamic plugin package:
+
+```yaml
+global:
+  dynamic:
+    plugins:
+      - disabled: false
+        package: >-
+          oci://quay.io/tkral/simple-chat@sha256:28036abec4dffc714394e4ee433f16a59493db8017795049c831be41c02eb5dc!internal-backstage-plugin-simple-chat
+```
+
 ### Example of external dynamic backend plugins
+
+> [!IMPORTANT]  
+> This section is a subject to change to be replaced with plugins published in OCI images examples
 
 If you wish to easily test the installation of dynamic backend plugins from an external NPM registry, you can utilize the example dynamic backend plugins outlined in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins), which have been published to NPMJS for demonstration purposes.
 
@@ -360,6 +481,9 @@ global:
 By sequentially adding these plugins and allowing for a deployment restart after each change, you should be able to follow the steps outlined in the associated [Proposed Demo Path](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#proposed-demo-path).
 
 ### Using a custom NPM registry
+
+> [!WARNING]  
+> Using a custom NPM Registry and/or NPMJS is not recommended. A dynamic plugin is a runtime artifact, and that it is not the best usage of an NPM registry to deliver runtime artifacts, especially in a container-based environment such as OCP. Using [Container Registry](#consuming-dynamic-plugins-from-a-container-registry) or [Local Configuration](#local-configuration) is recommended and supported for dynamic plugins production environments.
 
 To configure the NPM registry URL and authentication information for dynamic plugin packages obtained through `npm pack`, you can utilize a `.npmrc` file. When using the Helm chart, you can add this file by creating a secret named `dynamic-plugins-npmrc` with the following content:
 
@@ -534,7 +658,7 @@ Up to 3 levels of nested menu items are supported.
       - For `path: /docs`, the `menu_item_name` should be `docs`.
       - For `path: /metrics/users`, the `menu_item_name` should be `metrics.users`.
 
-- `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](../packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
+- `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
 - `title` - Optional. Specifies the display title of the menu item. This can also be omitted if it has already been defined in the `dynamicRoutes` configuration under `menuItem.text`.
 - `priority` - Optional. Defines the order in which menu items appear. The default priority is `0`, which places the item at the bottom of the list. A higher priority value will position the item higher in the sidebar.
 - `parent` - Optional. Defines the parent menu item to nest the current item under. If specified, the parent menu item must be defined somewhere else in the `menuItems` configuration of any enabled plugin.
@@ -761,7 +885,7 @@ Each plugin can expose multiple API Factories and each factory is required to de
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 
-There are a set of [API factories](../packages/app/src/apis.ts) already initialized by the Developer Hub application shell. These API factories can be overridden by an API factory provided by a dynamic plugin by specifying the same API ref ID, for example a dynamic plugin could export the following `AnyApiFactory<{}>` to cater for some specific use case:
+There are a set of [API factories](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/apis.ts) already initialized by the Developer Hub application shell. These API factories can be overridden by an API factory provided by a dynamic plugin by specifying the same API ref ID, for example a dynamic plugin could export the following `AnyApiFactory<{}>` to cater for some specific use case:
 
 ```typescript
 export const customScmAuthApiFactory = createApiFactory({
