@@ -9,7 +9,6 @@ import { CommonJSModuleLoader } from './loader';
 import { transports } from './logger';
 import {
   healthCheckPlugin,
-  metricsPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules';
@@ -44,7 +43,6 @@ backend.add(
   }),
 );
 
-backend.add(metricsPlugin);
 backend.add(healthCheckPlugin);
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
