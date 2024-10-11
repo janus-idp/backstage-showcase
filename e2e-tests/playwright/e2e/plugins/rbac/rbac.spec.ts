@@ -251,7 +251,6 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await rolesHelper.deleteRole('role:default/test-role');
   });
 
-  //FIXME
   test('Admin cannot create a role if there are no rules defined for the selected resource type.', async () => {
     await uiHelper.clickButton('Create');
     await uiHelper.verifyHeading('Create role');
