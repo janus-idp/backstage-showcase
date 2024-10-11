@@ -46,8 +46,6 @@ export class UIhelper {
       .locator(selector)
       .getByText(label, { exact: options.exact })
       .first();
-    await button.waitFor({ state: 'visible' });
-    await button.waitFor({ state: 'attached' });
 
     if (options?.force) {
       await button.click({ force: true });
@@ -232,6 +230,15 @@ export class UIhelper {
     await expect(headingLocator).toBeVisible();
   }
 
+  async verifyParagraph(paragraph: string) {
+    const headingLocator = this.page
+      .locator('p')
+      .filter({ hasText: paragraph })
+      .first();
+    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
+    await expect(headingLocator).toBeVisible();
+  }
+
   async waitForH4Title(text: string) {
     await this.page.waitForSelector(`h4:has-text("${text}")`, {
       timeout: 99999,
@@ -398,10 +405,21 @@ export class UIhelper {
       expect(color).toBe(expectedRgbColor);
     }
   }
+
   async verifyTableIsEmpty() {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toEqual(0);
+  }
+
+  async waitForCardWithHeader(cardHeading: string) {
+    await this.page.waitForSelector(UIhelperPO.MuiCard(cardHeading));
+  }
+
+  async verifyAlertErrorMessage(message: string | RegExp) {
+    const alert = this.page.getByRole('alert');
+    await alert.waitFor();
+    await expect(alert).toHaveText(message);
   }
 
   async clickById(id: string) {
@@ -411,5 +429,55 @@ export class UIhelper {
   async clickSpanByText(text: string) {
     await this.verifyText(text);
     await this.page.click(`span:has-text("${text}")`);
+  }
+
+  async verifyLocationRefreshButtonIsEnabled(locationName: string) {
+    await this.page.goto('/');
+    await this.openSidebar('Catalog');
+    await this.selectMuiBox('Kind', 'Location');
+    await this.verifyHeading('All locations');
+    await this.verifyCellsInTable([locationName]);
+    await this.clickLink(locationName);
+    await this.verifyHeading(locationName);
+    await this.page.locator(`button[title="Schedule entity refresh"]`).click();
+    await this.verifyAlertErrorMessage('Refresh scheduled');
+
+    const moreButton = await this.page
+      .locator("button[aria-label='more']")
+      .first();
+    await moreButton.waitFor({ state: 'visible' });
+    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.click();
+
+    const unregisterItem = await this.page
+      .locator("li[role='menuitem']")
+      .filter({ hasText: 'Unregister entity' })
+      .first();
+    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.waitFor({ state: 'attached' });
+    expect(unregisterItem).not.toBeDisabled();
+  }
+
+  async clickUnregisterButtonForDisplayedEntity() {
+    const moreButton = await this.page
+      .locator("button[aria-label='more']")
+      .first();
+    await moreButton.waitFor({ state: 'visible' });
+    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.click();
+
+    const unregisterItem = await this.page
+      .locator("li[role='menuitem']")
+      .filter({ hasText: 'Unregister entity' })
+      .first();
+    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.click();
+
+    const deleteButton = await this.page.getByRole('button', {
+      name: 'Delete Entity',
+    });
+    await deleteButton.waitFor({ state: 'visible' });
+    await deleteButton.waitFor({ state: 'attached' });
+    await deleteButton.click();
   }
 }

@@ -42,7 +42,7 @@ dynamicPlugins:
 
 See [Menu items](dynamic-plugins.md#menu-items) from dynamic-plugins documentation for more details.
 
-See [DefaultMainMenuItems](../packages/app/src/consts.ts#L1) for a list of main menu items, including their default priorities.
+See [DefaultMainMenuItems](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/consts.ts#L1) for a list of main menu items, including their default priorities.
 
 ## Changing the favicon and tab title
 
@@ -155,8 +155,8 @@ app:
             title: Janus Community
 ```
 
-<img src="images/example-support-button.png" alt="Example Support Configured" width="285">
+![Example Support Configured](images/example-support-button.png)
 
 If support is not configured, it would look as below.
 
-<img src="images/support-not-configured.png" alt="Example Support Not Configured" width="285">
+![Example Support Not Configured](images/support-not-configured.png)
