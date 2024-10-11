@@ -179,6 +179,6 @@ ENV GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=''
 # The `--no-node-snapshot` node option enables the usage of the backstage scaffolder on nodejs 20
 # https://github.com/backstage/backstage/issues/20661
 
-ENTRYPOINT ["node", "packages/backend", "--no-node-snapshot", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
+ENTRYPOINT ["node", "--require", "./instrumentation.ts", "packages/backend", "--no-node-snapshot", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
