@@ -34,7 +34,7 @@ Our current list of plugins within the showcase app include:
 - [Jenkins plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins/plugins/jenkins)
 - [GitLab plugin](https://github.com/immobiliare/backstage-plugin-gitlab)
 - [Jira plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira)
-- [Jfrog Artifactory plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/jfrog-artifactory)
+- [Jfrog Artifactory plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jfrog-artifactory/plugins/jfrog-artifactory)
 - [Datadog plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog)
 - [PagerDuty](https://github.com/PagerDuty/backstage-plugin)
 - [Lighthouse plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse/plugins/lighthouse)
