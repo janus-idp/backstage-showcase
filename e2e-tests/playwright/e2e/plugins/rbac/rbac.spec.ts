@@ -127,11 +127,11 @@ test.describe
 test.describe('Test RBAC plugin as an admin user', () => {
   let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
   let rolesHelper: Roles;
+  let testId: string;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
+  test.beforeEach(async ({ page }) => {
+    testId = Date.now().toString();
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
@@ -176,9 +176,11 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickLink('RBAC');
   });
 
-  test('Create and edit a role from the roles list page', async () => {
-    await rolesHelper.createRole('test-role');
-    await page.click(RoleListPO.editRole('role:default/test-role'));
+  test('Create and edit a role from the roles list page', async ({ page }) => {
+    const testRole = `test-role-${testId}`;
+    const composedRole = `role:default/${testRole}`;
+    await rolesHelper.createRole(testRole);
+    await page.click(RoleListPO.editRole(composedRole));
     await uiHelper.verifyHeading('Edit Role');
     await uiHelper.clickButton('Next');
     await page.fill(RoleFormPO.addUsersAndGroups, 'Jonathon Page');
@@ -195,14 +197,18 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await usersAndGroupsLocator.waitFor();
     await expect(usersAndGroupsLocator).toBeVisible();
 
-    await rolesHelper.deleteRole('role:default/test-role');
+    await rolesHelper.deleteRole(composedRole);
   });
 
-  test('Edit users and groups and update policies of a role from the overview page', async () => {
-    await rolesHelper.createRole('test-role1');
-    await uiHelper.clickLink('role:default/test-role1');
+  test('Edit users and groups and update policies of a role from the overview page', async ({
+    page,
+  }) => {
+    const testRole = `test-role-${testId}`;
+    const composedRole = `role:default/${testRole}`;
+    await rolesHelper.createRole(testRole);
+    await uiHelper.clickLink(composedRole);
 
-    await uiHelper.verifyHeading('role:default/test-role1');
+    await uiHelper.verifyHeading(composedRole);
     await uiHelper.clickTab('Overview');
 
     await page.click(RoleOverviewPO.updateMembers);
@@ -213,9 +219,7 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Save');
-    await uiHelper.verifyText(
-      'Role role:default/test-role1 updated successfully',
-    );
+    await uiHelper.verifyText(`Role ${composedRole} updated successfully`);
     await uiHelper.verifyHeading('Users and groups (1 user, 1 group)');
 
     await page.click(RoleOverviewPO.updatePolicies);
@@ -229,28 +233,33 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await uiHelper.optionSelector('scaffolder-template');
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Save');
-    await uiHelper.verifyText(
-      'Role role:default/test-role1 updated successfully',
-    );
+    await uiHelper.verifyText(`Role ${composedRole} updated successfully`);
     await uiHelper.verifyHeading('Permission Policies (3)');
 
-    await rolesHelper.deleteRole('role:default/test-role1');
+    await rolesHelper.deleteRole(composedRole);
   });
 
-  test('Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.', async () => {
-    await rolesHelper.createRoleWithPermissionPolicy('test-role');
+  test('Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.', async ({
+    page,
+  }) => {
+    const testRole = `test-role-${testId}`;
+    const composedRole = `role:default/${testRole}`;
+    await rolesHelper.createRoleWithPermissionPolicy(testRole);
 
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
     await uiHelper.verifyHeading('All roles (1)');
-    await rolesHelper.deleteRole('role:default/test-role');
+    await rolesHelper.deleteRole(composedRole);
   });
 
-  test('Admin cannot create a role if there are no rules defined for the selected resource type.', async () => {
+  test('Admin cannot create a role if there are no rules defined for the selected resource type.', async ({
+    page,
+  }) => {
+    const testRole = `test-role-${testId}`;
     await uiHelper.clickButton('Create');
     await uiHelper.verifyHeading('Create role');
 
-    await page.fill(RoleFormPO.roleName, 'test-role');
+    await page.fill(RoleFormPO.roleName, testRole);
     await uiHelper.clickButton('Next');
     await page.fill(RoleFormPO.addUsersAndGroups, 'guest user');
     await page.click(RoleFormPO.selectMember('Guest User'));
@@ -270,22 +279,30 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickButton('Cancel');
   });
 
-  test('As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.', async () => {
-    await rolesHelper.createRoleWithNotPermissionPolicy('test-role');
+  test('As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.', async ({
+    page,
+  }) => {
+    const testRole = `test-role-${testId}`;
+    const composedRole = `role:default/${testRole}`;
+    await rolesHelper.createRoleWithNotPermissionPolicy(testRole);
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
     await page.locator(HomePagePO.searchBar).fill('test-role');
     await uiHelper.verifyHeading('All roles (1)');
 
-    await rolesHelper.deleteRole('role:default/test-role');
+    await rolesHelper.deleteRole(composedRole);
   });
 
-  test('As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.', async () => {
-    await rolesHelper.createRoleWithNotPermissionPolicy('test-role');
+  test('As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.', async ({
+    page,
+  }) => {
+    const testRole = `test-role-${testId}`;
+    const composedRole = `role:default/${testRole}`;
+    await rolesHelper.createRoleWithNotPermissionPolicy(testRole);
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
-    await page.locator(HomePagePO.searchBar).fill('test-role');
+    await page.locator(HomePagePO.searchBar).fill(testRole);
     await uiHelper.verifyHeading('All roles (1)');
 
-    await page.click(RoleListPO.editRole('role:default/test-role'));
+    await page.click(RoleListPO.editRole(composedRole));
     await uiHelper.verifyHeading('Edit Role');
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Next');
@@ -300,20 +317,22 @@ test.describe('Test RBAC plugin as an admin user', () => {
 
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Save');
-    await uiHelper.verifyText(
-      'Role role:default/test-role updated successfully',
-    );
+    await uiHelper.verifyText(`Role ${composedRole} updated successfully`);
 
-    await rolesHelper.deleteRole('role:default/test-role');
+    await rolesHelper.deleteRole(composedRole);
   });
 
-  test('As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.', async () => {
-    await rolesHelper.createRoleWithPermissionPolicy('test-role');
+  test('As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.', async ({
+    page,
+  }) => {
+    const testRole = `test-role-${testId}`;
+    const composedRole = `role:default/${testRole}`;
+    await rolesHelper.createRoleWithPermissionPolicy(testRole);
     await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
-    await page.locator(HomePagePO.searchBar).fill('test-role');
+    await page.locator(HomePagePO.searchBar).fill(testRole);
     await uiHelper.verifyHeading('All roles (1)');
 
-    await page.click(RoleListPO.editRole('role:default/test-role'));
+    await page.click(RoleListPO.editRole(composedRole));
     await uiHelper.verifyHeading('Edit Role');
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Next');
@@ -326,15 +345,9 @@ test.describe('Test RBAC plugin as an admin user', () => {
     await uiHelper.clickButton('Next');
     await uiHelper.clickButton('Save');
 
-    await uiHelper.verifyText(
-      'Role role:default/test-role updated successfully',
-    );
+    await uiHelper.verifyText(`Role ${composedRole} updated successfully`);
 
-    await rolesHelper.deleteRole('role:default/test-role');
-  });
-
-  test.afterAll(async () => {
-    await page.close();
+    await rolesHelper.deleteRole(composedRole);
   });
 });
 
