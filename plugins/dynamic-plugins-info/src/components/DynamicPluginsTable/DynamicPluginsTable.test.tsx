@@ -126,6 +126,8 @@ describe('DynamicPluginsTable', () => {
     expect(nameCells[0].textContent).toBe(
       '@janus-idp/backstage-plugin-analytics-provider-segment',
     );
+
+    // TODO: what should this be?
     expect(nameCells[4].textContent).toBe(
       '@janus-idp/backstage-plugin-jfrog-artifactory',
     );

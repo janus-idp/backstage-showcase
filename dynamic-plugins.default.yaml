@@ -812,12 +812,12 @@ plugins:
                     anyOf:
                     - isAcrAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jfrog-artifactory
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-jfrog-artifactory:
+          backstage-community.plugin-jfrog-artifactory:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: JfrogArtifactoryPage
