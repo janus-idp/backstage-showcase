@@ -7588,10 +7588,10 @@
   dependencies:
     "@backstage/backend-plugin-api" "^0.6.21"
 
-"@janus-idp/backstage-scaffolder-backend-module-annotator@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-scaffolder-backend-module-annotator/-/backstage-scaffolder-backend-module-annotator-1.0.2.tgz#54fae30dce38579d13e7da3acc49d64c2af51c6e"
-  integrity sha512-4NyqbrRx+i/iErYdK01iFDpgqteL+5+e0uxyYNFkV63100AC+iMlJMZMLnyMTlpdx2mKHO+wyOamkTeE12qqjQ==
+"@janus-idp/backstage-scaffolder-backend-module-annotator@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-scaffolder-backend-module-annotator/-/backstage-scaffolder-backend-module-annotator-1.0.3.tgz#0492f30123db2126c1891c8c74fc1ef7dfc08c7d"
+  integrity sha512-v3tBH73DKS9Eq+FEiB/2Hu+GcYquh4cE5uatkfSuStuqfouP9ePFiJu4fjQVZ9H8qzrsmchctfh4qcYGpc+oYg==
   dependencies:
     "@backstage/backend-common" "^0.21.6"
     "@backstage/backend-dynamic-feature-service" "^0.2.9"
