@@ -414,6 +414,8 @@ plugins:
             sender: ${EMAIL_SENDER}
             broadcastConfig:
               receiver: 'users'
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+    disabled: true
 
   # Group: SonarQube
   - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
