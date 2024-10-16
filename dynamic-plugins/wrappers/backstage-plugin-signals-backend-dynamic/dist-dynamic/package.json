@@ -1,0 +1,74 @@
+{
+  "name": "backstage-plugin-signals-backend-dynamic",
+  "version": "0.2.1",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "backstage": {
+    "role": "backend-plugin",
+    "supported-versions": "1.27.7",
+    "pluginId": "signals",
+    "pluginPackages": [
+      "@backstage/plugin-signals",
+      "@backstage/plugin-signals-backend"
+    ]
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {},
+  "dependencies": {
+    "@types/express": "*",
+    "express": "^4.17.1",
+    "express-promise-router": "^4.1.0",
+    "http-proxy-middleware": "^2.0.0",
+    "node-fetch": "^2.7.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.2.1",
+    "ws": "^8.18.0",
+    "yn": "^4.0.0"
+  },
+  "devDependencies": {},
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:production",
+    "lifecycle:active"
+  ],
+  "bundleDependencies": true,
+  "peerDependencies": {
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "^1.0.1",
+    "@backstage/config": "^1.2.0",
+    "@backstage/plugin-auth-node": "^0.5.3",
+    "@backstage/plugin-events-node": "^0.4.1",
+    "@backstage/types": "^1.1.1"
+  },
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
+  }
+}
