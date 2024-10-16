@@ -43,54 +43,75 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
   }
 
-  private async logintoGithub(userid: string) {
+  private async logIntoGitHub(userId: string) {
     await this.page.goto('https://github.com/login');
-    await this.page.waitForSelector('#login_field');
-    await this.page.fill('#login_field', userid);
+    await this.page.fill('#login_field', userId);
 
-    switch (userid) {
-      case process.env.GH_USER_ID:
-        await this.page.fill('#password', process.env.GH_USER_PASS);
-        break;
-      case process.env.GH_USER2_ID:
-        await this.page.fill('#password', process.env.GH_USER2_PASS);
-        break;
-      default:
-        throw new Error('Invalid User ID');
+    const credentials = {
+      [process.env.GH_USER_ID]: process.env.GH_USER_PASS,
+      [process.env.GH_USER2_ID]: process.env.GH_USER2_PASS,
+    };
+
+    const password = credentials[userId];
+    if (!password) {
+      throw new Error('Invalid User ID');
     }
 
+    await this.page.fill('#password', password);
     await this.page.click('[value="Sign in"]');
-    await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
-    test.setTimeout(130000);
-    for (
-      let round = 0;
-      round < 5 &&
-      ((await this.uiHelper.isTextVisible(
-        'The two-factor code you entered has already been used',
-        3000,
-      )) ||
-        (await this.uiHelper.isTextVisible(
-          'too many codes have been submitted',
-          3000,
-        )));
-      round++
-    ) {
-      this.page.reload();
-      try {
-        await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid), {
-          timeout: 3000,
-        });
-      } catch (e) {
-        console.log('Problem with the 2FA, retrying');
-      }
-    }
+
+    await this.handleTwoFactorAuthentication(userId);
+
+    // Verify successful login by checking the absence of the 2FA input field
     await expect(this.page.locator('#app_totp')).toBeHidden({
       timeout: 120000,
     });
   }
 
+  private async handleTwoFactorAuthentication(userId: string) {
+    const maxRetries = 5;
+    const otpFieldSelector = '#app_totp';
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      const otpCode = this.getGitHub2FAOTP(userId);
+      try {
+        await this.page.fill(otpFieldSelector, otpCode);
+        await this.page.click('[value="Verify"]');
+
+        // Wait for potential error messages
+        const errorUsed = await this.uiHelper.isTextVisible(
+          'The two-factor code you entered has already been used',
+          3000,
+        );
+        const errorTooMany = await this.uiHelper.isTextVisible(
+          'too many codes have been submitted',
+          3000,
+        );
+
+        if (errorUsed || errorTooMany) {
+          if (attempt === maxRetries) {
+            throw new Error('Max retries reached for 2FA verification.');
+          }
+          console.log(`Attempt ${attempt} failed, retrying 2FA...`);
+          await this.page.reload();
+        } else {
+          // Success, break out of the loop
+          break;
+        }
+      } catch (error) {
+        if (attempt === maxRetries) {
+          throw new Error(
+            `2FA verification failed after ${maxRetries} attempts.`,
+          );
+        }
+        console.log(`Error during 2FA attempt ${attempt}: ${error.message}`);
+        await this.page.reload();
+      }
+    }
+  }
+
   async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
-    await this.logintoGithub(userid);
+    await this.logIntoGitHub(userid);
     await this.page.goto('/');
     await this.waitForLoad(240000);
     await this.uiHelper.clickButton('Sign In');
@@ -282,7 +303,7 @@ export class Common {
 
   async GetParentGroupDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Parent Group')");
-    const parent = await this.page
+    const parent = this.page
       .locator("p:has-text('Parent Group')")
       .locator('..');
     const group = await parent.locator('a').allInnerTexts();
@@ -291,7 +312,7 @@ export class Common {
 
   async GetChildGroupsDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Child Groups')");
-    const parent = await this.page
+    const parent = this.page
       .locator("p:has-text('Child Groups')")
       .locator('..');
     const groups = await parent.locator('a').allInnerTexts();
