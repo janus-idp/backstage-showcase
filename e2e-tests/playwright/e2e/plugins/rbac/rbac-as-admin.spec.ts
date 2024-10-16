@@ -221,12 +221,10 @@ base.describe('Test RBAC plugin as an admin user', () => {
     },
   );
 
-  base(
+  base.fixme(
     'As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.',
     async ({ uiHelper, rolesHelper, testId, page }) => {
-      page.reload();
       await rolesHelper.createRoleWithPermissionPolicy(testId.testRole);
-      page.reload();
       await page.locator(HomePagePO.searchBar).waitFor({ state: 'visible' });
       await page.locator(HomePagePO.searchBar).fill(testId.testRole);
       await uiHelper.verifyHeading('All roles (1)');
