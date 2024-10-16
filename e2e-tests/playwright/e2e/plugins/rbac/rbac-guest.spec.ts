@@ -2,12 +2,12 @@ import test, { expect } from '@playwright/test';
 import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 
-type RbacFixture = {
+type RbacGuestFixture = {
   uiHelper: UIhelper;
   common: Common;
 };
 
-const base = test.extend<RbacFixture>({
+const base = test.extend<RbacGuestFixture>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
     use(uiHelper);

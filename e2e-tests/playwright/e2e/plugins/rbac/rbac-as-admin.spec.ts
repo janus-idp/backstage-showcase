@@ -10,13 +10,13 @@ import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { Roles } from '../../../support/pages/rbac';
 
-type RbacFixture = {
+type RbacAsAdminFixture = {
   uiHelper: UIhelper;
   rolesHelper: Roles;
   testId: { testId: string; testRole: string; composedRole: string };
 };
 
-const base = test.extend<RbacFixture>({
+const base = test.extend<RbacAsAdminFixture>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
     await uiHelper.openSidebarButton('Administration');
