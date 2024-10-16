@@ -25,6 +25,7 @@ export class RhdhAuthHack {
   }
 
   private async _getApiToken(page: Page) {
+    const workingPage = page.url();
     const uiHelper = new UIhelper(page);
 
     await uiHelper.openSidebar('Catalog');
@@ -37,6 +38,7 @@ export class RhdhAuthHack {
     await uiHelper.openSidebar('Home');
     const getRequest = await requestPromise;
     const authToken = await getRequest.headerValue('Authorization');
+    page.goto(workingPage);
     return authToken;
   }
 }

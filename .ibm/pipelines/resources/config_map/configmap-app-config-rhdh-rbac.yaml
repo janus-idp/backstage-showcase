@@ -112,12 +112,10 @@ data:
         policyFileReload: true
         policies-csv-file: './rbac/rbac-policy.csv'
         conditionalPoliciesFile: './rbac-conditions/conditional-policies.yaml'
-        
         pluginsWithPermission:
           - catalog
           - permission
           - scaffolder
-
         admin:
           users:
             - name: user:default/rhdh-qe
