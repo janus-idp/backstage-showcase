@@ -110,6 +110,7 @@ droute_send() {
 
     local max_attempts=30
     local wait_seconds=2
+    set +e
     for ((i = 1; i <= max_attempts; i++)); do
       # Get DataRouter request information.
       DATA_ROUTER_REQUEST_OUTPUT=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
@@ -119,7 +120,7 @@ droute_send() {
         --password ${DATA_ROUTER_PASSWORD} \
         ${DATA_ROUTER_REQUEST_ID}")
       # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
-      REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[1].message | fromjson | .[0].launch_url' -)
+      REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
       if [ $? -eq 0 ]; then
         echo "Successfully acquired ReportPortal launch URL."
         return 0
@@ -128,6 +129,7 @@ droute_send() {
         sleep "${wait_seconds}"
       fi
     done
+    set -e
 
     echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
