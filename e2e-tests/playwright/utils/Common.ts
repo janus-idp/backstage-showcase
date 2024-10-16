@@ -1,9 +1,17 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { test, Browser, expect, Page, TestInfo } from '@playwright/test';
+import {
+  test,
+  Browser,
+  expect,
+  Page,
+  TestInfo,
+  Cookie,
+} from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
 import path from 'path';
+import GithubAuthStorage from '../support/storage/githubAuth';
 
 export class Common {
   page: Page;
@@ -80,11 +88,37 @@ export class Common {
   }
 
   async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
-    await this.logintoGithub(userid);
-    await this.page.goto('/');
-    await this.waitForLoad(240000);
-    await this.uiHelper.clickButton('Sign In');
-    await this.checkAndReauthorizeGithubApp();
+    if (GithubAuthStorage.getInstance().hasUsername(userid)) {
+      const authStorage = GithubAuthStorage.getInstance();
+      const storageState = authStorage.getStorageState(userid);
+      await this.page.goto('/');
+      const context = this.page.context();
+
+      const cookies: Cookie[] = storageState.cookies;
+      await context.addCookies(cookies);
+
+      const allLocalStorageItems = storageState.origins.flatMap(
+        originState => originState.localStorage,
+      );
+
+      await this.page.evaluate(items => {
+        for (const { name, value } of items) {
+          localStorage.setItem(name, value);
+        }
+      }, allLocalStorageItems);
+      await this.page.reload();
+    } else {
+      await this.logintoGithub(userid);
+      await this.page.goto('/');
+      await this.waitForLoad(30000);
+      await this.uiHelper.clickButton('Sign In');
+      await this.checkAndReauthorizeGithubApp();
+      GithubAuthStorage.getInstance().setStorageState(
+        userid,
+        await this.page.context().storageState(),
+      );
+    }
+
     await this.uiHelper.waitForSideBarVisible();
   }
 
