@@ -855,6 +855,9 @@ plugins:
                     allOf:
                       - isLighthouseAvailable
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+    disabled: true
+
   - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
     disabled: true
     pluginConfig:
