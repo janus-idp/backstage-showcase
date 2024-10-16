@@ -855,6 +855,22 @@ plugins:
                     allOf:
                       - isLighthouseAvailable
 
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-notifications:
+            appIcons:
+              - name: notificationIcon
+                importName: NotificationIcon
+            dynamicRoutes:
+              - path: /notifications
+                importName: NotificationsPage
+                menuItem:
+                  icon: notificationIcon
+                  text: Notifications
+
   - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
     disabled: true
 
