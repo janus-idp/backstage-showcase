@@ -218,7 +218,7 @@ plugins:
                     anyOf:
                       - hasAnnotation: backstage.io/kubernetes-id
                       - hasAnnotation: backstage.io/kubernetes-namespace
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
     disabled: true
     pluginConfig:
       dynamicPlugins:
