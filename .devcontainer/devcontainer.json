@@ -1,0 +1,14 @@
+{
+    "name": "backstage-showcase",
+    "build": {
+        "dockerfile": "Containerfile",
+        "context": "."
+    },
+    "runArgs": [
+        "--userns=keep-id"
+    ],
+    "containerEnv": {
+        "HOME": "/home/node"
+    },
+    "postStartCommand": "yarn install"
+}
