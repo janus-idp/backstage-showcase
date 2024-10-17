@@ -67,7 +67,7 @@
     "@azure/abort-controller" "^2.0.0"
     tslib "^2.6.2"
 
-"@azure/identity@^4.4.1":
+"@azure/identity@4.4.1":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@azure/identity/-/identity-4.4.1.tgz#490fa2ad26786229afa36411892bb53dfa3478d3"
   integrity sha512-DwnG4cKFEM7S3T+9u05NstXU/HN0dk45kPOinUyNKsn5VWwpXd9sbPKEg6kgJzGbm1lMuhx9o31PVbCtM5sfBA==
@@ -211,7 +211,7 @@
   dependencies:
     minipass "^7.0.4"
 
-"@keycloak/keycloak-admin-client@^25.0.2":
+"@keycloak/keycloak-admin-client@25.0.2":
   version "25.0.2"
   resolved "https://registry.yarnpkg.com/@keycloak/keycloak-admin-client/-/keycloak-admin-client-25.0.2.tgz#4cd0447a4a190ed123a2efecd4078ec0f96add39"
   integrity sha512-rHlJ1bQYQKLA3fnIktYZqofQP9imSPTia0yX7329fTpJ49A2MoPduAEFNsTa9QJIPHcuz2TBgZ6eI5NnfaP6/w==
@@ -220,7 +220,7 @@
     url-join "^5.0.0"
     url-template "^3.1.1"
 
-"@kubernetes/client-node@^0.21.0":
+"@kubernetes/client-node@0.21.0":
   version "0.21.0"
   resolved "https://registry.yarnpkg.com/@kubernetes/client-node/-/client-node-0.21.0.tgz#c807af50e5d4ecbbaa571087636d79cd71a7d9cc"
   integrity sha512-yYRbgMeyQbvZDHt/ZqsW3m4lRefzhbbJEuj8sVXM+bufKrgmzriA2oq7lWPH/k/LQIicAME9ixPUadTrxIF6dQ==
@@ -242,18 +242,13 @@
   optionalDependencies:
     openid-client "^5.3.0"
 
-"@microsoft/microsoft-graph-client@^3.0.7":
+"@microsoft/microsoft-graph-client@3.0.7":
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/@microsoft/microsoft-graph-client/-/microsoft-graph-client-3.0.7.tgz#535507df2db40bd7ed24a670dc68c87c628177a4"
   integrity sha512-/AazAV/F+HK4LIywF9C+NYHcJo038zEnWkteilcxC1FM/uK/4NVGDKGrxx7nNq1ybspAroRKT4I1FHfxQzxkUw==
   dependencies:
     "@babel/runtime" "^7.12.5"
     tslib "^2.2.0"
-
-"@microsoft/microsoft-graph-types@^2.40.0":
-  version "2.40.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/microsoft-graph-types/-/microsoft-graph-types-2.40.0.tgz#65f51600ab45ace97d7b1368c47f9e0f835fddca"
-  integrity sha512-1fcPVrB/NkbNcGNfCy+Cgnvwxt6/sbIEEFgZHFBJ670zYLegENYJF8qMo7x3LqBjWX2/Eneq5BVVRCLTmlJN+g==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -529,6 +524,11 @@
     "@otplib/plugin-crypto" "^12.0.1"
     "@otplib/plugin-thirty-two" "^12.0.1"
 
+"@pkgjs/parseargs@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
+  integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
+
 "@playwright/test@1.48.0":
   version "1.48.0"
   resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.48.0.tgz#4b81434a3ca75e2a6f82a645287784223a45434c"
@@ -545,11 +545,6 @@
   version "0.12.5"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.5.tgz#db9468cb1b1b5a925b8f34822f1669df0c5472f5"
   integrity sha512-hWtVTC2q7hc7xZ/RLbxapMvDMgUnDvKvMOpKal4DrMyfGBUfB1oKaZlIRr6mJL+If3bAP6sV/QneGzF6tJjZDg==
-
-"@types/isomorphic-fetch@^0.0.39":
-  version "0.0.39"
-  resolved "https://registry.yarnpkg.com/@types/isomorphic-fetch/-/isomorphic-fetch-0.0.39.tgz#889573a72ca637bc1a665910a41ff1cb3b52011f"
-  integrity sha512-I0gou/ZdA1vMG7t7gMzL7VYu2xAKU78rW9U1l10MI0nn77pEHq3tQqHQ8hMmXdMpBlkxZOorjI4sO594Z3kKJw==
 
 "@types/js-yaml@^4.0.1":
   version "4.0.9"
@@ -568,17 +563,10 @@
   dependencies:
     undici-types "~6.19.2"
 
-"@types/node@^20.1.1":
+"@types/node@20.16.5", "@types/node@^20.1.1":
   version "20.16.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.16.5.tgz#d43c7f973b32ffdf9aa7bd4f80e1072310fd7a53"
   integrity sha512-VwYCweNo3ERajwy0IUlqqcyZ8/A7Zwa9ZP3MnENWcB11AejO+tLy3pu850goUW2FC/IJMdZUfKpX/yxL1gymCA==
-  dependencies:
-    undici-types "~6.19.2"
-
-"@types/node@^22.5.0":
-  version "22.5.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.5.0.tgz#10f01fe9465166b4cab72e75f60d8b99d019f958"
-  integrity sha512-DkFrJOe+rfdHTqqMg0bSNlGlQ85hSoh2TPzZyhHsXnMtligRWpxUySiyw8FY14ITt24HVCiQPWxS3KO/QlGmWg==
   dependencies:
     undici-types "~6.19.2"
 
@@ -1519,7 +1507,7 @@ isexe@^2.0.0:
   resolved "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
-isomorphic-fetch@^3.0.0:
+isomorphic-fetch@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"
   integrity sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==
@@ -1864,7 +1852,7 @@ object-hash@^2.2.0:
   resolved "https://registry.yarnpkg.com/object-hash/-/object-hash-2.2.0.tgz#5ad518581eefc443bd763472b8ff2e9c2c0d54a5"
   integrity sha512-gScRMn0bS5fH+IuwyIFgnh9zBdo4DV+6GhygmWM9HyNJSgS0hScp1f5vjtm7oIIOiT9trXrShAkLFSc2IqKNgw==
 
-octokit@^4.0.2:
+octokit@4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/octokit/-/octokit-4.0.2.tgz#775d68d363cdaec69d7b73d3dc82ae909d30f59b"
   integrity sha512-wbqF4uc1YbcldtiBFfkSnquHtECEIpYD78YUXI6ri1Im5OO2NLo6ZVpRdbJpdnpZ05zMrVPssNiEo6JQtea+Qg==
@@ -2453,7 +2441,7 @@ winston-transport@^4.7.0:
     readable-stream "^3.6.2"
     triple-beam "^1.3.0"
 
-winston@^3.14.2:
+winston@3.14.2:
   version "3.14.2"
   resolved "https://registry.yarnpkg.com/winston/-/winston-3.14.2.tgz#94ce5fd26d374f563c969d12f0cd9c641065adab"
   integrity sha512-CO8cdpBB2yqzEf8v895L+GNKYJiEq8eKlHU38af3snQBQ+sdAIUepjMSguOIJC7ICbzm0ZI+Af2If4vIJrtmOg==
