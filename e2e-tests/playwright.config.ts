@@ -17,7 +17,7 @@ const useCommonDeviceAndViewportConfig = {
 };
 
 export default defineConfig({
-  timeout: 80000,
+  timeout: 20000,
   testDir: './playwright',
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -97,6 +97,7 @@ export default defineConfig({
         '**/playwright/e2e/plugins/rbac/**/*.spec.ts',
         '**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts',
         '**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts',
+        '**/playwright/e2e/authProviders/**/*.spec.ts',
         '**/playwright/e2e/plugins/bulk-import.spec.ts',
         '**/playwright/e2e/plugins/tekton/tekton.spec.ts',
         '**/playwright/e2e/catalog-scaffoldedfromLink.spec.ts',
