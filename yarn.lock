@@ -11763,6 +11763,14 @@
     "@openshift/dynamic-plugin-sdk" "^5.0.1"
     tslib "^2.6.2"
 
+"@scalprum/core@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@scalprum/core/-/core-0.8.1.tgz#7c3d6bb67f70052a6929cbf8fccf8a13dca02a63"
+  integrity sha512-bRbquESsjUvgu3QHA9aDIK5uTu7XoXjzqoxAmDmytnedzg8LFk/iNKs/bx4lSP2rufxx8iFkdVVvN3sM1W6a4A==
+  dependencies:
+    "@openshift/dynamic-plugin-sdk" "^5.0.1"
+    tslib "^2.6.2"
+
 "@scalprum/react-core@0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.8.0.tgz#34bdec81af62fa4f87741169b2721729b3dd69ee"
@@ -11772,23 +11780,23 @@
     "@scalprum/core" "^0.7.0"
     lodash "^4.17.0"
 
-"@scalprum/react-core@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.7.1.tgz#5e37d1ac88125d60252ed82d464811958e1cd58b"
-  integrity sha512-CdLSwg46MYyDqCjWGuim/u0HF6GaPPGxXRD6AkWCkB4o3feBep+2zRAjzNfi3IlhNufWaiswxLpThhTLG4cgMg==
+"@scalprum/react-core@^0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-core/-/react-core-0.9.3.tgz#e1f804e93125fdb782f0f97354b819a638ff4705"
+  integrity sha512-AnBoFLZl+qYB9XnAJBHYZJTHHRFWCW6iYAojGkiqtD4luyiEMmd6SaCv2s8xs/b6l/KKkG2FU272sIYqb/FkAQ==
   dependencies:
     "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    "@scalprum/core" "^0.7.0"
+    "@scalprum/core" "^0.8.1"
     lodash "^4.17.0"
 
-"@scalprum/react-test-utils@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@scalprum/react-test-utils/-/react-test-utils-0.2.2.tgz#aa3cb5126611212b57e1799f26a7934fe45dba21"
-  integrity sha512-Z0M5C23a0XyLMIPJywh1yelleYb1sn5sygDeGu/PTHocCmEwxrUx3LHu4YURyMM5d5/lHdkSdp7AN6Om1pWtIw==
+"@scalprum/react-test-utils@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@scalprum/react-test-utils/-/react-test-utils-0.2.4.tgz#e8b12bfa64789b711c55de9ba4111dc97e4974e9"
+  integrity sha512-+8MxKwyVhqYaDM6i2yztgLqwKdrLs3bq2dJ3VsovwEJ3BH+bXBOGfn+BwV6/9CULpzs63TAjV6rH23csG8arlw==
   dependencies:
     "@openshift/dynamic-plugin-sdk" "^5.0.1"
-    "@scalprum/core" "^0.7.0"
-    "@scalprum/react-core" "^0.7.1"
+    "@scalprum/core" "^0.8.1"
+    "@scalprum/react-core" "^0.9.3"
     tslib "^2.6.2"
     whatwg-fetch "^3.6.0"
 
