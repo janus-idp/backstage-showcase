@@ -1,0 +1,44 @@
+name: Check Markdown links
+
+on:
+  pull_request:
+
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Get all docs files that have changed
+      id: changed-files-yaml
+      uses: tj-actions/changed-files@v45
+      with:
+        files_yaml: |
+          doc:
+            - '**.md'
+            - docs/**
+
+    - name: Run step if doc file(s) change
+      if: steps.changed-files-yaml.outputs.doc_any_changed == 'true'
+      env:
+        DOC_ALL_CHANGED_FILES: ${{ steps.changed-files-yaml.outputs.doc_all_changed_files }}
+      run: |
+        echo "One or more doc file(s) has changed."
+        echo "List all the files that have changed: $DOC_ALL_CHANGED_FILES"
+
+    # If one file is changed, we can check all the files
+    - name: Check markdown links in docs
+      if: steps.changed-files-yaml.outputs.doc_any_changed == 'true'
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        config-file: '.github/workflows/link-checker.config.json'
+        folder-path: 'docs/'
+
+    - name: Check markdown files in root
+      if: steps.changed-files-yaml.outputs.doc_any_changed == 'true'
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        config-file: '.github/workflows/link-checker.config.json'
+        # ignore subfolders we don't want to check everthing, there is a lot of files from plugins that we don't control
+        max-depth: 0
