@@ -6,6 +6,11 @@ export interface Config {
      * @visibility frontend
      */
     proxyPath?: string;
+    /**
+     * Name of the Backstage flavor (e.g. backstage, rhdh, rhtap)
+     * @visibility frontend
+     */
+    flavor?: string;
   };
   app: {
     branding?: {
