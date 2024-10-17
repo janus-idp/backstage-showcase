@@ -23,7 +23,7 @@
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
 # https://registry.access.redhat.com/ubi9/nodejs-20
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-59.1726663413 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-59.1726696138 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -189,7 +189,7 @@ RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000 && \
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-63.1725851021 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-63.1726695170 AS runner
 USER 0
 
 # Downstream sources
