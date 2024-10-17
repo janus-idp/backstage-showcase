@@ -3276,6 +3276,22 @@
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     react-use "^17.2.4"
 
+"@backstage-community/plugin-nexus-repository-manager@1.10.1":
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-nexus-repository-manager/-/plugin-nexus-repository-manager-1.10.1.tgz#48229125b4451fb04705124dded6f1abbb48062e"
+  integrity sha512-h8K0d6GmZc+5sS5tIdkPmihGmby0khHZMjoEZWC+p0eCGZKzHfIxyP+nyXOwBLEkUAvGNG3MYIdDEWGxhtaHhg==
+  dependencies:
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/core-components" "^0.14.9"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-catalog-react" "^1.12.2"
+    "@backstage/theme" "^0.5.6"
+    "@janus-idp/shared-react" "2.11.0"
+    "@material-ui/core" "^4.9.13"
+    "@material-ui/icons" "^4.11.3"
+    "@material-ui/lab" "^4.0.0-alpha.45"
+    react-use "^17.4.0"
+
 "@backstage-community/plugin-redhat-argocd-common@1.0.5", "@backstage-community/plugin-redhat-argocd-common@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-redhat-argocd-common/-/plugin-redhat-argocd-common-1.0.5.tgz#13f2f32236a6a4e810e67a14635aadb553948a3d"
@@ -9110,6 +9126,23 @@
   version "2.10.3"
   resolved "https://registry.yarnpkg.com/@janus-idp/shared-react/-/shared-react-2.10.3.tgz#9c4e80cdc93838edd44165a9392f5199fc2b206a"
   integrity sha512-XkGymQUplgdrslEWSg7tVU3VZUWZgyQjI26fe2KfgZ7c3Tl8YevgvnGv2JtD0WklWRLKHqpfhRZ8RizW2f/3XA==
+  dependencies:
+    "@backstage/catalog-model" "1.5.0"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-kubernetes-common" "0.8.0"
+    "@backstage/plugin-kubernetes-react" "0.4.0"
+    "@kubernetes/client-node" "^0.20.0"
+    classnames "^2.3.2"
+    date-fns "^2.30.0"
+    file-saver "^2.0.5"
+    lodash "^4.17.21"
+    mathjs "^11.11.2"
+    react-use "^17.5.0"
+
+"@janus-idp/shared-react@2.11.0":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@janus-idp/shared-react/-/shared-react-2.11.0.tgz#026f02eb951a5591bff089aaf14fae6b9bc2d89f"
+  integrity sha512-A4SU1E9u/9eP83KiIh5RFV0EeuQIBUFinfjJev63FVEi23JbV549EbSXAolGENNj1V2VCr037n78j6eLBbQYEA==
   dependencies:
     "@backstage/catalog-model" "1.5.0"
     "@backstage/core-plugin-api" "^1.9.3"

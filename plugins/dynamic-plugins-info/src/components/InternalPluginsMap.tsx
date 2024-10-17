@@ -97,8 +97,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-plugin-tekton',
   '@janus-idp/backstage-plugin-quay':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-quay',
-  '@janus-idp/backstage-plugin-nexus-repository-manager':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-nexus-repository-manager',
+  'backstage-community-plugin-nexus-repository-manager':
+    './dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager',
   'backstage-community-plugin-acr':
     './dynamic-plugins/dist/backstage-community-plugin-acr',
   '@janus-idp/backstage-plugin-jfrog-artifactory':
