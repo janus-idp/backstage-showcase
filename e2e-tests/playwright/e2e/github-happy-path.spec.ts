@@ -92,9 +92,10 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify that the Issues tab renders all the open github issues in the repository', async () => {
     await uiHelper.clickTab('Issues');
+    await common.clickOnGHloginPopup();
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
-    const issuesCountText = `All repositories (${openIssues.length} Issues)*`;
+    const issuesCountText = `All repositories (${openIssues.length} Issues)`;
     await expect(page.locator(`text=${issuesCountText}`)).toBeVisible();
 
     for (const issue of openIssues.slice(0, 5)) {
@@ -154,7 +155,6 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied', async () => {
     await uiHelper.clickTab('CI');
-    await common.clickOnGHloginPopup();
 
     const workflowRuns = await backstageShowcase.getWorkflowRuns();
 
