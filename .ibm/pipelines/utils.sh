@@ -108,29 +108,31 @@ droute_send() {
       --results '${temp_droute}/${JUNIT_RESULTS}' \
       --verbose" | grep "request:" | awk '{print $2}')
 
-    local max_attempts=30
-    local wait_seconds=2
-    set +e
-    for ((i = 1; i <= max_attempts; i++)); do
-      # Get DataRouter request information.
-      DATA_ROUTER_REQUEST_OUTPUT=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-        /tmp/droute-linux-amd64 request get \
-        --url ${DATA_ROUTER_URL} \
-        --username ${DATA_ROUTER_USERNAME} \
-        --password ${DATA_ROUTER_PASSWORD} \
-        ${DATA_ROUTER_REQUEST_ID}")
-      # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
-      REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
-      if [ $? -eq 0 ]; then
-        # Write ReportPortal launch URL to a HTML file with redirect. This is used to link the test run with ReportPortal (Slack alert).
-        echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
-        return 0
-      else
-        echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
-        sleep "${wait_seconds}"
-      fi
-    done
-    set -e
+    if [[ "$JOB_NAME" == *periodic-* ]]; then
+      local max_attempts=30
+      local wait_seconds=2
+      set +e
+      for ((i = 1; i <= max_attempts; i++)); do
+        # Get DataRouter request information.
+        DATA_ROUTER_REQUEST_OUTPUT=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+          /tmp/droute-linux-amd64 request get \
+          --url ${DATA_ROUTER_URL} \
+          --username ${DATA_ROUTER_USERNAME} \
+          --password ${DATA_ROUTER_PASSWORD} \
+          ${DATA_ROUTER_REQUEST_ID}")
+        # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
+        REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
+        if [ $? -eq 0 ]; then
+          # Write ReportPortal launch URL to a HTML file with redirect. This is used to link the test run with ReportPortal (Slack alert).
+          echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
+          return 0
+        else
+          echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
+          sleep "${wait_seconds}"
+        fi
+      done
+      set -e
+    fi
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
