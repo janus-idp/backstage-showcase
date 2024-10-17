@@ -122,9 +122,28 @@ droute_send() {
           ${DATA_ROUTER_REQUEST_ID}")
         # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
         REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
-        if [ $? -eq 0 ]; then
-          # Write ReportPortal launch URL to a HTML file with redirect. This is used to link the test run with ReportPortal (Slack alert).
-          echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
+        if [[ $? -eq 0 ]]; then
+          if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+            RUN_STATUS_EMOJI=":done-circle-check:"
+            RUN_STATUS="passed"
+          else
+            RUN_STATUS_EMOJI=":failed:"
+            RUN_STATUS="failed"
+          fi
+          jq -n \
+            --arg run_status "$RUN_STATUS" \
+            --arg run_type "$RUN_TYPE" \
+            --arg reportportal_launch_url "$REPORTPORTAL_LAUNCH_URL" \
+            --arg job_name "$JOB_NAME" \
+            --arg run_status_emoji "$RUN_STATUS_EMOJI" \
+            '{
+              "RUN_STATUS": $run_status,
+              "RUN_TYPE": $run_type,
+              "REPORTPORTAL_LAUNCH_URL": $reportportal_launch_url,
+              "JOB_NAME": $job_name,
+              "RUN_STATUS_EMOJI": $run_status_emoji
+            }' > /tmp/data_router_slack_message.json
+          curl -X POST -H 'Content-type: application/json' --data @/tmp/data_router_slack_message.json  $SLACK_DATA_ROUTER_WEBHOOK_URL
           return 0
         else
           echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
