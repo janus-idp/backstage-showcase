@@ -128,10 +128,10 @@ droute_send() {
         echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
         sleep "${wait_seconds}"
       fi
+      # Write ReportPortal launch URL to a HTML file with redirect. This is used to link the test run with ReportPortal (Slack alert).
+      echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
     done
     set -e
-
-    echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
