@@ -1,6 +1,6 @@
 # CI Steps and Processes for the Tests
 
-This document is written from _front_ to _back_; we will start by looking at when the different test jobs are triggered and where you can see them, and we will delve deeper, looking into the environments that host them and where to find them.
+This document provides a comprehensive overview of our continuous integration (CI) testing processes. We begin by explaining when and how different test jobs are triggered and where you can monitor them. Then, we delve deeper into the environments that host these tests and guide you on how to access them.
 
 ## GitHub Pull Requests
 
@@ -25,12 +25,15 @@ However, the test outputs (screenshots, recordings, walkthroughs, etc.) are stor
 
 Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments:
 
-AKS Nightly Tests: Only the nightly tests for Azure Kubernetes Service (AKS) run on the bsCluster. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
+- **AKS Nightly Tests:** Only the nightly tests for Azure Kubernetes Service (AKS) run on the bsCluster. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
 
-IBM Cloud Tests: All other tests, including PR checks and nightlies for the `main`, `1.3`, and `1.2` branches, run against the `rhdh-pr-os` OpenShift Container Platform (OCP) cluster on IBM Cloud.
+- **IBM Cloud Tests:** All nightly tests for the `main`, `1.3`, and `1.2` branches run against the `rhdh-pr-os` OpenShift Container Platform (OCP) cluster on IBM Cloud.
 
-Additional Nightly Jobs for Main Branch:
-The nightly job for the main branch also runs against `rhdh-os-1` (currently OCP 4.14).
-It also runs against `rhdh-os-2` (currently OCP 4.15).
+### Additional Nightly Jobs for Main Branch:
 
-We regularly upgrade the clusters to ensure that rhdh-pr-os is always at the latest version we support. The team manages these upgrades to keep our test environments up-to-date with the newest supported OCP versions.
+- The nightly job for the `main` branch also runs against `rhdh-os-1` (currently OCP 4.14).
+- It also runs against `rhdh-os-2` (currently OCP 4.15).
+
+We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the latest version we support. The team manages these upgrades to keep our test environments up-to-date with the newest supported OCP versions.
+
+**Note:** The output of the nightly runs, including test results and any relevant notifications, is posted on the Slack channel **`#rhdh-e2e-test-alerts`**. This allows the team to monitor test outcomes and promptly address any issues that arise.
