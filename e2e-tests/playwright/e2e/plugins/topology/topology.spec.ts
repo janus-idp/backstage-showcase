@@ -44,5 +44,18 @@ test.describe('Test Topology Plugin', () => {
     await uiHelper.verifyHeading('Pods');
     await uiHelper.verifyHeading('Services');
     await uiHelper.verifyHeading('Routes');
+    await expect(
+      page.getByRole('link', { name: 'https://rhdh-backstage-' }),
+    ).toBeVisible();
+    await expect(page.getByTitle('Deployment')).toBeVisible();
+    await uiHelper.verifyText('S');
+    await uiHelper.verifyText('RT');
+    await expect(
+      page
+        .locator('g')
+        .filter({ hasText: /Open URL/ })
+        .locator('rect')
+        .first(),
+    ).toBeVisible();
   });
 });
