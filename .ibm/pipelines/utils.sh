@@ -122,14 +122,13 @@ droute_send() {
       # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
       REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
       if [ $? -eq 0 ]; then
-        echo "Successfully acquired ReportPortal launch URL."
+        # Write ReportPortal launch URL to a HTML file with redirect. This is used to link the test run with ReportPortal (Slack alert).
+        echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
         return 0
       else
         echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
         sleep "${wait_seconds}"
       fi
-      # Write ReportPortal launch URL to a HTML file with redirect. This is used to link the test run with ReportPortal (Slack alert).
-      echo "<meta http-equiv='refresh' content='0; url=${REPORTPORTAL_LAUNCH_URL}'>" > "${ARTIFACT_DIR}/${project}/reportportal-launch-url.html"
     done
     set -e
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
