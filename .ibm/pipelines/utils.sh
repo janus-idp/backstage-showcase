@@ -108,7 +108,6 @@ droute_send() {
       --results '${temp_droute}/${JUNIT_RESULTS}' \
       --verbose" | grep "request:" | awk '{print $2}')
 
-    if [[ "$JOB_NAME" == *periodic-* ]]; then
       local max_attempts=30
       local wait_seconds=2
       set +e
@@ -151,7 +150,6 @@ droute_send() {
         fi
       done
       set -e
-    fi
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
