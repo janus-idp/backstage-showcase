@@ -60,8 +60,7 @@
   "resolutions": {
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
-    "body-parser": "^1.20.3",
-    "dset": "^3.1.4"
+    "body-parser": "^1.20.3"
   },
   "jest": {
     "testTimeout": 20000
