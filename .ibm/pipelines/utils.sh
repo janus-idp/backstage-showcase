@@ -122,7 +122,7 @@ droute_send() {
         # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
         REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
         if [[ $? -eq 0 ]]; then
-          if [[ release_name == *rbac* ]]; then
+          if [[ "$release_name" == *rbac* ]]; then
             RUN_TYPE="rbac-nightly"
           else
             RUN_TYPE="nightly"
