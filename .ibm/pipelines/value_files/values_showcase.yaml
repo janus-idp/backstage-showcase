@@ -111,6 +111,9 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
         disabled: false
+      - package: '@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5'
+        disabled: false
+        integrity: sha512-srTnFDYn3Ett6z33bX4nL2NQY8wqux8TkpgBQNsE8S73nMfsor/wAdmVgHL+xW7pxQ09DT4YTdaG3GkH+cyyNQ==
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
   # -- Shorthand for users who do not want to specify a custom HOSTNAME. Used ONLY with the DEFAULT upstream.backstage.appConfig value and with OCP Route enabled.
