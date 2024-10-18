@@ -1,5 +1,7 @@
+# THIS IS USED BY Konflux builds >= 1.4
+# TODO verify this works with Cachi2 once we enable that, or switch to use ../.rhdh/docker/Dockerfile as input
 #
-# Copyright (c) 2023 Red Hat, Inc.
+# Copyright (c) 2023-2024 Red Hat, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,7 +21,8 @@
 # 4. add Brew metadata
 
 # Stage 1 - Build nodejs skeleton
-FROM registry.access.redhat.com/ubi9/nodejs-20:1-54 AS skeleton
+# https://registry.access.redhat.com/ubi9/nodejs-20
+FROM registry.access.redhat.com/ubi9/nodejs-20:1-59.1726663413 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -50,6 +53,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-home-page/package.json ./plugins/dynamic-home-page/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
@@ -104,10 +108,16 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
+RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000 && \
+    # delete all the nested .npmrc files and set default values
+    find . -type f -name .npmrc -exec rm -Rf {} \; && \
+    # reset npm config to the default registry and absolute path to .pem file
+    npm config set registry=https://registry.npmjs.org/ && \
+    npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # Stage 5 - Build the runner image
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-57 AS runner
+# https://registry.access.redhat.com/ubi9/nodejs-20-minimal
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:1-63.1725851021 AS runner
 USER 0
 
 # Upstream only
@@ -132,11 +142,13 @@ COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist
 # include patch files in final container just for reference
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
+# RHIDP-4220 - make Konflux preflight and EC checks happy - [check-container] Create a directory named /licenses and include all relevant licensing
+COPY $EXTERNAL_SOURCE/LICENSE /licenses/
+
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./
 RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
-  chmod -R a+rx ./install-dynamic-plugins.sh; \
-  rm -fr dynamic-plugins-root && cp -R dynamic-plugins/dist/ dynamic-plugins-root
+  chmod -R a+rx ./install-dynamic-plugins.sh;
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

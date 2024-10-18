@@ -1,4 +1,5 @@
 import { request, APIResponse, expect } from '@playwright/test';
+import { githubAPIEndpoints } from './APIEndpoints';
 
 export class APIHelper {
   private static githubAPIVersion = '2022-11-28';
@@ -47,6 +48,83 @@ export class APIHelper {
 
     response = [...response, ...body];
     return await this.getGithubPaginatedRequest(url, pageNo + 1, response);
+  }
+
+  static async createGitHubRepo(owner: string, repoName: string) {
+    await APIHelper.githubRequest(
+      'POST',
+      githubAPIEndpoints.createRepo(owner),
+      {
+        name: repoName,
+        private: false,
+      },
+    );
+  }
+
+  static async initCommit(owner: string, repo: string, branch = 'main') {
+    const content = Buffer.from(
+      'This is the initial commit for the repository.',
+    ).toString('base64');
+    await APIHelper.githubRequest(
+      'PUT',
+      `${githubAPIEndpoints.contents(owner, repo)}/initial-commit.md`,
+      {
+        message: 'Initial commit',
+        content: content,
+        branch: branch,
+      },
+    );
+  }
+
+  static async deleteGitHubRepo(owner: string, repoName: string) {
+    await APIHelper.githubRequest(
+      'DELETE',
+      githubAPIEndpoints.deleteRepo(owner, repoName),
+    );
+  }
+
+  static async mergeGitHubPR(
+    owner: string,
+    repoName: string,
+    pull_number: number,
+  ) {
+    await APIHelper.githubRequest(
+      'PUT',
+      githubAPIEndpoints.mergePR(owner, repoName, pull_number),
+    );
+  }
+
+  static async getGitHubPRs(
+    owner: string,
+    repoName: string,
+    state: 'open' | 'closed' | 'all',
+    paginated = false,
+  ) {
+    const url = githubAPIEndpoints.pull(owner, repoName, state);
+    if (paginated) {
+      return await APIHelper.getGithubPaginatedRequest(url);
+    }
+    const response = await APIHelper.githubRequest('GET', url);
+    return response.json();
+  }
+
+  static async getfileContentFromPR(
+    owner: string,
+    repoName: string,
+    pr: number,
+    filename: string,
+  ): Promise<string> {
+    const response = await APIHelper.githubRequest(
+      'GET',
+      githubAPIEndpoints.pull_files(owner, repoName, pr),
+    );
+    const file_raw_url = (await response.json()).find(
+      (file: { filename: string }) => file.filename === filename,
+    ).raw_url;
+    const raw_file_content = await (
+      await APIHelper.githubRequest('GET', file_raw_url)
+    ).text();
+    return raw_file_content;
   }
 
   async getGuestToken(): Promise<string> {

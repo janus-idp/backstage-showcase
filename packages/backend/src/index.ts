@@ -1,6 +1,4 @@
-import { statusCheckHandler } from '@backstage/backend-common';
 import { createBackend } from '@backstage/backend-defaults';
-import { rootHttpRouterServiceFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import {
   dynamicPluginsFeatureDiscoveryServiceFactory,
   dynamicPluginsFrontendSchemas,
@@ -8,45 +6,22 @@ import {
   dynamicPluginsServiceFactory,
 } from '@backstage/backend-dynamic-feature-service';
 import { PackageRoles } from '@backstage/cli-node';
-import { RequestHandler } from 'express';
 import * as path from 'path';
 import { configureCorporateProxyAgent } from './corporate-proxy';
 import { CommonJSModuleLoader } from './loader';
 import { customLogger } from './logger';
-import { metricsHandler } from './metrics';
 import {
+  metricsPlugin,
+  healthCheckPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
-} from './modules/rbacDynamicPluginsModule';
+} from './modules';
 
 // RHIDP-2217: adds support for corporate proxy
 configureCorporateProxyAgent();
 
 const backend = createBackend();
 
-backend.add(
-  rootHttpRouterServiceFactory({
-    configure(context) {
-      let healthCheckHandler: RequestHandler | undefined;
-
-      const { app, routes, middleware } = context;
-      app.use(middleware.helmet());
-      app.use(middleware.cors());
-      app.use(middleware.compression());
-      app.use(middleware.logging());
-      app.use('/healthcheck', async (_, response, next) => {
-        if (!healthCheckHandler) {
-          healthCheckHandler = await statusCheckHandler();
-        }
-        healthCheckHandler(_, response, next);
-      });
-      app.use('/metrics', metricsHandler());
-      app.use(routes);
-      app.use(middleware.notFound());
-      app.use(middleware.error());
-    },
-  }),
-);
 backend.add(dynamicPluginsFeatureDiscoveryServiceFactory); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
 backend.add(
   dynamicPluginsServiceFactory({
@@ -69,6 +44,9 @@ backend.add(
 );
 backend.add(dynamicPluginsFrontendSchemas);
 backend.add(customLogger);
+
+backend.add(metricsPlugin);
+backend.add(healthCheckPlugin);
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
 backend.add(

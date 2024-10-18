@@ -29,6 +29,11 @@ export class CatalogImport {
     }
   }
 
+  async analyzeComponent(url: string) {
+    await this.page.fill(CatalogImportPO.componentURL, url);
+    await this.uiHelper.clickButton('Analyze');
+  }
+
   async inspectEntityAndVerifyYaml(text: string) {
     await this.page.getByTitle('More').click();
     await this.page.getByRole('menuitem').getByText('Inspect entity').click();
@@ -54,16 +59,16 @@ export class BackstageShowcase {
     return rep.filter((issue: any) => !issue.pull_request);
   }
 
-  static async getGithubPRs(
+  static async getShowcasePRs(
     state: 'open' | 'closed' | 'all',
     paginated = false,
   ) {
-    const url = githubAPIEndpoints.pull(state);
-    if (paginated) {
-      return APIHelper.getGithubPaginatedRequest(url);
-    }
-    const response = await APIHelper.githubRequest('GET', url);
-    return response.json();
+    return await APIHelper.getGitHubPRs(
+      'janus-idp',
+      'backstage-showcase',
+      state,
+      paginated,
+    );
   }
 
   async clickNextPage() {

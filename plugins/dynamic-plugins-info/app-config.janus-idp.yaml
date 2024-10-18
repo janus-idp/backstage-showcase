@@ -1,3 +1,4 @@
+# please keep this in sync with packages/app/src/App.tsx
 dynamicPlugins:
   frontend:
     janus-idp.backstage-plugin-dynamic-plugins-info:

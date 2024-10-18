@@ -1,8 +1,8 @@
 # Local development behind a corporate proxy
 
-As mentioned in [Running the Showcase application behind a corporate proxy](../showcase-docs/corporate-proxy.md), the `HTTP(S)_PROXY` and `NO_PROXY` environment variables are supported.
+As mentioned in [Running the Showcase application behind a corporate proxy](corporate-proxy.md), the `HTTP(S)_PROXY` and `NO_PROXY` environment variables are supported.
 
-If you are behind a corporate proxy and are running the Showcase locally, as depicted in [Running locally with a basic configuration](../showcase-docs/getting-started.md#running-locally-with-a-basic-configuration) or [Running locally with the Optional Plugins](../showcase-docs/getting-started.md#running-locally-with-the-optional-plugins), you will need to additionally set the `GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE` to an empty value prior to running `yarn start`.
+If you are behind a corporate proxy and are running the Showcase locally, as depicted in [Running locally with a basic configuration](index.md#running-locally-with-a-basic-configuration) or [Running locally with the Optional Plugins](index.md#running-locally-with-the-optional-plugins), you will need to additionally set the `GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE` to an empty value prior to running `yarn start`.
 
 Example:
 
@@ -141,7 +141,7 @@ spec:
 EOF
 ```
 
-5. Follow the instructions to add the proxy environment variables for an [Operator-based](../showcase-docs/corporate-proxy.md#operator-deployment) or [Helm-based](../showcase-docs/corporate-proxy.md#helm-deployment) deployment.
+5. Follow the instructions to add the proxy environment variables for an [Operator-based](corporate-proxy.md#operator-deployment) or [Helm-based](corporate-proxy.md#helm-deployment) deployment.
 
 Example with a Custom Resource:
 
@@ -292,7 +292,7 @@ spec:
 EOF
 ```
 
-5. Follow the instructions to add the proxy environment variables for an [Operator-based](../showcase-docs/corporate-proxy.md#operator-deployment) or [Helm-based](../showcase-docs/corporate-proxy.md#helm-deployment) deployment.
+5. Follow the instructions to add the proxy environment variables for an [Operator-based](corporate-proxy.md#operator-deployment) or [Helm-based](corporate-proxy.md#helm-deployment) deployment.
 
 Example with a Custom Resource:
 

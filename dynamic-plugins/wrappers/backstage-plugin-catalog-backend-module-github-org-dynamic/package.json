@@ -38,7 +38,7 @@
     "@backstage/plugin-catalog-backend-module-github": "0.6.5"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.13.1"
+    "@janus-idp/cli": "1.14.0"
   },
   "files": [
     "dist",
@@ -57,7 +57,7 @@
   "homepage": "https://red.ht/rhdh",
   "bugs": "https://issues.redhat.com/browse/RHIDP",
   "keywords": [
-    "support:tech-preview",
+    "support:production",
     "lifecycle:active"
   ]
 }

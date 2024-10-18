@@ -104,13 +104,13 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify that the Pull/Merge Requests tab renders the 5 most recently updated Open Pull Requests', async () => {
     await uiHelper.clickTab('Pull/Merge Requests');
-    const openPRs = await BackstageShowcase.getGithubPRs('open');
+    const openPRs = await BackstageShowcase.getShowcasePRs('open');
     await backstageShowcase.verifyPRRows(openPRs, 0, 5);
   });
 
   test('Click on the CLOSED filter and verify that the 5 most recently updated Closed PRs are rendered (same with ALL)', async () => {
     await uiHelper.clickButton('CLOSED', { force: true });
-    const closedPRs = await BackstageShowcase.getGithubPRs('closed');
+    const closedPRs = await BackstageShowcase.getShowcasePRs('closed');
     await common.waitForLoad();
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
@@ -118,7 +118,7 @@ test.describe.serial('GitHub Happy path', () => {
   //TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
   test.skip('Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded', async () => {
     console.log('Fetching all PRs from GitHub');
-    const allPRs = await BackstageShowcase.getGithubPRs('all', true);
+    const allPRs = await BackstageShowcase.getShowcasePRs('all', true);
 
     console.log('Clicking on ALL button');
     await uiHelper.clickButton('ALL', { force: true });
@@ -146,7 +146,7 @@ test.describe.serial('GitHub Happy path', () => {
     await common.clickOnGHloginPopup();
     await uiHelper.clickTab('Pull/Merge Requests');
     await uiHelper.clickButton('ALL', { force: false });
-    const allPRs = await BackstageShowcase.getGithubPRs('all');
+    const allPRs = await BackstageShowcase.getShowcasePRs('all');
     await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
     await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
     await backstageShowcase.verifyPRRowsPerPage(20, allPRs);

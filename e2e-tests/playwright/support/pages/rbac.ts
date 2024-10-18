@@ -200,8 +200,7 @@ export class Roles {
   }
 
   async deleteRole(name: string) {
-    await this.uiHelper.openSidebar('Administration');
-    await this.uiHelper.clickTab('RBAC');
+    await this.uiHelper.openSidebar('RBAC');
     const button = this.page.locator(RoleListPO.deleteRole(name));
     await button.waitFor({ state: 'visible' });
     await button.click();
@@ -249,14 +248,6 @@ export class Response {
 
   getSimpleRequest() {
     return this.simpleRequest;
-  }
-
-  getExpectedRoles() {
-    return '[{"memberReferences":["user:default/rhdh-qe"],"name":"role:default/rbac_admin"},{"memberReferences":["user:xyz/user"],"name":"role:xyz/team_a"}]';
-  }
-
-  getExpectedPolicies() {
-    return '[{"entityReference":"role:default/rbac_admin","permission":"policy-entity","policy":"read","effect":"allow"},{"entityReference":"role:default/rbac_admin","permission":"policy-entity","policy":"create","effect":"allow"},{"entityReference":"role:default/rbac_admin","permission":"policy-entity","policy":"delete","effect":"allow"},{"entityReference":"role:default/rbac_admin","permission":"policy-entity","policy":"update","effect":"allow"},{"entityReference":"role:default/rbac_admin","permission":"catalog-entity","policy":"read","effect":"allow"},{"entityReference":"role:default/guests","permission":"catalog.entity.create","policy":"create","effect":"allow"},{"entityReference":"role:default/team_a","permission":"catalog-entity","policy":"read","effect":"allow"},{"entityReference":"role:xyz/team_a","permission":"catalog-entity","policy":"read","effect":"allow"},{"entityReference":"role:xyz/team_a","permission":"catalog.entity.create","policy":"create","effect":"allow"},{"entityReference":"role:xyz/team_a","permission":"catalog.location.create","policy":"create","effect":"allow"},{"entityReference":"role:xyz/team_a","permission":"catalog.location.read","policy":"read","effect":"allow"}]';
   }
 
   editPolicyRequest(oldPolicy: Policy[], newPolicy: Policy[]) {

@@ -11,10 +11,9 @@ test.describe('dynamic-plugins-info UI tests', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
-    await uiHelper.openSidebar('Administration');
-    await uiHelper.verifyHeading('Administration');
-    await uiHelper.verifyLink('Plugins');
-    await uiHelper.clickTab('Plugins');
+    await uiHelper.openSidebarButton('Administration');
+    await uiHelper.openSidebar('Plugins');
+    await uiHelper.verifyHeading('Plugins');
   });
 
   test('it should show a table, and the table should contain techdocs plugins', async ({
@@ -52,18 +51,16 @@ test.describe('dynamic-plugins-info UI tests', () => {
     expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
   });
 
-  test('it should have a backstage-plugin-3scale-backend-dynamic plugin which is not Enabled but Preinstalled', async ({
+  test('it should have a plugin-3scale-backend plugin which is not Enabled but Preinstalled', async ({
     page,
   }) => {
     await page
       .getByPlaceholder('Filter')
-      .pressSequentially('backstage-plugin-3scale-backend-dynamic\n', {
+      .pressSequentially('plugin-3scale-backend-dynamic\n', {
         delay: 300,
       });
     const row = await page.locator(
-      UIhelperPO.rowByText(
-        '@janus-idp/backstage-plugin-3scale-backend-dynamic',
-      ),
+      UIhelperPO.rowByText('backstage-community-plugin-3scale-backend-dynamic'),
     );
     expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
     expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled

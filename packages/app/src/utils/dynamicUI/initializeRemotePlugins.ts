@@ -2,6 +2,13 @@ import { AppsConfig, processManifest } from '@scalprum/core';
 import { ScalprumState } from '@scalprum/react-core';
 import { RemotePlugins } from '../../components/DynamicRoot/DynamicRootContext';
 
+// See packages/app/src/App.tsx
+const ignoreStaticPlugins = [
+  'default.main-menu-items',
+  'internal.plugin-dynamic-plugins-info',
+  'janus-idp.backstage-plugin-dynamic-home-page',
+];
+
 const initializeRemotePlugins = async (
   pluginStore: ScalprumState['pluginStore'],
   scalprumConfig: AppsConfig,
@@ -14,7 +21,7 @@ const initializeRemotePlugins = async (
   );
   let remotePlugins = await Promise.all(
     requiredModules
-      .filter(({ scope }) => !scope.startsWith('@internal'))
+      .filter(({ scope }) => !ignoreStaticPlugins.includes(scope))
       .map(({ scope, module }) =>
         pluginStore
           .getExposedModule<{

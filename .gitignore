@@ -62,3 +62,6 @@ dynamic-plugins/*/dist-dynamic/src
 .webpack-cache
 .idea/
 .idea/
+
+# Private Keys
+*.pem

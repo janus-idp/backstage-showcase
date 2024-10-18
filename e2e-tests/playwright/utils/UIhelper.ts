@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { UIhelperPO } from '../support/pageObjects/global-obj';
 
 export class UIhelper {
@@ -12,6 +12,10 @@ export class UIhelper {
     await this.openSidebar('Catalog');
     await this.selectMuiBox('Kind', kind);
     await this.verifyRowsInTable(expectedRows);
+  }
+
+  getSideBarMenuItem(menuItem: string): Locator {
+    return this.page.getByTestId('login-button').getByText(menuItem);
   }
 
   async fillTextInputByLabel(label: string, text: string) {
@@ -42,8 +46,6 @@ export class UIhelper {
       .locator(selector)
       .getByText(label, { exact: options.exact })
       .first();
-    await button.waitFor({ state: 'visible' });
-    await button.waitFor({ state: 'attached' });
 
     if (options?.force) {
       await button.click({ force: true });
@@ -75,7 +77,7 @@ export class UIhelper {
   }
 
   async clickLink(linkText: string) {
-    await this.page.locator(`a`).filter({ hasText: linkText }).click();
+    await this.page.locator(`a`).filter({ hasText: linkText }).first().click();
   }
 
   async verifyLink(
@@ -142,7 +144,17 @@ export class UIhelper {
   }
 
   async openSidebar(navBarText: string) {
-    const navLink = this.page.locator(`nav a:has-text("${navBarText}")`);
+    const navLink = this.page
+      .locator(`nav a:has-text("${navBarText}")`)
+      .first();
+    await navLink.waitFor({ state: 'visible' });
+    await navLink.click();
+  }
+
+  async openSidebarButton(navBarButtonLabel: string) {
+    const navLink = this.page.locator(
+      `nav button[aria-label="${navBarButtonLabel}"]`,
+    );
     await navLink.waitFor({ state: 'visible' });
     await navLink.click();
   }
@@ -208,12 +220,21 @@ export class UIhelper {
     }
   }
 
-  async verifyHeading(heading: string) {
+  async verifyHeading(heading: string | RegExp) {
     const headingLocator = this.page
       .locator('h1, h2, h3, h4, h5, h6')
       .filter({ hasText: heading })
       .first();
 
+    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
+    await expect(headingLocator).toBeVisible();
+  }
+
+  async verifyParagraph(paragraph: string) {
+    const headingLocator = this.page
+      .locator('p')
+      .filter({ hasText: paragraph })
+      .first();
     await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
@@ -260,6 +281,15 @@ export class UIhelper {
     return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
   }
 
+  /**
+   * Verifies that a table row, identified by unique text, contains specific cell texts.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {Array<string | RegExp>} cellTexts - An array of cell texts or regular expressions to match against the cells within the identified row.
+   * @example
+   * // Example usage to verify that a row containing "Developer-hub" has cells with the texts "service" and "active":
+   * await verifyRowInTableByUniqueText('Developer-hub', ['service', 'active']);
+   */
+
   async verifyRowInTableByUniqueText(
     uniqueRowText: string,
     cellTexts: string[] | RegExp[],
@@ -271,6 +301,45 @@ export class UIhelper {
         row.locator('td').filter({ hasText: cellText }).first(),
       ).toBeVisible();
     }
+  }
+
+  /**
+   * Clicks on a link within a table row that contains a unique text and matches a link's text.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string | RegExp} linkText - The text of the link, can be a string or a regular expression.
+   * @param {boolean} [exact=true] - Whether to match the link text exactly. By default, this is set to true.
+   */
+  async clickOnLinkInTableByUniqueText(
+    uniqueRowText: string,
+    linkText: string | RegExp,
+    exact = true,
+  ) {
+    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    await row.waitFor();
+    await row
+      .locator('a')
+      .getByText(linkText, { exact: exact })
+      .first()
+      .click();
+  }
+
+  /**
+   * Clicks on a button within a table row that contains a unique text and matches a button's label or aria-label.
+   * @param {string} UniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string | RegExp} textOrLabel - The text of the button or the `aria-label` attribute, can be a string or a regular expression.
+   */
+  async clickOnButtonInTableByUniqueText(
+    UniqueRowText: string,
+    textOrLabel: string | RegExp,
+  ) {
+    const row = this.page.locator(UIhelperPO.rowByText(UniqueRowText));
+    await row.waitFor();
+    await row
+      .locator(
+        `button:has-text("${textOrLabel}"), button[aria-label="${textOrLabel}"]`,
+      )
+      .first()
+      .click();
   }
 
   async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
@@ -336,9 +405,79 @@ export class UIhelper {
       expect(color).toBe(expectedRgbColor);
     }
   }
+
   async verifyTableIsEmpty() {
     const rowSelector = `table tbody tr:not(:has(td[colspan]))`;
     const rowCount = await this.page.locator(rowSelector).count();
     expect(rowCount).toEqual(0);
+  }
+
+  async waitForCardWithHeader(cardHeading: string) {
+    await this.page.waitForSelector(UIhelperPO.MuiCard(cardHeading));
+  }
+
+  async verifyAlertErrorMessage(message: string | RegExp) {
+    const alert = this.page.getByRole('alert');
+    await alert.waitFor();
+    await expect(alert).toHaveText(message);
+  }
+
+  async clickById(id: string) {
+    await this.page.click(`#${id}`);
+  }
+
+  async clickSpanByText(text: string) {
+    await this.verifyText(text);
+    await this.page.click(`span:has-text("${text}")`);
+  }
+
+  async verifyLocationRefreshButtonIsEnabled(locationName: string) {
+    await this.page.goto('/');
+    await this.openSidebar('Catalog');
+    await this.selectMuiBox('Kind', 'Location');
+    await this.verifyHeading('All locations');
+    await this.verifyCellsInTable([locationName]);
+    await this.clickLink(locationName);
+    await this.verifyHeading(locationName);
+    await this.page.locator(`button[title="Schedule entity refresh"]`).click();
+    await this.verifyAlertErrorMessage('Refresh scheduled');
+
+    const moreButton = await this.page
+      .locator("button[aria-label='more']")
+      .first();
+    await moreButton.waitFor({ state: 'visible' });
+    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.click();
+
+    const unregisterItem = await this.page
+      .locator("li[role='menuitem']")
+      .filter({ hasText: 'Unregister entity' })
+      .first();
+    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.waitFor({ state: 'attached' });
+    expect(unregisterItem).not.toBeDisabled();
+  }
+
+  async clickUnregisterButtonForDisplayedEntity() {
+    const moreButton = await this.page
+      .locator("button[aria-label='more']")
+      .first();
+    await moreButton.waitFor({ state: 'visible' });
+    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.click();
+
+    const unregisterItem = await this.page
+      .locator("li[role='menuitem']")
+      .filter({ hasText: 'Unregister entity' })
+      .first();
+    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.click();
+
+    const deleteButton = await this.page.getByRole('button', {
+      name: 'Delete Entity',
+    });
+    await deleteButton.waitFor({ state: 'visible' });
+    await deleteButton.waitFor({ state: 'attached' });
+    await deleteButton.click();
   }
 }

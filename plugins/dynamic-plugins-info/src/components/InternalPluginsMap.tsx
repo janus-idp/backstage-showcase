@@ -73,12 +73,12 @@ export const InternalPluginsMap: Record<string, string> = {
     '/dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic',
   '@janus-idp/backstage-plugin-aap-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic',
-  '@janus-idp/backstage-plugin-3scale-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-3scale-backend-dynamic',
+  'backstage-community-plugin-3scale-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
   '@janus-idp/backstage-plugin-keycloak-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic',
-  '@janus-idp/backstage-plugin-argocd':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-argocd',
+  'backstage-community-plugin-redhat-argocd':
+    './dynamic-plugins/dist/backstage-community-plugin-redhat-argocd',
   'backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic':
     './dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic',
   'backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic':
@@ -99,8 +99,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-plugin-quay',
   '@janus-idp/backstage-plugin-nexus-repository-manager':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-nexus-repository-manager',
-  '@janus-idp/backstage-plugin-acr':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-acr',
+  'backstage-community-plugin-acr':
+    './dynamic-plugins/dist/backstage-community-plugin-acr',
   '@janus-idp/backstage-plugin-jfrog-artifactory':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory',
   'pagerduty-backstage-plugin':
