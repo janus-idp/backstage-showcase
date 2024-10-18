@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { UIhelperPO } from '../../../support/pageObjects/global-obj';
+import { GithubLogin } from '../../../utils/authenticationProviders/githubLogin';
 
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   let common: Common;
@@ -10,7 +11,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('Plugins');
     await uiHelper.verifyHeading('Plugins');

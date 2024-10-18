@@ -7,6 +7,7 @@ import {
   CatalogImport,
 } from '../support/pages/CatalogImport';
 import { templates } from '../support/testData/templates';
+import { GithubLogin } from '../utils/authenticationProviders/githubLogin';
 
 let page: Page;
 test.describe.serial('GitHub Happy path', () => {
@@ -25,7 +26,7 @@ test.describe.serial('GitHub Happy path', () => {
     common = new Common(page);
     catalogImport = new CatalogImport(page);
     backstageShowcase = new BackstageShowcase(page);
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
   });
 
   test('Verify Profile is Github Account Name in the Settings page', async () => {
@@ -84,7 +85,7 @@ test.describe.serial('GitHub Happy path', () => {
     await uiHelper.selectMuiBox('Kind', 'Component');
     await uiHelper.clickByDataTestId('user-picker-all');
     await uiHelper.clickLink('Backstage Showcase');
-    await common.clickOnGHloginPopup();
+    await new GithubLogin(page).clickOnGHloginPopup();
     await uiHelper.verifyLink('Janus Website', { exact: false });
     await backstageShowcase.verifyPRStatisticsRendered();
     await backstageShowcase.verifyAboutCardIsDisplayed();
@@ -143,7 +144,7 @@ test.describe.serial('GitHub Happy path', () => {
   test.skip('Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.clickLink('Backstage Showcase');
-    await common.clickOnGHloginPopup();
+    await new GithubLogin(page).clickOnGHloginPopup();
     await uiHelper.clickTab('Pull/Merge Requests');
     await uiHelper.clickButton('ALL', { force: false });
     const allPRs = await BackstageShowcase.getShowcasePRs('all');
@@ -154,7 +155,7 @@ test.describe.serial('GitHub Happy path', () => {
 
   test('Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied', async () => {
     await uiHelper.clickTab('CI');
-    await common.clickOnGHloginPopup();
+    await new GithubLogin(page).clickOnGHloginPopup();
 
     const workflowRuns = await backstageShowcase.getWorkflowRuns();
 
