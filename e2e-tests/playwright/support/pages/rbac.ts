@@ -1,11 +1,6 @@
 import { APIResponse, Page, expect } from '@playwright/test';
 import { UIhelper } from '../../utils/UIhelper';
-import {
-  DeleteRolePO,
-  HomePagePO,
-  RoleFormPO,
-  RoleListPO,
-} from '../pageObjects/page-obj';
+import { DeleteRolePO, HomePagePO, RoleFormPO } from '../pageObjects/page-obj';
 
 export class Roles {
   private page: Page;
@@ -152,7 +147,7 @@ export class Roles {
 
     await this.uiHelper.clickButton('Create');
     await this.uiHelper.verifyText(
-      'Role role:default/test-role created successfully',
+      `Role role:default/${name} created successfully`,
     );
   }
 
@@ -196,12 +191,15 @@ export class Roles {
     await this.uiHelper.verifyText('Permission policies (1)');
     await this.uiHelper.verifyText('1 rule');
     await this.uiHelper.clickButton('Create');
-    await this.uiHelper.verifyText('role:default/test-role');
+    await this.uiHelper.verifyText(
+      `Role role:default/${name} created successfully`,
+    );
   }
 
   async deleteRole(name: string) {
     await this.uiHelper.openSidebar('RBAC');
-    const button = this.page.locator(RoleListPO.deleteRole(name));
+    await this.page.locator(HomePagePO.searchBar).fill(name);
+    const button = this.page.getByLabel('Delete').first();
     await button.waitFor({ state: 'visible' });
     await button.click();
     await this.uiHelper.verifyHeading('Delete this role?');
