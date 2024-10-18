@@ -6,6 +6,7 @@ import {
   RHSSO76_USERS,
   RHSSO76_DEFAULT_PASSWORD,
 } from '../../../utils/authenticationProviders/constants';
+import { GithubLogin } from '../../../utils/authenticationProviders/githubLogin';
 
 test.describe
   .serial('Test RBAC plugin: load permission policies and conditions from files', () => {
@@ -18,10 +19,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.keycloakLogin(
-      RHSSO76_USERS['admin'].username,
-      RHSSO76_DEFAULT_PASSWORD,
-    );
+    await new GithubLogin(page).loginAsGithubUser();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');
@@ -86,7 +84,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await new GithubLogin(page).loginAsGithubUser();
   });
 
   test('Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.', async () => {
