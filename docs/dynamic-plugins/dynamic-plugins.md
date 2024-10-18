@@ -77,8 +77,8 @@ These recommended changes to the `package.json` are summarized below:
   }
 ```
 
-> [!NOTE]  
->  The option `--embed-as-dependencies` includes embedded packages as private dependencies of backend plugins. When value is `false` (using `--no-embed-as-dependencies`), source code of embedded plugins is merged with the generated code, so that the embedded plugin packages are completly erased (only available for legacy reasons: use with care).
+> [!NOTE]
+> The option `--embed-as-dependencies` includes embedded packages as private dependencies of backend plugins. When value is `false` (using `--no-embed-as-dependencies`), source code of embedded plugins is merged with the generated code, so that the embedded plugin packages are completly erased (only available for legacy reasons: use with care).
 
 #### Required entry points
 
@@ -164,7 +164,7 @@ These recommended changes to the `package.json` are summarized below:
   ...
 ```
 
-> [!NOTE]  
+> [!NOTE]
 > The option `--in-place` can be used to add frontend dynamic plugin assets to the `dist-scalprum` folder of the original plugin package.
 
 Our CLI can generate the default configuration for Scalprum on the fly. For generated defaults see logs when running `yarn export-dynamic`. We default to the following configuration:
@@ -342,10 +342,10 @@ Note: 2.12 is the last version released from <https://github.com/janus-idp/helm-
   - `package`: a [package specification](https://docs.npmjs.com/cli/v10/using-npm/package-spec) indicating the dynamic plugin package to install (can be from a local path, OCI registry path or an NPM repository).
   - `integrity`: (required for external packages) An integrity checksum in the [format of `<alg>-<digest>`](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description) specific to the package. Supported algorithms include `sha256`, `sha384`, and `sha512`.
 
-> [!NOTE]  
+> [!NOTE]
 > For OCI images paths the integratiy field can be ommited and the [image digest](https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests) can be used in the plugin package path.
 
-> [!NOTE]  
+> [!NOTE]
 > For NPM packages You can easily obtain the integrity checksum using the following command:
 >
 > ```console
@@ -445,7 +445,7 @@ global:
 
 ### Example of external dynamic backend plugins
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > This section is a subject to change to be replaced with plugins published in OCI images examples
 
 If you wish to easily test the installation of dynamic backend plugins from an external NPM registry, you can utilize the example dynamic backend plugins outlined in the [dynamic backend plugin showcase repository](https://github.com/janus-idp/dynamic-backend-plugins-showcase/tree/main#provided-example-dynamic-plugins), which have been published to NPMJS for demonstration purposes.
@@ -482,7 +482,7 @@ By sequentially adding these plugins and allowing for a deployment restart after
 
 ### Using a custom NPM registry
 
-> [!WARNING]  
+> [!WARNING]
 > Using a custom NPM Registry and/or NPMJS is not recommended. A dynamic plugin is a runtime artifact, and that it is not the best usage of an NPM registry to deliver runtime artifacts, especially in a container-based environment such as OCP. Using [Container Registry](#consuming-dynamic-plugins-from-a-container-registry) or [Local Configuration](#local-configuration) is recommended and supported for dynamic plugins production environments.
 
 To configure the NPM registry URL and authentication information for dynamic plugin packages obtained through `npm pack`, you can utilize a `.npmrc` file. When using the Helm chart, you can add this file by creating a secret named `dynamic-plugins-npmrc` with the following content:
