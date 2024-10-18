@@ -2,6 +2,10 @@ import { Page, expect, test } from '@playwright/test';
 import { Roles } from '../../../support/pages/rbac';
 import { Common, setupBrowser } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
+import {
+  RHSSO76_USERS,
+  RHSSO76_DEFAULT_PASSWORD,
+} from '../../../utils/authenticationProviders/constants';
 
 test.describe
   .serial('Test RBAC plugin: load permission policies and conditions from files', () => {
@@ -14,7 +18,10 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.keycloakLogin(
+      RHSSO76_USERS['admin'].username,
+      RHSSO76_DEFAULT_PASSWORD,
+    );
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');

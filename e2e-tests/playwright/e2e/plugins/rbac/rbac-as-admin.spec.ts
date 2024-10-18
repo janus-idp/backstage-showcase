@@ -9,6 +9,10 @@ import {
 import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { Roles } from '../../../support/pages/rbac';
+import {
+  RHSSO76_USERS,
+  RHSSO76_DEFAULT_PASSWORD,
+} from '../../../utils/authenticationProviders/constants';
 
 type RbacAsAdminFixture = {
   uiHelper: UIhelper;
@@ -39,7 +43,10 @@ const base = test.extend<RbacAsAdminFixture>({
 base.describe('Test RBAC plugin as an admin user', () => {
   base.beforeEach(async ({ page }) => {
     const common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.keycloakLogin(
+      RHSSO76_USERS['admin'].username,
+      RHSSO76_DEFAULT_PASSWORD,
+    );
   });
 
   base(
