@@ -1,6 +1,7 @@
 import { test, Page } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common, setupBrowser } from '../utils/Common';
+import { GithubLogin } from '../utils/authenticationProviders/githubLogin';
 
 let page: Page;
 test.describe.serial('GitHub integration with Org data fetching', () => {
@@ -11,7 +12,7 @@ test.describe.serial('GitHub integration with Org data fetching', () => {
     page = (await setupBrowser(browser, testInfo)).page;
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
   });
 
   test('Verify that fetching the groups of the first org works', async () => {

@@ -10,6 +10,7 @@ import {
 } from '../../utils/helper';
 import { BrowserContext } from '@playwright/test';
 import * as ghHelper from '../../utils/authenticationProviders/githubHelper';
+import { GithubLogin } from '../../utils/authenticationProviders/githubLogin';
 
 let page: Page;
 
@@ -86,7 +87,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
       .allInnerTexts();
     expect(singInMethods).not.toContain('Guest');
 
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['admin'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -106,7 +107,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, 'github');
     }
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['admin'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -172,7 +173,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
       `Executing testcase: Remove a user from RHDH: authentication should work, but access is denied before next sync.`,
     );
 
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['admin'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -197,7 +198,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     await common.signOut();
     await context.clearCookies();
 
-    const loginSucceded = await common.githubLogin(
+    const loginSucceded = await new GithubLogin(page).githubLogin(
       constants.GH_USERS['user_1'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -215,7 +216,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
       `Execute testcase: Remove a user from RHDH: user is re-created and can login after the sync`,
     );
 
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['user_1'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -235,7 +236,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
       `Executing testcase: Remove a group from RHDH: user can login, but policy is broken before next sync.`,
     );
 
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['admin'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -292,7 +293,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
       constants.GH_USERS['user_1'].name,
     );
 
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['user_1'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -320,7 +321,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     logger.info(
       `Execute testcase: Move a user to another group in Github: change should be mirrored and permission should be updated after the sync`,
     );
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['user_1'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -356,7 +357,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
     );
     // user should login
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['admin'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -386,7 +387,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
 
     // users permission based on that group will be defaulted to read-only
     // expect user not to see catalog entities
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['user_1'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -431,7 +432,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     logger.info(
       `Execute testcase: Rename a user and a group: changes are mirrored in RHDH but permissions should be broken after the sync`,
     );
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['admin'].name,
       constants.GH_USER_PASSWORD,
     );
@@ -443,7 +444,7 @@ test.describe('Standard authentication providers: Github Provider', () => {
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
-    await common.githubLogin(
+    await new GithubLogin(page).githubLogin(
       constants.GH_USERS['user_1'].name,
       constants.GH_USER_PASSWORD,
     );

@@ -4,6 +4,7 @@ import { Common, setupBrowser } from '../utils/Common';
 import { CatalogImport } from '../support/pages/CatalogImport';
 import { APIHelper } from '../utils/APIHelper';
 import { githubAPIEndpoints } from '../utils/APIEndpoints';
+import { GithubLogin } from '../utils/authenticationProviders/githubLogin';
 
 let page: Page;
 test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
@@ -32,7 +33,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
 
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
   });
   test('Register an Template', async () => {
     await uiHelper.openSidebar('Catalog');
@@ -80,7 +81,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
   });
 
   test('Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ', async () => {
-    await common.clickOnGHloginPopup();
+    await new GithubLogin(page).clickOnGHloginPopup();
     await uiHelper.clickTab('Dependencies');
     await uiHelper.verifyText(
       `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,

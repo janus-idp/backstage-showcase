@@ -4,6 +4,7 @@ import GithubApi from '../support/api/github';
 import { CATALOG_FILE, JANUS_QE_ORG } from '../utils/constants';
 import { Common } from '../utils/Common';
 import { assert } from 'console';
+import { GithubLogin } from '../utils/authenticationProviders/githubLogin';
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -13,7 +14,7 @@ type GithubDiscoveryFixture = {
 
 const test = base.extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page }, use) => {
-    await new Common(page).loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
     const catalog = new Catalog(page);
     await catalog.go();
     use(catalog);

@@ -1,17 +1,9 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import {
-  test,
-  Browser,
-  expect,
-  Page,
-  TestInfo,
-  Cookie,
-} from '@playwright/test';
+import { Browser, expect, Page, TestInfo } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
 import path from 'path';
-import GithubAuthStorage from '../support/storage/githubAuth';
 
 export class Common {
   page: Page;
@@ -51,98 +43,6 @@ export class Common {
     await this.uiHelper.verifyHeading('Select a sign-in method');
   }
 
-  private async logintoGithub(userid: string) {
-    await this.page.goto('https://github.com/login');
-    await this.page.waitForSelector('#login_field');
-    await this.page.fill('#login_field', userid);
-
-    switch (userid) {
-      case process.env.GH_USER_ID:
-        await this.page.fill('#password', process.env.GH_USER_PASS);
-        break;
-      case process.env.GH_USER2_ID:
-        await this.page.fill('#password', process.env.GH_USER2_PASS);
-        break;
-      default:
-        throw new Error('Invalid User ID');
-    }
-
-    await this.page.click('[value="Sign in"]');
-    await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
-    test.setTimeout(130000);
-    if (
-      (await this.uiHelper.isTextVisible(
-        'The two-factor code you entered has already been used',
-      )) ||
-      (await this.uiHelper.isTextVisible(
-        'too many codes have been submitted',
-        3000,
-      ))
-    ) {
-      await this.page.waitForTimeout(60000);
-      await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
-    }
-    await expect(this.page.locator('#app_totp')).toBeHidden({
-      timeout: 120000,
-    });
-  }
-
-  async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
-    if (GithubAuthStorage.getInstance().hasUsername(userid)) {
-      const authStorage = GithubAuthStorage.getInstance();
-      const storageState = authStorage.getStorageState(userid);
-      await this.page.goto('/');
-      const context = this.page.context();
-
-      const cookies: Cookie[] = storageState.cookies;
-      await context.addCookies(cookies);
-
-      const allLocalStorageItems = storageState.origins.flatMap(
-        originState => originState.localStorage,
-      );
-
-      await this.page.evaluate(items => {
-        for (const { name, value } of items) {
-          localStorage.setItem(name, value);
-        }
-      }, allLocalStorageItems);
-      await this.page.reload();
-    } else {
-      await this.logintoGithub(userid);
-      await this.page.goto('/');
-      await this.waitForLoad(30000);
-      await this.uiHelper.clickButton('Sign In');
-      await this.checkAndReauthorizeGithubApp();
-      GithubAuthStorage.getInstance().setStorageState(
-        userid,
-        await this.page.context().storageState(),
-      );
-    }
-
-    await this.uiHelper.waitForSideBarVisible();
-  }
-
-  async checkAndReauthorizeGithubApp() {
-    await new Promise<void>(resolve => {
-      this.page.once('popup', async popup => {
-        await popup.waitForLoadState();
-
-        // Check for popup closure for up to 10 seconds before proceeding
-        for (let attempts = 0; attempts < 10 && !popup.isClosed(); attempts++) {
-          await this.page.waitForTimeout(1000); // Using page here because if the popup closes automatically, it throws an error during the wait
-        }
-
-        const locator = popup.locator('button.js-oauth-authorize-btn');
-        if (!popup.isClosed() && (await locator.isVisible())) {
-          await popup.locator('body').click();
-          await locator.waitFor();
-          await locator.click();
-        }
-        resolve();
-      });
-    });
-  }
-
   async googleSignIn(email: string) {
     await new Promise<void>(resolve => {
       this.page.once('popup', async popup => {
@@ -168,101 +68,72 @@ export class Common {
     });
   }
 
-  async clickOnGHloginPopup() {
-    await this.uiHelper.clickButton('Log in');
-    await this.checkAndReauthorizeGithubApp();
-    await this.page.waitForSelector(this.uiHelper.getButtonSelector('Log in'), {
-      state: 'hidden',
-      timeout: 100000,
-    });
-  }
-
-  getGitHub2FAOTP(userid: string): string {
-    const secrets: { [key: string]: string | undefined } = {
-      [process.env.GH_USER_ID]: process.env.GH_2FA_SECRET,
-      [process.env.GH_USER2_ID]: process.env.GH_USER2_2FA_SECRET,
-    };
-
-    const secret = secrets[userid];
-    if (!secret) {
-      throw new Error('Invalid User ID');
-    }
-
-    return authenticator.generate(secret);
-  }
-
   getGoogle2FAOTP(): string {
     const secret = process.env.GOOGLE_2FA_SECRET;
     return authenticator.generate(secret);
   }
 
-  async keycloakLogin(username: string, password: string) {
+  async keycloakLogin(username: string, password: string): Promise<string> {
     await this.page.goto('/');
     await this.page.waitForSelector('p:has-text("Sign in using OIDC")');
     await this.uiHelper.clickButton('Sign In');
 
-    return await new Promise<string>(resolve => {
-      this.page.once('popup', async popup => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve('Already logged in');
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator('#username').fill(username);
-            await popup.locator('#password').fill(password);
-            await popup.locator('[name=login]').click({ timeout: 5000 });
-            await popup.waitForEvent('close', { timeout: 2000 });
-            resolve('Login successful');
-          } catch (e) {
-            const usernameError = popup.locator('id=input-error');
-            if (await usernameError.isVisible()) {
-              await popup.close();
-              resolve('User does not exist');
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
+    const popup = await this.page.waitForEvent('popup');
+    const result = await this.handlePopupLogin(popup, username, password, {
+      usernameSelector: '#username',
+      passwordSelector: '#password',
+      submitButtonSelector: '[name=login]',
+      successUrlStartsWith: process.env.BASE_URL,
+      errorSelector: '#input-error',
     });
+    return result;
   }
 
-  async githubLogin(username: string, password: string) {
-    await this.page.goto('/');
-    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
-    await this.uiHelper.clickButton('Sign In');
-
-    return await new Promise<string>(resolve => {
-      this.page.once('popup', async popup => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve('Already logged in');
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator('#login_field').fill(username);
-            await popup.locator('#password').fill(password);
-            await popup.locator("[type='submit']").click({ timeout: 5000 });
-            //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent('close', { timeout: 2000 });
-            resolve('Login successful');
-          } catch (e) {
-            const authorization = popup.locator(
-              'button.js-oauth-authorize-btn',
-            );
-            if (await authorization.isVisible()) {
-              authorization.click();
-              resolve('Login successful with app authorization');
-            } else {
-              throw e;
-            }
+  async handlePopupLogin(
+    popup: Page,
+    username: string,
+    password: string,
+    options: {
+      usernameSelector: string;
+      passwordSelector: string;
+      submitButtonSelector: string;
+      successUrlStartsWith: string;
+      errorSelector?: string;
+      authorizationSelector?: string;
+    },
+  ): Promise<string> {
+    await popup.waitForLoadState();
+    if (popup.url().startsWith(options.successUrlStartsWith)) {
+      // An active session is already logged in and the popup will automatically close
+      return 'Already logged in';
+    } else {
+      await popup.waitForTimeout(3000);
+      try {
+        await popup.locator(options.usernameSelector).fill(username);
+        await popup.locator(options.passwordSelector).fill(password);
+        await popup
+          .locator(options.submitButtonSelector)
+          .click({ timeout: 5000 });
+        await popup.waitForEvent('close', { timeout: 2000 });
+        return 'Login successful';
+      } catch (e) {
+        if (options.errorSelector) {
+          const errorElement = popup.locator(options.errorSelector);
+          if (await errorElement.isVisible()) {
+            await popup.close();
+            return 'User does not exist';
           }
         }
-      });
-    });
+        if (options.authorizationSelector) {
+          const authorization = popup.locator(options.authorizationSelector);
+          if (await authorization.isVisible()) {
+            await authorization.click();
+            return 'Login successful with app authorization';
+          }
+        }
+        throw e;
+      }
+    }
   }
 
   async MicrosoftAzureLogin(username: string, password: string) {
@@ -306,7 +177,7 @@ export class Common {
 
   async GetParentGroupDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Parent Group')");
-    const parent = await this.page
+    const parent = this.page
       .locator("p:has-text('Parent Group')")
       .locator('..');
     const group = await parent.locator('a').allInnerTexts();
@@ -315,7 +186,7 @@ export class Common {
 
   async GetChildGroupsDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Child Groups')");
-    const parent = await this.page
+    const parent = this.page
       .locator("p:has-text('Child Groups')")
       .locator('..');
     const groups = await parent.locator('a').allInnerTexts();
