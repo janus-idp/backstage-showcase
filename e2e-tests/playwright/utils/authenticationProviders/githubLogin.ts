@@ -72,6 +72,9 @@ export class GithubLogin {
 
     await this.page.click('[value="Sign in"]');
     await this.page.fill('#app_totp', this.getGitHub2FAOTP(userid));
+    await expect(this.page.locator('#app_totp')).toBeHidden({
+      timeout: 120000,
+    });
   }
 
   private async checkAndReauthorizeGithubApp() {
