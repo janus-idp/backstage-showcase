@@ -272,7 +272,7 @@ export class Common {
 
   async GetParentGroupDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Parent Group')");
-    const parent = await this.page
+    const parent = this.page
       .locator("p:has-text('Parent Group')")
       .locator('..');
     const group = await parent.locator('a').allInnerTexts();
@@ -281,7 +281,7 @@ export class Common {
 
   async GetChildGroupsDisplayed(): Promise<string[]> {
     await this.page.waitForSelector("p:has-text('Child Groups')");
-    const parent = await this.page
+    const parent = this.page
       .locator("p:has-text('Child Groups')")
       .locator('..');
     const groups = await parent.locator('a').allInnerTexts();
