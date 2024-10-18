@@ -15,6 +15,8 @@ export const UIhelperPO = {
   MuiButtonTextPrimary: '.MuiButton-textPrimary',
   MuiCard: cardHeading =>
     `//div[contains(@class,'MuiCardHeader-root') and descendant::*[text()='${cardHeading}']]/..`,
+  MuiCardRoot: cardText =>
+    `//div[contains(@class,'MuiCard-root') and descendant::*[text()='${cardText}']]/..`,
   MuiTable: 'table.MuiTable-root',
   MuiCardHeader: 'div[class*="MuiCardHeader-root"]',
   MuiInputBase: 'div[class*="MuiInputBase-root"]',

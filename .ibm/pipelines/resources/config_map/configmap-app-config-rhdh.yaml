@@ -125,6 +125,8 @@ data:
         - type: url
           target: https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/templates.yaml
         - type: url
+          target: https://github.com/janus-idp/backstage-plugins/blob/main/plugins/kubernetes-actions/examples/templates/01-kubernetes-template.yaml
+        - type: url
           target: https://github.com/janus-qe/acr-catalog/blob/main/catalog-info.yaml
         - type: url
           target: https://github.com/janus-qe/rhdh-test/blob/main/user.yml

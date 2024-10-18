@@ -74,7 +74,7 @@ test.describe.serial('GitHub Happy path', () => {
     await uiHelper.waitForHeaderTitle();
 
     for (const template of templates) {
-      await uiHelper.waitForH4Title(template);
+      await uiHelper.waitForTitle(template, 4);
       await uiHelper.verifyHeading(template);
     }
   });
