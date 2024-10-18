@@ -9,6 +9,7 @@ import {
 import { Roles } from '../../../support/pages/rbac';
 import { Common, setupBrowser } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
+import { GithubLogin } from '../../../utils/authenticationProviders/githubLogin';
 
 test.describe
   .serial('Test RBAC plugin: load permission policies and conditions from files', () => {
@@ -21,7 +22,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');
@@ -86,7 +87,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await new GithubLogin(page).loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
   test('Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.', async () => {
@@ -136,7 +137,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     rolesHelper = new Roles(page);
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');

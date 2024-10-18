@@ -8,6 +8,7 @@ import {
   defaultCatalogInfoYaml,
   updatedCatalogInfoYaml,
 } from '../../support/testData/BulkImport';
+import { GithubLogin } from '../../utils/authenticationProviders/githubLogin';
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial('Bulk Import plugin', () => {
@@ -41,7 +42,7 @@ test.describe.serial('Bulk Import plugin', () => {
       newRepoDetails.owner,
       newRepoDetails.repoName,
     );
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await new GithubLogin(page).loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
@@ -248,7 +249,7 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await new GithubLogin(page).loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
   test('Verify existing repo from app-config is displayed in bulk import Added repositories', async () => {
@@ -291,7 +292,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await new GithubLogin(page).loginAsGithubUser();
   });
 
   test('Bulk Import - Verify users without permission cannot access', async () => {
