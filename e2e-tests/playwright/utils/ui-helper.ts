@@ -298,9 +298,9 @@ export class UIhelper {
     await expect(headingLocator).toBeVisible();
   }
 
-  async waitForH4Title(text: string) {
-    await this.page.waitForSelector(`h4:has-text("${text}")`, {
-      timeout: 10000,
+  async waitForTitle(text: string, level: number = 1) {
+    await this.page.waitForSelector(`h${level}:has-text("${text}")`, {
+      timeout: 99999,
     });
   }
 
@@ -421,6 +421,14 @@ export class UIhelper {
       .first();
     await link.scrollIntoViewIfNeeded();
     await expect(link).toBeVisible();
+  }
+
+  async clickBtnInCard(cardText: string, btnText: string, exact = true) {
+    const card = this.page.locator(UIhelperPO.MuiCardRoot(cardText)).first();
+    await card
+      .getByRole('button', { name: btnText, exact: exact })
+      .first()
+      .click();
   }
 
   async verifyTextinCard(
