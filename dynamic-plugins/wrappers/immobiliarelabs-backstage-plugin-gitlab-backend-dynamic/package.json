@@ -39,7 +39,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.6.0"
+    "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.7.0"
   },
   "devDependencies": {
     "@backstage/backend-dynamic-feature-service": "0.4.1",

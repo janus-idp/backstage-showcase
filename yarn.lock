@@ -10022,9 +10022,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@immobiliarelabs/backstage-plugin-gitlab-backend@npm:6.6.0":
-  version: 6.6.0
-  resolution: "@immobiliarelabs/backstage-plugin-gitlab-backend@npm:6.6.0"
+"@immobiliarelabs/backstage-plugin-gitlab-backend@npm:6.7.0":
+  version: 6.7.0
+  resolution: "@immobiliarelabs/backstage-plugin-gitlab-backend@npm:6.7.0"
   dependencies:
     "@backstage/backend-common": ^0.23.3
     "@backstage/backend-plugin-api": ^0.7.0
@@ -10036,13 +10036,13 @@ __metadata:
     http-proxy-middleware: ^2.0.6
     winston: ^3.2.1
     yn: ^4.0.0
-  checksum: 30fbbe49ee0ea04e1a53cb49dd72a118511d5e43910cffff67449db0e84fdc1001bd425db24caadbaa9278e8f345b89076f8188f2c8f4efd67c975aac3050f96
+  checksum: 9996949fe833749375791d47ded82f71d647b45344396c2a80465bce6399846e6a1b96281f207345c4be69133403bced03986a5263b7741d2905e4ee21b33f57
   languageName: node
   linkType: hard
 
-"@immobiliarelabs/backstage-plugin-gitlab@npm:6.6.0":
-  version: 6.6.0
-  resolution: "@immobiliarelabs/backstage-plugin-gitlab@npm:6.6.0"
+"@immobiliarelabs/backstage-plugin-gitlab@npm:6.6.1":
+  version: 6.6.1
+  resolution: "@immobiliarelabs/backstage-plugin-gitlab@npm:6.6.1"
   dependencies:
     "@backstage/core-components": ^0.14.9
     "@backstage/core-plugin-api": ^1.9.3
@@ -10065,7 +10065,7 @@ __metadata:
     react-dom: ^16.13.1 || ^18.0.0
     react-router: 6.0.0-beta.0 || ^6.20.0
     react-router-dom: 6.0.0-beta.0 || ^6.20.0
-  checksum: a8d7dd3f74c82ef43e2338efef1b5b2f7bb2303c01a614e01587389ad2122e6218527c975b27abf372d8454075147b404a4b20ec0c4b0bb48cfa09dad227ed58
+  checksum: 52f90ee44b3133b9578c0d00bcd8bdf19062c96c9d42edf0b66fc9800a346b0ad89483b87e757f683f620d072c0c713a159fc8a4ebed5e8f99c01d45d21a0117
   languageName: node
   linkType: hard
 
@@ -27650,7 +27650,7 @@ __metadata:
   dependencies:
     "@backstage/backend-dynamic-feature-service": 0.4.1
     "@backstage/cli": 0.27.1
-    "@immobiliarelabs/backstage-plugin-gitlab-backend": 6.6.0
+    "@immobiliarelabs/backstage-plugin-gitlab-backend": 6.7.0
     "@janus-idp/cli": 1.16.0
   languageName: unknown
   linkType: soft
@@ -27660,7 +27660,7 @@ __metadata:
   resolution: "immobiliarelabs-backstage-plugin-gitlab@workspace:dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab"
   dependencies:
     "@backstage/cli": 0.27.1
-    "@immobiliarelabs/backstage-plugin-gitlab": 6.6.0
+    "@immobiliarelabs/backstage-plugin-gitlab": 6.6.1
     "@janus-idp/cli": 1.16.0
   languageName: unknown
   linkType: soft

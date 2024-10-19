@@ -29,7 +29,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@immobiliarelabs/backstage-plugin-gitlab": "6.6.0"
+    "@immobiliarelabs/backstage-plugin-gitlab": "6.6.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.27.1",
