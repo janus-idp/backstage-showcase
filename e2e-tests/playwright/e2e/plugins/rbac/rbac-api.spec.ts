@@ -4,10 +4,6 @@ import { Common, setupBrowser } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { RbacConstants } from '../../../data/rbac-constants';
 import { RhdhAuthHack } from '../../../support/api/rhdh-auth-hack';
-import {
-  RHSSO76_USERS,
-  RHSSO76_DEFAULT_PASSWORD,
-} from '../../../utils/authenticationProviders/constants';
 
 test.describe('Test RBAC plugin REST API', () => {
   let common: Common;
@@ -21,10 +17,7 @@ test.describe('Test RBAC plugin REST API', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
 
-    await common.keycloakLogin(
-      RHSSO76_USERS['admin'].username,
-      RHSSO76_DEFAULT_PASSWORD,
-    );
+    await common.loginAsGithubUser();
     await uiHelper.openSidebar('Home');
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
