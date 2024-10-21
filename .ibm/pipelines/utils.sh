@@ -56,7 +56,27 @@ droute_send() {
       ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}/artifacts/e2e-tests/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
     else
       JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
-      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/${JOB_NAME}/${BUILD_ID}/artifacts/${JOB_NAME##periodic-ci-janus-idp-backstage-showcase-main-}/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
+      # OpenShift CI artifact storage URL cannot be parametrized and need to be updated manually, same as `report_template` at https://github.com/openshift/release/tree/master/ci-operator/jobs/janus-idp/backstage-showcase
+      case "$JOB_NAME" in
+        "periodic-ci-janus-idp-backstage-showcase-1.2.x-e2e-tests-nightly")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-1.2.x-e2e-tests-nightly/${BUILD_ID}/artifacts/e2e-tests-nightly/janus-idp-backstage-showcase-1.2.x-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly/${BUILD_ID}/artifacts/e2e-tests-nightly/janus-idp-backstage-showcase-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-aks")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-aks/${BUILD_ID}/artifacts/e2e-tests-nightly-aks/janus-idp-backstage-showcase-helm-aks-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-14")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-14/${BUILD_ID}/artifacts/e2e-tests-nightly-ocp-v4-14/janus-idp-backstage-showcase-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-15")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-15/${BUILD_ID}/artifacts/e2e-tests-nightly-ocp-v4-15/janus-idp-backstage-showcase-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-release-1.3-e2e-tests-nightly")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-release-1.3-e2e-tests-nightly/${BUILD_ID}/artifacts/e2e-tests-nightly/janus-idp-backstage-showcase-release-1.3-nightly/artifacts/${project}"
+          ;;
+      esac
     fi
 
     # Remove properties (only used for skipped test and invalidates the file if empty)
