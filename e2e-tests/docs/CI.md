@@ -56,6 +56,10 @@ This is useful if you believe a failure was due to a flake or external issue and
 - **Manual Retriggering:**
   - Tests can be manually retriggered using the `/retest e2e-tests` or `/test all` commands in the PR comments.
 
+### Github PRs Diagram:
+
+![Github PR Testing diagram](./resources/github_diagram.svg)
+
 ## Nightlies
 
 Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments, including both **RBAC** and **non-RBAC** instances.
@@ -125,6 +129,10 @@ Our CI pipeline supports testing on multiple platforms to ensure compatibility a
     - PR tests and nightly tests run on `rhdh-pr-os`, covering both RBAC and non-RBAC instances.
     - Additional nightly tests for the main branch run on `rhdh-os-1` and `rhdh-os-2` to validate against different OCP versions, including both RBAC and non-RBAC configurations.
   - **Notes:** Clusters are regularly upgraded to the latest supported OCP versions.
+
+### Nightly Test Diagram
+
+![Nightly Testing diagram](./resources/nightly_diagram.svg)
 
 ## Configuration and Installation of Testing Environments
 
