@@ -97,9 +97,9 @@ droute_send() {
 
     # "Install" Data Router
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
-      && chmod +x /tmp/droute-linux-amd64 \
-      && /tmp/droute-linux-amd64 version"
+      curl -fsSLk -o ${temp_droute}/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
+      && chmod +x ${temp_droute}/droute-linux-amd64 \
+      && ${temp_droute}/droute-linux-amd64 version"
 
     # Send test results through DataRouter and save the request ID.
     local max_attempts=5
@@ -107,12 +107,12 @@ droute_send() {
     for ((i = 1; i <= max_attempts; i++)); do
       echo "Attempt ${i} of ${max_attempts} to send test results through Data Router."
       if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-        /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
-        --url '${DATA_ROUTER_URL}' \
-        --username '${DATA_ROUTER_USERNAME}' \
-        --password '${DATA_ROUTER_PASSWORD}' \
-        --results '${temp_droute}/${JUNIT_RESULTS}' \
-        --verbose" 2>&1); then
+        ${temp_droute}/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
+          --url '${DATA_ROUTER_URL}' \
+          --username '${DATA_ROUTER_USERNAME}' \
+          --password '${DATA_ROUTER_PASSWORD}' \
+          --results '${temp_droute}/${JUNIT_RESULTS}' \
+          --verbose" 2>&1); then
         if DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
           [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
           echo "Test results successfully sent through Data Router."
@@ -140,7 +140,7 @@ droute_send() {
       for ((i = 1; i <= max_attempts; i++)); do
         # Get DataRouter request information.
         DATA_ROUTER_REQUEST_OUTPUT=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-          /tmp/droute-linux-amd64 request get \
+          ${temp_droute}/droute-linux-amd64 request get \
           --url ${DATA_ROUTER_URL} \
           --username ${DATA_ROUTER_USERNAME} \
           --password ${DATA_ROUTER_PASSWORD} \
