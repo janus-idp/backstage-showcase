@@ -17,7 +17,7 @@
   },
   "peerDependencies": {
     "@janus-idp/backstage-plugin-3scale-backend": "1.5.16",
-    "@janus-idp/backstage-plugin-aap-backend": "1.6.15",
+    "@janus-idp/backstage-plugin-aap-backend": "1.6.16",
     "@janus-idp/backstage-plugin-acr": "1.4.13",
     "@janus-idp/backstage-plugin-analytics-provider-segment": "1.4.9",
     "@janus-idp/backstage-plugin-jfrog-artifactory": "1.4.11",
