@@ -109,8 +109,8 @@ droute_send() {
       --verbose" | grep "request:" | awk '{print $2}')
 
     if [[ "$JOB_NAME" == *periodic-* ]]; then
-      local max_attempts=30
-      local wait_seconds=2
+      local max_attempts=12
+      local wait_seconds=5
       set +e
       for ((i = 1; i <= max_attempts; i++)); do
         # Get DataRouter request information.
