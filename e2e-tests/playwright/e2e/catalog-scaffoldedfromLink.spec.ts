@@ -1,11 +1,12 @@
-import { Page, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
-import { Common, setupBrowser } from '../utils/Common';
+import { Common } from '../utils/Common';
 import { CatalogImport } from '../support/pages/CatalogImport';
 import { APIHelper } from '../utils/APIHelper';
 import { githubAPIEndpoints } from '../utils/APIEndpoints';
+import { GH_USER_IDAuthFile } from '../support/auth/auth_constants';
 
-let page: Page;
+test.use({ storageState: GH_USER_IDAuthFile });
 test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
   let uiHelper: UIhelper;
   let common: Common;
@@ -25,14 +26,11 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     ).toString('utf8'), // Default repoOwner janus-qe
   };
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeEach(async ({ page }) => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
-
-    await common.loginAsGithubUser();
+    await Common.logintoGithub(page);
   });
   test('Register an Template', async () => {
     await uiHelper.openSidebar('Catalog');
@@ -115,6 +113,5 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
         reactAppDetails.repo,
       ),
     );
-    await page.close();
   });
 });

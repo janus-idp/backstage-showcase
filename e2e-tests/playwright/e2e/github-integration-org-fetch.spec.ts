@@ -11,7 +11,7 @@ test.describe.serial('GitHub integration with Org data fetching', () => {
     page = (await setupBrowser(browser, testInfo)).page;
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await Common.logintoGithub(page);
   });
 
   test('Verify that fetching the groups of the first org works', async () => {

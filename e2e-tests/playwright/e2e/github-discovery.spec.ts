@@ -2,8 +2,9 @@ import { test as base } from '@playwright/test';
 import { Catalog } from '../support/pages/Catalog';
 import GithubApi from '../support/api/github';
 import { CATALOG_FILE, JANUS_QE_ORG } from '../utils/constants';
-import { Common } from '../utils/Common';
 import { assert } from 'console';
+import { Common } from '../utils/Common';
+import { GH_USER_IDAuthFile } from '../support/auth/auth_constants';
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -11,9 +12,11 @@ type GithubDiscoveryFixture = {
   testOrganization: string;
 };
 
+base.use({ storageState: GH_USER_IDAuthFile });
+
 const test = base.extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page }, use) => {
-    await new Common(page).loginAsGithubUser();
+    await Common.logintoGithub(page);
     const catalog = new Catalog(page);
     await catalog.go();
     use(catalog);

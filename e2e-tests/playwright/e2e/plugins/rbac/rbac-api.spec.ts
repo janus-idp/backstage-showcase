@@ -1,24 +1,20 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { Response } from '../../../support/pages/rbac';
-import { Common, setupBrowser } from '../../../utils/Common';
+import { Common } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
 import { RbacConstants } from '../../../data/rbac-constants';
 import { RhdhAuthHack } from '../../../support/api/rhdh-auth-hack';
+import { GH_USER_IDAuthFile } from '../../../support/auth/auth_constants';
+
+test.use({ storageState: GH_USER_IDAuthFile });
 
 test.describe('Test RBAC plugin REST API', () => {
-  let common: Common;
   let uiHelper: UIhelper;
-  let page: Page;
   let responseHelper: Response;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    common = new Common(page);
-
-    await common.loginAsGithubUser();
-    await uiHelper.openSidebar('Home');
+    await Common.logintoGithub(page);
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
   });

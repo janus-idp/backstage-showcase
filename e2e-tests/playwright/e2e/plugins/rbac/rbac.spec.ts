@@ -9,19 +9,21 @@ import {
 import { Roles } from '../../../support/pages/rbac';
 import { Common, setupBrowser } from '../../../utils/Common';
 import { UIhelper } from '../../../utils/UIhelper';
+import {
+  GH_USER_IDAuthFile,
+  GH_USER2_IDAuthFile,
+  GuestAuthFile,
+} from '../../../support/auth/auth_constants';
 
+test.use({ storageState: GH_USER_IDAuthFile });
 test.describe
   .serial('Test RBAC plugin: load permission policies and conditions from files', () => {
-  let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeEach(async ({ page }, testInfo) => {
     uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsGithubUser();
+    await Common.logintoGithub(page);
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');
@@ -77,6 +79,8 @@ test.describe
 
 test.describe
   .serial('Test RBAC plugin: Aliases used in conditional access policies', () => {
+  test.use({ storageState: GH_USER2_IDAuthFile });
+
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -85,8 +89,6 @@ test.describe
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
   test('Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.', async () => {
@@ -125,6 +127,8 @@ test.describe
 });
 
 test.describe.serial('Test RBAC plugin as an admin user', () => {
+  test.use({ storageState: GH_USER_IDAuthFile });
+
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -134,9 +138,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
-    common = new Common(page);
     rolesHelper = new Roles(page);
-    await common.loginAsGithubUser();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');
@@ -357,10 +359,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
 });
 
 test.describe('Test RBAC plugin as a guest user', () => {
-  test.beforeEach(async ({ page }) => {
-    const common = new Common(page);
-    await common.loginAsGuest();
-  });
+  test.use({ storageState: GuestAuthFile });
 
   test('Check if Administration side nav is present with no RBAC plugin', async ({
     page,
