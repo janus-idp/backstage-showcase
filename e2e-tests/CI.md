@@ -19,7 +19,16 @@ When the test run is complete, the status will be reported under your PR checks.
 
 **The environment in which the PR tests are executed is shared and ephemeral. All the PR tests queue for the same environment, which is destroyed and recreated for each PR.**
 
-However, the test outputs (screenshots, recordings, walkthroughs, etc.) are stored for a reasonable amount of time and can be accessed by checking the _Details -> Artifacts_ of the test check on the PR.
+However, the test outputs (screenshots, recordings, walkthroughs, etc.) are stored for a retention period of **6 months** and can be accessed by checking the _Details -> Artifacts_ of the test check on the PR.
+
+### Retrying Tests
+
+PR tests are not automatically retried beyond the individual test retries specified in the Playwright configuration (each test is retried up to 2 times on failure). However, you can manually retrigger the entire test suite by commenting:
+
+- `/retest e2e-tests`
+- `/test all`
+
+This is useful if you believe a failure was due to a flake or external issue and want to rerun the tests without making any code changes.
 
 ### CI Job Definitions
 
@@ -28,25 +37,30 @@ However, the test outputs (screenshots, recordings, walkthroughs, etc.) are stor
 - **Purpose:** Validate new PRs for code quality, functionality, and integration.
 - **Trigger:** When a PR is opened and `/ok-to-test` is commented by a janus-idp member, or when `/test`, `/test all`, or `/retest` is issued after validation.
 - **Environment:** Runs on the ephemeral `rhdh-pr-os` cluster on IBM Cloud.
+- **Configurations:**
+  - Tests are executed on both **RBAC** and **non-RBAC** instances to ensure comprehensive coverage.
 - **Steps:**
   1. **Detection:** OpenShift-CI detects the PR event.
   2. **Environment Setup:** The test environment is set up using the `openshift-ci-tests.sh` script.
   3. **Test Execution:**
      - **Running Tests:** Executes test suites using `yarn` commands specified in `package.json`.
+     - **Retry Logic:** Individual tests are retried up to 2 times as specified in the Playwright configuration.
   4. **Artifact Collection:**
      - Collects test artifacts (logs, screenshots, recordings).
-     - Stores artifacts in the designated `ARTIFACT_DIR`.
+     - Stores artifacts in the designated `ARTIFACT_DIR` for a retention period of **6 months**.
   5. **Reporting:**
      - Reports status back to the PR checks.
      - Generates and uploads HTML reports.
 - **Artifacts:** Test reports, logs, screenshots, accessible via PR details under _Artifacts_.
 - **Notifications:** Status updates posted on the PR.
+- **Manual Retriggering:**
+  - Tests can be manually retriggered using the `/retest e2e-tests` or `/test all` commands in the PR comments.
 
 ## Nightlies
 
-Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments:
+Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments, including both **RBAC** and **non-RBAC** instances.
 
-- **AKS Nightly Tests:** Only the nightly tests for Azure Kubernetes Service (AKS) run on the `bsCluster`. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
+- **AKS Nightly Tests:** Nightly tests for Azure Kubernetes Service (AKS) run on the `bsCluster`. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
 
 - **IBM Cloud Tests:** All nightly tests for the `main`, `1.3`, and `1.2` branches run against the `rhdh-pr-os` OpenShift Container Platform (OCP) cluster on IBM Cloud.
 
@@ -69,6 +83,8 @@ We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the l
 - **Environments:**
   - **AKS Nightly Tests:** Runs on the `bsCluster`.
   - **IBM Cloud Nightly Tests:** Runs on the `rhdh-pr-os`, `rhdh-os-1`, and `rhdh-os-2` clusters.
+- **Configurations:**
+  - Tests are executed on both **RBAC** and **non-RBAC** instances to cover different security configurations.
 - **Steps:**
   1. **Triggering:** Nightly job is triggered by the scheduler.
   2. **Environment Setup:** Uses the `openshift-ci-tests.sh` script for setting up the environment.
@@ -78,9 +94,10 @@ We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the l
   3. **Test Execution:**
      - Runs full test suites using the `yarn` commands.
      - Tests are executed similarly to the PR tests but may include additional suites.
+     - **Retry Logic:** Individual tests are retried up to 2 times as specified in the Playwright configuration.
   4. **Artifact Collection:**
      - Collects and aggregates results.
-     - Stores artifacts for later review.
+     - Stores artifacts for later review for a retention period of **6 months**.
   5. **Reporting:**
      - Posts outputs to Slack channel `rhdh-e2e-test-alerts`.
      - Generates reports for team visibility.
@@ -89,14 +106,14 @@ We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the l
 
 ## Supported Platforms and Testing Strategies
 
-Our CI pipeline supports testing on multiple platforms to ensure compatibility and stability across different environments.
+Our CI pipeline supports testing on multiple platforms to ensure compatibility and stability across different environments. Tests are executed on both **RBAC** and **non-RBAC** instances to ensure that our applications function correctly under different security configurations.
 
 ### Supported Platforms
 
 - **Azure Kubernetes Service (AKS):**
 
   - **Cluster:** `bsCluster`
-  - **Testing Strategy:** Nightly tests are executed to validate functionality on AKS.
+  - **Testing Strategy:** Nightly tests are executed to validate functionality on AKS, covering both RBAC and non-RBAC configurations.
   - **Notes:** No PR tests are conducted on AKS; it is exclusively used for nightly runs.
 
 - **IBM Cloud OpenShift Clusters:**
@@ -105,8 +122,8 @@ Our CI pipeline supports testing on multiple platforms to ensure compatibility a
     - **`rhdh-os-1`** (currently OCP 4.14)
     - **`rhdh-os-2`** (currently OCP 4.15)
   - **Testing Strategy:**
-    - PR tests and nightly tests run on `rhdh-pr-os`.
-    - Additional nightly tests for the main branch run on `rhdh-os-1` and `rhdh-os-2` to validate against different OCP versions.
+    - PR tests and nightly tests run on `rhdh-pr-os`, covering both RBAC and non-RBAC instances.
+    - Additional nightly tests for the main branch run on `rhdh-os-1` and `rhdh-os-2` to validate against different OCP versions, including both RBAC and non-RBAC configurations.
   - **Notes:** Clusters are regularly upgraded to the latest supported OCP versions.
 
 ## Configuration and Installation of Testing Environments
@@ -132,9 +149,13 @@ Our CI pipeline supports testing on multiple platforms to ensure compatibility a
 - **RHDH Instances:**
   - Deployed with predefined configurations suitable for testing.
   - Ensures consistency across test runs.
-- **Secrets and Configurations:**
-  - Managed within the script using secure methods.
-  - Uses Kubernetes secrets and config maps for sensitive information.
+- **Environment Variables and Secrets:**
+  - Environment variables such as `AKS_NIGHTLY_CLUSTER_NAME` and secrets like GitHub credentials are stored securely in the **OpenShift-CI Vault**.
+    - Located under **Pipeline** and **e2e-tests Secrets**.
+  - These are made available to the scripts during runtime through secure methods.
+- **Secrets Management:**
+  - All sensitive information is managed securely within the OpenShift-CI Vault.
+  - Access is controlled and audited to maintain security compliance.
 
 ### Maintenance Procedures
 
@@ -144,3 +165,6 @@ Our CI pipeline supports testing on multiple platforms to ensure compatibility a
 - **Monitoring:**
   - Continuous monitoring for issues.
   - Logs and alerts set up for proactive management.
+- **Artifacts Retention Policy:**
+  - All test results and artifacts are retained for a period of **6 months**.
+  - This allows for historical analysis and auditing if necessary.
