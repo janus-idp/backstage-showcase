@@ -1,21 +1,20 @@
 import { test, Page } from '@playwright/test';
 import { UIhelper } from '../utils/UIhelper';
 import { Common, setupBrowser } from '../utils/Common';
+import { GH_USER_IDAuthFile } from '../support/auth/auth_constants';
 
-let page: Page;
+test.use({ storageState: GH_USER_IDAuthFile });
 test.describe.serial('GitHub integration with Org data fetching', () => {
   let common: Common;
   let uiHelper: UIhelper;
-
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await Common.logintoGithub(page);
+    await uiHelper.openSidebar('Catalog');
   });
 
   test('Verify that fetching the groups of the first org works', async () => {
-    await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'Group');
 
     await uiHelper.searchInputPlaceholder('m');
@@ -34,7 +33,6 @@ test.describe.serial('GitHub integration with Org data fetching', () => {
   });
 
   test('Verify that fetching the users of the orgs works', async () => {
-    await uiHelper.openSidebar('Catalog');
     await uiHelper.selectMuiBox('Kind', 'User');
 
     await uiHelper.searchInputPlaceholder('r');

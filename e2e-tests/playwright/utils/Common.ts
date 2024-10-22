@@ -1,6 +1,6 @@
 import { UIhelper } from './UIhelper';
 import { authenticator } from 'otplib';
-import { test, Browser, expect, Page, TestInfo } from '@playwright/test';
+import { Browser, expect, Page, TestInfo } from '@playwright/test';
 import { SettingsPagePO } from '../support/pageObjects/page-obj';
 import { waitsObjs } from '../support/pageObjects/global-obj';
 import path from 'path';
@@ -17,7 +17,7 @@ export class Common {
   public static async logintoGithub(page: Page) {
     const uiHelper = new UIhelper(page);
     page.goto('/');
-    await uiHelper.clickButton('Sign in');
+    await page.getByRole('button', { name: 'Sign In' }).click();
     await uiHelper.waitForSideBarVisible();
   }
 

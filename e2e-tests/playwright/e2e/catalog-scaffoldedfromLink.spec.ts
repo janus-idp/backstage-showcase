@@ -32,6 +32,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     catalogImport = new CatalogImport(page);
     await Common.logintoGithub(page);
   });
+
   test('Register an Template', async () => {
     await uiHelper.openSidebar('Catalog');
     await uiHelper.clickButton('Create');
