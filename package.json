@@ -7,7 +7,6 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "ci": "turbo run lint build test",
     "start": "turbo run build --filter=app && NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
     "start-backend": "turbo run start --filter=backend",
     "dev": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend --filter=app",
