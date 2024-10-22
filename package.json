@@ -59,8 +59,7 @@
   },
   "resolutions": {
     "@types/react": "18.3.7",
-    "@types/react-dom": "18.3.0",
-    "@backstage/cli/**/ws": "8.17.1"
+    "@types/react-dom": "18.3.0"
   },
   "jest": {
     "testTimeout": 20000
@@ -71,5 +70,5 @@
     "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
     "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@3.8.6"
 }

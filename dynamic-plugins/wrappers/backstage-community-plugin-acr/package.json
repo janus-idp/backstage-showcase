@@ -26,9 +26,9 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
+    "@backstage-community/plugin-acr": "1.8.1",
     "@backstage/core-plugin-api": "1.9.3",
-    "@mui/icons-material": "5.16.7",
-    "@backstage-community/plugin-acr": "1.8.1"
+    "@mui/icons-material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.11",

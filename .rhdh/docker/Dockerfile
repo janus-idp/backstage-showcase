@@ -117,7 +117,7 @@ RUN \
     # cat "$CONTAINER_SOURCE"/.npmrc || true; \
     # "$YARN" config list --verbose; npm config list; npm config list -l
 
-RUN "$YARN" install --frozen-lockfile --network-timeout 600000
+RUN "$YARN" install --immutable --network-timeout 600000
 
 # Stage 3 - Build packages
 COPY $EXTERNAL_SOURCE_NESTED ./
@@ -179,7 +179,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000 && \
+RUN "$YARN" install --immutable --production --network-timeout 600000 && \
     # delete all the nested .npmrc files and set default values
     find . -type f -name .npmrc -exec rm -Rf {} \; && \
     # reset npm config to the default registry and absolute path to .pem file
