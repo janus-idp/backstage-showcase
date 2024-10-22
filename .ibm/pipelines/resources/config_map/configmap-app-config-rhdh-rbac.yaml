@@ -49,6 +49,13 @@ data:
       skipInvalidProxies: true
       # endpoints: {}
       endpoints:
+        '/quay/api':
+          target: 'https://quay.io'
+          credentials: require
+          headers:
+            X-Requested-With: 'XMLHttpRequest'
+          changeOrigin: true
+          secure: true
         # Other Proxies
         # customize developer hub instance
         '/developer-hub':
@@ -112,7 +119,7 @@ data:
         policyFileReload: true
         policies-csv-file: './rbac/rbac-policy.csv'
         conditionalPoliciesFile: './rbac-conditions/conditional-policies.yaml'
-        
+
         pluginsWithPermission:
           - catalog
           - permission
