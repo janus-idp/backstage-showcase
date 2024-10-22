@@ -148,32 +148,7 @@ droute_send() {
         # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
         REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
         if [[ $? -eq 0 ]]; then
-          if [[ "$release_name" == *rbac* ]]; then
-            RUN_TYPE="rbac-nightly"
-          else
-            RUN_TYPE="nightly"
-          fi
-          if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
-            RUN_STATUS_EMOJI=":done-circle-check:"
-            RUN_STATUS="passed"
-          else
-            RUN_STATUS_EMOJI=":failed:"
-            RUN_STATUS="failed"
-          fi
-          jq -n \
-            --arg run_status "$RUN_STATUS" \
-            --arg run_type "$RUN_TYPE" \
-            --arg reportportal_launch_url "$REPORTPORTAL_LAUNCH_URL" \
-            --arg job_name "$JOB_NAME" \
-            --arg run_status_emoji "$RUN_STATUS_EMOJI" \
-            '{
-              "RUN_STATUS": $run_status,
-              "RUN_TYPE": $run_type,
-              "REPORTPORTAL_LAUNCH_URL": $reportportal_launch_url,
-              "JOB_NAME": $job_name,
-              "RUN_STATUS_EMOJI": $run_status_emoji
-            }' > /tmp/data_router_slack_message.json
-          curl -X POST -H 'Content-type: application/json' --data @/tmp/data_router_slack_message.json  $SLACK_DATA_ROUTER_WEBHOOK_URL
+          reportportal_slack_alert $release_name $REPORTPORTAL_LAUNCH_URL
           return 0
         else
           echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
@@ -187,6 +162,38 @@ droute_send() {
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
+}
+
+reportportal_slack_alert() {
+  local release_name=$1
+  local reportportal_launch_url=$2
+
+  if [[ "$release_name" == *rbac* ]]; then
+    RUN_TYPE="rbac-nightly"
+  else
+    RUN_TYPE="nightly"
+  fi
+  if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+    RUN_STATUS_EMOJI=":done-circle-check:"
+    RUN_STATUS="passed"
+  else
+    RUN_STATUS_EMOJI=":failed:"
+    RUN_STATUS="failed"
+  fi
+  jq -n \
+    --arg run_status "$RUN_STATUS" \
+    --arg run_type "$RUN_TYPE" \
+    --arg reportportal_launch_url "$reportportal_launch_url" \
+    --arg job_name "$JOB_NAME" \
+    --arg run_status_emoji "$RUN_STATUS_EMOJI" \
+    '{
+      "RUN_STATUS": $run_status,
+      "RUN_TYPE": $run_type,
+      "REPORTPORTAL_LAUNCH_URL": $reportportal_launch_url,
+      "JOB_NAME": $job_name,
+      "RUN_STATUS_EMOJI": $run_status_emoji
+    }' > /tmp/data_router_slack_message.json
+  curl -X POST -H 'Content-type: application/json' --data @/tmp/data_router_slack_message.json  $SLACK_DATA_ROUTER_WEBHOOK_URL
 }
 
 # Merge the base YAML value file with the differences file for Kubernetes
