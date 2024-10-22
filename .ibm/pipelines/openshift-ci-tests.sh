@@ -66,6 +66,7 @@ add_helm_repos() {
   done
 
   helm repo update
+}
 
 install_oc() {
   if command -v oc >/dev/null 2>&1; then
