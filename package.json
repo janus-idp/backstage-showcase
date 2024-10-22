@@ -54,10 +54,5 @@
     "testTimeout": 20000
   },
   "prettier": "@spotify/prettier-config",
-  "lint-staged": {
-    "*": "turbo run prettier:fix --",
-    "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
-    "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
-  },
   "packageManager": "yarn@3.8.6"
 }
