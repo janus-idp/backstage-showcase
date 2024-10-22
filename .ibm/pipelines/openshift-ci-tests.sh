@@ -5,10 +5,9 @@ export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # Prepend timestamp to each command
 
 # Define log file names and directories.
 LOGFILE="test-log"
-JUNIT_RESULTS="junit-results.xml"
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"  # Get the directory where the script is located.
-secret_name="rhdh-k8s-plugin-secret"  # Name of the Kubernetes secret.
-OVERALL_RESULT=0  # Initialize the overall result status.
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+secret_name="rhdh-k8s-plugin-secret"
+OVERALL_RESULT=0
 
 # Define a cleanup function to be executed upon script exit.
 cleanup() {
