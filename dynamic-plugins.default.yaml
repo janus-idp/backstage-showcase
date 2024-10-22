@@ -388,15 +388,15 @@ plugins:
       dynamicPlugins:
         frontend:
           backstage.plugin-notifications:
-            appIcons:
-              - name: notificationIcon
-                importName: NotificationIcon
             dynamicRoutes:
-              - path: /notifications
-                importName: NotificationsPage
+              - importName: NotificationsPage
                 menuItem:
-                  icon: notificationIcon
-                  text: Notifications
+                  config:
+                    props:
+                      titleCounterEnabled: true
+                      webNotificationsEnabled: false
+                  importName: NotificationsSidebarItem
+                path: /notifications
   - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
     disabled: true
   - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic
@@ -416,6 +416,12 @@ plugins:
               receiver: 'users'
   - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
     disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-signals: {}
 
   # Group: SonarQube
   - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic

@@ -92,15 +92,16 @@ dynamicPlugins:
               allOf:
                 - isLighthouseAvailable
     backstage.plugin-notifications:
-      appIcons:
-        - name: notificationIcon
-          importName: NotificationIcon
       dynamicRoutes:
-        - path: /notifications
-          importName: NotificationsPage
+        - importName: NotificationsPage
           menuItem:
-            icon: notificationIcon
-            text: Notifications
+            config:
+              props:
+                titleCounterEnabled: true
+                webNotificationsEnabled: false
+            importName: NotificationsSidebarItem
+          path: /notifications
+    backstage.plugin-signals: {}
     pagerduty.backstage-plugin:
       mountPoints:
         - mountPoint: entity.page.overview/cards
