@@ -55,6 +55,6 @@ setup('authenticate as GH_USER2_ID', async ({ page }) => {
 });
 
 setup('authenticate as Guest', async ({ page }) => {
-  new Common(page).loginAsGuest();
+  await new Common(page).loginAsGuest();
   await page.context().storageState({ path: GuestAuthFile });
 });
