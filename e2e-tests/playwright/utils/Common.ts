@@ -23,7 +23,7 @@ export class Common {
 
   async loginAsGuest() {
     await this.page.goto('/');
-    await this.waitForLoad(240000);
+    await this.page.waitForURL('/');
     // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
     this.page.on('dialog', async dialog => {
       console.log(`Dialog message: ${dialog.message()}`);
@@ -103,20 +103,6 @@ export class Common {
       state: 'hidden',
       timeout: 100000,
     });
-  }
-
-  getGitHub2FAOTP(userid: string): string {
-    const secrets: { [key: string]: string | undefined } = {
-      [process.env.GH_USER_ID]: process.env.GH_2FA_SECRET,
-      [process.env.GH_USER2_ID]: process.env.GH_USER2_2FA_SECRET,
-    };
-
-    const secret = secrets[userid];
-    if (!secret) {
-      throw new Error('Invalid User ID');
-    }
-
-    return authenticator.generate(secret);
   }
 
   getGoogle2FAOTP(): string {

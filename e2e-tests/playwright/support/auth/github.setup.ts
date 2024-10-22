@@ -1,4 +1,4 @@
-import { test as setup, expect, Page } from '@playwright/test';
+import { test as setup, expect, Page, Locator } from '@playwright/test';
 import { Common } from '../../utils/Common';
 import { authenticator } from 'otplib';
 import {
@@ -8,19 +8,21 @@ import {
 } from './auth_constants';
 
 async function onceGithubLogin(userId: string, password: string, page: Page) {
-  await page.goto('https://github.com/login');
-  await page.getByLabel('Username or email address').fill(userId);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.fill('#app_totp', getGitHub2FAOTP(userId));
-  await expect(page.locator('#app_totp')).toBeHidden({
-    timeout: 100000,
-  });
+  const githubLoginEmail: Locator = page.locator('#login_field');
+  const githubLoginPassword: Locator = page.locator('#password');
+  const githubLoginSignIn: Locator = page.locator('[value="Sign in"]');
+  const githubLogin2ndFactor: Locator = page.locator('#app_totp');
 
+  await page.goto('https://github.com/login');
+  await githubLoginEmail.fill(userId);
+  await githubLoginPassword.fill(password);
+  await githubLoginSignIn.click();
+
+  await githubLogin2ndFactor.fill(await getGitHub2FAOTP(userId));
   await page.waitForURL('https://github.com/');
 }
 
-function getGitHub2FAOTP(userid: string): string {
+async function getGitHub2FAOTP(userid: string): Promise<string> {
   const secrets: { [key: string]: string | undefined } = {
     [process.env.GH_USER_ID]: process.env.GH_2FA_SECRET,
     [process.env.GH_USER2_ID]: process.env.GH_USER2_2FA_SECRET,
@@ -30,7 +32,11 @@ function getGitHub2FAOTP(userid: string): string {
   if (!secret) {
     throw new Error('Invalid User ID');
   }
-
+  //with this, we ensure having always a new code, max is 30 seconds + 100ms to avoid race conditions
+  //https://www.npmjs.com/package/otplib#getting-time-remaining--time-used
+  await new Promise(resolve =>
+    setTimeout(resolve, authenticator.timeRemaining() * 1000 + 100),
+  );
   return authenticator.generate(secret);
 }
 
