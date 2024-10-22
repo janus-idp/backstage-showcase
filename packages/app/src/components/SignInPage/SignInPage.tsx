@@ -1,5 +1,3 @@
-import React from 'react';
-
 import {
   SignInPage as CCSignInPage,
   ProxiedSignInPage,

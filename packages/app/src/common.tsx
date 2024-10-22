@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { CodeSnippet, WarningPanel } from '@backstage/core-components';
 
 export const fetcher: <T>(...args: Parameters<typeof fetch>) => Promise<T[]> = <

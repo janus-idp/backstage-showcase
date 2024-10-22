@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';

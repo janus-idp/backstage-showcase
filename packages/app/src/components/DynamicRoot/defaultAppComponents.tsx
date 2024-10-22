@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { AppComponents } from '@backstage/core-plugin-api';
 

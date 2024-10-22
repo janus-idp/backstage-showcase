@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { apis } from './apis';
 import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
 import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { lazy, Suspense } from 'react';
 
 import { removeScalprum } from '@scalprum/core';
 import { mockPluginData } from '@scalprum/react-test-utils';
@@ -6,7 +6,7 @@ import { render, waitFor } from '@testing-library/react';
 
 import TestRoot from './utils/test/TestRoot';
 
-const AppBase = React.lazy(() => import('./components/AppBase'));
+const AppBase = lazy(() => import('./components/AppBase'));
 
 describe('App', () => {
   beforeEach(() => {
@@ -31,9 +31,9 @@ describe('App', () => {
     const rendered = render(
       <TestScalprumProvider>
         <TestRoot>
-          <React.Suspense fallback={null}>
+          <Suspense fallback={null}>
             <AppBase />
-          </React.Suspense>
+          </Suspense>
         </TestRoot>
       </TestScalprumProvider>,
     );

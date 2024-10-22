@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { EntityApiDefinitionCard } from '@backstage/plugin-api-docs';
 import { EntitySwitch, isKind } from '@backstage/plugin-catalog';

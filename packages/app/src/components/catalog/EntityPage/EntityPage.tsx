@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { ContextMenuAwareEntityLayout } from './ContextMenuAwareEntityLayout';
 import { defaultTabs, tabChildren, tabRules } from './defaultTabs';

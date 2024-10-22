@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { createDevApp, DevAppPageOptions } from '@backstage/dev-utils';
 import {

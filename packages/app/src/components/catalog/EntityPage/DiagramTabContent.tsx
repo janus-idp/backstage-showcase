@@ -1,19 +1,19 @@
-import React from 'react';
+
 
 import {
-  RELATION_API_CONSUMED_BY,
-  RELATION_API_PROVIDED_BY,
-  RELATION_CONSUMES_API,
-  RELATION_DEPENDENCY_OF,
-  RELATION_DEPENDS_ON,
-  RELATION_HAS_PART,
-  RELATION_PART_OF,
-  RELATION_PROVIDES_API,
+    RELATION_API_CONSUMED_BY,
+    RELATION_API_PROVIDED_BY,
+    RELATION_CONSUMES_API,
+    RELATION_DEPENDENCY_OF,
+    RELATION_DEPENDS_ON,
+    RELATION_HAS_PART,
+    RELATION_PART_OF,
+    RELATION_PROVIDES_API,
 } from '@backstage/catalog-model';
 import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
 import {
-  Direction,
-  EntityCatalogGraphCard,
+    Direction,
+    EntityCatalogGraphCard,
 } from '@backstage/plugin-catalog-graph';
 
 import Grid from '../Grid';

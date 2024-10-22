@@ -4,6 +4,7 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "outDir": "../../dist-types/plugins/dynamic-plugins-info",
-    "rootDir": "."
+    "rootDir": ".",
+    "jsx": "preserve"
   }
 }

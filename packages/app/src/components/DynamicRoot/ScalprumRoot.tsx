@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
-import React from 'react';
+
 import useAsync from 'react-use/lib/useAsync';
 
 import { AppConfig } from '@backstage/config';

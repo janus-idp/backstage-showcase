@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Content, Header, Page } from '@backstage/core-components';
 
 import { DynamicPluginsTable } from './DynamicPluginsTable/DynamicPluginsTable';

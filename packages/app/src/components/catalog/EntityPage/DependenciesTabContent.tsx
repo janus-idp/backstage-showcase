@@ -1,19 +1,19 @@
-import React from 'react';
+
 
 import {
-  EntityConsumedApisCard,
-  EntityProvidedApisCard,
+    EntityConsumedApisCard,
+    EntityProvidedApisCard,
 } from '@backstage/plugin-api-docs';
 import {
-  EntityDependsOnComponentsCard,
-  EntityDependsOnResourcesCard,
-  EntityHasSubcomponentsCard,
-  EntitySwitch,
-  isKind,
+    EntityDependsOnComponentsCard,
+    EntityDependsOnResourcesCard,
+    EntityHasSubcomponentsCard,
+    EntitySwitch,
+    isKind,
 } from '@backstage/plugin-catalog';
 import {
-  Direction,
-  EntityCatalogGraphCard,
+    Direction,
+    EntityCatalogGraphCard,
 } from '@backstage/plugin-catalog-graph';
 
 import Grid from '../Grid';

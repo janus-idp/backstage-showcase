@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import { Entity } from '@backstage/catalog-model';
 import { ApiHolder } from '@backstage/core-plugin-api';

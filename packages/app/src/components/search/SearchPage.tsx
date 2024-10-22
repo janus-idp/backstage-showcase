@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { CatalogIcon, Content, Header, Page } from '@backstage/core-components';
 import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
 import { SearchType } from '@backstage/plugin-search';
