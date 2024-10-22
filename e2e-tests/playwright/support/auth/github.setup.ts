@@ -19,6 +19,7 @@ async function onceGithubLogin(userId: string, password: string, page: Page) {
   await page.goto('/');
   await page.getByRole('button', { name: 'Sign In' }).click();
   await uiHelper.waitForSideBarVisible();
+  await page.waitForTimeout(2000);
 }
 
 async function getGitHub2FAOTP(userid: string): Promise<string> {
