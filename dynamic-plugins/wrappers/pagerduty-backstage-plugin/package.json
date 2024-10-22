@@ -23,7 +23,8 @@
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
     "@pagerduty/backstage-plugin": "0.15.0"

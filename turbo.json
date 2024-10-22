@@ -8,8 +8,12 @@
   ],
   "tasks": {
     "export-dynamic": {
-      "outputs": ["dist-dynamic/**"],
-      "dependsOn": ["//#tsc"]
+      "cache": false,
+      "dependsOn": ["tsc"]
+    },
+    "export-dynamic:clean": {
+      "cache": false,
+      "dependsOn": ["tsc"]
     },
     "start": {
       "cache": false,
@@ -17,7 +21,7 @@
     },
     "build": {
       "outputs": ["dist/**"],
-      "dependsOn": ["//#tsc", "^build"]
+      "dependsOn": ["tsc", "^build"]
     },
     "app#build": {
       "outputs": ["dist/**"],

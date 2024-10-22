@@ -8,6 +8,7 @@
   },
   "scripts": {
     "export-dynamic": "node ./import-plugins.js",
+    "export-dynamic:clean": "node ./import-plugins.js --clean",
     "install-dynamic": "node ./import-plugins.js --install-only",
     "lint": "backstage-cli package lint"
   },
