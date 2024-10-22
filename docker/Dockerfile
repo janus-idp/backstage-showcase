@@ -1,5 +1,7 @@
+# THIS IS USED BY Konflux builds >= 1.4
+# TODO verify this works with Cachi2 once we enable that, or switch to use ../.rhdh/docker/Dockerfile as input
 #
-# Copyright (c) 2023 Red Hat, Inc.
+# Copyright (c) 2023-2024 Red Hat, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -106,7 +108,12 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000
+RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000 && \
+    # delete all the nested .npmrc files and set default values
+    find . -type f -name .npmrc -exec rm -Rf {} \; && \
+    # reset npm config to the default registry and absolute path to .pem file
+    npm config set registry=https://registry.npmjs.org/ && \
+    npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
@@ -134,6 +141,9 @@ COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist
 
 # include patch files in final container just for reference
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
+
+# RHIDP-4220 - make Konflux preflight and EC checks happy - [check-container] Create a directory named /licenses and include all relevant licensing
+COPY $EXTERNAL_SOURCE/LICENSE /licenses/
 
 # Copy script to gather dynamic plugins; copy embedded dynamic plugins to root folder; fix permissions
 COPY docker/install-dynamic-plugins.py docker/install-dynamic-plugins.sh ./

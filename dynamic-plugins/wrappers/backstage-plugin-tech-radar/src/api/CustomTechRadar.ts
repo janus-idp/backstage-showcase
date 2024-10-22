@@ -3,7 +3,11 @@ import {
   TechRadarApi,
   type TechRadarLoaderResponse,
 } from '@backstage-community/plugin-tech-radar';
-import { ConfigApi, DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  ConfigApi,
+  DiscoveryApi,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 import defaultResponse from '../data/data-default.json';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';
@@ -11,14 +15,17 @@ const DEFAULT_PROXY_PATH = '/developer-hub';
 type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
+  identityApi: IdentityApi;
 };
 
 export class CustomTechRadar implements TechRadarApi {
   private readonly discoveryApi: DiscoveryApi;
   private readonly configApi: ConfigApi;
+  private readonly identityApi: IdentityApi;
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
     this.configApi = options.configApi;
+    this.identityApi = options.identityApi;
   }
 
   private async getBaseUrl() {
@@ -29,8 +36,12 @@ export class CustomTechRadar implements TechRadarApi {
   }
 
   private async fetcher(url: string) {
+    const { token: idToken } = await this.identityApi.getCredentials();
     const response = await fetch(url, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(idToken && { Authorization: `Bearer ${idToken}` }),
+      },
     });
     if (!response.ok) {
       throw new Error(
