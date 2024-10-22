@@ -1,9 +1,15 @@
 {
-  "extends": ["//"],
-  "pipeline": {
+  "extends": [
+    "//"
+  ],
+  "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/dynamic-home-page/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": [
+        "../../dist-types/plugins/dynamic-home-page/**"
+      ],
+      "dependsOn": [
+        "^tsc"
+      ]
     }
   }
 }
