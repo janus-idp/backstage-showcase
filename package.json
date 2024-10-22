@@ -12,7 +12,7 @@
     "start-backend": "turbo run start --filter=backend",
     "dev": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend --filter=app",
     "build": "turbo run build",
-    "tsc": "tsc",
+    "tsc": "turbo run tsc",
     "export-dynamic": "turbo run export-dynamic --concurrency 1",
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
     "clean": "turbo run clean",

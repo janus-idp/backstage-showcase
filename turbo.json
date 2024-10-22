@@ -37,12 +37,9 @@
     "prettier:fix": {
       "cache": false
     },
-    "//#tsc": {
-      "outputs": ["dist-types/**"],
+    "tsc": {
+      "outputs": ["../../dist-types/**"],
       "dependsOn": ["^tsc"]
-    },
-    "//#prettier:fix": {
-      "cache": false
     }
   }
 }

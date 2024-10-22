@@ -31,7 +31,6 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "tsc": "tsc",
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-ldap --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
