@@ -14,7 +14,7 @@ test.describe('Test RBAC plugin REST API', () => {
 
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
   });

@@ -16,9 +16,6 @@ export class Common {
 
   public async logintoGithub() {
     this.page.goto('/');
-    await this.page.getByRole('button', { name: 'Sign In' }).click();
-    await this.checkAndReauthorizeGithubApp();
-    await this.uiHelper.waitForSideBarVisible();
   }
 
   public async loginAsGuest() {

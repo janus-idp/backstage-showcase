@@ -48,7 +48,7 @@ test.describe.serial('Bulk Import plugin', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
   });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
@@ -254,7 +254,7 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
   });
 
   test('Verify existing repo from app-config is displayed in bulk import Added repositories', async () => {
@@ -299,7 +299,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
   });
 
   test('Bulk Import - Verify users without permission cannot access', async () => {

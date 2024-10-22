@@ -1,8 +1,10 @@
 import { test as setup, Page, Locator } from '@playwright/test';
 import { authenticator } from 'otplib';
 import { GH_USER2_IDAuthFile, GH_USER_IDAuthFile } from './auth_constants';
+import { UIhelper } from '../../utils/UIhelper';
 
 async function onceGithubLogin(userId: string, password: string, page: Page) {
+  const uiHelper: UIhelper = new UIhelper(page);
   const githubLoginEmail: Locator = page.locator('#login_field');
   const githubLoginPassword: Locator = page.locator('#password');
   const githubLoginSignIn: Locator = page.locator('[value="Sign in"]');
@@ -12,9 +14,11 @@ async function onceGithubLogin(userId: string, password: string, page: Page) {
   await githubLoginEmail.fill(userId);
   await githubLoginPassword.fill(password);
   await githubLoginSignIn.click();
-
   await githubLogin2ndFactor.fill(await getGitHub2FAOTP(userId));
   await page.waitForURL('https://github.com/');
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Sign In' }).click();
+  await uiHelper.waitForSideBarVisible();
 }
 
 async function getGitHub2FAOTP(userid: string): Promise<string> {
