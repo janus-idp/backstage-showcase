@@ -1,13 +1,19 @@
 import React from 'react';
 import { createDevApp, DevAppPageOptions } from '@backstage/dev-utils';
 import { TestApiProvider } from '@backstage/test-utils';
-import { MockSearchApi, searchApiRef } from '@backstage/plugin-search-react';
+import {
+  CatalogEntityPage,
+  CatalogIndexPage,
+  EntityLayout,
+} from '@backstage/plugin-catalog';
 import {
   CatalogApi,
   catalogApiRef,
+  EntityProvider,
   starredEntitiesApiRef,
   MockStarredEntitiesApi,
 } from '@backstage/plugin-catalog-react';
+import { MockSearchApi, searchApiRef } from '@backstage/plugin-search-react';
 import {
   visitsApiRef,
   VisitsApi,
@@ -90,6 +96,14 @@ class MockQuickAccessApi implements QuickAccessApi {
   }
 }
 
+const entity = {
+  apiVersion: 'backstage.io/v1alpha1',
+  kind: 'Component',
+  metadata: {
+    name: 'random-component',
+  },
+};
+
 const entities /* : Entity[]*/ = [
   {
     apiVersion: '1',
@@ -106,6 +120,7 @@ const entities /* : Entity[]*/ = [
     },
   },
 ];
+
 const mockCatalogApi: Partial<CatalogApi> = {
   // getEntities: (request?: GetEntitiesRequest, options?: CatalogRequestOptions): Promise<GetEntitiesResponse>
   getEntities: async () => ({
@@ -118,9 +133,8 @@ const mockCatalogApi: Partial<CatalogApi> = {
 };
 
 const mockStarredEntitiesApi = new MockStarredEntitiesApi();
-// TODO: Starred entity test page requires additional routeRefs to render starred entities
-// mockStarredEntitiesApi.toggleStarred('service-a');
-// mockStarredEntitiesApi.toggleStarred('service-b');
+mockStarredEntitiesApi.toggleStarred('service-a');
+mockStarredEntitiesApi.toggleStarred('service-b');
 
 class MockVisitsApi implements VisitsApi {
   async list(queryParams?: VisitsApiQueryParams): Promise<Visit[]> {
@@ -214,6 +228,24 @@ const createPage = ({
 createDevApp()
   .registerPlugin(dynamicHomePagePlugin)
   .addThemes(getAllThemes())
+  .addPage({
+    path: '/catalog',
+    title: 'Catalog',
+    element: <CatalogIndexPage />,
+  })
+  .addPage({
+    path: '/catalog/:namespace/:kind/:name',
+    element: <CatalogEntityPage />,
+    children: (
+      <EntityProvider entity={entity}>
+        <EntityLayout>
+          <EntityLayout.Route path="/" title="Overview">
+            <h1>Overview</h1>
+          </EntityLayout.Route>
+        </EntityLayout>
+      </EntityProvider>
+    ),
+  })
   .addPage(
     createPage({
       navTitle: 'Default',
@@ -260,7 +292,6 @@ createDevApp()
       navTitle: 'SearchBar',
       pageTitle: 'SearchBar',
       mountPoints: [
-        // TODO: why doesn't have instance 2 and 3 a background color? :-/
         {
           Component: SearchBar as React.ComponentType,
           config: {

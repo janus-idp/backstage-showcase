@@ -36,7 +36,7 @@ export const QuickAccessCard = (props: QuickAccessCardProps) => {
   const classes = useStyles();
   const { data, error, isLoading } = useQuickAccessLinks(props.path);
 
-  let content: React.ReactElement;
+  let content: React.ReactNode;
 
   if (isLoading) {
     content = (
@@ -70,7 +70,12 @@ export const QuickAccessCard = (props: QuickAccessCardProps) => {
                 />
               ),
             }))}
-            Renderer={renderProps => (
+            // Component creation is allowed inside component props only
+            // if prop name starts with `render`.
+            // We accept it here since the upstream package use `Renderer` instead.
+            Renderer={(
+              renderProps, // NOSONAR
+            ) => (
               <ComponentAccordion expanded={item.isExpanded} {...renderProps} />
             )}
           />

@@ -1,3 +1,5 @@
+import React, { useContext } from 'react';
+import { Route } from 'react-router-dom';
 import { FlatRoutes } from '@backstage/core-app-api';
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { ApiExplorerPage } from '@backstage/plugin-api-docs';
@@ -16,8 +18,7 @@ import { ScaffolderPage } from '@backstage/plugin-scaffolder';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
-import React, { useContext } from 'react';
-import { Route } from 'react-router-dom';
+import { VisitListener } from '@janus-idp/backstage-plugin-dynamic-home-page';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { Root } from '../Root';
 import { settingsPage } from '../UserSettings/SettingsPages';
@@ -72,6 +73,8 @@ const AppBase = () => {
       <OAuthRequestDialog />
       <AppRouter>
         <ConfigUpdater />
+        {/* RHIDP-4234: VisitListener should be replaced with a mount point */}
+        <VisitListener />
         <Root>
           <FlatRoutes>
             <Route
