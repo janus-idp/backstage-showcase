@@ -29,7 +29,10 @@
     "test": {
       "outputs": ["coverage/**"]
     },
-    "lint": {},
+    "lint:check": {},
+    "lint:fix": {
+      "cache": false
+    },
     "prettier:check": {},
     "prettier:fix": {
       "cache": false
