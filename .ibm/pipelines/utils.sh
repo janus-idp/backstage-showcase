@@ -173,7 +173,7 @@ reportportal_slack_alert() {
   else
     RUN_TYPE="nightly"
   fi
-  if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+  if [[ ${RESULT} -eq 0 ]]; then
     RUN_STATUS_EMOJI=":done-circle-check:"
     RUN_STATUS="passed"
   else
