@@ -6,13 +6,15 @@ import {
   dynamicPluginsServiceFactory,
 } from '@backstage/backend-dynamic-feature-service';
 import { PackageRoles } from '@backstage/cli-node';
+
 import * as path from 'path';
+
 import { configureCorporateProxyAgent } from './corporate-proxy';
 import { CommonJSModuleLoader } from './loader';
 import { customLogger } from './logger';
 import {
-  metricsPlugin,
   healthCheckPlugin,
+  metricsPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules';

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { bootstrap } from 'global-agent';
-import { Agent, ProxyAgent, Dispatcher, setGlobalDispatcher } from 'undici';
+import { Agent, Dispatcher, ProxyAgent, setGlobalDispatcher } from 'undici';
 
 /**
  * Adds support for corporate proxy to both 'node-fetch' (using 'global-agent') and native 'fetch' (using 'undici') packages.

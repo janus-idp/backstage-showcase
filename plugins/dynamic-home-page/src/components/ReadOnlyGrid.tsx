@@ -5,17 +5,17 @@
 // but without the drag and drop functionality.
 
 import React from 'react';
-
-import { ErrorBoundary } from '@backstage/core-components';
-
-import { makeStyles } from '@material-ui/core/styles';
-
 import {
   Layout,
   Layouts,
   Responsive,
   ResponsiveProps,
 } from 'react-grid-layout';
+
+import { ErrorBoundary } from '@backstage/core-components';
+
+import { makeStyles } from '@material-ui/core/styles';
+
 // Removes the doubled scrollbar
 import 'react-grid-layout/css/styles.css';
 

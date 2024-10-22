@@ -1,8 +1,10 @@
 import React, { ReactNode, useMemo, useState } from 'react';
+
+import { IconComponent } from '@backstage/core-plugin-api';
 import { EntityLayout } from '@backstage/plugin-catalog';
+
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import { MenuIcon } from '../../Root/MenuIcon';
-import { IconComponent } from '@backstage/core-plugin-api';
 
 const makeIcon =
   (iconName: string): IconComponent =>

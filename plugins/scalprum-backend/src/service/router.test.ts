@@ -1,18 +1,21 @@
-import express, { Router } from 'express';
-import request from 'supertest';
-import url from 'url';
-import path from 'path';
-import { createRouter } from './router';
 import {
   DynamicPluginManager,
   ScannedPluginManifest,
   ScannedPluginPackage,
 } from '@backstage/backend-dynamic-feature-service';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   createMockDirectory,
   mockServices,
 } from '@backstage/backend-test-utils';
-import { LoggerService } from '@backstage/backend-plugin-api';
+
+import express, { Router } from 'express';
+import request from 'supertest';
+
+import path from 'path';
+import url from 'url';
+
+import { createRouter } from './router';
 
 describe('createRouter', () => {
   let app: express.Express;

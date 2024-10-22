@@ -1,9 +1,12 @@
-import { Link, useSidebarOpenState } from '@backstage/core-components';
 import React from 'react';
+
+import { Link, useSidebarOpenState } from '@backstage/core-components';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
+
 import { makeStyles } from 'tss-react/mui';
+
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
-import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles()({
   sidebarLogo: {

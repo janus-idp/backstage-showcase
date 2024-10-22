@@ -1,13 +1,15 @@
 import React from 'react';
-import { isType } from '../utils';
-import { isKind } from '@backstage/plugin-catalog';
-import { OverviewTabContent } from './OverviewTabContent';
-import { ApiTabContent } from './ApiTabContent';
-import { DependenciesTabContent } from './DependenciesTabContent';
-import { DefinitionTabContent } from './DefinitionTabContent';
-import { DiagramTabContent } from './DiagramTabContent';
+
 import { Entity } from '@backstage/catalog-model';
+import { isKind } from '@backstage/plugin-catalog';
+
+import { isType } from '../utils';
+import { ApiTabContent } from './ApiTabContent';
+import { DefinitionTabContent } from './DefinitionTabContent';
+import { DependenciesTabContent } from './DependenciesTabContent';
+import { DiagramTabContent } from './DiagramTabContent';
 import { DynamicEntityTabProps } from './DynamicEntityTab';
+import { OverviewTabContent } from './OverviewTabContent';
 
 /**
  * The default set of entity tabs in the default order

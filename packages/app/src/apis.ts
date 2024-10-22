@@ -12,6 +12,7 @@ import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
+
 import {
   auth0AuthApiRef,
   oidcAuthApiRef,

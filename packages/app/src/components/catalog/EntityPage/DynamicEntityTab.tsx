@@ -1,10 +1,13 @@
-import { Entity } from '@backstage/catalog-model';
-import { EntityLayout, EntitySwitch } from '@backstage/plugin-catalog';
-import Box from '@mui/material/Box';
 import React from 'react';
+
+import { Entity } from '@backstage/catalog-model';
+import { ApiHolder } from '@backstage/core-plugin-api';
+import { EntityLayout, EntitySwitch } from '@backstage/plugin-catalog';
+
+import Box from '@mui/material/Box';
+
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import Grid from '../Grid';
-import { ApiHolder } from '@backstage/core-plugin-api';
 
 export type DynamicEntityTabProps = {
   path: string;

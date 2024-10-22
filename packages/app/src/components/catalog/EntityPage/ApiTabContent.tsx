@@ -1,12 +1,13 @@
 import React from 'react';
-import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
-import { isType } from '../utils';
-import Grid from '../Grid';
 
 import {
   EntityConsumedApisCard,
   EntityProvidedApisCard,
 } from '@backstage/plugin-api-docs';
+import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
+
+import Grid from '../Grid';
+import { isType } from '../utils';
 
 export const ApiTabContent = () => (
   <EntitySwitch>

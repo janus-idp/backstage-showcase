@@ -1,5 +1,7 @@
-import { AppComponents } from '@backstage/core-plugin-api';
 import React from 'react';
+
+import { AppComponents } from '@backstage/core-plugin-api';
+
 import { SignInPage } from '../SignInPage/SignInPage';
 
 const defaultAppComponents: Partial<AppComponents> = {

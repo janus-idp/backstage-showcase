@@ -1,3 +1,4 @@
+import { DatabaseManager } from '@backstage/backend-defaults/database';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import {
   AuthService,
@@ -8,21 +9,23 @@ import {
   PermissionsService,
   RootConfigService,
 } from '@backstage/backend-plugin-api';
+import { CatalogClient } from '@backstage/catalog-client';
+import { NotAllowedError } from '@backstage/errors';
+import { AuthorizeResult } from '@backstage/plugin-permission-common';
+
 import express from 'express';
 import Router from 'express-promise-router';
-import { DatabaseManager } from '@backstage/backend-defaults/database';
+import { json2csv } from 'json-2-csv';
+import { DateTime } from 'luxon';
+
+import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+
 import {
   DatabaseUserInfoStore,
   UserInfoRow,
 } from '../database/databaseUserInfoStore';
 import { CatalogEntityStore } from './catalogStore';
 import { readBackstageTokenExpiration } from './readBackstageTokenExpiration';
-import { json2csv } from 'json-2-csv';
-import { CatalogClient } from '@backstage/catalog-client';
-import { NotAllowedError } from '@backstage/errors';
-import { AuthorizeResult } from '@backstage/plugin-permission-common';
-import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
-import { DateTime } from 'luxon';
 
 export interface RouterOptions {
   logger: LoggerService;

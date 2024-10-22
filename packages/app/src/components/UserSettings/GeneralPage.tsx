@@ -1,10 +1,13 @@
+import React from 'react';
+
 import {
   UserSettingsAppearanceCard,
   UserSettingsIdentityCard,
   UserSettingsProfileCard,
 } from '@backstage/plugin-user-settings';
+
 import Grid from '@mui/material/Grid';
-import React from 'react';
+
 import { infoCard } from './InfoCard';
 
 export const generalPage = (

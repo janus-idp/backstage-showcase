@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
-import Grid from '../Grid';
-
 import { EntityApiDefinitionCard } from '@backstage/plugin-api-docs';
+import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
+
+import Grid from '../Grid';
 
 export const DefinitionTabContent = () => (
   <EntitySwitch>

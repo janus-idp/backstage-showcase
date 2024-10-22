@@ -1,7 +1,9 @@
+import React from 'react';
+
 import { removeScalprum } from '@scalprum/core';
 import { mockPluginData } from '@scalprum/react-test-utils';
 import { render, waitFor } from '@testing-library/react';
-import React from 'react';
+
 import TestRoot from './utils/test/TestRoot';
 
 const AppBase = React.lazy(() => import('./components/AppBase'));

@@ -1,8 +1,10 @@
+import React from 'react';
+
 import {
   SettingsLayout,
   UserSettingsAuthProviders,
 } from '@backstage/plugin-user-settings';
-import React from 'react';
+
 import { generalPage } from './GeneralPage';
 
 export const settingsPage = (

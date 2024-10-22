@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Direction,
-  EntityCatalogGraphCard,
-} from '@backstage/plugin-catalog-graph';
-import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
+
 import {
   RELATION_API_CONSUMED_BY,
   RELATION_API_PROVIDED_BY,
@@ -14,6 +10,12 @@ import {
   RELATION_PART_OF,
   RELATION_PROVIDES_API,
 } from '@backstage/catalog-model';
+import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
+import {
+  Direction,
+  EntityCatalogGraphCard,
+} from '@backstage/plugin-catalog-graph';
+
 import Grid from '../Grid';
 
 export const DiagramTabContent = () => (

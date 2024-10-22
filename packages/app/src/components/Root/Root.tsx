@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useContext, useState } from 'react';
+
 import {
   Sidebar,
   SidebarDivider,
@@ -10,26 +11,29 @@ import {
 } from '@backstage/core-components';
 import { IconComponent } from '@backstage/core-plugin-api';
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
+import { usePermission } from '@backstage/plugin-permission-react';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
+
+import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import MuiMenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import { makeStyles } from 'tss-react/mui';
-import { SidebarLogo } from './SidebarLogo';
-import DynamicRootContext, {
-  ResolvedMenuItem,
-} from '../DynamicRoot/DynamicRootContext';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
-import { usePermission } from '@backstage/plugin-permission-react';
+import { makeStyles } from 'tss-react/mui';
+
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+
+import DynamicRootContext, {
+  ResolvedMenuItem,
+} from '../DynamicRoot/DynamicRootContext';
 import { MenuIcon } from './MenuIcon';
-import Box from '@mui/material/Box';
+import { SidebarLogo } from './SidebarLogo';
 
 const useStyles = makeStyles()({
   sidebarItem: {

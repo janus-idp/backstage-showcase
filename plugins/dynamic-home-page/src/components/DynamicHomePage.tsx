@@ -1,5 +1,6 @@
 import React from 'react';
-import { Page, Header, Content, EmptyState } from '@backstage/core-components';
+
+import { Content, EmptyState, Header, Page } from '@backstage/core-components';
 
 import { useHomePageMountPoints } from '../hooks/useHomePageMountPoints';
 import { ReadOnlyGrid } from './ReadOnlyGrid';
