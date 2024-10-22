@@ -10,7 +10,7 @@ test.describe.serial('GitHub integration with Org data fetching', () => {
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebar('Catalog');
   });
 

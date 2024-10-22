@@ -14,11 +14,11 @@ export class Common {
     this.uiHelper = new UIhelper(page);
   }
 
-  public static async logintoGithub(page: Page) {
-    const uiHelper = new UIhelper(page);
-    page.goto('/');
-    await page.getByRole('button', { name: 'Sign In' }).click();
-    await uiHelper.waitForSideBarVisible();
+  public async logintoGithub() {
+    this.page.goto('/');
+    await this.page.getByRole('button', { name: 'Sign In' }).click();
+    await this.checkAndReauthorizeGithubApp();
+    await this.uiHelper.waitForSideBarVisible();
   }
 
   public async loginAsGuest() {

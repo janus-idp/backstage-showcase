@@ -30,7 +30,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
   });
 
   test('Register an Template', async () => {
