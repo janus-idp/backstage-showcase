@@ -8827,10 +8827,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@immobiliarelabs/backstage-plugin-gitlab-backend@6.6.0":
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/@immobiliarelabs/backstage-plugin-gitlab-backend/-/backstage-plugin-gitlab-backend-6.6.0.tgz#3b058bf38773354113486c4fc417312eec1b3874"
-  integrity sha512-nAwQwHw0CVwAKK1wMqFu08w68x8LWugacREBPPE9FlBNnD3gRtJLHhyMkfk1wjCSQEiaQSg71Pg1R/pEguHMQQ==
+"@immobiliarelabs/backstage-plugin-gitlab-backend@6.7.0":
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/@immobiliarelabs/backstage-plugin-gitlab-backend/-/backstage-plugin-gitlab-backend-6.7.0.tgz#5199c76a32620dbdd69c64ee511d0fc4e2669f83"
+  integrity sha512-VJ0SotqOsSk5ZAKbzTIQozF/SVumS7BnTlCw5qqU8sT4GoWH5hgjmjzgsThoZEXXyvrO5MqNfnUkxBPKOeGqfg==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
     "@backstage/backend-plugin-api" "^0.7.0"
@@ -8843,10 +8843,10 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@immobiliarelabs/backstage-plugin-gitlab@6.6.0":
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/@immobiliarelabs/backstage-plugin-gitlab/-/backstage-plugin-gitlab-6.6.0.tgz#33cddf43ede9045eca57ec196766b4d6897abedf"
-  integrity sha512-rMCMub2icAgzRHHif01+6iUZ/y91caUt39YPmji07aNo47jgbO4lGmiBDCYCuCgCY39P5NV/wh1VX5oYExii7A==
+"@immobiliarelabs/backstage-plugin-gitlab@6.6.1":
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/@immobiliarelabs/backstage-plugin-gitlab/-/backstage-plugin-gitlab-6.6.1.tgz#b6492b0d98ae916878222d1b46c0199a0b1d3868"
+  integrity sha512-C3M3ahrV5yUEVmiAZMMWv4KuV0fxJcJQzM0uhTm5ekkBMibPUOtXVWBjobUpJJfxRMg9BUAupDcpI2ysWW2tKg==
   dependencies:
     "@backstage/core-components" "^0.14.9"
     "@backstage/core-plugin-api" "^1.9.3"
