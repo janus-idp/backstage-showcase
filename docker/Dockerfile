@@ -38,7 +38,7 @@ ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
