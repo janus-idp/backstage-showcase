@@ -15,7 +15,8 @@ export class Common {
   }
 
   public async logintoGithub() {
-    this.page.goto('/');
+    await this.page.goto('/');
+    await this.page.waitForURL('/');
   }
 
   public async loginAsGuest() {
