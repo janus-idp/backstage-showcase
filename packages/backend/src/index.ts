@@ -11,7 +11,6 @@ import { configureCorporateProxyAgent } from './corporate-proxy';
 import { CommonJSModuleLoader } from './loader';
 import { customLogger } from './logger';
 import {
-  metricsPlugin,
   healthCheckPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
@@ -45,7 +44,6 @@ backend.add(
 backend.add(dynamicPluginsFrontendSchemas);
 backend.add(customLogger);
 
-backend.add(metricsPlugin);
 backend.add(healthCheckPlugin);
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
