@@ -153,6 +153,21 @@ catalog:
 
     - type: url
       target: https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/templates.yaml
+  providers:
+    rhaap:
+      development:
+        baseUrl: ${RHAAP_HOST}
+        clientId: ${RHAAP_CATALOG_OAUTH_CLIENT_ID}
+        clientSecret: ${RHAAP_CATALOG_OAUTH_CLIENT_SECRET}
+        user: ${RHAAP_CATALOG_USER}
+        password: ${RHAAP_CATALOG_PASSWORD}
+        schedule:
+          frequency:
+            minutes: 1
+          timeout:
+            minutes: 1
+          initialDelay:
+            seconds: 15
 
 # Plugin: PagerDuty
 pagerduty:
@@ -173,3 +188,25 @@ permission:
 
 dynamicPlugins:
   rootDirectory: dynamic-plugins-root
+
+dynamic:
+  includes:
+    - dynamic-plugins.default.yaml
+  plugins:
+    - package: ./dynamic-plugins-root/internal-backstage-plugin-catalog-backend-module-rhaap-0.1.0.tgz
+      disabled: false
+
+signInPage: rhaap
+auth:
+  environment: development
+  providers:
+    rhaap:
+      development:
+        host: ${RHAAP_HOST}
+        clientId: ${RHAAP_OAUTH_CLIENT_ID}
+        clientSecret: ${RHAAP_OAUTH_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUser
+
+enableExperimentalRedirectFlow: true

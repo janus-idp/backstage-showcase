@@ -4,6 +4,7 @@
 **/node_modules
 plugins
 !plugins/auth-backend-module-oidc-provider
+!plugins/auth-backend-module-rhaap-provider
 !plugins/dynamic-home-page
 !plugins/dynamic-plugins-info
 !plugins/dynamic-plugins-info-backend

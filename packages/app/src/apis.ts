@@ -16,6 +16,7 @@ import {
   auth0AuthApiRef,
   oidcAuthApiRef,
   samlAuthApiRef,
+  rhAapAuthApiRef,
 } from './api/AuthApiRefs';
 import {
   LearningPathApiClient,
@@ -99,6 +100,28 @@ export const apis: AnyApiFactory[] = [
           icon: () => null,
         },
         environment: configApi.getOptionalString('auth.environment'),
+      }),
+  }),
+  // AAP auth
+  createApiFactory({
+    api: rhAapAuthApiRef,
+    deps: {
+      discoveryApi: discoveryApiRef,
+      oauthRequestApi: oauthRequestApiRef,
+      configApi: configApiRef,
+    },
+    factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
+      OAuth2.create({
+        configApi,
+        discoveryApi,
+        oauthRequestApi,
+        provider: {
+          id: 'rhaap',
+          title: 'RedHat AAP auth provider',
+          icon: () => null,
+        },
+        environment: configApi.getOptionalString('auth.environment'),
+        defaultScopes: ['read'],
       }),
   }),
 ];

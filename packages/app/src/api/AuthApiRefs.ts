@@ -25,3 +25,7 @@ export const auth0AuthApiRef: ApiRef<CustomAuthApiRefType> = createApiRef({
 export const samlAuthApiRef: ApiRef<CustomAuthApiRefType> = createApiRef({
   id: 'internal.auth.saml',
 });
+
+export const rhAapAuthApiRef: ApiRef<
+  OAuthApi & ProfileInfoApi & BackstageIdentityApi & SessionApi
+> = createApiRef({ id: 'internal.auth.rhaap' });

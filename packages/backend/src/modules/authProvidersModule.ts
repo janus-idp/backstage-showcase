@@ -23,6 +23,10 @@ import {
   oidcSignInResolvers,
 } from '@internal/plugin-auth-backend-module-oidc-provider';
 import { ConfigSources } from '@backstage/config-loader';
+import {
+  aapAuthAuthenticator,
+  AAPAuthSignInResolvers,
+} from '@internal/backstage-plugin-auth-backend-module-rhaap-provider';
 /**
  * Function is responsible for signing in a user with the catalog user and
  * creating an entity reference based on the provided name parameter.
@@ -265,6 +269,13 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
       return providers.saml.create({
         signIn: {
           resolver: providers.saml.resolvers.nameIdMatchingUserEntityName(),
+        },
+      });
+    case 'rhaap':
+      return createOAuthProviderFactory({
+        authenticator: aapAuthAuthenticator,
+        signInResolverFactories: {
+          ...AAPAuthSignInResolvers,
         },
       });
     default:

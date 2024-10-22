@@ -37,6 +37,7 @@
     "@backstage/plugin-search-backend": "1.5.14",
     "@backstage/plugin-search-backend-module-catalog": "0.1.28",
     "@backstage/plugin-search-backend-module-pg": "0.5.32",
+    "@internal/backstage-plugin-auth-backend-module-rhaap-provider": "*",
     "@internal/plugin-auth-backend-module-oidc-provider": "*",
     "@internal/plugin-dynamic-plugins-info-backend": "*",
     "@internal/plugin-licensed-users-info-backend": "*",

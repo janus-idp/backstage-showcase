@@ -20,7 +20,12 @@ import {
   ProxiedSignInPage,
   type SignInProviderConfig,
 } from '@backstage/core-components';
-import { auth0AuthApiRef, oidcAuthApiRef, samlAuthApiRef } from '../../api';
+import {
+  auth0AuthApiRef,
+  oidcAuthApiRef,
+  samlAuthApiRef,
+  rhAapAuthApiRef,
+} from '../../api';
 
 const DEFAULT_PROVIDER = 'github';
 
@@ -143,6 +148,15 @@ const PROVIDERS = new Map<string, SignInProviderConfig | string>([
       title: 'SAML',
       message: 'Sign in using SAML',
       apiRef: samlAuthApiRef,
+    },
+  ],
+  [
+    'rhaap',
+    {
+      id: 'rhaap-auth-provider',
+      title: 'RedHat AAP',
+      message: 'Sign in using RedHat AAP',
+      apiRef: rhAapAuthApiRef,
     },
   ],
 ]);

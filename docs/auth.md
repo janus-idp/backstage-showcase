@@ -20,6 +20,7 @@ Currently we incorporate many of the Authentication providers available within B
 | OAuth 2 Custom Proxy | `oauth2Proxy`     |
 | OneLogin             | `onelogin`        |
 | SAML                 | `saml`            |
+| RedHat AAP           | `rhaap`           |
 
 ## Enabling Authentication in Showcase
 
@@ -124,6 +125,28 @@ The default resolver provided by the `oidc` auth provider is the `emailLocalPart
 If you want to use a different resolver, add the resolver you want to use in the `auth.providers.oidc.[environment].signIn.resolvers` configuration as soon in the example above, and it will override the default resolver.
 
 For more information on setting up the OIDC auth provider, consult the [Backstage documentation](https://backstage.io/docs/auth/oidc#the-configuration).
+
+### RedHat Ansible Automation Platform
+
+```yaml
+auth:
+  environment: development
+  providers:
+    rhaap:
+      development:
+        host: ${RHAAP_HOST} # e.g. https://my-aap.example.com
+        clientId: ${RHAAP_OAUTH_CLIENT_ID}
+        clientSecret: ${RHAAP_OAUTH_CLIENT_SECRET}
+        signIn:
+          resolvers:
+            - resolver: usernameMatchingUser
+```
+
+The AAP OAuth application should be created as:
+
+1. Authorization Grant Type: `authorization-code`
+2. Client Type: `confidential`
+3. Redirect URIs: `<BACKSTAGE_URL>/api/auth/rhaap/handler/frame`
 
 ### Sign In Page configuration value
 
