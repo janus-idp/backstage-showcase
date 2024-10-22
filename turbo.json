@@ -8,50 +8,35 @@
   ],
   "tasks": {
     "export-dynamic": {
-      "outputs": [
-        "dist-dynamic/**"
-      ],
-      "dependsOn": [
-        "//#tsc"
-      ]
+      "outputs": ["dist-dynamic/**"],
+      "dependsOn": ["//#tsc"]
     },
     "start": {
       "cache": false,
       "persistent": true
     },
     "build": {
-      "outputs": [
-        "dist/**"
-      ],
-      "dependsOn": [
-        "//#tsc",
-        "^build"
-      ]
+      "outputs": ["dist/**"],
+      "dependsOn": ["//#tsc", "^build"]
     },
     "app#build": {
-      "outputs": [
-        "dist/**"
-      ],
-      "dependsOn": [
-        "^build"
-      ]
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build"]
     },
     "clean": {
       "cache": false
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ]
+      "outputs": ["coverage/**"]
     },
     "lint": {},
+    "prettier:check": {},
+    "prettier:fix": {
+      "cache": false
+    },
     "//#tsc": {
-      "outputs": [
-        "dist-types/**"
-      ],
-      "dependsOn": [
-        "^tsc"
-      ]
+      "outputs": ["dist-types/**"],
+      "dependsOn": ["^tsc"]
     },
     "//#prettier:fix": {
       "cache": false

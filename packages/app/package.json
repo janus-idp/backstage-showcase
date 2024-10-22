@@ -11,7 +11,10 @@
     "build": "janus-cli package build",
     "clean": "backstage-cli package clean",
     "test": "backstage-cli package test --passWithNoTests --coverage",
-    "lint": "backstage-cli package lint"
+    "lint": "backstage-cli package lint",
+    "tsc": "tsc",
+    "prettier:check": "prettier --ignore-unknown --check .",
+    "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "dependencies": {
     "@backstage/app-defaults": "1.5.9",
@@ -64,7 +67,8 @@
     "@testing-library/user-event": "14.5.2",
     "@types/node": "18.19.50",
     "@types/react": "18.3.7",
-    "@types/react-dom": "18.3.0"
+    "@types/react-dom": "18.3.0",
+    "prettier": "3.3.3"
   },
   "browserslist": {
     "production": [

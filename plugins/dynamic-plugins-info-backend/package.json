@@ -25,7 +25,10 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack"
+    "postpack": "backstage-cli package postpack",
+    "tsc": "tsc",
+    "prettier:check": "prettier --ignore-unknown --check .",
+    "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "dependencies": {
     "@backstage/backend-common": "0.23.3",
@@ -43,6 +46,7 @@
     "@backstage/cli": "0.26.11",
     "@types/supertest": "6.0.2",
     "msw": "2.4.9",
+    "prettier": "3.3.3",
     "supertest": "6.3.4"
   },
   "files": [

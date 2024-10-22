@@ -26,7 +26,10 @@
     "test": "backstage-cli package test",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack"
+    "postpack": "backstage-cli package postpack",
+    "tsc": "tsc",
+    "prettier:check": "prettier --ignore-unknown --check .",
+    "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "dependencies": {
     "@backstage/backend-common": "0.23.3",
@@ -48,6 +51,7 @@
     "express-session": "1.18.0",
     "jose": "5.9.3",
     "msw": "1.3.4",
+    "prettier": "3.3.3",
     "supertest": "6.3.4"
   },
   "configSchema": "config.d.ts",

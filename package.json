@@ -20,8 +20,8 @@
     "fix": "backstage-cli repo fix",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
-    "prettier:check": "prettier --ignore-unknown --check .",
-    "prettier:fix": "prettier --ignore-unknown --write .",
+    "prettier:check": "turbo run prettier:check",
+    "prettier:fix": "turbo run prettier:fix",
     "new": "backstage-cli new --scope internal",
     "versions:bump": "backstage-cli versions:bump --pattern @{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
     "versions:metadata": "node ./scripts/update-metadata.mjs",
@@ -42,7 +42,6 @@
     "husky": "8.0.3",
     "lint-staged": "15.2.10",
     "node-gyp": "10.2.0",
-    "prettier": "3.3.3",
     "turbo": "2.2.3",
     "typescript": "5.6.2"
   },

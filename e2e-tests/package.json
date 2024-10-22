@@ -17,9 +17,13 @@
     "showcase-aks-ci-nightly": "playwright test --project=showcase-aks",
     "showcase-rbac-aks-ci-nightly": "playwright test --project=showcase-rbac-aks",
     "lint": "eslint . --ext .js,.ts",
-    "postinstall": "playwright install"
+    "postinstall": "playwright install",
+    "tsc": "tsc",
+    "prettier:check": "prettier --ignore-unknown --check .",
+    "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "devDependencies": {
+    "prettier": "3.3.3",
     "@playwright/test": "1.48.0",
     "@types/node": "20.16.5",
     "@typescript-eslint/eslint-plugin": "6.21.0",
