@@ -42,14 +42,14 @@ async function getGitHub2FAOTP(userid: string): Promise<string> {
 
 setup('authenticate as GH_USER_ID', async ({ page }) => {
   const userId = process.env.GH_USER_ID;
-  const password = process.env.GH_USER_PASS2;
+  const password = process.env.GH_USER_PASS;
   await onceGithubLogin(userId, password, page);
   await page.context().storageState({ path: GH_USER_IDAuthFile });
 });
 
 setup('authenticate as GH_USER2_ID', async ({ page }) => {
   const userId = process.env.GH_USER2_ID;
-  const password = process.env.GH_USER2_PASS2;
+  const password = process.env.GH_USER2_PASS;
   await onceGithubLogin(userId, password, page);
   await page.context().storageState({ path: GH_USER2_IDAuthFile });
 });
