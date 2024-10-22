@@ -21,18 +21,13 @@ export class Common {
     await uiHelper.waitForSideBarVisible();
   }
 
-  async loginAsGuest() {
+  public async loginAsGuest() {
+    const uiHelper = new UIhelper(this.page);
     await this.page.goto('/');
     await this.page.waitForURL('/');
-    // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
-    this.page.on('dialog', async dialog => {
-      console.log(`Dialog message: ${dialog.message()}`);
-      await dialog.accept();
-    });
-
-    await this.uiHelper.verifyHeading('Select a sign-in method');
-    await this.uiHelper.clickButton('Enter');
-    await this.uiHelper.waitForSideBarVisible();
+    await uiHelper.verifyHeading('Select a sign-in method');
+    await uiHelper.clickButton('Enter');
+    await uiHelper.waitForSideBarVisible();
   }
 
   async waitForLoad(timeout = 120000) {
@@ -67,6 +62,42 @@ export class Common {
           await locator.click();
         }
         resolve();
+      });
+    });
+  }
+
+  async githubLogin(username: string, password: string) {
+    await this.page.goto('/');
+    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
+    await this.uiHelper.clickButton('Sign In');
+
+    return await new Promise<string>(resolve => {
+      this.page.once('popup', async popup => {
+        await popup.waitForLoadState();
+        if (popup.url().startsWith(process.env.BASE_URL)) {
+          // an active rhsso session is already logged in and the popup will automatically close
+          resolve('Already logged in');
+        } else {
+          await popup.waitForTimeout(3000);
+          try {
+            await popup.locator('#login_field').fill(username);
+            await popup.locator('#password').fill(password);
+            await popup.locator("[type='submit']").click({ timeout: 5000 });
+            //await this.checkAndReauthorizeGithubApp()
+            await popup.waitForEvent('close', { timeout: 2000 });
+            resolve('Login successful');
+          } catch (e) {
+            const authorization = popup.locator(
+              'button.js-oauth-authorize-btn',
+            );
+            if (await authorization.isVisible()) {
+              authorization.click();
+              resolve('Login successful with app authorization');
+            } else {
+              throw e;
+            }
+          }
+        }
       });
     });
   }
@@ -134,42 +165,6 @@ export class Common {
             if (await usernameError.isVisible()) {
               await popup.close();
               resolve('User does not exist');
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
-    });
-  }
-
-  async githubLogin(username: string, password: string) {
-    await this.page.goto('/');
-    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
-    await this.uiHelper.clickButton('Sign In');
-
-    return await new Promise<string>(resolve => {
-      this.page.once('popup', async popup => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve('Already logged in');
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator('#login_field').fill(username);
-            await popup.locator('#password').fill(password);
-            await popup.locator("[type='submit']").click({ timeout: 5000 });
-            //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent('close', { timeout: 2000 });
-            resolve('Login successful');
-          } catch (e) {
-            const authorization = popup.locator(
-              'button.js-oauth-authorize-btn',
-            );
-            if (await authorization.isVisible()) {
-              authorization.click();
-              resolve('Login successful with app authorization');
             } else {
               throw e;
             }

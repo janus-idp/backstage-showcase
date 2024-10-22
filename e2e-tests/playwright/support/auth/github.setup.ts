@@ -1,11 +1,6 @@
-import { test as setup, expect, Page, Locator } from '@playwright/test';
-import { Common } from '../../utils/Common';
+import { test as setup, Page, Locator } from '@playwright/test';
 import { authenticator } from 'otplib';
-import {
-  GH_USER2_IDAuthFile,
-  GH_USER_IDAuthFile,
-  GuestAuthFile,
-} from './auth_constants';
+import { GH_USER2_IDAuthFile, GH_USER_IDAuthFile } from './auth_constants';
 
 async function onceGithubLogin(userId: string, password: string, page: Page) {
   const githubLoginEmail: Locator = page.locator('#login_field');
@@ -52,9 +47,4 @@ setup('authenticate as GH_USER2_ID', async ({ page }) => {
   const password = process.env.GH_USER2_PASS;
   await onceGithubLogin(userId, password, page);
   await page.context().storageState({ path: GH_USER2_IDAuthFile });
-});
-
-setup('authenticate as Guest', async ({ page }) => {
-  await new Common(page).loginAsGuest();
-  await page.context().storageState({ path: GuestAuthFile });
 });
