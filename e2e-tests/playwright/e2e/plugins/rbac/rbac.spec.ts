@@ -20,9 +20,9 @@ test.describe
   let uiHelper: UIhelper;
   let page: Page;
 
-  test.beforeEach(async ({ page }, testInfo) => {
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');
@@ -77,7 +77,7 @@ test.describe
   test.use({ storageState: GH_USER2_IDAuthFile });
 
   test.beforeEach(async ({ page }) => {
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
   });
 
   test('Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.', async ({
@@ -119,7 +119,7 @@ test.describe.serial('Test RBAC plugin as an admin user', () => {
 
   test.beforeEach(async ({ page }) => {
     const uiHelper = new UIhelper(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton('Administration');
     await uiHelper.openSidebar('RBAC');
     await uiHelper.verifyHeading('RBAC');

@@ -24,7 +24,7 @@ test.describe.serial('GitHub Happy path', () => {
     common = new Common(page);
     catalogImport = new CatalogImport(page);
     backstageShowcase = new BackstageShowcase(page);
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
   });
 
   test('Verify Profile is Github Account Name in the Settings page', async ({

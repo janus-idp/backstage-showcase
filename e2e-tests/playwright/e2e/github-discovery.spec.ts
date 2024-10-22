@@ -16,7 +16,7 @@ base.use({ storageState: GH_USER_IDAuthFile });
 
 const test = base.extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page }, use) => {
-    await Common.logintoGithub(page);
+    await new Common(page).logintoGithub();
     const catalog = new Catalog(page);
     await catalog.go();
     use(catalog);
