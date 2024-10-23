@@ -16,7 +16,7 @@ These interactions are picked up by the OpenShift-CI service, which sets up a te
 
 > **Note:** We do **not** have PR checks running on Azure Kubernetes Service (AKS); all PR checks are executed on IBM Cloud's `rhdh-pr-os` cluster.
 
-Detailed steps on how the tests and reports are managed can be found in the `run_tests()` function within the `openshift-ci-tests.sh` script. Additionally, all the different `yarn` commands that trigger various [Playwright projects] are described in the `package.json` file.
+Detailed steps on how the tests and reports are managed can be found in the `run_tests()` function within the `openshift-ci-tests.sh` script. Additionally, all the different `yarn` commands that trigger various Playwright projects are described in the `package.json` file.
 
 When the test run is complete, the status will be reported under your PR checks.
 
@@ -39,7 +39,7 @@ This is useful if you believe a failure was due to a flake or external issue and
 - **Trigger:** When a PR is opened and `/ok-to-test` is commented by a janus-idp member, or when `/test`, `/test all`, or `/retest` is issued after validation.
 - **Environment:** Runs on the ephemeral `rhdh-pr-os` cluster on IBM Cloud.
 - **Configurations:**
-  - Tests are executed on both **RBAC** (Role-Based Access Control) and **non-RBAC** instances to ensure comprehensive coverage.
+  - Tests are executed on both **RBAC** (Role-Based Access Control) and **non-RBAC** namespaces.
 - **Steps:**
   1. **Detection:** OpenShift-CI detects the PR event.
   2. **Environment Setup:** The test environment is set up using the `openshift-ci-tests.sh` script.
@@ -63,7 +63,7 @@ This is useful if you believe a failure was due to a flake or external issue and
 
 ## Nightly Tests
 
-Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments, including both **RBAC** and **non-RBAC** instances.
+Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments, including both **RBAC** and **non-RBAC**.
 
 - **AKS Nightly Tests:** Nightly tests for Azure Kubernetes Service (AKS) run on the `bsCluster`. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
 
@@ -76,9 +76,7 @@ The nightly job for the `main` branch also runs against:
 - **`rhdh-os-1`** (currently OCP 4.14).
 - **`rhdh-os-2`** (currently OCP 4.15).
 
-We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the latest version we support. The team manages these upgrades to keep our test environments up-to-date with the newest supported OCP versions.
-
-> **Note:** The output of the nightly runs, including test results and any relevant notifications, is posted on the Slack channel **`#rhdh-e2e-test-alerts`**. This allows the team to monitor test outcomes and promptly address any issues that arise.
+> **Note:** The output of the nightly runs, including test results and any relevant notifications, is posted on the Slack channel **`#rhdh-e2e-test-alerts`**.
 
 ### CI Job Definitions
 
@@ -90,9 +88,9 @@ We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the l
   - **AKS Nightly Tests:** Runs on the `bsCluster`.
   - **IBM Cloud Nightly Tests:** Runs on the `rhdh-pr-os`, `rhdh-os-1`, and `rhdh-os-2` clusters.
 - **Configurations:**
-  - Tests are executed on both **RBAC** and **non-RBAC** instances to cover different security configurations.
+  - Tests are executed on both **RBAC** and **non-RBAC** namespaces.
 - **Steps:**
-  1. **Triggering:** Nightly job is triggered by the scheduler.
+  1. **Triggering:** Nightly job is triggered on schedule.
   2. **Environment Setup:** Uses the `openshift-ci-tests.sh` script for setting up the environment.
      - **Cluster Selection:** Chooses the appropriate cluster based on the job name.
      - **Resource Configuration:** Sets up namespaces and configures resources.
@@ -106,38 +104,13 @@ We regularly upgrade the clusters to ensure that `rhdh-pr-os` is always at the l
      - Stores artifacts for later review for a retention period of **6 months**.
   5. **Reporting:**
      - Posts outputs to Slack channel `#rhdh-e2e-test-alerts`.
-     - Generates reports for team visibility.
+     - Generates report.
 - **Artifacts:** Comprehensive test reports, logs, screenshots.
 - **Notifications:** Results posted on Slack.
 
 ### Nightly Test Diagram
 
 ![Nightly Testing Diagram](./resources/nightly_diagram.svg)
-
-## Supported Platforms and Testing Strategies
-
-Our CI pipeline supports testing on multiple platforms to ensure compatibility and stability across different environments. Tests are executed on both **RBAC** and **non-RBAC** instances to ensure that our applications function correctly under different security configurations.
-
-### Supported Platforms
-
-- **Azure Kubernetes Service (AKS):**
-
-  - **Cluster:** `bsCluster`
-  - **Testing Strategy:** Nightly tests are executed to validate functionality on AKS, covering both RBAC and non-RBAC configurations.
-  - **Reasoning:** AKS represents a significant portion of our user base; testing ensures compatibility and performance on Azure infrastructure.
-  - **Notes:** No PR tests are conducted on AKS; it is exclusively used for nightly runs.
-
-- **IBM Cloud OpenShift Clusters:**
-
-  - **Clusters:**
-    - **`rhdh-pr-os`** (latest supported OCP version)
-    - **`rhdh-os-1`** (currently OCP 4.14)
-    - **`rhdh-os-2`** (currently OCP 4.15)
-  - **Testing Strategy:**
-    - PR tests and nightly tests run on `rhdh-pr-os`, covering both RBAC and non-RBAC instances.
-    - Additional nightly tests for the main branch run on `rhdh-os-1` and `rhdh-os-2` to validate against different OCP versions.
-  - **Reasoning:** Testing across multiple OCP versions ensures that our applications remain compatible with different OpenShift environments used by our customers.
-  - **Notes:** Clusters are regularly upgraded to the latest supported OCP versions.
 
 ## Configuration and Installation of Testing Environments
 
@@ -158,16 +131,5 @@ Our CI pipeline supports testing on multiple platforms to ensure compatibility a
 
 ### Configuration Details
 
-- **Clusters:**
-  - Configured with necessary resources and permissions.
-  - Running specific versions of OpenShift (OCP 4.14, 4.15, latest).
-- **RHDH Instances:**
-  - Deployed with predefined configurations suitable for testing.
-  - Ensures consistency across test runs and environments.
 - **Environment Variables and Secrets:**
-  - Environment variables such as `AKS_NIGHTLY_CLUSTER_NAME` and secrets like GitHub credentials are stored securely in the **OpenShift-CI Vault**.
-    - Located under **Pipeline** and **e2e-tests Secrets**.
-  - These are securely accessed by the scripts during runtime through environment variables.
-- **Secrets Management:**
-  - All sensitive information is managed securely within the OpenShift-CI Vault.
-  - Access is controlled and audited to maintain security compliance, following best practices and compliance standards.
+  - Environment variables such as `AKS_NIGHTLY_CLUSTER_NAME` and secrets like GitHub credentials are stored securely in the **OpenShift-CI Vault**. These are securely accessed by the scripts during runtime through environment variables.
