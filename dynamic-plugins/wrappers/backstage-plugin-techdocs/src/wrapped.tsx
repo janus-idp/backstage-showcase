@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
+// import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import {
   TechDocsReaderPage as TechDocsReaderPageBase,
@@ -17,20 +17,12 @@ import { useApi } from '@backstage/core-plugin-api';
 
 export const TechDocsReaderPage = {
   element: TechDocsReaderPageBase,
-  staticJSXContent: (
-    <TechDocsAddons>
-      <ReportIssue />
-    </TechDocsAddons>
-  ),
+  staticJSXContent: <TechDocsAddons>{/* <ReportIssue /> */}</TechDocsAddons>,
 };
 
 export const EntityTechdocsContent = {
   element: EntityTechdocsContentBase,
-  staticJSXContent: (
-    <TechDocsAddons>
-      <ReportIssue />
-    </TechDocsAddons>
-  ),
+  staticJSXContent: <TechDocsAddons>{/* <ReportIssue /> */}</TechDocsAddons>,
 };
 
 export const TechdocsSearchFilter = () => {
