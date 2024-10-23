@@ -269,18 +269,18 @@ wait_for_deployment() {
     return 1
 }
 
-install_pipelines_operator() {
-  oc apply -f - <<EOF
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: openshift-pipelines-operator
-  namespace: openshift-operators
-spec:
-  channel: "pipelines-1.12"
-  name: openshift-pipelines-operator-rh
-  source: redhat-operators
-  sourceNamespace: openshift-marketplace
-EOF
-  wait_for_deployment "openshift-operators" "pipelines"
-}
+# install_pipelines_operator() {
+#   oc apply -f - <<EOF
+# apiVersion: operators.coreos.com/v1alpha1
+# kind: Subscription
+# metadata:
+#   name: openshift-pipelines-operator
+#   namespace: openshift-operators
+# spec:
+#   channel: "pipelines-1.12"
+#   name: openshift-pipelines-operator-rh
+#   source: redhat-operators
+#   sourceNamespace: openshift-marketplace
+# EOF
+#   wait_for_deployment "openshift-operators" "pipelines"
+# }

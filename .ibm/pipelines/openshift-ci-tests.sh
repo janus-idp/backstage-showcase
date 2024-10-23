@@ -277,6 +277,7 @@ install_pipelines_operator() {
     echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
     oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
   fi
+  wait_for_deployment "openshift-operators" "pipelines"
 }
 
 install_tekton_pipelines() {
@@ -404,7 +405,6 @@ main() {
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
     delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else
-    install_pipelines_operator
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
