@@ -223,7 +223,7 @@ plugins:
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-topology:
+          backstage-community.plugin-topology:
             mountPoints:
               - mountPoint: entity.page.topology/cards
                 importName: TopologyPage
@@ -292,6 +292,8 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
+  - package: ./dynamic-plugins/dist/backstage-plugin-bazaar-backend-dynamic
+    disabled: false
   - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
     disabled: true
     pluginConfig:
@@ -585,7 +587,7 @@ plugins:
     disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
-    disabled: true
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
