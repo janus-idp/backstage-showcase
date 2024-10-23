@@ -23,7 +23,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "@janus-idp/cli": "1.13.2"
+    "@janus-idp/cli": "1.13.3"
   },
   "devDependencies": {},
   "files": [
