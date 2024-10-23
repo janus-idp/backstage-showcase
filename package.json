@@ -34,7 +34,8 @@
       "plugins/*",
       "dynamic-plugins/_utils",
       "dynamic-plugins/imports",
-      "dynamic-plugins/wrappers/*"
+      "dynamic-plugins/wrappers/*",
+      "e2e-tests"
     ]
   },
   "devDependencies": {
