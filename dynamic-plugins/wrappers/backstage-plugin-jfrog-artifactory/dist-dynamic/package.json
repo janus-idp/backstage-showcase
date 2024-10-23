@@ -1,0 +1,69 @@
+{
+  "name": "backstage-community-plugin-jfrog-artifactory-dynamic",
+  "version": "1.8.2",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "backstage": {
+    "role": "backend-plugin",
+    "supported-versions": "1.29.2",
+    "pluginId": "backstage-community-plugin-jfrog-artifactory",
+    "pluginPackages": [
+      "backstage-community-plugin-jfrog-artifactory"
+    ]
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {},
+  "dependencies": {
+    "@janus-idp/shared-react": "2.11.1",
+    "@material-ui/core": "^4.9.13",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "^4.0.0-alpha.45",
+    "react-use": "^17.4.0"
+  },
+  "devDependencies": {},
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-jfrog-artifactory"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
+  ],
+  "bundleDependencies": true,
+  "peerDependencies": {
+    "@backstage/catalog-model": "^1.5.0",
+    "@backstage/core-components": "^0.14.9",
+    "@backstage/core-plugin-api": "^1.9.3",
+    "@backstage/plugin-catalog-react": "^1.12.2",
+    "@backstage/theme": "^0.5.6"
+  },
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
+  }
+}

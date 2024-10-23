@@ -3253,6 +3253,22 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
+"@backstage-community/plugin-jfrog-artifactory@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@backstage-community/plugin-jfrog-artifactory/-/plugin-jfrog-artifactory-1.8.2.tgz#cbf3126a277e018b24e6d3ae786b05ce32519d40"
+  integrity sha512-kYffHmnrLlo1fcix+ls6zfNaoQqUtBs60HK1onyOD3FRnCa/L37LoF4J8eYl4Z2OmFfVl9ampfLO17Ln0tq0/Q==
+  dependencies:
+    "@backstage/catalog-model" "^1.5.0"
+    "@backstage/core-components" "^0.14.9"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-catalog-react" "^1.12.2"
+    "@backstage/theme" "^0.5.6"
+    "@janus-idp/shared-react" "2.11.1"
+    "@material-ui/core" "^4.9.13"
+    "@material-ui/icons" "^4.11.3"
+    "@material-ui/lab" "^4.0.0-alpha.45"
+    react-use "^17.4.0"
+
 "@backstage-community/plugin-lighthouse-common@^0.1.6":
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/@backstage-community/plugin-lighthouse-common/-/plugin-lighthouse-common-0.1.6.tgz#6b6b334cf6f2759647513fd59193cd724bee4bc9"
@@ -9123,6 +9139,26 @@
     mathjs "^11.11.2"
     react-use "^17.5.0"
 
+"@janus-idp/shared-react@2.11.1":
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/@janus-idp/shared-react/-/shared-react-2.11.1.tgz#eeefa3a436d93531d99cb5da92b1d2d6c004bb68"
+  integrity sha512-MJb+/h4XrrQUaktKDB6dO0CbTdgdhHqND6hZG59p5eE7I6cY761BMWs7M3WN4pmXtPVGYcUsZezcWdmLHBigHw==
+  dependencies:
+    "@backstage/catalog-model" "1.5.0"
+    "@backstage/core-components" "^0.14.9"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-kubernetes-common" "0.8.0"
+    "@backstage/plugin-kubernetes-react" "0.4.0"
+    "@kubernetes/client-node" "^0.20.0"
+    "@material-ui/core" "^4.12.4"
+    "@mui/icons-material" "5.15.17"
+    classnames "^2.3.2"
+    date-fns "^2.30.0"
+    file-saver "^2.0.5"
+    lodash "^4.17.21"
+    mathjs "^11.11.2"
+    react-use "^17.5.0"
+
 "@jest-mock/express@^2.0.1":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@jest-mock/express/-/express-2.0.2.tgz#e4f61c30b45e517c14b35ea5d67d89a7e52908f7"
@@ -9955,6 +9991,13 @@
   version "5.16.7"
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.16.7.tgz#182a325a520f7ebd75de051fceabfc0314cfd004"
   integrity sha512-RtsCt4Geed2/v74sbihWzzRs+HsIQCfclHeORh5Ynu2fS4icIKozcSubwuG7vtzq2uW3fOR1zITSP84TNt2GoQ==
+
+"@mui/icons-material@5.15.17":
+  version "5.15.17"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.15.17.tgz#518c02354036f7df28c8f9890b1db6a3269fcc2f"
+  integrity sha512-xVzl2De7IY36s/keHX45YMiCpsIx3mNv2xwDgtBkRSnZQtVk+Gqufwj1ktUxEyjzEhBl0+PiNJqYC31C+n1n6A==
+  dependencies:
+    "@babel/runtime" "^7.23.9"
 
 "@mui/icons-material@5.16.7":
   version "5.16.7"
