@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/roadiehq-scaffolder-backend-module-http-request/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

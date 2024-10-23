@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/roadiehq-scaffolder-backend-argocd-dynamic/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

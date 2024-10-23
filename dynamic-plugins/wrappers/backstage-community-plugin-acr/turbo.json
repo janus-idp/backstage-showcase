@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": ["../../dist-types/plugins/backstage-community-plugin-acr/**"],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

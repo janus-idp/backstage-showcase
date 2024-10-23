@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/backstage-plugin-scaffolder-backend-module-gitlab-dynamic/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

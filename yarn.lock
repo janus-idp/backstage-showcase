@@ -4459,7 +4459,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-redhat-argocd-common@npm:1.0.5, @backstage-community/plugin-redhat-argocd-common@npm:^1.0.5":
+"@backstage-community/plugin-redhat-argocd-common@npm:^1.0.5":
   version: 1.0.5
   resolution: "@backstage-community/plugin-redhat-argocd-common@npm:1.0.5"
   dependencies:
@@ -20870,16 +20870,6 @@ __metadata:
   resolution: "backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor"
   dependencies:
     "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor": 1.2.6
-    "@backstage/cli": 0.26.11
-    "@janus-idp/cli": 1.14.0
-  languageName: unknown
-  linkType: soft
-
-"backstage-community-plugin-redhat-argocd-common@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd-common":
-  version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-redhat-argocd-common@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd-common"
-  dependencies:
-    "@backstage-community/plugin-redhat-argocd-common": 1.0.5
     "@backstage/cli": 0.26.11
     "@janus-idp/cli": 1.14.0
   languageName: unknown

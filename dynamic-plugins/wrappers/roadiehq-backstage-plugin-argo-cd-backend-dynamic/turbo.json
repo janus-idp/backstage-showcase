@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/roadiehq-backstage-plugin-argo-cd-backend-dynamic/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

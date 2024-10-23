@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/backstage-plugin-github-actions/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

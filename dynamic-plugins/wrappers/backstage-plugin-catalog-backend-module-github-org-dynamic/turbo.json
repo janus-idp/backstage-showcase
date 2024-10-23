@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/backstage-plugin-catalog-backend-module-github-org-dynamic/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

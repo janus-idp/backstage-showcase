@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/backstage-plugin-sonarqube-backend-dynamic/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}

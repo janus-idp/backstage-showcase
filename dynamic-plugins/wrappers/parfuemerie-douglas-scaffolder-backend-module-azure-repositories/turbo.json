@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/parfuemerie-douglas-scaffolder-backend-module-azure-repositories/**"
+      ],
+      "dependsOn": ["^tsc"]
+    }
+  }
+}
