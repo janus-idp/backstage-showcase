@@ -3,7 +3,7 @@
   "tasks": {
     "tsc": {
       "outputs": [
-        "../../../dist-types/plugins/backstage-plugin-github-actions/**"
+        "../../../dist-types/dynamic-plugins/wrappers/backstage-plugin-github-actions/**"
       ]
     }
   }

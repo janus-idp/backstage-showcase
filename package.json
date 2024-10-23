@@ -13,7 +13,7 @@
     "build": "turbo run build",
     "tsc": "turbo run tsc",
     "export-dynamic": "turbo run export-dynamic",
-    "export-dynamic:clean": "turbo run export-dynamic --clean",
+    "export-dynamic:clean": "turbo run export-dynamic:clean",
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
     "clean": "turbo run clean",
     "test": "turbo run test",

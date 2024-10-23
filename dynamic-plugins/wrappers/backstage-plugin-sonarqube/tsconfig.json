@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../../dist-types/plugins/backstage-plugin-sonarqube",
+    "outDir": "../../../dist-types/dynamic-plugins/wrappers/backstage-plugin-sonarqube",
     "rootDir": "."
   }
 }
