@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

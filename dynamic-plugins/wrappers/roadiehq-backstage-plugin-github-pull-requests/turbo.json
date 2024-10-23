@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/roadiehq-backstage-plugin-github-pull-requests/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

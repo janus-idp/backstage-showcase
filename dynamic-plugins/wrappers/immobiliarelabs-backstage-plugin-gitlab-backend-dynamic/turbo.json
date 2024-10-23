@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

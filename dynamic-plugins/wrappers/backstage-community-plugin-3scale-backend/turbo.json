@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/backstage-community-plugin-3scale-backend/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

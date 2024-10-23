@@ -22408,21 +22408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001587":
-  version: 1.0.30001589
-  resolution: "caniuse-lite@npm:1.0.30001589"
-  checksum: 7a6e6c4fb14c2bd0103a8f744bdd8701c1a5f19162f4a7600b89e25bc86d689f82204dc135f3a1dcd1a53050caa04fd0bb39b7df88698a6b90f189ec48900689
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001629":
-  version: 1.0.30001636
-  resolution: "caniuse-lite@npm:1.0.30001636"
-  checksum: b0347fd2c8d346680a64d98b061c59cb8fbf149cdd03005a447fae4d21e6286d5bd161b43eefe3221c6624aacb3cda4e838ae83c95ff5313a547f84ca93bcc70
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001669":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001587, caniuse-lite@npm:^1.0.30001629, caniuse-lite@npm:^1.0.30001669":
   version: 1.0.30001669
   resolution: "caniuse-lite@npm:1.0.30001669"
   checksum: 8ed0c69d0c6aa3b1cbc5ba4e5f5330943e7b7165e257f6955b8b73f043d07ad922265261f2b54d9bbaf02886bbdba5e6f5b16662310a13f91f17035af3212de1
@@ -25035,6 +25021,30 @@ __metadata:
   resolution: "dynamic-plugins-utils@workspace:dynamic-plugins/_utils"
   dependencies:
     "@backstage/cli": 0.26.11
+  languageName: unknown
+  linkType: soft
+
+"e2e-tests@workspace:e2e-tests":
+  version: 0.0.0-use.local
+  resolution: "e2e-tests@workspace:e2e-tests"
+  dependencies:
+    "@azure/identity": ^4.4.1
+    "@keycloak/keycloak-admin-client": ^25.0.2
+    "@kubernetes/client-node": ^0.21.0
+    "@microsoft/microsoft-graph-client": ^3.0.7
+    "@playwright/test": 1.48.0
+    "@types/node": 20.16.5
+    "@typescript-eslint/eslint-plugin": 6.21.0
+    "@typescript-eslint/parser": 6.21.0
+    eslint: 8.57.1
+    ioredis: 5.4.1
+    isomorphic-fetch: ^3.0.0
+    node-fetch: 3.3.2
+    octokit: ^4.0.2
+    otplib: 12.0.1
+    prettier: 3.3.3
+    typescript: 5.6.2
+    winston: ^3.14.2
   languageName: unknown
   linkType: soft
 
@@ -39087,30 +39097,6 @@ __metadata:
   checksum: 9e5e02276972b103d3f2808280b82ab9f90006dd0aea6a253158e71e3ed618c3ac8dfe509a267080b19826a5d4e20d7a3d1adb2f13e166109f56946da3fdff9b
   languageName: node
   linkType: hard
-
-"showcase-app@workspace:e2e-tests":
-  version: 0.0.0-use.local
-  resolution: "showcase-app@workspace:e2e-tests"
-  dependencies:
-    "@azure/identity": ^4.4.1
-    "@keycloak/keycloak-admin-client": ^25.0.2
-    "@kubernetes/client-node": ^0.21.0
-    "@microsoft/microsoft-graph-client": ^3.0.7
-    "@playwright/test": 1.48.0
-    "@types/node": 20.16.5
-    "@typescript-eslint/eslint-plugin": 6.21.0
-    "@typescript-eslint/parser": 6.21.0
-    eslint: 8.57.1
-    ioredis: 5.4.1
-    isomorphic-fetch: ^3.0.0
-    node-fetch: 3.3.2
-    octokit: ^4.0.2
-    otplib: 12.0.1
-    prettier: 3.3.3
-    typescript: 5.6.2
-    winston: ^3.14.2
-  languageName: unknown
-  linkType: soft
 
 "side-channel@npm:^1.0.4":
   version: 1.0.5

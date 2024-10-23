@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/dynamic-plugins-info/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/dynamic-plugins-info/**"]
     }
   }
 }

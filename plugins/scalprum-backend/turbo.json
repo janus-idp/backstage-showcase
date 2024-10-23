@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/scalprum-backend/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/scalprum-backend/**"]
     }
   }
 }

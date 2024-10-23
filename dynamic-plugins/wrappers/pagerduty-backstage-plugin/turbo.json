@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/pagerduty-backstage-plugin/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/pagerduty-backstage-plugin/**"]
     }
   }
 }

@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/roadiehq-backstage-plugin-jira/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/roadiehq-backstage-plugin-jira/**"]
     }
   }
 }

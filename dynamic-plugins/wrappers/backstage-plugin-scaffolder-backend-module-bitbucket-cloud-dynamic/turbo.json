@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

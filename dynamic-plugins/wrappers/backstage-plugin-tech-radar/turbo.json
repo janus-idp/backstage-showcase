@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/backstage-plugin-tech-radar/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/backstage-plugin-tech-radar/**"]
     }
   }
 }

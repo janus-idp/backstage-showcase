@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/pagerduty-backstage-plugin-backend-dynamic/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

@@ -6,8 +6,7 @@
       "persistent": true
     },
     "tsc": {
-      "outputs": ["../../dist-types/packages/backend/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/packages/backend/**"]
     }
   }
 }

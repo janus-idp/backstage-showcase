@@ -4,8 +4,7 @@
     "tsc": {
       "outputs": [
         "../../dist-types/plugins/backstage-plugin-scaffolder-backend-module-github-dynamic/**"
-      ],
-      "dependsOn": ["^tsc"]
+      ]
     }
   }
 }

@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/backstage-plugin-github-issues/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/backstage-plugin-github-issues/**"]
     }
   }
 }

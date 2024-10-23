@@ -2,8 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/backstage-plugin-dynatrace/**"],
-      "dependsOn": ["^tsc"]
+      "outputs": ["../../dist-types/plugins/backstage-plugin-dynatrace/**"]
     }
   }
 }
