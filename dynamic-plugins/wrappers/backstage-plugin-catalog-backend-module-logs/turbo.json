@@ -3,7 +3,7 @@
   "tasks": {
     "tsc": {
       "outputs": [
-        "../../dist-types/plugins/backstage-plugin-catalog-backend-module-logs/**"
+        "../../../dist-types/plugins/backstage-plugin-catalog-backend-module-logs/**"
       ]
     }
   }

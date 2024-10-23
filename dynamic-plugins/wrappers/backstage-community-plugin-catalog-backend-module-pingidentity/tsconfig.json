@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../dist-types/plugins/backstage-community-plugin-catalog-backend-module-pingidentity",
+    "outDir": "../../../dist-types/plugins/backstage-community-plugin-catalog-backend-module-pingidentity",
     "rootDir": "."
   }
 }

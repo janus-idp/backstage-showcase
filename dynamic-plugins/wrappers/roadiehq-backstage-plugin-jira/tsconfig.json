@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../dist-types/plugins/roadiehq-backstage-plugin-jira",
+    "outDir": "../../../dist-types/plugins/roadiehq-backstage-plugin-jira",
     "rootDir": "."
   }
 }

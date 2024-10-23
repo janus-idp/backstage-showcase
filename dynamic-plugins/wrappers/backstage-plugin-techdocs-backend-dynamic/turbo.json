@@ -3,7 +3,7 @@
   "tasks": {
     "tsc": {
       "outputs": [
-        "../../dist-types/plugins/backstage-plugin-techdocs-backend-dynamic/**"
+        "../../../dist-types/plugins/backstage-plugin-techdocs-backend-dynamic/**"
       ]
     }
   }

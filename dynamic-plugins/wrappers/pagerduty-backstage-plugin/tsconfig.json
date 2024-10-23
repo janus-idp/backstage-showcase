@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../dist-types/plugins/pagerduty-backstage-plugin",
+    "outDir": "../../../dist-types/plugins/pagerduty-backstage-plugin",
     "rootDir": "."
   }
 }

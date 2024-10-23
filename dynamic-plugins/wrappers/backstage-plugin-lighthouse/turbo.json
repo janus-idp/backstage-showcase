@@ -2,7 +2,7 @@
   "extends": ["//"],
   "tasks": {
     "tsc": {
-      "outputs": ["../../dist-types/plugins/backstage-plugin-lighthouse/**"]
+      "outputs": ["../../../dist-types/plugins/backstage-plugin-lighthouse/**"]
     }
   }
 }

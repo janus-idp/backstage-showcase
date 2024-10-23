@@ -3,7 +3,7 @@
   "tasks": {
     "tsc": {
       "outputs": [
-        "../../dist-types/plugins/roadiehq-backstage-plugin-datadog/**"
+        "../../../dist-types/plugins/roadiehq-backstage-plugin-datadog/**"
       ]
     }
   }

@@ -3,7 +3,7 @@
   "tasks": {
     "tsc": {
       "outputs": [
-        "../../dist-types/plugins/pagerduty-backstage-plugin-backend-dynamic/**"
+        "../../../dist-types/plugins/pagerduty-backstage-plugin-backend-dynamic/**"
       ]
     }
   }
