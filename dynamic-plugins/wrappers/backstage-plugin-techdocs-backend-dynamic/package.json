@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.13.2",
+    "@janus-idp/cli": "1.13.3",
     "@backstage/backend-dynamic-feature-service": "0.2.15"
   },
   "files": [
