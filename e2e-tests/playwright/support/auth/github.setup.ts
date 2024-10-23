@@ -2,6 +2,7 @@ import { test as setup, Page, Locator } from '@playwright/test';
 import { authenticator } from 'otplib';
 import { GH_USER2_IDAuthFile, GH_USER_IDAuthFile } from './auth_constants';
 import { UIhelper } from '../../utils/UIhelper';
+import { Common } from '../../utils/Common';
 
 async function onceGithubLogin(userId: string, password: string, page: Page) {
   const uiHelper: UIhelper = new UIhelper(page);
@@ -18,6 +19,7 @@ async function onceGithubLogin(userId: string, password: string, page: Page) {
   await page.waitForURL('https://github.com/');
   await page.goto('/');
   await page.getByRole('button', { name: 'Sign In' }).click();
+  await new Common(page).checkAndReauthorizeGithubApp();
   await uiHelper.waitForSideBarVisible();
   await page.waitForTimeout(2000);
 }
@@ -41,6 +43,7 @@ async function getGitHub2FAOTP(userid: string): Promise<string> {
 }
 
 setup('authenticate as GH_USER_ID', async ({ page }) => {
+  setup.setTimeout(80000);
   const userId = process.env.GH_USER_ID;
   const password = process.env.GH_USER_PASS;
   await onceGithubLogin(userId, password, page);
@@ -48,6 +51,7 @@ setup('authenticate as GH_USER_ID', async ({ page }) => {
 });
 
 setup('authenticate as GH_USER2_ID', async ({ page }) => {
+  setup.setTimeout(80000);
   const userId = process.env.GH_USER2_ID;
   const password = process.env.GH_USER2_PASS;
   await onceGithubLogin(userId, password, page);
