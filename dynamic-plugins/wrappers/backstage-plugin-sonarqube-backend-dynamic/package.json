@@ -39,10 +39,10 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-sonarqube-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-sonarqube-backend": "0.2.20"
+    "@backstage-community/plugin-sonarqube-backend": "0.2.25"
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.1",
     "@janus-idp/cli": "1.16.0"
   },
   "files": [

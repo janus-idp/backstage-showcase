@@ -8,8 +8,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-plugin-catalog-backend-module-logs-dynamic@workspace:."
   peerDependencies:
-    "@backstage/backend-plugin-api": ^1.0.0
-    "@backstage/plugin-catalog-backend": ^1.26.1
-    "@backstage/plugin-events-node": ^0.4.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-catalog-backend": ^1.27.1
+    "@backstage/plugin-events-node": ^0.4.2
   languageName: unknown
   linkType: soft

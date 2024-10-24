@@ -27,11 +27,11 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@backstage-community/plugin-nexus-repository-manager": "1.10.1"
+    "@backstage-community/plugin-nexus-repository-manager": "1.10.2"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.28.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",

@@ -13,7 +13,7 @@
     "lint": "backstage-cli package lint"
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.1",
     "tar": "6.2.1"
   },
   "peerDependencies": {

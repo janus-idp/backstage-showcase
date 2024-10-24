@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-catalog-backend-module-gitlab-dynamic",
-  "version": "0.3.21",
+  "version": "0.4.4",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -47,14 +47,14 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-defaults": "^0.5.0",
-    "@backstage/backend-plugin-api": "^1.0.0",
+    "@backstage/backend-defaults": "^0.5.2",
+    "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/catalog-model": "^1.7.0",
     "@backstage/config": "^1.2.0",
-    "@backstage/integration": "^1.15.0",
+    "@backstage/integration": "^1.15.1",
     "@backstage/plugin-catalog-common": "^1.1.0",
-    "@backstage/plugin-catalog-node": "^1.13.0",
-    "@backstage/plugin-events-node": "^0.4.0"
+    "@backstage/plugin-catalog-node": "^1.13.1",
+    "@backstage/plugin-events-node": "^0.4.2"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
