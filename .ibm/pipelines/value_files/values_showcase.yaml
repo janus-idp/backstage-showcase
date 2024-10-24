@@ -109,7 +109,7 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
         disabled: false
 
   # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'

@@ -24,8 +24,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic',
   'backstage-plugin-kubernetes':
     './dynamic-plugins/dist/backstage-plugin-kubernetes',
-  '@janus-idp/backstage-plugin-topology':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-topology',
+  'backstage-community-plugin-topology':
+    './dynamic-plugins/dist/backstage-community-plugin-topology',
   'roadiehq-scaffolder-backend-argocd-dynamic':
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic',
   'roadiehq-backstage-plugin-argo-cd':

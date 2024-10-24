@@ -252,7 +252,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isTektonCIAvailable
-    janus-idp.backstage-plugin-topology:
+    backstage-community.plugin-topology:
       mountPoints:
         - mountPoint: entity.page.topology/cards
           importName: TopologyPage

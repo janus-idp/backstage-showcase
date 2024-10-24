@@ -29,7 +29,6 @@
     "@janus-idp/backstage-plugin-quay": "1.13.0",
     "@janus-idp/backstage-plugin-rbac": "1.31.0",
     "@janus-idp/backstage-plugin-tekton": "3.14.0",
-    "@janus-idp/backstage-plugin-topology": "1.29.0",
     "@janus-idp/backstage-scaffolder-backend-module-quay": "2.1.0",
     "@janus-idp/backstage-scaffolder-backend-module-regex": "2.1.0",
     "@janus-idp/backstage-scaffolder-backend-module-servicenow": "2.1.0",

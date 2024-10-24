@@ -218,12 +218,12 @@ plugins:
                     anyOf:
                       - hasAnnotation: backstage.io/kubernetes-id
                       - hasAnnotation: backstage.io/kubernetes-namespace
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-topology:
+          backstage-community.plugin-topology:
             mountPoints:
               - mountPoint: entity.page.topology/cards
                 importName: TopologyPage
@@ -292,6 +292,8 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
+  - package: ./dynamic-plugins/dist/backstage-plugin-bazaar-backend-dynamic
+    disabled: false
   - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
     disabled: true
     pluginConfig:
@@ -464,7 +466,7 @@ plugins:
 
   # Group: Bulk import
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
-    disabled: true
+    disabled: false
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
     disabled: true
     pluginConfig:
@@ -587,7 +589,7 @@ plugins:
     disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
-    disabled: true
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
