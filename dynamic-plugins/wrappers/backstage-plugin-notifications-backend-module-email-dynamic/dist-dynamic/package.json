@@ -20,7 +20,6 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {},
   "dependencies": {
     "@aws-sdk/client-ses": "^3.550.0",
     "@aws-sdk/types": "^3.347.0",
@@ -28,7 +27,6 @@
     "nodemailer": "^6.9.13",
     "p-throttle": "^4.1.1"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
