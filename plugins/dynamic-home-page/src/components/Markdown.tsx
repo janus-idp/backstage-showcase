@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { MarkdownContent } from '@backstage/core-components';
 
 import { makeStyles } from '@material-ui/core/styles';

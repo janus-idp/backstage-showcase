@@ -1,9 +1,9 @@
-import { test as base } from '@playwright/test';
-import { Catalog } from '../support/pages/Catalog';
-import GithubApi from '../support/api/github';
-import { CATALOG_FILE, JANUS_QE_ORG } from '../utils/constants';
-import { Common } from '../utils/Common';
-import { assert } from 'console';
+import { test as base } from "@playwright/test";
+import { Catalog } from "../support/pages/Catalog";
+import GithubApi from "../support/api/github";
+import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
+import { Common } from "../utils/Common";
+import { assert } from "console";
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -22,16 +22,16 @@ const test = base.extend<GithubDiscoveryFixture>({
   testOrganization: JANUS_QE_ORG,
 });
 
-test.describe('Github Discovery Catalog', () => {
+test.describe("Github Discovery Catalog", () => {
   test(`Discover Organization's Catalog`, async ({
     catalogPage,
     githubApi,
     testOrganization,
   }) => {
     const organizationRepos = await githubApi.getReposFromOrg(testOrganization);
-    const reposNames: string[] = organizationRepos.map(repo => repo['name']);
+    const reposNames: string[] = organizationRepos.map((repo) => repo["name"]);
     const realComponents: string[] = reposNames.filter(
-      async repo =>
+      async (repo) =>
         await githubApi.fileExistsOnRepo(
           `${testOrganization}/${repo}`,
           CATALOG_FILE,

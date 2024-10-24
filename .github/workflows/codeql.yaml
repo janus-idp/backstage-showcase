@@ -14,10 +14,6 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
-      - 'showcase-docs/**'
-      - '.changeset/**'
-    branches-ignore:
-      - 'changeset-release/**'
   schedule:
     - cron: '17 0 * * 2'
 
