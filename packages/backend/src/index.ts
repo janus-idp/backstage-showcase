@@ -1,18 +1,19 @@
 import { createBackend } from '@backstage/backend-defaults';
 import {
-  dynamicPluginsFeatureDiscoveryServiceFactory,
+  dynamicPluginsFeatureDiscoveryLoader,
   dynamicPluginsFrontendSchemas,
-  dynamicPluginsSchemasServiceFactory,
-  dynamicPluginsServiceFactory,
+  dynamicPluginsSchemasServiceFactoryWithOptions,
 } from '@backstage/backend-dynamic-feature-service';
 import { PackageRoles } from '@backstage/cli-node';
+
 import * as path from 'path';
+
 import { configureCorporateProxyAgent } from './corporate-proxy';
 import { CommonJSModuleLoader } from './loader';
 import { customLogger } from './logger';
 import {
-  metricsPlugin,
   healthCheckPlugin,
+  metricsPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules';
@@ -22,15 +23,14 @@ configureCorporateProxyAgent();
 
 const backend = createBackend();
 
-backend.add(dynamicPluginsFeatureDiscoveryServiceFactory); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
 backend.add(
-  dynamicPluginsServiceFactory({
+  dynamicPluginsFeatureDiscoveryLoader({
     moduleLoader: logger => new CommonJSModuleLoader(logger),
   }),
 );
 
 backend.add(
-  dynamicPluginsSchemasServiceFactory({
+  dynamicPluginsSchemasServiceFactoryWithOptions({
     schemaLocator(pluginPackage) {
       const platform = PackageRoles.getRoleInfo(
         pluginPackage.manifest.backstage.role,
@@ -75,9 +75,7 @@ backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
 backend.add(import('@backstage/plugin-events-backend/alpha'));
 
 backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
-backend.add(
-  import('@janus-idp/backstage-scaffolder-backend-module-annotator/alpha'),
-);
+backend.add(import('@janus-idp/backstage-scaffolder-backend-module-annotator'));
 backend.add(pluginIDProviderService);
 backend.add(rbacDynamicPluginsProvider);
 

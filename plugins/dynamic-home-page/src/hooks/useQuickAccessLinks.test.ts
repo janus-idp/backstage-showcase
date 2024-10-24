@@ -1,5 +1,7 @@
-import { renderHook, waitFor } from '@testing-library/react';
 import { useApi } from '@backstage/core-plugin-api';
+
+import { renderHook, waitFor } from '@testing-library/react';
+
 import { useQuickAccessLinks } from './useQuickAccessLinks';
 
 jest.mock('@backstage/core-plugin-api', () => ({

@@ -17,10 +17,10 @@
 import { OidcAuthResult } from '@backstage/plugin-auth-backend-module-oidc-provider';
 import {
   AuthResolverContext,
-  OAuthAuthenticatorResult,
-  SignInInfo,
   commonSignInResolvers,
   createSignInResolverFactory,
+  OAuthAuthenticatorResult,
+  SignInInfo,
 } from '@backstage/plugin-auth-node';
 
 /**

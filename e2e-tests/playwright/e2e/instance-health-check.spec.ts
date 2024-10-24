@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('Application health check', async ({ request }) => {
-  const healthCheckEndpoint = '/healthcheck';
+test("Application health check", async ({ request }) => {
+  const healthCheckEndpoint = "/healthcheck";
 
   const response = await request.get(healthCheckEndpoint);
 
@@ -9,5 +9,5 @@ test('Application health check', async ({ request }) => {
 
   expect(response.status()).toBe(200);
 
-  expect(responseBody).toHaveProperty('status', 'ok');
+  expect(responseBody).toHaveProperty("status", "ok");
 });

@@ -1,14 +1,15 @@
 import {
-  createBackendModule,
-  createServiceRef,
-  createServiceFactory,
-} from '@backstage/backend-plugin-api';
-import { pluginIdProviderExtensionPoint } from '@janus-idp/backstage-plugin-rbac-node';
-import { PluginIdProvider } from '@janus-idp/backstage-plugin-rbac-backend';
-import {
   DynamicPluginManager,
   dynamicPluginsServiceRef,
 } from '@backstage/backend-dynamic-feature-service';
+import {
+  createBackendModule,
+  createServiceFactory,
+  createServiceRef,
+} from '@backstage/backend-plugin-api';
+
+import { PluginIdProvider } from '@janus-idp/backstage-plugin-rbac-backend';
+import { pluginIdProviderExtensionPoint } from '@janus-idp/backstage-plugin-rbac-node';
 
 const pluginIDProviderServiceRef = createServiceRef<PluginIdProvider>({
   id: 'pluginIDProvider',

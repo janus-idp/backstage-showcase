@@ -1,5 +1,5 @@
-import k8s, { V1ConfigMap } from '@kubernetes/client-node';
-import { logger } from './Logger';
+import k8s, { V1ConfigMap } from "@kubernetes/client-node";
+import { logger } from "./Logger";
 
 export class kubeCLient {
   coreV1Api: k8s.CoreV1Api;
@@ -51,7 +51,7 @@ export class kubeCLient {
   ) {
     try {
       const options = {
-        headers: { 'Content-type': k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
+        headers: { "Content-type": k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
       };
       logger.info(
         `Updating configmap ${configmapName} in namespace ${namespace}`,
@@ -77,7 +77,7 @@ export class kubeCLient {
     try {
       const options = {
         headers: {
-          'Content-type': k8s.PatchUtils.PATCH_FORMAT_JSON_MERGE_PATCH,
+          "Content-type": k8s.PatchUtils.PATCH_FORMAT_JSON_MERGE_PATCH,
         },
       };
       logger.info(`Updating secret ${secretName} in namespace ${namespace}`);
@@ -120,13 +120,13 @@ export class kubeCLient {
         watch.watch(
           `/api/v1/namespaces?watch=true&fieldSelector=metadata.name=${namespace}`,
           {},
-          type => {
-            if (type === 'DELETED') {
+          (type) => {
+            if (type === "DELETED") {
               logger.info(`Namespace '${namespace}' has been deleted.`);
               resolve();
             }
           },
-          err => {
+          (err) => {
             if (err && err.statusCode === 404) {
               // Namespace was already deleted or does not exist
               logger.info(`Namespace '${namespace}' is already deleted.`);
@@ -139,14 +139,14 @@ export class kubeCLient {
         );
       });
     } catch (err) {
-      logger.error('Error deleting or waiting for namespace deletion:', err);
+      logger.error("Error deleting or waiting for namespace deletion:", err);
       throw err;
     }
   }
 
   async createNamespaceIfNotExists(namespace: string) {
     const nsList = await this.coreV1Api.listNamespace();
-    const ns = nsList.body.items.map(ns => ns.metadata.name);
+    const ns = nsList.body.items.map((ns) => ns.metadata.name);
     if (ns.includes(namespace)) {
       logger.info(`Delete and re-create namespace ${namespace}`);
       try {

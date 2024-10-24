@@ -1,5 +1,8 @@
-import React from 'react';
-
+import {
+  SignInPage as CCSignInPage,
+  ProxiedSignInPage,
+  type SignInProviderConfig,
+} from '@backstage/core-components';
 import {
   atlassianAuthApiRef,
   bitbucketAuthApiRef,
@@ -15,11 +18,6 @@ import {
   type SignInPageProps,
 } from '@backstage/core-plugin-api';
 
-import {
-  SignInPage as CCSignInPage,
-  ProxiedSignInPage,
-  type SignInProviderConfig,
-} from '@backstage/core-components';
 import { auth0AuthApiRef, oidcAuthApiRef, samlAuthApiRef } from '../../api';
 
 const DEFAULT_PROVIDER = 'github';

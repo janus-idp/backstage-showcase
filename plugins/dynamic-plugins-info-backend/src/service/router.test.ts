@@ -1,10 +1,12 @@
+import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
+import { mockServices } from '@backstage/backend-test-utils';
+
 import express from 'express';
 import request from 'supertest';
+
 import { plugins } from '../../__fixtures__/data';
 import { expectedList } from '../../__fixtures__/expected_result';
 import { createRouter } from './router';
-import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
-import { mockServices } from '@backstage/backend-test-utils';
 
 describe('createRouter', () => {
   let app: express.Express;

@@ -1,1 +1,1 @@
-export { dynamicPluginInstaller } from './dynamic';
+export { bundle as default } from './bundle';

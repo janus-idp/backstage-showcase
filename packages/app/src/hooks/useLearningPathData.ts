@@ -1,6 +1,8 @@
-import { useApi } from '@backstage/core-plugin-api';
 import { useCallback, useEffect, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
+
+import { useApi } from '@backstage/core-plugin-api';
+
 import { learningPathApiRef } from '../api/LearningPathApiClient';
 import { LearningPathLink } from '../types/types';
 
