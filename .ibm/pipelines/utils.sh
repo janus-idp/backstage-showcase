@@ -93,3 +93,64 @@ droute_send() {
     --verbose"
 
 }
+
+wait_for_deployment() {
+    local namespace=$1
+    local resource_name=$2
+    local timeout_minutes=${3:-5}
+    local check_interval=${4:-10}
+    
+    if [[ -z "$namespace" || -z "$resource_name" ]]; then
+        echo "Error: Missing required parameters"
+        echo "Usage: wait_for_deployment <namespace> <resource-name> [timeout_minutes] [check_interval_seconds]"
+        echo "Example: wait_for_deployment my-namespace my-deployment 5 10"
+        return 1
+    fi
+
+    local max_attempts=$((timeout_minutes * 60 / check_interval))
+    
+    echo "Waiting for resource '$resource_name' in namespace '$namespace' (timeout: ${timeout_minutes}m)..."
+    
+    for ((i=1; i<=max_attempts; i++)); do
+        # Get pod name
+        local pod_name=$(oc get pods -n "$namespace" | grep "$resource_name" | awk '{print $1}' | head -n 1)
+        
+        if [[ -n "$pod_name" ]]; then
+            # Check if pod is ready
+            local is_ready=$(oc get pod "$pod_name" -n "$namespace" -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}')
+            
+            if [[ "$is_ready" == "True" ]] && \
+               oc get pod "$pod_name" -n "$namespace" | grep -q "Running"; then
+                echo "Pod '$pod_name' is running and ready"
+                return 0
+            else
+                echo "Pod '$pod_name' is not ready (Ready: $is_ready)"
+            fi
+        else
+            echo "No pods found matching '$resource_name' in namespace '$namespace'"
+        fi
+        
+        echo "Still waiting... (${i}/${max_attempts} checks)"
+        sleep "$check_interval"
+    done
+
+    echo "Timeout waiting for resource to be ready. Please check:"
+    echo "oc get pods -n $namespace | grep $resource_name"
+    return 1
+}
+
+# install_pipelines_operator() {
+#   oc apply -f - <<EOF
+# apiVersion: operators.coreos.com/v1alpha1
+# kind: Subscription
+# metadata:
+#   name: openshift-pipelines-operator
+#   namespace: openshift-operators
+# spec:
+#   channel: "pipelines-1.12"
+#   name: openshift-pipelines-operator-rh
+#   source: redhat-operators
+#   sourceNamespace: openshift-marketplace
+# EOF
+#   wait_for_deployment "openshift-operators" "pipelines"
+# }
