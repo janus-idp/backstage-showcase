@@ -27,8 +27,8 @@ env:
   REGISTRY: quay.io
 
 jobs:
-  create-image:
-    name: Create Image
+  build-image:
+    name: Build Image
     runs-on: ubuntu-latest
     permissions:
       contents: read

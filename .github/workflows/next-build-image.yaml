@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Next Docker Build
+name: Next
 
 on:
   push:
@@ -27,8 +27,8 @@ env:
   REGISTRY: quay.io
 
 jobs:
-  next-docker-build:
-    name: Next Docker Build
+  build-image:
+    name: Build Image
     runs-on: ubuntu-latest
     permissions:
       contents: read

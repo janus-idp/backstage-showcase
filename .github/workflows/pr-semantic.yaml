@@ -1,4 +1,4 @@
-name: 'Semantic Release'
+name: PR
 
 on:
   pull_request_target:
