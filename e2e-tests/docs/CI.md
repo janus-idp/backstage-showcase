@@ -26,7 +26,9 @@ When the test run is complete, the status will be reported under your PR checks.
 
 PR tests are not automatically retried beyond the individual test retries specified in the Playwright configuration (each test is retried up to 2 times on failure). However, you can manually retrigger the entire test suite by commenting:
 
-- `/retest e2e-tests`
+- `/retest`
+- `/test e2e-tests`
+- `/test images`
 - `/test all`
 
 This is useful if you believe a failure was due to a flake or external issue and want to rerun the tests without making any code changes.
