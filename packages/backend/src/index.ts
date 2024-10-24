@@ -78,7 +78,7 @@ backend.add(import('@backstage/plugin-events-backend/alpha'));
 
 backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
 backend.add(
-  import('@janus-idp/backstage-scaffolder-backend-module-annotator/alpha'),
+  import('@janus-idp/backstage-scaffolder-backend-module-annotator'),
 );
 backend.add(pluginIDProviderService);
 backend.add(rbacDynamicPluginsProvider);

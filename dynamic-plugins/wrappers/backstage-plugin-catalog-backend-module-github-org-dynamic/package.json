@@ -40,7 +40,7 @@
     "@backstage/plugin-catalog-backend-module-github-org": "0.1.17"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.14.0"
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",
