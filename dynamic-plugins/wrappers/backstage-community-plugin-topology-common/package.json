@@ -59,8 +59,8 @@
   "homepage": "https://red.ht/rhdh",
   "bugs": "https://issues.redhat.com/browse/RHIDP",
   "dependencies": {
-    "@backstage/plugin-permission-common": "^0.8.0",
-    "@backstage-community/plugin-topology-common": "1.4.2"
+    "@backstage-community/plugin-topology-common": "1.4.2",
+    "@backstage/plugin-permission-common": "^0.8.0"
   },
   "maintainers": [
     "invincibleJai",

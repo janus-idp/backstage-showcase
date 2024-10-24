@@ -13128,6 +13128,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@patternfly/react-topology@npm:^5.1.0":
+  version: 5.4.0
+  resolution: "@patternfly/react-topology@npm:5.4.0"
+  dependencies:
+    "@dagrejs/dagre": 1.1.2
+    "@patternfly/react-core": ^5.1.1
+    "@patternfly/react-icons": ^5.1.1
+    "@patternfly/react-styles": ^5.1.1
+    "@types/d3": ^7.4.0
+    "@types/d3-force": ^1.2.1
+    "@types/react-measure": ^2.0.6
+    d3: ^7.8.0
+    mobx: ^6.9.0
+    mobx-react: ^7.6.0
+    point-in-svg-path: ^1.0.1
+    popper.js: ^1.16.1
+    react-measure: ^2.3.0
+    tslib: ^2.0.0
+    webcola: 3.4.0
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 3b5a4469ba7cf02499d57bc7a82e419895aeba38ce2b35579faf414e763e90ff7a0c599fc6b9b09c9ceb7313f61f2c61aad1a5c20d74fc2cf5b6ae1b299d739a
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -17944,6 +17970,15 @@ __metadata:
   dependencies:
     undici-types: ~5.26.4
   checksum: 8e45a05aa91437d3d11a346775ac16589353070c504f91a62cd91945a384231ccbbe92009a8e1ae653f954f9de5bf8ff106cc8e26721ecab98914dc019217aef
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.0.0":
+  version: 22.7.9
+  resolution: "@types/node@npm:22.7.9"
+  dependencies:
+    undici-types: ~6.19.2
+  checksum: 02671449e61f3f7c9898da44e18af272056fee0afbbc98b11dcff7cd7c4ed6c8a45353cfdde413208d9f597e247ee68d908c83a72cae4cbdd763b0e3a45ac0cd
   languageName: node
   linkType: hard
 
