@@ -4,9 +4,9 @@ import { Common } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
-import { GH_USER_IDAuthFile } from "../../../support/auth/auth_constants";
+import { GH_USER_IDAuthFile_rbac } from "../../../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile });
+test.use({ storageState: GH_USER_IDAuthFile_rbac });
 
 test.describe("Test RBAC plugin REST API", () => {
   let uiHelper: UIhelper;

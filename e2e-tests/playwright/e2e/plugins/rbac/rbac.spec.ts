@@ -12,9 +12,10 @@ import { UIhelper } from "../../../utils/UIhelper";
 import {
   GH_USER_IDAuthFile,
   GH_USER2_IDAuthFile,
+  GH_USER_IDAuthFile_rbac,
 } from "../../../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile });
+test.use({ storageState: GH_USER_IDAuthFile_rbac });
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
   let uiHelper: UIhelper;

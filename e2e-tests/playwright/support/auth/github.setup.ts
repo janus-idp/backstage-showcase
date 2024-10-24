@@ -1,8 +1,14 @@
 import { test as setup, Page, Locator } from "@playwright/test";
 import { authenticator } from "otplib";
-import { GH_USER2_IDAuthFile, GH_USER_IDAuthFile } from "./auth_constants";
+import {
+  GH_USER2_IDAuthFile,
+  GH_USER2_IDAuthFile_rbac,
+  GH_USER_IDAuthFile,
+  GH_USER_IDAuthFile_rbac,
+} from "./auth_constants";
 import { UIhelper } from "../../utils/UIhelper";
 import { Common } from "../../utils/Common";
+import test from "node:test";
 
 async function onceGithubLogin(userId: string, password: string, page: Page) {
   const uiHelper: UIhelper = new UIhelper(page);
@@ -42,18 +48,24 @@ async function getGitHub2FAOTP(userid: string): Promise<string> {
   return authenticator.generate(secret);
 }
 
-setup("authenticate as GH_USER_ID", async ({ page }) => {
+setup("authenticate as GH_USER_ID", async ({ page }, testInfo) => {
+  const isRbac = testInfo.project.name.includes("rbac");
   setup.setTimeout(80000);
   const userId = process.env.GH_USER_ID;
   const password = process.env.GH_USER_PASS;
   await onceGithubLogin(userId, password, page);
-  await page.context().storageState({ path: GH_USER_IDAuthFile });
+  await page.context().storageState({
+    path: isRbac ? GH_USER_IDAuthFile_rbac : GH_USER_IDAuthFile,
+  });
 });
 
-setup("authenticate as GH_USER2_ID", async ({ page }) => {
+setup("authenticate as GH_USER2_ID", async ({ page }, testInfo) => {
+  const isRbac = testInfo.project.name.includes("rbac");
   setup.setTimeout(80000);
   const userId = process.env.GH_USER2_ID;
   const password = process.env.GH_USER2_PASS;
   await onceGithubLogin(userId, password, page);
-  await page.context().storageState({ path: GH_USER2_IDAuthFile });
+  await page.context().storageState({
+    path: isRbac ? GH_USER2_IDAuthFile_rbac : GH_USER2_IDAuthFile,
+  });
 });

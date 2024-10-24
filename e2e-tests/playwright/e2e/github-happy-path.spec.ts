@@ -11,11 +11,6 @@ import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
 test.use({ storageState: GH_USER_IDAuthFile });
 test.describe("GitHub Happy path", () => {
-  //  let common: Common;
-  //  let uiHelper: UIhelper;
-  //  let catalogImport: CatalogImport;
-  //  let backstageShowcase: BackstageShowcase;
-
   const component =
     "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";
 
