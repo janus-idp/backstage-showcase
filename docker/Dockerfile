@@ -59,7 +59,7 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json .
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
 
-RUN "$YARN" install --immutable --network-timeout 600000
+RUN node "$YARN" install --immutable --network-timeout 600000
 
 # Stage 3 - Build packages
 # Upstream only
