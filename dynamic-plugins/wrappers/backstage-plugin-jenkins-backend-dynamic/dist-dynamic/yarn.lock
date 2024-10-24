@@ -134,16 +134,16 @@ __metadata:
     node-fetch: ^2.6.7
     yn: ^4.0.0
   peerDependencies:
-    "@backstage/backend-common": ^0.21.7
-    "@backstage/backend-plugin-api": ^0.6.17
-    "@backstage/catalog-client": ^1.6.4
-    "@backstage/catalog-model": ^1.4.5
+    "@backstage/backend-common": ^0.25.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-client": ^1.7.1
+    "@backstage/catalog-model": ^1.7.0
     "@backstage/config": ^1.2.0
     "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-common": ^1.0.22
-    "@backstage/plugin-catalog-node": ^1.11.1
-    "@backstage/plugin-permission-common": ^0.7.13
-    "@backstage/plugin-permission-node": ^0.7.28
+    "@backstage/plugin-catalog-common": ^1.1.0
+    "@backstage/plugin-catalog-node": ^1.13.1
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-node": ^0.8.4
   languageName: unknown
   linkType: soft
 

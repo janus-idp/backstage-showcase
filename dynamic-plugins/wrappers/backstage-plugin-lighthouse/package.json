@@ -28,11 +28,11 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-lighthouse": "0.4.20",
+    "@backstage-community/plugin-lighthouse": "0.4.24",
     "@mui/icons-material": "5.16.7"
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.1",
     "@janus-idp/cli": "1.16.0"
   },
   "files": [

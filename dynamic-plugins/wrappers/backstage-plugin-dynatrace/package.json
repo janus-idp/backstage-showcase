@@ -28,10 +28,10 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-dynatrace": "10.0.4"
+    "@backstage-community/plugin-dynatrace": "10.0.8"
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.1",
     "@janus-idp/cli": "1.16.0"
   },
   "files": [

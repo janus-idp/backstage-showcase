@@ -1,6 +1,6 @@
 {
   "name": "backstage-community-plugin-catalog-backend-module-pingidentity-dynamic",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -20,6 +20,10 @@
       "default": "./dist/index.cjs.js"
     },
     "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "uuid": "^10.0.0"
   },
   "files": [
     "dist"
@@ -41,9 +45,11 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.23.3",
-    "@backstage/backend-plugin-api": "^0.7.0",
-    "@backstage/plugin-catalog-node": "^1.12.4"
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "^1.0.1",
+    "@backstage/catalog-model": "^1.7.0",
+    "@backstage/config": "^1.2.0",
+    "@backstage/plugin-catalog-node": "^1.13.1"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

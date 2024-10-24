@@ -1,9 +1,5 @@
 import { createBackend } from '@backstage/backend-defaults';
-import {
-  dynamicPluginsFeatureDiscoveryLoader,
-  dynamicPluginsFrontendSchemas,
-  dynamicPluginsSchemasServiceFactoryWithOptions,
-} from '@backstage/backend-dynamic-feature-service';
+import { dynamicPluginsFeatureLoader } from '@backstage/backend-dynamic-feature-service';
 import { PackageRoles } from '@backstage/cli-node';
 
 import * as path from 'path';
@@ -24,13 +20,7 @@ configureCorporateProxyAgent();
 const backend = createBackend();
 
 backend.add(
-  dynamicPluginsFeatureDiscoveryLoader({
-    moduleLoader: logger => new CommonJSModuleLoader(logger),
-  }),
-);
-
-backend.add(
-  dynamicPluginsSchemasServiceFactoryWithOptions({
+  dynamicPluginsFeatureLoader({
     schemaLocator(pluginPackage) {
       const platform = PackageRoles.getRoleInfo(
         pluginPackage.manifest.backstage.role,
@@ -40,9 +30,9 @@ backend.add(
         'configSchema.json',
       );
     },
+    moduleLoader: logger => new CommonJSModuleLoader(logger),
   }),
 );
-backend.add(dynamicPluginsFrontendSchemas);
 backend.add(customLogger);
 
 backend.add(metricsPlugin);

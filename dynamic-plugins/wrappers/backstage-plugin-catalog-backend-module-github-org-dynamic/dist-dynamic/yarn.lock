@@ -156,22 +156,22 @@ __metadata:
   dependencies:
     "@octokit/graphql": ^5.0.0
     "@octokit/rest": ^19.0.3
-    git-url-parse: ^14.0.0
+    git-url-parse: ^15.0.0
     lodash: ^4.17.21
     minimatch: ^9.0.0
     node-fetch: ^2.7.0
     uuid: ^9.0.0
   peerDependencies:
     "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.0
-    "@backstage/catalog-client": ^1.7.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-client": ^1.7.1
     "@backstage/catalog-model": ^1.7.0
     "@backstage/config": ^1.2.0
-    "@backstage/integration": ^1.15.0
-    "@backstage/plugin-catalog-backend": ^1.26.1
+    "@backstage/integration": ^1.15.1
+    "@backstage/plugin-catalog-backend": ^1.27.1
     "@backstage/plugin-catalog-common": ^1.1.0
-    "@backstage/plugin-catalog-node": ^1.13.0
-    "@backstage/plugin-events-node": ^0.4.0
+    "@backstage/plugin-catalog-node": ^1.13.1
+    "@backstage/plugin-events-node": ^0.4.2
   languageName: unknown
   linkType: soft
 
@@ -215,12 +215,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"git-url-parse@npm:^14.0.0":
-  version: 14.1.0
-  resolution: "git-url-parse@npm:14.1.0"
+"git-url-parse@npm:^15.0.0":
+  version: 15.0.0
+  resolution: "git-url-parse@npm:15.0.0"
   dependencies:
     git-up: ^7.0.0
-  checksum: 16bbf5ca423352ab1b0d704dc40b46123e0bfcc0ae2959ef6a93d43c509146151cd6a1d99690f3555324d2261b36443b7978abc379dc1a7bf8f564e52d676dee
+  checksum: 4379e9b0a1297b62d603630341a7ce1a6e17901114ee7bb70a611f62ea0fd3b3649ac754891d2746fd42031a21e97ddc0092287a04cc028cbf37df8f6be65a9e
   languageName: node
   linkType: hard
 
