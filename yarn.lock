@@ -9830,7 +9830,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@internal/plugin-auth-backend-module-oidc-provider@workspace:plugins/auth-backend-module-oidc-provider"
   dependencies:
-    "@backstage/backend-common": 0.25.0
     "@backstage/backend-defaults": 0.5.0
     "@backstage/backend-plugin-api": 1.0.0
     "@backstage/backend-test-utils": 1.0.0
@@ -9856,7 +9855,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@internal/plugin-dynamic-plugins-info-backend@workspace:plugins/dynamic-plugins-info-backend"
   dependencies:
-    "@backstage/backend-common": 0.25.0
     "@backstage/backend-defaults": 0.5.0
     "@backstage/backend-dynamic-feature-service": 0.4.1
     "@backstage/backend-plugin-api": 1.0.0
@@ -9904,7 +9902,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@internal/plugin-licensed-users-info-backend@workspace:plugins/licensed-users-info-backend"
   dependencies:
-    "@backstage/backend-common": 0.25.0
     "@backstage/backend-defaults": 0.5.0
     "@backstage/backend-plugin-api": 1.0.0
     "@backstage/backend-test-utils": 1.0.0
@@ -9936,7 +9933,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@internal/plugin-scalprum-backend@workspace:plugins/scalprum-backend"
   dependencies:
-    "@backstage/backend-common": 0.25.0
     "@backstage/backend-defaults": 0.5.0
     "@backstage/backend-dynamic-feature-service": 0.4.1
     "@backstage/backend-plugin-api": 1.0.0
@@ -19583,7 +19579,6 @@ __metadata:
   resolution: "backend@workspace:packages/backend"
   dependencies:
     "@backstage/backend-app-api": 1.0.0
-    "@backstage/backend-common": 0.25.0
     "@backstage/backend-defaults": 0.5.0
     "@backstage/backend-dynamic-feature-service": 0.4.1
     "@backstage/backend-plugin-api": 1.0.0

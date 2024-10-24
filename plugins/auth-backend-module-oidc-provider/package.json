@@ -33,7 +33,6 @@
     "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "dependencies": {
-    "@backstage/backend-common": "0.25.0",
     "@backstage/backend-plugin-api": "1.0.0",
     "@backstage/plugin-auth-backend": "0.23.0",
     "@backstage/plugin-auth-backend-module-oidc-provider": "0.3.0",
