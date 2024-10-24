@@ -12,8 +12,8 @@
     "supported-versions": "1.27.7",
     "pluginId": "signals",
     "pluginPackages": [
-      "@backstage/plugin-signals",
-      "@backstage/plugin-signals-backend"
+      "backstage-plugin-signals",
+      "backstage-plugin-signals-backend"
     ]
   },
   "exports": {
