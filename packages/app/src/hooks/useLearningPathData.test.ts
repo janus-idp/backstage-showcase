@@ -1,5 +1,7 @@
-import { renderHook, waitFor } from '@testing-library/react';
 import { useApi } from '@backstage/core-plugin-api';
+
+import { renderHook, waitFor } from '@testing-library/react';
+
 import { useLearningPathData } from './useLearningPathData';
 
 jest.mock('@backstage/core-plugin-api', () => ({

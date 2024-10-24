@@ -1,6 +1,6 @@
-import { Entity } from '@backstage/catalog-model';
-import { CatalogClient } from '@backstage/catalog-client';
 import { AuthService } from '@backstage/backend-plugin-api';
+import { CatalogClient } from '@backstage/catalog-client';
+import { Entity } from '@backstage/catalog-model';
 
 export class CatalogEntityStore {
   constructor(

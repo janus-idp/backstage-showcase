@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   EntityConsumingComponentsCard,
   EntityHasApisCard,
@@ -19,7 +18,6 @@ import {
   isKind,
   isOrphan,
 } from '@backstage/plugin-catalog';
-import { hasLinks } from '../utils';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
   EntityGroupProfileCard,
@@ -27,7 +25,9 @@ import {
   EntityOwnershipCard,
   EntityUserProfileCard,
 } from '@backstage/plugin-org';
+
 import Grid from '../Grid';
+import { hasLinks } from '../utils';
 
 export const OverviewTabContent = () => (
   <>

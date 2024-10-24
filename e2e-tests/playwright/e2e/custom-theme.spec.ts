@@ -1,14 +1,14 @@
-import { test, Page, TestInfo, expect } from '@playwright/test';
-import { Common, setupBrowser } from '../utils/Common';
-import { ThemeVerifier } from '../utils/custom-theme/theme-verifier';
+import { test, Page, TestInfo, expect } from "@playwright/test";
+import { Common, setupBrowser } from "../utils/Common";
+import { ThemeVerifier } from "../utils/custom-theme/theme-verifier";
 import {
   customTabIcon,
   customBrandIcon,
-} from '../support/testData/custom-theme';
+} from "../support/testData/custom-theme";
 
 let page: Page;
 
-test.describe('CustomTheme should be applied', () => {
+test.describe("CustomTheme should be applied", () => {
   let common: Common;
   let themeVerifier: ThemeVerifier;
 
@@ -21,48 +21,48 @@ test.describe('CustomTheme should be applied', () => {
   });
 
   // eslint-disable-next-line no-empty-pattern
-  test('Verify that theme light colors are applied and make screenshots', async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme('Light');
+  test("Verify that theme light colors are applied and make screenshots", async ({}, testInfo: TestInfo) => {
+    await themeVerifier.setTheme("Light");
     await themeVerifier.verifyHeaderGradient(
-      'none, linear-gradient(90deg, rgb(248, 248, 248), rgb(248, 248, 248))',
+      "none, linear-gradient(90deg, rgb(248, 248, 248), rgb(248, 248, 248))",
     );
-    await themeVerifier.verifyBorderLeftColor('rgb(255, 95, 21)');
+    await themeVerifier.verifyBorderLeftColor("rgb(255, 95, 21)");
     await themeVerifier.takeScreenshotAndAttach(
-      'screenshots/custom-theme-light-inspection.png',
+      "screenshots/custom-theme-light-inspection.png",
       testInfo,
-      'custom-theme-light-inspection',
+      "custom-theme-light-inspection",
     );
-    await themeVerifier.verifyPrimaryColors('rgb(255, 95, 21)');
+    await themeVerifier.verifyPrimaryColors("rgb(255, 95, 21)");
   });
 
   // eslint-disable-next-line no-empty-pattern
-  test('Verify that theme dark colors are applied and make screenshots', async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme('Dark');
+  test("Verify that theme dark colors are applied and make screenshots", async ({}, testInfo: TestInfo) => {
+    await themeVerifier.setTheme("Dark");
     await themeVerifier.verifyHeaderGradient(
-      'none, linear-gradient(90deg, rgb(0, 0, 208), rgb(255, 246, 140))',
+      "none, linear-gradient(90deg, rgb(0, 0, 208), rgb(255, 246, 140))",
     );
-    await themeVerifier.verifyBorderLeftColor('rgb(244, 238, 169)');
+    await themeVerifier.verifyBorderLeftColor("rgb(244, 238, 169)");
     await themeVerifier.takeScreenshotAndAttach(
-      'screenshots/custom-theme-dark-inspection.png',
+      "screenshots/custom-theme-dark-inspection.png",
       testInfo,
-      'custom-theme-dark-inspection',
+      "custom-theme-dark-inspection",
     );
-    await themeVerifier.verifyPrimaryColors('#ab75cf');
+    await themeVerifier.verifyPrimaryColors("#ab75cf");
   });
 
-  test('Verify that tab icon for Backstage can be customized', async () => {
-    expect(await page.locator('#dynamic-favicon').getAttribute('href')).toEqual(
+  test("Verify that tab icon for Backstage can be customized", async () => {
+    expect(await page.locator("#dynamic-favicon").getAttribute("href")).toEqual(
       customTabIcon,
     );
   });
 
-  test('Verify that brand icon for Backstage can be customized', async () => {
-    expect(await page.getByTestId('home-logo').getAttribute('src')).toEqual(
+  test("Verify that brand icon for Backstage can be customized", async () => {
+    expect(await page.getByTestId("home-logo").getAttribute("src")).toEqual(
       customBrandIcon,
     );
   });
 
-  test('Verify that title for Backstage can be customized', async () => {
+  test("Verify that title for Backstage can be customized", async () => {
     await expect(page).toHaveTitle(/Red Hat Developer Hub/);
   });
 });

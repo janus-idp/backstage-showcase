@@ -1,5 +1,6 @@
-import React from 'react';
-import { Page, Header, Content, EmptyState } from '@backstage/core-components';
+import { useMemo } from 'react';
+
+import { Content, EmptyState, Header, Page } from '@backstage/core-components';
 
 import { useHomePageMountPoints } from '../hooks/useHomePageMountPoints';
 import { ReadOnlyGrid } from './ReadOnlyGrid';
@@ -11,7 +12,7 @@ export interface DynamicHomePageProps {
 export const DynamicHomePage = (props: DynamicHomePageProps) => {
   const allHomePageMountPoints = useHomePageMountPoints();
 
-  const filteredAndSortedHomePageCards = React.useMemo(() => {
+  const filteredAndSortedHomePageCards = useMemo(() => {
     if (!allHomePageMountPoints) {
       return [];
     }

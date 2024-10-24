@@ -25,16 +25,16 @@ const test = base.extend<GithubDiscoveryFixture>({
   testOrganization: JANUS_QE_ORG,
 });
 
-test.describe('Github Discovery Catalog', () => {
+test.describe("Github Discovery Catalog", () => {
   test(`Discover Organization's Catalog`, async ({
     catalogPage,
     githubApi,
     testOrganization,
   }) => {
     const organizationRepos = await githubApi.getReposFromOrg(testOrganization);
-    const reposNames: string[] = organizationRepos.map(repo => repo['name']);
+    const reposNames: string[] = organizationRepos.map((repo) => repo["name"]);
     const realComponents: string[] = reposNames.filter(
-      async repo =>
+      async (repo) =>
         await githubApi.fileExistsOnRepo(
           `${testOrganization}/${repo}`,
           CATALOG_FILE,

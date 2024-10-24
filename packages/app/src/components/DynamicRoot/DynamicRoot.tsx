@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import { createApp } from '@backstage/app-defaults';
 import { BackstageApp } from '@backstage/core-app-api';
 import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
@@ -7,28 +8,29 @@ import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
 import { useThemes } from '@redhat-developer/red-hat-developer-hub-theme';
 import { AppsConfig } from '@scalprum/core';
 import { useScalprum } from '@scalprum/react-core';
-import DynamicRootContext, {
-  ComponentRegistry,
-  ResolvedDynamicRoute,
-  ResolvedDynamicRouteMenuItem,
-  EntityTabOverrides,
-  MountPoints,
-  RemotePlugins,
-  ScaffolderFieldExtension,
-  ScalprumMountPointConfig,
-  AppThemeProvider,
-} from './DynamicRootContext';
+
+import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
 import extractDynamicConfig, {
-  DynamicPluginConfig,
   configIfToCallable,
+  DynamicPluginConfig,
   DynamicRoute,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
-import defaultAppComponents from './defaultAppComponents';
-import bindAppRoutes from '../../utils/dynamicUI/bindAppRoutes';
-import Loader from './Loader';
-import CommonIcons from './CommonIcons';
 import { MenuIcon } from '../Root/MenuIcon';
+import CommonIcons from './CommonIcons';
+import defaultAppComponents from './defaultAppComponents';
+import DynamicRootContext, {
+  AppThemeProvider,
+  ComponentRegistry,
+  EntityTabOverrides,
+  MountPoints,
+  RemotePlugins,
+  ResolvedDynamicRoute,
+  ResolvedDynamicRouteMenuItem,
+  ScaffolderFieldExtension,
+  ScalprumMountPointConfig,
+} from './DynamicRootContext';
+import Loader from './Loader';
 
 export type StaticPlugins = Record<
   string,

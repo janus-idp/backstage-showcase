@@ -1,5 +1,5 @@
-import { expect, Page } from '@playwright/test';
-import { UIhelper } from '../UIhelper';
+import { expect, Page } from "@playwright/test";
+import { UIhelper } from "../UIhelper";
 
 export class Tekton {
   page: Page;
@@ -11,7 +11,7 @@ export class Tekton {
   }
 
   getAllGridColumnsTextForPipelineRunsTable() {
-    return ['NAME', 'STATUS', 'TASK STATUS', 'STARTED', 'DURATION'];
+    return ["NAME", "STATUS", "TASK STATUS", "STARTED", "DURATION"];
   }
 
   async clickOnExpandRowFromPipelineRunsTable() {
@@ -38,12 +38,12 @@ export class Tekton {
 
   async search(value: string) {
     const searchInput = this.page.locator('input[placeholder="Search"]');
-    await searchInput.waitFor({ state: 'visible' });
+    await searchInput.waitFor({ state: "visible" });
     await searchInput.fill(value);
   }
 
   async isModalOpened() {
-    await expect(this.page.locator('#pipelinerun-logs')).toBeVisible();
+    await expect(this.page.locator("#pipelinerun-logs")).toBeVisible();
   }
 
   async checkPipelineStages(texts: string[]) {

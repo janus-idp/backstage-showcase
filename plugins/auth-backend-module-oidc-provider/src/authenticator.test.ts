@@ -16,17 +16,19 @@
 import { registerMswTestHooks } from '@backstage/backend-test-utils';
 import { ConfigReader } from '@backstage/config';
 import {
+  decodeOAuthState,
+  encodeOAuthState,
   OAuthAuthenticatorAuthenticateInput,
   OAuthAuthenticatorRefreshInput,
   OAuthAuthenticatorStartInput,
   OAuthState,
-  decodeOAuthState,
-  encodeOAuthState,
 } from '@backstage/plugin-auth-node';
+
 import express from 'express';
-import { JWK, SignJWT, exportJWK, generateKeyPair } from 'jose';
+import { exportJWK, generateKeyPair, JWK, SignJWT } from 'jose';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+
 import { oidcAuthenticator } from './authenticator';
 
 describe('oidcAuthenticator', () => {

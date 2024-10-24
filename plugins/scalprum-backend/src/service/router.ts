@@ -2,7 +2,9 @@ import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import { DynamicPluginManager } from '@backstage/backend-dynamic-feature-service';
 import { DiscoveryService, LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
+
 import express, { Router } from 'express';
+
 import * as fs from 'fs';
 import * as path from 'path';
 import * as url from 'url';

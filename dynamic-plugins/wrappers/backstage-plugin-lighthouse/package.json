@@ -19,19 +19,21 @@
   },
   "sideEffects": false,
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@mui/icons-material": "5.16.7",
-    "@backstage-community/plugin-lighthouse": "0.4.20"
+    "@backstage-community/plugin-lighthouse": "0.4.20",
+    "@mui/icons-material": "5.16.7"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.27.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",

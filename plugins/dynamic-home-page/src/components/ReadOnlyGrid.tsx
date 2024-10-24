@@ -4,18 +4,18 @@
 // https://github.com/backstage/backstage/blob/master/plugins/home/src/components/CustomHomepage/CustomHomepageGrid.tsx
 // but without the drag and drop functionality.
 
-import React from 'react';
-
-import { ErrorBoundary } from '@backstage/core-components';
-
-import { makeStyles } from '@material-ui/core/styles';
-
+import { useMemo } from 'react';
 import {
   Layout,
   Layouts,
   Responsive,
   ResponsiveProps,
 } from 'react-grid-layout';
+
+import { ErrorBoundary } from '@backstage/core-components';
+
+import { makeStyles } from '@material-ui/core/styles';
+
 // Removes the doubled scrollbar
 import 'react-grid-layout/css/styles.css';
 
@@ -85,7 +85,7 @@ export const ReadOnlyGrid = (props: ReadOnlyGridProps) => {
   const classes = useStyles();
   const [measureRef, measureRect] = useMeasure<HTMLDivElement>();
 
-  const cards = React.useMemo<Card[]>(() => {
+  const cards = useMemo<Card[]>(() => {
     return props.mountPoints.map<Card>((mountPoint, index) => {
       const id = (index + 1).toString();
       const layouts: Record<string, Layout> = {};
@@ -128,7 +128,7 @@ export const ReadOnlyGrid = (props: ReadOnlyGridProps) => {
     });
   }, [props.mountPoints]);
 
-  const layouts = React.useMemo<Layouts>(() => {
+  const layouts = useMemo<Layouts>(() => {
     const result: Layouts = {};
     for (const card of cards) {
       for (const [breakpoint, layoutPerBreakpoint] of Object.entries(
@@ -143,7 +143,7 @@ export const ReadOnlyGrid = (props: ReadOnlyGridProps) => {
     return result;
   }, [cards]);
 
-  const children = React.useMemo(() => {
+  const children = useMemo(() => {
     return cards.map(card => (
       <div
         key={card.id}
