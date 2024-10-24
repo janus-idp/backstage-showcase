@@ -1,14 +1,14 @@
-import { expect, test } from '@playwright/test';
-import { Response } from '../../../support/pages/rbac';
-import { Common } from '../../../utils/Common';
-import { UIhelper } from '../../../utils/UIhelper';
-import { RbacConstants } from '../../../data/rbac-constants';
-import { RhdhAuthHack } from '../../../support/api/rhdh-auth-hack';
-import { GH_USER_IDAuthFile } from '../../../support/auth/auth_constants';
+import { expect, test } from "@playwright/test";
+import { Response } from "../../../support/pages/rbac";
+import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/UIhelper";
+import { RbacConstants } from "../../../data/rbac-constants";
+import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
+import { GH_USER_IDAuthFile } from "../../../support/auth/auth_constants";
 
 test.use({ storageState: GH_USER_IDAuthFile });
 
-test.describe('Test RBAC plugin REST API', () => {
+test.describe("Test RBAC plugin REST API", () => {
   let uiHelper: UIhelper;
   let responseHelper: Response;
 

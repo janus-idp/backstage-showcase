@@ -1,10 +1,10 @@
-import { test as base } from '@playwright/test';
-import { Catalog } from '../support/pages/Catalog';
-import GithubApi from '../support/api/github';
-import { CATALOG_FILE, JANUS_QE_ORG } from '../utils/constants';
-import { assert } from 'console';
-import { Common } from '../utils/Common';
-import { GH_USER_IDAuthFile } from '../support/auth/auth_constants';
+import { test as base } from "@playwright/test";
+import { Catalog } from "../support/pages/Catalog";
+import GithubApi from "../support/api/github";
+import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
+import { assert } from "console";
+import { Common } from "../utils/Common";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;

@@ -1,9 +1,9 @@
-import { UIhelper } from './UIhelper';
-import { authenticator } from 'otplib';
-import { Browser, expect, Page, TestInfo } from '@playwright/test';
-import { SettingsPagePO } from '../support/pageObjects/page-obj';
-import { waitsObjs } from '../support/pageObjects/global-obj';
-import path from 'path';
+import { UIhelper } from "./UIhelper";
+import { authenticator } from "otplib";
+import { Browser, expect, Page, TestInfo } from "@playwright/test";
+import { SettingsPagePO } from "../support/pageObjects/page-obj";
+import { waitsObjs } from "../support/pageObjects/global-obj";
+import path from "path";
 
 export class Common {
   page: Page;
@@ -15,18 +15,18 @@ export class Common {
   }
 
   public async logintoGithub() {
-    await this.page.goto('/settings');
-    await this.page.waitForURL('/settings');
-    await this.page.goto('/');
-    await this.page.waitForURL('/');
+    await this.page.goto("/settings");
+    await this.page.waitForURL("/settings");
+    await this.page.goto("/");
+    await this.page.waitForURL("/");
   }
 
   public async loginAsGuest() {
     const uiHelper = new UIhelper(this.page);
-    await this.page.goto('/');
-    await this.page.waitForURL('/');
-    await uiHelper.verifyHeading('Select a sign-in method');
-    await uiHelper.clickButton('Enter');
+    await this.page.goto("/");
+    await this.page.waitForURL("/");
+    await uiHelper.verifyHeading("Select a sign-in method");
+    await uiHelper.clickButton("Enter");
     await uiHelper.waitForSideBarVisible();
   }
 
@@ -67,32 +67,32 @@ export class Common {
   }
 
   async githubLogin(username: string, password: string) {
-    await this.page.goto('/');
+    await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
-    await this.uiHelper.clickButton('Sign In');
+    await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>(resolve => {
-      this.page.once('popup', async popup => {
+    return await new Promise<string>((resolve) => {
+      this.page.once("popup", async (popup) => {
         await popup.waitForLoadState();
         if (popup.url().startsWith(process.env.BASE_URL)) {
           // an active rhsso session is already logged in and the popup will automatically close
-          resolve('Already logged in');
+          resolve("Already logged in");
         } else {
           await popup.waitForTimeout(3000);
           try {
-            await popup.locator('#login_field').fill(username);
-            await popup.locator('#password').fill(password);
+            await popup.locator("#login_field").fill(username);
+            await popup.locator("#password").fill(password);
             await popup.locator("[type='submit']").click({ timeout: 5000 });
             //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent('close', { timeout: 2000 });
-            resolve('Login successful');
+            await popup.waitForEvent("close", { timeout: 2000 });
+            resolve("Login successful");
           } catch (e) {
             const authorization = popup.locator(
-              'button.js-oauth-authorize-btn',
+              "button.js-oauth-authorize-btn",
             );
             if (await authorization.isVisible()) {
               authorization.click();
-              resolve('Login successful with app authorization');
+              resolve("Login successful with app authorization");
             } else {
               throw e;
             }

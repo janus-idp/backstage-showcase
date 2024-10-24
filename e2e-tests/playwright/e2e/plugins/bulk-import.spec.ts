@@ -7,14 +7,14 @@ import { CatalogImport } from "../../support/pages/CatalogImport";
 import {
   defaultCatalogInfoYaml,
   updatedCatalogInfoYaml,
-} from '../../support/testData/BulkImport';
+} from "../../support/testData/BulkImport";
 import {
   GH_USER2_IDAuthFile,
   GH_USER_IDAuthFile,
-} from '../../support/auth/auth_constants';
+} from "../../support/auth/auth_constants";
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
-test.describe.serial('Bulk Import plugin', () => {
+test.describe.serial("Bulk Import plugin", () => {
   test.use({ storageState: GH_USER2_IDAuthFile });
 
   let page: Page;
@@ -235,7 +235,7 @@ test.describe.serial('Bulk Import plugin', () => {
 });
 
 test.describe
-  .serial('Bulk Import - Verify existing repo are displayed in bulk import Added repositories', () => {
+  .serial("Bulk Import - Verify existing repo are displayed in bulk import Added repositories", () => {
   test.use({ storageState: GH_USER2_IDAuthFile });
 
   let uiHelper: UIhelper;
@@ -288,17 +288,15 @@ test.describe
 });
 
 test.describe
-  .serial('Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin', () => {
+  .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
   test.use({ storageState: GH_USER_IDAuthFile });
 
   let page: Page;
   let uiHelper: UIhelper;
-  let common: Common;
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
-    common = new Common(page);
     await new Common(page).logintoGithub();
   });
 

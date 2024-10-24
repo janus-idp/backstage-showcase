@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
-import { Common } from '../../../utils/Common';
-import { UIhelper } from '../../../utils/UIhelper';
-import { UIhelperPO } from '../../../support/pageObjects/global-obj';
-import { GH_USER_IDAuthFile } from '../../../support/auth/auth_constants';
+import { test, expect } from "@playwright/test";
+import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/UIhelper";
+import { UIhelperPO } from "../../../support/pageObjects/global-obj";
+import { GH_USER_IDAuthFile } from "../../../support/auth/auth_constants";
 
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   test.use({ storageState: GH_USER_IDAuthFile });
@@ -11,9 +11,9 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     await new Common(page).logintoGithub();
-    await uiHelper.openSidebarButton('Administration');
-    await uiHelper.openSidebar('Plugins');
-    await uiHelper.verifyHeading('Plugins');
+    await uiHelper.openSidebarButton("Administration");
+    await uiHelper.openSidebar("Plugins");
+    await uiHelper.verifyHeading("Plugins");
   });
 
   test("is disabled", async ({ page }) => {

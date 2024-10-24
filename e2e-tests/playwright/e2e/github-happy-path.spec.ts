@@ -1,16 +1,16 @@
-import { test, expect } from '@playwright/test';
-import { UIhelper } from '../utils/UIhelper';
-import { Common } from '../utils/Common';
-import { resources } from '../support/testData/resources';
+import { test, expect } from "@playwright/test";
+import { UIhelper } from "../utils/UIhelper";
+import { Common } from "../utils/Common";
+import { resources } from "../support/testData/resources";
 import {
   BackstageShowcase,
   CatalogImport,
-} from '../support/pages/CatalogImport';
-import { templates } from '../support/testData/templates';
-import { GH_USER_IDAuthFile } from '../support/auth/auth_constants';
+} from "../support/pages/CatalogImport";
+import { templates } from "../support/testData/templates";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
 test.use({ storageState: GH_USER_IDAuthFile });
-test.describe.serial('GitHub Happy path', () => {
+test.describe.serial("GitHub Happy path", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let catalogImport: CatalogImport;
@@ -27,11 +27,11 @@ test.describe.serial('GitHub Happy path', () => {
     await new Common(page).logintoGithub();
   });
 
-  test('Verify Profile is Github Account Name in the Settings page', async ({
+  test("Verify Profile is Github Account Name in the Settings page", async ({
     page,
   }) => {
-    await uiHelper.openSidebar('Settings');
-    await expect(page).toHaveURL('/settings');
+    await uiHelper.openSidebar("Settings");
+    await expect(page).toHaveURL("/settings");
     await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
     await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
   });
@@ -91,10 +91,10 @@ test.describe.serial('GitHub Happy path', () => {
     await backstageShowcase.verifyAboutCardIsDisplayed();
   });
 
-  test('Verify that the Issues tab renders all the open github issues in the repository', async ({
+  test("Verify that the Issues tab renders all the open github issues in the repository", async ({
     page,
   }) => {
-    await uiHelper.clickTab('Issues');
+    await uiHelper.clickTab("Issues");
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
     const issuesCountText = `All repositories (${openIssues.length} Issues)*`;
@@ -166,10 +166,10 @@ test.describe.serial('GitHub Happy path', () => {
     }
   });
 
-  test('Click on the Dependencies tab and verify that all the relations have been listed and displayed', async ({
+  test("Click on the Dependencies tab and verify that all the relations have been listed and displayed", async ({
     page,
   }) => {
-    await uiHelper.clickTab('Dependencies');
+    await uiHelper.clickTab("Dependencies");
     for (const resource of resources) {
       const resourceElement = page.locator(
         `#workspace:has-text("${resource}")`,

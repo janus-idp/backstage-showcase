@@ -1,13 +1,13 @@
-import { test } from '@playwright/test';
-import { UIhelper } from '../utils/UIhelper';
-import { Common } from '../utils/Common';
-import { CatalogImport } from '../support/pages/CatalogImport';
-import { APIHelper } from '../utils/APIHelper';
-import { githubAPIEndpoints } from '../utils/APIEndpoints';
-import { GH_USER_IDAuthFile } from '../support/auth/auth_constants';
+import { test } from "@playwright/test";
+import { UIhelper } from "../utils/UIhelper";
+import { Common } from "../utils/Common";
+import { CatalogImport } from "../support/pages/CatalogImport";
+import { APIHelper } from "../utils/APIHelper";
+import { githubAPIEndpoints } from "../utils/APIEndpoints";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
 test.use({ storageState: GH_USER_IDAuthFile });
-test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
+test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   let uiHelper: UIhelper;
   let common: Common;
   let catalogImport: CatalogImport;
@@ -33,10 +33,10 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     await new Common(page).logintoGithub();
   });
 
-  test('Register an Template', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.clickButton('Create');
-    await uiHelper.clickButton('Register Existing Component');
+  test("Register an Template", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.clickButton("Create");
+    await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(template, false);
   });
 

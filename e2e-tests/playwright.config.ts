@@ -46,7 +46,7 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
       name: "showcase",
       ...useCommonDeviceAndViewportConfig,
@@ -57,7 +57,7 @@ export default defineConfig({
         "**/playwright/e2e/authProviders/**/*.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
     {
       name: "showcase-rbac",
@@ -68,7 +68,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
     {
       name: "showcase-auth-providers",
@@ -109,7 +109,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-redis-cache.spec.ts",
         "**/playwright/e2e/plugins/topology/topology.spec.ts",
       ],
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
     {
       name: "showcase-rbac-aks",
@@ -119,7 +119,7 @@ export default defineConfig({
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
 
     // {
