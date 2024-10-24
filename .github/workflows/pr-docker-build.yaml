@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: PR Docker Build
+name: PR
 
 on:
   pull_request_target:
     paths-ignore:
       - 'docs/**'
-      - 'showcase-docs/**'
-      - '.changeset/**'
-    branches-ignore:
-      - 'changeset-release/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.event.pull_request.head.ref }}
@@ -31,8 +27,8 @@ env:
   REGISTRY: quay.io
 
 jobs:
-  pr-docker-build:
-    name: PR Docker Build
+  create-image:
+    name: Create Image
     runs-on: ubuntu-latest
     permissions:
       contents: read
