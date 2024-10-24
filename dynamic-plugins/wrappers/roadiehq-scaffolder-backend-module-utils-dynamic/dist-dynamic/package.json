@@ -52,12 +52,12 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-common": "^0.21.7",
-    "@backstage/backend-plugin-api": "0.6.17",
+    "@backstage/backend-common": "^0.24.0",
+    "@backstage/backend-plugin-api": "^0.8.0",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/plugin-scaffolder-backend": "^1.22.5",
-    "@backstage/plugin-scaffolder-node": "0.4.8"
+    "@backstage/plugin-scaffolder-backend": "^1.24.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.9"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

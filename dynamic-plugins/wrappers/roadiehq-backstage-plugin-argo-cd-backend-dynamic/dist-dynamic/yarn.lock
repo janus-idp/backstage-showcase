@@ -871,9 +871,9 @@ __metadata:
     winston: ^3.2.1
     yn: ^4.0.0
   peerDependencies:
-    "@backstage/backend-common": 0.21.7
-    "@backstage/backend-plugin-api": 0.6.17
-    "@backstage/catalog-client": ^1.6.4
+    "@backstage/backend-common": ^0.24.0
+    "@backstage/backend-plugin-api": ^0.8.0
+    "@backstage/catalog-client": ^1.6.6
     "@backstage/config": ^1.2.0
   languageName: unknown
   linkType: soft

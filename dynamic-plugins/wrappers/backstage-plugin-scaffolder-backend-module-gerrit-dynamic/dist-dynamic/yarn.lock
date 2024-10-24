@@ -9,18 +9,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-plugin-scaffolder-backend-module-gerrit-dynamic@workspace:."
   dependencies:
-    node-fetch: ^2.6.7
+    node-fetch: ^2.7.0
     yaml: ^2.0.0
   peerDependencies:
-    "@backstage/backend-plugin-api": ^0.7.0
+    "@backstage/backend-plugin-api": ^1.0.0
     "@backstage/config": ^1.2.0
     "@backstage/errors": ^1.2.4
-    "@backstage/integration": ^1.13.0
-    "@backstage/plugin-scaffolder-node": ^0.4.8
+    "@backstage/integration": ^1.15.0
+    "@backstage/plugin-scaffolder-node": ^0.4.11
   languageName: unknown
   linkType: soft
 
-"node-fetch@npm:^2.6.7":
+"node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:

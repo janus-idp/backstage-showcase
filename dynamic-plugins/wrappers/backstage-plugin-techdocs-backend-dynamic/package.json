@@ -39,7 +39,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-techdocs-backend @backstage/plugin-search-backend-module-techdocs @backstage/plugin-techdocs-node --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "1.0.0",
+    "@backstage/backend-plugin-api": "1.0.1",
     "@backstage/plugin-search-backend-module-techdocs": "0.2.2",
     "@backstage/plugin-techdocs-backend": "1.10.13"
   },
