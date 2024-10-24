@@ -39,9 +39,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/backstage-plugin-argo-cd-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "0.25.0",
-    "@backstage/backend-plugin-api": "1.0.0",
-    "@roadiehq/backstage-plugin-argo-cd-backend": "3.0.3"
+    "@roadiehq/backstage-plugin-argo-cd-backend": "3.2.3"
   },
   "devDependencies": {
     "@backstage/cli": "0.27.1",

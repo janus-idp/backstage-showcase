@@ -28,7 +28,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-github-pull-requests": "2.5.27"
+    "@roadiehq/backstage-plugin-github-pull-requests": "2.6.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.27.1",

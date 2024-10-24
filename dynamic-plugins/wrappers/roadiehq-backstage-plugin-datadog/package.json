@@ -28,7 +28,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-datadog": "2.3.0"
+    "@roadiehq/backstage-plugin-datadog": "2.4.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.27.1",

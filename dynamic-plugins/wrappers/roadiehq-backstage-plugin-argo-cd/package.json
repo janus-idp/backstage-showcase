@@ -29,7 +29,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-argo-cd": "2.6.5"
+    "@roadiehq/backstage-plugin-argo-cd": "2.8.4"
   },
   "devDependencies": {
     "@backstage/cli": "0.27.1",

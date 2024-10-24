@@ -1,1 +1,1 @@
-export { scaffolderBackendModuleArgocd as default } from './plugin';
+export { default } from '@roadiehq/scaffolder-backend-argocd';
