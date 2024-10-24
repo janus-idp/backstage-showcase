@@ -20,7 +20,7 @@
     "@janus-idp/backstage-plugin-acr": "1.7.11",
     "@janus-idp/backstage-plugin-analytics-provider-segment": "1.7.2",
     "@janus-idp/backstage-plugin-jfrog-artifactory": "1.7.5",
-    "@janus-idp/backstage-plugin-keycloak-backend": "1.13.2",
+    "@janus-idp/backstage-plugin-keycloak-backend": "1.13.4",
     "@janus-idp/backstage-plugin-nexus-repository-manager": "1.9.5",
     "@janus-idp/backstage-plugin-ocm": "4.4.4",
     "@janus-idp/backstage-plugin-ocm-backend": "4.4.2",
