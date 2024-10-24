@@ -1208,7 +1208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/identity@npm:^4.0.0, @azure/identity@npm:^4.4.1":
+"@azure/identity@npm:4.5.0, @azure/identity@npm:^4.0.0":
   version: 4.5.0
   resolution: "@azure/identity@npm:4.5.0"
   dependencies:
@@ -10896,7 +10896,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keycloak/keycloak-admin-client@npm:^25.0.2":
+"@keycloak/keycloak-admin-client@npm:25.0.6":
   version: 25.0.6
   resolution: "@keycloak/keycloak-admin-client@npm:25.0.6"
   dependencies:
@@ -11026,7 +11026,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kubernetes/client-node@npm:^0.21.0":
+"@kubernetes/client-node@npm:0.21.0, @kubernetes/client-node@npm:^0.21.0":
   version: 0.21.0
   resolution: "@kubernetes/client-node@npm:0.21.0"
   dependencies:
@@ -11357,7 +11357,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/microsoft-graph-client@npm:^3.0.7":
+"@microsoft/microsoft-graph-client@npm:3.0.7":
   version: 3.0.7
   resolution: "@microsoft/microsoft-graph-client@npm:3.0.7"
   dependencies:
@@ -23750,23 +23750,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "e2e-tests@workspace:e2e-tests"
   dependencies:
-    "@azure/identity": ^4.4.1
-    "@keycloak/keycloak-admin-client": ^25.0.2
-    "@kubernetes/client-node": ^0.21.0
-    "@microsoft/microsoft-graph-client": ^3.0.7
+    "@azure/identity": 4.5.0
+    "@keycloak/keycloak-admin-client": 25.0.6
+    "@kubernetes/client-node": 0.21.0
+    "@microsoft/microsoft-graph-client": 3.0.7
     "@playwright/test": 1.48.0
     "@types/node": 20.16.5
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
     eslint: 8.57.1
     ioredis: 5.4.1
-    isomorphic-fetch: ^3.0.0
+    isomorphic-fetch: 3.0.0
     node-fetch: 3.3.2
-    octokit: ^4.0.2
+    octokit: 4.0.2
     otplib: 12.0.1
     prettier: 3.3.3
     typescript: 5.6.2
-    winston: ^3.14.2
+    winston: 3.15.0
   languageName: unknown
   linkType: soft
 
@@ -28565,7 +28565,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-fetch@npm:^3.0.0":
+"isomorphic-fetch@npm:3.0.0":
   version: 3.0.0
   resolution: "isomorphic-fetch@npm:3.0.0"
   dependencies:
@@ -33356,6 +33356,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"octokit@npm:4.0.2":
+  version: 4.0.2
+  resolution: "octokit@npm:4.0.2"
+  dependencies:
+    "@octokit/app": ^15.0.0
+    "@octokit/core": ^6.0.0
+    "@octokit/oauth-app": ^7.0.0
+    "@octokit/plugin-paginate-graphql": ^5.0.0
+    "@octokit/plugin-paginate-rest": ^11.0.0
+    "@octokit/plugin-rest-endpoint-methods": ^13.0.0
+    "@octokit/plugin-retry": ^7.0.0
+    "@octokit/plugin-throttling": ^9.0.0
+    "@octokit/request-error": ^6.0.0
+    "@octokit/types": ^13.0.0
+  checksum: 6e3d6ccd67738d05b8b1a101798b9fcd5cb57560ba761761918d9d7e93e551b846b51f31125ee642fca443e37babd81b42c09a69fed79e33de0f97d8b694a8f7
+  languageName: node
+  linkType: hard
+
 "octokit@npm:^3.0.0":
   version: 3.1.2
   resolution: "octokit@npm:3.1.2"
@@ -33371,24 +33389,6 @@ __metadata:
     "@octokit/request-error": ^5.0.0
     "@octokit/types": ^12.0.0
   checksum: 8ef0d57a0e0129da5a3fddf2b2150c3214fd19b5cbefdd2fe7fa4604f45aae90587080ce1498fadef6714d385835ee00b7c86c526f31d67c93fcd545e041568c
-  languageName: node
-  linkType: hard
-
-"octokit@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "octokit@npm:4.0.2"
-  dependencies:
-    "@octokit/app": ^15.0.0
-    "@octokit/core": ^6.0.0
-    "@octokit/oauth-app": ^7.0.0
-    "@octokit/plugin-paginate-graphql": ^5.0.0
-    "@octokit/plugin-paginate-rest": ^11.0.0
-    "@octokit/plugin-rest-endpoint-methods": ^13.0.0
-    "@octokit/plugin-retry": ^7.0.0
-    "@octokit/plugin-throttling": ^9.0.0
-    "@octokit/request-error": ^6.0.0
-    "@octokit/types": ^13.0.0
-  checksum: 6e3d6ccd67738d05b8b1a101798b9fcd5cb57560ba761761918d9d7e93e551b846b51f31125ee642fca443e37babd81b42c09a69fed79e33de0f97d8b694a8f7
   languageName: node
   linkType: hard
 
@@ -41816,7 +41816,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"winston@npm:^3.14.2, winston@npm:^3.2.1":
+"winston@npm:3.15.0, winston@npm:^3.2.1":
   version: 3.15.0
   resolution: "winston@npm:3.15.0"
   dependencies:
