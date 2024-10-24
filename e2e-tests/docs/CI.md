@@ -4,17 +4,35 @@ This document provides a comprehensive overview of our Continuous Integration (C
 
 ## GitHub Pull Requests
 
-When a new Pull Request (PR) is opened at [backstage-showcase](https://github.com/janus-idp/backstage-showcase), tests can be triggered in two ways:
+When a new Pull Request (PR) is opened at [backstage-showcase](https://github.com/janus-idp/backstage-showcase), tests are triggered based on the nature of the changes and the contributor's role.
 
-1. **Commenting `/ok-to-test`**: Only members of the janus-idp GitHub organization can mark the PR with this comment to validate it for testing.
+### Automatic Triggering of Tests
 
-2. **Triggering Tests Post-Validation**: After a janus-idp member has validated the PR, anyone can trigger tests using the following commands:
-   - `/test` or `/test all`
-   - `/retest`
+- **Code Changes Affecting Tests:** PR tests are triggered automatically if the changes include code modifications that could impact tests. This means that for PRs involving code that affects functionality or test suites, the CI will automatically initiate the testing process.
+- **Documentation-Only Changes:** PRs that involve only documentation updates will skip the tests to conserve CI resources, as they do not affect the codebase or functionality.
 
-These interactions are picked up by the OpenShift-CI service, which sets up a test environment on the **IBM Cloud**, specifically on the `rhdh-pr-os` OpenShift Container Platform (OCP) cluster. The configurations and steps for setting up this environment are defined in the `openshift-ci-tests.sh` script.
+### Manual Triggering of Tests
 
-> **Note:** We do **not** have PR checks running on Azure Kubernetes Service (AKS); all PR checks are executed on IBM Cloud's `rhdh-pr-os` cluster.
+For scenarios where tests are not automatically triggered, or when you need to manually initiate tests (e.g., for draft PRs or external contributions), you can use the following commands:
+
+1. **Commenting `/ok-to-test`:**
+
+   - **Purpose:** This command is used to validate a PR for testing, especially important for external contributors or when tests are not automatically triggered.
+   - **Who Can Use It:** Only members of the [janus-idp](https://github.com/janus-idp) GitHub organization can mark the PR with this comment.
+   - **Use Cases:**
+     - **External Contributors:** For PRs from contributors outside the organization, a member needs to comment `/ok-to-test` to initiate tests.
+   - **More Details:** For additional information about `/ok-to-test`, please refer to the [Kubernetes Community Pull Requests Guide](https://github.com/kubernetes/community/blob/master/contributors/guide/pull-requests.md#more-about-ok-to-test).
+
+2. **Triggering Tests Post-Validation:**
+   - After a janus-idp member has validated the PR with `/ok-to-test`, anyone can trigger tests using the following commands:
+     - `/test`, `/test all` or `/test e2e-tests`
+     - `/retest`
+
+These interactions are picked up by the OpenShift-CI service, which sets up a test environment on the **IBM Cloud**, specifically on an OpenShift Container Platform (OCP) cluster. The configurations and steps for setting up this environment are defined in the `openshift-ci-tests.sh` script.
+
+**High-Level Overview of `openshift-ci-tests.sh`:**
+
+The `openshift-ci-tests.sh` script automates the deployment and testing workflow. It sets up the environment by configuring clusters and namespaces based on job requirements, deploys RHDH instances using Helm charts, runs end-to-end tests with Playwright for both RBAC and non-RBAC scenarios, and cleans up resources after testing.
 
 Detailed steps on how the tests and reports are managed can be found in the `run_tests()` function within the `openshift-ci-tests.sh` script. Additionally, all the different `yarn` commands that trigger various Playwright projects are described in the `package.json` file.
 
@@ -24,25 +42,24 @@ When the test run is complete, the status will be reported under your PR checks.
 
 ### Retrying Tests
 
-PR tests are not automatically retried beyond the individual test retries specified in the Playwright configuration (each test is retried up to 2 times on failure). However, you can manually retrigger the entire test suite by commenting:
-
-- `/retest e2e-tests`
-- `/test all`
-
-This is useful if you believe a failure was due to a flake or external issue and want to rerun the tests without making any code changes.
+If the initial automatically triggered tests fail, OpenShift-CI will add a comment to the PR with information on how to retrigger the tests.
 
 ### CI Job Definitions
 
 #### Pull Request Test Job
 
 - **Purpose:** Validate new PRs for code quality, functionality, and integration.
-- **Trigger:** When a PR is opened and `/ok-to-test` is commented by a janus-idp member, or when `/test`, `/test all`, or `/retest` is issued after validation.
-- **Environment:** Runs on the ephemeral `rhdh-pr-os` cluster on IBM Cloud.
+- **Trigger:**
+  - **Automatic:** When a PR includes code changes affecting tests (excluding doc-only changes), tests are automatically triggered.
+  - **Manual:** When `/ok-to-test` is commented by a janus-idp member for external contributors or when `/test`, `/test all`, or `/retest` is issued after validation.
+- **Environment:** Runs on an ephemeral OpenShift cluster on IBM Cloud.
 - **Configurations:**
   - Tests are executed on both **RBAC** (Role-Based Access Control) and **non-RBAC** namespaces.
 - **Steps:**
   1. **Detection:** OpenShift-CI detects the PR event.
   2. **Environment Setup:** The test environment is set up using the `openshift-ci-tests.sh` script.
+     - **Cluster Configuration:** Sets up the required namespaces and applies necessary configurations and secrets.
+     - **Application Deployment:** Deploys the RHDH instances using Helm charts, tailored to the specific test scenarios.
   3. **Test Execution:**
      - **Running Tests:** Executes test suites using `yarn` commands specified in `package.json`.
      - **Retry Logic:** Individual tests are retried up to 2 times as specified in the Playwright configuration.
@@ -55,7 +72,7 @@ This is useful if you believe a failure was due to a flake or external issue and
 - **Artifacts:** Test reports, logs, screenshots, accessible via PR details under **Artifacts**.
 - **Notifications:** Status updates posted on the PR.
 - **Manual Retriggering:**
-  - Tests can be manually retriggered using the `/retest e2e-tests` or `/test all` commands in the PR comments.
+  - OpenShift-CI will provide guidance on how to retrigger tests if they fail. Follow the instructions in the comment added by OpenShift-CI to rerun the tests.
 
 ### GitHub PRs Diagram
 
@@ -65,16 +82,15 @@ This is useful if you believe a failure was due to a flake or external issue and
 
 Nightly tests are run to ensure the stability and reliability of our codebase over time. These tests are executed on different clusters to cover various environments, including both **RBAC** and **non-RBAC**.
 
-- **AKS Nightly Tests:** Nightly tests for Azure Kubernetes Service (AKS) run on the `bsCluster`. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
+- **AKS Nightly Tests:** Nightly tests for Azure Kubernetes Service (AKS) run on a dedicated cluster. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
 
-- **IBM Cloud Tests:** All nightly tests for the `main`, `1.3`, and `1.2` branches run against the `rhdh-pr-os` OpenShift Container Platform (OCP) cluster on IBM Cloud.
+- **IBM Cloud Tests:** All nightly tests for the `main`, `release-1.3`, and `1.2.x` branches run against OpenShift clusters on IBM Cloud.
 
 ### Additional Nightly Jobs for Main Branch
 
-The nightly job for the `main` branch also runs against:
+The nightly job for the `main` branch also runs against three OpenShift Container Platform (OCP) versions to ensure compatibility and stability across multiple versions:
 
-- **`rhdh-os-1`** (currently OCP 4.14).
-- **`rhdh-os-2`** (currently OCP 4.15).
+We maintain testing on the three most recent OCP versions. As new OCP versions are released, we will update our testing pipeline to include the latest versions and drop support for older ones accordingly.
 
 > **Note:** The output of the nightly runs, including test results and any relevant notifications, is posted on the Slack channel **`#rhdh-e2e-test-alerts`**.
 
@@ -85,14 +101,14 @@ The nightly job for the `main` branch also runs against:
 - **Purpose:** Ensure ongoing stability and detect regressions in different environments.
 - **Trigger:** Scheduled to run every night.
 - **Environments:**
-  - **AKS Nightly Tests:** Runs on the `bsCluster`.
-  - **IBM Cloud Nightly Tests:** Runs on the `rhdh-pr-os`, `rhdh-os-1`, and `rhdh-os-2` clusters.
+  - **AKS Nightly Tests:** Runs on the dedicated AKS cluster.
+  - **IBM Cloud Nightly Tests:** Runs on OpenShift clusters on IBM Cloud, covering the most recent OCP versions.
 - **Configurations:**
   - Tests are executed on both **RBAC** and **non-RBAC** namespaces.
 - **Steps:**
   1. **Triggering:** Nightly job is triggered on schedule.
   2. **Environment Setup:** Uses the `openshift-ci-tests.sh` script for setting up the environment.
-     - **Cluster Selection:** Chooses the appropriate cluster based on the job name.
+     - **Cluster Selection:** Chooses the appropriate cluster and OCP version based on the job configuration.
      - **Resource Configuration:** Sets up namespaces and configures resources.
      - **Deployment:** Deploys the Red Hat Developer Hub (RHDH) instance and necessary services.
   3. **Test Execution:**
@@ -116,20 +132,41 @@ The nightly job for the `main` branch also runs against:
 
 ### Automation Processes
 
-- **Scripts Used:**
+- **Script Used:**
 
   - **`openshift-ci-tests.sh`**: Automates the setup of the test environment, deployment of RHDH instances, and execution of tests.
 
-- **Automated Steps:**
-  - **Environment Setup:**
-    - **PR Tests:** Ephemeral environments are automatically created and destroyed per test run to ensure a clean state for each test.
-    - **Nightly Tests:** Use long-running clusters with automated updates to reflect production-like environments.
-  - **Deployment:**
-    - RHDH instances are deployed using automated scripts and Helm charts to ensure consistency and repeatability.
-  - **Test Execution:**
-    - Tests are executed using `yarn` scripts defined in `package.json`, orchestrated by the CI pipeline.
+**High-Level Overview of `openshift-ci-tests.sh`:**
+
+The `openshift-ci-tests.sh` script orchestrates the deployment and testing workflow for both PR and nightly jobs:
+
+- **Environment Preparation:** Sets up clusters and namespaces based on job requirements.
+- **Deployment:** Deploys RHDH instances using Helm charts.
+- **Testing:** Runs end-to-end tests with Playwright.
+- **Cleanup and Reporting:** Cleans up resources and collects artifacts after testing.
+
+### Automated Steps
+
+- **Environment Setup:**
+  - **PR Tests:** Ephemeral environments are automatically created and destroyed per test run.
+  - **Nightly Tests:** Use long-running clusters with automated updates, including multiple OCP versions (usially the current and the previous two).
+- **Deployment:**
+  - RHDH instances are deployed using automated scripts and Helm charts.
+- **Test Execution:**
+  - Tests are executed using `yarn` scripts defined in `package.json`.
+- **Cleanup:**
+  - The script cleans up all temporary resources after tests.
+- **Reporting:**
+  - Generates reports and stores artifacts for **6 months**.
+  - Nightly test results are posted to Slack channel `#rhdh-e2e-test-alerts`.
 
 ### Configuration Details
 
 - **Environment Variables and Secrets:**
-  - Environment variables such as `AKS_NIGHTLY_CLUSTER_NAME` and secrets like GitHub credentials are stored securely in the **OpenShift-CI Vault**. These are securely accessed by the scripts during runtime through environment variables.
+  - Stored securely in the **OpenShift-CI Vault** and accessed during runtime.
+- **Cluster Credentials:**
+  - The script sets cluster URLs, tokens, and selects the appropriate OCP version based on job requirements.
+- **Namespace and Resource Management:**
+  - Handles creation and deletion of namespaces and applies necessary Kubernetes resources.
+- **Dependency Management:**
+  - Installs required tools like `oc`, `kubectl`, and `helm` if not already available.
