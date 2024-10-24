@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7-labs
+
 # THIS IS USED BY Konflux builds >= 1.4
 # TODO verify this works with Cachi2 once we enable that, or switch to use ../.rhdh/docker/Dockerfile as input
 #
@@ -50,14 +52,7 @@ FROM skeleton AS deps
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
-COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
-COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-home-page/package.json ./plugins/dynamic-home-page/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
+COPY --parents $EXTERNAL_SOURCE_NESTED/**/package.json ./
 
 RUN "$YARN" install --immutable --network-timeout 600000
 
@@ -76,14 +71,13 @@ RUN \
   # Upstream only - append build time into packages/app/src/build-metadata.json
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
   -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
-  cat packages/app/src/build-metadata.json; echo && \
-  "$YARN" build --filter=backend && \
-  # Build dynamic plugins: split commands for consistency with downstream
-  "$YARN" --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
-  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
-  "$YARN" --cwd ./dynamic-plugins/imports install-dynamic && \
-  "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
-  "$YARN" copy-dynamic-plugins dist
+  cat packages/app/src/build-metadata.json; echo
+
+RUN "$YARN" build --filter=backend
+
+RUN "$YARN" export-dynamic --filter=./dynamic-plugins/wrappers/* --concurrency=1
+
+RUN "$YARN" copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
 # Upstream only
