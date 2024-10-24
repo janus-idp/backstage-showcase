@@ -1,6 +1,8 @@
-import { useApi } from '@backstage/core-plugin-api';
 import { useCallback, useEffect, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
+
+import { useApi } from '@backstage/core-plugin-api';
+
 import { quickAccessApiRef } from '../api/QuickAccessApiClient';
 import { QuickAccessLink } from '../types';
 

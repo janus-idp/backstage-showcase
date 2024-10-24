@@ -1,42 +1,40 @@
-import React from 'react';
 import { createDevApp, DevAppPageOptions } from '@backstage/dev-utils';
-import { TestApiProvider } from '@backstage/test-utils';
-import { MockSearchApi, searchApiRef } from '@backstage/plugin-search-react';
 import {
   CatalogApi,
   catalogApiRef,
-  starredEntitiesApiRef,
   MockStarredEntitiesApi,
+  starredEntitiesApiRef,
 } from '@backstage/plugin-catalog-react';
 import {
-  visitsApiRef,
-  VisitsApi,
   Visit,
+  VisitsApi,
   VisitsApiQueryParams,
+  visitsApiRef,
 } from '@backstage/plugin-home';
+import { MockSearchApi, searchApiRef } from '@backstage/plugin-search-react';
+import { TestApiProvider } from '@backstage/test-utils';
 
-import { ScalprumContext, ScalprumState } from '@scalprum/react-core';
 import { PluginStore } from '@openshift/dynamic-plugin-sdk';
 import { getAllThemes } from '@redhat-developer/red-hat-developer-hub-theme';
+import { ScalprumContext, ScalprumState } from '@scalprum/react-core';
 
 import { QuickAccessApi, quickAccessApiRef } from '../src/api';
 import {
-  dynamicHomePagePlugin,
+  CatalogStarredEntitiesCard,
   DynamicHomePage,
-  SearchBar,
-  QuickAccessCard,
+  dynamicHomePagePlugin,
+  FeaturedDocsCard,
   Headline,
+  JokeCard,
   Markdown,
   MarkdownCard,
   Placeholder,
-  CatalogStarredEntitiesCard,
-  FeaturedDocsCard,
+  QuickAccessCard,
   RecentlyVisitedCard,
+  SearchBar,
   TopVisitedCard,
-  JokeCard,
 } from '../src/plugin';
 import { HomePageCardMountPoint, QuickAccessLink } from '../src/types';
-
 import defaultQuickAccess from './quickaccess-default.json';
 
 const defaultMountPoints: HomePageCardMountPoint[] = [

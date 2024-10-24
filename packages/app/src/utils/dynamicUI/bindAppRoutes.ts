@@ -1,12 +1,14 @@
 import { AppRouteBinder } from '@backstage/core-app-api';
+import { BackstagePlugin } from '@backstage/core-plugin-api';
 import { apiDocsPlugin } from '@backstage/plugin-api-docs';
 import { catalogPlugin } from '@backstage/plugin-catalog';
 import { catalogImportPlugin } from '@backstage/plugin-catalog-import';
 import { orgPlugin } from '@backstage/plugin-org';
 import { scaffolderPlugin } from '@backstage/plugin-scaffolder';
+
 import get from 'lodash/get';
+
 import { RouteBinding } from '../../components/DynamicRoot/DynamicRootContext';
-import { BackstagePlugin } from '@backstage/core-plugin-api';
 
 const bindAppRoutes = (
   bind: AppRouteBinder,

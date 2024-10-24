@@ -15,15 +15,6 @@
  */
 
 import {
-  custom,
-  CustomHttpOptionsProvider,
-  Issuer,
-  ClientAuthMethod,
-  TokenSet,
-  UserinfoResponse,
-  Strategy as OidcStrategy,
-} from 'openid-client';
-import {
   createOAuthAuthenticator,
   OAuthAuthenticatorResult,
   PassportDoneCallback,
@@ -31,6 +22,16 @@ import {
   PassportOAuthAuthenticatorHelper,
   PassportOAuthPrivateInfo,
 } from '@backstage/plugin-auth-node';
+
+import {
+  ClientAuthMethod,
+  custom,
+  CustomHttpOptionsProvider,
+  Issuer,
+  Strategy as OidcStrategy,
+  TokenSet,
+  UserinfoResponse,
+} from 'openid-client';
 
 const HTTP_OPTION_TIMEOUT = 10000;
 const httpOptionsProvider: CustomHttpOptionsProvider = (_url, options) => {

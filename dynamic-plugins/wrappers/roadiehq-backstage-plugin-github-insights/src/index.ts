@@ -1,1 +1,2 @@
-export * from '@roadiehq/backstage-plugin-github-insights';
+export { default } from '@roadiehq/backstage-plugin-github-insights';
+

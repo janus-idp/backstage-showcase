@@ -26,19 +26,21 @@
     }
   },
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-bitbucket-server --override-interop default --no-embed-as-dependencies"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-bitbucket-server --override-interop default --no-embed-as-dependencies",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-scaffolder-backend-module-bitbucket-server --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage/plugin-scaffolder-backend-module-bitbucket-server": "0.1.12"
+    "@backstage/plugin-scaffolder-backend-module-bitbucket-server": "0.2.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.27.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",

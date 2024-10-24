@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
-import React from 'react';
+import useAsync from 'react-use/lib/useAsync';
+
+import { AppConfig } from '@backstage/config';
 import { ConfigReader, defaultConfigLoader } from '@backstage/core-app-api';
 import { AnyApiFactory } from '@backstage/core-plugin-api';
 
 import { AppsConfig } from '@scalprum/core';
 import { ScalprumProvider } from '@scalprum/react-core';
 
-import overrideBaseUrlConfigs from '../../utils/dynamicUI/overrideBaseUrlConfigs';
-import useAsync from 'react-use/lib/useAsync';
-import Loader from './Loader';
-import { AppConfig } from '@backstage/config';
-import { DynamicRoot, StaticPlugins } from './DynamicRoot';
 import { DynamicPluginConfig } from '../../utils/dynamicUI/extractDynamicConfig';
+import overrideBaseUrlConfigs from '../../utils/dynamicUI/overrideBaseUrlConfigs';
+import { DynamicRoot, StaticPlugins } from './DynamicRoot';
 import { DynamicRootConfig } from './DynamicRootContext';
+import Loader from './Loader';
 
 export type ScalprumApiHolder = {
   dynamicRootConfig: DynamicRootConfig;

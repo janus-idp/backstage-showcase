@@ -1,12 +1,13 @@
 import {
-  coreServices,
-  createBackendPlugin,
-} from '@backstage/backend-plugin-api';
-import { createRouter } from './service/router';
-import {
   DynamicPluginManager,
   dynamicPluginsServiceRef,
 } from '@backstage/backend-dynamic-feature-service';
+import {
+  coreServices,
+  createBackendPlugin,
+} from '@backstage/backend-plugin-api';
+
+import { createRouter } from './service/router';
 
 export const scalprumPlugin = createBackendPlugin({
   pluginId: 'scalprum',
