@@ -2,6 +2,8 @@
 
 To customize the look of your showcase instance, you can edit the `app-config.yaml` file in the root of this repository. The customizations used to configure the app are loaded by the backstage app at startup, with certain values being queried by the app at runtime.
 
+Plugins can use field `developerHub.flavor` of the `app-config.yaml` to identify which Backstage flavor they are running on (e.g `backstage`, `rhdh` or `rhtap`).
+
 ## Changing the Sidebar Logo
 
 The sidebar uses two logos - one for the expanded sidebar and one for the collapsed sidebar.

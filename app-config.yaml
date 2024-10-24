@@ -1,3 +1,5 @@
+developerHub:
+  flavor: rhdh
 app:
   title: Janus IDP Backstage Showcase
   baseUrl: http://localhost:3000
