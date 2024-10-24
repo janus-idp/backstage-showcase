@@ -26,11 +26,9 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {},
   "dependencies": {
     "@backstage/plugin-notifications-backend": "0.4.1"
   },
-  "devDependencies": {},
   "files": [
     "dist",
     "migrations/**/*.{js,d.ts}"
@@ -60,7 +58,8 @@
     "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2",
     "@backstage/plugin-notifications-backend": "file:./embedded/backstage-plugin-notifications-backend",
     "@backstage/plugin-notifications-common": "file:./embedded/backstage-plugin-notifications-common",
-    "@backstage/plugin-notifications-node": "file:./embedded/backstage-plugin-notifications-node"
+    "@backstage/plugin-notifications-node": "file:./embedded/backstage-plugin-notifications-node",
+    "@backstage/plugin-signals-node": "file:./embedded/backstage-plugin-signals-node"
   },
   "peerDependencies": {
     "@backstage/backend-common": "^0.25.0",
@@ -71,7 +70,7 @@
     "@backstage/errors": "^1.2.4",
     "@backstage/plugin-auth-node": "^0.5.3",
     "@backstage/plugin-catalog-node": "^1.13.1",
-    "@backstage/plugin-events-node": "^0.4.1",
-    "@backstage/plugin-signals-node": "^0.1.12"
+    "@backstage/plugin-events-node": "^0.4.2",
+    "@backstage/types": "^1.1.1"
   }
 }
