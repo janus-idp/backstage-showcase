@@ -23723,7 +23723,7 @@ __metadata:
     "@janus-idp/backstage-plugin-bulk-import": 1.6.0
     "@janus-idp/backstage-plugin-bulk-import-backend": 4.0.0
     "@janus-idp/backstage-plugin-jfrog-artifactory": 1.9.0
-    "@janus-idp/backstage-plugin-keycloak-backend": 3.0.0
+    "@janus-idp/backstage-plugin-keycloak-backend": 1.13.4
     "@janus-idp/backstage-plugin-nexus-repository-manager": 1.10.2
     "@janus-idp/backstage-plugin-ocm": 5.1.0
     "@janus-idp/backstage-plugin-ocm-backend": 5.1.0
