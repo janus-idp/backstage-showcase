@@ -1,9 +1,8 @@
 import { createBackend } from '@backstage/backend-defaults';
 import {
-  dynamicPluginsFeatureDiscoveryServiceFactory,
+  dynamicPluginsFeatureDiscoveryLoader,
   dynamicPluginsFrontendSchemas,
-  dynamicPluginsSchemasServiceFactory,
-  dynamicPluginsServiceFactory,
+  dynamicPluginsSchemasServiceFactoryWithOptions,
 } from '@backstage/backend-dynamic-feature-service';
 import { PackageRoles } from '@backstage/cli-node';
 
@@ -24,15 +23,14 @@ configureCorporateProxyAgent();
 
 const backend = createBackend();
 
-backend.add(dynamicPluginsFeatureDiscoveryServiceFactory); // overridden version of the FeatureDiscoveryService which provides features loaded by dynamic plugins
 backend.add(
-  dynamicPluginsServiceFactory({
+  dynamicPluginsFeatureDiscoveryLoader({
     moduleLoader: logger => new CommonJSModuleLoader(logger),
   }),
 );
 
 backend.add(
-  dynamicPluginsSchemasServiceFactory({
+  dynamicPluginsSchemasServiceFactoryWithOptions({
     schemaLocator(pluginPackage) {
       const platform = PackageRoles.getRoleInfo(
         pluginPackage.manifest.backstage.role,

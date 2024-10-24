@@ -19984,7 +19984,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-plugin-techdocs-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic"
   dependencies:
-    "@backstage/backend-dynamic-feature-service": 0.4.1
     "@backstage/backend-plugin-api": 1.0.0
     "@backstage/cli": 0.27.1
     "@backstage/plugin-search-backend-module-techdocs": 0.2.2

@@ -1,10 +1,11 @@
 import { DatabaseManager } from '@backstage/backend-defaults/database';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
-import {
+import type {
   AuthService,
   BackstageCredentials,
   DiscoveryService,
   HttpAuthService,
+  LifecycleService,
   LoggerService,
   PermissionsService,
   RootConfigService,
@@ -34,6 +35,7 @@ export interface RouterOptions {
   discovery: DiscoveryService;
   permissions: PermissionsService;
   httpAuth: HttpAuthService;
+  lifecycle: LifecycleService;
 }
 
 export type UserInfoResponse = {
@@ -47,12 +49,13 @@ export type UserInfoResponse = {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config, auth, discovery, permissions, httpAuth } = options;
+  const { logger, config, auth, discovery, permissions, httpAuth, lifecycle } =
+    options;
 
   const tokenExpiration = readBackstageTokenExpiration(config);
 
   const authDB = await DatabaseManager.fromConfig(options.config)
-    .forPlugin('auth')
+    .forPlugin('auth', { logger, lifecycle })
     .getClient();
 
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
@@ -101,7 +104,7 @@ export async function createRouter(
 
     if (request.headers['content-type']?.includes('text/csv')) {
       try {
-        const csv = await json2csv(users, {
+        const csv = json2csv(users, {
           keys: ['userEntityRef', 'displayName', 'email', 'lastAuthTime'],
         });
         response.header('Content-Type', 'text/csv');

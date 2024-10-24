@@ -12,6 +12,7 @@ export const dynamicPluginsInfoPlugin = createBackendPlugin({
     env.registerInit({
       deps: {
         http: coreServices.httpRouter,
+        // TODO: Replace type
         pluginProvider: dynamicPluginsServiceRef,
         httpAuth: coreServices.httpAuth,
         discovery: coreServices.discovery,
