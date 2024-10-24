@@ -8832,10 +8832,10 @@
     express "^4.19.2"
     lodash "^4.17.21"
 
-"@janus-idp/backstage-plugin-rbac-backend@4.10.6":
-  version "4.10.6"
-  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.6.tgz#8ec82d75080010d09fbd8d52c3c15ec1e8dd7e35"
-  integrity sha512-Xr0INQBrYaj/Ohay3YyRE/AsDrGsWpuZrjX+cZPVlVadDz+I6E82CHOVHfEHwwQeeEbldjt0fn+PwkbjLuOCyg==
+"@janus-idp/backstage-plugin-rbac-backend@4.10.7":
+  version "4.10.7"
+  resolved "https://registry.yarnpkg.com/@janus-idp/backstage-plugin-rbac-backend/-/backstage-plugin-rbac-backend-4.10.7.tgz#c55450b4073c3c9d0e1478892ab85676801bd929"
+  integrity sha512-0RMkbBI2XhZrldx8wr4DsEFGgqAuYOtw8Kk8ewLO2YroAiDiARWaP75ycCDUg+o1Cjx7qygXxegaDo9UNoWicQ==
   dependencies:
     "@backstage/backend-common" "^0.23.3"
     "@backstage/backend-defaults" "^0.4.1"
