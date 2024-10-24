@@ -1,10 +1,5 @@
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import React from 'react';
-
-import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
-
 import { CatalogIcon, Content, Header, Page } from '@backstage/core-components';
+import { CatalogSearchResultListItem } from '@backstage/plugin-catalog';
 import { SearchType } from '@backstage/plugin-search';
 import {
   SearchBar,
@@ -12,7 +7,11 @@ import {
   SearchPagination,
   SearchResult,
 } from '@backstage/plugin-search-react';
+
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { makeStyles } from 'tss-react/mui';
+
 import getMountPointData from '../../utils/dynamicUI/getMountPointData';
 import { MenuIcon } from '../Root/MenuIcon';
 

@@ -11,7 +11,7 @@
   "compilerOptions": {
     "outDir": "dist-types",
     "rootDir": ".",
-    "jsx": "react",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "preserve",
   }
 }

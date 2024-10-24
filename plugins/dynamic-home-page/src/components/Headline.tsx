@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface HeadlineProps {
   title?: string;
   align?: 'left' | 'center' | 'right';

@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import React from 'react';
 
 const Svg: (props: React.ComponentProps<'svg'>) => React.ReactNode = styled(
   'svg',

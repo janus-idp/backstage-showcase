@@ -1,9 +1,9 @@
-import { expect, request } from '@playwright/test';
+import { expect, request } from "@playwright/test";
 
 export class Analytics {
   async getDynamicPluginsList(authHeader: { [key: string]: string }) {
     const context = await request.newContext();
-    const loadedPluginsEndpoint = '/api/dynamic-plugins-info/loaded-plugins';
+    const loadedPluginsEndpoint = "/api/dynamic-plugins-info/loaded-plugins";
     const response = await context.get(loadedPluginsEndpoint, {
       headers: authHeader,
     });

@@ -2,6 +2,7 @@ import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
+
 import { createRouter } from './service/router';
 
 /**
@@ -21,6 +22,7 @@ export const licensedUsersInfoPlugin = createBackendPlugin({
         discovery: coreServices.discovery,
         permissions: coreServices.permissions,
         httpAuth: coreServices.httpAuth,
+        lifecycle: coreServices.lifecycle,
       },
       async init({
         httpRouter,
@@ -30,6 +32,7 @@ export const licensedUsersInfoPlugin = createBackendPlugin({
         discovery,
         permissions,
         httpAuth,
+        lifecycle,
       }) {
         httpRouter.use(
           await createRouter({
@@ -39,6 +42,7 @@ export const licensedUsersInfoPlugin = createBackendPlugin({
             discovery,
             permissions,
             httpAuth,
+            lifecycle,
           }),
         );
         httpRouter.addAuthPolicy({
