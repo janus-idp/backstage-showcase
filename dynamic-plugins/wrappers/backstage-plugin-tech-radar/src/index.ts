@@ -3,6 +3,7 @@ import {
   configApiRef,
   createApiFactory,
   discoveryApiRef,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 import { CustomTechRadar } from './api/CustomTechRadar';
 
@@ -13,9 +14,10 @@ export const TechRadarApi = createApiFactory({
   deps: {
     discoveryApi: discoveryApiRef,
     configApi: configApiRef,
+    identityApi: identityApiRef,
   },
-  factory: ({ discoveryApi, configApi }) =>
-    new CustomTechRadar({ discoveryApi, configApi }),
+  factory: ({ discoveryApi, configApi, identityApi }) =>
+    new CustomTechRadar({ discoveryApi, configApi, identityApi }),
 });
 
 export { default as TechRadarIcon } from '@mui/icons-material/MyLocation';

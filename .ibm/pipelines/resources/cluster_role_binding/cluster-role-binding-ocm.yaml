@@ -15,10 +15,10 @@ subjects:
     namespace: showcase-rbac
   - kind: ServiceAccount
     name: rhdh-k8s-plugin
-    namespace: showcase-rbac
+    namespace: showcase-ci-nightly
   - kind: ServiceAccount
     name: rhdh-k8s-plugin
-    namespace: showcase-ci-nightly
+    namespace: showcase-rbac-nightly
   - kind: ServiceAccount
     name: rhdh-k8s-plugin
     namespace: showcase-1-3-x
