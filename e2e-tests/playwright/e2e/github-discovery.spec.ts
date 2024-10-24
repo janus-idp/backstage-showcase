@@ -12,8 +12,6 @@ type GithubDiscoveryFixture = {
   testOrganization: string;
 };
 
-base.use({ storageState: GH_USER_IDAuthFile });
-
 const test = base.extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page }, use) => {
     await new Common(page).logintoGithub();
@@ -24,6 +22,8 @@ const test = base.extend<GithubDiscoveryFixture>({
   githubApi: new GithubApi(),
   testOrganization: JANUS_QE_ORG,
 });
+
+test.use({ storageState: GH_USER_IDAuthFile });
 
 test.describe("Github Discovery Catalog", () => {
   test(`Discover Organization's Catalog`, async ({
