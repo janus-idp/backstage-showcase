@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
+
 import { Content, EmptyState, Header, Page } from '@backstage/core-components';
 
-import { useMemo } from 'react';
 import { useHomePageMountPoints } from '../hooks/useHomePageMountPoints';
 import { ReadOnlyGrid } from './ReadOnlyGrid';
 

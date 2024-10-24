@@ -26,8 +26,8 @@ metadata:
   annotations:
     github.com/project-slug: ${project_slug}
   labels:
-    ${labels.split(';')[0]}
-    ${labels.split(';')[1]}
+    ${labels.split(";")[0]}
+    ${labels.split(";")[1]}
 spec:
   type: other
   lifecycle: unknown

@@ -1,4 +1,3 @@
-
 import { BrowserRouter } from 'react-router-dom';
 
 import { useSidebarOpenState } from '@backstage/core-components';

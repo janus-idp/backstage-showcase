@@ -1,5 +1,3 @@
-
-
 import { Entity } from '@backstage/catalog-model';
 import { ApiHolder } from '@backstage/core-plugin-api';
 import { EntityLayout, EntitySwitch } from '@backstage/plugin-catalog';

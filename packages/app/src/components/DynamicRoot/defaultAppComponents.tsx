@@ -1,5 +1,3 @@
-
-
 import { AppComponents } from '@backstage/core-plugin-api';
 
 import { SignInPage } from '../SignInPage/SignInPage';

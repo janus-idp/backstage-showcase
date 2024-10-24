@@ -1,5 +1,3 @@
-
-
 import { createDevApp, DevAppPageOptions } from '@backstage/dev-utils';
 import {
   CatalogApi,

@@ -1,5 +1,3 @@
-
-
 import { ContextMenuAwareEntityLayout } from './ContextMenuAwareEntityLayout';
 import { defaultTabs, tabChildren, tabRules } from './defaultTabs';
 import { dynamicEntityTab, DynamicEntityTabProps } from './DynamicEntityTab';

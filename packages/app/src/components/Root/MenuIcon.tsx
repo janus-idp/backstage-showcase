@@ -1,5 +1,3 @@
-
-
 import { useApp } from '@backstage/core-plugin-api';
 
 import MuiIcon from '@mui/material/Icon';

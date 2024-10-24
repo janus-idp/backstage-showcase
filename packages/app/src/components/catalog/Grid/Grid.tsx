@@ -1,5 +1,3 @@
-
-
 import Box, { BoxProps } from '@mui/material/Box';
 import { makeStyles } from 'tss-react/mui';
 

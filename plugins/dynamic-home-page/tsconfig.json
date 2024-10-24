@@ -5,6 +5,6 @@
   "compilerOptions": {
     "outDir": "../../dist-types/plugins/auth-backend-module-oidc-provider",
     "rootDir": ".",
-    "jsx": "preserve",
+    "jsx": "preserve"
   }
 }

@@ -1,31 +1,29 @@
-
-
 import {
-    EntityConsumingComponentsCard,
-    EntityHasApisCard,
-    EntityProvidingComponentsCard,
+  EntityConsumingComponentsCard,
+  EntityHasApisCard,
+  EntityProvidingComponentsCard,
 } from '@backstage/plugin-api-docs';
 import {
-    EntityAboutCard,
-    EntityHasComponentsCard,
-    EntityHasResourcesCard,
-    EntityHasSystemsCard,
-    EntityLinksCard,
-    EntityOrphanWarning,
-    EntityProcessingErrorsPanel,
-    EntityRelationWarning,
-    EntitySwitch,
-    hasCatalogProcessingErrors,
-    hasRelationWarnings,
-    isKind,
-    isOrphan,
+  EntityAboutCard,
+  EntityHasComponentsCard,
+  EntityHasResourcesCard,
+  EntityHasSystemsCard,
+  EntityLinksCard,
+  EntityOrphanWarning,
+  EntityProcessingErrorsPanel,
+  EntityRelationWarning,
+  EntitySwitch,
+  hasCatalogProcessingErrors,
+  hasRelationWarnings,
+  isKind,
+  isOrphan,
 } from '@backstage/plugin-catalog';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
-    EntityGroupProfileCard,
-    EntityMembersListCard,
-    EntityOwnershipCard,
-    EntityUserProfileCard,
+  EntityGroupProfileCard,
+  EntityMembersListCard,
+  EntityOwnershipCard,
+  EntityUserProfileCard,
 } from '@backstage/plugin-org';
 
 import Grid from '../Grid';

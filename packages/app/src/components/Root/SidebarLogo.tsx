@@ -1,5 +1,3 @@
-
-
 import { Link, useSidebarOpenState } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 

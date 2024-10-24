@@ -1,5 +1,3 @@
-
-
 import { Entity } from '@backstage/catalog-model';
 import { isKind } from '@backstage/plugin-catalog';
 

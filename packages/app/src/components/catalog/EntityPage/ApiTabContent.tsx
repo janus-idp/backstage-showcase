@@ -1,8 +1,6 @@
-
-
 import {
-    EntityConsumedApisCard,
-    EntityProvidedApisCard,
+  EntityConsumedApisCard,
+  EntityProvidedApisCard,
 } from '@backstage/plugin-api-docs';
 import { EntitySwitch, isKind } from '@backstage/plugin-catalog';
 
