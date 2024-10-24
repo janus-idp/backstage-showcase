@@ -1,41 +1,37 @@
-import { test, expect, Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
+import { Common } from "../utils/Common";
 import { resources } from "../support/testData/resources";
 import {
   BackstageShowcase,
   CatalogImport,
 } from "../support/pages/CatalogImport";
 import { templates } from "../support/testData/templates";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
-let page: Page;
-test.describe.serial("GitHub Happy path", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  let catalogImport: CatalogImport;
-  let backstageShowcase: BackstageShowcase;
-
+test.use({ storageState: GH_USER_IDAuthFile });
+test.describe("GitHub Happy path", () => {
   const component =
     "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-    catalogImport = new CatalogImport(page);
-    backstageShowcase = new BackstageShowcase(page);
-    await common.loginAsGithubUser();
+  test.beforeEach(async ({ page }) => {
+    await new Common(page).logintoGithub();
   });
 
-  test("Verify Profile is Github Account Name in the Settings page", async () => {
+  test("Verify Profile is Github Account Name in the Settings page", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Settings");
     await expect(page).toHaveURL("/settings");
     await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
     await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
   });
 
-  test("Register an existing component", async () => {
+  test("Register an existing component", async ({ page }) => {
+    const uiHelper = new UIhelper(page);
+    const catalogImport = new CatalogImport(page);
+
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.clickButton("Create");
@@ -43,7 +39,10 @@ test.describe.serial("GitHub Happy path", () => {
     await catalogImport.registerExistingComponent(component);
   });
 
-  test("Verify that the following components were ingested into the Catalog", async () => {
+  test("Verify that the following components were ingested into the Catalog", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Group");
     await uiHelper.verifyComponentInCatalog("Group", ["Janus-IDP Authors"]);
@@ -68,7 +67,10 @@ test.describe.serial("GitHub Happy path", () => {
     await uiHelper.verifyRowsInTable(["rhdh-qe"]);
   });
 
-  test("Verify all 12 Software Templates appear in the Create page", async () => {
+  test("Verify all 12 Software Templates appear in the Create page", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
     await uiHelper.waitForHeaderTitle();
@@ -79,7 +81,12 @@ test.describe.serial("GitHub Happy path", () => {
     }
   });
 
-  test("Click login on the login popup and verify that Overview tab renders", async () => {
+  test("Click login on the login popup and verify that Overview tab renders", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const common = new Common(page);
+    const backstageShowcase = new BackstageShowcase(page);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.clickByDataTestId("user-picker-all");
@@ -90,7 +97,11 @@ test.describe.serial("GitHub Happy path", () => {
     await backstageShowcase.verifyAboutCardIsDisplayed();
   });
 
-  test("Verify that the Issues tab renders all the open github issues in the repository", async () => {
+  test("Verify that the Issues tab renders all the open github issues in the repository", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const backstageShowcase = new BackstageShowcase(page);
     await uiHelper.clickTab("Issues");
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
@@ -102,13 +113,22 @@ test.describe.serial("GitHub Happy path", () => {
     }
   });
 
-  test("Verify that the Pull/Merge Requests tab renders the 5 most recently updated Open Pull Requests", async () => {
+  test("Verify that the Pull/Merge Requests tab renders the 5 most recently updated Open Pull Requests", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const backstageShowcase = new BackstageShowcase(page);
     await uiHelper.clickTab("Pull/Merge Requests");
     const openPRs = await BackstageShowcase.getShowcasePRs("open");
     await backstageShowcase.verifyPRRows(openPRs, 0, 5);
   });
 
-  test("Click on the CLOSED filter and verify that the 5 most recently updated Closed PRs are rendered (same with ALL)", async () => {
+  test("Click on the CLOSED filter and verify that the 5 most recently updated Closed PRs are rendered (same with ALL)", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const common = new Common(page);
+    const backstageShowcase = new BackstageShowcase(page);
     await uiHelper.clickButton("CLOSED", { force: true });
     const closedPRs = await BackstageShowcase.getShowcasePRs("closed");
     await common.waitForLoad();
@@ -116,7 +136,11 @@ test.describe.serial("GitHub Happy path", () => {
   });
 
   //TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
-  test.skip("Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded", async () => {
+  test.skip("Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const backstageShowcase = new BackstageShowcase(page);
     console.log("Fetching all PRs from GitHub");
     const allPRs = await BackstageShowcase.getShowcasePRs("all", true);
 
@@ -140,7 +164,12 @@ test.describe.serial("GitHub Happy path", () => {
   });
 
   //FIXME
-  test.skip("Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs", async () => {
+  test.skip("Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const common = new Common(page);
+    const backstageShowcase = new BackstageShowcase(page);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickLink("Backstage Showcase");
     await common.clickOnGHloginPopup();
@@ -152,7 +181,12 @@ test.describe.serial("GitHub Happy path", () => {
     await backstageShowcase.verifyPRRowsPerPage(20, allPRs);
   });
 
-  test("Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied", async () => {
+  test("Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const common = new Common(page);
+    const backstageShowcase = new BackstageShowcase(page);
     await uiHelper.clickTab("CI");
     await common.clickOnGHloginPopup();
 
@@ -163,7 +197,10 @@ test.describe.serial("GitHub Happy path", () => {
     }
   });
 
-  test("Click on the Dependencies tab and verify that all the relations have been listed and displayed", async () => {
+  test("Click on the Dependencies tab and verify that all the relations have been listed and displayed", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.clickTab("Dependencies");
     for (const resource of resources) {
       const resourceElement = page.locator(
@@ -174,12 +211,12 @@ test.describe.serial("GitHub Happy path", () => {
     }
   });
 
-  test("Sign out and verify that you return back to the Sign in page", async () => {
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-  });
-
-  test.afterAll(async () => {
-    await page.close();
-  });
+  //  test("Sign out and verify that you return back to the Sign in page", async ({
+  //    page,
+  //  }) => {
+  //    const uiHelper = new UIhelper(page);
+  //    const common = new Common(page);
+  //    await uiHelper.openSidebar("Settings");
+  //    await common.signOut();
+  //  });
 });

@@ -1,16 +1,13 @@
-import { Page, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
+import { Common } from "../utils/Common";
 import { CatalogImport } from "../support/pages/CatalogImport";
 import { APIHelper } from "../utils/APIHelper";
 import { githubAPIEndpoints } from "../utils/APIEndpoints";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
-let page: Page;
-test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
-  let uiHelper: UIhelper;
-  let common: Common;
-  let catalogImport: CatalogImport;
-
+test.use({ storageState: GH_USER_IDAuthFile });
+test.describe("Link Scaffolded Templates to Catalog Items", () => {
   const template =
     "https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml";
 
@@ -25,23 +22,26 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     ).toString("utf8"), // Default repoOwner janus-qe
   };
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
-    common = new Common(page);
-    uiHelper = new UIhelper(page);
-    catalogImport = new CatalogImport(page);
-
-    await common.loginAsGithubUser();
+  test.beforeEach(async ({ page }) => {
+    const uiHelper = new UIhelper(page);
+    await new Common(page).logintoGithub();
+    await uiHelper.openSidebar("Catalog");
   });
-  test("Register an Template", async () => {
+
+  test("Register an Template", async ({ page }) => {
+    const uiHelper = new UIhelper(page);
+    const catalogImport = new CatalogImport(page);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
     await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(template, false);
   });
 
-  test("Create a React App using the newly registered Template", async () => {
+  test("Create a React App using the newly registered Template", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
     await uiHelper.searchInputPlaceholder("Create React App Template");
@@ -74,12 +74,16 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.verifyRowInTableByUniqueText("Repo Url", [
       `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
     ]);
-
-    await uiHelper.clickButton("Create");
-    await uiHelper.clickLink("Open in catalog");
   });
 
-  test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
+  test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const catalogImport = new CatalogImport(page);
+    const common = new Common(page);
+    await uiHelper.clickButton("Create");
+    await uiHelper.clickLink("Open in catalog");
     await common.clickOnGHloginPopup();
     await uiHelper.clickTab("Dependencies");
     await uiHelper.verifyText(
@@ -90,7 +94,11 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     );
   });
 
-  test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
+  test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const catalogImport = new CatalogImport(page);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
     await uiHelper.searchInputPlaceholder("Create React App Template");
@@ -115,6 +123,5 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
         reactAppDetails.repo,
       ),
     );
-    await page.close();
   });
 });

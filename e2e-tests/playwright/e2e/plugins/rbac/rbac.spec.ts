@@ -7,21 +7,23 @@ import {
   RoleOverviewPO,
 } from "../../../support/pageObjects/page-obj";
 import { Roles } from "../../../support/pages/rbac";
-import { Common, setupBrowser } from "../../../utils/Common";
+import { Common } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
+import {
+  GH_USER_IDAuthFile,
+  GH_USER2_IDAuthFile,
+  GH_USER_IDAuthFile_rbac,
+} from "../../../support/auth/auth_constants";
 
+test.use({ storageState: GH_USER_IDAuthFile_rbac });
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
-  let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsGithubUser();
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
@@ -69,27 +71,20 @@ test.describe
     await uiHelper.clickButton("Next");
     await uiHelper.clickButton("Cancel");
   });
-
-  test.afterAll(async () => {
-    await page.close();
-  });
 });
 
 test.describe
   .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  let page: Page;
+  test.use({ storageState: GH_USER2_IDAuthFile });
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+  test.beforeEach(async ({ page }) => {
+    await new Common(page).logintoGithub();
   });
 
-  test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async () => {
+  test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
 
@@ -118,31 +113,23 @@ test.describe
     const unregisterGroupOwned = page.getByText("Unregister entity");
     await expect(unregisterGroupOwned).toBeDisabled();
   });
-
-  test.afterAll(async () => {
-    await page.close();
-  });
 });
 
 test.describe.serial("Test RBAC plugin as an admin user", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  let page: Page;
-  let rolesHelper: Roles;
+  test.use({ storageState: GH_USER_IDAuthFile });
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-    rolesHelper = new Roles(page);
-    await common.loginAsGithubUser();
+  test.beforeEach(async ({ page }) => {
+    const uiHelper = new UIhelper(page);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
   });
 
-  test("Check if Administration side nav is present with RBAC plugin", async () => {
+  test("Check if Administration side nav is present with RBAC plugin", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.verifyHeading(/All roles \(\d+\)/);
     const allGridColumnsText = Roles.getRolesListColumnsText();
     await uiHelper.verifyColumnHeading(allGridColumnsText);
@@ -150,7 +137,8 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await uiHelper.verifyCellsInTable(allCellsIdentifier);
   });
 
-  test("View details of a role", async () => {
+  test("View details of a role", async ({ page }) => {
+    const uiHelper = new UIhelper(page);
     await uiHelper.clickLink("role:default/rbac_admin");
 
     await uiHelper.verifyHeading("role:default/rbac_admin");
@@ -176,7 +164,10 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await uiHelper.clickLink("RBAC");
   });
 
-  test("Create and edit a role from the roles list page", async () => {
+  test("Create and edit a role from the roles list page", async ({ page }) => {
+    const uiHelper = new UIhelper(page);
+    const rolesHelper = new Roles(page);
+
     await rolesHelper.createRole("test-role");
     await page.click(RoleListPO.editRole("role:default/test-role"));
     await uiHelper.verifyHeading("Edit Role");
@@ -203,7 +194,11 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await rolesHelper.deleteRole("role:default/test-role");
   });
 
-  test("Edit users and groups and update policies of a role from the overview page", async () => {
+  test("Edit users and groups and update policies of a role from the overview page", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const rolesHelper = new Roles(page);
     await rolesHelper.createRole("test-role1");
     await uiHelper.clickLink("role:default/test-role1");
 
@@ -242,7 +237,11 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await rolesHelper.deleteRole("role:default/test-role1");
   });
 
-  test("Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.", async () => {
+  test("Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
+    const rolesHelper = new Roles(page);
     await rolesHelper.createRoleWithPermissionPolicy("test-role");
 
     await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
@@ -254,7 +253,8 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
   //FIXME
   test.fixme(
     "Admin cannot create a role if there are no rules defined for the selected resource type.",
-    async () => {
+    async ({ page }) => {
+      const uiHelper = new UIhelper(page);
       await uiHelper.clickButton("Create");
       await uiHelper.verifyHeading("Create role");
 
@@ -281,7 +281,9 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test.fixme(
     "As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.",
-    async () => {
+    async ({ page }) => {
+      const uiHelper = new UIhelper(page);
+      const rolesHelper = new Roles(page);
       await rolesHelper.createRoleWithNotPermissionPolicy("test-role");
       await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
       await page.locator(HomePagePO.searchBar).fill("test-role");
@@ -293,7 +295,9 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test.fixme(
     "As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.",
-    async () => {
+    async ({ page }) => {
+      const uiHelper = new UIhelper(page);
+      const rolesHelper = new Roles(page);
       await rolesHelper.createRoleWithNotPermissionPolicy("test-role");
       await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
       await page.locator(HomePagePO.searchBar).fill("test-role");
@@ -324,7 +328,9 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test.fixme(
     "As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.",
-    async () => {
+    async ({ page }) => {
+      const uiHelper = new UIhelper(page);
+      const rolesHelper = new Roles(page);
       await rolesHelper.createRoleWithPermissionPolicy("test-role");
       await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
       await page.locator(HomePagePO.searchBar).fill("test-role");
@@ -350,22 +356,14 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
       await rolesHelper.deleteRole("role:default/test-role");
     },
   );
-
-  test.afterAll(async () => {
-    await page.close();
-  });
 });
 
 test.describe("Test RBAC plugin as a guest user", () => {
-  test.beforeEach(async ({ page }) => {
-    const common = new Common(page);
-    await common.loginAsGuest();
-  });
-
   test("Check if Administration side nav is present with no RBAC plugin", async ({
     page,
   }) => {
     const uiHelper = new UIhelper(page);
+    await new Common(page).loginAsGuest();
     await uiHelper.openSidebarButton("Administration");
     const dropdownMenuLocator = page.locator(`text="RBAC"`);
     await expect(dropdownMenuLocator).not.toBeVisible();

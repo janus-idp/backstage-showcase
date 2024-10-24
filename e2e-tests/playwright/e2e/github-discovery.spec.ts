@@ -2,8 +2,9 @@ import { test as base } from "@playwright/test";
 import { Catalog } from "../support/pages/Catalog";
 import GithubApi from "../support/api/github";
 import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
-import { Common } from "../utils/Common";
 import { assert } from "console";
+import { Common } from "../utils/Common";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -13,7 +14,7 @@ type GithubDiscoveryFixture = {
 
 const test = base.extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page }, use) => {
-    await new Common(page).loginAsGithubUser();
+    await new Common(page).logintoGithub();
     const catalog = new Catalog(page);
     await catalog.go();
     use(catalog);
@@ -21,6 +22,8 @@ const test = base.extend<GithubDiscoveryFixture>({
   githubApi: new GithubApi(),
   testOrganization: JANUS_QE_ORG,
 });
+
+test.use({ storageState: GH_USER_IDAuthFile });
 
 test.describe("Github Discovery Catalog", () => {
   test(`Discover Organization's Catalog`, async ({

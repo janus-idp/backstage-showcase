@@ -1,14 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
-
 const useCommonDeviceAndViewportConfig = {
   use: {
     ...devices["Desktop Chrome"],
@@ -46,6 +37,7 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
       name: "showcase",
       ...useCommonDeviceAndViewportConfig,
@@ -56,6 +48,7 @@ export default defineConfig({
         "**/playwright/e2e/authProviders/**/*.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
+      dependencies: ["setup"],
     },
     {
       name: "showcase-rbac",
@@ -66,6 +59,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
+      dependencies: ["setup"],
     },
     {
       name: "showcase-auth-providers",
@@ -106,6 +100,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-redis-cache.spec.ts",
         "**/playwright/e2e/plugins/topology/topology.spec.ts",
       ],
+      dependencies: ["setup"],
     },
     {
       name: "showcase-rbac-aks",
@@ -115,43 +110,7 @@ export default defineConfig({
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
+      dependencies: ["setup"],
     },
-
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
-    //
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });

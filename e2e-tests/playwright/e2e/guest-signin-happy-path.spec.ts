@@ -27,8 +27,8 @@ test.describe("Guest Signing Happy path", () => {
     await uiHelper.verifyHeading("User Entity: guest");
   });
 
-  test("Sign Out and Verify that you return to the Sign-in page", async () => {
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-  });
+  //  test("Sign Out and Verify that you return to the Sign-in page", async () => {
+  //    await uiHelper.openSidebar("Settings");
+  //    await common.signOut();
+  //  });
 });

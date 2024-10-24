@@ -7,8 +7,7 @@ test.describe("Verify TLS configuration with external Postgres DB", () => {
     page,
   }) => {
     const uiHelper = new UIhelper(page);
-    const common = new Common(page);
-    await common.loginAsGithubUser();
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.clickByDataTestId("user-picker-all");

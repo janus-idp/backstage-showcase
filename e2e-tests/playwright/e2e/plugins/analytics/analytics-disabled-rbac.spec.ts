@@ -2,15 +2,15 @@ import { test, expect } from "@playwright/test";
 import { Common } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
+import { GH_USER_IDAuthFile } from "../../../support/auth/auth_constants";
 
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
-  let common: Common;
+  test.use({ storageState: GH_USER_IDAuthFile });
   let uiHelper: UIhelper;
 
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsGithubUser();
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("Plugins");
     await uiHelper.verifyHeading("Plugins");
@@ -22,7 +22,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
       .pressSequentially("backstage-plugin-analytics-provider-segment\n", {
         delay: 300,
       });
-    const row = await page.locator(
+    const row = page.locator(
       UIhelperPO.rowByText(
         "@janus-idp/backstage-plugin-analytics-provider-segment",
       ),

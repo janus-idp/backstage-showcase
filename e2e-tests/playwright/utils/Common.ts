@@ -1,6 +1,6 @@
 import { UIhelper } from "./UIhelper";
 import { authenticator } from "otplib";
-import { test, Browser, expect, Page, TestInfo } from "@playwright/test";
+import { Browser, expect, Page, TestInfo } from "@playwright/test";
 import { SettingsPagePO } from "../support/pageObjects/page-obj";
 import { waitsObjs } from "../support/pageObjects/global-obj";
 import path from "path";
@@ -14,18 +14,20 @@ export class Common {
     this.uiHelper = new UIhelper(page);
   }
 
-  async loginAsGuest() {
+  public async logintoGithub() {
+    await this.page.goto("/settings");
+    await this.page.waitForURL("/settings");
     await this.page.goto("/");
-    await this.waitForLoad(240000);
-    // TODO - Remove it after https://issues.redhat.com/browse/RHIDP-2043. A Dynamic plugin for Guest Authentication Provider needs to be created
-    this.page.on("dialog", async (dialog) => {
-      console.log(`Dialog message: ${dialog.message()}`);
-      await dialog.accept();
-    });
+    await this.page.waitForURL("/");
+  }
 
-    await this.uiHelper.verifyHeading("Select a sign-in method");
-    await this.uiHelper.clickButton("Enter");
-    await this.uiHelper.waitForSideBarVisible();
+  public async loginAsGuest() {
+    const uiHelper = new UIhelper(this.page);
+    await this.page.goto("/");
+    await this.page.waitForURL("/");
+    await uiHelper.verifyHeading("Select a sign-in method");
+    await uiHelper.clickButton("Enter");
+    await uiHelper.waitForSideBarVisible();
   }
 
   async waitForLoad(timeout = 120000) {
@@ -41,51 +43,6 @@ export class Common {
     await this.page.click(SettingsPagePO.userSettingsMenu);
     await this.page.click(SettingsPagePO.signOut);
     await this.uiHelper.verifyHeading("Select a sign-in method");
-  }
-
-  private async logintoGithub(userid: string) {
-    await this.page.goto("https://github.com/login");
-    await this.page.waitForSelector("#login_field");
-    await this.page.fill("#login_field", userid);
-
-    switch (userid) {
-      case process.env.GH_USER_ID:
-        await this.page.fill("#password", process.env.GH_USER_PASS);
-        break;
-      case process.env.GH_USER2_ID:
-        await this.page.fill("#password", process.env.GH_USER2_PASS);
-        break;
-      default:
-        throw new Error("Invalid User ID");
-    }
-
-    await this.page.click('[value="Sign in"]');
-    await this.page.fill("#app_totp", this.getGitHub2FAOTP(userid));
-    test.setTimeout(130000);
-    if (
-      (await this.uiHelper.isTextVisible(
-        "The two-factor code you entered has already been used",
-      )) ||
-      (await this.uiHelper.isTextVisible(
-        "too many codes have been submitted",
-        3000,
-      ))
-    ) {
-      await this.page.waitForTimeout(60000);
-      await this.page.fill("#app_totp", this.getGitHub2FAOTP(userid));
-    }
-    await expect(this.page.locator("#app_totp")).toBeHidden({
-      timeout: 120000,
-    });
-  }
-
-  async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
-    await this.logintoGithub(userid);
-    await this.page.goto("/");
-    await this.waitForLoad(240000);
-    await this.uiHelper.clickButton("Sign In");
-    await this.checkAndReauthorizeGithubApp();
-    await this.uiHelper.waitForSideBarVisible();
   }
 
   async checkAndReauthorizeGithubApp() {
@@ -105,6 +62,42 @@ export class Common {
           await locator.click();
         }
         resolve();
+      });
+    });
+  }
+
+  async githubLogin(username: string, password: string) {
+    await this.page.goto("/");
+    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
+    await this.uiHelper.clickButton("Sign In");
+
+    return await new Promise<string>((resolve) => {
+      this.page.once("popup", async (popup) => {
+        await popup.waitForLoadState();
+        if (popup.url().startsWith(process.env.BASE_URL)) {
+          // an active rhsso session is already logged in and the popup will automatically close
+          resolve("Already logged in");
+        } else {
+          await popup.waitForTimeout(3000);
+          try {
+            await popup.locator("#login_field").fill(username);
+            await popup.locator("#password").fill(password);
+            await popup.locator("[type='submit']").click({ timeout: 5000 });
+            //await this.checkAndReauthorizeGithubApp()
+            await popup.waitForEvent("close", { timeout: 2000 });
+            resolve("Login successful");
+          } catch (e) {
+            const authorization = popup.locator(
+              "button.js-oauth-authorize-btn",
+            );
+            if (await authorization.isVisible()) {
+              authorization.click();
+              resolve("Login successful with app authorization");
+            } else {
+              throw e;
+            }
+          }
+        }
       });
     });
   }
@@ -143,20 +136,6 @@ export class Common {
     });
   }
 
-  getGitHub2FAOTP(userid: string): string {
-    const secrets: { [key: string]: string | undefined } = {
-      [process.env.GH_USER_ID]: process.env.GH_2FA_SECRET,
-      [process.env.GH_USER2_ID]: process.env.GH_USER2_2FA_SECRET,
-    };
-
-    const secret = secrets[userid];
-    if (!secret) {
-      throw new Error("Invalid User ID");
-    }
-
-    return authenticator.generate(secret);
-  }
-
   getGoogle2FAOTP(): string {
     const secret = process.env.GOOGLE_2FA_SECRET;
     return authenticator.generate(secret);
@@ -186,42 +165,6 @@ export class Common {
             if (await usernameError.isVisible()) {
               await popup.close();
               resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
-    });
-  }
-
-  async githubLogin(username: string, password: string) {
-    await this.page.goto("/");
-    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
-    await this.uiHelper.clickButton("Sign In");
-
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator("#login_field").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[type='submit']").click({ timeout: 5000 });
-            //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const authorization = popup.locator(
-              "button.js-oauth-authorize-btn",
-            );
-            if (await authorization.isVisible()) {
-              authorization.click();
-              resolve("Login successful with app authorization");
             } else {
               throw e;
             }

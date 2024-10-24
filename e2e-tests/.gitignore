@@ -68,3 +68,6 @@ site
 
 # e2e test results
 junit-results.xml
+
+#saved credentials from test setup
+playwright/.auth
