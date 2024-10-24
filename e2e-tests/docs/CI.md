@@ -57,7 +57,7 @@ This is useful if you believe a failure was due to a flake or external issue and
 - **Artifacts:** Test reports, logs, screenshots, accessible via PR details under **Artifacts**.
 - **Notifications:** Status updates posted on the PR.
 - **Manual Retriggering:**
-  - Tests can be manually retriggered using the `/retest e2e-tests` or `/test all` commands in the PR comments.
+  - Tests can be manually retriggered using the `/retest`, `/test e2e-tests` or `/test all` commands in the PR comments.
 
 ### GitHub PRs Diagram
 
