@@ -24,9 +24,8 @@
     "prettier:check": "turbo run prettier:check",
     "prettier:fix": "turbo run prettier:fix",
     "new": "backstage-cli new --scope internal",
-    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
     "versions:metadata": "node ./scripts/update-metadata.mjs",
-    "versions:all": "node ./scripts/update-backstage.mjs"
+    "versions:bump": "node ./scripts/update-backstage.mjs"
   },
   "workspaces": {
     "packages": [
@@ -39,7 +38,7 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.1",
     "@ianvs/prettier-plugin-sort-imports": "4.2.1",
     "@spotify/prettier-config": "15.0.0",
     "husky": "8.0.3",
