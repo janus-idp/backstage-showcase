@@ -6,6 +6,7 @@ import {
   AppTheme,
   BackstagePlugin,
 } from '@backstage/core-plugin-api';
+
 import { ScalprumComponentProps } from '@scalprum/react-core';
 
 export type RouteBinding = {

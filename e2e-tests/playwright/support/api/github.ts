@@ -1,15 +1,15 @@
-import { getOrganizationResponse } from './github-structures';
-import { JANUS_ORG } from '../../utils/constants';
-import { APIResponse, request } from '@playwright/test';
+import { getOrganizationResponse } from "./github-structures";
+import { JANUS_ORG } from "../../utils/constants";
+import { APIResponse, request } from "@playwright/test";
 
 // https://docs.github.com/en/rest?apiVersion=2022-11-28
 export default class GithubApi {
-  private readonly API_URL = 'https://api.github.com';
-  private readonly API_VERSION = '2022-11-28';
+  private readonly API_URL = "https://api.github.com";
+  private readonly API_VERSION = "2022-11-28";
   private readonly AUTH_HEADER = {
-    Accept: 'application/vnd.github+json',
+    Accept: "application/vnd.github+json",
     Authorization: `Bearer ${process.env.GH_RHDH_QE_USER_TOKEN}`,
-    'X-GitHub-Api-Version': this.API_VERSION,
+    "X-GitHub-Api-Version": this.API_VERSION,
   };
 
   public async getOrganization(
@@ -28,7 +28,7 @@ export default class GithubApi {
     const req = await this._repo(repo).getContent(file);
     const status = req.status();
     if (status == 403) {
-      throw Error('You don-t have permissions to see this path');
+      throw Error("You don-t have permissions to see this path");
     }
     return [200, 302, 304].includes(status);
   }
@@ -50,7 +50,7 @@ export default class GithubApi {
   }
 
   private _organization(organization: string) {
-    const url = '/orgs/';
+    const url = "/orgs/";
 
     return {
       get: async (): Promise<APIResponse> => {

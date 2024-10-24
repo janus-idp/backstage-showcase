@@ -3,8 +3,9 @@ import {
   ScannedPluginManifest,
 } from '@backstage/backend-dynamic-feature-service';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import path from 'path';
+
 import * as fs from 'fs';
+import path from 'path';
 
 export class CommonJSModuleLoader implements ModuleLoader {
   constructor(public readonly logger: LoggerService) {}

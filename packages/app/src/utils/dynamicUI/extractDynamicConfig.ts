@@ -1,5 +1,7 @@
 import { Entity } from '@backstage/catalog-model';
+import { ApiHolder } from '@backstage/core-plugin-api';
 import { isKind } from '@backstage/plugin-catalog';
+
 import { hasAnnotation, isType } from '../../components/catalog/utils';
 import {
   DynamicModuleEntry,
@@ -7,7 +9,6 @@ import {
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
-import { ApiHolder } from '@backstage/core-plugin-api';
 import { extractMenuItems } from './extractDynamicConfigFrontend';
 
 export type DynamicRouteMenuItem =

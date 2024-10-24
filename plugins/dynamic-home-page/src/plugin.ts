@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   configApiRef,
   createApiFactory,
@@ -8,15 +9,14 @@ import {
   discoveryApiRef,
   identityApiRef,
 } from '@backstage/core-plugin-api';
-
 import type {
+  FeaturedDocsCardProps,
   StarredEntitiesProps,
   VisitedByTypeProps,
-  FeaturedDocsCardProps,
 } from '@backstage/plugin-home';
 
+import { QuickAccessApiClient, quickAccessApiRef } from './api';
 import { rootRouteRef } from './routes';
-import { quickAccessApiRef, QuickAccessApiClient } from './api';
 
 export const dynamicHomePagePlugin = createPlugin({
   id: 'dynamic-home-page',

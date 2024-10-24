@@ -1,14 +1,14 @@
-const BASE_API_URL = 'https://api.github.com';
+const BASE_API_URL = "https://api.github.com";
 const PER_PAGE = 100;
 
 const getRepoUrl = (owner: string, repo: string) =>
   `${BASE_API_URL}/repos/${owner}/${repo}`;
 const getOrgUrl = (owner: string) => `${BASE_API_URL}/orgs/${owner}`;
 
-const backstageShowcaseAPI = getRepoUrl('janus-idp', 'backstage-showcase');
+const backstageShowcaseAPI = getRepoUrl("janus-idp", "backstage-showcase");
 
 export const githubAPIEndpoints = {
-  pull: (owner: string, repo: string, state: 'open' | 'closed' | 'all') =>
+  pull: (owner: string, repo: string, state: "open" | "closed" | "all") =>
     `${getRepoUrl(owner, repo)}/pulls?per_page=${PER_PAGE}&state=${state}`,
 
   issues: (state: string) =>

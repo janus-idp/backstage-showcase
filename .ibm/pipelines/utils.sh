@@ -36,62 +36,131 @@ save_all_pod_logs(){
 }
 
 droute_send() {
-  # Skipping ReportPortal for nightly jobs on OCP v4.14, v4.13 and AKS for now, as new clusters are not behind the RH VPN.
-  if [[ "$JOB_NAME" == *ocp-v4* || "$JOB_NAME" == *aks* ]]; then
-    return 0
-  fi
+  temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
+  ( # Open subshell
+    export KUBECONFIG="$temp_kubeconfig"
+    local droute_version="1.2.2"
+    local release_name=$1
+    local project=$2
+    local droute_project="droute"
+    METEDATA_OUTPUT="data_router_metadata_output.json"
+    
+    oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
+    oc whoami --show-server
+    local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
+    local temp_droute=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mktemp -d")
 
-  local droute_version="1.2"
-  local release_name=$1
-  local project=$2
-  local droute_project="droute"
-  local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
-  METEDATA_OUTPUT="data_router_metadata_output.json"
+    JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
+    if [ -n "${PULL_NUMBER:-}" ]; then
+      JOB_URL="${JOB_BASE_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}"
+      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}/artifacts/e2e-tests/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
+    else
+      JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
+      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/${JOB_NAME}/${BUILD_ID}/artifacts/${JOB_NAME##periodic-ci-janus-idp-backstage-showcase-main-}/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
+    fi
 
-  # Remove properties (only used for skipped test and invalidates the file if empty)
-  sed -i '/<properties>/,/<\/properties>/d' "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+    # Remove properties (only used for skipped test and invalidates the file if empty)
+    sed -i '/<properties>/,/<\/properties>/d' "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+    # Replace attachments with link to OpenShift CI storage
+    sed -iE "s#\[\[ATTACHMENT|\(.*\)\]\]#${ARTIFACTS_URL}/\1#g" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
-  JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
-  if [ -n "${PULL_NUMBER:-}" ]; then
-    JOB_URL="${JOB_BASE_URL}/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}"
-  else
-    JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
-  fi
+    jq \
+      --arg hostname "$REPORTPORTAL_HOSTNAME" \
+      --arg project "$DATA_ROUTER_PROJECT" \
+      --arg name "$JOB_NAME" \
+      --arg description "[View job run details](${JOB_URL})" \
+      --arg key1 "job_type" \
+      --arg value1 "$JOB_TYPE" \
+      --arg key2 "pr" \
+      --arg value2 "$GIT_PR_NUMBER" \
+      --arg key3 "job_name" \
+      --arg value3 "$JOB_NAME" \
+      --arg key4 "tag_name" \
+      --arg value4 "$TAG_NAME" \
+      --arg auto_finalization_treshold $DATA_ROUTER_AUTO_FINALIZATION_TRESHOLD \
+      '.targets.reportportal.config.hostname = $hostname |
+      .targets.reportportal.config.project = $project |
+      .targets.reportportal.processing.launch.name = $name |
+      .targets.reportportal.processing.launch.description = $description |
+      .targets.reportportal.processing.launch.attributes += [
+          {"key": $key1, "value": $value1},
+          {"key": $key2, "value": $value2},
+          {"key": $key3, "value": $value3},
+          {"key": $key4, "value": $value4}
+        ] |
+      .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
+      ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
 
-  jq \
-    --arg hostname "$REPORTPORTAL_HOSTNAME" \
-    --arg project "$DATA_ROUTER_PROJECT" \
-    --arg name "$JOB_NAME" \
-    --arg description "[View job run details](${JOB_URL})" \
-    --arg key1 "job_type" \
-    --arg value1 "$JOB_TYPE" \
-    --arg key2 "pr" \
-    --arg value2 "$GIT_PR_NUMBER" \
-    --arg auto_finalization_treshold $DATA_ROUTER_AUTO_FINALIZATION_TRESHOLD \
-    '.targets.reportportal.config.hostname = $hostname |
-     .targets.reportportal.config.project = $project |
-     .targets.reportportal.processing.launch.name = $name |
-     .targets.reportportal.processing.launch.description = $description |
-     .targets.reportportal.processing.launch.attributes += [
-        {"key": $key1, "value": $value1},
-        {"key": $key2, "value": $value2}
-      ] |
-     .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
-     ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
+    oc rsync --include="${METEDATA_OUTPUT}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
 
-  oc rsync -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:/tmp/droute"
+    # "Install" Data Router
+    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+      curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
+      && chmod +x /tmp/droute-linux-amd64 \
+      && /tmp/droute-linux-amd64 version"
 
-  oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-    curl -fsSLk -o /tmp/droute-linux-amd64 'https://${NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' && chmod +x /tmp/droute-linux-amd64"
+    # Send test results through DataRouter and save the request ID.
+    DATA_ROUTER_REQUEST_ID=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+      /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
+      --url '${DATA_ROUTER_URL}' \
+      --username '${DATA_ROUTER_USERNAME}' \
+      --password '${DATA_ROUTER_PASSWORD}' \
+      --results '${temp_droute}/${JUNIT_RESULTS}' \
+      --verbose" | grep "request:" | awk '{print $2}')
 
-  oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-    /tmp/droute-linux-amd64 send --metadata /tmp/droute/${METEDATA_OUTPUT} \
-    --url '${DATA_ROUTER_URL}' \
-    --username '${DATA_ROUTER_USERNAME}' \
-    --password '${DATA_ROUTER_PASSWORD}' \
-    --results '/tmp/droute/${JUNIT_RESULTS}' \
-    --verbose"
-
+    if [[ "$JOB_NAME" == *periodic-* ]]; then
+      local max_attempts=30
+      local wait_seconds=2
+      set +e
+      for ((i = 1; i <= max_attempts; i++)); do
+        # Get DataRouter request information.
+        DATA_ROUTER_REQUEST_OUTPUT=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+          /tmp/droute-linux-amd64 request get \
+          --url ${DATA_ROUTER_URL} \
+          --username ${DATA_ROUTER_USERNAME} \
+          --password ${DATA_ROUTER_PASSWORD} \
+          ${DATA_ROUTER_REQUEST_ID}")
+        # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
+        REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
+        if [[ $? -eq 0 ]]; then
+          if [[ "$release_name" == *rbac* ]]; then
+            RUN_TYPE="rbac-nightly"
+          else
+            RUN_TYPE="nightly"
+          fi
+          if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+            RUN_STATUS_EMOJI=":done-circle-check:"
+            RUN_STATUS="passed"
+          else
+            RUN_STATUS_EMOJI=":failed:"
+            RUN_STATUS="failed"
+          fi
+          jq -n \
+            --arg run_status "$RUN_STATUS" \
+            --arg run_type "$RUN_TYPE" \
+            --arg reportportal_launch_url "$REPORTPORTAL_LAUNCH_URL" \
+            --arg job_name "$JOB_NAME" \
+            --arg run_status_emoji "$RUN_STATUS_EMOJI" \
+            '{
+              "RUN_STATUS": $run_status,
+              "RUN_TYPE": $run_type,
+              "REPORTPORTAL_LAUNCH_URL": $reportportal_launch_url,
+              "JOB_NAME": $job_name,
+              "RUN_STATUS_EMOJI": $run_status_emoji
+            }' > /tmp/data_router_slack_message.json
+          curl -X POST -H 'Content-type: application/json' --data @/tmp/data_router_slack_message.json  $SLACK_DATA_ROUTER_WEBHOOK_URL
+          return 0
+        else
+          echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
+          sleep "${wait_seconds}"
+        fi
+      done
+      set -e
+    fi
+    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
+  ) # Close subshell
+  rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
+  oc whoami --show-server
 }
 
 az_login() {

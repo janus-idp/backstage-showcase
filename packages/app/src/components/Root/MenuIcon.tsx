@@ -1,5 +1,5 @@
-import React from 'react';
 import { useApp } from '@backstage/core-plugin-api';
+
 import MuiIcon from '@mui/material/Icon';
 
 export const MenuIcon = ({ icon }: { icon: string }) => {

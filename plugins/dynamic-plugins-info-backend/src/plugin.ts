@@ -1,9 +1,10 @@
+import { dynamicPluginsServiceRef } from '@backstage/backend-dynamic-feature-service';
 import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
+
 import { createRouter } from './service/router';
-import { dynamicPluginsServiceRef } from '@backstage/backend-dynamic-feature-service';
 
 export const dynamicPluginsInfoPlugin = createBackendPlugin({
   pluginId: 'dynamic-plugins-info',
@@ -11,6 +12,7 @@ export const dynamicPluginsInfoPlugin = createBackendPlugin({
     env.registerInit({
       deps: {
         http: coreServices.httpRouter,
+        // TODO: Replace type
         pluginProvider: dynamicPluginsServiceRef,
         httpAuth: coreServices.httpAuth,
         discovery: coreServices.discovery,

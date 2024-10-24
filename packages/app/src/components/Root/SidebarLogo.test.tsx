@@ -1,8 +1,10 @@
+import { BrowserRouter } from 'react-router-dom';
+
 import { useSidebarOpenState } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
+
 import { render } from '@testing-library/react';
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+
 import { SidebarLogo } from './SidebarLogo';
 
 jest.mock('@backstage/core-components', () => ({

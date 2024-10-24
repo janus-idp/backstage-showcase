@@ -20,11 +20,14 @@ import {
   startTestBackend,
 } from '@backstage/backend-test-utils';
 import { decodeOAuthState } from '@backstage/plugin-auth-node';
-import { Server } from 'http';
-import { JWK, SignJWT, exportJWK, generateKeyPair } from 'jose';
+
+import { exportJWK, generateKeyPair, JWK, SignJWT } from 'jose';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import request from 'supertest';
+
+import { Server } from 'http';
+
 import { authModuleOidcProvider } from './module';
 
 describe('authModuleOidcProvider', () => {

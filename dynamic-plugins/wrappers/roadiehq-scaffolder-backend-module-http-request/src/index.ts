@@ -1,1 +1,2 @@
-export { scaffolderModuleHttpRequest as default } from './plugin';
+export { default } from '@roadiehq/scaffolder-backend-module-http-request';
+

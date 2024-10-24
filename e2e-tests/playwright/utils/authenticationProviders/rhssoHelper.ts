@@ -1,12 +1,12 @@
-import { logger } from '../Logger';
-import { expect } from '@playwright/test';
-import * as constants from './constants';
-import GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation';
-import UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation';
-import KcAdminClient from '@keycloak/keycloak-admin-client';
-import { ConnectionConfig } from '@keycloak/keycloak-admin-client/lib/client';
-import { Credentials } from '@keycloak/keycloak-admin-client/lib/utils/auth';
-import * as helper from '../helper';
+import { logger } from "../Logger";
+import { expect } from "@playwright/test";
+import * as constants from "./constants";
+import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
+import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
+import KcAdminClient from "@keycloak/keycloak-admin-client";
+import { ConnectionConfig } from "@keycloak/keycloak-admin-client/lib/client";
+import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
+import * as helper from "../helper";
 
 let kcAdminClient: KcAdminClient | undefined;
 
@@ -17,9 +17,9 @@ export const connectionConfig: ConnectionConfig = {
 
 const cred: Credentials = {
   clientSecret: constants.RHSSO76_CLIENT_SECRET,
-  grantType: 'client_credentials',
+  grantType: "client_credentials",
   clientId: constants.RHSSO76_CLIENTID,
-  scopes: ['openid', 'profile'],
+  scopes: ["openid", "profile"],
 };
 
 export async function initializeRHSSOClient(
@@ -28,7 +28,7 @@ export async function initializeRHSSOClient(
   // Ensure settings isn't null
   if (!connectionConfig) {
     logger.error(`RHSSO config cannot be undefined`);
-    throw new Error('Config cannot be undefined');
+    throw new Error("Config cannot be undefined");
   }
   logger.info(`Initializing RHSSO client`);
   kcAdminClient = new KcAdminClient(connectionConfig);
@@ -40,7 +40,7 @@ export async function setupRHSSOEnvironment(): Promise<{
   usersCreated: Map<string, UserRepresentation>;
   groupsCreated: Map<string, GroupRepresentation>;
 }> {
-  logger.info('Setting up RHSSO environment');
+  logger.info("Setting up RHSSO environment");
   const usersCreated = new Map<string, UserRepresentation>();
   const groupsCreated = new Map<string, GroupRepresentation>();
 
@@ -80,27 +80,27 @@ export async function setupRHSSOEnvironment(): Promise<{
     }
 
     const nestedgroup = await kcAdminClient.groups.createChildGroup(
-      { id: groupsCreated['group_2'].id },
+      { id: groupsCreated["group_2"].id },
       constants.RHSSO76_NESTED_GROUP,
     );
 
     await kcAdminClient.users.addToGroup({
-      id: usersCreated['user_3'].id,
+      id: usersCreated["user_3"].id,
       groupId: nestedgroup.id,
     });
 
     // create rbac policy for created users
     await helper.ensureNewPolicyConfigMapExists(
-      'rbac-policy',
+      "rbac-policy",
       constants.AUTH_PROVIDERS_NAMESPACE,
     );
   } catch (e) {
     logger.log({
-      level: 'error',
-      message: 'RHSSO setup failed:',
+      level: "error",
+      message: "RHSSO setup failed:",
       dump: JSON.stringify(e),
     });
-    throw new Error('RHSSO setup failed: ' + JSON.stringify(e));
+    throw new Error("RHSSO setup failed: " + JSON.stringify(e));
   }
   return {
     usersCreated,
@@ -116,9 +116,9 @@ export async function clearUserSessions(username: string, realm: string) {
     id: usr[0].id,
   });
   logger.log({
-    level: 'info',
+    level: "info",
     message: `Clearing ${username} sessions`,
-    dump: JSON.stringify(sessions.map(s => s.id)),
+    dump: JSON.stringify(sessions.map((s) => s.id)),
   });
 
   for (const s of sessions) {
@@ -164,17 +164,17 @@ export async function updateUserEmail(username: string, newEmail: string) {
       { email: newEmail },
     );
     logger.log({
-      level: 'info',
+      level: "info",
       message: `Updated user: ${username}: `,
       dump: JSON.stringify(res),
     });
   } catch (e) {
     logger.log({
-      level: 'info',
-      message: 'RHSSO update email failed:',
+      level: "info",
+      message: "RHSSO update email failed:",
       dump: JSON.stringify(e),
     });
-    throw new Error('Cannot update user: ' + JSON.stringify(e));
+    throw new Error("Cannot update user: " + JSON.stringify(e));
   }
 }
 
@@ -219,5 +219,5 @@ export async function deleteGroup(groupId: string) {
 }
 
 export function getRHSSOUserDisplayName(user: UserRepresentation) {
-  return user.firstName + ' ' + user.lastName;
+  return user.firstName + " " + user.lastName;
 }

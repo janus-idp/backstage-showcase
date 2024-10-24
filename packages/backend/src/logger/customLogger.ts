@@ -8,8 +8,10 @@ import {
 } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { loadConfigSchema } from '@backstage/config-loader';
+
 import { getPackages } from '@manypkg/get-packages';
 import * as winston from 'winston';
+
 import 'winston-daily-rotate-file';
 
 const defaultFormat = winston.format.combine(

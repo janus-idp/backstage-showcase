@@ -1,3 +1,6 @@
+import React, { useContext } from 'react';
+import { Route } from 'react-router-dom';
+
 import { FlatRoutes } from '@backstage/core-app-api';
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { ApiExplorerPage } from '@backstage/plugin-api-docs';
@@ -5,8 +8,8 @@ import {
   CatalogEntityPage,
   CatalogIndexPage,
   CatalogTable,
-  CatalogTableRow,
   CatalogTableColumnsFunc,
+  CatalogTableRow,
 } from '@backstage/plugin-catalog';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
@@ -16,15 +19,14 @@ import { ScaffolderPage } from '@backstage/plugin-scaffolder';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
-import React, { useContext } from 'react';
-import { Route } from 'react-router-dom';
-import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
-import { Root } from '../Root';
-import { settingsPage } from '../UserSettings/SettingsPages';
+
 import { entityPage } from '../catalog/EntityPage';
+import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
-import { SearchPage } from '../search/SearchPage';
+import { Root } from '../Root';
 import ConfigUpdater from '../Root/ConfigUpdater';
+import { SearchPage } from '../search/SearchPage';
+import { settingsPage } from '../UserSettings/SettingsPages';
 
 const AppBase = () => {
   const {

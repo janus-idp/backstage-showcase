@@ -2,7 +2,9 @@ import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
+
 import promBundle from 'express-prom-bundle';
+
 import * as url from 'url';
 
 const rootRegEx = new RegExp('^/([^/]*)/.*');

@@ -4,6 +4,7 @@ import {
   DiscoveryApi,
   IdentityApi,
 } from '@backstage/core-plugin-api';
+
 import { QuickAccessLink } from '../types';
 
 const DEFAULT_PROXY_PATH = '/developer-hub';

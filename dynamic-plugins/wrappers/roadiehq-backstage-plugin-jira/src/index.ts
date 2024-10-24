@@ -1,1 +1,2 @@
-export * from '@roadiehq/backstage-plugin-jira';
+export { default } from '@roadiehq/backstage-plugin-jira';
+

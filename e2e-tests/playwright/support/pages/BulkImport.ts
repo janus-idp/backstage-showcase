@@ -1,7 +1,7 @@
-import { Page } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
-import { APIHelper } from '../../utils/APIHelper';
-import { UIhelperPO } from '../pageObjects/global-obj';
+import { Page } from "@playwright/test";
+import { UIhelper } from "../../utils/UIhelper";
+import { APIHelper } from "../../utils/APIHelper";
+import { UIhelperPO } from "../pageObjects/global-obj";
 
 export class BulkImport {
   private page: Page;
@@ -14,13 +14,13 @@ export class BulkImport {
 
   async searchInOrg(searchText: string) {
     await this.page
-      .getByTestId('search-in-organization')
-      .getByPlaceholder('Search')
+      .getByTestId("search-in-organization")
+      .getByPlaceholder("Search")
       .fill(searchText);
   }
 
   async filterAddedRepo(searchText: string) {
-    await this.page.getByPlaceholder('Filter').fill(searchText);
+    await this.page.getByPlaceholder("Filter").fill(searchText);
   }
 
   async newGitHubRepo(owner: string, repoName: string) {
@@ -31,7 +31,7 @@ export class BulkImport {
   async selectRepoInTable(repoName: string) {
     await this.page
       .locator(UIhelperPO.rowByText(repoName))
-      .getByRole('checkbox')
+      .getByRole("checkbox")
       .check();
   }
 

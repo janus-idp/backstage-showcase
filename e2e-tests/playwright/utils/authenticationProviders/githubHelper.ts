@@ -1,7 +1,7 @@
-import * as constants from './constants';
-import { App } from 'octokit';
-import { logger } from '../Logger';
-import * as helper from '../helper';
+import * as constants from "./constants";
+import { App } from "octokit";
+import { logger } from "../Logger";
+import * as helper from "../helper";
 
 const app = new App({
   appId: constants.AUTH_ORG_APP_ID,
@@ -26,34 +26,34 @@ export async function setupGithubEnvironment() {
   }
 
   await setParentTeam(
-    constants.GH_TEAMS['team_3'].name,
+    constants.GH_TEAMS["team_3"].name,
     constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    constants.GH_TEAMS['team_2'].name,
+    constants.GH_TEAMS["team_2"].name,
   );
 
   await addMemberToTeam(
-    constants.GH_TEAMS['team_3'].name,
+    constants.GH_TEAMS["team_3"].name,
     constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    constants.GH_USERS['user_1'].name,
+    constants.GH_USERS["user_1"].name,
   );
   await addMemberToTeam(
-    constants.GH_TEAMS['team_4'].name,
+    constants.GH_TEAMS["team_4"].name,
     constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    constants.GH_USERS['user_1'].name,
+    constants.GH_USERS["user_1"].name,
   );
   await addMemberToTeam(
-    constants.GH_TEAMS['team_1'].name,
+    constants.GH_TEAMS["team_1"].name,
     constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    constants.GH_USERS['admin'].name,
+    constants.GH_USERS["admin"].name,
   );
   await addMemberToTeam(
-    constants.GH_TEAMS['location_admin'].name,
+    constants.GH_TEAMS["location_admin"].name,
     constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    constants.GH_USERS['admin'].name,
+    constants.GH_USERS["admin"].name,
   );
 
   await helper.ensureNewPolicyConfigMapExists(
-    'rbac-policy',
+    "rbac-policy",
     constants.AUTH_PROVIDERS_NAMESPACE,
   );
 }
@@ -71,7 +71,7 @@ export async function getTeamByName(team: string, org: string) {
 export async function getTeamMembers() {
   return await octokit.rest.teams.listMembersInOrg({
     org: constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    team_slug: 'team1',
+    team_slug: "team1",
   });
 }
 
@@ -101,7 +101,7 @@ export async function deleteTeam(team: string, org: string) {
     logger.info(`Deleting team from github ${team} in org ${org}`);
     return await octokit.rest.teams.deleteInOrg({ team_slug: team, org });
   } catch (e) {
-    if (e.message.includes('Not Found')) {
+    if (e.message.includes("Not Found")) {
       logger.info(`Team already deleted: ${team} in org ${org}`);
     } else {
       logger.info(`Cannot delete team: ${e.statusCode}-${JSON.stringify(e)}`);
@@ -114,7 +114,7 @@ export async function createTeam(team: string, org: string) {
   return await octokit.rest.teams.create({
     name: team,
     org,
-    privacy: 'closed',
+    privacy: "closed",
   });
 }
 
@@ -145,7 +145,7 @@ export async function removeUserFromAllTeams(user: string, org: string) {
   const teams = await listTeams(org);
   for (const team of teams.data) {
     const members = await listTeamsMembers(team.name, org);
-    if (members.data.map(m => m.login).includes(user)) {
+    if (members.data.map((m) => m.login).includes(user)) {
       await removeMemberToTeam(team.name, org, user);
     }
   }

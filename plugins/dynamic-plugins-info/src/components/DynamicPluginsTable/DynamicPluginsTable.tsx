@@ -11,8 +11,8 @@ import { Query, QueryResult } from '@material-table/core';
 
 import { DynamicPluginInfo, dynamicPluginsInfoApiRef } from '../../api/types';
 import {
-  InternalPluginsMap,
   getNotEnabledInternalPlugins,
+  InternalPluginsMap,
 } from '../InternalPluginsMap';
 
 export const DynamicPluginsTable = () => {

@@ -38,7 +38,7 @@ ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
@@ -59,7 +59,7 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json .
 COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
 
-RUN "$YARN" install --frozen-lockfile --network-timeout 600000
+RUN "$YARN" install --immutable --network-timeout 600000
 
 # Stage 3 - Build packages
 # Upstream only
@@ -75,7 +75,7 @@ RUN rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 RUN \
   # Upstream only - append build time into packages/app/src/build-metadata.json
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
-    -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
+  -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
   cat packages/app/src/build-metadata.json; echo && \
   "$YARN" build --filter=backend && \
   # Build dynamic plugins: split commands for consistency with downstream
@@ -91,10 +91,10 @@ FROM skeleton AS cleanup
 
 # Upstream only - copy the install dependencies from the build stage and context
 COPY --from=build $CONTAINER_SOURCE/yarn.lock \
-     $CONTAINER_SOURCE/package.json \
-     $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
-     $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
-     ./
+  $CONTAINER_SOURCE/package.json \
+  $CONTAINER_SOURCE/packages/backend/dist/skeleton.tar.gz \
+  $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
+  ./
 ENV TARBALL_PATH=.
 
 RUN tar xzf "$TARBALL_PATH"/skeleton.tar.gz; tar xzf "$TARBALL_PATH"/bundle.tar.gz; \
@@ -108,12 +108,12 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000 && \
-    # delete all the nested .npmrc files and set default values
-    find . -type f -name .npmrc -exec rm -Rf {} \; && \
-    # reset npm config to the default registry and absolute path to .pem file
-    npm config set registry=https://registry.npmjs.org/ && \
-    npm config set cafile /opt/app-root/src/registry-ca.pem
+RUN "$YARN" install --immutable --production --network-timeout 600000 && \
+  # delete all the nested .npmrc files and set default values
+  find . -type f -name .npmrc -exec rm -Rf {} \; && \
+  # reset npm config to the default registry and absolute path to .pem file
+  npm config set registry=https://registry.npmjs.org/ && \
+  npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal

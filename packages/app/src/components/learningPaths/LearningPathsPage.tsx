@@ -1,11 +1,12 @@
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
+
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
 import { ErrorReport } from '../../common';
 import { useLearningPathData } from '../../hooks/useLearningPathData';
 import { LearningPathLink } from '../../types/types';
