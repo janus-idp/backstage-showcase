@@ -20,18 +20,20 @@
   },
   "sideEffects": false,
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
     "@backstage/plugin-notifications": "0.3.2"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.27.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",
