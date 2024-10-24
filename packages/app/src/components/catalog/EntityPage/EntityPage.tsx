@@ -1,7 +1,6 @@
-import React from 'react';
-import { dynamicEntityTab, DynamicEntityTabProps } from './DynamicEntityTab';
-import { defaultTabs, tabRules, tabChildren } from './defaultTabs';
 import { ContextMenuAwareEntityLayout } from './ContextMenuAwareEntityLayout';
+import { defaultTabs, tabChildren, tabRules } from './defaultTabs';
+import { dynamicEntityTab, DynamicEntityTabProps } from './DynamicEntityTab';
 
 /**
  * Displays the tabs and content for a catalog entity

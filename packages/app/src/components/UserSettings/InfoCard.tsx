@@ -1,7 +1,8 @@
 import { InfoCard as BSInfoCard } from '@backstage/core-components';
+
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+
 import buildMetadata from '../../build-metadata.json';
 
 export const infoCard = (

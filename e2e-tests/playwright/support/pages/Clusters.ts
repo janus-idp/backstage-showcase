@@ -1,5 +1,5 @@
-import { Page } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
+import { Page } from "@playwright/test";
+import { UIhelper } from "../../utils/UIhelper";
 
 export class Clusters {
   private page: Page;
@@ -11,22 +11,22 @@ export class Clusters {
   }
 
   async verifyOCMLinksCardDetails() {
-    await this.uiHelper.verifyLinkinCard('Links', 'OpenShift Console', false);
-    await this.uiHelper.verifyLinkinCard('Links', 'OCM Console', false);
+    await this.uiHelper.verifyLinkinCard("Links", "OpenShift Console", false);
+    await this.uiHelper.verifyLinkinCard("Links", "OCM Console", false);
     await this.uiHelper.verifyLinkinCard(
-      'Links',
-      'OpenShift Cluster Manager',
+      "Links",
+      "OpenShift Cluster Manager",
       false,
     );
   }
 
   async verifyOCMAvailableCardDetails(cpuCores: RegExp, memorySize: RegExp) {
-    await this.uiHelper.verifyTextinCard('Available', cpuCores);
-    await this.uiHelper.verifyTextinCard('Available', memorySize);
+    await this.uiHelper.verifyTextinCard("Available", cpuCores);
+    await this.uiHelper.verifyTextinCard("Available", memorySize);
   }
 
   async verifyOCMClusterInfo(clusterName: string, status: string) {
-    await this.uiHelper.verifyTextinCard('Cluster Info', `Name${clusterName}`);
-    await this.uiHelper.verifyTextinCard('Cluster Info', `Status${status}`);
+    await this.uiHelper.verifyTextinCard("Cluster Info", `Name${clusterName}`);
+    await this.uiHelper.verifyTextinCard("Cluster Info", `Status${status}`);
   }
 }

@@ -1,8 +1,8 @@
-import { Page, expect } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
-import { BackstageShowcasePO, CatalogImportPO } from '../pageObjects/page-obj';
-import { APIHelper } from '../../utils/APIHelper';
-import { githubAPIEndpoints } from '../../utils/APIEndpoints';
+import { Page, expect } from "@playwright/test";
+import { UIhelper } from "../../utils/UIhelper";
+import { BackstageShowcasePO, CatalogImportPO } from "../pageObjects/page-obj";
+import { APIHelper } from "../../utils/APIHelper";
+import { githubAPIEndpoints } from "../../utils/APIEndpoints";
 
 export class CatalogImport {
   private page: Page;
@@ -17,29 +17,29 @@ export class CatalogImport {
     clickViewComponent: boolean = true,
   ) {
     await this.page.fill(CatalogImportPO.componentURL, url);
-    await this.uiHelper.clickButton('Analyze');
+    await this.uiHelper.clickButton("Analyze");
 
     // Wait for the visibility of either 'Refresh' or 'Import' button
-    if (await this.uiHelper.isBtnVisible('Import')) {
-      await this.uiHelper.clickButton('Import');
-      if (clickViewComponent) await this.uiHelper.clickButton('View Component');
+    if (await this.uiHelper.isBtnVisible("Import")) {
+      await this.uiHelper.clickButton("Import");
+      if (clickViewComponent) await this.uiHelper.clickButton("View Component");
     } else {
-      await this.uiHelper.clickButton('Refresh');
-      expect(await this.uiHelper.isBtnVisible('Register another')).toBeTruthy();
+      await this.uiHelper.clickButton("Refresh");
+      expect(await this.uiHelper.isBtnVisible("Register another")).toBeTruthy();
     }
   }
 
   async analyzeComponent(url: string) {
     await this.page.fill(CatalogImportPO.componentURL, url);
-    await this.uiHelper.clickButton('Analyze');
+    await this.uiHelper.clickButton("Analyze");
   }
 
   async inspectEntityAndVerifyYaml(text: string) {
-    await this.page.getByTitle('More').click();
-    await this.page.getByRole('menuitem').getByText('Inspect entity').click();
-    await this.uiHelper.clickTab('Raw YAML');
-    await expect(this.page.getByTestId('code-snippet')).toContainText(text);
-    await this.uiHelper.clickButton('Close');
+    await this.page.getByTitle("More").click();
+    await this.page.getByRole("menuitem").getByText("Inspect entity").click();
+    await this.uiHelper.clickTab("Raw YAML");
+    await expect(this.page.getByTestId("code-snippet")).toContainText(text);
+    await this.uiHelper.clickButton("Close");
   }
 }
 
@@ -54,18 +54,18 @@ export class BackstageShowcase {
 
   async getGithubOpenIssues() {
     const rep = await APIHelper.getGithubPaginatedRequest(
-      githubAPIEndpoints.issues('open'),
+      githubAPIEndpoints.issues("open"),
     );
     return rep.filter((issue: any) => !issue.pull_request);
   }
 
   static async getShowcasePRs(
-    state: 'open' | 'closed' | 'all',
+    state: "open" | "closed" | "all",
     paginated = false,
   ) {
     return await APIHelper.getGitHubPRs(
-      'janus-idp',
-      'backstage-showcase',
+      "janus-idp",
+      "backstage-showcase",
       state,
       paginated,
     );
@@ -106,7 +106,7 @@ export class BackstageShowcase {
 
   async getWorkflowRuns() {
     const response = await APIHelper.githubRequest(
-      'GET',
+      "GET",
       githubAPIEndpoints.workflowRuns,
     );
     const responseBody = await response.json();
@@ -120,12 +120,12 @@ export class BackstageShowcase {
 
   async verifyAboutCardIsDisplayed() {
     const url =
-      'https://github.com/janus-idp/backstage-showcase/tree/main/catalog-entities/components/';
+      "https://github.com/janus-idp/backstage-showcase/tree/main/catalog-entities/components/";
     const isLinkVisible = await this.page
       .locator(`a[href="${url}"]`)
       .isVisible();
     if (!isLinkVisible) {
-      throw new Error('About card is not displayed');
+      throw new Error("About card is not displayed");
     }
   }
 

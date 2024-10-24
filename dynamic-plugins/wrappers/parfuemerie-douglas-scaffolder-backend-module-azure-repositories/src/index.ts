@@ -1,1 +1,1 @@
-export { azureRepositoriesActions as default } from './plugin';
+export { default } from '@parfuemerie-douglas/scaffolder-backend-module-azure-repositories';

@@ -1,4 +1,3 @@
-import { createLegacyAuthAdapters } from '@backstage/backend-common';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import {
   BaseDynamicPlugin,
@@ -10,12 +9,13 @@ import {
   LoggerService,
 } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
+
 import express, { Router } from 'express';
 
 export interface RouterOptions {
   pluginProvider: DynamicPluginProvider;
   discovery: DiscoveryService;
-  httpAuth?: HttpAuthService;
+  httpAuth: HttpAuthService;
   logger: LoggerService;
   config: Config;
 }
@@ -23,8 +23,7 @@ export interface RouterOptions {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, pluginProvider, config } = options;
-  const { httpAuth } = createLegacyAuthAdapters(options);
+  const { logger, pluginProvider, config, httpAuth } = options;
 
   const router = Router();
   router.use(express.json());

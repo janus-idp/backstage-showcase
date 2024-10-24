@@ -18,6 +18,7 @@ import {
   authProvidersExtensionPoint,
   createOAuthProviderFactory,
 } from '@backstage/plugin-auth-node';
+
 import { oidcAuthenticator } from './authenticator';
 import { oidcSignInResolvers } from './resolvers';
 

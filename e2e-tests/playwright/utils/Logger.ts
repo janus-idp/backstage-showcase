@@ -1,12 +1,12 @@
-import { createLogger, transports, format } from 'winston';
+import { createLogger, transports, format } from "winston";
 
 function dumpData(dump) {
   if (!dump) {
-    return '';
+    return "";
   }
-  if (typeof dump == 'string') {
+  if (typeof dump == "string") {
     return dump;
-  } else if (typeof dump == 'object') {
+  } else if (typeof dump == "object") {
     return JSON.stringify(dump);
   }
 }
@@ -18,7 +18,7 @@ const myFormat = format.printf(({ level, message, timestamp, dump }) => {
 export const logger = createLogger({
   format: format.combine(
     format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: "YYYY-MM-DD HH:mm:ss",
     }),
     format.errors({ stack: true }),
     format.splat(),
@@ -28,7 +28,7 @@ export const logger = createLogger({
   transports: [
     new transports.File({
       filename: `test-logs.log`,
-      dirname: process.env.CI ? process.env.ARTIFACTS_DIR : '/tmp',
+      dirname: process.env.CI ? process.env.ARTIFACTS_DIR : "/tmp",
     }),
   ],
 });

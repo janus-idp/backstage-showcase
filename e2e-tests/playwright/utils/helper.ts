@@ -1,24 +1,24 @@
-import { logger } from './Logger';
-import { spawn } from 'child_process';
-import * as constants from './authenticationProviders/constants';
-import { expect } from '@playwright/test';
-import { kubeCLient } from './k8sHelper';
-import { V1ConfigMap, V1Secret } from '@kubernetes/client-node';
+import { logger } from "./Logger";
+import { spawn } from "child_process";
+import * as constants from "./authenticationProviders/constants";
+import { expect } from "@playwright/test";
+import { kubeCLient } from "./k8sHelper";
+import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
 
 export const k8sClient = new kubeCLient();
 
 export async function runShellCmd(command: string) {
-  return new Promise<string>(resolve => {
+  return new Promise<string>((resolve) => {
     logger.info(`Executing command ${command}`);
-    const process = spawn('/bin/sh', ['-c', command]);
+    const process = spawn("/bin/sh", ["-c", command]);
     let result: string;
-    process.stdout.on('data', data => {
+    process.stdout.on("data", (data) => {
       result = data;
     });
-    process.stderr.on('data', data => {
+    process.stderr.on("data", (data) => {
       result = data;
     });
-    process.on('exit', code => {
+    process.on("exit", (code) => {
       logger.info(`Process ended with exit code ${code}: `);
       if (code == 0) {
         resolve(result);
@@ -49,10 +49,10 @@ export async function upgradeHelmChartWithWait(
     --values ${VALUES} \
     --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-    ${FLAGS.join(' ')}`);
+    ${FLAGS.join(" ")}`);
 
   logger.log({
-    level: 'info',
+    level: "info",
     message: `Release upgrade returned: `,
     dump: upgradeOutput,
   });
@@ -62,7 +62,7 @@ export async function upgradeHelmChartWithWait(
     NAMESPACE,
   );
   logger.log({
-    level: 'info',
+    level: "info",
     message: `Applied confguration for release upgrade: `,
     dump: configmap.body.data,
   });
@@ -79,7 +79,7 @@ export async function deleteHelmReleaseWithWait(
     `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
   );
   logger.log({
-    level: 'info',
+    level: "info",
     message: `Release delete returned: `,
     dump: result,
   });
@@ -89,13 +89,13 @@ export async function deleteHelmReleaseWithWait(
 export async function getLastSyncTimeFromLogs(
   provider: string,
 ): Promise<number> {
-  let searchString = 'Reading msgraph users and groups';
-  if (provider == 'microsoft') {
-    searchString = 'Reading msgraph users and groups';
-  } else if (provider == 'rhsso') {
-    searchString = 'Reading Keycloak users and groups';
-  } else if (provider == 'github') {
-    searchString = 'Reading GitHub users and groups';
+  let searchString = "Reading msgraph users and groups";
+  if (provider == "microsoft") {
+    searchString = "Reading msgraph users and groups";
+  } else if (provider == "rhsso") {
+    searchString = "Reading Keycloak users and groups";
+  } else if (provider == "github") {
+    searchString = "Reading GitHub users and groups";
   }
 
   try {
@@ -142,14 +142,14 @@ export async function replaceInRBACPolicyFileConfigMap(
     `Replacing ${match} with ${value} in existing configmap ${configMap} in namespace ${namespace}`,
   );
   const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
-  const patched = cm.body.data['rbac-policy.csv'].replace(match, value);
+  const patched = cm.body.data["rbac-policy.csv"].replace(match, value);
   logger.info(`Patch ${patched}`);
   const patch = [
     {
-      op: 'replace',
-      path: '/data',
+      op: "replace",
+      path: "/data",
       value: {
-        'rbac-policy.csv': patched,
+        "rbac-policy.csv": patched,
       },
     },
   ];
@@ -167,10 +167,10 @@ export async function ensureNewPolicyConfigMapExists(
     await k8sClient.getCongifmap(configMap, namespace);
     const patch = [
       {
-        op: 'replace',
-        path: '/data',
+        op: "replace",
+        path: "/data",
         value: {
-          'rbac-policy.csv': constants.RBAC_POLICY_ROLES,
+          "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       },
     ];
@@ -187,7 +187,7 @@ export async function ensureNewPolicyConfigMapExists(
           namespace: namespace,
         },
         data: {
-          'rbac-policy.csv': constants.RBAC_POLICY_ROLES,
+          "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       };
       return await k8sClient.createCongifmap(namespace, cmBody);
@@ -203,63 +203,63 @@ export async function ensureEnvSecretExists(
 ) {
   logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
-    BASE_URL: Buffer.from(process.env.BASE_URL).toString('base64'),
+    BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),
     AUTH_PROVIDERS_AZURE_CLIENT_SECRET: Buffer.from(
       constants.AUTH_PROVIDERS_AZURE_CLIENT_SECRET,
-    ).toString('base64'),
+    ).toString("base64"),
     AUTH_PROVIDERS_AZURE_CLIENT_ID: Buffer.from(
       constants.AUTH_PROVIDERS_AZURE_CLIENT_ID,
-    ).toString('base64'),
+    ).toString("base64"),
     AUTH_PROVIDERS_AZURE_TENANT_ID: Buffer.from(
       constants.AUTH_PROVIDERS_AZURE_TENANT_ID,
-    ).toString('base64'),
+    ).toString("base64"),
     AUTH_PROVIDERS_REALM_NAME: Buffer.from(
       constants.AUTH_PROVIDERS_REALM_NAME,
-    ).toString('base64'),
+    ).toString("base64"),
     AZURE_LOGIN_USERNAME: Buffer.from(constants.AZURE_LOGIN_USERNAME).toString(
-      'base64',
+      "base64",
     ),
     AZURE_LOGIN_PASSWORD: Buffer.from(constants.AZURE_LOGIN_PASSWORD).toString(
-      'base64',
+      "base64",
     ),
     RHSSO76_DEFAULT_PASSWORD: Buffer.from(
       constants.RHSSO76_DEFAULT_PASSWORD,
-    ).toString('base64'),
+    ).toString("base64"),
     RHSSO76_METADATA_URL: Buffer.from(
       `${constants.RHSSO76_URL}/realms/authProviders`,
-    ).toString('base64'),
-    RHSSO76_URL: Buffer.from(constants.RHSSO76_URL).toString('base64'),
+    ).toString("base64"),
+    RHSSO76_URL: Buffer.from(constants.RHSSO76_URL).toString("base64"),
     RHSSO76_CLIENT_ID: Buffer.from(constants.RHSSO76_CLIENTID).toString(
-      'base64',
+      "base64",
     ),
     RHSSO76_ADMIN_USERNAME: Buffer.from(
       constants.RHSSO76_ADMIN_USERNAME,
-    ).toString('base64'),
+    ).toString("base64"),
     RHSSO76_ADMIN_PASSWORD: Buffer.from(
       constants.RHSSO76_ADMIN_PASSWORD,
-    ).toString('base64'),
+    ).toString("base64"),
     RHSSO76_CALLBACK_URL: Buffer.from(
       `${process.env.BASE_URL}/api/auth/oidc/handler/frame`,
-    ).toString('base64'),
+    ).toString("base64"),
     RHSSO76_CLIENT_SECRET: Buffer.from(
       constants.RHSSO76_CLIENT_SECRET,
-    ).toString('base64'),
-    AUTH_ORG_APP_ID: Buffer.from(constants.AUTH_ORG_APP_ID).toString('base64'),
+    ).toString("base64"),
+    AUTH_ORG_APP_ID: Buffer.from(constants.AUTH_ORG_APP_ID).toString("base64"),
     AUTH_ORG_CLIENT_ID: Buffer.from(constants.AUTH_ORG_CLIENT_ID).toString(
-      'base64',
+      "base64",
     ),
     AUTH_ORG_CLIENT_SECRET: Buffer.from(
       constants.AUTH_ORG_CLIENT_SECRET,
-    ).toString('base64'),
+    ).toString("base64"),
     AUTH_ORG1_PRIVATE_KEY: Buffer.from(
       constants.AUTH_ORG1_PRIVATE_KEY,
-    ).toString('base64'),
+    ).toString("base64"),
     AUTH_ORG_WEBHOOK_SECRET: Buffer.from(
       constants.AUTH_ORG_WEBHOOK_SECRET,
-    ).toString('base64'),
+    ).toString("base64"),
     AUTH_PROVIDERS_GH_ORG_NAME: Buffer.from(
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    ).toString('base64'),
+    ).toString("base64"),
   };
   const secret: V1Secret = {
     metadata: {

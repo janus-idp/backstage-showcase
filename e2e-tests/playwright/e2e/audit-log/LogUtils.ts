@@ -1,6 +1,6 @@
-import { expect } from '@playwright/test';
-import { exec } from 'child_process';
-import { Log } from './Log';
+import { expect } from "@playwright/test";
+import { exec } from "child_process";
+import { Log } from "./Log";
 
 export class LogUtils {
   /**
@@ -12,7 +12,7 @@ export class LogUtils {
    */
   public static validateLog(actual: Log, expected: Partial<Log>) {
     // Loop through each key in the expected log object
-    Object.keys(expected).forEach(key => {
+    Object.keys(expected).forEach((key) => {
       const expectedValue = expected[key as keyof Log];
       const actualValue = actual[key as keyof Log];
 
@@ -28,13 +28,13 @@ export class LogUtils {
    * @param expected The expected value
    */
   private static compareValues(actual: any, expected: any) {
-    if (typeof expected === 'object' && expected !== null) {
-      Object.keys(expected).forEach(subKey => {
+    if (typeof expected === "object" && expected !== null) {
+      Object.keys(expected).forEach((subKey) => {
         const expectedSubValue = expected[subKey];
         const actualSubValue = actual?.[subKey];
         LogUtils.compareValues(actualSubValue, expectedSubValue);
       });
-    } else if (typeof expected === 'number') {
+    } else if (typeof expected === "number") {
       expect(actual).toBe(expected);
     } else {
       expect(actual).toContain(expected);
@@ -51,15 +51,15 @@ export class LogUtils {
     return new Promise((resolve, reject) => {
       exec(
         command,
-        { encoding: 'utf8', shell: '/bin/bash' },
+        { encoding: "utf8", shell: "/bin/bash" },
         (error, stdout, stderr) => {
           if (error) {
-            console.error('Error executing command:', error);
+            console.error("Error executing command:", error);
             reject(`Error: ${error.message}`);
             return;
           }
           if (stderr) {
-            console.warn('stderr warning:', stderr);
+            console.warn("stderr warning:", stderr);
           }
           resolve(stdout);
         },
@@ -79,14 +79,14 @@ export class LogUtils {
    */
   static async getPodLogsWithGrep(grepFilter: string): Promise<string> {
     const podSelector =
-      'app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage';
+      "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
     const tailNumber = 30;
     const command = `oc logs -l ${podSelector} --tail=${tailNumber} -c backstage-backend -n ${process.env.NAME_SPACE} | grep "${grepFilter}" | head -n 1`;
     console.log(command);
     try {
       return await LogUtils.executeCommand(command);
     } catch (error) {
-      console.error('Error fetching logs:', error);
+      console.error("Error fetching logs:", error);
       throw new Error(`Failed to fetch logs: ${error}`);
     }
   }
@@ -100,9 +100,9 @@ export class LogUtils {
     const command = `oc login --token="${process.env.K8S_CLUSTER_TOKEN}" --server="${process.env.K8S_CLUSTER_URL}"`;
     try {
       const result = await LogUtils.executeCommand(command);
-      console.log('Login successful:', result);
+      console.log("Login successful:", result);
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error("Error during login:", error);
       throw new Error(`Failed to login to OpenShift: ${error}`);
     }
   }

@@ -133,7 +133,7 @@ console.log('Updating lockfile...');
 execSync('yarn install', { stdio: 'inherit' });
 
 console.log('Updating dynamic-plugins folder...');
-execSync('yarn run export-dynamic --no-cache -- -- --clean', {
+execSync('yarn run export-dynamic:clean', {
   stdio: 'inherit',
 });
 

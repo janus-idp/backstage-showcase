@@ -1,1 +1,2 @@
-export * from '@roadiehq/backstage-plugin-security-insights';
+export { default } from '@roadiehq/backstage-plugin-security-insights';
+

@@ -7,25 +7,24 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "patch-package",
-    "ci": "turbo run lint build test",
     "start": "turbo run build --filter=app && NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
     "start-backend": "turbo run start --filter=backend",
     "dev": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend --filter=app",
     "build": "turbo run build",
-    "tsc": "tsc",
-    "export-dynamic": "turbo run export-dynamic --concurrency 1",
+    "tsc": "turbo run tsc",
+    "export-dynamic": "turbo run export-dynamic",
+    "export-dynamic:clean": "turbo run export-dynamic:clean",
     "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
     "clean": "turbo run clean",
     "test": "turbo run test",
-    "fix": "backstage-cli repo fix",
+    "lint:check": "turbo run lint:check",
+    "lint:fix": "turbo run lint:fix",
     "lint": "turbo run lint",
-    "lint-staged": "lint-staged",
-    "prettier:check": "prettier --ignore-unknown --check .",
-    "prettier:fix": "prettier --ignore-unknown --write .",
+    "lint-staged": "lint-staged -p 10",
+    "prettier:check": "turbo run prettier:check",
+    "prettier:fix": "turbo run prettier:fix",
     "new": "backstage-cli new --scope internal",
-    "git:tag": "cross-var git tag -a v$npm_package_version -m \"Release v$npm_package_version\"",
-    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
+    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
     "versions:metadata": "node ./scripts/update-metadata.mjs",
     "versions:all": "node ./scripts/update-backstage.mjs"
   },
@@ -35,41 +34,26 @@
       "plugins/*",
       "dynamic-plugins/_utils",
       "dynamic-plugins/imports",
-      "dynamic-plugins/wrappers/*"
+      "dynamic-plugins/wrappers/*",
+      "e2e-tests"
     ]
   },
-  "dependencies": {
-    "node-gyp": "9.4.1",
-    "patch-package": "8.0.0",
-    "postinstall-postinstall": "2.1.0"
-  },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@smithy/util-utf8": "2.3.0",
+    "@backstage/cli": "0.27.1",
+    "@ianvs/prettier-plugin-sort-imports": "4.2.1",
     "@spotify/prettier-config": "15.0.0",
-    "cross-var": "1.1.0",
     "husky": "8.0.3",
-    "ip": "1.1.9",
     "lint-staged": "15.2.10",
-    "prettier": "3.3.3",
-    "sanitize-html": "2.13.1",
-    "turbo": "1.13.4",
-    "typescript": "5.6.2",
-    "undici": "5.28.4"
+    "node-gyp": "10.2.0",
+    "turbo": "2.2.3",
+    "typescript": "5.6.2"
   },
   "resolutions": {
     "@types/react": "18.3.7",
-    "@types/react-dom": "18.3.0",
-    "@backstage/cli/**/ws": "8.17.1"
+    "@types/react-dom": "18.3.0"
   },
   "jest": {
     "testTimeout": 20000
   },
-  "prettier": "@spotify/prettier-config",
-  "lint-staged": {
-    "*": "turbo run prettier:fix --",
-    "*.{jsx,ts,tsx,mjs,cjs}": "turbo run lint --concurrency=1 -- --fix",
-    "!(.eslintrc).js": "turbo run lint --concurrency=1 -- --fix"
-  },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@3.8.6"
 }

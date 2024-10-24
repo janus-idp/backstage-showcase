@@ -1,6 +1,5 @@
-import React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { useLoaderTheme } from '@redhat-developer/red-hat-developer-hub-theme';

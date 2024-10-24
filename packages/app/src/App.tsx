@@ -1,8 +1,6 @@
-import React from 'react';
-
-import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';
-import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
 import { apis } from './apis';
+import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
+import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';
 import { DefaultMainMenuItems } from './consts';
 
 // Statically integrated frontend plugins

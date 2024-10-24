@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 const ConfigUpdater: React.FC = () => {

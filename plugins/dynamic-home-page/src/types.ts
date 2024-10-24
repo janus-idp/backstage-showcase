@@ -1,4 +1,5 @@
 import React from 'react';
+
 import type { Tool } from '@backstage/plugin-home';
 
 export enum Breakpoint {

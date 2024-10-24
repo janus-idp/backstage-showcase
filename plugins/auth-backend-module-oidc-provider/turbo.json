@@ -1,0 +1,10 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "tsc": {
+      "outputs": [
+        "../../dist-types/plugins/auth-backend-module-oidc-provider/**"
+      ]
+    }
+  }
+}
