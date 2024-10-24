@@ -52,7 +52,8 @@ export const apis: AnyApiFactory[] = [
       OAuth2.create({
         configApi,
         discoveryApi,
-        oauthRequestApi,
+        // TODO: Check if 1.32 fixes this type error
+        oauthRequestApi: oauthRequestApi as any,
         provider: {
           id: 'oidc',
           title: 'OIDC',
@@ -72,7 +73,8 @@ export const apis: AnyApiFactory[] = [
     factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
       OAuth2.create({
         discoveryApi,
-        oauthRequestApi,
+        // TODO: Check if 1.32 fixes this type error
+        oauthRequestApi: oauthRequestApi as any,
         provider: {
           id: 'auth0',
           title: 'Auth0',
@@ -93,7 +95,8 @@ export const apis: AnyApiFactory[] = [
     factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
       OAuth2.create({
         discoveryApi,
-        oauthRequestApi,
+        // TODO: Check if 1.32 fixes this type error
+        oauthRequestApi: oauthRequestApi as any,
         provider: {
           id: 'saml',
           title: 'SAML',

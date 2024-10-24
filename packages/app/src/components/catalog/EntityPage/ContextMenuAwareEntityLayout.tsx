@@ -1,14 +1,11 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 
-import { IconComponent } from '@backstage/core-plugin-api';
 import { EntityLayout } from '@backstage/plugin-catalog';
 
 import getMountPointData from '../../../utils/dynamicUI/getMountPointData';
 import { MenuIcon } from '../../Root/MenuIcon';
 
-const makeIcon =
-  (iconName: string): IconComponent =>
-  () => <MenuIcon icon={iconName} />;
+const makeIcon = (iconName: string) => () => <MenuIcon icon={iconName} />;
 
 export const ContextMenuAwareEntityLayout = (props: {
   children?: ReactNode;

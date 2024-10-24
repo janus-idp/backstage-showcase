@@ -9,7 +9,6 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
-import { IconComponent } from '@backstage/core-plugin-api';
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import { usePermission } from '@backstage/plugin-permission-react';
 import { SidebarSearchModal } from '@backstage/plugin-search';
@@ -288,7 +287,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           to="/settings"
           icon={<AccountCircleOutlinedIcon />}
         >
-          <SidebarSettings icon={AccountCircleOutlinedIcon as IconComponent} />
+          <SidebarSettings icon={AccountCircleOutlinedIcon} />
         </SidebarGroup>
       </Sidebar>
       {children}
