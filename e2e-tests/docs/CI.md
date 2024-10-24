@@ -44,6 +44,13 @@ When the test run is complete, the status will be reported under your PR checks.
 
 If the initial automatically triggered tests fail, OpenShift-CI will add a comment to the PR with information on how to retrigger the tests.
 
+- `/retest`
+- `/test e2e-tests`
+- `/test images`
+- `/test all`
+
+This is useful if you believe a failure was due to a flake or external issue and want to rerun the tests without making any code changes.
+
 ### CI Job Definitions
 
 #### Pull Request Test Job
