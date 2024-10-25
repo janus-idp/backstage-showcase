@@ -1,6 +1,6 @@
-import test, { expect } from '@playwright/test';
-import { Common } from '../../../utils/Common';
-import { UIhelper } from '../../../utils/UIhelper';
+import test, { expect } from "@playwright/test";
+import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/UIhelper";
 
 type RbacGuestFixture = {
   uiHelper: UIhelper;
@@ -18,14 +18,14 @@ const base = test.extend<RbacGuestFixture>({
   },
 });
 
-base.describe('Test RBAC plugin as a guest user', () => {
+base.describe("Test RBAC plugin as a guest user", () => {
   base.beforeEach(async ({ uiHelper, common }) => {
     await common.loginAsGuest();
-    await uiHelper.openSidebarButton('Administration');
+    await uiHelper.openSidebarButton("Administration");
   });
 
   base(
-    'Check if Administration side nav is present with no RBAC plugin',
+    "Check if Administration side nav is present with no RBAC plugin",
     async ({ page }) => {
       const dropdownMenuLocator = page.locator(`text="RBAC"`);
       await expect(dropdownMenuLocator).not.toBeVisible();

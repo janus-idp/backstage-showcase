@@ -1,6 +1,6 @@
-import { APIResponse, Page, expect } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
-import { DeleteRolePO, HomePagePO, RoleFormPO } from '../pageObjects/page-obj';
+import { APIResponse, Page, expect } from "@playwright/test";
+import { UIhelper } from "../../utils/UIhelper";
+import { DeleteRolePO, HomePagePO, RoleFormPO } from "../pageObjects/page-obj";
 
 export class Roles {
   private page: Page;
@@ -177,30 +177,30 @@ export class Roles {
     });
     await this.uiHelper.optionSelector("catalog-entity");
 
-    await this.page.getByLabel('configure-access').click();
-    await this.page.getByRole('button', { name: 'Not' }).click();
-    await this.page.getByTestId('rules-sidebar').getByLabel('Open').click();
-    await this.page.getByText('HAS_SPEC').click();
-    await this.page.getByLabel('key *').click();
-    await this.page.getByLabel('key *').fill('lifecycle');
-    await this.page.getByLabel('key *').press('Tab');
-    await this.page.getByLabel('value').fill('experimental');
-    await this.page.getByTestId('save-conditions').click();
-    await this.uiHelper.verifyText('Configure access (1 rule)');
-    await this.page.getByTestId('nextButton-2').click();
-    await this.uiHelper.verifyText('Permission policies (1)');
-    await this.uiHelper.verifyText('1 rule');
-    await this.uiHelper.clickButton('Create');
+    await this.page.getByLabel("configure-access").click();
+    await this.page.getByRole("button", { name: "Not" }).click();
+    await this.page.getByTestId("rules-sidebar").getByLabel("Open").click();
+    await this.page.getByText("HAS_SPEC").click();
+    await this.page.getByLabel("key *").click();
+    await this.page.getByLabel("key *").fill("lifecycle");
+    await this.page.getByLabel("key *").press("Tab");
+    await this.page.getByLabel("value").fill("experimental");
+    await this.page.getByTestId("save-conditions").click();
+    await this.uiHelper.verifyText("Configure access (1 rule)");
+    await this.page.getByTestId("nextButton-2").click();
+    await this.uiHelper.verifyText("Permission policies (1)");
+    await this.uiHelper.verifyText("1 rule");
+    await this.uiHelper.clickButton("Create");
     await this.uiHelper.verifyText(
       `Role role:default/${name} created successfully`,
     );
   }
 
   async deleteRole(name: string) {
-    await this.uiHelper.openSidebar('RBAC');
+    await this.uiHelper.openSidebar("RBAC");
     await this.page.locator(HomePagePO.searchBar).fill(name);
-    const button = this.page.getByLabel('Delete').first();
-    await button.waitFor({ state: 'visible' });
+    const button = this.page.getByLabel("Delete").first();
+    await button.waitFor({ state: "visible" });
     await button.click();
     await this.uiHelper.verifyHeading("Delete this role?");
     await this.page.locator(DeleteRolePO.roleName).click();

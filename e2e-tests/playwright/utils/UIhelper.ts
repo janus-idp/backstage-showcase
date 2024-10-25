@@ -443,8 +443,8 @@ export class UIhelper {
     await this.verifyAlertErrorMessage("Refresh scheduled");
 
     const moreButton = this.page.locator("button[aria-label='more']").first();
-    await moreButton.waitFor({ state: 'visible' });
-    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.waitFor({ state: "visible" });
+    await moreButton.waitFor({ state: "attached" });
     await moreButton.click();
 
     const unregisterItem = this.page
@@ -458,8 +458,8 @@ export class UIhelper {
 
   async clickUnregisterButtonForDisplayedEntity() {
     const moreButton = this.page.locator("button[aria-label='more']").first();
-    await moreButton.waitFor({ state: 'visible' });
-    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.waitFor({ state: "visible" });
+    await moreButton.waitFor({ state: "attached" });
     await moreButton.click();
 
     const unregisterItem = this.page
@@ -469,8 +469,8 @@ export class UIhelper {
     await unregisterItem.waitFor({ state: "visible" });
     await unregisterItem.click();
 
-    const deleteButton = this.page.getByRole('button', {
-      name: 'Delete Entity',
+    const deleteButton = this.page.getByRole("button", {
+      name: "Delete Entity",
     });
     await deleteButton.waitFor({ state: "visible" });
     await deleteButton.waitFor({ state: "attached" });
