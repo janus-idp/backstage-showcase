@@ -1,23 +1,10 @@
-import { createConfigSecretEnumerator } from '@backstage/backend-defaults/rootConfig';
-import { WinstonLogger } from '@backstage/backend-defaults/rootLogger';
-import {
-  DynamicPluginsRootLoggerFactoryOptions,
-  DynamicPluginsSchemasService,
-} from '@backstage/backend-dynamic-feature-service';
-import {
-  coreServices,
-  createServiceFactory,
-  createServiceRef,
-} from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { loadConfigSchema } from '@backstage/config-loader';
+import type { Config } from '@backstage/config';
 
-import { getPackages } from '@manypkg/get-packages';
 import * as winston from 'winston';
 
 import 'winston-daily-rotate-file';
 
-export const defaultFormat = winston.format.combine(
+const defaultFormat = winston.format.combine(
   winston.format.timestamp({
     format: 'YYYY-MM-DD HH:mm:ss',
   }),
@@ -86,47 +73,3 @@ export const transports = {
     ];
   },
 };
-
-const dynamicPluginsSchemasServiceRef =
-  createServiceRef<DynamicPluginsSchemasService>({
-    id: 'core.dynamicplugins.schemas',
-    scope: 'root',
-  });
-
-export const customLogger = createServiceFactory({
-  service: coreServices.rootLogger,
-  deps: {
-    config: coreServices.rootConfig,
-    schemas: dynamicPluginsSchemasServiceRef,
-  },
-  async factory({ config, schemas }) {
-    const auditLogConfig = config.getOptionalConfig('auditLog');
-    const logger = WinstonLogger.create({
-      meta: {
-        service: 'backstage',
-      },
-      level: process.env.LOG_LEVEL ?? 'info',
-      format: winston.format.combine(defaultFormat, winston.format.json()),
-      transports: [
-        ...transports.log,
-        ...transports.auditLog(auditLogConfig),
-        ...transports.auditLogFile(auditLogConfig),
-      ],
-    });
-
-    const configSchema = await loadConfigSchema({
-      dependencies: (await getPackages(process.cwd())).packages.map(
-        p => p.packageJson.name,
-      ),
-    });
-
-    const secretEnumerator = await createConfigSecretEnumerator({
-      logger,
-      schema: (await schemas.addDynamicPluginsSchemas(configSchema)).schema,
-    });
-    logger.addRedactions(secretEnumerator(config));
-    config.subscribe?.(() => logger.addRedactions(secretEnumerator(config)));
-
-    return logger;
-  },
-});

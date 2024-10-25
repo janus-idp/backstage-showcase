@@ -48,7 +48,6 @@
     "@janus-idp/backstage-plugin-rbac-backend": "5.1.0",
     "@janus-idp/backstage-plugin-rbac-node": "1.7.0",
     "@janus-idp/backstage-scaffolder-backend-module-annotator": "2.1.0",
-    "@manypkg/get-packages": "1.1.3",
     "app": "*",
     "express-prom-bundle": "6.6.0",
     "global-agent": "3.0.0",
