@@ -31,7 +31,9 @@ async function onceGithubLogin(
   const sessionStorage = await page.evaluate(() =>
     JSON.stringify(sessionStorage),
   );
-  fs.writeFileSync(storagePath, sessionStorage, "utf-8");
+  if (!fs.existsSync(storagePath)) {
+    fs.writeFileSync(storagePath, sessionStorage, "utf-8");
+  }
   await page.goto("/");
   await page.getByRole("button", { name: "Sign In" }).click();
   await new Common(page).checkAndReauthorizeGithubApp();
