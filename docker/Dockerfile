@@ -45,7 +45,12 @@ ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
+
+# Add execute permissions to yarn
 RUN chmod +x "$YARN"
+
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
@@ -54,7 +59,7 @@ COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY --parents $EXTERNAL_SOURCE_NESTED/**/package.json ./
 
-RUN "$YARN" install --immutable --network-timeout 600000
+RUN "$YARN" install --immutable
 
 # Stage 3 - Build packages
 # Upstream only
@@ -102,7 +107,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" workspaces focus --all --production --network-timeout 600000 && \
+RUN "$YARN" workspaces focus --all --production && \
   # delete all the nested .npmrc files and set default values
   find . -type f -name .npmrc -exec rm -Rf {} \; && \
   # reset npm config to the default registry and absolute path to .pem file

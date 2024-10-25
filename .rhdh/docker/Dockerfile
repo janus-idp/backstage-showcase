@@ -45,7 +45,12 @@ ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
+
+# Add execute permissions to yarn
 RUN chmod +x "$YARN"
+
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
 
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
@@ -102,7 +107,6 @@ RUN \
   # set longer timeouts
   # npm config set fetch-retry-maxtimeout 6000000; \
   # npm config set fetch-retry-mintimeout 1000000; \
-  "$YARN" config set network-timeout 600000 -g; \
   # set cachito as default registry
   "$YARN" config set registry $(npm config get registry) -g; \
   \
@@ -119,7 +123,7 @@ RUN \
 # cat "$CONTAINER_SOURCE"/.npmrc || true; \
 # "$YARN" config list --verbose; npm config list; npm config list -l
 
-RUN "$YARN" install --immutable --network-timeout 600000
+RUN "$YARN" install --immutable
 
 # Stage 3 - Build packages
 COPY $EXTERNAL_SOURCE_NESTED ./
@@ -178,7 +182,7 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" workspaces focus --all --production --network-timeout 600000 && \
+RUN "$YARN" workspaces focus --all --production && \
   # delete all the nested .npmrc files and set default values
   find . -type f -name .npmrc -exec rm -Rf {} \; && \
   # reset npm config to the default registry and absolute path to .pem file
