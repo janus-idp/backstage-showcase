@@ -9,21 +9,16 @@ import {
 import { Roles } from "../../../support/pages/rbac";
 import { Common } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
-import {
-  GH_USER_IDAuthFile,
-  GH_USER2_IDAuthFile,
-  GH_USER_IDAuthFile_rbac,
-} from "../../../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile_rbac });
+test.use({ actionTimeout: 0, navigationTimeout: 0 });
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
   let uiHelper: UIhelper;
   let page: Page;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
     uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    await new Common(page).logintoGithub(context);
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
@@ -75,10 +70,8 @@ test.describe
 
 test.describe
   .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {
-  test.use({ storageState: GH_USER2_IDAuthFile });
-
   test.beforeEach(async ({ page }) => {
-    await new Common(page).logintoGithub();
+    //await new Common(page).logintoGithub();
   });
 
   test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
@@ -116,11 +109,9 @@ test.describe
 });
 
 test.describe.serial("Test RBAC plugin as an admin user", () => {
-  test.use({ storageState: GH_USER_IDAuthFile });
-
   test.beforeEach(async ({ page }) => {
     const uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    //await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");

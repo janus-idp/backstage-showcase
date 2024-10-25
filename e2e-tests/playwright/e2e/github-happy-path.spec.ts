@@ -7,15 +7,15 @@ import {
   CatalogImport,
 } from "../support/pages/CatalogImport";
 import { templates } from "../support/testData/templates";
-import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
+import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile });
+test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 test.describe("GitHub Happy path", () => {
   const component =
     "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";
 
-  test.beforeEach(async ({ page }) => {
-    await new Common(page).logintoGithub();
+  test.beforeEach(async ({ page, context }) => {
+    await new Common(page).logintoGithub(context);
   });
 
   test("Verify Profile is Github Account Name in the Settings page", async ({

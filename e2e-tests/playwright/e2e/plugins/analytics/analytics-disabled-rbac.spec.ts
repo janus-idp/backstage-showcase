@@ -2,15 +2,15 @@ import { test, expect } from "@playwright/test";
 import { Common } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
-import { GH_USER_IDAuthFile } from "../../../support/auth/auth_constants";
+import { GH_USER_IDAuthFile_rhdh } from "../../../support/auth/auth_constants";
 
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
-  test.use({ storageState: GH_USER_IDAuthFile });
+  test.use({ storageState: GH_USER_IDAuthFile_rhdh });
   let uiHelper: UIhelper;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
     uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    await new Common(page).logintoGithub(context);
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("Plugins");
     await uiHelper.verifyHeading("Plugins");

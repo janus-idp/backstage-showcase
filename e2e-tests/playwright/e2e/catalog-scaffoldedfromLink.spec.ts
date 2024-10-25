@@ -4,9 +4,9 @@ import { Common } from "../utils/Common";
 import { CatalogImport } from "../support/pages/CatalogImport";
 import { APIHelper } from "../utils/APIHelper";
 import { githubAPIEndpoints } from "../utils/APIEndpoints";
-import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
+import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile });
+test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 test.describe("Link Scaffolded Templates to Catalog Items", () => {
   const template =
     "https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml";
@@ -22,9 +22,9 @@ test.describe("Link Scaffolded Templates to Catalog Items", () => {
     ).toString("utf8"), // Default repoOwner janus-qe
   };
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
     const uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    await new Common(page).logintoGithub(context);
     await uiHelper.openSidebar("Catalog");
   });
 

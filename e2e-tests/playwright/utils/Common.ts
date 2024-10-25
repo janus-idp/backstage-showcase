@@ -1,9 +1,17 @@
 import { UIhelper } from "./UIhelper";
 import { authenticator } from "otplib";
-import { Browser, expect, Page, TestInfo } from "@playwright/test";
+import {
+  Browser,
+  BrowserContext,
+  expect,
+  Page,
+  TestInfo,
+} from "@playwright/test";
 import { SettingsPagePO } from "../support/pageObjects/page-obj";
 import { waitsObjs } from "../support/pageObjects/global-obj";
 import path from "path";
+import { GH_USER_IDAuthFile_github } from "../support/auth/auth_constants";
+import fs from "fs";
 
 export class Common {
   page: Page;
@@ -14,7 +22,14 @@ export class Common {
     this.uiHelper = new UIhelper(page);
   }
 
-  public async logintoGithub() {
+  public async logintoGithub(context: BrowserContext) {
+    const sessionStorage = JSON.parse(
+      fs.readFileSync(GH_USER_IDAuthFile_github, "utf-8"),
+    );
+    await context.addInitScript((storage) => {
+      for (const [key, value] of Object.entries(storage))
+        window.sessionStorage.setItem(key, value as string);
+    }, sessionStorage);
     await this.page.goto("/settings");
     await this.page.waitForURL("/settings");
     await this.page.goto("/");
