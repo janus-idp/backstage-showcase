@@ -261,7 +261,7 @@ run_tests() {
   # Copy the Playwright report.
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
 
-  droute_send "${release_name}" "${project}"  # Send deployment route information.
+  droute_send "${release_name}" "${project}"  # Send test results through Data Router to ReportPortal.
 
   echo "${project} RESULT: ${RESULT}"
   if [ "${RESULT}" -ne 0 ]; then
