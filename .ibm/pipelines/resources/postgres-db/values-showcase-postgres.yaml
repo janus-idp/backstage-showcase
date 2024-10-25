@@ -1,0 +1,184 @@
+global:
+  auth:
+    backend:
+      enabled: true
+      existingSecret: ''
+      value: ''
+  clusterRouterBase: 
+  dynamic:
+    includes:
+      - dynamic-plugins.default.yaml
+    plugins: []
+  host: ''
+route:
+  annotations: {}
+  enabled: true
+  host: '{{ .Values.global.host }}'
+  path: /
+  tls:
+    caCertificate: ''
+    certificate: ''
+    destinationCACertificate: ''
+    enabled: true
+    insecureEdgeTerminationPolicy: Redirect
+    key: ''
+    termination: edge
+  wildcardPolicy: None
+upstream:
+  postgresql:
+    enabled: false  # disable PostgreSQL instance creation
+    auth:
+      existingSecret: postgres-cred
+  backstage:
+    appConfig:
+      app:
+        baseUrl: 'https://{{- include "janus-idp.hostname" . }}'
+      backend:
+        auth:
+          externalAccess:
+            - options:
+                secret: '${BACKEND_SECRET}'
+                subject: legacy-default-config
+              type: legacy
+        baseUrl: 'https://{{- include "janus-idp.hostname" . }}'
+        cors:
+          origin: 'https://{{- include "janus-idp.hostname" . }}'
+        database:
+          connection:  # configure Backstage DB connection parameters
+            host: ${POSTGRES_HOST}
+            port: ${POSTGRES_PORT}
+            user: ${POSTGRES_USER}
+            password: ${POSTGRES_PASSWORD}
+    args:
+      - '--config'
+      - dynamic-plugins-root/app-config.dynamic-plugins.yaml
+    command: []
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    extraEnvVarsSecrets:
+      - postgres-cred # inject credentials secret to Backstage cont.
+    extraEnvVars:
+      - name: BACKEND_SECRET
+        valueFrom:
+          secretKeyRef:
+            key: backend-secret
+            name: '{{ include "janus-idp.backend-secret-name" $ }}'
+    extraVolumeMounts:
+      - mountPath: /opt/app-root/src/dynamic-plugins-root
+        name: dynamic-plugins-root
+      - mountPath: /opt/app-root/src/postgres-crt.pem
+        name: postgres-crt # inject certificate secret to Backstage cont.
+        subPath: postgres-crt.pem
+    extraVolumes:
+      - name: dynamic-plugins-root
+        persistentVolumeClaim:
+          claimName: '{{ printf "%s-dynamic-plugins-root" .Release.Name }}'
+      - configMap:
+          defaultMode: 420
+          name: '{{ printf "%s-dynamic-plugins" .Release.Name }}'
+          optional: true
+        name: dynamic-plugins
+      - name: dynamic-plugins-npmrc
+        secret:
+          defaultMode: 420
+          optional: true
+          secretName: '{{ printf "%s-dynamic-plugins-npmrc" .Release.Name }}'
+      - name: dynamic-plugins-registry-auth
+        secret:
+          defaultMode: 416
+          optional: true
+          secretName: '{{ printf "%s-dynamic-plugins-registry-auth" .Release.Name }}'
+      - name: postgres-crt
+        secret:
+          secretName: postgres-crt
+      - emptyDir: {}
+        name: npmcacache
+    image:
+      registry: quay.io
+      repository: janus-idp/backstage-showcase
+      tag: next
+    initContainers:
+      - command:
+          - ./install-dynamic-plugins.sh
+          - /dynamic-plugins-root
+        env:
+          - name: NPM_CONFIG_USERCONFIG
+            value: /opt/app-root/src/.npmrc.dynamic-plugins
+        image: '{{ include "backstage.image" . }}'
+        imagePullPolicy: Always
+        name: install-dynamic-plugins
+        resources:
+          limits:
+            cpu: 1000m
+            ephemeral-storage: 5Gi
+            memory: 2.5Gi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+          - mountPath: /dynamic-plugins-root
+            name: dynamic-plugins-root
+          - mountPath: /opt/app-root/src/dynamic-plugins.yaml
+            name: dynamic-plugins
+            readOnly: true
+            subPath: dynamic-plugins.yaml
+          - mountPath: /opt/app-root/src/.npmrc.dynamic-plugins
+            name: dynamic-plugins-npmrc
+            readOnly: true
+            subPath: .npmrc
+          - mountPath: /opt/app-root/src/.config/containers
+            name: dynamic-plugins-registry-auth
+            readOnly: true
+          - mountPath: /opt/app-root/src/.npm/_cacache
+            name: npmcacache
+        workingDir: /opt/app-root/src
+    installDir: /opt/app-root/src
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /healthcheck
+        port: 7007
+        scheme: HTTP
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 2
+    podAnnotations:
+      checksum/dynamic-plugins: >-
+        {{- include "common.tplvalues.render" ( dict "value"
+        .Values.global.dynamic "context" $) | sha256sum }}
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /healthcheck
+        port: 7007
+        scheme: HTTP
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 2
+      timeoutSeconds: 2
+    resources:
+      limits:
+        cpu: 1000m
+        ephemeral-storage: 5Gi
+        memory: 2.5Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+  ingress:
+    host: '{{ .Values.global.host }}'
+  nameOverride: developer-hub
