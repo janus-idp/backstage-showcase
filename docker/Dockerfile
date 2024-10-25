@@ -49,15 +49,15 @@ COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 # Add execute permissions to yarn
 RUN chmod +x "$YARN"
 
-# Increate timeout for yarn install
-RUN "$YARN" config set httpTimeout 600000
-
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
 COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 COPY --parents $EXTERNAL_SOURCE_NESTED/**/package.json ./
+
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
 
 RUN "$YARN" install --immutable
 
@@ -95,6 +95,9 @@ COPY --from=build $CONTAINER_SOURCE/yarn.lock \
   $CONTAINER_SOURCE/packages/backend/dist/bundle.tar.gz \
   ./
 ENV TARBALL_PATH=.
+
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
 
 RUN tar xzf "$TARBALL_PATH"/skeleton.tar.gz; tar xzf "$TARBALL_PATH"/bundle.tar.gz; \
   rm -f "$TARBALL_PATH"/skeleton.tar.gz "$TARBALL_PATH"/bundle.tar.gz

@@ -49,9 +49,6 @@ COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 # Add execute permissions to yarn
 RUN chmod +x "$YARN"
 
-# Increate timeout for yarn install
-RUN "$YARN" config set httpTimeout 600000
-
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
@@ -122,6 +119,9 @@ RUN \
 # RUN echo $PATH; ls -la /usr/local/bin/yarn; whereis yarn;which yarn; yarn --version; \
 # cat "$CONTAINER_SOURCE"/.npmrc || true; \
 # "$YARN" config list --verbose; npm config list; npm config list -l
+
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
 
 RUN "$YARN" install --immutable
 
