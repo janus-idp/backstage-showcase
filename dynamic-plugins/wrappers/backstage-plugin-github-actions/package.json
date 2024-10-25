@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.3",
     "pluginId": "github-actions",
     "pluginPackages": [
       "backstage-plugin-github-actions"

@@ -4716,7 +4716,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/core-components@npm:0.15.1, @backstage/core-components@npm:^0.15.1":
+"@backstage/core-components@npm:0.15.1, @backstage/core-components@npm:^0.15.0, @backstage/core-components@npm:^0.15.1":
   version: 0.15.1
   resolution: "@backstage/core-components@npm:0.15.1"
   dependencies:
@@ -4817,7 +4817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/core-plugin-api@npm:1.10.0, @backstage/core-plugin-api@npm:^1.10.0, @backstage/core-plugin-api@npm:^1.9.3":
+"@backstage/core-plugin-api@npm:1.10.0, @backstage/core-plugin-api@npm:^1.10.0, @backstage/core-plugin-api@npm:^1.9.3, @backstage/core-plugin-api@npm:^1.9.4":
   version: 1.10.0
   resolution: "@backstage/core-plugin-api@npm:1.10.0"
   dependencies:
@@ -7273,7 +7273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/theme@npm:^0.5.6":
+"@backstage/theme@npm:^0.5.6, @backstage/theme@npm:^0.5.7":
   version: 0.5.7
   resolution: "@backstage/theme@npm:0.5.7"
   dependencies:
@@ -9515,6 +9515,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@janus-idp/backstage-plugin-analytics-provider-segment@npm:1.9.0":
+  version: 1.9.0
+  resolution: "@janus-idp/backstage-plugin-analytics-provider-segment@npm:1.9.0"
+  dependencies:
+    "@backstage/config": ^1.2.0
+    "@backstage/core-components": ^0.15.0
+    "@backstage/core-plugin-api": ^1.9.4
+    "@backstage/theme": ^0.5.7
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": 4.0.0-alpha.61
+    "@segment/analytics-next": ^1.58.0
+    prop-types: ^15.8.1
+    react-use: ^17.4.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 4ef107f63715f48345b5801802da250d8456ba5e14d7c347e8e4a7578bdc6e795c69dc3cdfa2fdc7b9ffa340f7fbfa0a191d9a903be080e0d325f9619d68ec60
+  languageName: node
+  linkType: hard
+
 "@janus-idp/backstage-plugin-audit-log-node@npm:*, @janus-idp/backstage-plugin-audit-log-node@npm:1.6.0":
   version: 1.6.0
   resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.6.0"
@@ -10362,6 +10384,22 @@ __metadata:
   dependencies:
     "@lezer/common": ^1.0.0
   checksum: 4c8517017e9803415c6c5cb8230d8764107eafd7d0b847676cd1023abb863a4b268d0d01c7ce3cf1702c4749527c68f0a26b07c329cb7b68c36ed88362d7b193
+  languageName: node
+  linkType: hard
+
+"@lukeed/csprng@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@lukeed/csprng@npm:1.1.0"
+  checksum: 926f5f7fc629470ca9a8af355bfcd0271d34535f7be3890f69902432bddc3262029bb5dbe9025542cf6c9883d878692eef2815fc2f3ba5b92e9da1f9eba2e51b
+  languageName: node
+  linkType: hard
+
+"@lukeed/uuid@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@lukeed/uuid@npm:2.0.1"
+  dependencies:
+    "@lukeed/csprng": ^1.1.0
+  checksum: f5e71e4da852dbff49b93cad27d5a2f61c2241e307bbe89b3b54b889ecb7927f2487246467f90ebb6cbdb7e0ac2a213e2e58b1182cb7990cef6e049aa7c39e7b
   languageName: node
   linkType: hard
 
@@ -14029,6 +14067,82 @@ __metadata:
     tslib: ^2.6.2
     whatwg-fetch: ^3.6.0
   checksum: 47e6d4559e02deaa67036ce0bf04f11295773388c7d88db5f3a5774167f8208644e8f0345d54e54bba6374aac81a344d6ea2e656a6abee1d3632edbc7a052801
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-core@npm:1.8.0":
+  version: 1.8.0
+  resolution: "@segment/analytics-core@npm:1.8.0"
+  dependencies:
+    "@lukeed/uuid": ^2.0.0
+    "@segment/analytics-generic-utils": 1.2.0
+    dset: ^3.1.4
+    tslib: ^2.4.1
+  checksum: c8e2a98670658d6400d8e517e141aff6eff581a12a4015ce8ff906185d148cf9dad79cc5bfb5376195794cc0c964a9c9ca79d36f3d4b49affeb7344251dcde1f
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-generic-utils@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@segment/analytics-generic-utils@npm:1.2.0"
+  dependencies:
+    tslib: ^2.4.1
+  checksum: f36aa093722e4f51dddd4dfa37164bd082175bb0c0960096f9b03073c482e96a17012bc99782259a9d3787e52a48f03ab3447902c6c635654a8ce544892073e5
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-next@npm:^1.58.0":
+  version: 1.75.0
+  resolution: "@segment/analytics-next@npm:1.75.0"
+  dependencies:
+    "@lukeed/uuid": ^2.0.0
+    "@segment/analytics-core": 1.8.0
+    "@segment/analytics-generic-utils": 1.2.0
+    "@segment/analytics.js-video-plugins": ^0.2.1
+    "@segment/facade": ^3.4.9
+    dset: ^3.1.4
+    js-cookie: 3.0.1
+    node-fetch: ^2.6.7
+    tslib: ^2.4.1
+    unfetch: ^4.1.0
+  checksum: 92bc7ad1b1364e2446d8df3869a87d4014dc2a096248fdbd0c3bda9f2206e482eedbe044f348f21738f4139925d2d1997cff83df0879659c3accf1a4edf2c2b5
+  languageName: node
+  linkType: hard
+
+"@segment/analytics.js-video-plugins@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@segment/analytics.js-video-plugins@npm:0.2.1"
+  dependencies:
+    unfetch: ^3.1.1
+  checksum: 284b42bb05569366ac4a7c51c90d64bcea64315b2dd330ff8b58c63fa11949443b3d2f7e92d2e3c118495e9018352249183f7d3fb05e4b904148302536d385ba
+  languageName: node
+  linkType: hard
+
+"@segment/facade@npm:^3.4.9":
+  version: 3.4.10
+  resolution: "@segment/facade@npm:3.4.10"
+  dependencies:
+    "@segment/isodate-traverse": ^1.1.1
+    inherits: ^2.0.4
+    new-date: ^1.0.3
+    obj-case: 0.2.1
+  checksum: 5d10861f586ecebe3a71b25c9f37b3c922298188965047efcfd5b7e6f7147dc6967c3760726c43db99f33ef285191498e0726fc8d2556d5bdd82312a5f647ef2
+  languageName: node
+  linkType: hard
+
+"@segment/isodate-traverse@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@segment/isodate-traverse@npm:1.1.1"
+  dependencies:
+    "@segment/isodate": ^1.0.3
+  checksum: 06f783623c74a7a2310bdcca50355a1f7b9cbb7a1d77f0c7408def29bd0a355dbc2ff31516d025b7cd6baebfdca7d771fb62899f446366f86cd6d34cae9a7000
+  languageName: node
+  linkType: hard
+
+"@segment/isodate@npm:1.0.3, @segment/isodate@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@segment/isodate@npm:1.0.3"
+  checksum: 31faf12e83fa6ab5ba7dfd5600dfaf8d224a00ab24f3a2d3d9ba7f4ecdc1683a55c00fc9246585361aa5cb67c6d7846e1d5497cc3bcca58c105902b79c91c34a
   languageName: node
   linkType: hard
 
@@ -22919,7 +23033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dset@npm:^3.1.2":
+"dset@npm:^3.1.2, dset@npm:^3.1.4":
   version: 3.1.4
   resolution: "dset@npm:3.1.4"
   checksum: 9a7677e9ffd3c13ad850f7cf367aa94b39984006510e84c3c09b7b88bba0a5b3b7196d85a99d0c4cae4e47d67bdeca43dc1834a41d80f31bcdc86dd26121ecec
@@ -22964,7 +23078,6 @@ __metadata:
     "@backstage/cli": 0.28.1
     tar: 6.2.1
   peerDependencies:
-    "@janus-idp/backstage-plugin-aap-backend": 2.1.0
     "@janus-idp/backstage-plugin-analytics-provider-segment": 1.9.0
     "@janus-idp/backstage-plugin-bulk-import": 1.6.0
     "@janus-idp/backstage-plugin-bulk-import-backend": 4.0.0
@@ -28088,6 +28201,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"janus-idp-backstage-plugin-analytics-provider-segment@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment":
+  version: 0.0.0-use.local
+  resolution: "janus-idp-backstage-plugin-analytics-provider-segment@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment"
+  dependencies:
+    "@backstage/cli": 0.28.1
+    "@janus-idp/backstage-plugin-analytics-provider-segment": 1.9.0
+    "@janus-idp/cli": 1.16.0
+  languageName: unknown
+  linkType: soft
+
 "javascript-natural-sort@npm:^0.7.1":
   version: 0.7.1
   resolution: "javascript-natural-sort@npm:0.7.1"
@@ -28636,6 +28759,13 @@ __metadata:
   version: 3.7.7
   resolution: "js-base64@npm:3.7.7"
   checksum: d1b02971db9dc0fd35baecfaf6ba499731fb44fe3373e7e1d6681fbd3ba665f29e8d9d17910254ef8104e2cb8b44117fe4202d3dc54c7cafe9ba300fe5433358
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:3.0.1":
+  version: 3.0.1
+  resolution: "js-cookie@npm:3.0.1"
+  checksum: bb48de67e2a6bd1ae3dfd6b2d5a167c33dd0c5a37e909206161eb0358c98f17cb55acd55827a58e9eea3630d89444e7479f7938ef4420dda443218b8c434a4c3
   languageName: node
   linkType: hard
 
@@ -32264,6 +32394,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"new-date@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "new-date@npm:1.0.3"
+  dependencies:
+    "@segment/isodate": 1.0.3
+  checksum: 5bc778542276f5d947b77654f10ad796c7502b184bd7f9b87749064a3f69a5cb5631acfceb234b433b3408cfe151de34ee484d5751d1fd87a74d6ec1e7e1ac9c
+  languageName: node
+  linkType: hard
+
 "nimma@npm:0.2.2":
   version: 0.2.2
   resolution: "nimma@npm:0.2.2"
@@ -32674,6 +32813,13 @@ __metadata:
   version: 0.9.15
   resolution: "oauth@npm:0.9.15"
   checksum: 957c0d8d85300398dcb0e293953650c0fc3facc795bee8228238414f19f59cef5fd4ee8d17a972c142924c10c5f6ec50ef80f77f4a6cc6e3c98f9d22c027801c
+  languageName: node
+  linkType: hard
+
+"obj-case@npm:0.2.1":
+  version: 0.2.1
+  resolution: "obj-case@npm:0.2.1"
+  checksum: 2726b29d054027c52c6ac1a18531c3f995fcc313047847c7f7357889a56cf07bd88bef459bd4645c139fa56f9432c282806e0f1c7ab444d6cbdb662e39073e36
   languageName: node
   linkType: hard
 
@@ -39824,6 +39970,20 @@ __metadata:
   version: 6.19.8
   resolution: "undici@npm:6.19.8"
   checksum: 2f812769992a187d9c55809b6943059c0bb1340687a0891f769de02101342dded0b9c8874cd5af4a49daaeba8284101d74a1fbda4de04c604ba7a5f6190b9ea2
+  languageName: node
+  linkType: hard
+
+"unfetch@npm:^3.1.1":
+  version: 3.1.2
+  resolution: "unfetch@npm:3.1.2"
+  checksum: 5529f0021c51ffa52b5eb36b7b7824f5cbb2167c4a7a09365d071af7534a87a7968a93f1d71f8cdb1aab930af5692af10f53521100999021a05bfb738ff859ab
+  languageName: node
+  linkType: hard
+
+"unfetch@npm:^4.1.0":
+  version: 4.2.0
+  resolution: "unfetch@npm:4.2.0"
+  checksum: 6a4b2557e1d921eaa80c4425ce27a404945ec26491ed06e62598f333996a91a44c7908cb26dc7c2746d735762b13276cf4aa41829b4c8f438dde63add3045d7a
   languageName: node
   linkType: hard
 

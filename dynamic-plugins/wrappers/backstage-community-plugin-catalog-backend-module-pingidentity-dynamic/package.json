@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.29.2",
+    "supported-versions": "1.32.3",
     "pluginId": "catalog",
     "pluginPackage": "@backstage/plugin-catalog-backend"
   },
@@ -50,7 +50,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
