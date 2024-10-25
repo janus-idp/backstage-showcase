@@ -127,7 +127,7 @@ The nightly job for the `main` branch also runs against three OpenShift Containe
 
 ### High-Level Overview of `openshift-ci-tests.sh`
 
-The `openshift-ci-tests.sh` script (located at [`.ibm/pipelines/openshift-ci-tests.sh`](../../.ibm/pipelines/openshift-ci-tests.sh)) orchestrates the deployment and testing workflow for both PR and nightly jobs:
+The `openshift-ci-tests.sh` script (located at [`.ibm/pipelines/openshift-ci-tests.sh`](../../.ibm/pipelines/openshift-ci-tests.sh)) orchestrates the deployment and testing workflow for both PR and nightly jobs. The configuration for the Red Hat Developer Hub instance is managed using `yaml` config files for the application itself and the plugins in use. Those files are located in `.ibm/pipelines/resources`. These files define essential setup details and configurations specific to each test instance, ultimately determining the precise environment for the RHDH deployment.
 
 - **Environment Preparation:** Sets up clusters and namespaces based on job requirements.
 - **Deployment:** Deploys RHDH instances using Helm charts.
