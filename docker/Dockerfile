@@ -75,7 +75,7 @@ RUN \
 
 RUN "$YARN" build --filter=backend
 
-RUN "$YARN" export-dynamic --filter=./dynamic-plugins/wrappers/* --concurrency=1
+RUN "$YARN" export-dynamic --filter=./dynamic-plugins/wrappers/*
 
 RUN "$YARN" copy-dynamic-plugins dist
 
@@ -102,7 +102,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --immutable --production --network-timeout 600000 && \
+RUN "$YARN" workspaces focus --all --production --network-timeout 600000 && \
   # delete all the nested .npmrc files and set default values
   find . -type f -name .npmrc -exec rm -Rf {} \; && \
   # reset npm config to the default registry and absolute path to .pem file
