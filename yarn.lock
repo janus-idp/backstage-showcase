@@ -4043,7 +4043,7 @@ __metadata:
 
 "@backstage/backend-dynamic-feature-service@patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch::locator=root%40workspace%3A.":
   version: 0.4.3
-  resolution: "@backstage/backend-dynamic-feature-service@patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch::version=0.4.3&hash=918c83&locator=root%40workspace%3A."
+  resolution: "@backstage/backend-dynamic-feature-service@patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch::version=0.4.3&hash=fe5034&locator=root%40workspace%3A."
   dependencies:
     "@backstage/backend-app-api": ^1.0.1
     "@backstage/backend-common": ^0.25.0
@@ -4072,7 +4072,7 @@ __metadata:
     fs-extra: ^11.2.0
     lodash: ^4.17.21
     winston: ^3.2.1
-  checksum: dabccaa6d6aee0b3087b0827d0b557c785ce5aa9f81cd5495f96bc425c9905cc03ba84eca29102b1052e509a589ff2302c51879cddb76d93c5ed644b4662710e
+  checksum: 956242bb773c31887cb7050afd49e95210ef23dd11f16cf149d9626ba6e86c7f11b6d7fe504a361467d8543e5dd8696adef9209aa8f1192f68905b19ea2957c3
   languageName: node
   linkType: hard
 
