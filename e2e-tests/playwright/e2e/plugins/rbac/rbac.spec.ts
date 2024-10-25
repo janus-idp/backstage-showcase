@@ -16,9 +16,9 @@ test.describe
   let uiHelper: UIhelper;
   let page: Page;
 
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub(context);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");

@@ -8,9 +8,9 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   test.use({ storageState: GH_USER_IDAuthFile_rhdh });
   let uiHelper: UIhelper;
 
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
-    await Common.logintoGithub(context);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("Plugins");
     await uiHelper.verifyHeading("Plugins");

@@ -44,11 +44,11 @@ test.describe.serial("Bulk Import plugin", () => {
     );
   });
 
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
-    await Common.logintoGithub(context);
+    await new Common(page).logintoGithub();
   });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
@@ -249,12 +249,12 @@ test.describe
     repoName: "janus-test-2-bulk-import-test",
     url: "https://github.com/janus-test/janus-test-2-bulk-import-test/blob/main/catalog-info.yaml",
   };
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await Common.logintoGithub(context);
+    await new Common(page).logintoGithub();
   });
 
   test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
@@ -291,13 +291,12 @@ test.describe
   .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
   test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 
-  let page: Page;
   let uiHelper: UIhelper;
-  test.beforeAll(async ({ browser, context }, testInfo) => {
+  test.beforeAll(async ({ browser, page }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
-    await Common.logintoGithub(context);
+    await new Common(page).logintoGithub();
   });
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
