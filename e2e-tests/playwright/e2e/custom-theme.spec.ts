@@ -21,8 +21,38 @@ test.describe("CustomTheme should be applied", () => {
   });
 
   // eslint-disable-next-line no-empty-pattern
-  test("Verify that theme light colors are applied and make screenshots", async ({}, testInfo: TestInfo) => {
+  test("Verify that theme light colors are applied using static red hat developer theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
     await themeVerifier.setTheme("Light");
+    await themeVerifier.verifyHeaderGradient(
+      "none, linear-gradient(90deg, rgb(216, 98, 208), rgb(216, 164, 98))",
+    );
+    await themeVerifier.verifyBorderLeftColor("rgb(98, 216, 105)");
+    await themeVerifier.takeScreenshotAndAttach(
+      "screenshots/custom-theme-light-inspection.png",
+      testInfo,
+      "custom-theme-light-inspection",
+    );
+    await themeVerifier.verifyPrimaryColors("#2A61A7");
+  });
+
+  // eslint-disable-next-line no-empty-pattern
+  test("Verify that theme dark colors are applied using static red hat developer theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
+    await themeVerifier.setTheme("Dark");
+    await themeVerifier.verifyHeaderGradient(
+      "none, linear-gradient(90deg, rgb(190, 122, 45), rgb(45, 190, 50))",
+    );
+    await themeVerifier.verifyBorderLeftColor("rgb(45, 113, 190)");
+    await themeVerifier.takeScreenshotAndAttach(
+      "screenshots/custom-theme-dark-inspection.png",
+      testInfo,
+      "custom-theme-dark-inspection",
+    );
+    await themeVerifier.verifyPrimaryColors("#DC6ED9");
+  });
+
+  // eslint-disable-next-line no-empty-pattern
+  test("Verify that theme light colors are applied using custom dynamic theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
+    await themeVerifier.setTheme("Light Dynamic");
     await themeVerifier.verifyHeaderGradient(
       "none, linear-gradient(90deg, rgb(248, 248, 248), rgb(248, 248, 248))",
     );
@@ -36,8 +66,8 @@ test.describe("CustomTheme should be applied", () => {
   });
 
   // eslint-disable-next-line no-empty-pattern
-  test("Verify that theme dark colors are applied and make screenshots", async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme("Dark");
+  test("Verify that theme dark colors are applied using custom dynamic theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
+    await themeVerifier.setTheme("Dark Dynamic");
     await themeVerifier.verifyHeaderGradient(
       "none, linear-gradient(90deg, rgb(0, 0, 208), rgb(255, 246, 140))",
     );
