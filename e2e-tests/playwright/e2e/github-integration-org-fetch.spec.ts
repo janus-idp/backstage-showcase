@@ -1,12 +1,12 @@
 import { test } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
 import { Common } from "../utils/Common";
-import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
+import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile });
+test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 test.describe("GitHub integration with Org data fetching", () => {
-  test.beforeEach(async ({ page }) => {
-    await new Common(page).logintoGithub();
+  test.beforeEach(async ({ page, context }) => {
+    await new Common(page).logintoGithub(context);
     const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Catalog");
   });

@@ -9,13 +9,13 @@ import {
   updatedCatalogInfoYaml,
 } from "../../support/testData/BulkImport";
 import {
-  GH_USER2_IDAuthFile,
-  GH_USER_IDAuthFile,
+  GH_USER2_IDAuthFile_rhdh,
+  GH_USER_IDAuthFile_rhdh,
 } from "../../support/auth/auth_constants";
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial("Bulk Import plugin", () => {
-  test.use({ storageState: GH_USER2_IDAuthFile });
+  test.use({ storageState: GH_USER2_IDAuthFile_rhdh });
 
   let page: Page;
   let uiHelper: UIhelper;
@@ -44,11 +44,11 @@ test.describe.serial("Bulk Import plugin", () => {
     );
   });
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
-    await new Common(page).logintoGithub();
+    await new Common(page).logintoGithub(context);
   });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
@@ -236,7 +236,7 @@ test.describe.serial("Bulk Import plugin", () => {
 
 test.describe
   .serial("Bulk Import - Verify existing repo are displayed in bulk import Added repositories", () => {
-  test.use({ storageState: GH_USER2_IDAuthFile });
+  test.use({ storageState: GH_USER2_IDAuthFile_rhdh });
 
   let uiHelper: UIhelper;
   let common: Common;
@@ -249,12 +249,12 @@ test.describe
     repoName: "janus-test-2-bulk-import-test",
     url: "https://github.com/janus-test/janus-test-2-bulk-import-test/blob/main/catalog-info.yaml",
   };
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await new Common(page).logintoGithub();
+    await new Common(page).logintoGithub(context);
   });
 
   test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
@@ -289,15 +289,15 @@ test.describe
 
 test.describe
   .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
-  test.use({ storageState: GH_USER_IDAuthFile });
+  test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 
   let page: Page;
   let uiHelper: UIhelper;
-  test.beforeAll(async ({ browser }, testInfo) => {
+  test.beforeAll(async ({ browser, context }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    await new Common(page).logintoGithub(context);
   });
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
