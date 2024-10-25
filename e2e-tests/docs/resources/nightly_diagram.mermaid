@@ -1,0 +1,32 @@
+graph TD
+    A[Trigger Nightly Test Job] -->B1[AKS Cluster: Run Tests]
+    A -->B2[IBM Cloud OCP Cluster: Run Tests on Recent Versions]
+
+    subgraph "Environment Setup - AKS"
+        B1_1[Configure AKS Environment]
+        B1_2[Deploy RHDH Instance with Helm]
+    end
+
+    B1 --> B1_1 --> B1_2 --> C1[Run Test Suites on AKS]
+
+    subgraph "Environment Setup - IBM Cloud OCP"
+        B2_1[Configure IBM Cloud RBAC & non-RBAC Namespaces]
+        B2_2[Deploy RHDH Instance with Helm]
+    end
+
+    B2 --> B2_1 --> B2_2 --> C2[Run Test Suites on IBM Cloud OCP]
+
+    subgraph "Artifact Collection"
+        G1[Collect Logs, Screenshots, Recordings]
+        G2[Store Artifacts for 6 Months]
+    end
+
+    C1 --> G1 --> G2
+    C2 --> G1 --> G2
+
+    subgraph "Reporting"
+        H1[Generate Reports]
+        H2[Post Results to #rhdh-e2e-test-alerts on Slack]
+    end
+
+    G2 --> H1 --> H2
