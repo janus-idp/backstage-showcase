@@ -3,7 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../../dist-types/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-logs",
+    "outDir": "../../../dist-types/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic",
     "rootDir": "."
   }
 }
