@@ -32,7 +32,7 @@ backend.add(
     },
     moduleLoader: logger => new CommonJSModuleLoader(logger),
     logger: config => {
-      const auditLogConfig = config.getOptionalConfig('auditLog');
+      const auditLogConfig = config?.getOptionalConfig('auditLog');
       return {
         transports: [
           ...transports.log,
