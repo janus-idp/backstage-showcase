@@ -9,6 +9,7 @@ import {
 import { UIhelper } from "../../utils/UIhelper";
 import { Common } from "../../utils/Common";
 import fs from "fs";
+import path from "path";
 
 async function onceGithubLogin(
   userId: string,
@@ -31,9 +32,14 @@ async function onceGithubLogin(
   const sessionStorage = await page.evaluate(() =>
     JSON.stringify(sessionStorage),
   );
+
+  if (!fs.existsSync(path.dirname(storagePath))) {
+    fs.mkdirSync(path.dirname(storagePath), { recursive: true });
+  }
   if (!fs.existsSync(storagePath)) {
     fs.writeFileSync(storagePath, sessionStorage, "utf-8");
   }
+
   await page.goto("/");
   await page.getByRole("button", { name: "Sign In" }).click();
   await new Common(page).checkAndReauthorizeGithubApp();
