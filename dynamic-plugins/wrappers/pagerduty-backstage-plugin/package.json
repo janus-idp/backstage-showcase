@@ -14,7 +14,8 @@
     "supported-versions": "1.27.7",
     "pluginId": "pagerduty",
     "pluginPackages": [
-      "pagerduty-backstage-plugin"
+      "pagerduty-backstage-plugin",
+      "pagerduty-backstage-plugin-backend"
     ]
   },
   "sideEffects": false,

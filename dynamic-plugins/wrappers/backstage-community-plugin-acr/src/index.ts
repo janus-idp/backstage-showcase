@@ -1,1 +1,2 @@
-export * from '@backstage-community/plugin-acr';
+export { default } from '@backstage-community/plugin-acr';
+

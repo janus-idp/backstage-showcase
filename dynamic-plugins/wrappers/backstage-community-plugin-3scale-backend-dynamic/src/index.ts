@@ -1,1 +1,1 @@
-export * from '@backstage-community/plugin-3scale-backend';
+export { default } from '@backstage-community/plugin-3scale-backend';

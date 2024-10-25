@@ -7,7 +7,7 @@ import {
 } from '@backstage/core-plugin-api';
 import { CustomTechRadar } from './api/CustomTechRadar';
 
-export * from '@backstage-community/plugin-tech-radar';
+export { default } from '@backstage-community/plugin-tech-radar';
 
 export const TechRadarApi = createApiFactory({
   api: techRadarApiRef,
@@ -21,3 +21,4 @@ export const TechRadarApi = createApiFactory({
 });
 
 export { default as TechRadarIcon } from '@mui/icons-material/MyLocation';
+

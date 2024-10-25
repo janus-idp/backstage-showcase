@@ -1,1 +1,2 @@
-export * from '@pagerduty/backstage-plugin';
+export { default } from '@pagerduty/backstage-plugin';
+

@@ -5859,7 +5859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-catalog-node@npm:^1.12.4, @backstage/plugin-catalog-node@npm:^1.13.1":
+"@backstage/plugin-catalog-node@npm:^1.12.4, @backstage/plugin-catalog-node@npm:^1.13.0, @backstage/plugin-catalog-node@npm:^1.13.1":
   version: 1.13.1
   resolution: "@backstage/plugin-catalog-node@npm:1.13.1"
   dependencies:
@@ -9500,6 +9500,18 @@ __metadata:
   version: 0.1.3
   resolution: "@istanbuljs/schema@npm:0.1.3"
   checksum: 5282759d961d61350f33d9118d16bcaed914ebf8061a52f4fa474b2cb08720c9c81d165e13b82f2e5a8a212cc5af482f0c6fc1ac27b9e067e5394c9a6ed186c9
+  languageName: node
+  linkType: hard
+
+"@janus-idp/backstage-plugin-aap-backend@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@janus-idp/backstage-plugin-aap-backend@npm:2.1.0"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.0
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-catalog-node": ^1.13.0
+  checksum: 88e20d0d967729fd88fb53847224b94eb1f328381397e3a57cde560877e058e8f912385a583a3ede06789b818b6baddb20d693bb9d3888961c6e88f511fd8bf5
   languageName: node
   linkType: hard
 
@@ -19183,9 +19195,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"backstage-community-plugin-3scale-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend":
+"backstage-community-plugin-3scale-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-3scale-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend"
+  resolution: "backstage-community-plugin-3scale-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic"
   dependencies:
     "@backstage-community/plugin-3scale-backend": 3.0.1
     "@backstage/cli": 0.28.1
@@ -19205,9 +19217,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"backstage-community-plugin-catalog-backend-module-pingidentity@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity":
+"backstage-community-plugin-catalog-backend-module-pingidentity@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-catalog-backend-module-pingidentity@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity"
+  resolution: "backstage-community-plugin-catalog-backend-module-pingidentity@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic"
   dependencies:
     "@backstage-community/plugin-catalog-backend-module-pingidentity": 0.1.4
     "@backstage/cli": 0.28.1
@@ -19215,9 +19227,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor":
+"backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor"
+  resolution: "backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic"
   dependencies:
     "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor": 2.0.1
     "@backstage/cli": 0.28.1
@@ -19265,9 +19277,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"backstage-plugin-catalog-backend-module-bitbucket-cloud@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud":
+"backstage-plugin-catalog-backend-module-bitbucket-cloud@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-catalog-backend-module-bitbucket-cloud@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud"
+  resolution: "backstage-plugin-catalog-backend-module-bitbucket-cloud@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic"
   dependencies:
     "@backstage/cli": 0.28.1
     "@backstage/plugin-catalog-backend-module-bitbucket-cloud": 0.4.1
@@ -19275,9 +19287,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"backstage-plugin-catalog-backend-module-bitbucket-server@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server":
+"backstage-plugin-catalog-backend-module-bitbucket-server@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-catalog-backend-module-bitbucket-server@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server"
+  resolution: "backstage-plugin-catalog-backend-module-bitbucket-server@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic"
   dependencies:
     "@backstage/cli": 0.28.1
     "@backstage/plugin-catalog-backend-module-bitbucket-server": 0.2.3
@@ -19333,16 +19345,6 @@ __metadata:
     "@backstage/plugin-catalog-backend-module-ldap": 0.9.1
     "@janus-idp/cli": 1.16.0
     typescript: 5.6.2
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-catalog-backend-module-logs@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-logs":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-catalog-backend-module-logs@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-logs"
-  dependencies:
-    "@backstage/cli": 0.28.1
-    "@backstage/plugin-catalog-backend-module-logs": 0.1.3
-    "@janus-idp/cli": 1.16.0
   languageName: unknown
   linkType: soft
 
@@ -28076,6 +28078,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"janus-idp-backstage-plugin-aap-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic":
+  version: 0.0.0-use.local
+  resolution: "janus-idp-backstage-plugin-aap-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic"
+  dependencies:
+    "@backstage/cli": 0.28.1
+    "@janus-idp/backstage-plugin-aap-backend": 2.1.0
+    "@janus-idp/cli": 1.16.0
+  languageName: unknown
+  linkType: soft
+
 "javascript-natural-sort@npm:^0.7.1":
   version: 0.7.1
   resolution: "javascript-natural-sort@npm:0.7.1"
@@ -33323,9 +33335,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parfuemerie-douglas-scaffolder-backend-module-azure-repositories@workspace:dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories":
+"parfuemerie-douglas-scaffolder-backend-module-azure-repositories@workspace:dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic":
   version: 0.0.0-use.local
-  resolution: "parfuemerie-douglas-scaffolder-backend-module-azure-repositories@workspace:dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories"
+  resolution: "parfuemerie-douglas-scaffolder-backend-module-azure-repositories@workspace:dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic"
   dependencies:
     "@backstage/cli": 0.28.1
     "@janus-idp/cli": 1.16.0
@@ -36566,9 +36578,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"roadiehq-scaffolder-backend-module-http-request@workspace:dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request":
+"roadiehq-scaffolder-backend-module-http-request@workspace:dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request-dynamic":
   version: 0.0.0-use.local
-  resolution: "roadiehq-scaffolder-backend-module-http-request@workspace:dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request"
+  resolution: "roadiehq-scaffolder-backend-module-http-request@workspace:dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request-dynamic"
   dependencies:
     "@backstage/cli": 0.28.1
     "@janus-idp/cli": 1.16.0
