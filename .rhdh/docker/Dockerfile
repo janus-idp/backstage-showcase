@@ -52,7 +52,6 @@ RUN chmod +x "$YARN"
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # TODO: transform --parent to individual copy statements
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json

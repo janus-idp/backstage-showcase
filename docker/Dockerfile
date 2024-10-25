@@ -141,9 +141,6 @@ COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 # Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
 
-# include patch files in final container just for reference
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
-
 # RHIDP-4220 - make Konflux preflight and EC checks happy - [check-container] Create a directory named /licenses and include all relevant licensing
 COPY $EXTERNAL_SOURCE/LICENSE /licenses/
 
