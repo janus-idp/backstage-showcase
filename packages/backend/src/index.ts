@@ -57,21 +57,21 @@ backend.add(import('@backstage/plugin-catalog-backend/alpha'));
 // TODO: Probably we should now provide this as a dynamic plugin
 backend.add(import('@backstage/plugin-catalog-backend-module-openapi'));
 
-backend.add(import('@backstage/plugin-proxy-backend/alpha'));
+backend.add(import('@backstage/plugin-proxy-backend'));
 
 // TODO: Check in the Scaffolder new backend plugin why the identity is not passed and the default is built instead.
 backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
 
 // search engine
 // See https://backstage.io/docs/features/search/search-engines
-backend.add(import('@backstage/plugin-search-backend-module-pg/alpha'));
+backend.add(import('@backstage/plugin-search-backend-module-pg'));
 
 // search collators
-backend.add(import('@backstage/plugin-search-backend/alpha'));
-backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
+backend.add(import('@backstage/plugin-search-backend'));
+backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 
 // TODO: We should test it more deeply. The structure is not exactly the same as the old backend implementation
-backend.add(import('@backstage/plugin-events-backend/alpha'));
+backend.add(import('@backstage/plugin-events-backend'));
 
 backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
 backend.add(import('@janus-idp/backstage-scaffolder-backend-module-annotator'));
