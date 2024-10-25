@@ -43,7 +43,7 @@ If the initial automatically triggered tests fail, OpenShift-CI will add a comme
   - **Manual:** When `/ok-to-test` is commented by a janus-idp member for external contributors or when `/test`, `/test images`, `/test all` and `/test e2e-tests` is commented after validation.
 - **Environment:** Runs on an ephemeral OpenShift cluster on IBM Cloud.
 - **Configurations:**
-  - Tests are executed on both **RBAC** (Role-Based Access Control) and **non-RBAC** namespaces.
+  - Tests are executed on both **RBAC** (Role-Based Access Control) and **non-RBAC** namespaces. Different sets of tests are executed for both the **non-RBAC RHDH instance** and the **RBAC RHDH instance**, each deployed in separate namespaces.
 - **Steps:**
 
   1. **Detection:** OpenShift-CI detects the PR event.
@@ -79,9 +79,7 @@ Nightly tests are run to ensure the stability and reliability of our codebase ov
 
 ### Additional Nightly Jobs for Main Branch
 
-The nightly job for the `main` branch also runs against three OpenShift Container Platform (OCP) versions to ensure compatibility and stability across multiple versions:
-
-We maintain testing on the three most recent OCP versions. As new OCP versions are released, we will update our testing pipeline to include the latest versions and drop support for older ones accordingly.
+The nightly job for the `main` branch also runs against three OpenShift Container Platform (OCP) versions to ensure compatibility and stability across multiple versions. We maintain testing on the three most recent OCP versions. As new OCP versions are released, we will update our testing pipeline to include the latest versions and drop support for older ones accordingly.
 
 > **Note:** The output of the nightly runs, including test results and any relevant notifications, is posted on the Slack channel **`#rhdh-e2e-test-alerts`**.
 
