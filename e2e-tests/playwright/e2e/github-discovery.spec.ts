@@ -13,9 +13,9 @@ type GithubDiscoveryFixture = {
 };
 
 const test = base.extend<GithubDiscoveryFixture>({
-  catalogPage: async ({ page, context }, use) => {
-    const myPage: Page = await Common.logintoGithub(context);
-    const catalog = new Catalog(myPage);
+  catalogPage: async ({ page }, use) => {
+    await new Common(page).logintoGithub();
+    const catalog = new Catalog(page);
     await catalog.go();
     use(catalog);
   },

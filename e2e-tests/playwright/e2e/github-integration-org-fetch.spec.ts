@@ -5,8 +5,8 @@ import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
 
 test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 test.describe("GitHub integration with Org data fetching", () => {
-  test.beforeEach(async ({ page, context }) => {
-    await Common.logintoGithub(context);
+  test.beforeEach(async ({ page }) => {
+    await new Common(page).logintoGithub();
     const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Catalog");
   });

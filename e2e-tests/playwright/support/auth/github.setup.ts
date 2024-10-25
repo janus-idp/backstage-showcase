@@ -1,22 +1,13 @@
 import { test as setup, Page, Locator } from "@playwright/test";
 import { authenticator } from "otplib";
 import {
-  GH_USER2_IDAuthFile_github,
   GH_USER2_IDAuthFile_rhdh,
-  GH_USER_IDAuthFile_github,
   GH_USER_IDAuthFile_rhdh,
 } from "./auth_constants";
 import { UIhelper } from "../../utils/UIhelper";
 import { Common } from "../../utils/Common";
-import fs from "fs";
-import path from "path";
 
-async function onceGithubLogin(
-  userId: string,
-  password: string,
-  page: Page,
-  storagePath: string,
-) {
+async function onceGithubLogin(userId: string, password: string, page: Page) {
   const uiHelper: UIhelper = new UIhelper(page);
   const githubLoginEmail: Locator = page.locator("#login_field");
   const githubLoginPassword: Locator = page.locator("#password");
@@ -29,17 +20,7 @@ async function onceGithubLogin(
   await githubLoginSignIn.click();
   await githubLogin2ndFactor.fill(await getGitHub2FAOTP(userId));
   await page.waitForURL("https://github.com/");
-  const sessionStorage = await page.evaluate(() =>
-    JSON.stringify(sessionStorage),
-  );
-
-  if (!fs.existsSync(path.dirname(storagePath))) {
-    fs.mkdirSync(path.dirname(storagePath), { recursive: true });
-  }
-  if (!fs.existsSync(storagePath)) {
-    fs.writeFileSync(storagePath, sessionStorage, "utf-8");
-  }
-
+  await page.waitForTimeout(5000);
   await page.goto("/");
   await page.getByRole("button", { name: "Sign In" }).click();
   await new Common(page).checkAndReauthorizeGithubApp();
@@ -70,7 +51,7 @@ setup("authenticate as GH_USER_ID", async ({ page }, testInfo) => {
   setup.setTimeout(80000);
   const userId = process.env.GH_USER_ID;
   const password = process.env.GH_USER_PASS;
-  await onceGithubLogin(userId, password, page, GH_USER_IDAuthFile_github);
+  await onceGithubLogin(userId, password, page);
   await page.context().storageState({
     path: GH_USER_IDAuthFile_rhdh,
   });
@@ -81,7 +62,7 @@ setup("authenticate as GH_USER2_ID", async ({ page }, testInfo) => {
   setup.setTimeout(80000);
   const userId = process.env.GH_USER2_ID;
   const password = process.env.GH_USER2_PASS;
-  await onceGithubLogin(userId, password, page, GH_USER2_IDAuthFile_github);
+  await onceGithubLogin(userId, password, page);
   await page.context().storageState({
     path: GH_USER2_IDAuthFile_rhdh,
   });

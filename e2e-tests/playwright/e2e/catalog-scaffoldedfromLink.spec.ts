@@ -24,7 +24,7 @@ test.describe("Link Scaffolded Templates to Catalog Items", () => {
 
   test.beforeEach(async ({ page, context }) => {
     const uiHelper = new UIhelper(page);
-    await Common.logintoGithub(context);
+    await new Common(page).logintoGithub();
     await uiHelper.openSidebar("Catalog");
   });
 

@@ -22,20 +22,11 @@ export class Common {
     this.uiHelper = new UIhelper(page);
   }
 
-  public static async logintoGithub(context: BrowserContext) {
-    const sessionStorage = JSON.parse(
-      fs.readFileSync(GH_USER_IDAuthFile_github, "utf-8"),
-    );
-    await context.addInitScript((storage) => {
-      for (const [key, value] of Object.entries(storage))
-        window.sessionStorage.setItem(key, value as string);
-    }, sessionStorage);
-    const myPage = await context.newPage();
-    await myPage.goto("/settings");
-    await myPage.waitForURL("/settings");
-    await myPage.goto("/");
-    await myPage.waitForURL("/");
-    return myPage;
+  public async logintoGithub() {
+    await this.page.goto("/settings");
+    await this.page.waitForURL("/settings");
+    await this.page.goto("/");
+    await this.page.waitForURL("/");
   }
 
   public async loginAsGuest() {

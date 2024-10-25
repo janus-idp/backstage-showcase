@@ -65,3 +65,5 @@ dynamic-plugins/*/dist-dynamic/src
 
 # Private Keys
 *.pem
+
+playwright/.auth/
