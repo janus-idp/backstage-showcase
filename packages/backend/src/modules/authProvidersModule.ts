@@ -13,17 +13,16 @@ import {
   providers,
 } from '@backstage/plugin-auth-backend';
 import {
+  oidcAuthenticator,
+  oidcSignInResolvers,
+} from '@backstage/plugin-auth-backend-module-oidc-provider';
+import {
   AuthProviderFactory,
   authProvidersExtensionPoint,
   AuthResolverCatalogUserQuery,
   AuthResolverContext,
   createOAuthProviderFactory,
 } from '@backstage/plugin-auth-node';
-
-import {
-  oidcAuthenticator,
-  oidcSignInResolvers,
-} from '@internal/plugin-auth-backend-module-oidc-provider';
 
 /**
  * Function is responsible for signing in a user with the catalog user and
