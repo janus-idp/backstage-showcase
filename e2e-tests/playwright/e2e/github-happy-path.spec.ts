@@ -15,7 +15,7 @@ test.describe("GitHub Happy path", () => {
     "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";
 
   test.beforeEach(async ({ page, context }) => {
-    await new Common(page).logintoGithub(context);
+    await Common.logintoGithub(context);
   });
 
   test("Verify Profile is Github Account Name in the Settings page", async ({

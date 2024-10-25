@@ -10,7 +10,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
 
   test.beforeEach(async ({ page, context }) => {
     uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub(context);
+    await Common.logintoGithub(context);
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("Plugins");
     await uiHelper.verifyHeading("Plugins");

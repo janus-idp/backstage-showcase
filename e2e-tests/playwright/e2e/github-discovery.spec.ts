@@ -1,4 +1,4 @@
-import { test as base } from "@playwright/test";
+import { test as base, Page } from "@playwright/test";
 import { Catalog } from "../support/pages/Catalog";
 import GithubApi from "../support/api/github";
 import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
@@ -14,8 +14,8 @@ type GithubDiscoveryFixture = {
 
 const test = base.extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page, context }, use) => {
-    await new Common(page).logintoGithub(context);
-    const catalog = new Catalog(page);
+    const myPage: Page = await Common.logintoGithub(context);
+    const catalog = new Catalog(myPage);
     await catalog.go();
     use(catalog);
   },
