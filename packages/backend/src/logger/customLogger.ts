@@ -1,6 +1,9 @@
 import { createConfigSecretEnumerator } from '@backstage/backend-defaults/rootConfig';
 import { WinstonLogger } from '@backstage/backend-defaults/rootLogger';
-import { DynamicPluginsSchemasService } from '@backstage/backend-dynamic-feature-service';
+import {
+  DynamicPluginsRootLoggerFactoryOptions,
+  DynamicPluginsSchemasService,
+} from '@backstage/backend-dynamic-feature-service';
 import {
   coreServices,
   createServiceFactory,
@@ -14,7 +17,7 @@ import * as winston from 'winston';
 
 import 'winston-daily-rotate-file';
 
-const defaultFormat = winston.format.combine(
+export const defaultFormat = winston.format.combine(
   winston.format.timestamp({
     format: 'YYYY-MM-DD HH:mm:ss',
   }),
@@ -40,7 +43,7 @@ const auditLogWinstonFormat = winston.format.combine(
   winston.format.json(),
 );
 
-const transports = {
+export const transports = {
   log: [
     new winston.transports.Console({
       format: winston.format.combine(

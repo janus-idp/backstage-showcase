@@ -6,7 +6,7 @@ import * as path from 'path';
 
 import { configureCorporateProxyAgent } from './corporate-proxy';
 import { CommonJSModuleLoader } from './loader';
-import { customLogger } from './logger';
+import { transports } from './logger';
 import {
   healthCheckPlugin,
   metricsPlugin,
@@ -31,9 +31,18 @@ backend.add(
       );
     },
     moduleLoader: logger => new CommonJSModuleLoader(logger),
+    logger: config => {
+      const auditLogConfig = config.getOptionalConfig('auditLog');
+      return {
+        transports: [
+          ...transports.log,
+          ...transports.auditLog(auditLogConfig),
+          ...transports.auditLogFile(auditLogConfig),
+        ],
+      };
+    },
   }),
 );
-backend.add(customLogger);
 
 backend.add(metricsPlugin);
 backend.add(healthCheckPlugin);
