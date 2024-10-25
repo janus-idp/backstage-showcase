@@ -172,7 +172,6 @@ ENV TARBALL_PATH=./packages/backend/dist
 
 RUN tar xzf "$TARBALL_PATH"/skeleton.tar.gz; tar xzf "$TARBALL_PATH"/bundle.tar.gz; \
   rm -f "$TARBALL_PATH"/skeleton.tar.gz "$TARBALL_PATH"/bundle.tar.gz
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy app-config files needed in runtime
 # Upstream only
@@ -230,9 +229,6 @@ RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 COPY --from=build --chown=1001:1001 "$REMOTE_SOURCES_DIR"/ ./
 # Downstream only - copy embedded dynamic plugins from "$REMOTE_SOURCES_DIR"
 COPY --from=build "$REMOTE_SOURCES_DIR"/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-
-# include patch files in final container just for reference
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # RHIDP-4220 - make Konflux preflight and EC checks happy - [check-container] Create a directory named /licenses and include all relevant licensing
 COPY $EXTERNAL_SOURCE/LICENSE /licenses/
