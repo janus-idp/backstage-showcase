@@ -10,7 +10,7 @@ export interface Config {
      * Name of the Backstage flavor (e.g. backstage, rhdh, rhtap)
      * @visibility frontend
      */
-    flavor?: string;
+    flavor?: 'backstage' | 'rhdh' | 'rhtap' | (string & {});
   };
   app: {
     branding?: {
