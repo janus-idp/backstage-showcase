@@ -16,6 +16,7 @@
     "showcase-rbac-nightly": "playwright test --project=showcase-rbac",
     "showcase-aks-ci-nightly": "playwright test --project=showcase-aks",
     "showcase-rbac-aks-ci-nightly": "playwright test --project=showcase-rbac-aks",
+    "showcase-runtime": "playwright test --project=showcase-runtime",
     "lint:check": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "postinstall": "playwright install",
