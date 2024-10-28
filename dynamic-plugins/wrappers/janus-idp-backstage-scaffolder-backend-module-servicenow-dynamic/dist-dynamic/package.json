@@ -1,5 +1,5 @@
 {
-  "name": "janus-idp-backstage-plugin-aap-backend-dynamic",
+  "name": "janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic",
   "version": "2.1.0",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
@@ -9,12 +9,10 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin",
+    "role": "backend-plugin-module",
     "supported-versions": "1.32.3",
-    "pluginId": "janus-idp-aap-backend",
-    "pluginPackages": [
-      "janus-idp-backstage-plugin-aap-backend"
-    ]
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": {
@@ -23,13 +21,20 @@
     },
     "./package.json": "./package.json"
   },
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "axios": "^1.7.4",
+    "form-data": "^4.0.0",
+    "yaml": "^2.3.3",
+    "zod": "^3.22.4"
+  },
   "files": [
     "dist"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic"
+    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
@@ -44,9 +49,7 @@
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-plugin-api": "^1.0.0",
-    "@backstage/catalog-model": "^1.7.0",
-    "@backstage/errors": "^1.2.4",
-    "@backstage/plugin-catalog-node": "^1.13.0"
+    "@backstage/plugin-scaffolder-node": "^0.4.11"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
