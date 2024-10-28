@@ -1,6 +1,14 @@
 ## Arbitrary app-config for backwards compatible UI configuration - now with dynamic plugins
 dynamicPlugins:
   frontend:
+    ### Import scaffolderLayouts from frontend plugin  
+    # backstage-plugin-simple-layout-plugin: # same as plugin-manifest.json "name"
+    #   scaffolderLayouts:
+    #     - importName: TwoColumnLayout
+    ### Import scaffolderFieldExtensions from frontend plugin  
+    # premisedata.plugin-dynamic-pick-extension: # same as plugin-manifest.json "name"
+    #   scaffolderFieldExtensions:
+    #     - importName: DynamicPickFieldExtension
     backstage.plugin-azure-devops:
       mountPoints:
         - mountPoint: entity.page.ci/cards
@@ -428,3 +436,4 @@ dynamicPlugins:
     janus-idp.backstage-plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
+

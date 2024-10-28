@@ -21,15 +21,7 @@ organization:
   name: ${ORGANIZATION_NAME}
 
 auth:
-  environment: production
-  providers:
-    github:
-      production:
-        clientId: Iv23li95BX2pCzM7wdJ3
-        clientSecret: 1a3c56c90233235706bf89007d55428d4353b924
-
-signInPage: github
-dangerouslyAllowSignInWithoutUserInCatalog: true
+  environment: development
 
 backend:
   # Required for authentication. This secret is shared by all backend plugins.
@@ -181,16 +173,3 @@ dynatrace:
 # Plugin: Permission
 permission:
   enabled: ${PERMISSION_ENABLED}
-
-dynamicPlugins:
-  rootDirectory: dynamic-plugins-root
-  frontend:
-    backstage-plugin-simple-layout-plugin: # same as plugin-manifest.json "name"
-      scaffolderLayouts:
-        - importName: TwoColumnLayout
-    premisedata.plugin-dynamic-pick-extension: # same as plugin-manifest.json "name"
-      scaffolderFieldExtensions:
-        - importName: DynamicPickFieldExtension
-
-logger:
-  level: debug

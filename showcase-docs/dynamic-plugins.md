@@ -789,7 +789,9 @@ dynamicPlugins:
 
 which would override the default ScmAuth API factory that DeveloperHub defaults to.
 
-### Provide custom Scaffolder field extensions
+### Provide custom Scaffolder extensions
+
+#### Field extension
 
 The Backstage scaffolder component supports specifying [custom form fields](https://backstage.io/docs/features/software-templates/writing-custom-field-extensions/#creating-a-field-extension) for the software template wizard, for example:
 
@@ -813,7 +815,30 @@ dynamicPlugins:
         - importName: MyNewFieldExtension
 ```
 
-A plugin can specify multiple field extensions, in which case each field extension will need to supply an `importName` for each field extension.
+#### Layout extension
+
+The Backstage scaffolder component supports specifying [custom form layouts](https://backstage.io/docs/features/software-templates/writing-custom-step-layouts) for the software template wizard, for example:
+
+```typescript
+export const MyNewLayoutExtension = scaffolderPlugin.provide(
+  createScaffolderFieldExtension({
+    name: 'MyNewLayoutExtension',
+    component: MyNewLayout,
+  }),
+);
+```
+
+These components can be contributed by plugins by exposing the scaffolder layout component via the `scaffolderLayouts` configuration:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      scaffolderLayouts:
+        - importName: MyNewLayoutExtension
+```
+
+A plugin can specify multiple field or layout extensions, in which case each field extension will need to supply an `importName` for each field extension.
 
 - `importName` is an optional import name that should reference the value returned the scaffolder field extension API
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
