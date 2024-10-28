@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7-labs
+
 # THIS IS USED BY Konflux builds >= 1.4
 # TODO verify this works with Cachi2 once we enable that, or switch to use ../.rhdh/docker/Dockerfile as input
 #
@@ -43,23 +45,20 @@ ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
+
+# Add execute permissions to yarn
 RUN chmod +x "$YARN"
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
-COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
-COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-home-page/package.json ./plugins/dynamic-home-page/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/auth-backend-module-oidc-provider/package.json ./plugins/auth-backend-module-oidc-provider/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
+COPY --parents $EXTERNAL_SOURCE_NESTED/**/package.json ./
 
-RUN "$YARN" install --immutable --network-timeout 600000
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
+
+RUN "$YARN" install --immutable
 
 # Stage 3 - Build packages
 # Upstream only
@@ -76,14 +75,13 @@ RUN \
   # Upstream only - append build time into packages/app/src/build-metadata.json
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
   -e "s/(\"Last Commit: .+\")/\1, \"Build Time: $now\"/" && \
-  cat packages/app/src/build-metadata.json; echo && \
-  "$YARN" build --filter=backend && \
-  # Build dynamic plugins: split commands for consistency with downstream
-  "$YARN" --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
-  # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
-  "$YARN" --cwd ./dynamic-plugins/imports install-dynamic && \
-  "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
-  "$YARN" copy-dynamic-plugins dist
+  cat packages/app/src/build-metadata.json; echo
+
+RUN "$YARN" build --filter=backend
+
+RUN "$YARN" export-dynamic --filter=./dynamic-plugins/wrappers/*
+
+RUN "$YARN" copy-dynamic-plugins dist
 
 # Stage 4 - Build the actual backend image and install production dependencies
 # Upstream only
@@ -97,9 +95,11 @@ COPY --from=build $CONTAINER_SOURCE/yarn.lock \
   ./
 ENV TARBALL_PATH=.
 
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
+
 RUN tar xzf "$TARBALL_PATH"/skeleton.tar.gz; tar xzf "$TARBALL_PATH"/bundle.tar.gz; \
   rm -f "$TARBALL_PATH"/skeleton.tar.gz "$TARBALL_PATH"/bundle.tar.gz
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy app-config files needed in runtime
 # Upstream only
@@ -108,7 +108,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins.default.yaml ./
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --immutable --production --network-timeout 600000 && \
+RUN "$YARN" workspaces focus --all --production && \
   # delete all the nested .npmrc files and set default values
   find . -type f -name .npmrc -exec rm -Rf {} \; && \
   # reset npm config to the default registry and absolute path to .pem file
@@ -138,9 +138,6 @@ RUN microdnf update --setopt=install_weak_deps=0 -y && \
 COPY --from=cleanup --chown=1001:1001 $CONTAINER_SOURCE/ ./
 # Upstream only - copy embedded dynamic plugins from $CONTAINER_SOURCE
 COPY --from=build $CONTAINER_SOURCE/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-
-# include patch files in final container just for reference
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # RHIDP-4220 - make Konflux preflight and EC checks happy - [check-container] Create a directory named /licenses and include all relevant licensing
 COPY $EXTERNAL_SOURCE/LICENSE /licenses/
