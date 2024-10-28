@@ -1,1 +1,1 @@
-export { CommonJSModuleLoader } from './CommonJSModuleLoader';
+export { moduleLoader } from './moduleLoader';

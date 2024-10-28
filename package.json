@@ -7,8 +7,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "start": "turbo run build --filter=app && NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
-    "start-backend": "turbo run start --filter=backend",
+    "start": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
     "dev": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend --filter=app",
     "build": "turbo run build",
     "tsc": "turbo run tsc",
@@ -24,9 +23,8 @@
     "prettier:check": "turbo run prettier:check",
     "prettier:fix": "turbo run prettier:fix",
     "new": "backstage-cli new --scope internal",
-    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
     "versions:metadata": "node ./scripts/update-metadata.mjs",
-    "versions:all": "node ./scripts/update-backstage.mjs"
+    "versions:bump": "node ./scripts/update-backstage.mjs"
   },
   "workspaces": {
     "packages": [
@@ -39,7 +37,7 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.1",
     "@ianvs/prettier-plugin-sort-imports": "4.2.1",
     "@spotify/prettier-config": "15.0.0",
     "husky": "8.0.3",
@@ -50,7 +48,8 @@
   },
   "resolutions": {
     "@types/react": "18.3.7",
-    "@types/react-dom": "18.3.0"
+    "@types/react-dom": "18.3.0",
+    "@backstage/backend-dynamic-feature-service@0.4.3": "patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch"
   },
   "jest": {
     "testTimeout": 20000
