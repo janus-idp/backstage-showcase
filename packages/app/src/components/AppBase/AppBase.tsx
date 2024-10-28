@@ -13,7 +13,10 @@ import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { CatalogImportPage } from '@backstage/plugin-catalog-import';
 import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage } from '@backstage/plugin-scaffolder';
-import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
+import {
+  ScaffolderFieldExtensions,
+  ScaffolderLayouts,
+} from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import React, { useContext } from 'react';
@@ -33,6 +36,7 @@ const AppBase = () => {
     dynamicRoutes,
     entityTabOverrides,
     scaffolderFieldExtensions,
+    scaffolderLayouts,
   } = useContext(DynamicRootContext);
 
   const myCustomColumnsFunc: CatalogTableColumnsFunc = entityListContext => [
@@ -102,6 +106,14 @@ const AppBase = () => {
                 )}
               </ScaffolderFieldExtensions>
               scaffolderFieldExtensions
+              <ScaffolderLayouts>
+                {scaffolderLayouts.map(
+                  ({ scope, module, importName, Component }) => (
+                    <Component key={`${scope}-${module}-${importName}`} />
+                  ),
+                )}
+              </ScaffolderLayouts>
+              scaffolderLayouts
             </Route>
             <Route path="/api-docs" element={<ApiExplorerPage />} />
             <Route

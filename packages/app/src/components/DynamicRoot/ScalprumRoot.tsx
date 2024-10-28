@@ -77,6 +77,7 @@ const ScalprumRoot = ({
       entityTabOverrides: {},
       mountPoints: {},
       scaffolderFieldExtensions: [],
+      scaffolderLayouts: [],
     } as DynamicRootConfig,
   };
   return (

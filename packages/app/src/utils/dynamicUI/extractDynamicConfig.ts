@@ -92,6 +92,12 @@ type ScaffolderFieldExtension = {
   importName: string;
 };
 
+type ScaffolderLayout = {
+  scope: string;
+  module: string;
+  importName: string;
+};
+
 type EntityTab = {
   mountPoint: string;
   path: string;
@@ -133,6 +139,7 @@ type CustomProperties = {
   appIcons?: AppIcon[];
   apiFactories?: ApiFactory[];
   scaffolderFieldExtensions?: ScaffolderFieldExtension[];
+  scaffolderLayouts?: ScaffolderLayout[];
   themes?: ThemeEntry[];
 };
 
@@ -155,6 +162,7 @@ type DynamicConfig = {
   routeBindings: RouteBinding[];
   routeBindingTargets: BindingTarget[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
+  scaffolderLayouts: ScaffolderLayout[];
   themes: ThemeEntry[];
 };
 
@@ -177,6 +185,7 @@ function extractDynamicConfig(
     routeBindings: [],
     routeBindingTargets: [],
     scaffolderFieldExtensions: [],
+    scaffolderLayouts: [],
     themes: [],
   };
   config.pluginModules = Object.entries(frontend).reduce<PluginModule[]>(
@@ -278,6 +287,20 @@ function extractDynamicConfig(
     );
     return accScaffolderFieldExtensions;
   }, []);
+
+  config.scaffolderLayouts = Object.entries(frontend).reduce<
+    ScaffolderLayout[]
+  >((accScaffolderLayouts, [scope, { scaffolderLayouts }]) => {
+    accScaffolderLayouts.push(
+      ...(scaffolderLayouts ?? []).map(scaffolderLayout => ({
+        module: scaffolderLayout.module ?? 'PluginRoot',
+        importName: scaffolderLayout.importName ?? 'default',
+        scope,
+      })),
+    );
+    return accScaffolderLayouts;
+  }, []);
+
   config.entityTabs = Object.entries(frontend).reduce<EntityTabEntry[]>(
     (accEntityTabs, [scope, { entityTabs }]) => {
       accEntityTabs.push(

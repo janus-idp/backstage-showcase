@@ -15,6 +15,7 @@ import DynamicRootContext, {
   MountPoints,
   RemotePlugins,
   ScaffolderFieldExtension,
+  ScaffolderLayout,
   ScalprumMountPointConfig,
   AppThemeProvider,
 } from './DynamicRootContext';
@@ -77,6 +78,7 @@ export const DynamicRoot = ({
       routeBindings,
       routeBindingTargets,
       scaffolderFieldExtensions,
+      scaffolderLayouts,
       themes: pluginThemes,
     } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
@@ -105,6 +107,10 @@ export const DynamicRoot = ({
         module,
       })),
       ...scaffolderFieldExtensions.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...scaffolderLayouts.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -360,6 +366,27 @@ export const DynamicRoot = ({
       return acc;
     }, []);
 
+    const scaffolderLayoutComponents = scaffolderLayouts.reduce<
+      ScaffolderLayout[]
+    >((acc, { scope, module, importName }) => {
+      const extensionComponent = allPlugins[scope]?.[module]?.[importName];
+      if (extensionComponent) {
+        // console.log(`Plugin scaffolderLayout ${scope}.${module}.${importName}`,);
+        acc.push({
+          scope,
+          module,
+          importName,
+          Component: extensionComponent as React.ComponentType<unknown>,
+        });
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring scaffolderLayout: ${importName}`,
+        );
+      }
+      return acc;
+    }, []);
+
     const dynamicThemeProviders = pluginThemes.reduce<AppThemeProvider[]>(
       (acc, { scope, module, importName, icon, ...rest }) => {
         const provider = allPlugins[scope]?.[module]?.[importName];
@@ -417,6 +444,7 @@ export const DynamicRoot = ({
     dynamicRootConfig.mountPoints = mountPointComponents;
     dynamicRootConfig.scaffolderFieldExtensions =
       scaffolderFieldExtensionComponents;
+    dynamicRootConfig.scaffolderLayouts = scaffolderLayoutComponents;
 
     // make the dynamic UI configuration available to DynamicRootContext consumers
     setComponents({
@@ -427,6 +455,7 @@ export const DynamicRoot = ({
       entityTabOverrides,
       mountPoints: mountPointComponents,
       scaffolderFieldExtensions: scaffolderFieldExtensionComponents,
+      scaffolderLayouts: scaffolderLayoutComponents,
     });
 
     afterInit().then(({ default: Component }) => {

@@ -1,0 +1,43 @@
+{
+  "name": "backstage-plugin-simple-layout-plugin-dynamic",
+  "version": "0.1.0",
+  "main": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.esm.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "frontend-plugin"
+  },
+  "sideEffects": false,
+  "scripts": {},
+  "dependencies": {
+    "@backstage/core-components": "^0.14.10",
+    "@backstage/core-plugin-api": "^1.9.3",
+    "@backstage/theme": "^0.5.6",
+    "@material-ui/core": "^4.9.13",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "react-use": "^17.2.4"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1 || ^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {},
+  "files": [
+    "dist",
+    "dist-scalprum"
+  ],
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
+  }
+}
