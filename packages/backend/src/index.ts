@@ -5,7 +5,7 @@ import { PackageRoles } from '@backstage/cli-node';
 import * as path from 'path';
 
 import { configureCorporateProxyAgent } from './corporate-proxy';
-import { CommonJSModuleLoader } from './loader';
+import { moduleLoader } from './loader';
 import { transports } from './logger';
 import {
   healthCheckPlugin,
@@ -30,7 +30,7 @@ backend.add(
         'configSchema.json',
       );
     },
-    moduleLoader: logger => new CommonJSModuleLoader(logger),
+    moduleLoader,
     logger: config => {
       const auditLogConfig = config?.getOptionalConfig('auditLog');
       return {
