@@ -5,6 +5,7 @@ import {
   customTabIcon,
   customBrandIcon,
 } from "../support/testData/custom-theme";
+import { ThemeConstants } from "../data/theme-constants";
 
 let page: Page;
 
@@ -20,64 +21,22 @@ test.describe("CustomTheme should be applied", () => {
     await common.loginAsGuest();
   });
 
-  // eslint-disable-next-line no-empty-pattern
-  test("Verify that theme light colors are applied using static red hat developer theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme("Light");
-    await themeVerifier.verifyHeaderGradient(
-      "none, linear-gradient(90deg, rgb(216, 98, 208), rgb(216, 164, 98))",
-    );
-    await themeVerifier.verifyBorderLeftColor("rgb(98, 216, 105)");
-    await themeVerifier.takeScreenshotAndAttach(
-      "screenshots/custom-theme-light-inspection.png",
-      testInfo,
-      "custom-theme-light-inspection",
-    );
-    await themeVerifier.verifyPrimaryColors("#2A61A7");
-  });
+  test("Verify theme colors are applied and make screenshots", async (_args, testInfo: TestInfo) => {
+    const themes = ThemeConstants.getThemes();
 
-  // eslint-disable-next-line no-empty-pattern
-  test("Verify that theme dark colors are applied using static red hat developer theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme("Dark");
-    await themeVerifier.verifyHeaderGradient(
-      "none, linear-gradient(90deg, rgb(190, 122, 45), rgb(45, 190, 50))",
-    );
-    await themeVerifier.verifyBorderLeftColor("rgb(45, 113, 190)");
-    await themeVerifier.takeScreenshotAndAttach(
-      "screenshots/custom-theme-dark-inspection.png",
-      testInfo,
-      "custom-theme-dark-inspection",
-    );
-    await themeVerifier.verifyPrimaryColors("#DC6ED9");
-  });
-
-  // eslint-disable-next-line no-empty-pattern
-  test("Verify that theme light colors are applied using custom dynamic theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme("Light Dynamic");
-    await themeVerifier.verifyHeaderGradient(
-      "none, linear-gradient(90deg, rgb(248, 248, 248), rgb(248, 248, 248))",
-    );
-    await themeVerifier.verifyBorderLeftColor("rgb(255, 95, 21)");
-    await themeVerifier.takeScreenshotAndAttach(
-      "screenshots/custom-theme-light-inspection.png",
-      testInfo,
-      "custom-theme-light-inspection",
-    );
-    await themeVerifier.verifyPrimaryColors("rgb(255, 95, 21)");
-  });
-
-  // eslint-disable-next-line no-empty-pattern
-  test("Verify that theme dark colors are applied using custom dynamic theme plugin and make screenshots", async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme("Dark Dynamic");
-    await themeVerifier.verifyHeaderGradient(
-      "none, linear-gradient(90deg, rgb(0, 0, 208), rgb(255, 246, 140))",
-    );
-    await themeVerifier.verifyBorderLeftColor("rgb(244, 238, 169)");
-    await themeVerifier.takeScreenshotAndAttach(
-      "screenshots/custom-theme-dark-inspection.png",
-      testInfo,
-      "custom-theme-dark-inspection",
-    );
-    await themeVerifier.verifyPrimaryColors("#ab75cf");
+    for (const theme of themes) {
+      await themeVerifier.setTheme(theme.name);
+      await themeVerifier.verifyHeaderGradient(
+        `none, linear-gradient(90deg, ${theme.headerColor1}, ${theme.headerColor2})`,
+      );
+      await themeVerifier.verifyBorderLeftColor(theme.navigationIndicatorColor);
+      await themeVerifier.takeScreenshotAndAttach(
+        `screenshots/custom-theme-${theme.name}-inspection.png`,
+        testInfo,
+        `custom-theme-${theme.name}-inspection`,
+      );
+      await themeVerifier.verifyPrimaryColors(theme.primaryColor);
+    }
   });
 
   test("Verify that tab icon for Backstage can be customized", async () => {
