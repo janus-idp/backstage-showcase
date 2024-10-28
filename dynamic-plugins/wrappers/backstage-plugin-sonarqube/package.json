@@ -29,7 +29,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-sonarqube": "0.8.4"
+    "@backstage-community/plugin-sonarqube": "0.8.5"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.1",

@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.29.2",
+    "supported-versions": "1.32.3",
     "pluginId": "backstage-community-plugin-3scale-backend",
     "pluginPackages": [
       "backstage-community-plugin-3scale-backend"
@@ -35,7 +35,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"

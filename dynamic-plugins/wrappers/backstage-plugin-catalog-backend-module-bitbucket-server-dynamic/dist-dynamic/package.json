@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.3",
     "pluginId": "catalog",
     "pluginPackage": "@backstage/plugin-catalog-backend"
   },
@@ -32,7 +32,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server"
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
