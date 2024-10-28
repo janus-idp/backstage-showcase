@@ -247,24 +247,14 @@ check_backstage_running() {
   return 1
 }
 
-install_pipelines_operator() {
-  local dir=$1
-  DISPLAY_NAME="Red Hat OpenShift Pipelines"
-
-  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
-    echo "Red Hat OpenShift Pipelines operator is already installed."
-  else
-    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
-    oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
-  fi
-  wait_for_deployment "openshift-operators" "pipelines"
-}
-
 initiate_deployments() {
-  add_helm_repos
-  configure_namespace "${NAME_SPACE}"
+
   install_pipelines_operator "${DIR}"
+  install_crunchy_postgres_operator
   install_helm
+  add_helm_repos
+
+  configure_namespace "${NAME_SPACE}"
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
   # Deploy redis cache db.
@@ -279,8 +269,6 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
-
-  install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"

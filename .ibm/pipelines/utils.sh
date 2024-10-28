@@ -139,18 +139,38 @@ wait_for_deployment() {
     return 1
 }
 
-# install_pipelines_operator() {
-#   oc apply -f - <<EOF
-# apiVersion: operators.coreos.com/v1alpha1
-# kind: Subscription
-# metadata:
-#   name: openshift-pipelines-operator
-#   namespace: openshift-operators
-# spec:
-#   channel: "pipelines-1.12"
-#   name: openshift-pipelines-operator-rh
-#   source: redhat-operators
-#   sourceNamespace: openshift-marketplace
-# EOF
-#   wait_for_deployment "openshift-operators" "pipelines"
-# }
+install_subscription(){
+  name=$1
+  namespace=$2
+  package=$3
+  channel=$4
+  source_name=$5
+  oc apply -f - << EOD
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: $name
+  namespace: $namespace
+spec:
+  channel: $channel
+  installPlanApproval: Automatic
+  name: $package
+  source: $source_name
+  sourceNamespace: openshift-marketplace
+EOD
+}
+
+install_crunchy_postgres_operator(){
+  install_subscription crunchy-postgres-operator openshift-operators crunchy-postgres-operator v5 certified-operators
+}
+
+install_pipelines_operator() {
+  DISPLAY_NAME="Red Hat OpenShift Pipelines"
+  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
+    echo "Red Hat OpenShift Pipelines operator is already installed."
+  else
+    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
+    install_subscription openshift-pipelines-operator openshift-operators openshift-pipelines-operator-rh latest redhat-operators
+    wait_for_deployment "openshift-operators" "pipelines"
+  fi
+}
