@@ -1,6 +1,6 @@
 {
   "name": "janus-idp-backstage-plugin-ocm-backend-dynamic",
-  "version": "5.1.0",
+  "version": "5.1.2",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@kubernetes/client-node": "^0.20.0",
+    "@kubernetes/client-node": "^0.22.1",
     "express": "^4.18.2",
     "semver": "^7.5.4"
   },
@@ -55,7 +55,6 @@
     "@backstage/catalog-model": "^1.7.0",
     "@backstage/errors": "^1.2.4",
     "@backstage/plugin-catalog-node": "^1.13.0",
-    "@backstage/plugin-kubernetes-common": "^0.8.3",
     "@backstage/plugin-permission-common": "^0.8.1",
     "@backstage/plugin-permission-node": "^0.8.3"
   },
