@@ -79,16 +79,16 @@ jobs:
         run: |
           if [[ -n "${{ inputs.release }}" ]]; then
             echo "commit_message=feat: update Backstage to ${{ inputs.release }}" >> $GITHUB_OUTPUT
-            echo "branch=backstage/${{ inputs.release }}" >> $GITHUB_OUTPUT
+            echo "branch=dependencies/backstage-${{ inputs.release }}" >> $GITHUB_OUTPUT
           elif [[ -n "${{ inputs.pattern }}" ]]; then
             sanitized_branch=$(echo "${{ inputs.pattern }}" | tr -d '@{}*' | tr '/' '-' | tr ',' '.')
             # Remove trailing hyphen if present
             sanitized_branch=${sanitized_branch%-*}
             echo "commit_message=feat: update Backstage plugins dependencies with pattern ${{ inputs.pattern }}" >> $GITHUB_OUTPUT
-            echo "branch=backstage/${sanitized_branch}" >> $GITHUB_OUTPUT
+            echo "branch=dependencies/${sanitized_branch}" >> $GITHUB_OUTPUT
           else
             echo "commit_message=feat: update Backstage to the latest version" >> $GITHUB_OUTPUT
-            echo "branch=backstage/latest" >> $GITHUB_OUTPUT
+            echo "branch=dependencies/backstage-latest" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Pull Request
