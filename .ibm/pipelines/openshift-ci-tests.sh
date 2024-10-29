@@ -294,6 +294,7 @@ initiate_deployments() {
   add_helm_repos
   install_helm
 
+  uninstall_pipelines_operator "${DIR}"
   configure_namespace "${NAME_SPACE}"
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
@@ -309,7 +310,7 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
-  
+
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
@@ -358,6 +359,35 @@ check_and_test() {
   fi
   save_all_pod_logs $namespace
 }
+
+uninstall_pipelines_operator() {
+  local dir=$1
+  DISPLAY_NAME="Red Hat OpenShift Pipelines"
+
+  # Remove a assinatura do operador
+  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
+    echo "Uninstalling Red Hat OpenShift Pipelines operator..."
+    oc delete -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
+  else
+    echo "Red Hat OpenShift Pipelines operator is not installed, nothing to remove."
+  fi
+
+  # Remove os recursos adicionais
+  if oc get -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml" &> /dev/null; then
+    echo "Deleting hello-world-pipeline..."
+    oc delete -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  else
+    echo "hello-world-pipeline not found, nothing to delete."
+  fi
+
+  if oc get -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml" &> /dev/null; then
+    echo "Deleting hello-world-pipeline-run..."
+    oc delete -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  else
+    echo "hello-world-pipeline-run not found, nothing to delete."
+  fi
+}
+
 
 main() {
   echo "Log file: ${LOGFILE}"
