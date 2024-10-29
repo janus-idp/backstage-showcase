@@ -1,6 +1,6 @@
 {
   "name": "backstage-community-plugin-nexus-repository-manager",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.29.2",
+    "supported-versions": "1.32.3",
     "pluginId": "nexus-repository-manager",
     "pluginPackages": [
       "backstage-community-plugin-nexus-repository-manager"
@@ -27,11 +27,11 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@backstage-community/plugin-nexus-repository-manager": "1.10.1"
+    "@backstage-community/plugin-nexus-repository-manager": "1.10.2"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.28.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",

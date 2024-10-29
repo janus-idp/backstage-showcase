@@ -1,1 +1,2 @@
-export * from '@backstage-community/plugin-jenkins';
+export { default } from '@backstage-community/plugin-jenkins';
+
