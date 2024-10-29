@@ -1,0 +1,89 @@
+# Copyright 2024 The Janus IDP Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Update Backstage
+
+# enforce only one release action per release branch at a time
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Backstage release version (e.g., 1.2.3)'
+        required: false
+      deps:
+        # Use backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas to update everything
+        description: 'Comma-separated list of dependencies to update (e.g., backstage,backstage-community)'
+        required: false
+      skip-export-dynamic:
+        description: 'Skip updating dynamic plugins'
+        required: false
+        type: boolean
+  schedule:
+    - cron: "15 3 * * WED" # Every Wednesday at 3:15 AM
+
+jobs:
+  create-pr:
+    name: Create PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@31c86eb3b33c9b601a1f60f98dcbfd1d70f379b4 # v1.10.3
+        with:
+          app-id: ${{ vars.JANUS_IDP_GITHUB_APP_ID }}
+          private-key: ${{ secrets.JANUS_IDP_GITHUB_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run script
+        run: |
+          yarn versions:bump \
+            ${{ inputs.release && format('--release {0}', inputs.release) }} \
+            ${{ inputs.deps && format('--deps {0}', inputs.deps) }} \
+            ${{ inputs.skip-export-dynamic && '--skip-export-dynamic' }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          commit-message: |
+            ${{ inputs.release && format('feat: Update Backstage to {0}', inputs.release) }}
+            ${{ inputs.deps && 'feat: Update Backstage plugins dependencies' }}
+            ${{ !inputs.release && !inputs.deps && 'feat: Update Backstage to the latest version' }}
+          title: |
+            ${{ inputs.release && format('feat: Update Backstage to {0}', inputs.release) }}
+            ${{ inputs.deps && 'feat: Update Backstage plugins dependencies' }}
+            ${{ !inputs.release && !inputs.deps && 'feat: Update Backstage to the latest version' }}
+          branch: |
+            ${{ inputs.release && format('backstage/', inputs.release) }}
+            ${{ inputs.deps && 'backstage/plugin-dependencies' }}
+            ${{ !inputs.release && !inputs.deps && 'backstage/latest' }}
+          base: main
