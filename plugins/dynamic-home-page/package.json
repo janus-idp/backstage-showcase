@@ -1,5 +1,5 @@
 {
-  "name": "@janus-idp/backstage-plugin-dynamic-home-page",
+  "name": "@internal/backstage-plugin-dynamic-home-page",
   "version": "1.0.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -14,7 +14,7 @@
     "role": "frontend-plugin",
     "pluginId": "dynamic-home-page",
     "pluginPackages": [
-      "@janus-idp/backstage-plugin-dynamic-home-page"
+      "@internal/backstage-plugin-dynamic-home-page"
     ]
   },
   "sideEffects": false,
