@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.3",
     "pluginId": "sonarqube",
     "pluginPackages": [
       "backstage-plugin-sonarqube",
@@ -29,19 +29,21 @@
     }
   },
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-sonarqube-backend --override-interop default --no-embed-as-dependencies"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-sonarqube-backend --override-interop default --no-embed-as-dependencies",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-sonarqube-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-sonarqube-backend": "0.2.20"
+    "@backstage-community/plugin-sonarqube-backend": "0.2.25"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.28.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",

@@ -1,28 +1,29 @@
 import {
-  providers,
-  defaultAuthProviderFactories,
-  ProviderFactories,
-} from '@backstage/plugin-auth-backend';
-import {
-  stringifyEntityRef,
-  DEFAULT_NAMESPACE,
-} from '@backstage/catalog-model';
-import {
-  AuthProviderFactory,
-  AuthResolverCatalogUserQuery,
-  AuthResolverContext,
-  authProvidersExtensionPoint,
-  createOAuthProviderFactory,
-} from '@backstage/plugin-auth-node';
-import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
 import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
+import { ConfigSources } from '@backstage/config-loader';
+import {
+  defaultAuthProviderFactories,
+  ProviderFactories,
+  providers,
+} from '@backstage/plugin-auth-backend';
+import {
   oidcAuthenticator,
   oidcSignInResolvers,
-} from '@internal/plugin-auth-backend-module-oidc-provider';
-import { ConfigSources } from '@backstage/config-loader';
+} from '@backstage/plugin-auth-backend-module-oidc-provider';
+import {
+  AuthProviderFactory,
+  authProvidersExtensionPoint,
+  AuthResolverCatalogUserQuery,
+  AuthResolverContext,
+  createOAuthProviderFactory,
+} from '@backstage/plugin-auth-node';
+
 /**
  * Function is responsible for signing in a user with the catalog user and
  * creating an entity reference based on the provided name parameter.

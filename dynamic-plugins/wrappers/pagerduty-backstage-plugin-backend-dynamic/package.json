@@ -1,42 +1,49 @@
 {
   "name": "pagerduty-backstage-plugin-backend",
-  "version": "0.6.1",
+  "version": "0.9.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.29.2",
+    "supported-versions": "1.32.3",
     "pluginId": "pagerduty",
     "pluginPackages": [
-      "@pagerduty/backstage-plugin",
-      "@pagerduty/backstage-plugin-backend"
+      "pagerduty-backstage-plugin",
+      "pagerduty-backstage-plugin-backend"
     ]
   },
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ]
+    }
+  },
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default --no-embed-as-dependencies"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default --no-embed-as-dependencies",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@pagerduty/backstage-plugin-backend": "0.6.1"
+    "@pagerduty/backstage-plugin-backend": "0.9.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.28.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",

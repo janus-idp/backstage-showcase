@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { InfoCard, MarkdownContent } from '@backstage/core-components';
 
 export interface MarkdownCardProps {

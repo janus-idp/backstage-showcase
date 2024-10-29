@@ -1,28 +1,28 @@
-import { Page, test } from '@playwright/test';
-import { UIhelper } from '../utils/UIhelper';
-import { Common, setupBrowser } from '../utils/Common';
-import { CatalogImport } from '../support/pages/CatalogImport';
-import { APIHelper } from '../utils/APIHelper';
-import { githubAPIEndpoints } from '../utils/APIEndpoints';
+import { Page, test } from "@playwright/test";
+import { UIhelper } from "../utils/UIhelper";
+import { Common, setupBrowser } from "../utils/Common";
+import { CatalogImport } from "../support/pages/CatalogImport";
+import { APIHelper } from "../utils/APIHelper";
+import { githubAPIEndpoints } from "../utils/APIEndpoints";
 
 let page: Page;
-test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
+test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   let uiHelper: UIhelper;
   let common: Common;
   let catalogImport: CatalogImport;
 
   const template =
-    'https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml';
+    "https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml";
 
   const reactAppDetails = {
-    owner: 'janus-qe/maintainers',
+    owner: "janus-qe/maintainers",
     componentName: `test-scaffoldedfromlink-${Date.now()}`,
-    description: 'react app using template',
+    description: "react app using template",
     repo: `test-scaffolded-${Date.now()}`,
     repoOwner: Buffer.from(
-      process.env.GITHUB_ORG || 'amFudXMtcWU=',
-      'base64',
-    ).toString('utf8'), // Default repoOwner janus-qe
+      process.env.GITHUB_ORG || "amFudXMtcWU=",
+      "base64",
+    ).toString("utf8"), // Default repoOwner janus-qe
   };
 
   test.beforeAll(async ({ browser }, testInfo) => {
@@ -34,54 +34,54 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
 
     await common.loginAsGithubUser();
   });
-  test('Register an Template', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.clickButton('Create');
-    await uiHelper.clickButton('Register Existing Component');
+  test("Register an Template", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.clickButton("Create");
+    await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(template, false);
   });
 
-  test('Create a React App using the newly registered Template', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.clickButton('Create');
-    await uiHelper.searchInputPlaceholder('Create React App Template');
-    await uiHelper.verifyText('Create React App Template');
-    await uiHelper.waitForTextDisappear('Add ArgoCD to an existing project');
-    await uiHelper.clickButton('Choose');
+  test("Create a React App using the newly registered Template", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.clickButton("Create");
+    await uiHelper.searchInputPlaceholder("Create React App Template");
+    await uiHelper.verifyText("Create React App Template");
+    await uiHelper.waitForTextDisappear("Add ArgoCD to an existing project");
+    await uiHelper.clickButton("Choose");
 
-    await uiHelper.fillTextInputByLabel('Name', reactAppDetails.componentName);
+    await uiHelper.fillTextInputByLabel("Name", reactAppDetails.componentName);
     await uiHelper.fillTextInputByLabel(
-      'Description',
+      "Description",
       reactAppDetails.description,
     );
-    await uiHelper.fillTextInputByLabel('Owner', reactAppDetails.owner);
-    await uiHelper.clickButton('Next');
+    await uiHelper.fillTextInputByLabel("Owner", reactAppDetails.owner);
+    await uiHelper.clickButton("Next");
 
-    await uiHelper.fillTextInputByLabel('Owner', reactAppDetails.repoOwner);
-    await uiHelper.fillTextInputByLabel('Repository', reactAppDetails.repo);
+    await uiHelper.fillTextInputByLabel("Owner", reactAppDetails.repoOwner);
+    await uiHelper.fillTextInputByLabel("Repository", reactAppDetails.repo);
     await uiHelper.pressTab();
-    await uiHelper.clickButton('Review');
+    await uiHelper.clickButton("Review");
 
-    await uiHelper.verifyRowInTableByUniqueText('Owner', [
+    await uiHelper.verifyRowInTableByUniqueText("Owner", [
       `group:${reactAppDetails.owner}`,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText('Component Id', [
+    await uiHelper.verifyRowInTableByUniqueText("Component Id", [
       reactAppDetails.componentName,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText('Description', [
+    await uiHelper.verifyRowInTableByUniqueText("Description", [
       reactAppDetails.description,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText('Repo Url', [
+    await uiHelper.verifyRowInTableByUniqueText("Repo Url", [
       `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
     ]);
 
-    await uiHelper.clickButton('Create');
-    await uiHelper.clickLink('Open in catalog');
+    await uiHelper.clickButton("Create");
+    await uiHelper.clickLink("Open in catalog");
   });
 
-  test('Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ', async () => {
+  test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
     await common.clickOnGHloginPopup();
-    await uiHelper.clickTab('Dependencies');
+    await uiHelper.clickTab("Dependencies");
     await uiHelper.verifyText(
       `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
     );
@@ -90,26 +90,26 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
     );
   });
 
-  test('Verify Registered Template and scaffolderOf relation in entity Raw Yaml', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.selectMuiBox('Kind', 'Template');
-    await uiHelper.searchInputPlaceholder('Create React App Template');
-    await uiHelper.verifyRowInTableByUniqueText('Create React App Template', [
-      'website',
+  test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.selectMuiBox("Kind", "Template");
+    await uiHelper.searchInputPlaceholder("Create React App Template");
+    await uiHelper.verifyRowInTableByUniqueText("Create React App Template", [
+      "website",
     ]);
-    await uiHelper.clickLink('Create React App Template');
+    await uiHelper.clickLink("Create React App Template");
 
     await catalogImport.inspectEntityAndVerifyYaml(
       `- type: scaffolderOf\n    targetRef: component:default/${reactAppDetails.componentName}\n    target:\n      kind: component\n      namespace: default\n      name: ${reactAppDetails.componentName}\n`,
     );
 
-    await uiHelper.clickLink('Launch Template');
-    await uiHelper.verifyText('Provide some simple information');
+    await uiHelper.clickLink("Launch Template");
+    await uiHelper.verifyText("Provide some simple information");
   });
 
   test.afterAll(async () => {
     await APIHelper.githubRequest(
-      'DELETE',
+      "DELETE",
       githubAPIEndpoints.deleteRepo(
         reactAppDetails.repoOwner,
         reactAppDetails.repo,

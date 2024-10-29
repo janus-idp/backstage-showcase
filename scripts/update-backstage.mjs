@@ -121,7 +121,7 @@ function updateBackstageVersionFile(version) {
 }
 
 console.log('Bumping version...');
-execSync('yarn run versions:bump', { stdio: 'inherit' });
+execSync('backstage-cli versions:bump --pattern @{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*', { stdio: 'inherit' });
 
 console.log('Pinning all dependencies...');
 pinDependencies();
@@ -132,8 +132,11 @@ updateDynamicPluginVersions();
 console.log('Updating lockfile...');
 execSync('yarn install', { stdio: 'inherit' });
 
+console.log('Deduping lockfile...');
+execSync('yarn dedupe', { stdio: 'inherit' });
+
 console.log('Updating dynamic-plugins folder...');
-execSync('yarn run export-dynamic --no-cache -- -- --clean', {
+execSync('yarn run export-dynamic:clean', {
   stdio: 'inherit',
 });
 

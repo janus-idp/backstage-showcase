@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic",
-  "version": "0.1.12",
+  "version": "0.2.1",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.3",
     "pluginId": "scaffolder",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
@@ -21,13 +21,11 @@
     },
     "./package.json": "./package.json"
   },
-  "scripts": {},
   "dependencies": {
     "fs-extra": "^11.2.0",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^2.7.0",
     "yaml": "^2.0.0"
   },
-  "devDependencies": {},
   "files": [
     "dist"
   ],
@@ -48,12 +46,12 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^0.7.0",
+    "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/integration": "^1.13.0",
-    "@backstage/plugin-bitbucket-cloud-common": "^0.2.21",
-    "@backstage/plugin-scaffolder-node": "^0.4.8"
+    "@backstage/integration": "^1.15.1",
+    "@backstage/plugin-bitbucket-cloud-common": "^0.2.24",
+    "@backstage/plugin-scaffolder-node": "^0.5.0"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

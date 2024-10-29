@@ -1,3 +1,6 @@
+import React, { useContext } from 'react';
+import * as useAsync from 'react-use/lib/useAsync';
+
 import * as appDefaults from '@backstage/app-defaults';
 import { Entity } from '@backstage/catalog-model';
 import { AppRouteBinder, defaultConfigLoader } from '@backstage/core-app-api';
@@ -10,10 +13,10 @@ import {
   useApp,
 } from '@backstage/core-plugin-api';
 import { renderWithEffects } from '@backstage/test-utils';
+
 import { removeScalprum } from '@scalprum/core';
 import { waitFor, within } from '@testing-library/dom';
-import React, { useContext } from 'react';
-import * as useAsync from 'react-use/lib/useAsync';
+
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
 import DynamicRootContext from './DynamicRootContext';
 

@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.3",
     "pluginId": "azure-devops",
     "pluginPackage": "backstage-plugin-azure-devops",
     "pluginPackages": [
@@ -21,18 +21,20 @@
   },
   "sideEffects": false,
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-azure-devops": "0.4.4"
+    "@backstage-community/plugin-azure-devops": "0.6.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.14.0"
+    "@backstage/cli": "0.28.1",
+    "@janus-idp/cli": "1.16.0"
   },
   "files": [
     "dist",
