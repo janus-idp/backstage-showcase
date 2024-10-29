@@ -1,1 +1,2 @@
-export * from '@backstage-community/plugin-github-actions';
+export { default } from '@backstage-community/plugin-github-actions';
+

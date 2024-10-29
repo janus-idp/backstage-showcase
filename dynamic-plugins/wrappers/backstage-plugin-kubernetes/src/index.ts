@@ -5,8 +5,8 @@ import {
   type OpenIdConnectApi,
   type ProfileInfoApi,
   type SessionApi,
-  createApiRef,
   createApiFactory,
+  createApiRef,
   gitlabAuthApiRef,
   googleAuthApiRef,
   microsoftAuthApiRef,
@@ -14,11 +14,11 @@ import {
   oneloginAuthApiRef,
 } from '@backstage/core-plugin-api';
 import {
-  kubernetesAuthProvidersApiRef,
   KubernetesAuthProviders,
+  kubernetesAuthProvidersApiRef,
 } from '@backstage/plugin-kubernetes';
 
-export * from '@backstage/plugin-kubernetes';
+export { default } from '@backstage/plugin-kubernetes';
 
 type CustomAuthApiRefType = OAuthApi &
   OpenIdConnectApi &

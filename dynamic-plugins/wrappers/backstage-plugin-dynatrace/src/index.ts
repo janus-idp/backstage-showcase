@@ -1,1 +1,2 @@
-export * from '@backstage-community/plugin-dynatrace';
+export { default } from '@backstage-community/plugin-dynatrace';
+
