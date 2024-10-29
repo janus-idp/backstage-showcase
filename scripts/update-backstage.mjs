@@ -206,16 +206,16 @@ async function main() {
     // Parse command line arguments
     const args = process.argv.slice(2);
     const releaseIndex = args.indexOf("--release");
-    const depsIndex = args.indexOf("--deps");
+    const patternIndex = args.indexOf("--pattern");
     const skipExportDynamicIndex = args.indexOf("--skip-export-dynamic");
     const hasReleaseFlag = releaseIndex !== -1;
-    const hasDepsFlag = depsIndex !== -1;
+    const hasPatternFlag = patternIndex !== -1;
     const hasSkipExportDynamicFlag = skipExportDynamicIndex !== -1;
 
-    // Ensure that --deps and --release are not used together
-    if (hasReleaseFlag && hasDepsFlag) {
+    // Ensure that --pattern and --release are not used together
+    if (hasReleaseFlag && hasPatternFlag) {
       console.error(
-        "Error: The --deps and --release flags cannot be used together.",
+        "Error: The --pattern and --release flags cannot be used together.",
       );
       process.exit(1);
     }
@@ -223,17 +223,26 @@ async function main() {
     // Construct the command for bumping versions
     let bumpCommand = "backstage-cli versions:bump --skip-install";
     let releaseVersion = "";
+    let pattern = "";
     if (hasReleaseFlag) {
       releaseVersion = args[releaseIndex + 1];
       if (!releaseVersion) {
-        console.error("Error: The --release flag requires a version argument.");
+        console.error(
+          `Error: The '--release' flag requires a version argument to bump to a specific Backstage release line or version (default: "main").`,
+        );
         process.exit(1);
       }
       bumpCommand += ` --release ${releaseVersion}`;
-    } else if (hasDepsFlag) {
-      const deps = args[depsIndex + 1]?.split(",");
-      if (deps.length > 0) {
-        bumpCommand += ` --pattern @{${deps.join(",")}}/*`;
+    } else if (hasPatternFlag) {
+      pattern = args[patternIndex + 1];
+      if (!pattern) {
+        console.error(
+          "Error: The '--pattern' flag requires a glob pattern to specify which packages to upgrade.",
+        );
+        process.exit(1);
+      }
+      if (pattern.length > 0) {
+        bumpCommand += ` --pattern ${pattern}`;
       }
     }
 
@@ -266,7 +275,16 @@ async function main() {
       );
     } else {
       console.log("Updating dynamic-plugins folder...");
-      execSync("yarn run export-dynamic:clean", { stdio: "inherit" });
+      execSync("yarn run export-dynamic:clean --affected", {
+        stdio: "inherit",
+      });
+    }
+
+    // Skip updating `backstage.json` if the Backstage version remains unchanged
+    // Exclude the `@backstage-community` namespace in the regex
+    // Ensure the regex comparison returns false to avoid unintended changes
+    if (hasPatternFlag && /backstage[^-]/.test(pattern) === false) {
+      return;
     }
 
     console.log(`Updating backstage.json to ${releaseVersion}...`);
