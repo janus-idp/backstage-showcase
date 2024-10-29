@@ -2,7 +2,7 @@
   "name": "backstage-plugin-notifications-backend-module-email-dynamic",
   "version": "0.3.1",
   "main": "./dist/index.cjs.js",
-  "types": "src/index.ts",
+  "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
@@ -16,16 +16,13 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.cjs.js"
     },
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.550.0",
-    "@aws-sdk/types": "^3.347.0",
-    "lodash": "^4.17.21",
-    "nodemailer": "^6.9.13",
-    "p-throttle": "^4.1.1"
+    "@backstage/plugin-notifications-backend-module-email": "0.3.1"
   },
   "files": [
     "dist"
@@ -46,6 +43,18 @@
     "lifecycle:active"
   ],
   "bundleDependencies": true,
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2",
+    "@backstage/plugin-notifications-backend-module-email": "file:./embedded/backstage-plugin-notifications-backend-module-email",
+    "@backstage/plugin-notifications-common": "file:./embedded/backstage-plugin-notifications-common",
+    "@backstage/plugin-notifications-node": "file:./embedded/backstage-plugin-notifications-node",
+    "@backstage/plugin-signals-node": "file:./embedded/backstage-plugin-signals-node"
+  },
   "peerDependencies": {
     "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "^1.0.1",
@@ -53,17 +62,9 @@
     "@backstage/catalog-model": "^1.7.0",
     "@backstage/config": "^1.2.0",
     "@backstage/integration-aws-node": "^0.1.12",
+    "@backstage/plugin-auth-node": "^0.5.3",
     "@backstage/plugin-catalog-node": "^1.13.1",
-    "@backstage/plugin-notifications-common": "^0.0.5",
-    "@backstage/plugin-notifications-node": "^0.2.7",
+    "@backstage/plugin-events-node": "^0.4.2",
     "@backstage/types": "^1.1.1"
-  },
-  "overrides": {
-    "@aws-sdk/util-utf8-browser": {
-      "@smithy/util-utf8": "^2.0.0"
-    }
-  },
-  "resolutions": {
-    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
   }
 }

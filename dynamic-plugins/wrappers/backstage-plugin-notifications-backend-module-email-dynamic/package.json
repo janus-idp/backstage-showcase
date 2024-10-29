@@ -31,8 +31,8 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-notifications-backend-module-email --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-notifications-backend-module-email --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --shared-package !/@backstage/plugin-notifications/ --shared-package !/@backstage/plugin-signals/ --embed-package @backstage/plugin-notifications-backend-module-email --embed-package @backstage/plugin-notifications-node --embed-package @backstage/plugin-signals-node",
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage/plugin-notifications-backend-module-email": "0.3.1"
