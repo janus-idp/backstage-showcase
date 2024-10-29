@@ -28,7 +28,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-tech-radar": "0.7.11",
+    "@backstage-community/plugin-tech-radar": "1.0.0",
     "@backstage/core-plugin-api": "1.10.0",
     "@mui/icons-material": "5.16.7"
   },
