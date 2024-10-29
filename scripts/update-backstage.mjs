@@ -255,7 +255,7 @@ async function main() {
     updateSupportedBackstageVersions(releaseVersion);
 
     console.log("Updating lockfile...");
-    execSync("yarn install", { stdio: "inherit" });
+    execSync("yarn install --no-immutable", { stdio: "inherit" });
 
     console.log("Deduping lockfile...");
     execSync("yarn dedupe", { stdio: "inherit" });
