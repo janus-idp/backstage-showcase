@@ -2,7 +2,7 @@
   "name": "backstage-plugin-signals-backend-dynamic",
   "version": "0.2.1",
   "main": "./dist/index.cjs.js",
-  "types": "src/index.ts",
+  "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
@@ -19,20 +19,13 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.cjs.js"
     },
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@types/express": "*",
-    "express": "^4.17.1",
-    "express-promise-router": "^4.1.0",
-    "http-proxy-middleware": "^2.0.0",
-    "node-fetch": "^2.7.0",
-    "uuid": "^9.0.0",
-    "winston": "^3.2.1",
-    "ws": "^8.18.0",
-    "yn": "^4.0.0"
+    "@backstage/plugin-signals-backend": "0.2.1"
   },
   "files": [
     "dist"
@@ -53,20 +46,22 @@
     "lifecycle:active"
   ],
   "bundleDependencies": true,
-  "peerDependencies": {
-    "@backstage/backend-common": "^0.25.0",
-    "@backstage/backend-plugin-api": "^1.0.1",
-    "@backstage/config": "^1.2.0",
-    "@backstage/plugin-auth-node": "^0.5.3",
-    "@backstage/plugin-events-node": "^0.4.1",
-    "@backstage/types": "^1.1.1"
-  },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
       "@smithy/util-utf8": "^2.0.0"
     }
   },
   "resolutions": {
-    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2",
+    "@backstage/plugin-signals-backend": "file:./embedded/backstage-plugin-signals-backend",
+    "@backstage/plugin-signals-node": "file:./embedded/backstage-plugin-signals-node"
+  },
+  "peerDependencies": {
+    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "^1.0.1",
+    "@backstage/config": "^1.2.0",
+    "@backstage/plugin-auth-node": "^0.5.3",
+    "@backstage/plugin-events-node": "^0.4.2",
+    "@backstage/types": "^1.1.1"
   }
 }
