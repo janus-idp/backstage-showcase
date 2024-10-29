@@ -84,7 +84,7 @@ jobs:
             sanitized_branch=$(echo "${{ inputs.pattern }}" | tr -d '@{}*' | tr '/' '-' | tr ',' '.')
             # Remove trailing hyphen if present
             sanitized_branch=${sanitized_branch%-*}
-            echo "commit_message=feat: update Backstage plugins dependencies" >> $GITHUB_OUTPUT
+            echo "commit_message=feat: update Backstage plugins dependencies with pattern ${{ inputs.pattern }}" >> $GITHUB_OUTPUT
             echo "branch=backstage/${sanitized_branch}" >> $GITHUB_OUTPUT
           else
             echo "commit_message=feat: update Backstage to the latest version" >> $GITHUB_OUTPUT
