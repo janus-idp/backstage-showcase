@@ -116,6 +116,14 @@ export default defineConfig({
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
     },
+    {
+      name: "showcase-runtime",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: [
+        "**/playwright/e2e/configuration-test/**/*.spec.ts"
+        ],
+    }
+
 
     // {
     //   name: 'firefox',
