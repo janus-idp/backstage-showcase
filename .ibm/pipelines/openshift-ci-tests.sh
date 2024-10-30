@@ -94,6 +94,7 @@ uninstall_helmchart() {
 
 configure_namespace() {
   local project=$1
+  oc get pods -n "${project}"
   delete_namespace $project
   oc create namespace "${project}"
   oc config set-context --current --namespace="${project}"
