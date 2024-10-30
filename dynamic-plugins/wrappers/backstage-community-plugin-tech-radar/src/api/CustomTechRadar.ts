@@ -1,16 +1,16 @@
+import { TechRadarApi } from "@backstage-community/plugin-tech-radar";
 import {
   RadarEntry,
-  TechRadarApi,
   type TechRadarLoaderResponse,
-} from '@backstage-community/plugin-tech-radar';
+} from "@backstage-community/plugin-tech-radar-common";
 import {
   ConfigApi,
   DiscoveryApi,
   IdentityApi,
-} from '@backstage/core-plugin-api';
-import defaultResponse from '../data/data-default.json';
+} from "@backstage/core-plugin-api";
+import defaultResponse from "../data/data-default.json";
 
-const DEFAULT_PROXY_PATH = '/developer-hub';
+const DEFAULT_PROXY_PATH = "/developer-hub";
 
 type Options = {
   discoveryApi: DiscoveryApi;
@@ -30,16 +30,16 @@ export class CustomTechRadar implements TechRadarApi {
 
   private async getBaseUrl() {
     const proxyPath =
-      this.configApi.getOptionalString('developerHub.proxyPath') ||
+      this.configApi.getOptionalString("developerHub.proxyPath") ||
       DEFAULT_PROXY_PATH;
-    return `${await this.discoveryApi.getBaseUrl('proxy')}${proxyPath}`;
+    return `${await this.discoveryApi.getBaseUrl("proxy")}${proxyPath}`;
   }
 
   private async fetcher(url: string) {
     const { token: idToken } = await this.identityApi.getCredentials();
     const response = await fetch(url, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...(idToken && { Authorization: `Bearer ${idToken}` }),
       },
     });
@@ -59,7 +59,7 @@ export class CustomTechRadar implements TechRadarApi {
       data = defaultResponse;
       // eslint-disable-next-line no-console
       console.log(
-        'Tech Radar: Custom data source not defined, using default example data',
+        "Tech Radar: Custom data source not defined, using default example data",
       );
     }
 
@@ -67,7 +67,7 @@ export class CustomTechRadar implements TechRadarApi {
       ...data,
       entries: data.entries.map((entry: RadarEntry) => ({
         ...entry,
-        timeline: entry.timeline.map(timeline => ({
+        timeline: entry.timeline.map((timeline) => ({
           ...timeline,
           date: new Date(timeline.date),
         })),
