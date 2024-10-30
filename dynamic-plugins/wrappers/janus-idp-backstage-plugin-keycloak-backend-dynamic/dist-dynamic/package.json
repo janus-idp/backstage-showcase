@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.3",
+    "supported-versions": "1.32.4",
     "pluginId": "janus-idp-keycloak-backend",
     "pluginPackage": "janus-idp-keycloak-backend"
   },

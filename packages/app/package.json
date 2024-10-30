@@ -57,7 +57,7 @@
     "tss-react": "4.9.12"
   },
   "devDependencies": {
-    "@backstage/cli": "0.28.1",
+    "@backstage/cli": "0.28.2",
     "@backstage/test-utils": "1.7.0",
     "@janus-idp/cli": "1.16.1",
     "@scalprum/react-test-utils": "0.2.2",
