@@ -1,11 +1,11 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
 export interface PlaceholderProps {
   showBorder?: boolean;
   debugContent?: string;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   centerDebugContent: {
     height: '100%',
     display: 'flex',
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 export const Placeholder = (props: PlaceholderProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const className = [
     props.debugContent ? classes.centerDebugContent : undefined,
     props.showBorder ? classes.showBorder : undefined,
