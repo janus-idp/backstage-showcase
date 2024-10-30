@@ -135,12 +135,16 @@ export class Common {
   }
 
   async clickOnGHloginPopup() {
-    await this.uiHelper.clickButton("Log in");
-    await this.checkAndReauthorizeGithubApp();
-    await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
-      state: "hidden",
-      timeout: 100000,
-    });
+    const loginButtonExists = await this.page.locator(this.uiHelper.getButtonSelector("Log in")).count() > 0;
+
+    if (loginButtonExists) {
+      await this.uiHelper.clickButton("Log in");
+      await this.checkAndReauthorizeGithubApp();
+      await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
+        state: "hidden",
+        timeout: 100000,
+      });
+    }
   }
 
   getGitHub2FAOTP(userid: string): string {
