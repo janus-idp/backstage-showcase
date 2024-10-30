@@ -20270,6 +20270,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-azure-devops-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-azure-devops-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic"
+  dependencies:
+    "@backstage-community/plugin-azure-devops-backend": 0.7.3
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-azure-devops@workspace:dynamic-plugins/wrappers/backstage-community-plugin-azure-devops":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-azure-devops@workspace:dynamic-plugins/wrappers/backstage-community-plugin-azure-devops"
+  dependencies:
+    "@backstage-community/plugin-azure-devops": 0.6.1
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-catalog-backend-module-pingidentity@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-catalog-backend-module-pingidentity@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic"
@@ -20287,6 +20307,67 @@ __metadata:
     "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor": 2.0.1
     "@backstage/cli": 0.28.1
     "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-dynatrace@workspace:dynamic-plugins/wrappers/backstage-community-plugin-dynatrace":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-dynatrace@workspace:dynamic-plugins/wrappers/backstage-community-plugin-dynatrace"
+  dependencies:
+    "@backstage-community/plugin-dynatrace": 10.0.8
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-github-actions@workspace:dynamic-plugins/wrappers/backstage-community-plugin-github-actions":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-github-actions@workspace:dynamic-plugins/wrappers/backstage-community-plugin-github-actions"
+  dependencies:
+    "@backstage-community/plugin-github-actions": 0.6.23
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-github-issues@workspace:dynamic-plugins/wrappers/backstage-community-plugin-github-issues":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-github-issues@workspace:dynamic-plugins/wrappers/backstage-community-plugin-github-issues"
+  dependencies:
+    "@backstage-community/plugin-github-issues": 0.4.7
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-jenkins-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-jenkins-backend-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-jenkins-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-jenkins-backend-dynamic"
+  dependencies:
+    "@backstage-community/plugin-jenkins-backend": 0.6.2
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-jenkins@workspace:dynamic-plugins/wrappers/backstage-community-plugin-jenkins":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-jenkins@workspace:dynamic-plugins/wrappers/backstage-community-plugin-jenkins"
+  dependencies:
+    "@backstage-community/plugin-jenkins": 0.11.1
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-lighthouse@workspace:dynamic-plugins/wrappers/backstage-community-plugin-lighthouse":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-lighthouse@workspace:dynamic-plugins/wrappers/backstage-community-plugin-lighthouse"
+  dependencies:
+    "@backstage-community/plugin-lighthouse": 0.4.24
+    "@backstage/cli": 0.28.1
+    "@janus-idp/cli": 1.16.1
+    "@mui/icons-material": 5.16.7
   languageName: unknown
   linkType: soft
 
@@ -20310,23 +20391,35 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"backstage-plugin-azure-devops-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-azure-devops-backend-dynamic":
+"backstage-community-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-azure-devops-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-azure-devops-backend-dynamic"
+  resolution: "backstage-community-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic"
   dependencies:
-    "@backstage-community/plugin-azure-devops-backend": 0.7.3
+    "@backstage-community/plugin-sonarqube-backend": 0.2.25
     "@backstage/cli": 0.28.1
     "@janus-idp/cli": 1.16.1
   languageName: unknown
   linkType: soft
 
-"backstage-plugin-azure-devops@workspace:dynamic-plugins/wrappers/backstage-plugin-azure-devops":
+"backstage-community-plugin-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-azure-devops@workspace:dynamic-plugins/wrappers/backstage-plugin-azure-devops"
+  resolution: "backstage-community-plugin-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube"
   dependencies:
-    "@backstage-community/plugin-azure-devops": 0.6.1
+    "@backstage-community/plugin-sonarqube": 0.8.5
     "@backstage/cli": 0.28.1
     "@janus-idp/cli": 1.16.1
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-tech-radar@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-tech-radar@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar"
+  dependencies:
+    "@backstage-community/plugin-tech-radar": 0.7.11
+    "@backstage/cli": 0.28.1
+    "@backstage/core-plugin-api": 1.10.0
+    "@janus-idp/cli": 1.16.1
+    "@mui/icons-material": 5.16.7
   languageName: unknown
   linkType: soft
 
@@ -20411,56 +20504,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"backstage-plugin-dynatrace@workspace:dynamic-plugins/wrappers/backstage-plugin-dynatrace":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-dynatrace@workspace:dynamic-plugins/wrappers/backstage-plugin-dynatrace"
-  dependencies:
-    "@backstage-community/plugin-dynatrace": 10.0.8
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-github-actions@workspace:dynamic-plugins/wrappers/backstage-plugin-github-actions":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-github-actions@workspace:dynamic-plugins/wrappers/backstage-plugin-github-actions"
-  dependencies:
-    "@backstage-community/plugin-github-actions": 0.6.23
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-github-issues@workspace:dynamic-plugins/wrappers/backstage-plugin-github-issues":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-github-issues@workspace:dynamic-plugins/wrappers/backstage-plugin-github-issues"
-  dependencies:
-    "@backstage-community/plugin-github-issues": 0.4.7
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-jenkins-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-jenkins-backend-dynamic":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-jenkins-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-jenkins-backend-dynamic"
-  dependencies:
-    "@backstage-community/plugin-jenkins-backend": 0.6.2
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-jenkins@workspace:dynamic-plugins/wrappers/backstage-plugin-jenkins":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-jenkins@workspace:dynamic-plugins/wrappers/backstage-plugin-jenkins"
-  dependencies:
-    "@backstage-community/plugin-jenkins": 0.11.1
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
 "backstage-plugin-kubernetes-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-plugin-kubernetes-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic"
@@ -20479,17 +20522,6 @@ __metadata:
     "@backstage/core-plugin-api": 1.10.0
     "@backstage/plugin-kubernetes": 0.11.16
     "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-lighthouse@workspace:dynamic-plugins/wrappers/backstage-plugin-lighthouse":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-lighthouse@workspace:dynamic-plugins/wrappers/backstage-plugin-lighthouse"
-  dependencies:
-    "@backstage-community/plugin-lighthouse": 0.4.24
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-    "@mui/icons-material": 5.16.7
   languageName: unknown
   linkType: soft
 
@@ -20550,38 +20582,6 @@ __metadata:
     "@backstage/cli": 0.28.1
     "@backstage/plugin-scaffolder-backend-module-gitlab": 0.6.0
     "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-sonarqube-backend-dynamic":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-sonarqube-backend-dynamic"
-  dependencies:
-    "@backstage-community/plugin-sonarqube-backend": 0.2.25
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-sonarqube@workspace:dynamic-plugins/wrappers/backstage-plugin-sonarqube":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-sonarqube@workspace:dynamic-plugins/wrappers/backstage-plugin-sonarqube"
-  dependencies:
-    "@backstage-community/plugin-sonarqube": 0.8.5
-    "@backstage/cli": 0.28.1
-    "@janus-idp/cli": 1.16.1
-  languageName: unknown
-  linkType: soft
-
-"backstage-plugin-tech-radar@workspace:dynamic-plugins/wrappers/backstage-plugin-tech-radar":
-  version: 0.0.0-use.local
-  resolution: "backstage-plugin-tech-radar@workspace:dynamic-plugins/wrappers/backstage-plugin-tech-radar"
-  dependencies:
-    "@backstage-community/plugin-tech-radar": 0.7.11
-    "@backstage/cli": 0.28.1
-    "@backstage/core-plugin-api": 1.10.0
-    "@janus-idp/cli": 1.16.1
-    "@mui/icons-material": 5.16.7
   languageName: unknown
   linkType: soft
 
