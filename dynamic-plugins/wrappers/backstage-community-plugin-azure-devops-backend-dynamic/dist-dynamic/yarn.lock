@@ -133,9 +133,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"backstage-plugin-azure-devops-backend-dynamic@workspace:.":
+"backstage-community-plugin-azure-devops-backend-dynamic@workspace:.":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-azure-devops-backend-dynamic@workspace:."
+  resolution: "backstage-community-plugin-azure-devops-backend-dynamic@workspace:."
   dependencies:
     "@types/express": ^4.17.6
     azure-devops-node-api: ^13.0.0

@@ -123,9 +123,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"backstage-plugin-sonarqube-backend-dynamic@workspace:.":
+"backstage-community-plugin-sonarqube-backend-dynamic@workspace:.":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-sonarqube-backend-dynamic@workspace:."
+  resolution: "backstage-community-plugin-sonarqube-backend-dynamic@workspace:."
   dependencies:
     "@types/express": "*"
     express: ^4.18.1

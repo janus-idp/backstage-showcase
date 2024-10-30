@@ -123,9 +123,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"backstage-plugin-jenkins-backend-dynamic@workspace:.":
+"backstage-community-plugin-jenkins-backend-dynamic@workspace:.":
   version: 0.0.0-use.local
-  resolution: "backstage-plugin-jenkins-backend-dynamic@workspace:."
+  resolution: "backstage-community-plugin-jenkins-backend-dynamic@workspace:."
   dependencies:
     "@types/express": ^4.17.6
     express: ^4.17.1
