@@ -1,6 +1,6 @@
 {
   "name": "janus-idp-backstage-plugin-bulk-import-backend-dynamic",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
