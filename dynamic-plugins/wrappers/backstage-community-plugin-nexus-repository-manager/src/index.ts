@@ -1,1 +1,1 @@
-export { default } from '@backstage-community/plugin-nexus-repository-manager';
+export * from '@backstage-community/plugin-nexus-repository-manager';
