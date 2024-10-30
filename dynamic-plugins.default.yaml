@@ -292,8 +292,6 @@ plugins:
                   if:
                     allOf:
                       - isArgocdAvailable
-  - package: ./dynamic-plugins/dist/backstage-plugin-bazaar-backend-dynamic
-    disabled: false
   - package: ./dynamic-plugins/dist/backstage-community-plugin-redhat-argocd
     disabled: true
     pluginConfig:
