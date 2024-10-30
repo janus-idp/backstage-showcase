@@ -188,8 +188,9 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
   sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  # Renable when namespace termination issue is solved
+  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
 
 run_tests() {
@@ -323,7 +324,8 @@ initiate_aks_deployment() {
   install_helm
   delete_namespace "${NAME_SPACE_RBAC_AKS}"
   configure_namespace "${NAME_SPACE_AKS}"
-  install_tekton_pipelines
+  # Renable when namespace termination issue is solved
+  # install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
@@ -337,7 +339,8 @@ initiate_rbac_aks_deployment() {
   install_helm
   delete_namespace "${NAME_SPACE_AKS}"
   configure_namespace "${NAME_SPACE_RBAC_AKS}"
-  install_tekton_pipelines
+  # Renable when namespace termination issue is solved
+  # install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
