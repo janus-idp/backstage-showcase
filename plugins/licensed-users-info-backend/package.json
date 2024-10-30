@@ -40,7 +40,7 @@
     "@backstage/plugin-auth-backend": "0.23.1",
     "@backstage/plugin-permission-common": "0.8.1",
     "@backstage/types": "1.1.1",
-    "@janus-idp/backstage-plugin-rbac-common": "1.11.0",
+    "@janus-idp/backstage-plugin-rbac-common": "1.12.0",
     "express": "4.21.0",
     "express-promise-router": "4.1.1",
     "json-2-csv": "5.5.5",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "1.0.2",
-    "@backstage/cli": "0.28.1",
+    "@backstage/cli": "0.28.2",
     "@backstage/plugin-auth-backend": "0.23.1",
     "@backstage/plugin-auth-backend-module-guest-provider": "0.2.1",
     "@types/express": "4.17.21",
