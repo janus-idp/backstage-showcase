@@ -1,2 +1,2 @@
-export { default } from '@janus-idp/backstage-plugin-rbac';
+export * from '@janus-idp/backstage-plugin-rbac';
 

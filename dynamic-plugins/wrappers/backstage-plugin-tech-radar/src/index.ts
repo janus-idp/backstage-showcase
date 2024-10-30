@@ -7,7 +7,7 @@ import {
 } from '@backstage/core-plugin-api';
 import { CustomTechRadar } from './api/CustomTechRadar';
 
-export { default } from '@backstage-community/plugin-tech-radar';
+export * from '@backstage-community/plugin-tech-radar';
 
 export const TechRadarApi = createApiFactory({
   api: techRadarApiRef,
