@@ -3130,9 +3130,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-redhat-argocd@npm:1.8.9":
-  version: 1.8.9
-  resolution: "@backstage-community/plugin-redhat-argocd@npm:1.8.9"
+"@backstage-community/plugin-redhat-argocd@npm:1.10.1":
+  version: 1.10.1
+  resolution: "@backstage-community/plugin-redhat-argocd@npm:1.10.1"
   dependencies:
     "@backstage-community/plugin-redhat-argocd-common": ^1.0.7
     "@backstage/catalog-model": ^1.7.0
@@ -3159,7 +3159,7 @@ __metadata:
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.3.0
-  checksum: 993a9b15b7c57243bf1434e7b5c12a1cbcb64cf7d8b67e2a2ac8afbfec8557f5b99a08dbf9d89822cec72fd19ca4cc79826720f1fdd19e494ddc6c2b33074b5b
+  checksum: b41ccde361ca858e56a4d45401467b02035cc3aa9ab34a60b32a25b4f22caae9911b97f76be175cce5c39da007732fe473202ce3d21ee8a748614cc7fd99d2d1
   languageName: node
   linkType: hard
 
@@ -20304,7 +20304,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-redhat-argocd@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd"
   dependencies:
-    "@backstage-community/plugin-redhat-argocd": 1.8.9
+    "@backstage-community/plugin-redhat-argocd": 1.10.1
     "@backstage/cli": 0.28.1
     "@janus-idp/cli": 1.16.1
   languageName: unknown
