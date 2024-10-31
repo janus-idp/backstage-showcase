@@ -102,8 +102,19 @@ configure_namespace() {
 delete_namespace() {
   local project=$1
   if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists! Deleting namespace."
-    oc delete namespace "${project}"
+    echo "Namespace ${project} exists. Attempting to delete..."
+
+    # Remove blockOwnerDeletion from resources before deleting
+    remove_block_owner_deletion "$project"
+
+    # Delete the namespace
+    oc delete namespace "${project}" --grace-period=0 --force || true
+
+    # Check if the namespace is still in 'Terminating' state and force removal if necessary
+    if oc get namespace "${project}" -o jsonpath='{.status.phase}' | grep -q 'Terminating'; then
+      echo "Namespace ${project} is stuck in Terminating. Forcing deletion..."
+      force_delete_terminating_namespace "$project"
+    fi
   fi
 }
 
@@ -287,7 +298,7 @@ install_tekton_pipelines() {
     echo "Tekton Pipelines are already installed."
   else
     echo "Tekton Pipelines is not installed. Installing..."
-    kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
   fi
 }
 
@@ -310,7 +321,7 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
-  
+
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
@@ -361,6 +372,29 @@ check_and_test() {
   fi
   save_all_pod_logs $namespace
 }
+
+# Function to remove 'blockOwnerDeletion' from resources in a namespace
+remove_block_owner_deletion() {
+  local project=$1
+  echo "Removing blockOwnerDeletion: true from resources in namespace ${project}"
+
+  # List and adjust all resources that have ownerReferences with blockOwnerDeletion
+  for resource in $(oc api-resources --verbs=list --namespaced -o name); do
+    for item in $(oc get "$resource" -n "$project" -o name); do
+      oc patch "$item" -n "$project" --type=json -p='[{"op": "remove", "path": "/metadata/ownerReferences/0/blockOwnerDeletion"}]' || true
+    done
+  done
+}
+
+# Function to force the deletion of namespaces stuck in 'Terminating'
+force_delete_terminating_namespace() {
+  local project=$1
+  echo "Forcing deletion of namespace ${project}"
+
+  # Attempt to delete remaining resources directly
+  oc get namespace "$project" -o json | jq '.spec = {"finalizers":[]}' | oc replace --raw "/api/v1/namespaces/$project/finalize" -f -
+}
+
 
 main() {
   echo "Log file: ${LOGFILE}"
