@@ -8,6 +8,8 @@ This plugin shouldn't be pushed into the [public npm registry](https://www.npmjs
 
 ## How to configure up a dynamic plugin project to publish to an npm registry?
 
+**WARNING:** Do not push derivated dynamic plugin packages to the public npm registry. Push it to a private or internal npm registry only. If possible use OCI images or tgz files to distribute the derived packages instead of npm registry. <!-- TODO: link to documentation about packaging plugins as OCI images or tgzs  -->
+
 1. Generate plugin derived package by running the following command:
 
   **NOTE:** If you are not using the latest RHDH version, see [versions](/dynamic-plugins/versions) document to see which version of the `@janus-idp/cli` you should use.
