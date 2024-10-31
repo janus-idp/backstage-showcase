@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.3",
+    "supported-versions": "1.32.4",
     "pluginId": "catalog",
     "pluginPackage": "@backstage/plugin-catalog-backend"
   },
@@ -40,7 +40,7 @@
     "@backstage/plugin-catalog-backend-module-github-org": "0.3.3"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.16.0"
+    "@janus-idp/cli": "1.17.0"
   },
   "files": [
     "dist",

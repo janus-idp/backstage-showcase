@@ -135,6 +135,9 @@ export const DynamicRoot = ({
     const allModules = allScopes.flatMap(scope => Object.values(scope));
     const allImports = allModules.flatMap(module => Object.values(module));
     const remoteBackstagePlugins = allImports.filter(imported => {
+      if (!imported) {
+        return false;
+      }
       const prototype = Object.getPrototypeOf(imported);
       return (
         prototype !== undefined &&

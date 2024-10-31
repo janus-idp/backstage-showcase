@@ -78,17 +78,17 @@ jobs:
         id: pr-details
         run: |
           if [[ -n "${{ inputs.release }}" ]]; then
-            echo "commit_message=feat: Update Backstage to ${{ inputs.release }}" >> $GITHUB_OUTPUT
-            echo "title=feat: Update Backstage to ${{ inputs.release }}" >> $GITHUB_OUTPUT
-            echo "branch=backstage/${{ inputs.release }}" >> $GITHUB_OUTPUT
+            echo "commit_message=feat: update Backstage to ${{ inputs.release }}" >> $GITHUB_OUTPUT
+            echo "branch=dependencies/backstage-${{ inputs.release }}" >> $GITHUB_OUTPUT
           elif [[ -n "${{ inputs.pattern }}" ]]; then
-            echo "commit_message=feat: Update Backstage plugins dependencies" >> $GITHUB_OUTPUT
-            echo "title=feat: Update Backstage plugins dependencies" >> $GITHUB_OUTPUT
-            echo "branch=backstage/plugin-dependencies" >> $GITHUB_OUTPUT
+            sanitized_branch=$(echo "${{ inputs.pattern }}" | tr -d '@{}*' | tr '/' '-' | tr ',' '.')
+            # Remove trailing hyphen if present
+            sanitized_branch=${sanitized_branch%-*}
+            echo "commit_message=feat: update Backstage plugins dependencies with pattern ${{ inputs.pattern }}" >> $GITHUB_OUTPUT
+            echo "branch=dependencies/${sanitized_branch}" >> $GITHUB_OUTPUT
           else
-            echo "commit_message=feat: Update Backstage to the latest version" >> $GITHUB_OUTPUT
-            echo "title=feat: Update Backstage to the latest version" >> $GITHUB_OUTPUT
-            echo "branch=backstage/latest" >> $GITHUB_OUTPUT
+            echo "commit_message=feat: update Backstage to the latest version" >> $GITHUB_OUTPUT
+            echo "branch=dependencies/backstage-latest" >> $GITHUB_OUTPUT
           fi
 
       - name: Create Pull Request
@@ -96,7 +96,7 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: ${{ steps.pr-details.outputs.commit_message }}
-          title: ${{ steps.pr-details.outputs.title }}
+          title: ${{ steps.pr-details.outputs.commit_message }}
           branch: ${{ steps.pr-details.outputs.branch }}
           base: main
           signoff: true
