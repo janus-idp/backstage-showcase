@@ -296,7 +296,8 @@ initiate_deployments() {
   install_helm
 
   configure_namespace "${NAME_SPACE}"
-  install_pipelines_operator "${DIR}"
+  # Renable when namespace termination issue is solved
+  # install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
   # Deploy redis cache db.
@@ -311,7 +312,8 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
   
-  install_pipelines_operator "${DIR}"
+  # Renable when namespace termination issue is solved
+  # install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
