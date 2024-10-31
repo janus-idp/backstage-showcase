@@ -228,7 +228,6 @@ apply_yaml_files() {
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
-  fi
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
@@ -429,7 +428,16 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
+<<<<<<< HEAD
 
+=======
+  
+<<<<<<< HEAD
+=======
+  # Renable when namespace termination issue is solved
+  # install_pipelines_operator "${DIR}"
+>>>>>>> cc79ac8e (add OCM cluster-role-binding to operator projects)
+>>>>>>> b4da0ab9 (add OCM cluster-role-binding to operator projects)
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
