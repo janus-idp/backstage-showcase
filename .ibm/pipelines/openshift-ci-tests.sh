@@ -101,19 +101,19 @@ configure_namespace() {
 
 delete_namespace() {
   local project=$1
-  if oc get namespace "${project}" >/dev/null 2>&1; then
+  if oc get namespace "$project" >/dev/null 2>&1; then
     echo "Namespace ${project} exists. Attempting to delete..."
 
-    # Remove blockOwnerDeletion from resources before deleting
-    remove_block_owner_deletion "$project"
+    # Remove blocking finalizers
+    remove_finalizers_from_resources "$project"
 
-    # Delete the namespace
-    oc delete namespace "${project}" --grace-period=0 --force || true
+    # Attempt to delete the namespace
+    oc delete namespace "$project" --grace-period=0 --force || true
 
-    # Check if the namespace is still in 'Terminating' state and force removal if necessary
-    if oc get namespace "${project}" -o jsonpath='{.status.phase}' | grep -q 'Terminating'; then
+    # Check if namespace is still stuck in 'Terminating' and force removal if necessary
+    if oc get namespace "$project" -o jsonpath='{.status.phase}' | grep -q 'Terminating'; then
       echo "Namespace ${project} is stuck in Terminating. Forcing deletion..."
-      force_delete_terminating_namespace "$project"
+      force_delete_namespace "$project"
     fi
   fi
 }
@@ -373,28 +373,32 @@ check_and_test() {
   save_all_pod_logs $namespace
 }
 
-# Function to remove 'blockOwnerDeletion' from resources in a namespace
-remove_block_owner_deletion() {
+# Function to remove finalizers from specific resources in a namespace that are blocking deletion.
+remove_finalizers_from_resources() {
   local project=$1
-  echo "Removing blockOwnerDeletion: true from resources in namespace ${project}"
+  echo "Removing finalizers from resources in namespace ${project} that are blocking deletion."
 
-  # List and adjust all resources that have ownerReferences with blockOwnerDeletion
-  for resource in $(oc api-resources --verbs=list --namespaced -o name); do
-    for item in $(oc get "$resource" -n "$project" -o name); do
-      oc patch "$item" -n "$project" --type=json -p='[{"op": "remove", "path": "/metadata/ownerReferences/0/blockOwnerDeletion"}]' || true
+  # Remove finalizers from stuck PipelineRuns and TaskRuns
+  for resource_type in "pipelineruns.tekton.dev" "taskruns.tekton.dev"; do
+    for resource in $(oc get "$resource_type" -n "$project" -o name); do
+      oc patch "$resource" -n "$project" --type='merge' -p '{"metadata":{"finalizers":[]}}' || true
+      echo "Removed finalizers from $resource in $project."
     done
+  done
+
+  # Check and remove specific finalizers stuck on 'chains.tekton.dev' resources
+  for chain_resource in $(oc get pipelineruns.tekton.dev,taskruns.tekton.dev -n "$project" -o name); do
+    oc patch "$chain_resource" -n "$project" --type='json' -p='[{"op": "remove", "path": "/metadata/finalizers"}]' || true
+    echo "Removed Tekton finalizers from $chain_resource in $project."
   done
 }
 
-# Function to force the deletion of namespaces stuck in 'Terminating'
-force_delete_terminating_namespace() {
+# Function to forcibly delete a namespace stuck in 'Terminating' status
+force_delete_namespace() {
   local project=$1
-  echo "Forcing deletion of namespace ${project}"
-
-  # Attempt to delete remaining resources directly
+  echo "Forcefully deleting namespace ${project}."
   oc get namespace "$project" -o json | jq '.spec = {"finalizers":[]}' | oc replace --raw "/api/v1/namespaces/$project/finalize" -f -
 }
-
 
 main() {
   echo "Log file: ${LOGFILE}"
