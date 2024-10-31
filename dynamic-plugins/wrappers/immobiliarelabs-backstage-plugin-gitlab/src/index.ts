@@ -1,2 +1,2 @@
-export { default } from '@immobiliarelabs/backstage-plugin-gitlab';
+export * from '@immobiliarelabs/backstage-plugin-gitlab';
 
