@@ -3222,6 +3222,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-tech-radar-backend@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@backstage-community/plugin-tech-radar-backend@npm:1.0.0"
+  dependencies:
+    "@backstage-community/plugin-tech-radar-common": ^1.0.0
+    "@backstage/backend-defaults": ^0.5.0
+    "@backstage/backend-plugin-api": ^1.0.0
+    "@backstage/config": ^1.2.0
+    express: ^4.17.1
+    express-promise-router: ^4.1.0
+    node-fetch: ^2.6.7
+    zod: ^3.20.0
+  checksum: 8c2ac9a1f87b7893e8d1a08cf0b068dd7e97f81d5cfd3dd430f4728703cd425f98bff423e0fbd25c6b02e8840517c28e6cf805798887bbf32a4086b54a879a96
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-tech-radar-common@npm:1.0.0, @backstage-community/plugin-tech-radar-common@npm:^1.0.0":
   version: 1.0.0
   resolution: "@backstage-community/plugin-tech-radar-common@npm:1.0.0"
@@ -3706,7 +3722,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/backend-defaults@npm:0.5.2, @backstage/backend-defaults@npm:^0.5.2":
+"@backstage/backend-defaults@npm:0.5.2, @backstage/backend-defaults@npm:^0.5.0, @backstage/backend-defaults@npm:^0.5.2":
   version: 0.5.2
   resolution: "@backstage/backend-defaults@npm:0.5.2"
   dependencies:
@@ -20298,6 +20314,16 @@ __metadata:
   resolution: "backstage-community-plugin-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube"
   dependencies:
     "@backstage-community/plugin-sonarqube": 0.8.5
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-tech-radar-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-tech-radar-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic"
+  dependencies:
+    "@backstage-community/plugin-tech-radar-backend": 1.0.0
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
   languageName: unknown

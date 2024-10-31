@@ -14,7 +14,8 @@
     "supported-versions": "1.32.4",
     "pluginId": "tech-radar",
     "pluginPackages": [
-      "backstage-community-plugin-tech-radar"
+      "backstage-community-plugin-tech-radar",
+      "backstage-community-plugin-tech-radar-backend"
     ]
   },
   "sideEffects": false,
