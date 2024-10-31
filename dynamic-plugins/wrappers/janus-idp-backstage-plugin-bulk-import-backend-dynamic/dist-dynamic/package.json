@@ -1,6 +1,6 @@
 {
   "name": "janus-idp-backstage-plugin-bulk-import-backend-dynamic",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.3",
+    "supported-versions": "1.32.4",
     "pluginId": "janus-idp-bulk-import-backend",
     "pluginPackages": [
       "janus-idp-bulk-import",
@@ -55,13 +55,13 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-defaults": "^0.5.0",
-    "@backstage/backend-plugin-api": "^1.0.0",
+    "@backstage/backend-defaults": "^0.5.2",
+    "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/errors": "^1.2.4",
-    "@backstage/integration": "^1.15.0",
-    "@backstage/plugin-catalog-node": "^1.13.0",
+    "@backstage/integration": "^1.15.1",
+    "@backstage/plugin-catalog-node": "^1.13.1",
     "@backstage/plugin-permission-common": "^0.8.1",
-    "@backstage/plugin-permission-node": "^0.8.3"
+    "@backstage/plugin-permission-node": "^0.8.4"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {

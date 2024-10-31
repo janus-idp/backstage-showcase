@@ -1,7 +1,7 @@
 ## Arbitrary app-config for backwards compatible UI configuration - now with dynamic plugins
 dynamicPlugins:
   frontend:
-    backstage.plugin-azure-devops:
+    backstage-community.plugin-azure-devops:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: EntityAzurePipelinesContent
@@ -19,7 +19,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isAzureDevOpsAvailable
-    backstage.plugin-dynatrace:
+    backstage-community.plugin-dynatrace:
       mountPoints:
         - mountPoint: entity.page.monitoring/cards
           importName: DynatraceTab
@@ -29,7 +29,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isDynatraceAvailable
-    backstage.plugin-github-actions:
+    backstage-community.plugin-github-actions:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: EntityGithubActionsContent
@@ -39,7 +39,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isGithubActionsAvailable
-    backstage.plugin-github-issues:
+    backstage-community.plugin-github-issues:
       mountPoints:
         - mountPoint: entity.page.issues/cards
           importName: GithubIssuesCard
@@ -49,7 +49,7 @@ dynamicPlugins:
             if:
               allOf:
                 - hasAnnotation: github.com/project-slug
-    backstage.plugin-jenkins:
+    backstage-community.plugin-jenkins:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: EntityJenkinsContent
@@ -70,7 +70,7 @@ dynamicPlugins:
               anyOf:
                 - hasAnnotation: backstage.io/kubernetes-id
                 - hasAnnotation: backstage.io/kubernetes-namespace
-    backstage.plugin-lighthouse:
+    backstage-community.plugin-lighthouse:
       appIcons:
         - name: lighthouse
           importName: LighthouseIcon
@@ -103,7 +103,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isPluginApplicableToEntity
-    backstage.plugin-sonarqube:
+    backstage-community.plugin-sonarqube:
       mountPoints:
         - mountPoint: entity.page.overview/cards
           importName: EntitySonarQubeCard
@@ -409,7 +409,7 @@ dynamicPlugins:
             props:
               name: Documentation
               icon: docs
-    backstage.plugin-tech-radar:
+    backstage-community.plugin-tech-radar:
       apiFactories:
         - importName: TechRadarApi
       appIcons:

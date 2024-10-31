@@ -143,8 +143,8 @@ __metadata:
   linkType: hard
 
 "@rjsf/core@npm:^5.14.3":
-  version: 5.22.2
-  resolution: "@rjsf/core@npm:5.22.2"
+  version: 5.22.3
+  resolution: "@rjsf/core@npm:5.22.3"
   dependencies:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
@@ -154,7 +154,7 @@ __metadata:
   peerDependencies:
     "@rjsf/utils": ^5.22.x
     react: ^16.14.0 || >=17
-  checksum: 349981c7cdd079d641459d24a59b89b64a711254b4993836bf97974735aa1001cec37b1fa857372667c2de61c26cdb666ece6fc88f82d0fe2a34aa048b689022
+  checksum: 79aba03d150bd5cd1ee7051aa7036e4bdbc80528974bd88e8360f912233cdb64e5fb64f377175eb76894ce3602e8121cbe082a7a0c82d3834f3f1ffe0041d7e4
   languageName: node
   linkType: hard
 
