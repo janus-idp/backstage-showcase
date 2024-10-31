@@ -49,10 +49,10 @@ __metadata:
     pg-format: ^1.0.4
     uuid: ^9.0.1
   peerDependencies:
-    "@backstage/backend-plugin-api": ^1.0.0
+    "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-model": ^1.7.0
     "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-node": ^1.13.0
+    "@backstage/plugin-catalog-node": ^1.13.1
   languageName: unknown
   linkType: soft
 

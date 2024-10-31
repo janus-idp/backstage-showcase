@@ -875,14 +875,14 @@ __metadata:
     express: ^4.18.2
     semver: ^7.5.4
   peerDependencies:
-    "@backstage/backend-defaults": ^0.5.0
-    "@backstage/backend-openapi-utils": ^0.1.18
-    "@backstage/backend-plugin-api": ^1.0.0
+    "@backstage/backend-defaults": ^0.5.2
+    "@backstage/backend-openapi-utils": ^0.2.0
+    "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-model": ^1.7.0
     "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-node": ^1.13.0
+    "@backstage/plugin-catalog-node": ^1.13.1
     "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.3
+    "@backstage/plugin-permission-node": ^0.8.4
   languageName: unknown
   linkType: soft
 

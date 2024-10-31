@@ -1,4 +1,4 @@
-export { default } from '@backstage/plugin-techdocs';
+export * from '@backstage/plugin-techdocs';
 export {
   EntityTechdocsContent, TechDocsReaderPage, TechdocsSearchFilter,
   techdocsSearchType
