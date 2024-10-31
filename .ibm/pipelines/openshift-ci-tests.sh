@@ -101,12 +101,24 @@ configure_namespace() {
 }
 
 delete_namespace() {
-  local project=$1
+  project=$1
+
   if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists! Deleting namespace."
+    echo "Namespace ${project} already exists! Removing finalizers from all pods."
+
+    # Find all pods with finalizers in the namespace
+    for pod in $(oc get pods -n "${project}" -o jsonpath='{.items[?(@.metadata.finalizers)].metadata.name}'); do
+      echo "Removing finalizers from pod ${pod} in namespace ${project}."
+      oc patch pod "${pod}" -n "${project}" -p '{"metadata":{"finalizers":[]}}' --type=merge
+    done
+
+    echo "Deleting namespace ${project}."
     oc delete namespace "${project}"
+  else
+    echo "Namespace ${project} does not exist."
   fi
 }
+
 
 configure_external_postgres_db() {
   local project=$1
