@@ -1,5 +1,5 @@
 {
-  "name": "janus-idp-backstage-plugin-jfrog-artifactory",
+  "name": "backstage-community-plugin-jfrog-artifactory",
   "version": "1.10.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -11,11 +11,11 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.32.5",
     "pluginId": "jfrog-artifactory",
-    "pluginPackage": "janus-idp-jfrog-artifactory",
+    "pluginPackage": "backstage-community-plugin-jfrog-artifactory",
     "pluginPackages": [
-      "janus-idp-backstage-plugin-jfrog-artifactory"
+      "backstage-community-plugin-jfrog-artifactory"
     ]
   },
   "sideEffects": false,
@@ -29,7 +29,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@janus-idp/backstage-plugin-jfrog-artifactory": "1.10.0"
+    "@backstage-community/plugin-jfrog-artifactory": "1.10.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
@@ -40,7 +40,7 @@
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "janus-idp.backstage-plugin-jfrog-artifactory",
+    "name": "backstage-community.plugin-jfrog-artifactory",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
@@ -48,7 +48,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-jfrog-artifactory"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-jfrog-artifactory"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
