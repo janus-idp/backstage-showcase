@@ -1,8 +1,6 @@
-import React from 'react';
-
-import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';
-import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
 import { apis } from './apis';
+import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
+import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';
 import { DefaultMainMenuItems } from './consts';
 
 // Statically integrated frontend plugins
@@ -10,7 +8,7 @@ const { dynamicPluginsInfoPlugin, ...dynamicPluginsInfoPluginModule } =
   await import('@internal/plugin-dynamic-plugins-info');
 
 const { dynamicHomePagePlugin, ...dynamicHomePagePluginModule } = await import(
-  '@janus-idp/backstage-plugin-dynamic-home-page'
+  '@internal/backstage-plugin-dynamic-home-page'
 );
 
 // The base UI configuration, these values can be overridden by values

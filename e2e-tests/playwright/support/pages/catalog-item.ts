@@ -1,5 +1,5 @@
-import { expect, Page } from '@playwright/test';
-import { GITHUB_URL } from '../../utils/constants';
+import { expect, Page } from "@playwright/test";
+import { GITHUB_URL } from "../../utils/constants";
 
 export class CatalogItem {
   private page: Page;

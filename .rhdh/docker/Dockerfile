@@ -40,17 +40,20 @@ ENV EXTERNAL_SOURCE_NESTED=$REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-1.22.19.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
+
+# Add execute permissions to yarn
 RUN chmod +x "$YARN"
 
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
+
+# TODO: transform --parent to individual copy statements
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/scalprum-backend/package.json
@@ -86,38 +89,40 @@ COPY $REMOTE_SOURCES/upstream1/cachito.env \
 # NOTE: this is overridden to "/remote-source/registry-ca.pem" below
 # hadolint ignore=SC1091,SC2046
 RUN \
-    # debug
-    # cat $CONTAINER_SOURCE/cachito.env; \
-    # load envs
-    source "$CONTAINER_SOURCE/cachito.env"; \
-    \
-    # load cert
-    cert_path="$CONTAINER_SOURCE/registry-ca.pem"; \
-    # debug
-    # ls -la "${cert_path}"; \
-    npm config set cafile "${cert_path}"; "$YARN" config set cafile "${cert_path}" -g; \
-    \
-    # set longer timeouts
-    # npm config set fetch-retry-maxtimeout 6000000; \
-    # npm config set fetch-retry-mintimeout 1000000; \
-    "$YARN" config set network-timeout 600000 -g; \
-    # set cachito as default registry
-    "$YARN" config set registry $(npm config get registry) -g; \
-    \
-    # debug
-    # ls -l /usr/; \
-    # set up node dir with common.gypi and unsafe-perms=true
-    ln -s /usr/include/node/common.gypi /usr/common.gypi; "$YARN" config set nodedir /usr; "$YARN" config set unsafe-perm true; \
-    \
-    # add yarn to path via symlink
-    ln -s "$CONTAINER_SOURCE"/"$YARN" /usr/local/bin/yarn
+  # debug
+  # cat $CONTAINER_SOURCE/cachito.env; \
+  # load envs
+  source "$CONTAINER_SOURCE/cachito.env"; \
+  \
+  # load cert
+  cert_path="$CONTAINER_SOURCE/registry-ca.pem"; \
+  # debug
+  # ls -la "${cert_path}"; \
+  npm config set cafile "${cert_path}"; "$YARN" config set cafile "${cert_path}" -g; \
+  \
+  # set longer timeouts
+  # npm config set fetch-retry-maxtimeout 6000000; \
+  # npm config set fetch-retry-mintimeout 1000000; \
+  # set cachito as default registry
+  "$YARN" config set registry $(npm config get registry) -g; \
+  \
+  # debug
+  # ls -l /usr/; \
+  # set up node dir with common.gypi and unsafe-perms=true
+  ln -s /usr/include/node/common.gypi /usr/common.gypi; "$YARN" config set nodedir /usr; "$YARN" config set unsafe-perm true; \
+  \
+  # add yarn to path via symlink
+  ln -s "$CONTAINER_SOURCE"/"$YARN" /usr/local/bin/yarn
 
 # Downstream only - debug
 # RUN echo $PATH; ls -la /usr/local/bin/yarn; whereis yarn;which yarn; yarn --version; \
-    # cat "$CONTAINER_SOURCE"/.npmrc || true; \
-    # "$YARN" config list --verbose; npm config list; npm config list -l
+# cat "$CONTAINER_SOURCE"/.npmrc || true; \
+# "$YARN" config list --verbose; npm config list; npm config list -l
 
-RUN "$YARN" install --frozen-lockfile --network-timeout 600000
+# Increate timeout for yarn install
+RUN "$YARN" config set httpTimeout 600000
+
+RUN "$YARN" install --immutable
 
 # Stage 3 - Build packages
 COPY $EXTERNAL_SOURCE_NESTED ./
@@ -133,30 +138,27 @@ COPY packages/app/src/build-metadata.json ./packages/app/src/
 RUN \
   # Downstream only - relabel upstream + append build time into packages/app/src/build-metadata.json
   now=$(date -u +%FT%TZ); sed -i packages/app/src/build-metadata.json -r \
-    -e "s/\"Last Commit: (.+)\"/\"Upstream: \1\", \"Build Time: $now\"/" && \
+  -e "s/\"Last Commit: (.+)\"/\"Upstream: \1\", \"Build Time: $now\"/" && \
   cat packages/app/src/build-metadata.json; echo && \
   "$YARN" build --filter=backend && \
-  # Build dynamic plugins: yarn.lock files need to be present in order to transform to point to cachito URLs
-  "$YARN" --cwd ./dynamic-plugins/imports export-dynamic --no-install && \
   # Downstream only - replace registry refs with cachito ones
   cachitoRegistry=$(npm config get registry); echo "cachito registry: $cachitoRegistry"; \
-    for d in $(find . -name yarn.lock); do echo; echo "===== $d ====="; \
-      sed -i "$d" -r -e "s#(https://registry.yarnpkg.com|https://registry.npmjs.org)#${cachitoRegistry}#g"; \
-      grep resolved "$d" | head -1; echo "Total $(grep resolved $d | wc -l) resolution lines in $d"; \
-    done; \
+  for d in $(find . -name yarn.lock); do echo; echo "===== $d ====="; \
+  sed -i "$d" -r -e "s#(https://registry.yarnpkg.com|https://registry.npmjs.org)#${cachitoRegistry}#g"; \
+  grep resolved "$d" | head -1; echo "Total $(grep resolved $d | wc -l) resolution lines in $d"; \
+  done; \
   # Already imported the packages above; need to `yarn install` on the `dist-dynamic` sub-folder for backend plugins
-  "$YARN" --cwd ./dynamic-plugins/imports install-dynamic && \
-  "$YARN" export-dynamic -- --filter=./dynamic-plugins/wrappers/* && \
+  "$YARN" export-dynamic --filter=./dynamic-plugins/wrappers/* && \
   "$YARN" copy-dynamic-plugins dist
 
 # Downstream only - debug
 # hadolint ignore=SC3010,DL4006
 RUN echo "=== Check for yarn.lock files that don't use cachito registry ===>"; \
-    for d in $(find . -name yarn.lock); do \
-      found=$(grep -E "yarnpkg.com|npmjs.org" "$d" | head -1); \
-      if [[ "$found" ]]; then echo;echo "$d : $found"; fi; \
-    done; \
-    echo "<=== Check for yarn.lock files that don't use cachito registry ==="
+  for d in $(find . -name yarn.lock); do \
+  found=$(grep -E "yarnpkg.com|npmjs.org" "$d" | head -1); \
+  if [[ "$found" ]]; then echo;echo "$d : $found"; fi; \
+  done; \
+  echo "<=== Check for yarn.lock files that don't use cachito registry ==="
 
 # Downstream only - clean up dynamic plugins sources:
 # Only keep the dist sub-folder in the dynamic-plugins folder
@@ -170,7 +172,6 @@ ENV TARBALL_PATH=./packages/backend/dist
 
 RUN tar xzf "$TARBALL_PATH"/skeleton.tar.gz; tar xzf "$TARBALL_PATH"/bundle.tar.gz; \
   rm -f "$TARBALL_PATH"/skeleton.tar.gz "$TARBALL_PATH"/bundle.tar.gz
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Copy app-config files needed in runtime
 # Upstream only
@@ -179,12 +180,12 @@ COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # Install production dependencies
 # hadolint ignore=DL3059
-RUN "$YARN" install --frozen-lockfile --production --network-timeout 600000 && \
-    # delete all the nested .npmrc files and set default values
-    find . -type f -name .npmrc -exec rm -Rf {} \; && \
-    # reset npm config to the default registry and absolute path to .pem file
-    npm config set registry=https://registry.npmjs.org/ && \
-    npm config set cafile /opt/app-root/src/registry-ca.pem
+RUN "$YARN" workspaces focus --all --production && \
+  # delete all the nested .npmrc files and set default values
+  find . -type f -name .npmrc -exec rm -Rf {} \; && \
+  # reset npm config to the default registry and absolute path to .pem file
+  npm config set registry=https://registry.npmjs.org/ && \
+  npm config set cafile /opt/app-root/src/registry-ca.pem
 
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
@@ -228,9 +229,6 @@ RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 COPY --from=build --chown=1001:1001 "$REMOTE_SOURCES_DIR"/ ./
 # Downstream only - copy embedded dynamic plugins from "$REMOTE_SOURCES_DIR"
 COPY --from=build "$REMOTE_SOURCES_DIR"/dynamic-plugins/dist/ ./dynamic-plugins/dist/
-
-# include patch files in final container just for reference
-COPY $EXTERNAL_SOURCE_NESTED/patches/ ./patches/
 
 # RHIDP-4220 - make Konflux preflight and EC checks happy - [check-container] Create a directory named /licenses and include all relevant licensing
 COPY $EXTERNAL_SOURCE/LICENSE /licenses/

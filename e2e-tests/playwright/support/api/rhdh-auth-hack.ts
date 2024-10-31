@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test';
-import { UIhelper } from '../../utils/UIhelper';
-import playwrightConfig from '../../../playwright.config';
+import { Page } from "@playwright/test";
+import { UIhelper } from "../../utils/UIhelper";
+import playwrightConfig from "../../../playwright.config";
 
 //https://redhatquickcourses.github.io/devhub-admin/devhub-admin/1/chapter2/rbac.html#_lab_rbac_rest_api
 export class RhdhAuthHack {
@@ -27,16 +27,16 @@ export class RhdhAuthHack {
   private async _getApiToken(page: Page) {
     const uiHelper = new UIhelper(page);
 
-    await uiHelper.openSidebar('Catalog');
+    await uiHelper.openSidebar("Catalog");
     const requestPromise = page.waitForRequest(
-      request =>
+      (request) =>
         request.url() ===
           `${playwrightConfig.use.baseURL}/api/search/query?term=` &&
-        request.method() === 'GET',
+        request.method() === "GET",
     );
-    await uiHelper.openSidebar('Home');
+    await uiHelper.openSidebar("Home");
     const getRequest = await requestPromise;
-    const authToken = await getRequest.headerValue('Authorization');
+    const authToken = await getRequest.headerValue("Authorization");
     return authToken;
   }
 }

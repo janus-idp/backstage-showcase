@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { renderWithEffects } from '@backstage/test-utils';
 
 import { act, fireEvent, screen } from '@testing-library/react';

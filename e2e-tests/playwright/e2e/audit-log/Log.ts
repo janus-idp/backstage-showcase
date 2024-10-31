@@ -42,22 +42,22 @@ export class Log {
    */
   constructor(overrides: Partial<Log> = {}) {
     // Default value for status
-    this.status = overrides.status || 'succeeded';
+    this.status = overrides.status || "succeeded";
     this.isAuditLog = overrides.isAuditLog || true;
 
     // Default value for actorId, with other actor properties being optional
     this.actor = {
-      actorId: overrides.actor?.actorId || 'user:development/guest', // Default actorId
-      hostname: overrides.actor?.hostname || '',
+      actorId: overrides.actor?.actorId || "user:development/guest", // Default actorId
+      hostname: overrides.actor?.hostname || "",
     };
 
     // Other properties without default values
-    this.eventName = overrides.eventName || '';
-    this.plugin = overrides.plugin || '';
-    this.message = overrides.message || '';
+    this.eventName = overrides.eventName || "";
+    this.plugin = overrides.plugin || "";
+    this.message = overrides.message || "";
     this.request = {
-      method: overrides.request?.method || '',
-      url: overrides.request?.url || '',
+      method: overrides.request?.method || "",
+      url: overrides.request?.url || "",
     };
     this.response = {
       status: overrides.response?.status || 0,

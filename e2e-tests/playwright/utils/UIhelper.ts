@@ -1,5 +1,5 @@
-import { expect, Locator, Page } from '@playwright/test';
-import { UIhelperPO } from '../support/pageObjects/global-obj';
+import { expect, Locator, Page } from "@playwright/test";
+import { UIhelperPO } from "../support/pageObjects/global-obj";
 
 export class UIhelper {
   private page: Page;
@@ -9,13 +9,13 @@ export class UIhelper {
   }
 
   async verifyComponentInCatalog(kind: string, expectedRows: string[]) {
-    await this.openSidebar('Catalog');
-    await this.selectMuiBox('Kind', kind);
+    await this.openSidebar("Catalog");
+    await this.selectMuiBox("Kind", kind);
     await this.verifyRowsInTable(expectedRows);
   }
 
   getSideBarMenuItem(menuItem: string): Locator {
-    return this.page.getByTestId('login-button').getByText(menuItem);
+    return this.page.getByTestId("login-button").getByText(menuItem);
   }
 
   async fillTextInputByLabel(label: string, text: string) {
@@ -27,7 +27,7 @@ export class UIhelper {
   }
 
   async pressTab() {
-    await this.page.keyboard.press('Tab');
+    await this.page.keyboard.press("Tab");
   }
 
   async waitForHeaderTitle() {
@@ -57,16 +57,16 @@ export class UIhelper {
 
   async clickBtnByTitleIfNotPressed(title: string) {
     const button = this.page.locator(`button[title="${title}"]`);
-    const isPressed = await button.getAttribute('aria-pressed');
+    const isPressed = await button.getAttribute("aria-pressed");
 
-    if (isPressed === 'false') {
+    if (isPressed === "false") {
       await button.click();
     }
   }
 
   async clickByDataTestId(dataTestId: string) {
     const element = this.page.getByTestId(dataTestId);
-    await element.waitFor({ state: 'visible' });
+    await element.waitFor({ state: "visible" });
     await element.click();
   }
 
@@ -91,7 +91,7 @@ export class UIhelper {
     },
   ) {
     const linkLocator = this.page
-      .locator('a')
+      .locator("a")
       .getByText(linkText, { exact: options.exact })
       .first();
 
@@ -109,7 +109,7 @@ export class UIhelper {
   ): Promise<boolean> {
     try {
       await this.page.waitForSelector(locator, {
-        state: 'visible',
+        state: "visible",
         timeout: timeout,
       });
       const button = this.page.locator(locator).first();
@@ -140,14 +140,14 @@ export class UIhelper {
   }
 
   async waitForSideBarVisible() {
-    await this.page.waitForSelector('nav a', { timeout: 120000 });
+    await this.page.waitForSelector("nav a", { timeout: 120000 });
   }
 
   async openSidebar(navBarText: string) {
     const navLink = this.page
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
-    await navLink.waitFor({ state: 'visible' });
+    await navLink.waitFor({ state: "visible" });
     await navLink.click();
   }
 
@@ -155,7 +155,7 @@ export class UIhelper {
     const navLink = this.page.locator(
       `nav button[aria-label="${navBarButtonLabel}"]`,
     );
-    await navLink.waitFor({ state: 'visible' });
+    await navLink.waitFor({ state: "visible" });
     await navLink.click();
   }
 
@@ -176,11 +176,11 @@ export class UIhelper {
   }
 
   async waitForTextDisappear(text: string) {
-    await this.page.waitForSelector(`text=${text}`, { state: 'detached' });
+    await this.page.waitForSelector(`text=${text}`, { state: "detached" });
   }
 
   async verifyText(text: string | RegExp, exact: boolean = true) {
-    await this.verifyTextInLocator('', text, exact);
+    await this.verifyTextInLocator("", text, exact);
   }
 
   private async verifyTextInLocator(
@@ -192,8 +192,8 @@ export class UIhelper {
       ? this.page.locator(locator).getByText(text, { exact }).first()
       : this.page.getByText(text, { exact }).first();
 
-    await elementLocator.waitFor({ state: 'visible', timeout: 10000 });
-    await elementLocator.waitFor({ state: 'attached', timeout: 10000 });
+    await elementLocator.waitFor({ state: "visible", timeout: 10000 });
+    await elementLocator.waitFor({ state: "attached", timeout: 10000 });
 
     try {
       await elementLocator.scrollIntoViewIfNeeded();
@@ -214,7 +214,7 @@ export class UIhelper {
         .locator(`tr>th`)
         .getByText(rowText, { exact: exact })
         .first();
-      await rowLocator.waitFor({ state: 'visible' });
+      await rowLocator.waitFor({ state: "visible" });
       await rowLocator.scrollIntoViewIfNeeded();
       await expect(rowLocator).toBeVisible();
     }
@@ -222,20 +222,20 @@ export class UIhelper {
 
   async verifyHeading(heading: string | RegExp) {
     const headingLocator = this.page
-      .locator('h1, h2, h3, h4, h5, h6')
+      .locator("h1, h2, h3, h4, h5, h6")
       .filter({ hasText: heading })
       .first();
 
-    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
+    await headingLocator.waitFor({ state: "visible", timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
 
   async verifyParagraph(paragraph: string) {
     const headingLocator = this.page
-      .locator('p')
+      .locator("p")
       .filter({ hasText: paragraph })
       .first();
-    await headingLocator.waitFor({ state: 'visible', timeout: 30000 });
+    await headingLocator.waitFor({ state: "visible", timeout: 30000 });
     await expect(headingLocator).toBeVisible();
   }
 
@@ -247,7 +247,7 @@ export class UIhelper {
 
   async clickTab(tabName: string) {
     const tabLocator = this.page.locator(`text="${tabName}"`);
-    await tabLocator.waitFor({ state: 'visible' });
+    await tabLocator.waitFor({ state: "visible" });
     await tabLocator.click();
   }
 
@@ -298,7 +298,7 @@ export class UIhelper {
     await row.waitFor();
     for (const cellText of cellTexts) {
       await expect(
-        row.locator('td').filter({ hasText: cellText }).first(),
+        row.locator("td").filter({ hasText: cellText }).first(),
       ).toBeVisible();
     }
   }
@@ -317,7 +317,7 @@ export class UIhelper {
     const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
     await row.waitFor();
     await row
-      .locator('a')
+      .locator("a")
       .getByText(linkText, { exact: exact })
       .first()
       .click();
@@ -345,7 +345,7 @@ export class UIhelper {
   async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
     const link = this.page
       .locator(UIhelperPO.MuiCard(cardHeading))
-      .locator('a')
+      .locator("a")
       .getByText(linkText, { exact: exact })
       .first();
     await link.scrollIntoViewIfNeeded();
@@ -382,7 +382,7 @@ export class UIhelper {
 
   // Function to convert hexadecimal to RGB or return RGB if it's already in RGB
   toRgb(color: string): string {
-    if (color.startsWith('rgb')) {
+    if (color.startsWith("rgb")) {
       return color;
     }
 
@@ -401,7 +401,7 @@ export class UIhelper {
     for (let i = 0; i < count; i++) {
       const color = await elements
         .nth(i)
-        .evaluate(el => window.getComputedStyle(el).color);
+        .evaluate((el) => window.getComputedStyle(el).color);
       expect(color).toBe(expectedRgbColor);
     }
   }
@@ -417,7 +417,7 @@ export class UIhelper {
   }
 
   async verifyAlertErrorMessage(message: string | RegExp) {
-    const alert = this.page.getByRole('alert');
+    const alert = this.page.getByRole("alert");
     await alert.waitFor();
     await expect(alert).toHaveText(message);
   }
@@ -432,29 +432,29 @@ export class UIhelper {
   }
 
   async verifyLocationRefreshButtonIsEnabled(locationName: string) {
-    await this.page.goto('/');
-    await this.openSidebar('Catalog');
-    await this.selectMuiBox('Kind', 'Location');
-    await this.verifyHeading('All locations');
+    await this.page.goto("/");
+    await this.openSidebar("Catalog");
+    await this.selectMuiBox("Kind", "Location");
+    await this.verifyHeading("All locations");
     await this.verifyCellsInTable([locationName]);
     await this.clickLink(locationName);
     await this.verifyHeading(locationName);
     await this.page.locator(`button[title="Schedule entity refresh"]`).click();
-    await this.verifyAlertErrorMessage('Refresh scheduled');
+    await this.verifyAlertErrorMessage("Refresh scheduled");
 
     const moreButton = await this.page
       .locator("button[aria-label='more']")
       .first();
-    await moreButton.waitFor({ state: 'visible' });
-    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.waitFor({ state: "visible" });
+    await moreButton.waitFor({ state: "attached" });
     await moreButton.click();
 
     const unregisterItem = await this.page
       .locator("li[role='menuitem']")
-      .filter({ hasText: 'Unregister entity' })
+      .filter({ hasText: "Unregister entity" })
       .first();
-    await unregisterItem.waitFor({ state: 'visible' });
-    await unregisterItem.waitFor({ state: 'attached' });
+    await unregisterItem.waitFor({ state: "visible" });
+    await unregisterItem.waitFor({ state: "attached" });
     expect(unregisterItem).not.toBeDisabled();
   }
 
@@ -462,22 +462,22 @@ export class UIhelper {
     const moreButton = await this.page
       .locator("button[aria-label='more']")
       .first();
-    await moreButton.waitFor({ state: 'visible' });
-    await moreButton.waitFor({ state: 'attached' });
+    await moreButton.waitFor({ state: "visible" });
+    await moreButton.waitFor({ state: "attached" });
     await moreButton.click();
 
     const unregisterItem = await this.page
       .locator("li[role='menuitem']")
-      .filter({ hasText: 'Unregister entity' })
+      .filter({ hasText: "Unregister entity" })
       .first();
-    await unregisterItem.waitFor({ state: 'visible' });
+    await unregisterItem.waitFor({ state: "visible" });
     await unregisterItem.click();
 
-    const deleteButton = await this.page.getByRole('button', {
-      name: 'Delete Entity',
+    const deleteButton = await this.page.getByRole("button", {
+      name: "Delete Entity",
     });
-    await deleteButton.waitFor({ state: 'visible' });
-    await deleteButton.waitFor({ state: 'attached' });
+    await deleteButton.waitFor({ state: "visible" });
+    await deleteButton.waitFor({ state: "attached" });
     await deleteButton.click();
   }
 }

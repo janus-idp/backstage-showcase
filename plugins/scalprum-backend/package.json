@@ -20,17 +20,20 @@
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
+    "lint:fix": "backstage-cli package lint --fix",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack"
+    "postpack": "backstage-cli package postpack",
+    "tsc": "tsc",
+    "prettier:check": "prettier --ignore-unknown --check .",
+    "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "dependencies": {
-    "@backstage/backend-common": "0.23.3",
-    "@backstage/backend-defaults": "0.4.1",
-    "@backstage/backend-dynamic-feature-service": "0.2.15",
-    "@backstage/backend-plugin-api": "0.7.0",
+    "@backstage/backend-defaults": "0.5.2",
+    "@backstage/backend-dynamic-feature-service": "0.4.3",
+    "@backstage/backend-plugin-api": "1.0.1",
     "@backstage/config": "1.2.0",
     "@types/express": "4.17.21",
     "express": "4.21.0",
@@ -38,12 +41,13 @@
     "winston": "3.14.2"
   },
   "devDependencies": {
-    "@backstage/backend-test-utils": "0.4.4",
-    "@backstage/cli": "0.26.11",
+    "@backstage/backend-test-utils": "1.0.2",
+    "@backstage/cli": "0.28.2",
     "@types/mock-fs": "4.13.4",
     "@types/supertest": "6.0.2",
     "mock-fs": "5.3.0",
     "msw": "2.4.9",
+    "prettier": "3.3.3",
     "supertest": "6.3.4"
   },
   "files": [

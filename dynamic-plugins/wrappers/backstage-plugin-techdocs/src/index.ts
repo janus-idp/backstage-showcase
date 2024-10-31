@@ -1,7 +1,6 @@
 export * from '@backstage/plugin-techdocs';
 export {
-  TechDocsReaderPage,
-  EntityTechdocsContent,
-  TechdocsSearchFilter,
-  techdocsSearchType,
+  EntityTechdocsContent, TechDocsReaderPage, TechdocsSearchFilter,
+  techdocsSearchType
 } from './wrapped';
+

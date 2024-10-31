@@ -1,8 +1,8 @@
 import { MenuItem } from './extractDynamicConfig';
 import {
-  getNameFromPath,
-  compareMenuItems,
   buildTree,
+  compareMenuItems,
+  getNameFromPath,
 } from './extractDynamicConfigFrontend';
 
 describe('getNameFromPath', () => {

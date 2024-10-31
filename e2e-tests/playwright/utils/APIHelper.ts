@@ -1,8 +1,8 @@
-import { request, APIResponse, expect } from '@playwright/test';
-import { githubAPIEndpoints } from './APIEndpoints';
+import { request, APIResponse, expect } from "@playwright/test";
+import { githubAPIEndpoints } from "./APIEndpoints";
 
 export class APIHelper {
-  private static githubAPIVersion = '2022-11-28';
+  private static githubAPIVersion = "2022-11-28";
 
   static async githubRequest(
     method: string,
@@ -13,14 +13,14 @@ export class APIHelper {
     const options: any = {
       method: method,
       headers: {
-        Accept: 'application/vnd.github+json',
+        Accept: "application/vnd.github+json",
         Authorization: `Bearer ${process.env.GH_RHDH_QE_USER_TOKEN}`,
-        'X-GitHub-Api-Version': this.githubAPIVersion,
+        "X-GitHub-Api-Version": this.githubAPIVersion,
       },
     };
 
     if (body) {
-      options['data'] = body;
+      options["data"] = body;
     }
 
     const response = await context.fetch(url, options);
@@ -33,7 +33,7 @@ export class APIHelper {
     response: any[] = [],
   ): Promise<any[]> {
     const fullUrl = `${url}&page=${pageNo}`;
-    const result = await this.githubRequest('GET', fullUrl);
+    const result = await this.githubRequest("GET", fullUrl);
     const body = await result.json();
 
     if (!Array.isArray(body)) {
@@ -52,7 +52,7 @@ export class APIHelper {
 
   static async createGitHubRepo(owner: string, repoName: string) {
     await APIHelper.githubRequest(
-      'POST',
+      "POST",
       githubAPIEndpoints.createRepo(owner),
       {
         name: repoName,
@@ -61,15 +61,15 @@ export class APIHelper {
     );
   }
 
-  static async initCommit(owner: string, repo: string, branch = 'main') {
+  static async initCommit(owner: string, repo: string, branch = "main") {
     const content = Buffer.from(
-      'This is the initial commit for the repository.',
-    ).toString('base64');
+      "This is the initial commit for the repository.",
+    ).toString("base64");
     await APIHelper.githubRequest(
-      'PUT',
+      "PUT",
       `${githubAPIEndpoints.contents(owner, repo)}/initial-commit.md`,
       {
-        message: 'Initial commit',
+        message: "Initial commit",
         content: content,
         branch: branch,
       },
@@ -78,7 +78,7 @@ export class APIHelper {
 
   static async deleteGitHubRepo(owner: string, repoName: string) {
     await APIHelper.githubRequest(
-      'DELETE',
+      "DELETE",
       githubAPIEndpoints.deleteRepo(owner, repoName),
     );
   }
@@ -89,7 +89,7 @@ export class APIHelper {
     pull_number: number,
   ) {
     await APIHelper.githubRequest(
-      'PUT',
+      "PUT",
       githubAPIEndpoints.mergePR(owner, repoName, pull_number),
     );
   }
@@ -97,14 +97,14 @@ export class APIHelper {
   static async getGitHubPRs(
     owner: string,
     repoName: string,
-    state: 'open' | 'closed' | 'all',
+    state: "open" | "closed" | "all",
     paginated = false,
   ) {
     const url = githubAPIEndpoints.pull(owner, repoName, state);
     if (paginated) {
       return await APIHelper.getGithubPaginatedRequest(url);
     }
-    const response = await APIHelper.githubRequest('GET', url);
+    const response = await APIHelper.githubRequest("GET", url);
     return response.json();
   }
 
@@ -115,21 +115,21 @@ export class APIHelper {
     filename: string,
   ): Promise<string> {
     const response = await APIHelper.githubRequest(
-      'GET',
+      "GET",
       githubAPIEndpoints.pull_files(owner, repoName, pr),
     );
     const file_raw_url = (await response.json()).find(
       (file: { filename: string }) => file.filename === filename,
     ).raw_url;
     const raw_file_content = await (
-      await APIHelper.githubRequest('GET', file_raw_url)
+      await APIHelper.githubRequest("GET", file_raw_url)
     ).text();
     return raw_file_content;
   }
 
   async getGuestToken(): Promise<string> {
     const context = await request.newContext();
-    const response = await context.post('/api/auth/guest/refresh');
+    const response = await context.post("/api/auth/guest/refresh");
     expect(response.status()).toBe(200);
     const data = await response.json();
     return data.backstageIdentity.token;
