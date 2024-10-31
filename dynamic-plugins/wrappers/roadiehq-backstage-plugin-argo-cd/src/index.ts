@@ -1,2 +1,2 @@
-export { default } from '@roadiehq/backstage-plugin-argo-cd';
+export * from '@roadiehq/backstage-plugin-argo-cd';
 

@@ -18,7 +18,7 @@ import {
   kubernetesAuthProvidersApiRef,
 } from '@backstage/plugin-kubernetes';
 
-export { default } from '@backstage/plugin-kubernetes';
+export * from '@backstage/plugin-kubernetes';
 
 type CustomAuthApiRefType = OAuthApi &
   OpenIdConnectApi &
