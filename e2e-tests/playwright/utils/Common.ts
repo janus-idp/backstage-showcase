@@ -135,15 +135,21 @@ export class Common {
   }
 
   async clickOnGHloginPopup() {
-    const loginButtonExists = await this.page.locator(this.uiHelper.getButtonSelector("Log in")).count() > 0;
+    const loginButtonExists =
+      (await this.page
+        .locator(this.uiHelper.getButtonSelector("Log in"))
+        .count()) > 0;
 
     if (loginButtonExists) {
       await this.uiHelper.clickButton("Log in");
       await this.checkAndReauthorizeGithubApp();
-      await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
-        state: "hidden",
-        timeout: 100000,
-      });
+      await this.page.waitForSelector(
+        this.uiHelper.getButtonSelector("Log in"),
+        {
+          state: "hidden",
+          timeout: 100000,
+        },
+      );
     }
   }
 
