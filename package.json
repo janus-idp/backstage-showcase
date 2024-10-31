@@ -7,14 +7,13 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "start": "turbo run build --filter=app && NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
-    "start-backend": "turbo run start --filter=backend",
+    "start": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend",
     "dev": "NODE_OPTIONS=--no-node-snapshot turbo run start --filter=backend --filter=app",
     "build": "turbo run build",
     "tsc": "turbo run tsc",
     "export-dynamic": "turbo run export-dynamic",
     "export-dynamic:clean": "turbo run export-dynamic:clean",
-    "copy-dynamic-plugins": "yarn --cwd dynamic-plugins/_utils run copy-dynamic-plugins",
+    "copy-dynamic-plugins": "yarn workspace dynamic-plugins-utils run copy-dynamic-plugins",
     "clean": "turbo run clean",
     "test": "turbo run test",
     "lint:check": "turbo run lint:check",
@@ -24,22 +23,21 @@
     "prettier:check": "turbo run prettier:check",
     "prettier:fix": "turbo run prettier:fix",
     "new": "backstage-cli new --scope internal",
-    "versions:bump": "backstage-cli versions:bump --pattern @{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*",
+    "repo:fix": "backstage-cli repo fix --publish",
     "versions:metadata": "node ./scripts/update-metadata.mjs",
-    "versions:all": "node ./scripts/update-backstage.mjs"
+    "versions:bump": "node ./scripts/update-backstage.mjs"
   },
   "workspaces": {
     "packages": [
       "packages/*",
       "plugins/*",
       "dynamic-plugins/_utils",
-      "dynamic-plugins/imports",
       "dynamic-plugins/wrappers/*",
       "e2e-tests"
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
+    "@backstage/cli": "0.28.2",
     "@ianvs/prettier-plugin-sort-imports": "4.2.1",
     "@spotify/prettier-config": "15.0.0",
     "husky": "8.0.3",
@@ -50,7 +48,21 @@
   },
   "resolutions": {
     "@types/react": "18.3.7",
-    "@types/react-dom": "18.3.0"
+    "@types/react-dom": "18.3.0",
+    "@backstage/plugin-catalog-backend@^1.26.1": "patch:@backstage/plugin-catalog-backend@npm%3A1.27.1#./.yarn/patches/@backstage-plugin-catalog-backend-npm-1.27.1-4a70d05379.patch",
+    "@backstage/plugin-catalog-backend@^1.27.1": "patch:@backstage/plugin-catalog-backend@npm%3A1.27.1#./.yarn/patches/@backstage-plugin-catalog-backend-npm-1.27.1-4a70d05379.patch",
+    "@backstage/plugin-catalog-backend@1.26.1": "patch:@backstage/plugin-catalog-backend@npm%3A1.27.1#./.yarn/patches/@backstage-plugin-catalog-backend-npm-1.27.1-4a70d05379.patch",
+    "@backstage/plugin-catalog-backend@^1.24.0": "patch:@backstage/plugin-catalog-backend@npm%3A1.27.1#./.yarn/patches/@backstage-plugin-catalog-backend-npm-1.27.1-4a70d05379.patch",
+    "@backstage/plugin-scaffolder-backend@^1.24.0": "patch:@backstage/plugin-scaffolder-backend@npm%3A1.26.2#./.yarn/patches/@backstage-plugin-scaffolder-backend-npm-1.26.2-309568ee11.patch",
+    "@backstage/plugin-scaffolder-backend@^1.22.6": "patch:@backstage/plugin-scaffolder-backend@npm%3A1.26.2#./.yarn/patches/@backstage-plugin-scaffolder-backend-npm-1.26.2-309568ee11.patch",
+    "@backstage/plugin-scaffolder-backend@1.25.0": "patch:@backstage/plugin-scaffolder-backend@npm%3A1.26.2#./.yarn/patches/@backstage-plugin-scaffolder-backend-npm-1.26.2-309568ee11.patch",
+    "@backstage/plugin-scaffolder-node@^0.4.11": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
+    "@backstage/plugin-scaffolder-node@^0.4.9": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
+    "@backstage/plugin-scaffolder-node@^0.2.9": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
+    "@backstage/plugin-scaffolder-node@^0.4.2": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
+    "@backstage/plugin-scaffolder-node@^0.4.8": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
+    "@backstage/plugin-scaffolder-node@^0.5.0": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
+    "@backstage/backend-dynamic-feature-service@0.4.3": "patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch"
   },
   "jest": {
     "testTimeout": 20000
