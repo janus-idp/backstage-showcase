@@ -2,7 +2,7 @@
 
 ## What is Dynamic plugin derived package?
 
-This is a special npm package that is derived from an original plugin package source code.
+This is a special JavaScript package that is derived from an original plugin package source code.
 It has `-dynamic` suffix in its name. Its purpose is to be dynamically loaded by the RHDH.
 This plugin shouldn't be pushed into the [public npm registry](https://www.npmjs.com), but it can be published to a private or internal npm registry.
 
