@@ -66,7 +66,7 @@ export class LogUtils {
 
   /**
    * Fetches the logs from pods that match the fixed pod selector and applies a grep filter.
-   * The pod selector is:
+   * The pod selector for showcase is:
    * - app.kubernetes.io/component=backstage
    * - app.kubernetes.io/instance=redhat-developer-hub
    * - app.kubernetes.io/name=developer-hub
@@ -75,8 +75,11 @@ export class LogUtils {
    * @returns A promise that resolves with the filtered logs
    */
   static async getPodLogsWithGrep(filter: string): Promise<string> {
-    const podSelector =
+    let podSelector =
       "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
+    if (process.env.NAME_SPACE == "showcase-operator-nightly") {
+      podSelector = "rhdh.redhat.com/app=backstage-rhdh";
+    }
     const tailNumber = 30;
     const namespace = process.env.NAME_SPACE || "default";
 
