@@ -8,7 +8,7 @@ https://github.com/janus-idp/backstage-showcase/blob/main/backstage.json
 
 Based on [Backstage 1.31.3](https://backstage.io/docs/releases/v1.31.0)
 
-To bootstrap Backstage app that is compatible with RHDH 1.3, you can should use:
+To bootstrap Backstage app that is compatible with RHDH 1.4, you can use:
 
 ```bash
 npx @backstage/create-app@0.5.17
@@ -50,7 +50,7 @@ https://github.com/janus-idp/backstage-showcase/blob/release-1.3/backstage.json
 
 Based on [Backstage 1.29.2](https://backstage.io/docs/releases/v1.29.0)
 
-To bootstrap Backstage app that is compatible with RHDH 1.4, you can should use:
+To bootstrap Backstage app that is compatible with RHDH 1.3, you can use:
 
 ```bash
 npx @backstage/create-app@0.5.17
@@ -96,7 +96,7 @@ https://github.com/janus-idp/backstage-showcase/blob/1.2.x/backstage.json
 
 Based on [Backstage 1.26.5](https://backstage.io/docs/releases/v1.26.0)
 
-To bootstrap Backstage app that is compatible with RHDH 1.2, you can should use:
+To bootstrap Backstage app that is compatible with RHDH 1.2, you can use:
 
 ```bash
 npx @backstage/create-app@0.5.14
