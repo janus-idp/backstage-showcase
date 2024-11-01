@@ -998,7 +998,7 @@ The required options mirror the [AppTheme](https://backstage.io/docs/reference/c
 
 ### Backend Dynamic Plugins Local Debug
 
-For local debugging of Dynamic Plugins you need to clone `backstage-showcase` and run it ready for debugging and attach your IDE debugger to the backend process. First it is required to build and copy the dynamic plugin :
+For local debugging of Dynamic Plugins you need to clone `backstage-showcase`, run it with debugging enabled and attach your IDE debugger to the backend process. First it is required to build and copy the dynamic plugin:
 
 * Build your plugin and export the dynamic package
 ```
@@ -1007,18 +1007,17 @@ yarn build && yarn run export-dynamic
 ```
 * Copy the resulting `dist-dynamic` directory to dynamic-plugins-root/${plugin-id}
 
-Once the plugin is built and deployed, it is time to prepare the showcase to run in debug mode:
+Once the plugin is built and deployed, it is time to prepare the showcase to run it debug mode:
 
-* Start backstage-showcase backend on a terminal:
-   * Go to packages/backend
-   * Run yarn run start –inspect
-   * In logs you should see something like the following:
+* Go to `backstage-showcase` root directory;
+* Run `yarn workspace backend start --inspect`
+* In logs you should see something like the following:
 
 ```
 Debugger listening on ws://127.0.0.1:9229/9299bb26-3c32-4781-9488-7759b8781db5
 ```
 
-* On a new terminal you may start the front end by running the following command from the root directory `yarn start --filter=app`
+* The application will be acessible from `http://localhost:7007`. You may start the front end by running the following command from the root directory: `yarn start --filter=app`. It will be available in `http://localhost:3000`
 * Attach your IDE debugger to the backend process. This step may depend on the IDE that you are using. For example, if you are using VSCode you may want to check [Node.js debugging in VS Code](https://code.visualstudio.com/docs/nodejs/nodejs-debugging)
 * Add Breakpoints to the files in folder `dynamic-plugins-root/${plugin-id}`. Optionally you can configure your IDE to add the source maps for the plugin so you can debug the TypeScript code directly and not the compiled Javascript files
 
