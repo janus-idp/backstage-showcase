@@ -54,7 +54,7 @@ jobs:
 
       - name: Get the last commit short SHA of the PR
         run: |
-          SHORT_SHA=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})
+          SHORT_SHA=$(git rev-parse --short=8 ${{ github.event.pull_request.head.sha }})
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
           if [[ -f packages/app/src/build-metadata.json ]]; then
             repoPR="${{ github.repository }}/pull/${{ github.event.number }}"
