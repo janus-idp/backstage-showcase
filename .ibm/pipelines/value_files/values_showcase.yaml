@@ -140,8 +140,6 @@ upstream:
   backstage:
     image:
       pullPolicy: Always
-      pullSecrets:
-        - rhdh-pull-secret
       # using test image from https://quay.io/repository/janus-idp/backstage-showcase
       registry: quay.io
       repository: janus-idp/backstage-showcase
