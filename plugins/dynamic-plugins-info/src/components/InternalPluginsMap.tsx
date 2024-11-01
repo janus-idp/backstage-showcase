@@ -8,10 +8,10 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic',
   'backstage-plugin-catalog-backend-module-github-org-dynamic':
     './dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic',
-  'backstage-plugin-github-actions':
-    './dynamic-plugins/dist/backstage-plugin-github-actions',
-  'backstage-plugin-github-issues':
-    './dynamic-plugins/dist/backstage-plugin-github-issues',
+  'backstage-community-plugin-github-actions':
+    './dynamic-plugins/dist/backstage-community-plugin-github-actions',
+  'backstage-community-plugin-github-issues':
+    './dynamic-plugins/dist/backstage-community-plugin-github-issues',
   'roadiehq-backstage-plugin-github-insights':
     './dynamic-plugins/dist/roadiehq-backstage-plugin-github-insights',
   'roadiehq-backstage-plugin-github-pull-requests':
@@ -32,17 +32,18 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd',
   'backstage-plugin-scaffolder-backend-module-azure-dynamic':
     './dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic',
-  'backstage-plugin-azure-devops-backend-dynamic':
-    './dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic',
-  'backstage-plugin-azure-devops':
-    './dynamic-plugins/dist/backstage-plugin-azure-devops',
-  'backstage-plugin-jenkins-backend-dynamic':
-    './dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic',
-  'backstage-plugin-jenkins': './dynamic-plugins/dist/backstage-plugin-jenkins',
-  'backstage-plugin-sonarqube-backend-dynamic':
-    './dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic',
-  'backstage-plugin-sonarqube':
-    './dynamic-plugins/dist/backstage-plugin-sonarqube',
+  'backstage-community-plugin-azure-devops-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-azure-devops-backend-dynamic',
+  'backstage-community-plugin-azure-devops':
+    './dynamic-plugins/dist/backstage-community-plugin-azure-devops',
+  'backstage-community-plugin-jenkins-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic',
+  'backstage-community-plugin-jenkins':
+    './dynamic-plugins/dist/backstage-community-plugin-jenkins',
+  'backstage-community-plugin-sonarqube-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic',
+  'backstage-community-plugin-sonarqube':
+    './dynamic-plugins/dist/backstage-community-plugin-sonarqube',
   '@janus-idp/backstage-plugin-ocm-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic',
   '@janus-idp/backstage-plugin-ocm':
@@ -107,8 +108,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/pagerduty-backstage-plugin',
   'backstage-plugin-lighthouse':
     './dynamic-plugins/dist/backstage-plugin-lighthouse',
-  'backstage-plugin-tech-radar':
-    './dynamic-plugins/dist/backstage-plugin-tech-radar',
+  'backstage-community-plugin-tech-radar':
+    './dynamic-plugins/dist/backstage-community-plugin-tech-radar',
   '@janus-idp/backstage-plugin-analytics-provider-segment':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment',
 };
