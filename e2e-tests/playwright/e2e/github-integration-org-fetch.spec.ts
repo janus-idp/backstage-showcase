@@ -1,46 +1,44 @@
-import { test } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
+import { testWithHelper } from "../utils/UIhelper";
 import { Common } from "../utils/Common";
 import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
 
-test.use({ storageState: GH_USER_IDAuthFile_rhdh });
-test.describe("GitHub integration with Org data fetching", () => {
-  test.beforeEach(async ({ page }) => {
+testWithHelper.use({ storageState: GH_USER_IDAuthFile_rhdh });
+testWithHelper.describe("GitHub integration with Org data fetching", () => {
+  testWithHelper.beforeEach(async ({ uiHelper, page }) => {
     await new Common(page).logintoGithub();
-    const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Catalog");
   });
 
-  test("Verify that fetching the groups of the first org works", async ({
-    page,
-  }) => {
-    const uiHelper = new UIhelper(page);
+  testWithHelper(
+    "Verify that fetching the groups of the first org works",
+    async ({ uiHelper }) => {
+      await uiHelper.selectMuiBox("Kind", "Group");
 
-    await uiHelper.selectMuiBox("Kind", "Group");
+      await uiHelper.searchInputPlaceholder("m");
+      await uiHelper.verifyRowsInTable(["maintainers"]);
 
-    await uiHelper.searchInputPlaceholder("m");
-    await uiHelper.verifyRowsInTable(["maintainers"]);
+      await uiHelper.searchInputPlaceholder("r");
+      await uiHelper.verifyRowsInTable(["rhdh-qes"]);
+    },
+  );
 
-    await uiHelper.searchInputPlaceholder("r");
-    await uiHelper.verifyRowsInTable(["rhdh-qes"]);
-  });
+  testWithHelper(
+    "Verify that fetching the groups of the second org works",
+    async ({ uiHelper }) => {
+      await uiHelper.searchInputPlaceholder("c");
+      await uiHelper.verifyRowsInTable(["catalog-group"]);
 
-  test("Verify that fetching the groups of the second org works", async ({
-    page,
-  }) => {
-    const uiHelper = new UIhelper(page);
+      await uiHelper.searchInputPlaceholder("j");
+      await uiHelper.verifyRowsInTable(["janus-test"]);
+    },
+  );
 
-    await uiHelper.searchInputPlaceholder("c");
-    await uiHelper.verifyRowsInTable(["catalog-group"]);
-
-    await uiHelper.searchInputPlaceholder("j");
-    await uiHelper.verifyRowsInTable(["janus-test"]);
-  });
-
-  test("Verify that fetching the users of the orgs works", async ({ page }) => {
-    const uiHelper = new UIhelper(page);
-    await uiHelper.selectMuiBox("Kind", "User");
-    await uiHelper.searchInputPlaceholder("r");
-    await uiHelper.verifyRowsInTable(["rhdh-qe"]);
-  });
+  testWithHelper(
+    "Verify that fetching the users of the orgs works",
+    async ({ uiHelper }) => {
+      await uiHelper.selectMuiBox("Kind", "User");
+      await uiHelper.searchInputPlaceholder("r");
+      await uiHelper.verifyRowsInTable(["rhdh-qe"]);
+    },
+  );
 });
