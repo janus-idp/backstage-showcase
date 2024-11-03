@@ -8,7 +8,7 @@ const { dynamicPluginsInfoPlugin, ...dynamicPluginsInfoPluginModule } =
   await import('@internal/plugin-dynamic-plugins-info');
 
 const { dynamicHomePagePlugin, ...dynamicHomePagePluginModule } = await import(
-  '@janus-idp/backstage-plugin-dynamic-home-page'
+  '@internal/backstage-plugin-dynamic-home-page'
 );
 
 // The base UI configuration, these values can be overridden by values

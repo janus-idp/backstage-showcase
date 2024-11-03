@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-kubernetes",
-  "version": "0.11.12",
+  "version": "0.11.16",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.4",
     "pluginId": "kubernetes",
     "pluginPackages": [
       "backstage-plugin-kubernetes",
@@ -29,12 +29,12 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage/core-plugin-api": "1.9.4",
-    "@backstage/plugin-kubernetes": "0.11.15"
+    "@backstage/core-plugin-api": "1.10.0",
+    "@backstage/plugin-kubernetes": "0.11.16"
   },
   "devDependencies": {
-    "@backstage/cli": "0.27.1",
-    "@janus-idp/cli": "1.16.0"
+    "@backstage/cli": "0.28.2",
+    "@janus-idp/cli": "1.17.0"
   },
   "files": [
     "dist",

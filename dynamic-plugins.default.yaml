@@ -780,12 +780,12 @@ plugins:
                     anyOf:
                     - isQuayAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-nexus-repository-manager
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-nexus-repository-manager:
+          backstage-community.plugin-nexus-repository-manager:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: NexusRepositoryManagerPage
