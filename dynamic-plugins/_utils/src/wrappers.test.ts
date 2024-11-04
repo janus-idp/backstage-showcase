@@ -109,7 +109,8 @@ describe('Dynamic Plugin Wrappers', () => {
 
   describe("Frontend Plugin", () => {
     it.each(frontendPackageJsonFiles)('$name should have a matching directory name', ({ name, repository }) => {
-      expect(wrapperPackageJsonPaths.some((value) => value.includes(name))).toBeTruthy()
+      const hasMatchingDirName = wrapperPackageJsonPaths.some((value) => value.includes(name))
+      expect(hasMatchingDirName).toBeTruthy()
       expect(repository.directory).toBe(`dynamic-plugins/wrappers/${name}`)
     })
 

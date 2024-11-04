@@ -11,11 +11,6 @@ const IGNORE_GLOB = ['**/node_modules/**', '**/dist-dynamic/**'];
 const ROOT_DIR = path.join(__dirname, '../../../..');
 const DYNAMIC_PLUGINS_DIR = path.join(ROOT_DIR, 'dynamic-plugins/wrappers');
 
-const wrapperPackageJsonPaths = glob.sync(PACKAGE_JSON_GLOB, {
-  cwd: DYNAMIC_PLUGINS_DIR, // Search only within DYNAMIC_PLUGINS_DIR
-  ignore: IGNORE_GLOB,
-});
-
 type WrapperFrontendPackageJson = {
   name: string;
   backstage: {
@@ -63,6 +58,13 @@ function getDifference<T>(arrA: T[], arrB: T[]): T[] {
 }
 
 describe('InternalPluginsMap', () => {
+  const wrapperPackageJsonPaths = glob.sync(PACKAGE_JSON_GLOB, {
+    cwd: DYNAMIC_PLUGINS_DIR, // Search only within DYNAMIC_PLUGINS_DIR
+    ignore: IGNORE_GLOB,
+  });
+
+  const wrapperDirNames = wrapperPackageJsonPaths.map(path.dirname);
+
   const wrapperPackageJsonFiles = wrapperPackageJsonPaths.map(
     packageJsonPath => {
       const packageJson = fs.readFileSync(
@@ -79,36 +81,37 @@ describe('InternalPluginsMap', () => {
   );
 
   it('should have a valid map', () => {
-    // remove `\\package.json` suffix
-    const wrapperDirNames = wrapperPackageJsonPaths.map(value =>
-      value.substring(0, value.length - 13),
-    );
-
     const difference = getDifference(
       Object.keys(InternalPluginsMap),
       wrapperDirNames,
     );
 
-    expect(difference).toStrictEqual([]);
+    try {
+      expect(difference).toStrictEqual([]);
+    } catch {
+      throw new Error(
+        `The following plugins are missing: ${difference.join(', ')}`,
+      );
+    }
   });
 
   it.each(backendPackageJsonFiles)(
     '$name should have a `-dynamic` suffix in the directory name',
     ({ name }) => {
-      expect(
-        Object.values(InternalPluginsMap).some(value =>
-          value.includes(`${name}-dynamic`),
-        ),
-      ).toBeTruthy();
+      const hasDynamicSuffix = Object.values(InternalPluginsMap).some(value =>
+        value.includes(`${name}-dynamic`),
+      );
+      expect(hasDynamicSuffix).toBeTruthy();
     },
   );
 
   it.each(frontendPackageJsonFiles)(
     '$name should have a matching directory name',
     ({ name }) => {
-      expect(
-        Object.values(InternalPluginsMap).some(value => value.includes(name)),
-      ).toBeTruthy();
+      const hasMatchingDirName = Object.values(InternalPluginsMap).some(value =>
+        value.includes(name),
+      );
+      expect(hasMatchingDirName).toBeTruthy();
     },
   );
 });
