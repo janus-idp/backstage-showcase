@@ -1,2 +1,2 @@
-export { default } from '@roadiehq/backstage-plugin-github-pull-requests';
+export * from '@roadiehq/backstage-plugin-github-pull-requests';
 

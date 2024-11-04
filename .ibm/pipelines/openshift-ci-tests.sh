@@ -114,9 +114,20 @@ configure_namespace() {
 # Function to delete a OpenShift namespace if it exists.
 delete_namespace() {
   local project=$1
-  if oc get namespace "${project}" >/dev/null 2>&1; then
-    echo "Namespace ${project} already exists! Deleting namespace."
-    oc delete namespace "${project}"
+  if oc get namespace "$project" >/dev/null 2>&1; then
+    echo "Namespace ${project} exists. Attempting to delete..."
+
+    # Remove blocking finalizers
+    remove_finalizers_from_resources "$project"
+
+    # Attempt to delete the namespace
+    oc delete namespace "$project" --grace-period=0 --force || true
+
+    # Check if namespace is still stuck in 'Terminating' and force removal if necessary
+    if oc get namespace "$project" -o jsonpath='{.status.phase}' | grep -q 'Terminating'; then
+      echo "Namespace ${project} is stuck in Terminating. Forcing deletion..."
+      force_delete_namespace "$project"
+    fi
   fi
 }
 
@@ -216,11 +227,10 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20
-
-  # Apply sample pipeline and pipeline run YAML files.
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
+  # Renable when namespace termination issue is solved
+  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
 
 run_tests() {
@@ -322,7 +332,7 @@ install_tekton_pipelines() {
     echo "Tekton Pipelines are already installed."
   else
     echo "Tekton Pipelines is not installed. Installing..."
-    kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
   fi
 }
 
@@ -347,7 +357,7 @@ initiate_deployments() {
   # Configure namespaces for PostgreSQL DB and RBAC.
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
-  configure_external_postgres_db "${NAME_SPACE_RBAC}"  # Set up the external PostgreSQL database.
+  configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
   install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
@@ -360,9 +370,10 @@ initiate_deployments() {
 initiate_aks_deployment() {
   add_helm_repos
   install_helm
-  delete_namespace "${NAME_SPACE_RBAC_AKS}"  # Delete the RBAC namespace if it exists.
-  configure_namespace "${NAME_SPACE_AKS}"  # Configure the main AKS namespace.
-  install_tekton_pipelines
+  delete_namespace "${NAME_SPACE_RBAC_AKS}"
+  configure_namespace "${NAME_SPACE_AKS}"
+  # Renable when namespace termination issue is solved
+  # install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
@@ -379,7 +390,8 @@ initiate_rbac_aks_deployment() {
   install_helm
   delete_namespace "${NAME_SPACE_AKS}"
   configure_namespace "${NAME_SPACE_RBAC_AKS}"
-  install_tekton_pipelines
+  # Renable when namespace termination issue is solved
+  # install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
@@ -403,7 +415,33 @@ check_and_test() {
   save_all_pod_logs $namespace  # Save logs from all pods.
 }
 
-# Main function to orchestrate the deployment and testing process.
+# Function to remove finalizers from specific resources in a namespace that are blocking deletion.
+remove_finalizers_from_resources() {
+  local project=$1
+  echo "Removing finalizers from resources in namespace ${project} that are blocking deletion."
+
+  # Remove finalizers from stuck PipelineRuns and TaskRuns
+  for resource_type in "pipelineruns.tekton.dev" "taskruns.tekton.dev"; do
+    for resource in $(oc get "$resource_type" -n "$project" -o name); do
+      oc patch "$resource" -n "$project" --type='merge' -p '{"metadata":{"finalizers":[]}}' || true
+      echo "Removed finalizers from $resource in $project."
+    done
+  done
+
+  # Check and remove specific finalizers stuck on 'chains.tekton.dev' resources
+  for chain_resource in $(oc get pipelineruns.tekton.dev,taskruns.tekton.dev -n "$project" -o name); do
+    oc patch "$chain_resource" -n "$project" --type='json' -p='[{"op": "remove", "path": "/metadata/finalizers"}]' || true
+    echo "Removed Tekton finalizers from $chain_resource in $project."
+  done
+}
+
+# Function to forcibly delete a namespace stuck in 'Terminating' status
+force_delete_namespace() {
+  local project=$1
+  echo "Forcefully deleting namespace ${project}."
+  oc get namespace "$project" -o json | jq '.spec = {"finalizers":[]}' | oc replace --raw "/api/v1/namespaces/$project/finalize" -f -
+}
+
 main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info  # Set cluster credentials.

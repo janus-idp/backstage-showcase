@@ -33,7 +33,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: janus-idp-dynamic-home-page-frontend
-  title: '@janus-idp/backstage-plugin-dynamic-home-page'
+  title: '@internal/backstage-plugin-dynamic-home-page'
   description: Home Page plugin based on the upstream home [page] plugin that can be extended via (dynamic) plugins.
   annotations:
     backstage.io/source-location: url:https://github.com/janus-idp/backstage-showcase/tree/main/plugins/dynamic-home-page
