@@ -42,7 +42,7 @@ jobs:
 
       - name: Get the last commit short SHA
         run: |
-          SHORT_SHA=$(git rev-parse --short HEAD)
+          SHORT_SHA=$(git rev-parse --short=8 HEAD)
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
           if [[ -f packages/app/src/build-metadata.json ]]; then
             repo="${{ github.repository }}"

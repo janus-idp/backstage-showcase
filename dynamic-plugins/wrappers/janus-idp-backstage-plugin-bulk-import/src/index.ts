@@ -1,2 +1,2 @@
-export { default } from '@janus-idp/backstage-plugin-bulk-import';
+export * from '@janus-idp/backstage-plugin-bulk-import';
 
