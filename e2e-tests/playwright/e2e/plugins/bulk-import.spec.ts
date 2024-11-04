@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { testWithHelper, UIhelper } from "../../utils/UIhelper";
 import { Common, setupBrowser } from "../../utils/Common";
 import { APIHelper } from "../../utils/APIHelper";
@@ -119,7 +119,7 @@ testWithHelper.describe("Bulk Import plugin", () => {
 
   testWithHelper(
     "Verify the Content of catalog-info.yaml in the PR is Correct",
-    async ({ uiHelper }) => {
+    async ({}) => {
       const prCatalogInfoYaml = await APIHelper.getfileContentFromPR(
         newRepoDetails.owner,
         newRepoDetails.repoName,

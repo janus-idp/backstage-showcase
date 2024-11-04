@@ -1,4 +1,4 @@
-import { test as base, Page } from "@playwright/test";
+import { test as base } from "@playwright/test";
 import { Catalog } from "../support/pages/Catalog";
 import GithubApi from "../support/api/github";
 import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";

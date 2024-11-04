@@ -1,5 +1,4 @@
-import { test } from "@playwright/test";
-import { testWithHelper, UIhelper } from "../utils/UIhelper";
+import { testWithHelper } from "../utils/UIhelper";
 import { HomePage } from "../support/pages/HomePage";
 import { Common } from "../utils/Common";
 

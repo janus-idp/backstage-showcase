@@ -21,7 +21,7 @@ testWithHelper.describe("Link Scaffolded Templates to Catalog Items", () => {
     ).toString("utf8"), // Default repoOwner janus-qe
   };
 
-  testWithHelper.beforeEach(({ uiHelper, page }) => {
+  testWithHelper.beforeEach(({ uiHelper }) => {
     uiHelper.openSidebar("Catalog");
   });
 

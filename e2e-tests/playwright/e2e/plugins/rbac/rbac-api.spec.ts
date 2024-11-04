@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { Response } from "../../../support/pages/rbac";
 import { testWithHelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
@@ -8,7 +8,7 @@ import { Common } from "../../../utils/Common";
 testWithHelper.use({ actionTimeout: 0, navigationTimeout: 0 });
 testWithHelper.describe("Test RBAC plugin REST API", () => {
   let responseHelper: Response;
-  testWithHelper.beforeEach(async ({ page, context }) => {
+  testWithHelper.beforeEach(async ({ page }) => {
     await new Common(page).logintoGithub();
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
