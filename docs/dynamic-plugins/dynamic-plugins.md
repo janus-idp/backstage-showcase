@@ -36,6 +36,10 @@
 - [**Provide Additional Utility APIs**](#provide-additional-utility-apis)
 - [**Provide Custom Scaffolder Field Extensions**](#provide-custom-scaffolder-field-extensions)
 - [**Add a Custom Backstage Theme or Replace the Provided Theme** ](#add-a-custom-backstage-theme-or-replace-the-provided-theme)
+- **[Debugging Dynamic Plugins](#debugging-dynamic-plugins)**
+  - **[Backend Dynamic Plugins Local Debug](#backend-dynamic-plugins-local-debug)**
+  - **[Backend Dynamic Plugins Container Debug](#backend-dynamic-plugins-container-debug)**
+  - **[Frontend Dynamic Plugins Debug](#frontend-dynamic-plugins-debug)**
 
 ## Overview
 
@@ -988,3 +992,62 @@ The required options mirror the [AppTheme](https://backstage.io/docs/reference/c
 - `variant` Whether the theme is `light` or `dark`, can only be one of these values.
 - `icon` a string reference to a system or [app icon](#extend-internal-library-of-available-icons)
 - `importName` name of the exported theme provider function, the function signature should match `({ children }: { children: ReactNode }): React.JSX.Element`
+  
+
+## Debugging Dynamic Plugins
+
+### Backend Dynamic Plugins Local Debug
+
+For local debugging of Dynamic Plugins you need to clone `backstage-showcase`, run it with debugging enabled and attach your IDE debugger to the backend process. First it is required to build and copy the dynamic plugin:
+
+* Build your plugin and export the dynamic package
+```
+cd ${pluginRootDir}
+yarn build && yarn run export-dynamic
+```
+* Copy the resulting `dist-dynamic` directory to dynamic-plugins-root/${plugin-id}
+
+Once the plugin is built and deployed, it is time to prepare the showcase to run it debug mode:
+
+* Go to `backstage-showcase` root directory;
+* Run `yarn workspace backend start --inspect`
+* In logs you should see something like the following:
+
+```
+Debugger listening on ws://127.0.0.1:9229/9299bb26-3c32-4781-9488-7759b8781db5
+```
+
+* The application will be acessible from `http://localhost:7007`. You may start the front end by running the following command from the root directory: `yarn start --filter=app`. It will be available in `http://localhost:3000`
+* Attach your IDE debugger to the backend process. This step may depend on the IDE that you are using. For example, if you are using VSCode you may want to check [Node.js debugging in VS Code](https://code.visualstudio.com/docs/nodejs/nodejs-debugging)
+* Add Breakpoints to the files in folder `dynamic-plugins-root/${plugin-id}`. Optionally you can configure your IDE to add the source maps for the plugin so you can debug the TypeScript code directly and not the compiled Javascript files
+
+
+### Backend Dynamic Plugins Container Debug
+
+It is possible to run RHDH on a container and debug plugins that are running on it. In this case you don't need to clone the `backstage-showcase` code locally, instead you must make sure that the running container has the [Node JS debug](https://nodejs.org/en/learn/getting-started/debugging) port open and exposed to the host machine. These are the steps to debug backend dynamic plugins on a container:
+
+* Create directory `dynamic-plugins-root`
+* Build your plugin and copy the folder `dist-dynamic` to `dynamic-plugins-root`
+```
+$ yarn build && yarn export-dynamic
+$ cp ${yourPluginRootDir}/dist-dynamic ./dynamic-plugins-root/${pluginID}
+```
+* Start the container and make sure to share the plugins directory with it, allow inspect and open the debug port. Here's a sample command tested on RHDH container image version 1.3:
+
+```
+podman run \
+	-v ./dynamic-plugins-root:/opt/app-root/src/dynamic-plugins-root:Z \
+	-v ./app-config.local.yaml:/opt/app-root/src/app-config.local.yaml:Z \
+	-p 7007:7007 \
+	-p 9229:9229 \
+	-e NODE_OPTIONS=--no-node-snapshot \
+	--entrypoint='["node", "--inspect=0.0.0.0:9229", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.local.yaml"]' \
+	quay.io/rhdh/rhdh-hub-rhel9:1.3 
+```
+
+You should be able to debug from your IDE by attaching it to the process running on port `9229` or selecting it from a list of processes detected by the IDE.
+
+
+### Frontend Dynamic Plugins Debug
+
+Front end plugins can be debugged directly on your browser, just make sure to export the sources map. When running the plugin on the browser open the Developer Tools and you should be able to visualize the source code and place breakpoints.
