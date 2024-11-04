@@ -120,7 +120,7 @@ describe('Dynamic Plugin Wrappers', () => {
   })
 
   describe('(dynamic-plugins.default.yaml) should have a valid config', () => {
-    const dynamicPluginsConfig = yaml.parse(fs.readFileSync(DYNAMIC_PLUGINS_CONFIG_FILE).toString()) as DynamicPluginsConfig
+    const dynamicPluginsConfig = parseYamlFile<DynamicPluginsConfig>(DYNAMIC_PLUGINS_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
       validateDynamicPluginsConfig(dynamicPluginsConfig, wrapperDirNames)
@@ -132,7 +132,7 @@ describe('Dynamic Plugin Wrappers', () => {
   })
 
   describe('(app-config.dynamic-plugins.yaml) should have a valid config', () => {
-    const dynamicPluginsConfig = yaml.parse(fs.readFileSync(APP_CONFIG_DYNAMIC_PLUGINS_CONFIG_FILE).toString()) as DynamicPluginAppConfig
+    const dynamicPluginsConfig = parseYamlFile<DynamicPluginAppConfig>(APP_CONFIG_DYNAMIC_PLUGINS_CONFIG_FILE)
 
     it.each(frontendPackageJsonFiles)('$scalprum.name should exist in the config', ({ scalprum }) => {
       expect(Object.keys(dynamicPluginsConfig?.dynamicPlugins?.frontend ?? {}).includes(scalprum.name)).toBeTruthy()
@@ -140,7 +140,7 @@ describe('Dynamic Plugin Wrappers', () => {
   })
 
   describe('(ibm: values_showcase.yaml) should have a valid config', () => {
-    const valuesShowcase = yaml.parse(fs.readFileSync(IBM_VALUES_SHOWCASE_CONFIG_FILE).toString()) as GlobalDynamicPluginsConfig
+    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
       validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
