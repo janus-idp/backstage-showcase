@@ -186,9 +186,9 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator to be ready
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  #sleep 20 # wait for Pipeline Operator to be ready
+  #oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  #oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
 
 run_tests() {
@@ -278,7 +278,7 @@ install_pipelines_operator() {
 initiate_deployments() {
   add_helm_repos
   configure_namespace "${NAME_SPACE}"
-  install_pipelines_operator "${DIR}"
+  #install_pipelines_operator "${DIR}"
   install_helm
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
@@ -295,7 +295,7 @@ initiate_deployments() {
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
 
-  install_pipelines_operator "${DIR}"
+  #install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
