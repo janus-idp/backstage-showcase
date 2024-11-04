@@ -3222,10 +3222,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-tech-radar@npm:0.7.11":
-  version: 0.7.11
-  resolution: "@backstage-community/plugin-tech-radar@npm:0.7.11"
+"@backstage-community/plugin-tech-radar-backend@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@backstage-community/plugin-tech-radar-backend@npm:1.0.0"
   dependencies:
+    "@backstage-community/plugin-tech-radar-common": ^1.0.0
+    "@backstage/backend-defaults": ^0.5.0
+    "@backstage/backend-plugin-api": ^1.0.0
+    "@backstage/config": ^1.2.0
+    express: ^4.17.1
+    express-promise-router: ^4.1.0
+    node-fetch: ^2.6.7
+    zod: ^3.20.0
+  checksum: 8c2ac9a1f87b7893e8d1a08cf0b068dd7e97f81d5cfd3dd430f4728703cd425f98bff423e0fbd25c6b02e8840517c28e6cf805798887bbf32a4086b54a879a96
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-tech-radar-common@npm:1.0.0, @backstage-community/plugin-tech-radar-common@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@backstage-community/plugin-tech-radar-common@npm:1.0.0"
+  dependencies:
+    zod: ^3.20.0
+  checksum: 92a335f537f3f41e5236c60dbde2368a091c9b5e73237c10d2e72d48dd0593ab8278fab307607a7154c1c9802d09419c7153a95ab66aec87743e5f4d3129fbaa
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-tech-radar@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@backstage-community/plugin-tech-radar@npm:1.0.0"
+  dependencies:
+    "@backstage-community/plugin-tech-radar-common": ^1.0.0
     "@backstage/core-compat-api": ^0.3.1
     "@backstage/core-components": ^0.15.1
     "@backstage/core-plugin-api": ^1.10.0
@@ -3240,7 +3266,7 @@ __metadata:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: 6.0.0-beta.0 || ^6.3.0
-  checksum: 7a6e2de59738088025715b61c2161f2293d5a90c502b7a36b18f3391b244e51167acb3e2238947fb08b61abc939cb5004cfb987433e31edadfe6d8ba83a17de5
+  checksum: 02fbb09c9952e5f6b7fed7c98521b63be5d585ee2a251386887ef10aef3a0c182751216920dd43711525fda4c72cf21df6db2230d4423716469980c3ce8b8d7f
   languageName: node
   linkType: hard
 
@@ -3696,7 +3722,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/backend-defaults@npm:0.5.2, @backstage/backend-defaults@npm:^0.5.2":
+"@backstage/backend-defaults@npm:0.5.2, @backstage/backend-defaults@npm:^0.5.0, @backstage/backend-defaults@npm:^0.5.2":
   version: 0.5.2
   resolution: "@backstage/backend-defaults@npm:0.5.2"
   dependencies:
@@ -5208,7 +5234,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-auth-backend-module-oidc-provider@npm:0.3.1, @backstage/plugin-auth-backend-module-oidc-provider@npm:^0.3.1":
+"@backstage/plugin-auth-backend-module-oidc-provider@npm:0.3.1":
   version: 0.3.1
   resolution: "@backstage/plugin-auth-backend-module-oidc-provider@npm:0.3.1"
   dependencies:
@@ -5220,6 +5246,21 @@ __metadata:
     openid-client: ^5.5.0
     passport: ^0.7.0
   checksum: 436b4badb0dd7570a82daef1d5b10295835b40a401e95c97d5a9474e17fd66694bd8b5ae627af5ffc36e5b8729fc8de15e52430552ecbde440e66a4d817b30d3
+  languageName: node
+  linkType: hard
+
+"@backstage/plugin-auth-backend-module-oidc-provider@patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1-6fab98121c.patch::locator=root%40workspace%3A.":
+  version: 0.3.1
+  resolution: "@backstage/plugin-auth-backend-module-oidc-provider@patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1-6fab98121c.patch::version=0.3.1&hash=359432&locator=root%40workspace%3A."
+  dependencies:
+    "@backstage/backend-common": ^0.25.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-auth-backend": ^0.23.1
+    "@backstage/plugin-auth-node": ^0.5.3
+    express: ^4.18.2
+    openid-client: ^5.5.0
+    passport: ^0.7.0
+  checksum: 53028040cf40cd4b81e6c25a924cc5628f902051d38821b17ffc401bfeee4d31cafcedc8fc6e9e26fb65ae33f8576c814bbd3e74cce49ec3d4b9675707745e4c
   languageName: node
   linkType: hard
 
@@ -9366,6 +9407,7 @@ __metadata:
     "@testing-library/jest-dom": 6.5.0
     "@testing-library/react": 14.3.1
     "@testing-library/user-event": 14.5.2
+    glob: 11.0.0
     msw: 1.3.4
     prettier: 3.3.3
     react-use: 17.5.1
@@ -20277,11 +20319,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-tech-radar-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-tech-radar-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic"
+  dependencies:
+    "@backstage-community/plugin-tech-radar-backend": 1.0.0
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-tech-radar@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-tech-radar@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tech-radar"
   dependencies:
-    "@backstage-community/plugin-tech-radar": 0.7.11
+    "@backstage-community/plugin-tech-radar": 1.0.0
+    "@backstage-community/plugin-tech-radar-common": 1.0.0
     "@backstage/cli": 0.28.2
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.17.0
@@ -24113,6 +24166,8 @@ __metadata:
   resolution: "dynamic-plugins-utils@workspace:dynamic-plugins/_utils"
   dependencies:
     "@backstage/cli": 0.28.2
+    glob: 11.0.0
+    yaml: 2.6.0
   languageName: unknown
   linkType: soft
 
@@ -26937,6 +26992,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:11.0.0, glob@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "glob@npm:11.0.0"
+  dependencies:
+    foreground-child: ^3.1.0
+    jackspeak: ^4.0.1
+    minimatch: ^10.0.0
+    minipass: ^7.1.2
+    package-json-from-dist: ^1.0.0
+    path-scurry: ^2.0.0
+  bin:
+    glob: dist/esm/bin.mjs
+  checksum: 8a2dd914d5776987be5244624d9491bbcaf19f2387e06783737003ff696ebfd2264190c47014f8709c1c02d8bc892f17660cf986c587b107e194c0a3151ab333
+  languageName: node
+  linkType: hard
+
 "glob@npm:^10.0.0, glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.7, glob@npm:^10.4.1":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
@@ -29227,6 +29298,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jackspeak@npm:^4.0.1":
+  version: 4.0.2
+  resolution: "jackspeak@npm:4.0.2"
+  dependencies:
+    "@isaacs/cliui": ^8.0.2
+  checksum: 210030029edfa1658328799ad88c3d0fc057c4cb8a069fc4137cc8d2cc4b65c9721c6e749e890f9ca77a954bb54f200f715b8896e50d330e5f3e902e72b40974
+  languageName: node
+  linkType: hard
+
 "janus-idp-backstage-plugin-aap-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic":
   version: 0.0.0-use.local
   resolution: "janus-idp-backstage-plugin-aap-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic"
@@ -31365,6 +31445,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru-cache@npm:^11.0.0":
+  version: 11.0.2
+  resolution: "lru-cache@npm:11.0.2"
+  checksum: f9c27c58919a30f42834de9444de9f75bcbbb802c459239f96dd449ad880d8f9a42f51556d13659864dc94ab2dbded9c4a4f42a3e25a45b6da01bb86111224df
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^5.1.1":
   version: 5.1.1
   resolution: "lru-cache@npm:5.1.1"
@@ -32964,6 +33051,15 @@ __metadata:
   dependencies:
     brace-expansion: ^2.0.1
   checksum: 253487976bf485b612f16bf57463520a14f512662e592e95c571afdab1442a6a6864b6c88f248ce6fc4ff0b6de04ac7aa6c8bb51e868e99d1d65eb0658a708b5
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^10.0.0":
+  version: 10.0.1
+  resolution: "minimatch@npm:10.0.1"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: f5b63c2f30606091a057c5f679b067f84a2cd0ffbd2dbc9143bda850afd353c7be81949ff11ae0c86988f07390eeca64efd7143ee05a0dab37f6c6b38a2ebb6c
   languageName: node
   linkType: hard
 
@@ -35094,6 +35190,16 @@ __metadata:
     lru-cache: ^10.2.0
     minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
   checksum: 890d5abcd593a7912dcce7cf7c6bf7a0b5648e3dee6caf0712c126ca0a65c7f3d7b9d769072a4d1baf370f61ce493ab5b038d59988688e0c5f3f646ee3c69023
+  languageName: node
+  linkType: hard
+
+"path-scurry@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "path-scurry@npm:2.0.0"
+  dependencies:
+    lru-cache: ^11.0.0
+    minipass: ^7.1.2
+  checksum: 9953ce3857f7e0796b187a7066eede63864b7e1dfc14bf0484249801a5ab9afb90d9a58fc533ebb1b552d23767df8aa6a2c6c62caf3f8a65f6ce336a97bbb484
   languageName: node
   linkType: hard
 
@@ -38234,6 +38340,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@ianvs/prettier-plugin-sort-imports": 4.2.1
     "@spotify/prettier-config": 15.0.0
+    glob: ^11.0.0
     husky: 8.0.3
     lint-staged: 15.2.10
     node-gyp: 10.2.0
@@ -43206,19 +43313,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^1.10.0, yaml@npm:^1.10.2, yaml@npm:^1.7.2":
-  version: 1.10.2
-  resolution: "yaml@npm:1.10.2"
-  checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^2.0.0, yaml@npm:^2.1.1, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.3.3, yaml@npm:^2.3.4":
+"yaml@npm:2.6.0, yaml@npm:^2.0.0, yaml@npm:^2.1.1, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.3.3, yaml@npm:^2.3.4":
   version: 2.6.0
   resolution: "yaml@npm:2.6.0"
   bin:
     yaml: bin.mjs
   checksum: e5e74fd75e01bde2c09333d529af9fbb5928c5f7f01bfdefdcb2bf753d4ef489a45cab4deac01c9448f55ca27e691612b81fe3c3a59bb8cb5b0069da0f92cf0b
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^1.10.0, yaml@npm:^1.10.2, yaml@npm:^1.7.2":
+  version: 1.10.2
+  resolution: "yaml@npm:1.10.2"
+  checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
   languageName: node
   linkType: hard
 
@@ -43433,10 +43540,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.22.4":
-  version: 3.22.4
-  resolution: "zod@npm:3.22.4"
-  checksum: 80bfd7f8039b24fddeb0718a2ec7c02aa9856e4838d6aa4864335a047b6b37a3273b191ef335bf0b2002e5c514ef261ffcda5a589fb084a48c336ffc4cdbab7f
+"zod@npm:^3.20.0, zod@npm:^3.22.4":
+  version: 3.23.8
+  resolution: "zod@npm:3.23.8"
+  checksum: 15949ff82118f59c893dacd9d3c766d02b6fa2e71cf474d5aa888570c469dbf5446ac5ad562bb035bf7ac9650da94f290655c194f4a6de3e766f43febd432c5c
   languageName: node
   linkType: hard
 
