@@ -120,54 +120,54 @@ describe('Dynamic Plugin Wrappers', () => {
   })
 
   describe('(dynamic-plugins.default.yaml) should have a valid config', () => {
-    const dynamicPluginsConfig = parseYamlFile<DynamicPluginsConfig>(DYNAMIC_PLUGINS_CONFIG_FILE)
+    const config = parseYamlFile<DynamicPluginsConfig>(DYNAMIC_PLUGINS_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      validateDynamicPluginsConfig(dynamicPluginsConfig, wrapperDirNames)
+      validateDynamicPluginsConfig(config, wrapperDirNames)
     })
 
     it.each(frontendPackageJsonFiles)('$scalprum.name should exist in the config', ({ scalprum }) => {
-      expect(dynamicPluginsConfig.plugins.some((plugin) => Object.keys(plugin.pluginConfig?.dynamicPlugins?.frontend ?? {}).includes(scalprum.name))).toBeTruthy()
+      expect(config.plugins.some((plugin) => Object.keys(plugin.pluginConfig?.dynamicPlugins?.frontend ?? {}).includes(scalprum.name))).toBeTruthy()
     })
   })
 
   describe('(app-config.dynamic-plugins.yaml) should have a valid config', () => {
-    const dynamicPluginsConfig = parseYamlFile<DynamicPluginAppConfig>(APP_CONFIG_DYNAMIC_PLUGINS_CONFIG_FILE)
+    const config = parseYamlFile<DynamicPluginAppConfig>(APP_CONFIG_DYNAMIC_PLUGINS_CONFIG_FILE)
 
     it.each(frontendPackageJsonFiles)('$scalprum.name should exist in the config', ({ scalprum }) => {
-      expect(Object.keys(dynamicPluginsConfig?.dynamicPlugins?.frontend ?? {}).includes(scalprum.name)).toBeTruthy()
+      expect(Object.keys(config?.dynamicPlugins?.frontend ?? {}).includes(scalprum.name)).toBeTruthy()
     })
   })
 
   describe('(ibm: values_showcase.yaml) should have a valid config', () => {
-    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_CONFIG_FILE)
+    const config = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
+      validateDynamicPluginsConfig(config.global.dynamic, wrapperDirNames)
     })
   })
 
   describe('(ibm: values_showcase-rbac.yaml) should have a valid config', () => {
-    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_RBAC_CONFIG_FILE)
+    const config = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_RBAC_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
+      validateDynamicPluginsConfig(config.global.dynamic, wrapperDirNames)
     })
   })
 
   describe('(ibm: values_showcase_auth-providers.yaml) should have a valid config', () => {
-    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_AUTH_PROVIDERS_CONFIG_FILE)
+    const config = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_AUTH_PROVIDERS_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
+      validateDynamicPluginsConfig(config.global.dynamic, wrapperDirNames)
     })
   })
 
   describe('(rhdh-openshift-setup: values.yaml) should have a valid config', () => {
-    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(RHDH_OPENSHIFT_SETUP_CONFIG_FILE)
+    const config = parseYamlFile<GlobalDynamicPluginsConfig>(RHDH_OPENSHIFT_SETUP_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
+      validateDynamicPluginsConfig(config.global.dynamic, wrapperDirNames)
     })
   })
 })
