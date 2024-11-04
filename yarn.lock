@@ -9776,9 +9776,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-rbac-backend@npm:5.2.0":
-  version: 5.2.0
-  resolution: "@janus-idp/backstage-plugin-rbac-backend@npm:5.2.0"
+"@janus-idp/backstage-plugin-rbac-backend@npm:5.2.1":
+  version: 5.2.1
+  resolution: "@janus-idp/backstage-plugin-rbac-backend@npm:5.2.1"
   dependencies:
     "@backstage/backend-defaults": ^0.5.2
     "@backstage/backend-plugin-api": ^1.0.1
@@ -9801,7 +9801,7 @@ __metadata:
     knex: ^3.0.0
     lodash: ^4.17.21
     typeorm-adapter: ^1.6.1
-  checksum: 999ad140465c7e8d1e86b4e035a5a39a656149bd87bc49fdd22af06b58356265d5c96562072744c6715cf40787c51c85ca06048f52966d1d2719d9bb59afe2ea
+  checksum: 375322422862b1fdfbf9d798021351804c47b39d90e65e9fa577c98eadbc0b256c0e8d460f71c5f0a68488ef92f75f37a510eade35cd7e72811bc08ed4ec4659
   languageName: node
   linkType: hard
 
@@ -20124,7 +20124,7 @@ __metadata:
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
     "@janus-idp/backstage-plugin-audit-log-node": 1.7.0
-    "@janus-idp/backstage-plugin-rbac-backend": 5.2.0
+    "@janus-idp/backstage-plugin-rbac-backend": 5.2.1
     "@janus-idp/backstage-plugin-rbac-node": 1.8.0
     "@janus-idp/backstage-scaffolder-backend-module-annotator": 2.2.0
     "@types/express": 4.17.21
