@@ -8,6 +8,8 @@ data:
       - 'dynamic-plugins.default.yaml'
 
     plugins:
+        - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-github-dynamic
+        disabled: false
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
           disabled: false
           pluginConfig:
@@ -26,7 +28,7 @@ data:
                         seconds: 15
         - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
           disabled: false
-        - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
+        - package: ./dynamic-plugins/dist/backstage-plugin-github-issues
           disabled: false
         - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
           disabled: false
@@ -80,13 +82,19 @@ data:
                     owner: janus-authors
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
           disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+          disabled: false
         - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
           disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
+        - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
           disabled: false
         - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
           disabled: true
         - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
+          disabled: false
+        - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
           disabled: false
         - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
           disabled: false
