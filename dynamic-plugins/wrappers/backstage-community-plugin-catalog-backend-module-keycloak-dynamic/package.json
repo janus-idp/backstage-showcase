@@ -1,6 +1,6 @@
 {
-  "name": "janus-idp-backstage-plugin-keycloak-backend",
-  "version": "3.1.0",
+  "name": "backstage-community-plugin-catalog-backend-module-keycloak",
+  "version": "3.2.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,8 +11,8 @@
   "backstage": {
     "role": "backend-plugin-module",
     "supported-versions": "1.32.4",
-    "pluginId": "janus-idp-keycloak-backend",
-    "pluginPackage": "janus-idp-keycloak-backend"
+    "pluginId": "backstage-community-plugin-catalog-backend-module-keycloak",
+    "pluginPackage": "backstage-community-plugin-catalog-backend-module-keycloak"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -32,11 +32,11 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-keycloak-backend --override-interop default --no-embed-as-dependencies",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-keycloak --override-interop default --no-embed-as-dependencies",
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-keycloak-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@janus-idp/backstage-plugin-keycloak-backend": "3.1.0"
+    "@backstage-community/plugin-catalog-backend-module-keycloak": "3.2.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
@@ -50,7 +50,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-keycloak-backend-dynamic"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
