@@ -5208,7 +5208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-auth-backend-module-oidc-provider@npm:0.3.1, @backstage/plugin-auth-backend-module-oidc-provider@npm:^0.3.1":
+"@backstage/plugin-auth-backend-module-oidc-provider@npm:0.3.1":
   version: 0.3.1
   resolution: "@backstage/plugin-auth-backend-module-oidc-provider@npm:0.3.1"
   dependencies:
@@ -5220,6 +5220,21 @@ __metadata:
     openid-client: ^5.5.0
     passport: ^0.7.0
   checksum: 436b4badb0dd7570a82daef1d5b10295835b40a401e95c97d5a9474e17fd66694bd8b5ae627af5ffc36e5b8729fc8de15e52430552ecbde440e66a4d817b30d3
+  languageName: node
+  linkType: hard
+
+"@backstage/plugin-auth-backend-module-oidc-provider@patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1-6fab98121c.patch::locator=root%40workspace%3A.":
+  version: 0.3.1
+  resolution: "@backstage/plugin-auth-backend-module-oidc-provider@patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1-6fab98121c.patch::version=0.3.1&hash=359432&locator=root%40workspace%3A."
+  dependencies:
+    "@backstage/backend-common": ^0.25.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-auth-backend": ^0.23.1
+    "@backstage/plugin-auth-node": ^0.5.3
+    express: ^4.18.2
+    openid-client: ^5.5.0
+    passport: ^0.7.0
+  checksum: 53028040cf40cd4b81e6c25a924cc5628f902051d38821b17ffc401bfeee4d31cafcedc8fc6e9e26fb65ae33f8576c814bbd3e74cce49ec3d4b9675707745e4c
   languageName: node
   linkType: hard
 
