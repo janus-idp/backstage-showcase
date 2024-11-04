@@ -428,3 +428,19 @@ dynamicPlugins:
     janus-idp.backstage-plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
+    janus-idp.backstage-plugin-rbac:
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
+                module: RbacPlugin
+            dynamicRoutes:
+              - path: /rbac
+                module: RbacPlugin
+                importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: admin
+                icon: rbacIcon
