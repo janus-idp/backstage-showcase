@@ -876,6 +876,12 @@ plugins:
                   props:
                     width: 1500
                     height: 800
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
+    disabled: true
+    pluginConfig:
+      techRadar:
+        url: ${TECH_RADAR_DATA_URL}
+
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
     disabled: false
