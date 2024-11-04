@@ -121,12 +121,12 @@ global:
                       if:
                         anyOf:
                         - isQuayAvailable
-      - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              backstage.plugin-tech-radar:
+              backstage-community.plugin-tech-radar:
                 apiFactories:
                   - importName: TechRadarApi
                 appIcons:
