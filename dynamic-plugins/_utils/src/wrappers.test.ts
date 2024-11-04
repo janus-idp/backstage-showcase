@@ -15,11 +15,6 @@ const IBM_VALUES_SHOWCASE_RBAC_CONFIG_FILE = path.join(ROOT_DIR, '.ibm/pipelines
 const IBM_VALUES_SHOWCASE_AUTH_PROVIDERS_CONFIG_FILE = path.join(ROOT_DIR, '.ibm/pipelines/value_files/values_showcase-auth-providers.yaml')
 const RHDH_OPENSHIFT_SETUP_CONFIG_FILE = path.join(ROOT_DIR, 'scripts/rhdh-openshift-setup/values.yaml')
 
-const wrapperPackageJsonPaths = glob.sync(PACKAGE_JSON_GLOB, {
-  cwd: DYNAMIC_PLUGINS_DIR, // Search only within DYNAMIC_PLUGINS_DIR
-  ignore: IGNORE_GLOB,
-});
-
 type WrapperFrontendPackageJson = {
   name: string;
   backstage: {
@@ -67,7 +62,36 @@ function getDifference<T>(arrA: T[], arrB: T[]): T[] {
   return arrA.filter(x => !arrB.includes(x));
 }
 
+function parseYamlFile<T>(filePath: string): T {
+  return yaml.parse(fs.readFileSync(filePath).toString());
+}
+
+function validateDynamicPluginsConfig(config: DynamicPluginsConfig, wrapperDirNames: string[]): void {
+  const dynamicPluginsPackageNames = config.plugins.reduce((packageNames, plugin) => {
+    // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
+    packageNames.push(plugin.package.split('/')[3])
+
+    return packageNames
+  }, [] as string[])
+
+
+  const difference = getDifference(dynamicPluginsPackageNames, wrapperDirNames)
+
+  try {
+    expect(difference).toStrictEqual([])
+  } catch {
+    throw new Error(`The following plugins are missing: ${difference.join(', ')}`)
+  }
+}
+
 describe('Dynamic Plugin Wrappers', () => {
+  const wrapperPackageJsonPaths = glob.sync(PACKAGE_JSON_GLOB, {
+    cwd: DYNAMIC_PLUGINS_DIR, // Search only within DYNAMIC_PLUGINS_DIR
+    ignore: IGNORE_GLOB,
+  });
+
+  const wrapperDirNames = wrapperPackageJsonPaths.map(path.dirname)
+
   const wrapperPackageJsonFiles = wrapperPackageJsonPaths.map((packageJsonPath) => {
     const packageJson = fs.readFileSync(path.join(DYNAMIC_PLUGINS_DIR, packageJsonPath))
     return JSON.parse(packageJson.toString()) as WrapperPackageJson
@@ -77,7 +101,8 @@ describe('Dynamic Plugin Wrappers', () => {
 
   describe("Backend Plugin", () => {
     it.each(backendPackageJsonFiles)('$name should have a `-dynamic` suffix in the directory name', ({ name, repository }) => {
-      expect(wrapperPackageJsonPaths.some((value) => value.includes(`${name}-dynamic`))).toBeTruthy()
+      const hasDynamicSuffix = wrapperPackageJsonPaths.some(value => value.includes(`${name}-dynamic`));
+      expect(hasDynamicSuffix).toBeTruthy();
       expect(repository.directory).toBe(`dynamic-plugins/wrappers/${name}-dynamic`)
     })
   })
@@ -97,19 +122,7 @@ describe('Dynamic Plugin Wrappers', () => {
     const dynamicPluginsConfig = yaml.parse(fs.readFileSync(DYNAMIC_PLUGINS_CONFIG_FILE).toString()) as DynamicPluginsConfig
 
     it('should have a corresponding package', () => {
-      const dynamicPluginsPackageNames = dynamicPluginsConfig.plugins.reduce((packageNames, plugin) => {
-        // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
-        packageNames.push(plugin.package.split('/')[3])
-
-        return packageNames
-      }, [] as string[])
-
-      // remove `\\package.json` suffix
-      const wrapperDirNames = wrapperPackageJsonPaths.map((value) => value.substring(0, value.length - 13))
-
-      const difference = getDifference(dynamicPluginsPackageNames, wrapperDirNames)
-
-      expect(difference).toStrictEqual([])
+      validateDynamicPluginsConfig(dynamicPluginsConfig, wrapperDirNames)
     })
 
     it.each(frontendPackageJsonFiles)('$scalprum.name should exist in the config', ({ scalprum }) => {
@@ -129,79 +142,31 @@ describe('Dynamic Plugin Wrappers', () => {
     const valuesShowcase = yaml.parse(fs.readFileSync(IBM_VALUES_SHOWCASE_CONFIG_FILE).toString()) as GlobalDynamicPluginsConfig
 
     it('should have a corresponding package', () => {
-      const dynamicPluginsPackageNames = valuesShowcase.global.dynamic.plugins.reduce((packageNames, plugin) => {
-        // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
-        packageNames.push(plugin.package.split('/')[3])
-
-        return packageNames
-      }, [] as string[])
-
-      // remove `\\package.json` suffix
-      const wrapperDirNames = wrapperPackageJsonPaths.map((value) => value.substring(0, value.length - 13))
-
-      const difference = getDifference(dynamicPluginsPackageNames, wrapperDirNames)
-
-      expect(difference).toStrictEqual([])
+      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
     })
   })
 
   describe('(ibm: values_showcase-rbac.yaml) should have a valid config', () => {
-    const valuesShowcase = yaml.parse(fs.readFileSync(IBM_VALUES_SHOWCASE_RBAC_CONFIG_FILE).toString()) as GlobalDynamicPluginsConfig
+    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_RBAC_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      const dynamicPluginsPackageNames = valuesShowcase.global.dynamic.plugins.reduce((packageNames, plugin) => {
-        // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
-        packageNames.push(plugin.package.split('/')[3])
-
-        return packageNames
-      }, [] as string[])
-
-      // remove `\\package.json` suffix
-      const wrapperDirNames = wrapperPackageJsonPaths.map((value) => value.substring(0, value.length - 13))
-
-      const difference = getDifference(dynamicPluginsPackageNames, wrapperDirNames)
-
-      expect(difference).toStrictEqual([])
+      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
     })
   })
 
   describe('(ibm: values_showcase_auth-providers.yaml) should have a valid config', () => {
-    const valuesShowcase = yaml.parse(fs.readFileSync(IBM_VALUES_SHOWCASE_AUTH_PROVIDERS_CONFIG_FILE).toString()) as GlobalDynamicPluginsConfig
+    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(IBM_VALUES_SHOWCASE_AUTH_PROVIDERS_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      const dynamicPluginsPackageNames = valuesShowcase.global.dynamic.plugins.reduce((packageNames, plugin) => {
-        // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
-        packageNames.push(plugin.package.split('/')[3])
-
-        return packageNames
-      }, [] as string[])
-
-      // remove `\\package.json` suffix
-      const wrapperDirNames = wrapperPackageJsonPaths.map((value) => value.substring(0, value.length - 13))
-
-      const difference = getDifference(dynamicPluginsPackageNames, wrapperDirNames)
-
-      expect(difference).toStrictEqual([])
+      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
     })
   })
 
   describe('(rhdh-openshift-setup: values.yaml) should have a valid config', () => {
-    const valuesShowcase = yaml.parse(fs.readFileSync(RHDH_OPENSHIFT_SETUP_CONFIG_FILE).toString()) as GlobalDynamicPluginsConfig
+    const valuesShowcase = parseYamlFile<GlobalDynamicPluginsConfig>(RHDH_OPENSHIFT_SETUP_CONFIG_FILE)
 
     it('should have a corresponding package', () => {
-      const dynamicPluginsPackageNames = valuesShowcase.global.dynamic.plugins.reduce((packageNames, plugin) => {
-        // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
-        packageNames.push(plugin.package.split('/')[3])
-
-        return packageNames
-      }, [] as string[])
-
-      // remove `\\package.json` suffix
-      const wrapperDirNames = wrapperPackageJsonPaths.map((value) => value.substring(0, value.length - 13))
-
-      const difference = getDifference(dynamicPluginsPackageNames, wrapperDirNames)
-
-      expect(difference).toStrictEqual([])
+      validateDynamicPluginsConfig(valuesShowcase.global.dynamic, wrapperDirNames)
     })
   })
 })
