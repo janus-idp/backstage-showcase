@@ -12,7 +12,7 @@ This plugin shouldn't be pushed into the [public npm registry](https://www.npmjs
 
 1. Generate plugin derived package by running the following command:
 
-  **NOTE:** If you are not using the latest RHDH version, see [versions](/dynamic-plugins/versions) document to see which version of the `@janus-idp/cli` you should use.
+  **NOTE:** If you are not using the latest RHDH version, see [versions](../versions) document to see which version of the `@janus-idp/cli` you should use.
 
   ```sh
   npx @janus-idp/cli@latest package export-dynamic-plugin
@@ -42,13 +42,11 @@ cd dist-dynamic
 npm publish
 ```
 
-## How to configure RHDH to use private or internal npm registry?
+## How to configure RHDH to use private or internal npm registry?
 
-<!-- TODO: fix link once https://github.com/janus-idp/backstage-showcase/pull/1789 is merged -->
+See [Using a custom NPM registry](../dynamic-plugins#using-a-custom-npm-registry)
 
-See [Using a custom NPM registry](/dynamic-plugins/dynamic-plugins#using-a-custom-npm-registry)
-
-## How to install community Backstage plugin to the RHDH?
+## How to install community Backstage plugin to the RHDH?
 
 TODO
 
@@ -56,13 +54,13 @@ TODO
 
 <!-- TODO: fix link once https://github.com/janus-idp/backstage-showcase/pull/1789 is merged -->
 
-This is documented at [Provide custom Scaffolder field extensions](/dynamic-plugins/dynamic-plugins#provide-custom-scaffolder-field-extensions)
+This is documented at [Provide custom Scaffolder field extensions](../dynamic-plugins#provide-custom-scaffolder-field-extensions)
 
-## How to make a custom action?
+## How to make a custom action?
 
 TODO
 
-## How to load a username transformer when ingesting catalog entities?
+## How to load a username transformer when ingesting catalog entities?
 
 TODO
 
