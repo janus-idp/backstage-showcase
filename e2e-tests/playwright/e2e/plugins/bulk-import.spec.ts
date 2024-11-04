@@ -119,7 +119,7 @@ testWithHelper.describe("Bulk Import plugin", () => {
 
   testWithHelper(
     "Verify the Content of catalog-info.yaml in the PR is Correct",
-    async ({}) => {
+    async () => {
       const prCatalogInfoYaml = await APIHelper.getfileContentFromPR(
         newRepoDetails.owner,
         newRepoDetails.repoName,

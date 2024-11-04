@@ -1,17 +1,9 @@
 import { UIhelper } from "./UIhelper";
 import { authenticator } from "otplib";
-import {
-  Browser,
-  BrowserContext,
-  expect,
-  Page,
-  TestInfo,
-} from "@playwright/test";
+import { Browser, expect, Page, TestInfo } from "@playwright/test";
 import { SettingsPagePO } from "../support/pageObjects/page-obj";
 import { waitsObjs } from "../support/pageObjects/global-obj";
 import path from "path";
-import { GH_USER_IDAuthFile_github } from "../support/auth/auth_constants";
-import fs from "fs";
 
 export class Common {
   page: Page;

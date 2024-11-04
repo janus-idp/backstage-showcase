@@ -8,7 +8,7 @@ import {
 } from "../../../support/pageObjects/page-obj";
 import { Roles } from "../../../support/pages/rbac";
 import { Common } from "../../../utils/Common";
-import { testWithHelper, UIhelper } from "../../../utils/UIhelper";
+import { testWithHelper } from "../../../utils/UIhelper";
 
 testWithHelper.use({ actionTimeout: 0, navigationTimeout: 0 });
 testWithHelper.describe.serial(
@@ -17,7 +17,6 @@ testWithHelper.describe.serial(
     let page: Page;
 
     testWithHelper.beforeEach(async ({ uiHelper, page }) => {
-      uiHelper = new UIhelper(page);
       await new Common(page).logintoGithub();
       await uiHelper.openSidebarButton("Administration");
       await uiHelper.openSidebar("RBAC");
