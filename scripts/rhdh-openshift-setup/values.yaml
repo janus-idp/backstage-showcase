@@ -22,12 +22,10 @@ global:
               janus-idp.backstage-plugin-bulk-import:
                 appIcons:
                   - name: bulkImportIcon
-                    module: BulkImportPlugin
                     importName: BulkImportIcon
                 dynamicRoutes:
                   - path: /bulk-import/repositories
                     importName: BulkImportPage
-                    module: BulkImportPlugin
                     menuItem:
                       icon: bulkImportIcon
                       text: Bulk import
