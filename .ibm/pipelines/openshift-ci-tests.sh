@@ -24,6 +24,7 @@ cleanup() {
 trap cleanup EXIT
 
 source "${DIR}/utils.sh"
+source "${DIR}/cluster/aks/az.sh"
 
 set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
@@ -454,10 +455,20 @@ main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info
   source "${DIR}/env_variables.sh"
+  if [[ "$JOB_NAME" == *periodic-* ]]; then
+    NAME_SPACE="showcase-ci-nightly"
+    NAME_SPACE_RBAC="showcase-rbac-nightly"
+    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_AKS="showcase-aks-ci-nightly"
+    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
+  fi
 
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
-    az aks get-credentials --name="${AKS_NIGHTLY_CLUSTER_NAME}" --resource-group="${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}" --overwrite-existing
+    az_login
+    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_get_credentials "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   else
     oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
   fi
