@@ -24,7 +24,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
       });
     const row = await page.locator(
       UIhelperPO.rowByText(
-        "@janus-idp/backstage-plugin-analytics-provider-segment",
+        "janus-idp-backstage-plugin-analytics-provider-segment",
       ),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled
