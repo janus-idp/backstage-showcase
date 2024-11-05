@@ -1,4 +1,4 @@
-import glob from "glob";
+import { glob } from "glob";
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
