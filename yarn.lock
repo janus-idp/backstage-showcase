@@ -3159,6 +3159,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-ocm-common@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "@backstage-community/plugin-ocm-common@npm:3.6.1"
+  peerDependencies:
+    "@backstage/plugin-permission-common": ^0.8.1
+  checksum: 54758f3fbdb9f2b5f41965d24e063c47d63d6ad64437390ee225f99be3336ba5fc71bb58dea46256f31461fffbca26c0f011c6e7999096f262f76d2d9b044df9
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-ocm@npm:5.2.1":
+  version: 5.2.1
+  resolution: "@backstage-community/plugin-ocm@npm:5.2.1"
+  dependencies:
+    "@backstage-community/plugin-ocm-common": ^3.6.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-catalog-react": ^1.14.0
+    "@backstage/plugin-home": ^0.8.0
+    "@backstage/plugin-permission-react": ^0.4.27
+    "@backstage/plugin-search-react": ^1.8.1
+    "@backstage/theme": ^0.6.0
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": ^4.0.0-alpha.45
+    "@mui/icons-material": ^5.16.4
+    "@patternfly/patternfly": ^5.1.0
+    react-use: ^17.4.0
+    semver: ^7.5.4
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+  checksum: e0fa5fe989c49ec189629f0fb3c1667a8f600d993a403dceb994b3054f2b648ba7be8554fa73e81f9633cf0e0905624fd9effd23e405b8136333f248f4ec79f7
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-redhat-argocd-common@npm:^1.0.7":
   version: 1.0.7
   resolution: "@backstage-community/plugin-redhat-argocd-common@npm:1.0.7"
@@ -9721,34 +9758,6 @@ __metadata:
   peerDependencies:
     "@backstage/plugin-permission-common": ^0.8.1
   checksum: 334c9909f2b07f9c95f9f05e0c8e38eda65550b55baad697fc57f6cfed01f92e3e9475515c198e193c7e66a6a417397237a9d481da980d530eae4dd259e16c02
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-ocm@npm:5.2.0":
-  version: 5.2.0
-  resolution: "@janus-idp/backstage-plugin-ocm@npm:5.2.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/plugin-home": ^0.8.0
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/plugin-search-react": ^1.8.1
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/backstage-plugin-ocm-common": ^3.6.0
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": ^4.0.0-alpha.45
-    "@mui/icons-material": ^5.16.4
-    "@patternfly/patternfly": ^5.1.0
-    react-use: ^17.4.0
-    semver: ^7.5.4
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-  checksum: dc29e03fc680140d62ca6809fa4c2a4a49f1fa408afcbca7adc2e9fdf2a2c1d24af96a07f98bad4b9d287bf1e32d82c5bd340a76d4560379af2a0a744b651463
   languageName: node
   linkType: hard
 
@@ -20334,6 +20343,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-ocm@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-ocm@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm"
+  dependencies:
+    "@backstage-community/plugin-ocm": 5.2.1
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-redhat-argocd@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-redhat-argocd@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd"
@@ -29434,16 +29454,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-ocm-backend": 5.2.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-ocm@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-ocm":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-ocm@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-ocm"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-ocm": 5.2.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
