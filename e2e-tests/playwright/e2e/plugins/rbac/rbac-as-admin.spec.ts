@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import test, { expect, Page } from "@playwright/test";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
 import {
@@ -6,7 +7,7 @@ import {
   HomePagePO,
   RoleOverviewPO,
 } from "../../../support/pageObjects/page-obj";
-import { Common, setupBrowser } from "../../../utils/Common";
+import { setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { Roles } from "../../../support/pages/rbac";
 
@@ -19,18 +20,18 @@ type RbacAsAdminFixture = {
 let myPage: Page;
 
 const base = test.extend<RbacAsAdminFixture>({
-  uiHelper: async ({ page }, use) => {
+  uiHelper: async ({}, use) => {
     const uiHelper = new UIhelper(myPage);
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
     await use(uiHelper);
   },
-  rolesHelper: async ({ page }, use) => {
+  rolesHelper: async ({}, use) => {
     const rolesHelper = new Roles(myPage);
     await use(rolesHelper);
   },
-  testId: async ({ page }, use) => {
+  testId: async ({}, use) => {
     const testId = Date.now().toString();
     const testRole = `test-role-${testId}`;
     const composedRole = `role:default/${testRole}`;
