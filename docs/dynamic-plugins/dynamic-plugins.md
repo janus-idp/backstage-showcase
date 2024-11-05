@@ -542,7 +542,7 @@ global:
 
 Compared to the backend plugins, where mount points are defined in code and consumed by the backend plugin manager, frontend plugins require additional configuration in the `app-config.yaml`. A plugin missing this configuration will not be loaded into the application and will not be displayed.
 
-Similarly to traditional Backstage instances, there are 3 types of functionality a dynamic frontend plugin can offer:
+Similarly to traditional Backstage instances, there are various kinds of functionality a dynamic frontend plugin can offer:
 
 - Full new page that declares a completely new route in the app
 - Extension to existing page via router `bind`ings
@@ -631,8 +631,37 @@ Each plugin can expose multiple routes and each route is required to define its 
 - `path` - Unique path in the app. Cannot override existing routes with the exception of the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
-- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
-- `config.props` - Optional. Additionally you can pass React props to the component.
+- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts the following properties:
+  - `text`: The label shown to the user
+  - `icon`: refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
+  - `importName`: optional name of an exported SidebarItem component.  The component will receive a `to` property as well as any properties specified in `config.props`
+- `config` - An optional field which is a holder to pass `props` to a custom sidebar item
+
+A custom SidebarItem offers opportunities to provide a richer user experience such as notification badges.  The component should accept the following properties:
+
+```typescript
+export type MySidebarItemProps = {
+  to: string; // supplied by the sidebar during rendering, this will be the path configured for the dynamicRoute
+};
+```
+
+Other properties can be specified as well and configured using the `config.props` property on the dynamic route.
+
+Here is an example configuration specifying a custom SidebarItem component:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    my-dynamic-plugin-package-name:
+      dynamicRoutes:
+        - importName: CustomPage
+          menuItem:
+            config:
+              props:
+                text: Click Me!
+            importName: SimpleSidebarItem
+          path: /custom_page
+```
 
 #### Menu items
 
@@ -749,6 +778,7 @@ The following mount points are available:
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
 | `admin.page.plugins`         | Administration plugins page         | NO                                                             |
 | `admin.page.rbac`            | Administration RBAC page            | NO                                                             |
+| `entity.context.menu`        | Catalog entity context menu         | YES for all entities                                           |
 | `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
 | `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
 | `entity.page.issues`         | Catalog entity "Issues" tab         | NO                                                             |
@@ -768,12 +798,14 @@ The following mount points are available:
 | `search.page.filters`        | Search filters                      | YES, default catalog kind and lifecycle filters are visible    |
 | `search.page.results`        | Search results content              | YES, default catalog search is present                         |
 
-Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
+Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
 
 Each `entity.page.*` mount point has 2 complementary variations:
 
 - `*/context` type that serves to create React contexts
 - `*/cards` type for regular React components
+
+Here is an example of the overall configuration structure of a mount point:
 
 ```yaml
 # app-config.yaml
@@ -813,6 +845,33 @@ Each mount point supports additional configuration:
   - `isType`: Accepts a string or a list of string with entity types. For example `isType: service` will render the component only for entities of `spec.type: 'service'`.
   - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
   - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`
+
+The entity page also supports adding more items to the context menu at the top right of the page.  Components targeting the `entity.context.menu` mount point have some constraints to follow.  The exported component should be some form of dialog wrapper component that accepts an `open` boolean property and an `onClose` event handler property, like so:
+
+```typescript
+export type SimpleDialogProps = {
+  open: boolean;
+  onClose: () => void;
+};
+```
+
+ The context menu entry can be configured via the `props` configuration entry for the mount point.  The `title` and `icon` properties will set the menu item's text and icon.  Any system icon or icon added via a dynamic plugin can be used.  Here is an example configuration:
+
+ ```yaml
+dynamicPlugins:
+  frontend:
+    my-dynamic-plugin-package:
+      appIcons:
+        - name: dialogIcon
+          importName: DialogIcon
+      mountPoints:
+        - mountPoint: entity.context.menu
+          importName: SimpleDialog
+          config:
+            props:
+              title: Open Simple Dialog
+              icon: dialogIcon
+ ```
 
 #### Customizing and Adding Entity tabs
 
@@ -872,7 +931,18 @@ Backstage offers an Utility API mechanism that provide ways for plugins to commu
 - Custom plugin-made API that can be already self contained within any plugin (including dynamic plugins)
 - [App API implementations and overrides](https://backstage.io/docs/api/utility-apis/#app-apis) which needs to be added separately.
 
-Dynamic plugins provides you with a way to utilize the App API concept via `apiFactories` configuration:
+and a plugin can potentially expose multiple API Factories.  Dynamic plugins allow a couple different ways to take advantage of this functionality.
+
+If a dynamic plugin exports the plugin object returned by `createPlugin`, it will be supplied to the `createApp` API and all API factories exported by the plugin will be automatically registered and available in the frontend application.  Dynamic plugins that follow this pattern should not use the `apiFactories` configuration.  Also, if a dynamic plugin only contains API factories and follows this pattern, it will just be necessary to add an entry to the `dynamicPlugins.frontend` config for the dynamic plugin package name, for example:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    my-dynamic-plugin-package-with-api-factories: {}
+```
+
+However if the dynamic plugin doesn't export it's plugin object then it will be necessary to explicitly configure each API factory that should be registered with the `createApp` API via the `apiFactories` configuration:
 
 ```yaml
 # app-config.yaml
@@ -883,8 +953,6 @@ dynamicPlugins:
         - importName: BarApi # Optional, explicit import name that reference a AnyApiFactory<{}> implementation. Defaults to default export.
           module: CustomModule # Optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
 ```
-
-Each plugin can expose multiple API Factories and each factory is required to define its `importName` (if it differs from the default export).
 
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
