@@ -32,6 +32,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic@workspace:."
+  dependencies:
+    abort-controller: ^3.0.0
+    axios: ^1.7.4
+    form-data: ^4.0.0
+    yaml: ^2.3.3
+    zod: ^3.22.4
+  peerDependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+  languageName: unknown
+  linkType: soft
+
 "combined-stream@npm:^1.0.8":
   version: 1.0.8
   resolution: "combined-stream@npm:1.0.8"
@@ -75,21 +90,6 @@ __metadata:
   checksum: ccee458cd5baf234d6b57f349fe9cc5f9a2ea8fd1af5ecda501a18fd1572a6dd3bf08a49f00568afd995b6a65af34cb8dec083cf9d582c4e621836499498dd84
   languageName: node
   linkType: hard
-
-"janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic@workspace:."
-  dependencies:
-    abort-controller: ^3.0.0
-    axios: ^1.7.4
-    form-data: ^4.0.0
-    yaml: ^2.3.3
-    zod: ^3.22.4
-  peerDependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/plugin-scaffolder-node": ^0.5.0
-  languageName: unknown
-  linkType: soft
 
 "mime-db@npm:1.52.0":
   version: 1.52.0
