@@ -3159,6 +3159,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-ocm-backend@npm:5.2.2":
+  version: 5.2.2
+  resolution: "@backstage-community/plugin-ocm-backend@npm:5.2.2"
+  dependencies:
+    "@backstage-community/plugin-ocm-common": ^3.6.1
+    "@backstage/backend-defaults": ^0.5.2
+    "@backstage/backend-openapi-utils": ^0.2.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-catalog-node": ^1.13.1
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-node": ^0.8.4
+    "@kubernetes/client-node": ^0.22.1
+    express: ^4.18.2
+    semver: ^7.5.4
+  checksum: d4fd8848f150601a7646b0902d0847f6f77c9a01f5c582aa8f5cd96a1890aad0ac51d8db7d8010f4a984473ecd648b95dc1855379d4418bd4298e7f35cd2fc25
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-ocm-common@npm:^3.6.1":
   version: 3.6.1
   resolution: "@backstage-community/plugin-ocm-common@npm:3.6.1"
@@ -3168,9 +3188,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-ocm@npm:5.2.1":
-  version: 5.2.1
-  resolution: "@backstage-community/plugin-ocm@npm:5.2.1"
+"@backstage-community/plugin-ocm@npm:5.2.2":
+  version: 5.2.2
+  resolution: "@backstage-community/plugin-ocm@npm:5.2.2"
   dependencies:
     "@backstage-community/plugin-ocm-common": ^3.6.1
     "@backstage/catalog-model": ^1.7.0
@@ -3192,7 +3212,7 @@ __metadata:
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-  checksum: e0fa5fe989c49ec189629f0fb3c1667a8f600d993a403dceb994b3054f2b648ba7be8554fa73e81f9633cf0e0905624fd9effd23e405b8136333f248f4ec79f7
+  checksum: 7fa00a3ddd29510837fa96ae1322d2bcc3ed54dd15fbc5a8a2a5b4cde43420b70bff786b508cc4b4f01087b23e843771a01372ffefd8c8a2e84a6ce538815317
   languageName: node
   linkType: hard
 
@@ -9729,35 +9749,6 @@ __metadata:
     react: 16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
   checksum: 6726b9d3c8148334e5947b41030180b51d21f771cd870085b23580d306c9ca4135b3698788506addbd64217099423baaa9fa07cfd64d4da8f9ad33088c6a3f93
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-ocm-backend@npm:5.2.0":
-  version: 5.2.0
-  resolution: "@janus-idp/backstage-plugin-ocm-backend@npm:5.2.0"
-  dependencies:
-    "@backstage/backend-defaults": ^0.5.2
-    "@backstage/backend-openapi-utils": ^0.2.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.4
-    "@janus-idp/backstage-plugin-ocm-common": ^3.6.0
-    "@kubernetes/client-node": ^0.22.1
-    express: ^4.18.2
-    semver: ^7.5.4
-  checksum: 3784746177e47847d51d3ee165a793e3aadb62461903552a143c26b295451d45bba4ba05ac5cd854d3726a75c620ee783de59d33405476f6e9cd902e72eb47ec
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-ocm-common@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "@janus-idp/backstage-plugin-ocm-common@npm:3.6.0"
-  peerDependencies:
-    "@backstage/plugin-permission-common": ^0.8.1
-  checksum: 334c9909f2b07f9c95f9f05e0c8e38eda65550b55baad697fc57f6cfed01f92e3e9475515c198e193c7e66a6a417397237a9d481da980d530eae4dd259e16c02
   languageName: node
   linkType: hard
 
@@ -20343,11 +20334,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-ocm-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-ocm-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic"
+  dependencies:
+    "@backstage-community/plugin-ocm-backend": 5.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-ocm@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-ocm@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm"
   dependencies:
-    "@backstage-community/plugin-ocm": 5.2.1
+    "@backstage-community/plugin-ocm": 5.2.2
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
     typescript: ^5.6.3
@@ -29444,16 +29446,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-bulk-import": 1.7.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-ocm-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-ocm-backend-dynamic":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-ocm-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-ocm-backend-dynamic"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-ocm-backend": 5.2.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft

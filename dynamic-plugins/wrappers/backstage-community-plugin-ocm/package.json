@@ -29,7 +29,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-ocm": "5.2.1"
+    "@backstage-community/plugin-ocm": "5.2.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
