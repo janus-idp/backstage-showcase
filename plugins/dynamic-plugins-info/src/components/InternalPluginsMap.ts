@@ -79,7 +79,7 @@ export const InternalPluginsMap: Record<string, string> = {
   'backstage-community-plugin-3scale-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
   'backstage-community-plugin-catalog-backend-module-keycloak-dynamic':
-    './dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak',
+    './dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic',
   'backstage-community-plugin-redhat-argocd':
     './dynamic-plugins/dist/backstage-community-plugin-redhat-argocd',
   'backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic':
