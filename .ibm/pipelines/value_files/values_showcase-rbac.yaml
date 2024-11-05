@@ -254,6 +254,10 @@ upstream:
             EOF
 
             python install-dynamic-plugins.py /dynamic-plugins-root
+        env:
+          - name: NPM_CONFIG_USERCONFIG
+            value: /opt/app-root/src/.npmrc.dynamic-plugins
+        imagePullPolicy: Always
         volumeMounts:
           - mountPath: /dynamic-plugins-root
             name: dynamic-plugins-root
