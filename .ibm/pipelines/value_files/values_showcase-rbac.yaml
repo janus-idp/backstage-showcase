@@ -157,9 +157,6 @@ upstream:
       # The initContainer below will install dynamic plugins in this volume mount.
       - name: dynamic-plugins-root
         mountPath: /opt/app-root/src/dynamic-plugins-root
-      # Audit Log data will be stored in this volume mount.
-      - name: audit-log-data
-        mountPath: /var/log/redhat-developer-hub/audit
       - name: rbac-policy
         mountPath: /opt/app-root/src/rbac
       - name: rbac-conditions
@@ -174,18 +171,17 @@ upstream:
         name: postgress-external-db-cluster-cert
         subPath: tls.key
     extraVolumes:
+      # -- Ephemeral volume that will contain the dynamic plugins installed by the initContainer below at start.
+      # To have more control on underlying storage, the [emptyDir](https://docs.openshift.com/container-platform/4.13/storage/understanding-ephemeral-storage.html)
+      # could be changed to a [generic ephemeral volume](https://docs.openshift.com/container-platform/4.13/storage/generic-ephemeral-vols.html#generic-ephemeral-vols-procedure_generic-ephemeral-volumes).
       - name: dynamic-plugins-root
-        persistentVolumeClaim:
-          claimName: '{{ printf "%s-dynamic-plugins-root" .Release.Name }}'
-      - name: audit-log-data
-        persistentVolumeClaim:
-          claimName: '{{ printf "%s-audit-log" .Release.Name }}'
+        emptyDir: {}
       # Volume that will expose the `dynamic-plugins.yaml` file from the `dynamic-plugins` config map.
       # The `dynamic-plugins` config map is created by the helm chart from the content of the `global.dynamic` field.
       - name: dynamic-plugins
         configMap:
           defaultMode: 420
-          name: '{{ printf "%s-dynamic-plugins" .Release.Name }}'
+          name: dynamic-plugins
           optional: true
       # Optional volume that allows exposing the `.npmrc` file (through a `dynamic-plugins-npmrc` secret)
       # to be used when running `npm pack` during the dynamic plugins installation by the initContainer.
@@ -193,16 +189,7 @@ upstream:
         secret:
           defaultMode: 420
           optional: true
-          secretName: '{{ printf "%s-dynamic-plugins-npmrc" .Release.Name }}'
-      # Optional volume that allows adding a container registry `auth.json` file (through a `dynamic-plugins-registry-auth` secret)
-      # to be used when installing plugins from secure container registries during the dynamic plugins installation by the initContainer.
-      - name: dynamic-plugins-registry-auth
-        secret:
-          defaultMode: 416
-          optional: true
-          secretName: '{{ printf "%s-dynamic-plugins-registry-auth" .Release.Name }}'
-      - name: npmcacache
-        emptyDir: {}
+          secretName: dynamic-plugins-npmrc
       - name: postgress-external-db-cluster-cert
         secret:
           secretName: postgress-external-db-cluster-cert
@@ -269,11 +256,6 @@ upstream:
             name: dynamic-plugins-npmrc
             readOnly: true
             subPath: .npmrc
-          - mountPath: /opt/app-root/src/.config/containers
-            name: dynamic-plugins-registry-auth
-            readOnly: true
-          - mountPath: /opt/app-root/src/.npm/_cacache
-            name: npmcacache
           - mountPath: /rbac
             name: rbac-policy
           - mountPath: /rbac-conditions
