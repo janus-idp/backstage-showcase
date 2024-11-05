@@ -40,6 +40,7 @@
     "@backstage/cli": "0.28.2",
     "@ianvs/prettier-plugin-sort-imports": "4.2.1",
     "@spotify/prettier-config": "15.0.0",
+    "glob": "^11.0.0",
     "husky": "8.0.3",
     "lint-staged": "15.2.10",
     "node-gyp": "10.2.0",
@@ -62,7 +63,9 @@
     "@backstage/plugin-scaffolder-node@^0.4.2": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
     "@backstage/plugin-scaffolder-node@^0.4.8": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
     "@backstage/plugin-scaffolder-node@^0.5.0": "patch:@backstage/plugin-scaffolder-node@npm%3A0.5.0#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.5.0-ed9dfe74cb.patch",
-    "@backstage/backend-dynamic-feature-service@0.4.3": "patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch"
+    "@backstage/backend-dynamic-feature-service@0.4.3": "patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.3#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.3-2650d84cc8.patch",
+    "@backstage/plugin-auth-backend-module-oidc-provider@0.3.1": "patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1-6fab98121c.patch",
+    "@backstage/plugin-auth-backend-module-oidc-provider@^0.3.1": "patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1-6fab98121c.patch"
   },
   "jest": {
     "testTimeout": 20000

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import {
   ResponseErrorPanel,
@@ -72,7 +72,7 @@ export const DynamicPluginsTable = () => {
               enabled: true,
             };
           }
-          return { ...plugin, internal: false, enabled: true };
+          return plugin;
         },
       );
       const notEnabledInternalPlugins = getNotEnabledInternalPlugins(
