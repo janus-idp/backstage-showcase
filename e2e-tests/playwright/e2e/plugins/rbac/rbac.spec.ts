@@ -205,6 +205,11 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test("Edit users and groups and update policies of a role from the overview page", async () => {
     await rolesHelper.createRole("test-role1");
+
+    await page
+      .getByPlaceholder("Filter")
+      .pressSequentially("test-role1\n", { delay: 300 });
+
     await uiHelper.clickLink("role:default/test-role1");
 
     await uiHelper.verifyHeading("role:default/test-role1");
