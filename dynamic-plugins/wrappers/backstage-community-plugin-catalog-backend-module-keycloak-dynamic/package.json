@@ -33,7 +33,7 @@
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-keycloak --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-keycloak-backend --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-keycloak --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-catalog-backend-module-keycloak": "3.2.0"
