@@ -585,7 +585,7 @@ plugins:
     disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
-    disabled: false
+    disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
