@@ -150,7 +150,6 @@ global:
               janus-idp.backstage-plugin-rbac:
                 mountPoints:
                   - mountPoint: admin.page.rbac/cards
-                    module: RbacPlugin
                     importName: RbacPage
                     config:
                       layout:
@@ -160,7 +159,6 @@ global:
                         useHeader: false
                 dynamicRoutes:
                   - path: /admin/rbac
-                    module: RbacPlugin
                     importName: RbacPage
       # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
       #   disabled: false
