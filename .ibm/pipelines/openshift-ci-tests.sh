@@ -25,6 +25,7 @@ trap cleanup EXIT
 
 source "${DIR}/utils.sh"
 source "${DIR}/cluster/aks/az.sh"
+source "${DIR}/cluster/gke/gcloud.sh"
 
 set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
@@ -214,7 +215,7 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/service-account-rhdh-secret.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
-  if [[ "$JOB_NAME" != *aks* ]]; then
+  if [[ "$JOB_NAME" != *aks* && "$JOB_NAME" != *gke*  ]]; then
     oc new-app https://github.com/janus-qe/test-backstage-customization-provider --namespace="${project}"
     oc expose svc/test-backstage-customization-provider --namespace="${project}"
   fi
@@ -297,7 +298,7 @@ check_backstage_running() {
   local release_name=$1
   local namespace=$2
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
-  if [[ "$JOB_NAME" == *aks* ]]; then
+  if [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke*  ]]; then
     local url="https://${K8S_CLUSTER_ROUTER_BASE}"
   fi
 
@@ -410,6 +411,39 @@ initiate_rds_deployment() {
   helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
+initiate_gke_deployment() {
+  gcloud_ssl_cert_create $GKE_CERT_NAME $GKE_INSTANCE_DOMAIN_NAME $GOOGLE_CLOUD_PROJECT
+  add_helm_repos
+  install_helm
+  #delete_namespace "${NAME_SPACE_RBAC_AKS}"
+  configure_namespace "${NAME_SPACE_AKS}"
+  # Renable when namespace termination issue is solved
+  # install_tekton_pipelines
+  uninstall_helmchart "${NAME_SPACE_AKS}" "${RELEASE_NAME}"
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_AKS}"
+  oc apply -f "${DIR}/cluster/gke/frontend-config.yaml" --namespace="${project}"
+  yq_merge_value_files "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_GKE_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_GKE_MERGED_VALUE_FILE_NAME}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_AKS}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_GKE_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_rbac_gke_deployment() {
+  gcloud_ssl_cert_create $GKE_CERT_NAME $GKE_INSTANCE_DOMAIN_NAME $GOOGLE_CLOUD_PROJECT
+  add_helm_repos
+  install_helm
+  delete_namespace "${NAME_SPACE_AKS}"
+  configure_namespace "${NAME_SPACE_RBAC_AKS}"
+  # Renable when namespace termination issue is solved
+  # install_tekton_pipelines
+  uninstall_helmchart "${NAME_SPACE_RBAC_AKS}" "${RELEASE_NAME_RBAC}"
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_AKS}"
+  yq_merge_value_files "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_RBAC_GKE_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_RBAC_GKE_MERGED_VALUE_FILE_NAME}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_RBAC_AKS}"
+  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_RBAC_GKE_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
 check_and_test() {
   local release_name=$1
   local namespace=$2
@@ -455,7 +489,7 @@ main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info
   source "${DIR}/env_variables.sh"
-  if [[ "$JOB_NAME" == *periodic-* ]]; then
+  if [[ "$JOB_NAME" == *periodic* ]]; then
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
@@ -469,6 +503,9 @@ main() {
     az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
     az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
     az_aks_get_credentials "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  elif [[ "$JOB_NAME" == *gke* ]]; then
+    gcloud_auth "${GKE_SERVICE_ACCOUNT_NAME}" "/tmp/secrets/GKE_SERVICE_ACCOUNT_KEY"
+    gcloud_gke_get_credentials "${GKE_CLUSTER_NAME}" "${GKE_CLUSTER_REGION}" "${GOOGLE_CLOUD_PROJECT}"
   else
     oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
   fi
@@ -485,6 +522,8 @@ main() {
   API_SERVER_URL=$(oc whoami --show-server)
   if [[ "$JOB_NAME" == *aks* ]]; then
     K8S_CLUSTER_ROUTER_BASE=$AKS_INSTANCE_DOMAIN_NAME
+  elif [[ "$JOB_NAME" == *gke* ]]; then
+    K8S_CLUSTER_ROUTER_BASE="${GKE_INSTANCE_DOMAIN_NAME}"
   else
     K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
   fi
@@ -500,6 +539,13 @@ main() {
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
     delete_namespace "${NAME_SPACE_AKS}"
     initiate_rbac_aks_deployment
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
+    delete_namespace "${NAME_SPACE_RBAC_AKS}"
+  elif [[ "$JOB_NAME" == *gke* ]]; then
+    initiate_gke_deployment
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
+    delete_namespace "${NAME_SPACE_AKS}"
+    initiate_rbac_gke_deployment
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
     delete_namespace "${NAME_SPACE_RBAC_AKS}"
   else

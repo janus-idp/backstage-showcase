@@ -8,6 +8,10 @@ HELM_CHART_AKS_DIFF_VALUE_FILE_NAME="diff-values_showcase_AKS.yaml"
 HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME="diff-values_showcase-rbac_AKS.yaml"
 HELM_CHART_AKS_MERGED_VALUE_FILE_NAME="merged-values_showcase_AKS.yaml"
 HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME="merged-values_showcase-rbac_AKS.yaml"
+HELM_CHART_GKE_DIFF_VALUE_FILE_NAME="diff-values_showcase_GKE.yaml"
+HELM_CHART_RBAC_GKE_DIFF_VALUE_FILE_NAME="diff-values_showcase-rbac_GKE.yaml"
+HELM_CHART_GKE_MERGED_VALUE_FILE_NAME="merged-values_showcase_GKE.yaml"
+HELM_CHART_RBAC_GKE_MERGED_VALUE_FILE_NAME="merged-values_showcase-rbac_GKE.yaml"
 HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"
@@ -95,5 +99,12 @@ ARM_CLIENT_ID=$(cat /tmp/secrets/ARM_CLIENT_ID)
 ARM_CLIENT_SECRET=$(cat /tmp/secrets/ARM_CLIENT_SECRET)
 AKS_NIGHTLY_CLUSTER_NAME=$(cat /tmp/secrets/AKS_NIGHTLY_CLUSTER_NAME)
 AKS_NIGHTLY_CLUSTER_RESOURCEGROUP=$(cat /tmp/secrets/AKS_NIGHTLY_CLUSTER_RESOURCEGROUP)
+
+GKE_CLUSTER_NAME=$(cat /tmp/secrets/GKE_CLUSTER_NAME)
+GKE_CLUSTER_REGION=$(cat /tmp/secrets/GKE_CLUSTER_REGION)
+GKE_INSTANCE_DOMAIN_NAME=$(cat /tmp/secrets/GKE_INSTANCE_DOMAIN_NAME)
+GKE_SERVICE_ACCOUNT_NAME=$(cat /tmp/secrets/GKE_SERVICE_ACCOUNT_NAME)
+GKE_CERT_NAME=$(cat /tmp/secrets/GKE_CERT_NAME)
+GOOGLE_CLOUD_PROJECT=$(cat /tmp/secrets/GOOGLE_CLOUD_PROJECT)
 
 set +a  # Stop automatically exporting variables
