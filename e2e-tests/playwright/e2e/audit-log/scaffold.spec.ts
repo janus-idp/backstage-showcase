@@ -31,6 +31,7 @@ test.describe("Audit Log check for Catalog Plugin", () => {
     await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(template, false);
     await uiHelper.openSidebar("Create");
+    await common.waitForLoad();
     await uiHelper.searchInputPlaceholder("Hello World 2");
     await uiHelper.pressTab();
     await uiHelper.clickButton("Choose");

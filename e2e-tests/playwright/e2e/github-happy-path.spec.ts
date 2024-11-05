@@ -91,6 +91,7 @@ test.describe.serial("GitHub Happy path", () => {
 
   test("Verify that the Issues tab renders all the open github issues in the repository", async () => {
     await uiHelper.clickTab("Issues");
+    await common.clickOnGHloginPopup();
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
     const issuesCountText = `All repositories (${openIssues.length} Issues)*`;

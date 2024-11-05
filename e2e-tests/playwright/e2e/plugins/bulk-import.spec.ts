@@ -291,7 +291,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
