@@ -40,6 +40,7 @@
     "@backstage/cli": "0.28.2",
     "@ianvs/prettier-plugin-sort-imports": "4.2.1",
     "@spotify/prettier-config": "15.0.0",
+    "glob": "^11.0.0",
     "husky": "8.0.3",
     "lint-staged": "15.2.10",
     "node-gyp": "10.2.0",
