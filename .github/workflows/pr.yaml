@@ -95,3 +95,6 @@ jobs:
 
       - name: Run tests
         run: yarn run test --concurrency=75% --affected
+
+      - name: Verify wrappers
+        run: yarn workspace dynamic-plugins-utils run test:wrappers

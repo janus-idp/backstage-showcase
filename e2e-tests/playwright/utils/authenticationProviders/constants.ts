@@ -1,7 +1,7 @@
-import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
-import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
-import { User, Group } from "@microsoft/microsoft-graph-types";
+import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
+import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
+import { Group, User } from "@microsoft/microsoft-graph-types";
 
 export const RHSSO76_ADMIN_USERNAME = process.env.RHSSO76_ADMIN_USERNAME;
 export const RHSSO76_ADMIN_PASSWORD = process.env.RHSSO76_ADMIN_PASSWORD;
@@ -34,7 +34,7 @@ export const QUAY_REPO = process.env.QUAY_REPO;
 export const TAG_NAME = process.env.TAG_NAME;
 
 export const AUTH_PROVIDERS_VALUES_FILE =
-  "../.ibm/pipelines/value_files/values-showcase_auth-providers.yaml";
+  "../.ibm/pipelines/value_files/values_showcase-auth-providers.yaml";
 export const AUTH_PROVIDERS_POD_STRING =
   AUTH_PROVIDERS_RELEASE + "-" + AUTH_PROVIDERS_CHART.split("/")[1];
 export const AUTH_PROVIDERS_BASE_URL = `https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${process.env.K8S_CLUSTER_ROUTER_BASE}`;
