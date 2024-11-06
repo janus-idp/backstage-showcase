@@ -3216,6 +3216,88 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-rbac-backend@npm:5.2.4":
+  version: 5.2.4
+  resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.4"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": ^1.12.2
+    "@backstage-community/plugin-rbac-node": ^1.8.2
+    "@backstage/backend-defaults": ^0.5.2
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-client": ^1.7.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-auth-node": ^0.5.3
+    "@backstage/plugin-permission-backend": ^0.5.50
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-node": ^0.8.4
+    "@dagrejs/graphlib": ^2.1.13
+    "@janus-idp/backstage-plugin-audit-log-node": ^1.7.1
+    casbin: ^5.27.1
+    chokidar: ^3.6.0
+    csv-parse: ^5.5.5
+    express: ^4.18.2
+    js-yaml: ^4.1.0
+    knex: ^3.0.0
+    lodash: ^4.17.21
+    typeorm-adapter: ^1.6.1
+  checksum: a855e93074dc18e9189ded5cc6af8e010f9a7d24f7f81dc18f554895b4ac638b81ec35c39c9878b2eb7253b5e12c7341e4bf13366814a647fb108d65236d309d
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-common@npm:1.12.2, @backstage-community/plugin-rbac-common@npm:^1.12.2":
+  version: 1.12.2
+  resolution: "@backstage-community/plugin-rbac-common@npm:1.12.2"
+  peerDependencies:
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-permission-common": ^0.8.1
+  checksum: e649c786650e77aac5daee65e7a71b9146391712b6bacc1d9516150ffdeb580b2770b30b1813bcb4d539b3082fd85c644e68a4805fc5d18201c7a4d981e7776f
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-node@npm:1.8.2, @backstage-community/plugin-rbac-node@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "@backstage-community/plugin-rbac-node@npm:1.8.2"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+  checksum: 32544869b139c8d255406a701f545bf673159255261b8d1f7fcef2f6cf47d93f5cfd30cdd513682322ba87422028a21037cb7ed666c86bae87ce9e21727e5812
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac@npm:1.32.3":
+  version: 1.32.3
+  resolution: "@backstage-community/plugin-rbac@npm:1.32.3"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": ^1.12.2
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/plugin-catalog": ^1.24.0
+    "@backstage/plugin-catalog-common": ^1.1.0
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-react": ^0.4.27
+    "@backstage/theme": ^0.6.0
+    "@janus-idp/shared-react": ^2.13.1
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": ^4.0.0-alpha.45
+    "@mui/icons-material": 5.16.4
+    "@mui/material": ^5.14.18
+    "@rjsf/core": ^5.21.2
+    "@rjsf/mui": ^5.21.2
+    "@rjsf/utils": ^5.21.2
+    "@rjsf/validator-ajv8": ^5.21.2
+    autosuggest-highlight: ^3.3.4
+    formik: ^2.4.5
+    react-use: ^17.4.0
+    yup: ^1.3.2
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: c7692b8b8c9978967f4594b98adb30ef5e60098f61d63a822e40762a546ff6175bbb7afa5fbe6d7023482b5a96c9396b33e62bf7134fa96e612be33ef58b2653
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-redhat-argocd-common@npm:^1.0.7":
   version: 1.0.7
   resolution: "@backstage-community/plugin-redhat-argocd-common@npm:1.0.7"
@@ -9591,6 +9673,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@internal/plugin-licensed-users-info-backend@workspace:plugins/licensed-users-info-backend"
   dependencies:
+    "@backstage-community/plugin-rbac-common": 1.12.2
     "@backstage/backend-defaults": 0.5.2
     "@backstage/backend-plugin-api": 1.0.1
     "@backstage/backend-test-utils": 1.0.2
@@ -9603,7 +9686,6 @@ __metadata:
     "@backstage/plugin-auth-backend-module-guest-provider": 0.2.1
     "@backstage/plugin-permission-common": 0.8.1
     "@backstage/types": 1.1.1
-    "@janus-idp/backstage-plugin-rbac-common": 1.12.0
     "@types/express": 4.17.21
     "@types/supertest": 2.0.16
     express: 4.21.0
@@ -9725,12 +9807,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0, @janus-idp/backstage-plugin-audit-log-node@npm:^1.7.0":
+"@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0":
   version: 1.7.0
   resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0"
   dependencies:
     lodash: ^4.17.21
   checksum: 22557f15cffc7a22bca592d9b0efaf917ac3cb8a2693957407ccad1f160060d349dc81fbc5f823c1b9e26cf2357d7566a005ac00d5b31b94b9ef952b13b301d0
+  languageName: node
+  linkType: hard
+
+"@janus-idp/backstage-plugin-audit-log-node@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.1"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: 1d8861a8bdb88aabfd39493077f360d505dc110b310f079d64fc48f1896037afe0b7f991f9541f02437f6011d1e45ddaf42f7d9e8698c57a3e662687f2dd186a
   languageName: node
   linkType: hard
 
@@ -9769,85 +9860,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-rbac-backend@npm:5.2.1":
-  version: 5.2.1
-  resolution: "@janus-idp/backstage-plugin-rbac-backend@npm:5.2.1"
-  dependencies:
-    "@backstage/backend-defaults": ^0.5.2
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-permission-backend": ^0.5.50
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.4
-    "@dagrejs/graphlib": ^2.1.13
-    "@janus-idp/backstage-plugin-audit-log-node": ^1.7.0
-    "@janus-idp/backstage-plugin-rbac-common": ^1.12.0
-    "@janus-idp/backstage-plugin-rbac-node": ^1.8.0
-    casbin: ^5.27.1
-    chokidar: ^3.6.0
-    csv-parse: ^5.5.5
-    express: ^4.18.2
-    js-yaml: ^4.1.0
-    knex: ^3.0.0
-    lodash: ^4.17.21
-    typeorm-adapter: ^1.6.1
-  checksum: 375322422862b1fdfbf9d798021351804c47b39d90e65e9fa577c98eadbc0b256c0e8d460f71c5f0a68488ef92f75f37a510eade35cd7e72811bc08ed4ec4659
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-rbac-common@npm:1.12.0, @janus-idp/backstage-plugin-rbac-common@npm:^1.12.0":
+"@janus-idp/backstage-plugin-rbac-common@npm:1.12.0":
   version: 1.12.0
   resolution: "@janus-idp/backstage-plugin-rbac-common@npm:1.12.0"
   peerDependencies:
     "@backstage/errors": ^1.2.4
     "@backstage/plugin-permission-common": ^0.8.1
   checksum: f2de8438bf081558be39571becfaa7eae5764e8d974af73e2116bbedf21e2c4086015fcab187bc4060e45048d250ae95ca194e25fadf96a9d5564d43fb7888eb
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-rbac-node@npm:1.8.0, @janus-idp/backstage-plugin-rbac-node@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@janus-idp/backstage-plugin-rbac-node@npm:1.8.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-  checksum: 15710889dbb58a1a49356b54ebcad899003685d748b2326de60a811b4e6601def2c6e2198753f1ff611b2bbaafc74f1435520d9c404522789011df3521cabb33
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-rbac@npm:1.32.0":
-  version: 1.32.0
-  resolution: "@janus-idp/backstage-plugin-rbac@npm:1.32.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog": ^1.24.0
-    "@backstage/plugin-catalog-common": ^1.1.0
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/backstage-plugin-rbac-common": ^1.12.0
-    "@janus-idp/shared-react": ^2.13.0
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": ^4.0.0-alpha.45
-    "@mui/icons-material": 5.16.4
-    "@mui/material": ^5.14.18
-    "@rjsf/core": ^5.21.2
-    "@rjsf/mui": ^5.21.2
-    "@rjsf/utils": ^5.21.2
-    "@rjsf/validator-ajv8": ^5.21.2
-    autosuggest-highlight: ^3.3.4
-    formik: ^2.4.5
-    react-use: ^17.4.0
-    yup: ^1.3.2
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-router-dom: ^6.0.0
-  checksum: bfa38a8439e4760388c3638bc378593078881d9792248e848721808a4ebbd61f123216723653d6dfe7ca442f9d17c3b38534dbd79b5fef20d1129c36a3cc77c8
   languageName: node
   linkType: hard
 
@@ -20205,6 +20224,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend@workspace:packages/backend"
   dependencies:
+    "@backstage-community/plugin-rbac-backend": 5.2.4
+    "@backstage-community/plugin-rbac-node": 1.8.2
     "@backstage/backend-app-api": 1.0.1
     "@backstage/backend-defaults": 0.5.2
     "@backstage/backend-dynamic-feature-service": 0.4.3
@@ -20233,8 +20254,6 @@ __metadata:
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
     "@janus-idp/backstage-plugin-audit-log-node": 1.7.0
-    "@janus-idp/backstage-plugin-rbac-backend": 5.2.1
-    "@janus-idp/backstage-plugin-rbac-node": 1.8.0
     "@janus-idp/backstage-scaffolder-backend-module-annotator": 2.2.0
     "@types/express": 4.17.21
     "@types/global-agent": 2.1.3
@@ -20435,6 +20454,17 @@ __metadata:
   resolution: "backstage-community-plugin-ocm@workspace:dynamic-plugins/wrappers/backstage-community-plugin-ocm"
   dependencies:
     "@backstage-community/plugin-ocm": 5.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac"
+  dependencies:
+    "@backstage-community/plugin-rbac": 1.32.3
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
     typescript: ^5.6.3
@@ -29531,16 +29561,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-quay": 1.14.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-rbac@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-rbac@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-rbac": 1.32.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft

@@ -68,8 +68,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic',
   'janus-idp-backstage-scaffolder-backend-module-regex-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic',
-  'janus-idp-backstage-plugin-rbac':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-rbac',
+  'backstage-community-plugin-rbac':
+    './dynamic-plugins/dist/backstage-community-plugin-rbac',
   'backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
   'backstage-community-scaffolder-backend-module-sonarqube-dynamic':
