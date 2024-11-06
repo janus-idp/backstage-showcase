@@ -8902,10 +8902,10 @@
     lodash "^4.17.21"
     yaml "^2.0.0"
 
-"@janus-idp/cli@1.13.2":
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.13.2.tgz#ff63fc07442999ea45286ee4a16a79e271d8a6bc"
-  integrity sha512-2UsvnIJgx1v9BgVrroz8pjn4OBpUvpZ7/Xl3sPWCkQh4KI0Rj50MWHP1B8W65WwBC1Zh/naANKBdGKtX4VAsmg==
+"@janus-idp/cli@1.13.3":
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/@janus-idp/cli/-/cli-1.13.3.tgz#87c7ce9e6489f589a8ebffd9bc6897d81ee42c5d"
+  integrity sha512-5CieRfK/mEUkAMCZhoSS8yN0mdt+rdGebQD6sZMZef/gP7adN2fgNY/hs0/W77eUBafYbF6zVX2JJVEjTx/C2Q==
   dependencies:
     "@backstage/cli-common" "^0.1.14"
     "@backstage/cli-node" "^0.2.7"
