@@ -22,12 +22,11 @@ export class Common {
   }
 
   public async loginAsGuest() {
-    const uiHelper = new UIhelper(this.page);
     await this.page.goto("/");
     await this.page.waitForURL("/");
-    await uiHelper.verifyHeading("Select a sign-in method");
-    await uiHelper.clickButton("Enter");
-    await uiHelper.waitForSideBarVisible();
+    await this.uiHelper.verifyHeading("Select a sign-in method");
+    await this.uiHelper.clickButton("Enter");
+    await this.uiHelper.waitForSideBarVisible();
   }
 
   async waitForLoad(timeout = 120000) {
@@ -66,38 +65,136 @@ export class Common {
     });
   }
 
-  async githubLogin(username: string, password: string) {
+  async handleLoginPopup(
+    resolve: (value: string | PromiseLike<string>) => void,
+    popup: Page,
+    loginSteps: (popup: Page) => Promise<void>,
+    errorHandler?: (popup: Page, e: any) => Promise<void>,
+  ) {
+    await popup.waitForLoadState();
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      resolve("Already logged in");
+    } else {
+      await popup.waitForTimeout(3000);
+      try {
+        await loginSteps(popup);
+        await popup.waitForEvent("close", { timeout: 2000 });
+        resolve("Login successful");
+      } catch (e) {
+        if (errorHandler) {
+          await errorHandler(popup, e);
+          resolve("Login successful with additional steps");
+        } else {
+          throw e;
+        }
+      }
+    }
+  }
+
+  async login(
+    signInMethodText: string,
+    username: string,
+    password: string,
+    selectors: {
+      usernameField: string;
+      passwordField: string;
+      submitButton: string;
+      additionalSteps?: (popup: Page) => Promise<void>;
+      errorHandler?: (popup: Page, e: any) => Promise<void>;
+    },
+  ) {
     await this.page.goto("/");
-    await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
+    await this.page.waitForSelector(
+      `p:has-text("Sign in using ${signInMethodText}")`,
+    );
     await this.uiHelper.clickButton("Sign In");
 
     return await new Promise<string>((resolve) => {
       this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
+        await this.handleLoginPopup(
+          resolve,
+          popup,
+          async (popup) => {
+            await popup.locator(selectors.usernameField).fill(username);
+            await popup.locator(selectors.passwordField).fill(password);
+            await popup
+              .locator(selectors.submitButton)
+              .click({ timeout: 5000 });
+            if (selectors.additionalSteps) {
+              await selectors.additionalSteps(popup);
+            }
+          },
+          selectors.errorHandler,
+        );
+      });
+    });
+  }
+
+  async githubLogin(username: string, password: string) {
+    return await this.login("GitHub", username, password, {
+      usernameField: "#login_field",
+      passwordField: "#password",
+      submitButton: "[type='submit']",
+      errorHandler: async (popup, e) => {
+        const authorization = popup.locator("button.js-oauth-authorize-btn");
+        if (await authorization.isVisible()) {
+          await authorization.click();
         } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator("#login_field").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[type='submit']").click({ timeout: 5000 });
-            //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const authorization = popup.locator(
-              "button.js-oauth-authorize-btn",
-            );
-            if (await authorization.isVisible()) {
-              authorization.click();
-              resolve("Login successful with app authorization");
+          throw e;
+        }
+      },
+    });
+  }
+
+  async keycloakLogin(username: string, password: string) {
+    return await this.login("OIDC", username, password, {
+      usernameField: "#username",
+      passwordField: "#password",
+      submitButton: "[name=login]",
+      errorHandler: async (popup, e) => {
+        const usernameError = popup.locator("#input-error");
+        if (await usernameError.isVisible()) {
+          await popup.close();
+          throw new Error("User does not exist");
+        } else {
+          throw e;
+        }
+      },
+    });
+  }
+
+  async MicrosoftAzureLogin(username: string, password: string) {
+    await this.page.goto("/");
+    await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
+    await this.uiHelper.clickButton("Sign In");
+
+    return await new Promise<string>((resolve) => {
+      this.page.once("popup", async (popup) => {
+        await this.handleLoginPopup(
+          resolve,
+          popup,
+          async (popup) => {
+            await popup.locator("[name=loginfmt]").fill(username);
+            await popup
+              .locator('[type=submit]:has-text("Next")')
+              .click({ timeout: 5000 });
+            await popup.locator("[name=passwd]").fill(password);
+            await popup
+              .locator('[type=submit]:has-text("Sign in")')
+              .click({ timeout: 5000 });
+            await popup
+              .locator('[type=button]:has-text("No")')
+              .click({ timeout: 15000 });
+          },
+          async (popup, e) => {
+            const usernameError = popup.locator("#usernameError");
+            if (await usernameError.isVisible()) {
+              throw new Error("User does not exist");
             } else {
               throw e;
             }
-          }
-        }
+          },
+        );
       });
     });
   }
@@ -141,94 +238,21 @@ export class Common {
     return authenticator.generate(secret);
   }
 
-  async keycloakLogin(username: string, password: string) {
-    await this.page.goto("/");
-    await this.page.waitForSelector('p:has-text("Sign in using OIDC")');
-    await this.uiHelper.clickButton("Sign In");
-
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator("#username").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[name=login]").click({ timeout: 5000 });
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const usernameError = popup.locator("id=input-error");
-            if (await usernameError.isVisible()) {
-              await popup.close();
-              resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
-    });
-  }
-
-  async MicrosoftAzureLogin(username: string, password: string) {
-    await this.page.goto("/");
-    await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
-    await this.uiHelper.clickButton("Sign In");
-
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active microsoft session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          try {
-            await popup.locator("[name=loginfmt]").fill(username);
-            await popup
-              .locator('[type=submit]:has-text("Next")')
-              .click({ timeout: 5000 });
-
-            await popup.locator("[name=passwd]").fill(password);
-            await popup
-              .locator('[type=submit]:has-text("Sign in")')
-              .click({ timeout: 5000 });
-            await popup
-              .locator('[type=button]:has-text("No")')
-              .click({ timeout: 15000 });
-            resolve("Login successful");
-          } catch (e) {
-            const usernameError = popup.locator("id=usernameError");
-            if (await usernameError.isVisible()) {
-              resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
-    });
-  }
-
-  async GetParentGroupDisplayed(): Promise<string[]> {
-    await this.page.waitForSelector("p:has-text('Parent Group')");
-    const parent = await this.page
-      .locator("p:has-text('Parent Group')")
-      .locator("..");
-    const group = await parent.locator("a").allInnerTexts();
-    return group;
-  }
-
-  async GetChildGroupsDisplayed(): Promise<string[]> {
-    await this.page.waitForSelector("p:has-text('Child Groups')");
-    const parent = await this.page
-      .locator("p:has-text('Child Groups')")
+  async GetGroupsDisplayed(groupType: string): Promise<string[]> {
+    await this.page.waitForSelector(`p:has-text('${groupType}')`);
+    const parent = this.page
+      .locator(`p:has-text('${groupType}')`)
       .locator("..");
     const groups = await parent.locator("a").allInnerTexts();
     return groups;
+  }
+
+  async GetParentGroupDisplayed(): Promise<string[]> {
+    return await this.GetGroupsDisplayed("Parent Group");
+  }
+
+  async GetChildGroupsDisplayed(): Promise<string[]> {
+    return await this.GetGroupsDisplayed("Child Groups");
   }
 
   async GetMembersOfGroupDisplayed(): Promise<string[]> {
@@ -263,52 +287,44 @@ export class Common {
     };
   }
 
-  async UnregisterUserEnittyFromCatalog(user: string) {
+  async UnregisterEntityFromCatalog(kind: string, entityName: string) {
     await this.page.goto("/");
     await this.uiHelper.openSidebar("Catalog");
-    await this.uiHelper.selectMuiBox("Kind", "User");
-    await this.uiHelper.verifyHeading("All users");
+    await this.uiHelper.selectMuiBox("Kind", kind);
+    await this.uiHelper.verifyHeading(`All ${kind.toLowerCase()}s`);
 
-    await this.uiHelper.clickLink(user);
-    await this.uiHelper.verifyHeading(user);
+    await this.uiHelper.clickLink(entityName);
+    await this.uiHelper.verifyHeading(entityName);
 
     await this.uiHelper.clickUnregisterButtonForDisplayedEntity();
   }
 
-  async UnregisterGroupEnittyFromCatalog(group: string) {
-    await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
-    await this.uiHelper.selectMuiBox("Kind", "Group");
-    await this.uiHelper.verifyHeading("All groups");
+  async UnregisterUserEntityFromCatalog(user: string) {
+    await this.UnregisterEntityFromCatalog("User", user);
+  }
 
-    await this.uiHelper.clickLink(group);
-    await this.uiHelper.verifyHeading(group);
+  async UnregisterGroupEntityFromCatalog(group: string) {
+    await this.UnregisterEntityFromCatalog("Group", group);
+  }
 
-    await this.uiHelper.clickUnregisterButtonForDisplayedEntity();
+  async CheckEntitiesAreShowingInCatalog(kind: string, entities: string[]) {
+    await this.page.goto(
+      `/catalog?filters%5Bkind%5D=${kind.toLowerCase()}&filters%5Buser%5D=all`,
+    );
+    await expect(this.page.getByRole("heading", { level: 1 })).toHaveText(
+      "My Org Catalog",
+      { timeout: 10000 },
+    );
+    await this.uiHelper.verifyHeading(`All ${kind.toLowerCase()}s`);
+    await this.uiHelper.verifyCellsInTable(entities);
   }
 
   async CheckGroupIsShowingInCatalog(groups: string[]) {
-    await this.page.goto(
-      "/catalog?filters%5Bkind%5D=group&filters%5Buser%5D=all",
-    );
-    await expect(this.page.getByRole("heading", { level: 1 })).toHaveText(
-      "My Org Catalog",
-      { timeout: 10000 },
-    );
-    await this.uiHelper.verifyHeading("All groups");
-    await this.uiHelper.verifyCellsInTable(groups);
+    await this.CheckEntitiesAreShowingInCatalog("Group", groups);
   }
 
   async CheckUserIsShowingInCatalog(users: string[]) {
-    await this.page.goto(
-      "/catalog?filters%5Bkind%5D=user&filters%5Buser%5D=all",
-    );
-    await expect(this.page.getByRole("heading", { level: 1 })).toHaveText(
-      "My Org Catalog",
-      { timeout: 10000 },
-    );
-    await this.uiHelper.verifyHeading("All user");
-    await this.uiHelper.verifyCellsInTable(users);
+    await this.CheckEntitiesAreShowingInCatalog("User", users);
   }
 }
 
