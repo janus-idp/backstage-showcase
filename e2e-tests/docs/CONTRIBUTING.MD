@@ -132,6 +132,62 @@ We welcome both code and non-code contributions to our project. Non-code contrib
    - When working with tests that directly use `uiHelper` in spec files, refactor them to move `uiHelper` usage into POM classes.
    - This ensures that all UI interactions are encapsulated within page objects, promoting cleaner and more maintainable test code.
 
+4. **Use External Sources for Validation**
+
+   - **Avoid Hardcoded Data in Tests**
+
+     - When validating frontend results in your end-to-end tests, use external sources of truth such as APIs or databases instead of hardcoded information.
+     - This approach ensures that tests are more robust and accurately reflect the dynamic nature of the application data.
+
+#### Adding New Tests
+
+When contributing new tests or modifying existing ones, please adhere to the following guidelines:
+
+- **Follow Architectural Principles:**
+
+  - **Naming Conventions:** Use consistent and descriptive names for variables, functions, and files as per the project's naming conventions.
+  - **Code Visibility:** Expose only necessary classes and functions. Ensure that the API is simple and user-friendly while maintaining robust internal implementations.
+  - **Test Isolation:** Write tests to be as isolated as possible. This improves reliability and makes future refactoring easier.
+  - **Control Over Test Environment:** Ensure your tests do not rely on external states that are not controlled by the test framework. Manage environment configurations within the framework, propagating settings up to the Playwright layer.
+
+- **Adhere to Technical Guidelines:**
+
+  - **Use the Page Object Model (POM):**
+
+    - All new test code must use the POM design pattern. This is **mandatory** for any new contributions.
+    - When editing old tests that do not follow POM, update them to adhere to this guideline.
+    - Refer to the [Playwright POM Documentation](https://playwright.dev/docs/pom) for best practices.
+
+  - **Utilize Playwright Fixtures:**
+
+    - Use Playwright fixtures to manage context and state between tests.
+    - Refer to the [Playwright Fixtures Documentation](https://playwright.dev/docs/test-fixtures) for details.
+
+  - **Avoid Using `uiHelper` in Spec Files:**
+
+    - Do not use `uiHelper` methods directly in spec files. Instead, encapsulate UI interactions within Page Object classes.
+
+  - **Follow Playwright Best Practices:**
+
+    - Always adhere to Playwright's recommended best practices as outlined in the [Playwright Best Practices](https://playwright.dev/docs/best-practices) documentation.
+    - When editing existing code that does not follow these best practices, improve it to align with the guidelines.
+
+  - **Use External Sources for Validation:**
+
+    - **Dynamic Data Validation:**
+
+      - Use external APIs or databases to validate frontend results dynamically.
+      - Avoid hardcoding expected results; instead, fetch them from a reliable source to reflect real-world scenarios.
+
+    - **Maintain Test Reliability:**
+
+      - Ensure that the external sources used are stable and available during test execution.
+      - Implement retries or fallback mechanisms in case of temporary unavailability.
+
+    - **Example Implementation:**
+
+      - For instance, if testing a user profile display, fetch the expected user data from the API and compare it with the frontend rendering.
+
 ### Pull Requests
 
 If you want to contribute code changes to the project, here are some guidelines:
@@ -207,39 +263,6 @@ If you want to contribute code changes to the project, here are some guidelines:
 8. **Open a Pull Request**
 
    Go to the original repository and click on **New Pull Request**. Provide a clear description of your changes, including any issues your PR fixes, acceptance criteria, and any special notes to the reviewers.
-
-#### Adding New Tests
-
-When contributing new tests or modifying existing ones, please adhere to the following guidelines:
-
-- **Follow Architectural Principles:**
-
-  - **Naming Conventions:** Use consistent and descriptive names for variables, functions, and files as per the project's naming conventions.
-  - **Code Visibility:** Expose only necessary classes and functions. Ensure that the API is simple and user-friendly while maintaining robust internal implementations.
-  - **Test Isolation:** Write tests to be as isolated as possible. This improves reliability and makes future refactoring easier.
-  - **Control Over Test Environment:** Ensure your tests do not rely on external states that are not controlled by the test framework. Manage environment configurations within the framework, propagating settings up to the Playwright layer.
-
-- **Adhere to Technical Guidelines:**
-
-  - **Use the Page Object Model (POM):**
-
-    - All new test code must use the POM design pattern. This is **mandatory** for any new contributions.
-    - When editing old tests that do not follow POM, update them to adhere to this guideline.
-    - Refer to the [Playwright POM Documentation](https://playwright.dev/docs/pom) for best practices.
-
-  - **Utilize Playwright Fixtures:**
-
-    - Use Playwright fixtures to manage context and state between tests.
-    - Refer to the [Playwright Fixtures Documentation](https://playwright.dev/docs/test-fixtures) for details.
-
-  - **Avoid Using `uiHelper` in Spec Files:**
-
-    - Do not use `uiHelper` methods directly in spec files. Instead, encapsulate UI interactions within Page Object classes.
-
-  - **Follow Playwright Best Practices:**
-
-    - Always adhere to Playwright's recommended best practices as outlined in the [Playwright Best Practices](https://playwright.dev/docs/best-practices) documentation.
-    - When editing existing code that does not follow these best practices, improve it to align with the guidelines.
 
 #### Collaboration and Communication
 
