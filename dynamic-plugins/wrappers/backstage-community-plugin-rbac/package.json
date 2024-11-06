@@ -48,7 +48,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-rbac"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
