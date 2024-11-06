@@ -36,6 +36,10 @@ inputs:
   push:
     description: Whether to push the image
     required: true
+  platform:
+    description: "Target given CPU platform architecture (default: linux/amd64)"
+    required: false
+    default: linux/amd64
 
 runs:
   using: composite
@@ -84,3 +88,4 @@ runs:
         provenance: false
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        platform: ${{ steps.meta.outputs.platform }}
