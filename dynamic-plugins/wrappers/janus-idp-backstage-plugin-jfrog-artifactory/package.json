@@ -15,7 +15,7 @@
     "pluginId": "jfrog-artifactory",
     "pluginPackage": "janus-idp-jfrog-artifactory",
     "pluginPackages": [
-      "janus-idp-jfrog-artifactory"
+      "janus-idp-backstage-plugin-jfrog-artifactory"
     ]
   },
   "sideEffects": false,

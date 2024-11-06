@@ -3163,6 +3163,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-scaffolder-backend-module-servicenow@npm:2.2.1":
+  version: 2.2.1
+  resolution: "@backstage-community/plugin-scaffolder-backend-module-servicenow@npm:2.2.1"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+    abort-controller: ^3.0.0
+    axios: ^1.7.4
+    form-data: ^4.0.0
+    yaml: ^2.3.3
+    zod: ^3.22.4
+  checksum: 780311fe2b8fe1f76eab067abf360811ce051d7b3fe58b18c1e5631da79f5175a3f6ed9e7b0f865b79a5c804cb842db507d4731a961b4e97608750c42ef8e6b3
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-sonarqube-backend@npm:0.2.25":
   version: 0.2.25
   resolution: "@backstage-community/plugin-sonarqube-backend@npm:0.2.25"
@@ -9971,21 +9986,6 @@ __metadata:
     yaml: ^2.3.3
     zod: ^3.22.4
   checksum: 5b708b124bbefe9ba548911cae94565f02ac08b27198d754def31bd76e6c1ca8d6fec793518054ae8a5bf0ab42ccb72c1f613a56e40c4af04361d6c4519e2774
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-scaffolder-backend-module-servicenow@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@janus-idp/backstage-scaffolder-backend-module-servicenow@npm:2.2.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/plugin-scaffolder-node": ^0.5.0
-    abort-controller: ^3.0.0
-    axios: ^1.7.4
-    form-data: ^4.0.0
-    yaml: ^2.3.3
-    zod: ^3.22.4
-  checksum: 9e9efe8042e84d86fc1ddfe9a271bd106c32660e1b7a10059b78a3ae49166c1f2f2d8d002caf18ee000743b3c38522d531dcb47c879cec45af5a194d4a6dcde2
   languageName: node
   linkType: hard
 
@@ -20299,6 +20299,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-servicenow": 2.2.1
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
+  peerDependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic"
@@ -29455,16 +29469,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-scaffolder-backend-module-regex": 2.2.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-scaffolder-backend-module-servicenow": 2.2.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
@@ -41246,6 +41250,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^5.6.3":
+  version: 5.6.3
+  resolution: "typescript@npm:5.6.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: ba302f8822777ebefb28b554105f3e074466b671e7444ec6b75dadc008a62f46f373d9e57ceced1c433756d06c8b7dc569a7eefdf3a9573122a49205ff99021a
+  languageName: node
+  linkType: hard
+
 "typescript@npm:~5.1.0":
   version: 5.1.6
   resolution: "typescript@npm:5.1.6"
@@ -41273,6 +41287,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: be6138b734b2d5f6aa9844b760d6a9e853d395e55ec4570ff1026cca195e5968849e38907c18f9c5b35f6a38e4e18ec29937f1c2ae03c6405e9874ad45d810b1
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^5.6.3#~builtin<compat/typescript>":
+  version: 5.6.3
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#~builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: f6947c263dc67ea8429eefc3921683320f901a07d9ef29a1101a34f5b30108343b5a29aa77a581217a17f2616091ae7bd3043b304cf37f37d5e128e19296c08b
   languageName: node
   linkType: hard
 

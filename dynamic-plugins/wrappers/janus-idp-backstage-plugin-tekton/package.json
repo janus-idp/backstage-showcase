@@ -13,7 +13,10 @@
     "role": "frontend-plugin",
     "supported-versions": "1.32.4",
     "pluginId": "janus-idp-tekton",
-    "pluginPackage": "janus-idp-tekton"
+    "pluginPackage": "janus-idp-tekton",
+    "pluginPackages": [
+      "janus-idp-backstage-plugin-tekton"
+    ]
   },
   "sideEffects": false,
   "scripts": {
