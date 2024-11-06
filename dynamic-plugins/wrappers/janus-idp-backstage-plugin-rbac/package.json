@@ -14,8 +14,7 @@
     "supported-versions": "1.32.4",
     "pluginId": "rbac",
     "pluginPackages": [
-      "janus-idp-rbac",
-      "janus-idp-rbac-backend"
+      "janus-idp-backstage-plugin-rbac"
     ]
   },
   "sideEffects": false,
