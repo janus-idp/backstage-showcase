@@ -99,7 +99,6 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   );
 
   test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
-    await common.clickOnGHloginPopup();
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
     await uiHelper.searchInputPlaceholder("Create React App Template");
