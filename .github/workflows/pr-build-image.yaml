@@ -69,7 +69,8 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ vars.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
+          #imageName: ${{ github.repository }}
+          imageName: tkral/backstage-showcase
           imageTags: |
             type=ref,prefix=pr-,event=pr
             type=ref,prefix=pr-,suffix=-${{ env.SHORT_SHA }},event=pr
