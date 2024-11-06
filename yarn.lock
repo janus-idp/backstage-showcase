@@ -2912,9 +2912,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.2.0":
-  version: 3.2.0
-  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.2.0"
+"@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.2.1":
+  version: 3.2.1
+  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.2.1"
   dependencies:
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-model": ^1.7.0
@@ -2925,7 +2925,7 @@ __metadata:
     lodash: ^4.17.21
     pg-format: ^1.0.4
     uuid: ^9.0.1
-  checksum: 51a051f3f2dfde08af2ebf38ef2f0321f17f865837a76d516a1f9ee836af1f8480613552f73496b4207a4079fe395d4cfe30ec58f8847e700690d0826f67ff04
+  checksum: c60b22bb1e0996c2555fe4107c4171e1536d5b3007c001e153931a85d8a9437ba951acdf69df3aef6b0797cee45ae3730abdd4d619dfc0fc185b82531c86adbd
   languageName: node
   linkType: hard
 
@@ -20202,7 +20202,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-catalog-backend-module-keycloak@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic"
   dependencies:
-    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.2.0
+    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.2.1
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
     typescript: ^5.6.3
