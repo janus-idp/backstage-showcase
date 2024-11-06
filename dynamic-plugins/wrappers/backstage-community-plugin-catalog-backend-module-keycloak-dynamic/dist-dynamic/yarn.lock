@@ -16,6 +16,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"backstage-community-plugin-catalog-backend-module-keycloak-dynamic@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-catalog-backend-module-keycloak-dynamic@workspace:."
+  dependencies:
+    "@keycloak/keycloak-admin-client": 24.0.5
+    inclusion: ^1.0.1
+    lodash: ^4.17.21
+    pg-format: ^1.0.4
+    uuid: ^9.0.1
+  peerDependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-catalog-node": ^1.13.1
+  languageName: unknown
+  linkType: soft
+
 "callsites@npm:^3.1.0":
   version: 3.1.0
   resolution: "callsites@npm:3.1.0"
@@ -38,23 +55,6 @@ __metadata:
   checksum: 1ee1d829d4f354797b3c7ccca2a5fb669e7d4dafb83aaa96837265bbb6041eb4f7a6cab075730ba77c6b7b78c2918124411ba48092fa1bd13ee18c4b408ef36c
   languageName: node
   linkType: hard
-
-"janus-idp-backstage-plugin-keycloak-backend-dynamic@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-keycloak-backend-dynamic@workspace:."
-  dependencies:
-    "@keycloak/keycloak-admin-client": 24.0.5
-    inclusion: ^1.0.1
-    lodash: ^4.17.21
-    pg-format: ^1.0.4
-    uuid: ^9.0.1
-  peerDependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-node": ^1.13.1
-  languageName: unknown
-  linkType: soft
 
 "lodash@npm:^4.17.21":
   version: 4.17.21

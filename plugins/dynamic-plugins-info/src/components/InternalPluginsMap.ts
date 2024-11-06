@@ -78,8 +78,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic',
   'backstage-community-plugin-3scale-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
-  'janus-idp-backstage-plugin-keycloak-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic',
+  'backstage-community-plugin-catalog-backend-module-keycloak-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic',
   'backstage-community-plugin-redhat-argocd':
     './dynamic-plugins/dist/backstage-community-plugin-redhat-argocd',
   'backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic':

@@ -27,7 +27,7 @@ Our current list of plugins within the showcase app include:
 - [GitHub Issues plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/github-issues/plugins/github-issues)
 - [GitHub Discovery](https://backstage.io/docs/integrations/github/discovery) & [Org Data](https://backstage.io/docs/integrations/github/org)
 - [Security Insights plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-security-insights)
-- [Keycloak plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/keycloak-backend)
+- [Keycloak plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/keycloak/plugins/catalog-backend-module-keycloak)
 - [SonarQube plugin](https://roadie.io/backstage/plugins/sonarqube/)
 - [Tekton plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/tekton)
 - [Azure DevOps plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/azure-devops)

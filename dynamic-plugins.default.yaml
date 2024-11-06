@@ -638,7 +638,7 @@ plugins:
               baseUrl: '${THREESCALE_BASE_URL}'
               accessToken: '${THREESCALE_ACCESS_TOKEN}'
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
     disabled: true
     pluginConfig:
       catalog:
