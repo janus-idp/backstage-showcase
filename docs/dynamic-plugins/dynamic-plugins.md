@@ -36,6 +36,10 @@
 - [**Provide Additional Utility APIs**](#provide-additional-utility-apis)
 - [**Provide Custom Scaffolder Field Extensions**](#provide-custom-scaffolder-field-extensions)
 - [**Add a Custom Backstage Theme or Replace the Provided Theme** ](#add-a-custom-backstage-theme-or-replace-the-provided-theme)
+- **[Debugging Dynamic Plugins](#debugging-dynamic-plugins)**
+  - **[Backend Dynamic Plugins Local Debug](#backend-dynamic-plugins-local-debug)**
+  - **[Backend Dynamic Plugins Container Debug](#backend-dynamic-plugins-container-debug)**
+  - **[Frontend Dynamic Plugins Debug](#frontend-dynamic-plugins-debug)**
 
 ## Overview
 
@@ -538,7 +542,7 @@ global:
 
 Compared to the backend plugins, where mount points are defined in code and consumed by the backend plugin manager, frontend plugins require additional configuration in the `app-config.yaml`. A plugin missing this configuration will not be loaded into the application and will not be displayed.
 
-Similarly to traditional Backstage instances, there are 3 types of functionality a dynamic frontend plugin can offer:
+Similarly to traditional Backstage instances, there are various kinds of functionality a dynamic frontend plugin can offer:
 
 - Full new page that declares a completely new route in the app
 - Extension to existing page via router `bind`ings
@@ -627,8 +631,37 @@ Each plugin can expose multiple routes and each route is required to define its 
 - `path` - Unique path in the app. Cannot override existing routes with the exception of the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
-- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts `text` and `icon` properties. `icon` refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
-- `config.props` - Optional. Additionally you can pass React props to the component.
+- `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts the following properties:
+  - `text`: The label shown to the user
+  - `icon`: refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
+  - `importName`: optional name of an exported SidebarItem component.  The component will receive a `to` property as well as any properties specified in `config.props`
+- `config` - An optional field which is a holder to pass `props` to a custom sidebar item
+
+A custom SidebarItem offers opportunities to provide a richer user experience such as notification badges.  The component should accept the following properties:
+
+```typescript
+export type MySidebarItemProps = {
+  to: string; // supplied by the sidebar during rendering, this will be the path configured for the dynamicRoute
+};
+```
+
+Other properties can be specified as well and configured using the `config.props` property on the dynamic route.
+
+Here is an example configuration specifying a custom SidebarItem component:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    my-dynamic-plugin-package-name:
+      dynamicRoutes:
+        - importName: CustomPage
+          menuItem:
+            config:
+              props:
+                text: Click Me!
+            importName: SimpleSidebarItem
+          path: /custom_page
+```
 
 #### Menu items
 
@@ -745,6 +778,7 @@ The following mount points are available:
 | ---------------------------- | ----------------------------------- | -------------------------------------------------------------- |
 | `admin.page.plugins`         | Administration plugins page         | NO                                                             |
 | `admin.page.rbac`            | Administration RBAC page            | NO                                                             |
+| `entity.context.menu`        | Catalog entity context menu         | YES for all entities                                           |
 | `entity.page.overview`       | Catalog entity overview page        | YES for all entities                                           |
 | `entity.page.topology`       | Catalog entity "Topology" tab       | NO                                                             |
 | `entity.page.issues`         | Catalog entity "Issues" tab         | NO                                                             |
@@ -764,12 +798,14 @@ The following mount points are available:
 | `search.page.filters`        | Search filters                      | YES, default catalog kind and lifecycle filters are visible    |
 | `search.page.results`        | Search results content              | YES, default catalog search is present                         |
 
-Note: Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
+Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
 
 Each `entity.page.*` mount point has 2 complementary variations:
 
 - `*/context` type that serves to create React contexts
 - `*/cards` type for regular React components
+
+Here is an example of the overall configuration structure of a mount point:
 
 ```yaml
 # app-config.yaml
@@ -809,6 +845,33 @@ Each mount point supports additional configuration:
   - `isType`: Accepts a string or a list of string with entity types. For example `isType: service` will render the component only for entities of `spec.type: 'service'`.
   - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
   - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`
+
+The entity page also supports adding more items to the context menu at the top right of the page.  Components targeting the `entity.context.menu` mount point have some constraints to follow.  The exported component should be some form of dialog wrapper component that accepts an `open` boolean property and an `onClose` event handler property, like so:
+
+```typescript
+export type SimpleDialogProps = {
+  open: boolean;
+  onClose: () => void;
+};
+```
+
+ The context menu entry can be configured via the `props` configuration entry for the mount point.  The `title` and `icon` properties will set the menu item's text and icon.  Any system icon or icon added via a dynamic plugin can be used.  Here is an example configuration:
+
+ ```yaml
+dynamicPlugins:
+  frontend:
+    my-dynamic-plugin-package:
+      appIcons:
+        - name: dialogIcon
+          importName: DialogIcon
+      mountPoints:
+        - mountPoint: entity.context.menu
+          importName: SimpleDialog
+          config:
+            props:
+              title: Open Simple Dialog
+              icon: dialogIcon
+ ```
 
 #### Customizing and Adding Entity tabs
 
@@ -868,7 +931,18 @@ Backstage offers an Utility API mechanism that provide ways for plugins to commu
 - Custom plugin-made API that can be already self contained within any plugin (including dynamic plugins)
 - [App API implementations and overrides](https://backstage.io/docs/api/utility-apis/#app-apis) which needs to be added separately.
 
-Dynamic plugins provides you with a way to utilize the App API concept via `apiFactories` configuration:
+and a plugin can potentially expose multiple API Factories.  Dynamic plugins allow a couple different ways to take advantage of this functionality.
+
+If a dynamic plugin exports the plugin object returned by `createPlugin`, it will be supplied to the `createApp` API and all API factories exported by the plugin will be automatically registered and available in the frontend application.  Dynamic plugins that follow this pattern should not use the `apiFactories` configuration.  Also, if a dynamic plugin only contains API factories and follows this pattern, it will just be necessary to add an entry to the `dynamicPlugins.frontend` config for the dynamic plugin package name, for example:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    my-dynamic-plugin-package-with-api-factories: {}
+```
+
+However if the dynamic plugin doesn't export it's plugin object then it will be necessary to explicitly configure each API factory that should be registered with the `createApp` API via the `apiFactories` configuration:
 
 ```yaml
 # app-config.yaml
@@ -879,8 +953,6 @@ dynamicPlugins:
         - importName: BarApi # Optional, explicit import name that reference a AnyApiFactory<{}> implementation. Defaults to default export.
           module: CustomModule # Optional, same as key in `scalprum.exposedModules` key in plugin's `package.json`
 ```
-
-Each plugin can expose multiple API Factories and each factory is required to define its `importName` (if it differs from the default export).
 
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
@@ -988,3 +1060,62 @@ The required options mirror the [AppTheme](https://backstage.io/docs/reference/c
 - `variant` Whether the theme is `light` or `dark`, can only be one of these values.
 - `icon` a string reference to a system or [app icon](#extend-internal-library-of-available-icons)
 - `importName` name of the exported theme provider function, the function signature should match `({ children }: { children: ReactNode }): React.JSX.Element`
+  
+
+## Debugging Dynamic Plugins
+
+### Backend Dynamic Plugins Local Debug
+
+For local debugging of Dynamic Plugins you need to clone `backstage-showcase`, run it with debugging enabled and attach your IDE debugger to the backend process. First it is required to build and copy the dynamic plugin:
+
+* Build your plugin and export the dynamic package
+```
+cd ${pluginRootDir}
+yarn build && yarn run export-dynamic
+```
+* Copy the resulting `dist-dynamic` directory to dynamic-plugins-root/${plugin-id}
+
+Once the plugin is built and deployed, it is time to prepare the showcase to run it debug mode:
+
+* Go to `backstage-showcase` root directory;
+* Run `yarn workspace backend start --inspect`
+* In logs you should see something like the following:
+
+```
+Debugger listening on ws://127.0.0.1:9229/9299bb26-3c32-4781-9488-7759b8781db5
+```
+
+* The application will be acessible from `http://localhost:7007`. You may start the front end by running the following command from the root directory: `yarn start --filter=app`. It will be available in `http://localhost:3000`
+* Attach your IDE debugger to the backend process. This step may depend on the IDE that you are using. For example, if you are using VSCode you may want to check [Node.js debugging in VS Code](https://code.visualstudio.com/docs/nodejs/nodejs-debugging)
+* Add Breakpoints to the files in folder `dynamic-plugins-root/${plugin-id}`. Optionally you can configure your IDE to add the source maps for the plugin so you can debug the TypeScript code directly and not the compiled Javascript files
+
+
+### Backend Dynamic Plugins Container Debug
+
+It is possible to run RHDH on a container and debug plugins that are running on it. In this case you don't need to clone the `backstage-showcase` code locally, instead you must make sure that the running container has the [Node JS debug](https://nodejs.org/en/learn/getting-started/debugging) port open and exposed to the host machine. These are the steps to debug backend dynamic plugins on a container:
+
+* Create directory `dynamic-plugins-root`
+* Build your plugin and copy the folder `dist-dynamic` to `dynamic-plugins-root`
+```
+$ yarn build && yarn export-dynamic
+$ cp ${yourPluginRootDir}/dist-dynamic ./dynamic-plugins-root/${pluginID}
+```
+* Start the container and make sure to share the plugins directory with it, allow inspect and open the debug port. Here's a sample command tested on RHDH container image version 1.3:
+
+```
+podman run \
+	-v ./dynamic-plugins-root:/opt/app-root/src/dynamic-plugins-root:Z \
+	-v ./app-config.local.yaml:/opt/app-root/src/app-config.local.yaml:Z \
+	-p 7007:7007 \
+	-p 9229:9229 \
+	-e NODE_OPTIONS=--no-node-snapshot \
+	--entrypoint='["node", "--inspect=0.0.0.0:9229", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.local.yaml"]' \
+	quay.io/rhdh/rhdh-hub-rhel9:1.3 
+```
+
+You should be able to debug from your IDE by attaching it to the process running on port `9229` or selecting it from a list of processes detected by the IDE.
+
+
+### Frontend Dynamic Plugins Debug
+
+Front end plugins can be debugged directly on your browser, just make sure to export the sources map. When running the plugin on the browser open the Developer Tools and you should be able to visualize the source code and place breakpoints.
