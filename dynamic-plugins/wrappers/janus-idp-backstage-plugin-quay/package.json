@@ -13,7 +13,10 @@
     "role": "frontend-plugin",
     "supported-versions": "1.32.4",
     "pluginId": "janus-idp-quay",
-    "pluginPackage": "janus-idp-quay"
+    "pluginPackage": "janus-idp-quay",
+    "pluginPackages": [
+      "janus-idp-backstage-plugin-quay"
+    ]
   },
   "sideEffects": false,
   "scripts": {

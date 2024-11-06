@@ -12,7 +12,10 @@
   "backstage": {
     "role": "frontend-plugin",
     "supported-versions": "1.32.4",
-    "pluginId": "janus-idp-topology"
+    "pluginId": "janus-idp-topology",
+    "pluginPackages": [
+      "janus-idp-backstage-plugin-topology"
+    ]
   },
   "sideEffects": false,
   "scripts": {
