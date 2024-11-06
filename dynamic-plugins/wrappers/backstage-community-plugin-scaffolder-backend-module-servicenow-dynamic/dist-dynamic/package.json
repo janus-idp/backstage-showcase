@@ -12,7 +12,7 @@
     "role": "backend-plugin-module",
     "supported-versions": "1.32.5",
     "pluginId": "scaffolder",
-    "pluginPackage": "@backstage-community/plugin-scaffolder-backend-module-servicenow"
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": {
