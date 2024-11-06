@@ -13,7 +13,7 @@ We are excited that you want to be a part of this project by contributing to the
 2. **Clone Your Forked Repository**
 
    ```bash
-   git clone https://github.com/your-username/showcase-e2e.git
+   git clone https://github.com/your-username/backstage-showcase.git
    ```
 
 3. **Navigate to the Project Directory**
@@ -57,14 +57,14 @@ We are excited that you want to be a part of this project by contributing to the
 Our project contains multiple test suites for different environments and configurations. Some useful scripts to run the tests:
 
 ```bash
-yarn showcase                   # Runs the showcase test suite
-yarn showcase-rbac              # Runs the showcase RBAC test suite
-yarn showcase-1-2-x             # Runs the showcase 1.2.x test suite
-yarn showcase-rbac-1-2-x        # Runs the showcase RBAC 1.2.x test suite
-yarn showcase-ci-nightly        # Runs the showcase CI nightly test suite
-yarn showcase-rbac-nightly      # Runs the showcase RBAC nightly test suite
-yarn showcase-aks-ci-nightly    # Runs the showcase AKS CI nightly test suite
-yarn showcase-rbac-aks-ci-nightly # Runs the showcase RBAC AKS CI nightly test suite
+yarn showcase                       # Runs the showcase test suite
+yarn showcase-rbac                  # Runs the showcase RBAC test suite
+yarn showcase-1-2-x                 # Runs the showcase 1.2.x test suite
+yarn showcase-rbac-1-2-x            # Runs the showcase RBAC 1.2.x test suite
+yarn showcase-ci-nightly            # Runs the showcase CI nightly test suite
+yarn showcase-rbac-nightly          # Runs the showcase RBAC nightly test suite
+yarn showcase-aks-ci-nightly        # Runs the showcase AKS CI nightly test suite
+yarn showcase-rbac-aks-ci-nightly   # Runs the showcase RBAC AKS CI nightly test suite
 ```
 
 ### Useful Scripts
@@ -89,6 +89,49 @@ Some additional scripts available in `package.json`:
 
 We welcome both code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, bug reports, enhancement requests, and feature requests.
 
+### Developer Guidelines
+
+#### Architectural Principles
+
+1. **Naming Convention**
+
+   A naming convention is enforced for all entities, including variables, functions, and file names. Consistent naming ensures code clarity, maintainability, and ease of navigation throughout the project.
+
+2. **Code Visibility**
+
+   Carefully consider the visibility of all classes, variables, and functions. Exposed elements should be simple and understandable on the frontend while being versatile and resilient in the background. This promotes a clean and user-friendly API while maintaining robust internal functionality.
+
+3. **Test Isolation**
+
+   All tests should be written to be as isolated as possible. Even if current constraints (such as GitHub login rate limits) prevent complete independence, strive for maximum isolation. This approach ensures that when blockers are removed, refactoring can proceed smoothly.
+
+4. **Control Over Test Environment**
+
+   The test framework must have full control over the test environment. All environment configurations should be managed and propagated up to the Playwright layer. This ensures consistency and reliability across all tests.
+
+5. **Team Agreement on Architecture Principles**
+
+   All architecture principles and guidelines must be agreed upon by the team. Every team member's voice is important, and open communication ensures alignment and shared understanding of the project's direction.
+
+#### Technical Guidelines
+
+1. **Page Object Model (POM)**
+
+   The Page Object Model (POM) design pattern is required for all test code. Until we find a better-suited standard, we adhere to this well-known and well-tested pattern to promote code reusability and maintainability.
+
+   - **Relentless Adherence:** We must be relentless in applying POM. The success of the test framework depends on consistently following this design pattern.
+
+2. **Playwright Best Practices**
+
+   We follow Playwright best practices, including the use of fixtures. Adhering to these practices ensures that our tests are reliable, efficient, and maintainable. Please refer to the [Playwright Best Practices](https://playwright.dev/docs/best-practices) and [Fixtures](https://playwright.dev/docs/test-fixtures) documentation for guidance.
+
+3. **Avoid Using `uiHelper` in Spec Files**
+
+   - The `uiHelper` utility should **never** be used directly in spec files.
+   - Use `uiHelper` methods only within the Page Object Model (POM) classes.
+   - When working with tests that directly use `uiHelper` in spec files, refactor them to move `uiHelper` usage into POM classes.
+   - This ensures that all UI interactions are encapsulated within page objects, promoting cleaner and more maintainable test code.
+
 ### Pull Requests
 
 If you want to contribute code changes to the project, here are some guidelines:
@@ -101,7 +144,7 @@ If you want to contribute code changes to the project, here are some guidelines:
 
 2. **Implement Your Changes**
 
-   Make your code changes, ensuring that you follow the project's coding standards and best practices.
+   Make your code changes, ensuring that you follow the project's coding standards and best practices outlined in the [Developer Guidelines](#developer-guidelines).
 
 3. **Testing**
 
@@ -167,33 +210,46 @@ If you want to contribute code changes to the project, here are some guidelines:
 
 #### Adding New Tests
 
-When contributing new tests **or modifying existing ones**:
+When contributing new tests or modifying existing ones, please adhere to the following guidelines:
 
-- **Use the Page Object Model (POM):**
+- **Follow Architectural Principles:**
 
-  - All new test code must use the POM design pattern to promote code reusability and maintainability.
-  - While POM is not currently implemented in all tests, it is **mandatory** for any new contributions.
-  - **When editing old tests that do not follow the POM pattern, please update them to adhere to this guideline.**
-  - Please refer to the [Playwright POM Documentation](https://playwright.dev/docs/pom) for best practices and implementation details.
+  - **Naming Conventions:** Use consistent and descriptive names for variables, functions, and files as per the project's naming conventions.
+  - **Code Visibility:** Expose only necessary classes and functions. Ensure that the API is simple and user-friendly while maintaining robust internal implementations.
+  - **Test Isolation:** Write tests to be as isolated as possible. This improves reliability and makes future refactoring easier.
+  - **Control Over Test Environment:** Ensure your tests do not rely on external states that are not controlled by the test framework. Manage environment configurations within the framework, propagating settings up to the Playwright layer.
 
-- **Utilize Playwright Fixtures:**
+- **Adhere to Technical Guidelines:**
 
-  - Use Playwright fixtures when possible to manage context and state between tests.
-  - Fixtures help in setting up and tearing down resources needed for tests.
-  - **If you are modifying tests that do not utilize fixtures, consider refactoring them to include fixtures for better maintainability.**
-  - Refer to the [Playwright Fixtures Documentation](https://playwright.dev/docs/test-fixtures) for implementation details.
+  - **Use the Page Object Model (POM):**
 
-- **Avoid Using `uiHelper` in Spec Files:**
+    - All new test code must use the POM design pattern. This is **mandatory** for any new contributions.
+    - When editing old tests that do not follow POM, update them to adhere to this guideline.
+    - Refer to the [Playwright POM Documentation](https://playwright.dev/docs/pom) for best practices.
 
-  - The `uiHelper` utility should **never** be used directly in spec files.
-  - Use `uiHelper` methods only within the Page Object Model (POM) classes.
-  - **When working with tests that directly use `uiHelper` in spec files, please refactor them to move `uiHelper` usage into POM classes.**
-  - This ensures that all UI interactions are encapsulated within page objects, promoting cleaner and more maintainable test code.
+  - **Utilize Playwright Fixtures:**
 
-- **Follow Best Practices:**
+    - Use Playwright fixtures to manage context and state between tests.
+    - Refer to the [Playwright Fixtures Documentation](https://playwright.dev/docs/test-fixtures) for details.
 
-  - Always adhere to Playwright's recommended best practices as outlined in the [Playwright Best Practices](https://playwright.dev/docs/best-practices) documentation.
-  - **When editing existing tests or code that do not follow these best practices, please improve them to better adhere to the guidelines.**
+  - **Avoid Using `uiHelper` in Spec Files:**
+
+    - Do not use `uiHelper` methods directly in spec files. Instead, encapsulate UI interactions within Page Object classes.
+
+  - **Follow Playwright Best Practices:**
+
+    - Always adhere to Playwright's recommended best practices as outlined in the [Playwright Best Practices](https://playwright.dev/docs/best-practices) documentation.
+    - When editing existing code that does not follow these best practices, improve it to align with the guidelines.
+
+#### Collaboration and Communication
+
+- **Team Consensus:**
+
+  - Engage with the team when introducing significant changes. Ensure that architectural decisions are agreed upon collectively.
+
+- **Open Communication:**
+
+  - Encourage discussion and feedback. All voices are important in shaping the project's direction.
 
 ### Commit Messages
 
