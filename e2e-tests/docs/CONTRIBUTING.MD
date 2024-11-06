@@ -89,33 +89,6 @@ Some additional scripts available in `package.json`:
 
 We welcome both code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, bug reports, enhancement requests, and feature requests.
 
-### Bug Reporting
-
-If you find a bug in our project, please submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fbug%2Cstatus%2Ftriage&template=bug_report.md) describing the problem you encountered. Important information to include:
-
-- **Title:** Brief summary of the bug.
-- **Description:** Detailed description, including steps to reproduce, expected behavior, and any relevant logs or screenshots.
-- **Environment:** Information about your operating system, Node.js version, and any other relevant details.
-
-### Enhancement Requests
-
-If you have suggestions for improvements or enhancements, please submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fenhancement%2Cstatus%2Ftriage&template=enhancement_request.md). Include:
-
-- **Description:** What you would like to see improved, current behavior, and the new behavior you wish to see.
-- **Benefits:** How the enhancement would benefit the project or its users.
-
-### Feature Requests
-
-For new features, please file an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Ffeature%2Cstatus%2Ftriage&template=feature_request.md) detailing the feature. Include:
-
-- **Description:** What you are trying to achieve with the new feature.
-- **Requirements:** What is needed, who will have access, and any relevant documentation or information.
-- **Use Cases:** Examples of how the feature would be used.
-
-### Documentation
-
-Documentation is vital for any project. If you find areas where documentation can be improved, unclear, or outdated, please raise an issue or submit a pull request with your proposed changes.
-
 ### Pull Requests
 
 If you want to contribute code changes to the project, here are some guidelines:
@@ -123,7 +96,7 @@ If you want to contribute code changes to the project, here are some guidelines:
 1. **Create a Branch**
 
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b e2e/your-feature-name
    ```
 
 2. **Implement Your Changes**
@@ -132,14 +105,15 @@ If you want to contribute code changes to the project, here are some guidelines:
 
 3. **Testing**
 
-   - **Write Tests:** All new features and bug fixes must include appropriate tests.
    - **Run Tests:** Ensure all tests pass before committing.
 
      ```bash
      yarn showcase
      ```
 
-   - **Test Coverage:** Ensure your code maintains or improves overall test coverage.
+   - **Note on Environment Dependencies:**
+
+     - If your new or edited tests **can't be validated locally** due to environment dependencies, you can open a **draft Pull Request (PR)**. This allows the tests to run on the test environment as described in [CI.md](./CI.md).
 
 4. **Linting and Formatting**
 
@@ -178,13 +152,13 @@ If you want to contribute code changes to the project, here are some guidelines:
    Use meaningful commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
    ```bash
-   git commit -m "feat: add new feature"
+   git commit -m "test: add new feature"
    ```
 
 7. **Push to Your Fork**
 
    ```bash
-   git push origin feature/your-feature-name
+   git push origin e2e/your-feature-name
    ```
 
 8. **Open a Pull Request**
@@ -225,8 +199,6 @@ When contributing new tests **or modifying existing ones**:
 
 Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
-- `feat`: A new feature.
-- `fix`: A bug fix.
 - `docs`: Documentation changes.
 - `style`: Code style changes (formatting, missing semi-colons, etc.).
 - `refactor`: Code changes that neither fix a bug nor add a feature.
