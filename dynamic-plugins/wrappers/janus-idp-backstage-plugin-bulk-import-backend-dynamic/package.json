@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.32.5",
     "pluginId": "janus-idp-bulk-import-backend",
     "pluginPackages": [
       "janus-idp-bulk-import",

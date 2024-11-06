@@ -73,9 +73,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/client-cognito-identity@npm:3.682.0":
-  version: 3.682.0
-  resolution: "@aws-sdk/client-cognito-identity@npm:3.682.0"
+"@aws-sdk/client-cognito-identity@npm:3.685.0":
+  version: 3.685.0
+  resolution: "@aws-sdk/client-cognito-identity@npm:3.685.0"
   dependencies:
     "@aws-crypto/sha256-browser": 5.2.0
     "@aws-crypto/sha256-js": 5.2.0
@@ -118,7 +118,7 @@ __metadata:
     "@smithy/util-retry": ^3.0.7
     "@smithy/util-utf8": ^3.0.0
     tslib: ^2.6.2
-  checksum: 4773859f04edd811fc1bb158e16d5a58c96f1a0cbdaf1a260db2901e5d7ba6865bf28a019a5f764e67ea7f9ad0fff45053ad5560e35f152d3b1987e0ff96afc0
+  checksum: f9e9f0c93bba7acf529c8e3562fb1f1ccec59c80303cec06d44443b2010b05385d9d20db35078ba7601120fdb4a811df86232ac34c52ebdc14781377c85d90e8
   languageName: node
   linkType: hard
 
@@ -284,16 +284,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/credential-provider-cognito-identity@npm:3.682.0":
-  version: 3.682.0
-  resolution: "@aws-sdk/credential-provider-cognito-identity@npm:3.682.0"
+"@aws-sdk/credential-provider-cognito-identity@npm:3.685.0":
+  version: 3.685.0
+  resolution: "@aws-sdk/credential-provider-cognito-identity@npm:3.685.0"
   dependencies:
-    "@aws-sdk/client-cognito-identity": 3.682.0
+    "@aws-sdk/client-cognito-identity": 3.685.0
     "@aws-sdk/types": 3.679.0
     "@smithy/property-provider": ^3.1.7
     "@smithy/types": ^3.5.0
     tslib: ^2.6.2
-  checksum: 6cb6562ca45cef61362f251c5cfa6249489ff4caeb4aa9df7e074e184e9b45653ea57b76f0b22c279e8006cf0644293a3ee17713fdfaee754790427b5ebf8771
+  checksum: 36b7f2d83e375d33b3bfff67da084f5e02f02d35ae7255ebd4d9242c683077ffacde2458714f156697b9b167708e7abb5761eec07a280791a14440bf61357fc3
   languageName: node
   linkType: hard
 
@@ -416,14 +416,14 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/credential-providers@npm:^3.350.0":
-  version: 3.682.0
-  resolution: "@aws-sdk/credential-providers@npm:3.682.0"
+  version: 3.685.0
+  resolution: "@aws-sdk/credential-providers@npm:3.685.0"
   dependencies:
-    "@aws-sdk/client-cognito-identity": 3.682.0
+    "@aws-sdk/client-cognito-identity": 3.685.0
     "@aws-sdk/client-sso": 3.682.0
     "@aws-sdk/client-sts": 3.682.0
     "@aws-sdk/core": 3.679.0
-    "@aws-sdk/credential-provider-cognito-identity": 3.682.0
+    "@aws-sdk/credential-provider-cognito-identity": 3.685.0
     "@aws-sdk/credential-provider-env": 3.679.0
     "@aws-sdk/credential-provider-http": 3.679.0
     "@aws-sdk/credential-provider-ini": 3.682.0
@@ -436,7 +436,7 @@ __metadata:
     "@smithy/property-provider": ^3.1.7
     "@smithy/types": ^3.5.0
     tslib: ^2.6.2
-  checksum: b69cba7efdb1e0d5e5c22f0faad8fdbe8ec530b1e44a63691f8c0568c07d1e80ac39d1638a772aaf41fbf39c0e29f001b9dbb7186c40f1f2a9247818e232c0c2
+  checksum: 16dbc660296a1ff53e6e90967ba7a70248e780d778da2c188e09f67c7be8a7c2ae071a366ad20276dc9abb253ef69a84ea78280713b501f20d70f119c8d9ee9d
   languageName: node
   linkType: hard
 
@@ -786,29 +786,29 @@ __metadata:
   linkType: hard
 
 "@azure/msal-browser@npm:^3.26.1":
-  version: 3.26.1
-  resolution: "@azure/msal-browser@npm:3.26.1"
+  version: 3.27.0
+  resolution: "@azure/msal-browser@npm:3.27.0"
   dependencies:
-    "@azure/msal-common": 14.15.0
-  checksum: 70ebea1abc4bc6b0e5a250f865cffd24a1aeb615a35e7b572dad11369d486a7aeb4af60048c5f6a5bc3627fad65dbdc8c118f16086cb3f9cc03931699b08f4f7
+    "@azure/msal-common": 14.16.0
+  checksum: 22c7d087380405f87139a7dfa579b8a49a17d5493e748e1e609f5733bb7549dd5b8558d709f81500f8faa3feebbc2245f8978adc96dc2ce84c54825b37301465
   languageName: node
   linkType: hard
 
-"@azure/msal-common@npm:14.15.0":
-  version: 14.15.0
-  resolution: "@azure/msal-common@npm:14.15.0"
-  checksum: 072e4ca58856997df2e82935c818801a69a85df16d7dccdfed02c1b8f8a772751594efe1b918433c760202348a99aa6ec9d99cc0f018ab2f1659186ad2a8b88e
+"@azure/msal-common@npm:14.16.0":
+  version: 14.16.0
+  resolution: "@azure/msal-common@npm:14.16.0"
+  checksum: 01ec26e22243c5c435b97db085e96f5488733336c142b65a118ee6e523a548d3f17d013147810948cceaee7bdc339362bb9b2799fc9ea53c9d4c9aa10d8987e3
   languageName: node
   linkType: hard
 
 "@azure/msal-node@npm:^2.15.0":
-  version: 2.15.0
-  resolution: "@azure/msal-node@npm:2.15.0"
+  version: 2.16.0
+  resolution: "@azure/msal-node@npm:2.16.0"
   dependencies:
-    "@azure/msal-common": 14.15.0
+    "@azure/msal-common": 14.16.0
     jsonwebtoken: ^9.0.0
     uuid: ^8.3.0
-  checksum: 10dd1c273e2465d519d28ee04d1c9e2e4ecfa2cab664b38677502c626139f86a16f7d78c645e6727d550a84dfa7773ebea1fb2cc7454870f3c6507d601e6ef2f
+  checksum: a19f302ba32b832acc4be52f20b1f222509f54ba9316942e045c93206d345a95767736db86966c3104da84bfb5e433477e7addec773fb6b6e0974bcb1f0f7b6e
   languageName: node
   linkType: hard
 
@@ -1627,27 +1627,27 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
-  version: 22.8.4
-  resolution: "@types/node@npm:22.8.4"
+  version: 22.9.0
+  resolution: "@types/node@npm:22.9.0"
   dependencies:
     undici-types: ~6.19.8
-  checksum: 1e55594ce7942e259919283e6bb9ee814f184afcd545956d95163dd3b1d4b1923dba97e0c258c5a9dd2c96b2e754fa9ae42994437a564255c8907ae7cdc25b4b
+  checksum: c014eb3b8a110f1b87b614a40ef288d13e6b08ae9d5dafbd38951a2eebc24d352dc55330ed9d00c97ee9e64483c3cc14c4aa914c5df7ca7b9eaa1a30b2340dbd
   languageName: node
   linkType: hard
 
 "@types/node@npm:^20.1.1":
-  version: 20.17.3
-  resolution: "@types/node@npm:20.17.3"
+  version: 20.17.6
+  resolution: "@types/node@npm:20.17.6"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 0a02f7a24dd7f7e238d79defeba6711c1d92d44a16fdbbaf4e663174bc55a8f14e3f83f9a5e65e2f59015539813f21775c4d23a1a8c7d9c6560cda998ca5a509
+  checksum: d51dbb9881c94d0310b32b5fd8013e3261595c61bc888fa27258469c93c3dc0b3c4d20a9f28f3f5f79562f6737e28e7f3dd04940dc8b4d966d34aaf318f7f69b
   languageName: node
   linkType: hard
 
 "@types/qs@npm:*":
-  version: 6.9.16
-  resolution: "@types/qs@npm:6.9.16"
-  checksum: 2e8918150c12735630f7ee16b770c72949274938c30306025f68aaf977227f41fe0c698ed93db1099e04916d582ac5a1faf7e3c7061c8d885d9169f59a184b6c
+  version: 6.9.17
+  resolution: "@types/qs@npm:6.9.17"
+  checksum: fc3beda0be70e820ddabaa361e8dfec5e09b482b8f6cf1515615479a027dd06cd5ba0ffbd612b654c2605523f45f484c8905a475623d6cd0c4cadcf5d0c517f5
   languageName: node
   linkType: hard
 
@@ -1706,11 +1706,11 @@ __metadata:
   linkType: hard
 
 "@types/ws@npm:^8.5.3":
-  version: 8.5.12
-  resolution: "@types/ws@npm:8.5.12"
+  version: 8.5.13
+  resolution: "@types/ws@npm:8.5.13"
   dependencies:
     "@types/node": "*"
-  checksum: ddefb6ad1671f70ce73b38a5f47f471d4d493864fca7c51f002a86e5993d031294201c5dced6d5018fb8905ad46888d65c7f20dd54fc165910b69f42fba9a6d0
+  checksum: f17023ce7b89c6124249c90211803a4aaa02886e12bc2d0d2cd47fa665eeb058db4d871ce4397d8e423f6beea97dd56835dd3fdbb921030fe4d887601e37d609
   languageName: node
   linkType: hard
 
@@ -1723,7 +1723,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"accepts@npm:~1.3.5, accepts@npm:~1.3.8":
+"accepts@npm:~1.3.8":
   version: 1.3.8
   resolution: "accepts@npm:1.3.8"
   dependencies:
@@ -2023,13 +2023,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bytes@npm:3.0.0":
-  version: 3.0.0
-  resolution: "bytes@npm:3.0.0"
-  checksum: a2b386dd8188849a5325f58eef69c3b73c51801c08ffc6963eddc9be244089ba32d19347caf6d145c86f315ae1b1fc7061a32b0c1aa6379e6a719090287ed101
-  languageName: node
-  linkType: hard
-
 "bytes@npm:3.1.2":
   version: 3.1.2
   resolution: "bytes@npm:3.1.2"
@@ -2162,7 +2155,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compressible@npm:~2.0.16":
+"compressible@npm:~2.0.18":
   version: 2.0.18
   resolution: "compressible@npm:2.0.18"
   dependencies:
@@ -2172,17 +2165,17 @@ __metadata:
   linkType: hard
 
 "compression@npm:^1.7.4":
-  version: 1.7.4
-  resolution: "compression@npm:1.7.4"
+  version: 1.7.5
+  resolution: "compression@npm:1.7.5"
   dependencies:
-    accepts: ~1.3.5
-    bytes: 3.0.0
-    compressible: ~2.0.16
+    bytes: 3.1.2
+    compressible: ~2.0.18
     debug: 2.6.9
+    negotiator: ~0.6.4
     on-headers: ~1.0.2
-    safe-buffer: 5.1.2
+    safe-buffer: 5.2.1
     vary: ~1.1.2
-  checksum: 35c0f2eb1f28418978615dc1bc02075b34b1568f7f56c62d60f4214d4b7cc00d0f6d282b5f8a954f59872396bd770b6b15ffd8aa94c67d4bce9b8887b906999b
+  checksum: d624b5562492518eee82c4f1381ea36f69f1f10b4283bfc2dcafd7d4d7eeed17c3f0e8f2951798594b7064db7ac5a6198df34816bde2d56bb7c75ce1570880e9
   languageName: node
   linkType: hard
 
@@ -3534,6 +3527,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"negotiator@npm:~0.6.4":
+  version: 0.6.4
+  resolution: "negotiator@npm:0.6.4"
+  checksum: 7ded10aa02a0707d1d12a9973fdb5954f98547ca7beb60e31cb3a403cc6e8f11138db7a3b0128425cf836fc85d145ec4ce983b2bdf83dca436af879c2d683510
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
@@ -4221,9 +4221,9 @@ __metadata:
   linkType: hard
 
 "tslib@npm:^2.2.0, tslib@npm:^2.4.0, tslib@npm:^2.4.1, tslib@npm:^2.5.0, tslib@npm:^2.6.2":
-  version: 2.8.0
-  resolution: "tslib@npm:2.8.0"
-  checksum: de852ecd81adfdb4870927e250763345f07dc13fe7f395ce261424966bb122a0992ad844c3ec875c9e63e72afe2220a150712984e44dfd1a8a7e538a064e3d46
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 
@@ -4371,8 +4371,8 @@ __metadata:
   linkType: hard
 
 "winston@npm:^3.2.1":
-  version: 3.15.0
-  resolution: "winston@npm:3.15.0"
+  version: 3.16.0
+  resolution: "winston@npm:3.16.0"
   dependencies:
     "@colors/colors": ^1.6.0
     "@dabh/diagnostics": ^2.0.2
@@ -4385,7 +4385,7 @@ __metadata:
     stack-trace: 0.0.x
     triple-beam: ^1.3.0
     winston-transport: ^4.7.0
-  checksum: 2ae6f3a3359fadd90f69a4db20d78aba6901e18114648e48c8538e925511e4820f8d488f19b1c026096ece614732338aa138f4a0fa2c5e29e8fbc53029f55473
+  checksum: 2b01d51d8dc355c7eec67fe26f1f9642a5d4fb4ad3db38612229fa95c7c925fba7cbe3d87d362f36c433f9ad15032d455f96159a5bbe77166c4a8cf440127a6d
   languageName: node
   linkType: hard
 
