@@ -9,5 +9,9 @@
     "moduleResolution": "node",
     "noEmit": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  "baseUrl": ".",
+  "paths": {
+    "@playwright/test": ["playwright/utils/globalFixtures.ts"]
+  }
 }
