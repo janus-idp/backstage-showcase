@@ -64,12 +64,14 @@ type DynamicPluginAppConfig = {
   dynamicPlugins?: { frontend?: Record<string, unknown> };
 };
 
+type DynamicPluginConfig = {
+  package: string;
+  disabled?: boolean;
+  pluginConfig?: DynamicPluginAppConfig;
+};
+
 type DynamicPluginsConfig = {
-  plugins: {
-    package: string;
-    disabled?: boolean;
-    pluginConfig?: DynamicPluginAppConfig;
-  }[];
+  plugins: DynamicPluginConfig[];
 };
 
 type GlobalDynamicPluginsConfig = {
@@ -110,11 +112,14 @@ function parseYamlFile<T>(filePath: string): T {
 function validateDynamicPluginsConfig(
   config: DynamicPluginsConfig,
   wrapperDirNames: string[],
+  externalDynamicPlugin?: DynamicPluginConfig,
 ): void {
   const dynamicPluginsPackageNames = config.plugins.reduce(
     (packageNames, plugin) => {
-      // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
-      packageNames.push(plugin.package.split("/")[3]);
+      if (externalDynamicPlugin?.package !== plugin.package) {
+        // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
+        packageNames.push(plugin.package.split("/")[3]);
+      }
 
       return packageNames;
     },
@@ -235,8 +240,17 @@ describe("Dynamic Plugin Wrappers", () => {
       IBM_VALUES_SHOWCASE_CONFIG_FILE,
     );
 
+    const externalDynamicPluginConfig: DynamicPluginConfig = {
+      package: "@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5",
+      disabled: false,
+    };
+
     it("should have a corresponding package", () => {
-      validateDynamicPluginsConfig(config.global.dynamic, wrapperDirNames);
+      validateDynamicPluginsConfig(
+        config.global.dynamic,
+        wrapperDirNames,
+        externalDynamicPluginConfig,
+      );
     });
   });
 
