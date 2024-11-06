@@ -46,7 +46,7 @@ async function getGitHub2FAOTP(userid: string): Promise<string> {
   return authenticator.generate(secret);
 }
 
-setup("authenticate as GH_USER_ID", async ({ page }, testInfo) => {
+setup("authenticate as GH_USER_ID", async ({ page }) => {
   //const isRbac = testInfo.project.name.includes("rbac");
   setup.setTimeout(80000);
   const userId = process.env.GH_USER_ID;
@@ -57,7 +57,7 @@ setup("authenticate as GH_USER_ID", async ({ page }, testInfo) => {
   });
 });
 
-setup("authenticate as GH_USER2_ID", async ({ page }, testInfo) => {
+setup("authenticate as GH_USER2_ID", async ({ page }) => {
   //const isRbac = testInfo.project.name.includes("rbac");
   setup.setTimeout(80000);
   const userId = process.env.GH_USER2_ID;
