@@ -3178,6 +3178,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-scaffolder-backend-module-sonarqube@npm:2.2.2":
+  version: 2.2.2
+  resolution: "@backstage-community/plugin-scaffolder-backend-module-sonarqube@npm:2.2.2"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+    yaml: ^2.3.3
+  checksum: a5a0574ccfdd660c2d6ee16ebf114aae0cfa0f6bba22007e2bcd6567112737d50cecebeb8d71c2c207cb5441f051d2c2341901b0e32b1099687d7ced4b4d3b82
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-sonarqube-backend@npm:0.2.25":
   version: 0.2.25
   resolution: "@backstage-community/plugin-sonarqube-backend@npm:0.2.25"
@@ -9986,17 +9997,6 @@ __metadata:
     yaml: ^2.3.3
     zod: ^3.22.4
   checksum: 5b708b124bbefe9ba548911cae94565f02ac08b27198d754def31bd76e6c1ca8d6fec793518054ae8a5bf0ab42ccb72c1f613a56e40c4af04361d6c4519e2774
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-scaffolder-backend-module-sonarqube@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@janus-idp/backstage-scaffolder-backend-module-sonarqube@npm:2.2.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/plugin-scaffolder-node": ^0.5.0
-    yaml: ^2.3.3
-  checksum: 4e1bb39c17507827291ee1052e7bdadcad1ad1476f000faef148c0441c11ee818a0a08f9d5cfbce25896f1875be6fbfe6bad7f924fd4af124220ef0c155e1abb
   languageName: node
   linkType: hard
 
@@ -20356,6 +20356,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-sonarqube": 2.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
+  languageName: unknown
+  linkType: soft
+
 "backstage-plugin-catalog-backend-module-bitbucket-cloud@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-plugin-catalog-backend-module-bitbucket-cloud@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic"
@@ -29468,16 +29479,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-scaffolder-backend-module-regex": 2.2.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-scaffolder-backend-module-sonarqube": 2.2.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
