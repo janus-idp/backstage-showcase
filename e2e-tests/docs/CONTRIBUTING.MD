@@ -2,7 +2,7 @@
 
 We are excited that you want to be a part of this project by contributing to the end-to-end tests. Here is some information on how to get started, as well as our requirements and guidelines to ensure a smooth contribution process.
 
-## Get Started
+## Getting Started
 
 ### Clone and Install
 
@@ -52,7 +52,7 @@ We are excited that you want to be a part of this project by contributing to the
    yarn tsc
    ```
 
-### Run the Tests
+### Running the Tests
 
 Our project contains multiple test suites for different environments and configurations. Some useful scripts to run the tests:
 
@@ -85,9 +85,9 @@ Some additional scripts available in `package.json`:
   yarn prettier:fix     # Fixes formatting issues automatically
   ```
 
-## Contributions
+## Contribution Guidelines
 
-We welcome both code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, bug reports, enhancement requests, and feature requests.
+We welcome both code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, enhancement requests, and new test requests.
 
 ### Developer Guidelines
 
@@ -139,7 +139,7 @@ We welcome both code and non-code contributions to our project. Non-code contrib
      - When validating frontend results in your end-to-end tests, use external sources of truth such as APIs or databases instead of hardcoded information.
      - This approach ensures that tests are more robust and accurately reflect the dynamic nature of the application data.
 
-#### Adding New Tests
+### Adding New Tests
 
 When contributing new tests or modifying existing ones, please adhere to the following guidelines:
 
@@ -195,7 +195,7 @@ If you want to contribute code changes to the project, here are some guidelines:
 1. **Create a Branch**
 
    ```bash
-   git checkout -b e2e/your-feature-name
+   git checkout -b e2e/your-test-name
    ```
 
 2. **Implement Your Changes**
@@ -251,28 +251,18 @@ If you want to contribute code changes to the project, here are some guidelines:
    Use meaningful commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
 
    ```bash
-   git commit -m "test: add new feature"
+   git commit -m "test: add new test"
    ```
 
 7. **Push to Your Fork**
 
    ```bash
-   git push origin e2e/your-feature-name
+   git push origin e2e/your-test-name
    ```
 
 8. **Open a Pull Request**
 
    Go to the original repository and click on **New Pull Request**. Provide a clear description of your changes, including any issues your PR fixes, acceptance criteria, and any special notes to the reviewers.
-
-#### Collaboration and Communication
-
-- **Team Consensus:**
-
-  - Engage with the team when introducing significant changes. Ensure that architectural decisions are agreed upon collectively.
-
-- **Open Communication:**
-
-  - Encourage discussion and feedback. All voices are important in shaping the project's direction.
 
 ### Commit Messages
 
@@ -283,6 +273,16 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 - `refactor`: Code changes that neither fix a bug nor add a feature.
 - `test`: Adding or correcting tests.
 - `chore`: Changes to the build process or auxiliary tools.
+
+### Collaboration and Communication
+
+- **Team Consensus:**
+
+  - Engage with the team when introducing significant changes. Ensure that architectural decisions are agreed upon collectively.
+
+- **Open Communication:**
+
+  - Encourage discussion and feedback. All voices are important in shaping the project's direction.
 
 ## Support
 
