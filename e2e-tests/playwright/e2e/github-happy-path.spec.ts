@@ -71,7 +71,6 @@ test.describe.serial("GitHub Happy path", () => {
   test("Verify all 12 Software Templates appear in the Create page", async () => {
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
-    await uiHelper.waitForHeaderTitle();
 
     for (const template of templates) {
       await uiHelper.waitForH4Title(template);
