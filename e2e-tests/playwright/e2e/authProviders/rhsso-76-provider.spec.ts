@@ -487,7 +487,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["admin"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await common.UnregisterUserEnittyFromCatalog(
+    await common.UnregisterUserEntityFromCatalog(
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
     );
     await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
@@ -549,7 +549,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
 
-    await common.UnregisterGroupEnittyFromCatalog(
+    await common.UnregisterGroupEntityFromCatalog(
       constants.RHSSO76_GROUPS["group_3"].name,
     );
 

@@ -287,7 +287,7 @@ export class Common {
     };
   }
 
-  async UnregisterEntityFromCatalog(kind: string, entityName: string) {
+  private async UnregisterEntityFromCatalog(kind: string, entityName: string) {
     await this.page.goto("/");
     await this.uiHelper.openSidebar("Catalog");
     await this.uiHelper.selectMuiBox("Kind", kind);

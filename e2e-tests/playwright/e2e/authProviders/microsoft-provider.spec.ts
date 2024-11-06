@@ -409,7 +409,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
     logger.info("Unregistering user 3 from catalog");
-    await common.UnregisterUserEnittyFromCatalog(
+    await common.UnregisterUserEntityFromCatalog(
       constants.MSGRAPH_USERS["user_3"].displayName,
     );
     logger.info("Checking alert message after login");
@@ -474,7 +474,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.MSGRAPH_USERS["admin"].userPrincipalName,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await common.UnregisterGroupEnittyFromCatalog(
+    await common.UnregisterGroupEntityFromCatalog(
       constants.MSGRAPH_GROUPS["group_5"].displayName,
     );
     await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
