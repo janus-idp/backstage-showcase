@@ -53,7 +53,8 @@ RUN chmod +x "$YARN"
 FROM skeleton AS deps
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/ ./dynamic-plugins/
 COPY $EXTERNAL_SOURCE_NESTED/package.json $EXTERNAL_SOURCE_NESTED/yarn.lock ./
-COPY --parents $EXTERNAL_SOURCE_NESTED/**/package.json ./
+# BEGIN COPY package.json files
+# END COPY package.json files
 
 # Increate timeout for yarn install
 RUN "$YARN" config set httpTimeout 600000
