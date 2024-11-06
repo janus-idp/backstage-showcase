@@ -16,15 +16,19 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
     await uiHelper.verifyHeading("Plugins");
   });
 
+  test.beforeEach(
+    async ({ page }) => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("is disabled", async ({ page }) => {
     await page
       .getByPlaceholder("Filter")
       .pressSequentially("backstage-plugin-analytics-provider-segment\n", {
         delay: 300,
       });
-    const row = await page.locator(
+    const row = page.locator(
       UIhelperPO.rowByText(
-        "@janus-idp/backstage-plugin-analytics-provider-segment",
+        "janus-idp-backstage-plugin-analytics-provider-segment",
       ),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled

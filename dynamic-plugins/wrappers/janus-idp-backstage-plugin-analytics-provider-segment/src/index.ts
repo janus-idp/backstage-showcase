@@ -1,2 +1,1 @@
-export * from '@backstage-community/plugin-acr';
-
+export * from "@janus-idp/backstage-plugin-analytics-provider-segment";
