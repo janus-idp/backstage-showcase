@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import test, { Page } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
 import { Common, setupBrowser } from "../utils/Common";
 import { CatalogImport } from "../support/pages/CatalogImport";
@@ -34,6 +34,9 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
 
     await common.loginAsGithubUser();
   });
+
+  test.beforeEach(async () => new Common(page).checkAndClickOnGHloginPopup());
+
   test("Register an Template", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
