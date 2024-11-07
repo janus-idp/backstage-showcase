@@ -3391,7 +3391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-topology-common@npm:1.4.2, @backstage-community/plugin-topology-common@npm:^1.4.2":
+"@backstage-community/plugin-topology-common@npm:1.4.2":
   version: 1.4.2
   resolution: "@backstage-community/plugin-topology-common@npm:1.4.2"
   dependencies:
@@ -3400,11 +3400,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-topology@npm:1.29.0":
-  version: 1.29.0
-  resolution: "@backstage-community/plugin-topology@npm:1.29.0"
+"@backstage-community/plugin-topology-common@npm:^1.4.3":
+  version: 1.4.3
+  resolution: "@backstage-community/plugin-topology-common@npm:1.4.3"
   dependencies:
-    "@backstage-community/plugin-topology-common": ^1.4.2
+    "@backstage/plugin-permission-common": ^0.8.1
+  checksum: 546c3ed9044144b4a6df2265e615d8d030ba413c666f4ef95f993226e7e83597d3c52416ddf7dd2f86cf21b90bc63a7c6b09bb896e9b7eee6ac5c3bffe185733
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-topology@npm:^1.29.0":
+  version: 1.29.2
+  resolution: "@backstage-community/plugin-topology@npm:1.29.2"
+  dependencies:
+    "@backstage-community/plugin-topology-common": ^1.4.3
     "@backstage/catalog-model": ^1.7.0
     "@backstage/core-components": ^0.15.1
     "@backstage/core-plugin-api": ^1.10.0
@@ -3414,7 +3423,7 @@ __metadata:
     "@backstage/plugin-kubernetes-react": ^0.4.4
     "@backstage/plugin-permission-react": ^0.4.27
     "@backstage/theme": ^0.6.0
-    "@janus-idp/shared-react": 2.11.1
+    "@janus-idp/shared-react": ^2.13.1
     "@kubernetes/client-node": ^0.22.1
     "@mui/icons-material": 5.15.17
     "@mui/lab": 5.0.0-alpha.173
@@ -3431,11 +3440,12 @@ __metadata:
     js-yaml: ^4.1.0
     lodash: ^4.17.21
     react-use: ^17.4.0
+    style-inject: ^0.3.0
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
-  checksum: 1ba8d43aef8b0ae5556eacf3c0b78248fd7f5afa38ba78d6772e20beed801935faf0ad72b29b364708c46048160309bc658e959fbbe7da964eae4740cb4265ce
+  checksum: 4842f41433924d3b111ed9194646f4fd8caf9932bc67ff8d2c4c1a7052e4f620307053c1869ae96a35e275885b55a0c8df23f3045cb0139496543143a300e5b1
   languageName: node
   linkType: hard
 
@@ -20514,9 +20524,9 @@ __metadata:
 
 "backstage-community-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic":
   version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-topology-common@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology-common"
+  resolution: "backstage-community-plugin-sonarqube-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic"
   dependencies:
-    "@backstage-community/plugin-tech-radar": 0.7.11
+    "@backstage-community/plugin-sonarqube-backend": 0.2.25
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
   languageName: unknown
@@ -20551,27 +20561,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"backstage-community-plugin-topology@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology":
-  version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-topology@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology"
-  dependencies:
-    "@backstage-community/plugin-topology": 1.29.0
-    "@backstage/cli": 0.28.2
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic":
-  version: 0.0.0-use.local
-  resolution: "backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic"
-  dependencies:
-    "@backstage-community/plugin-scaffolder-backend-module-sonarqube": 2.2.2
-    "@backstage/cli": 0.28.2
-    "@janus-idp/cli": 1.17.0
-    typescript: ^5.6.3
+    "@mui/icons-material": 5.16.7
   languageName: unknown
   linkType: soft
 
@@ -20590,9 +20580,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-topology@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology"
   dependencies:
-    "@backstage-community/plugin-topology": 1.29.0
+    "@backstage-community/plugin-topology": ^1.29.0
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-sonarqube": 2.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
   languageName: unknown
   linkType: soft
 
