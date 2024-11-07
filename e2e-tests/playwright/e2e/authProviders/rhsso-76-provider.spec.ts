@@ -66,7 +66,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       ],
     );
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_1"].username,
@@ -123,7 +123,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       ],
     );
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     // emailMatchingUserEntityProfileEmail should only allow authentication of keycloak users that match the email attribute with the entity one.
     // update jdoe email -> login should fail with error Login failed; caused by Error: Failed to sign-in, unable to resolve user identity
@@ -189,7 +189,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
 
     // preferredUsernameMatchingUserEntityName should allow authentication of any keycloak.
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     // login with testuser1 -> login should succeed
     await common.keycloakLogin(
@@ -227,7 +227,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
 
   test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH", async () => {
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_1"].username,
@@ -293,7 +293,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     test.setTimeout(300 * 1000);
     LOGGER.info(`Executing testcase: Remove user from RHSSO`);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
     await rhssoHelper.deleteUser(usersCreated["user_1"].id);
     await page.waitForTimeout(2000); // give rhsso a few seconds
@@ -304,7 +304,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
 
     await uiHelper.verifyAlertErrorMessage(/Login failed/gm);
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_2"].username,
@@ -330,7 +330,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
   test("Move a user to another group in RHSSO", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
     // move a user to another group -> ensure user can still login
     // move user_3 to group_3
@@ -370,7 +370,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     await uiHelper.openSidebar("Settings");
     await common.signOut();
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     // ensure the change is mirrored in the catalog
     LOGGER.info(
@@ -410,7 +410,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
   test("Remove a group from RHSSO", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
     // remove a group -> ensure group and its members still exists, member should still login
     // remove group_3
@@ -437,7 +437,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     await common.signOut();
 
     // waiting for next sync
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     // after the sync ensure the group entity is removed
     LOGGER.info(
@@ -481,7 +481,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       `Executing testcase: Remove a user from RHDH: authentication should work, but access is denied before next sync.`,
     );
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
     await common.keycloakLogin(
       constants.RHSSO76_USERS["admin"].username,
@@ -518,7 +518,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.AUTH_PROVIDERS_REALM_NAME,
     );
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     LOGGER.info(
       `Execute testcase: Remove a user from RHDH: user is re-created and can login after the sync`,
@@ -542,7 +542,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       `Executing testcase: Remove a group from RHDH: user can login, but policy is broken before next sync.`,
     );
     if (test.info().retry >= 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
     await common.keycloakLogin(
       constants.RHSSO76_USERS["admin"].username,
@@ -564,7 +564,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     await uiHelper.openSidebar("Settings");
     await common.signOut();
 
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     // after sync, ensure group is created again and memembers can login
     LOGGER.info(
@@ -584,7 +584,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
   test("Rename a user and a group", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "rhsso");
+      await waitForNextSync("rhsso", syncTime);
     }
 
     // rename group -> user can login, but policy is broken
@@ -601,7 +601,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     });
 
     // waiting for next sync
-    await waitForNextSync(syncTime, "rhsso");
+    await waitForNextSync("rhsso", syncTime);
 
     // after sync, ensure group is mirrored
     // after sync, ensure user change is mirrorred

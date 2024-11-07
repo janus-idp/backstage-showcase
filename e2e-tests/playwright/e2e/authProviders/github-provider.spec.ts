@@ -64,7 +64,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
       ],
     );
 
-    await waitForNextSync(syncTime, "github");
+    await waitForNextSync("github", syncTime);
   });
 
   test("Github with default resolver: user should login and entity is in the catalog", async () => {
@@ -76,7 +76,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     );
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
 
     await page.goto("/");
@@ -104,7 +104,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
     await common.githubLogin(
       constants.GH_USERS["admin"].name,
@@ -165,7 +165,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Remove a user from RHDH", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
     // remove user from RHDH -> authentication works, access is broken
     LOGGER.info(
@@ -208,7 +208,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await context.clearCookies();
 
     // waiting for next sync
-    await waitForNextSync(syncTime, "github");
+    await waitForNextSync("github", syncTime);
 
     // after sync, user_4 is created again and can login
     LOGGER.info(
@@ -227,7 +227,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Remove a group from RHDH", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
 
     // remove group from RHDH -> user can login, but policy is broken
@@ -254,7 +254,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     });
 
     // waiting for next sync
-    await waitForNextSync(syncTime, "github");
+    await waitForNextSync("github", syncTime);
 
     // after sync, ensure group is created again and memembers can login
     LOGGER.info(
@@ -274,7 +274,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Move a user to another group in Github", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
     // move a user to another group -> ensure user can still login
     LOGGER.info(
@@ -314,7 +314,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await uiHelper.openSidebar("Settings");
     await common.signOut();
 
-    await waitForNextSync(syncTime, "github");
+    await waitForNextSync("github", syncTime);
 
     // ensure the change is mirrored in the catalog
     LOGGER.info(
@@ -344,7 +344,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Remove a group from Github", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
     // remove a group -> members still exists, member should still login
     LOGGER.info(
@@ -368,7 +368,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     expect(displayed.groupMembers).toContain(constants.GH_USERS["user_1"].name);
 
     // waiting for next sync
-    await waitForNextSync(syncTime, "github");
+    await waitForNextSync("github", syncTime);
 
     // after the sync ensure the group entity is removed
     LOGGER.info(
@@ -404,7 +404,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
     if (test.info().retry > 0) {
-      await waitForNextSync(syncTime, "github");
+      await waitForNextSync("github", syncTime);
     }
     // rename group from RHDH -> user can login, but policy is broken
     LOGGER.info(`Executing testcase: Rename a user and a group.`);
@@ -425,7 +425,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     );
 
     // waiting for next sync
-    await waitForNextSync(syncTime, "github");
+    await waitForNextSync("github", syncTime);
 
     // after sync, ensure group is mirrored
     LOGGER.info(

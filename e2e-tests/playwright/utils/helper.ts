@@ -5,7 +5,7 @@ import { expect } from "@playwright/test";
 import { KubeCLient } from "./kubernetes-helper";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
 
-const k8sClient = new KubeCLient();
+export const k8sClient = new KubeCLient();
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
