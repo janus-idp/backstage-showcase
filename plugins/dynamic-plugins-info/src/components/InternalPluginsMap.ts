@@ -55,10 +55,10 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic',
   'backstage-community-plugin-sonarqube':
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube',
-  'janus-idp-backstage-plugin-ocm-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic',
-  'janus-idp-backstage-plugin-ocm':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm',
+  'backstage-community-plugin-ocm-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic',
+  'backstage-community-plugin-ocm':
+    './dynamic-plugins/dist/backstage-community-plugin-ocm',
   'janus-idp-backstage-plugin-bulk-import-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic',
   'janus-idp-backstage-plugin-bulk-import':

@@ -194,7 +194,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isNexusRepositoryManagerAvailable
-    janus-idp.backstage-plugin-ocm:
+    backstage-community.plugin-ocm:
       appIcons:
         - name: ocmIcon
           importName: OcmIcon

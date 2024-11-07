@@ -1,6 +1,6 @@
 # Installation Instructions for Tests
 
-For tests dependent on `janus-idp-backstage-plugin-ocm-backend-dynamic` and `janus-idp-backstage-plugin-ocm`, it's necessary to install **Advanced Cluster Management for Kubernetes "MultiClusterHub"**.
+For tests dependent on `backstage-community-plugin-ocm-backend-dynamic` and `backstage-community-plugin-ocm`, it's necessary to install **Advanced Cluster Management for Kubernetes "MultiClusterHub"**.
 
 Please follow these steps for installation:
 
