@@ -27,7 +27,7 @@ export class LogUtils {
    * @param actual The actual value to compare
    * @param expected The expected value
    */
-  private static compareValues(actual: any, expected: any) {
+  private static compareValues(actual: unknown, expected: unknown) {
     if (typeof expected === "object" && expected !== null) {
       Object.keys(expected).forEach((subKey) => {
         const expectedSubValue = expected[subKey];

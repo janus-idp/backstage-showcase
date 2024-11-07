@@ -1,6 +1,7 @@
-export class getOrganizationResponse {
+export class GetOrganizationResponse {
   reposUrl: string;
-  constructor(response: any) {
+
+  constructor(response: unknown) {
     enum OrganizationResponseAttributes {
       ReposUrl = "repos_url",
     }

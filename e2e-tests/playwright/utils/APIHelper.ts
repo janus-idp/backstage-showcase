@@ -1,6 +1,16 @@
 import { request, APIResponse, expect } from "@playwright/test";
 import { githubAPIEndpoints } from "./APIEndpoints";
 
+type FetchOptions = {
+  method: string;
+  headers: {
+    Accept: string;
+    Authorization: string;
+    "X-GitHub-Api-Version": string;
+  };
+  data?: string | object;
+};
+
 export class APIHelper {
   private static githubAPIVersion = "2022-11-28";
 
@@ -10,7 +20,7 @@ export class APIHelper {
     body?: string | object,
   ): Promise<APIResponse> {
     const context = await request.newContext();
-    const options: any = {
+    const options: FetchOptions = {
       method: method,
       headers: {
         Accept: "application/vnd.github+json",
@@ -20,7 +30,7 @@ export class APIHelper {
     };
 
     if (body) {
-      options["data"] = body;
+      options.data = body;
     }
 
     const response = await context.fetch(url, options);
@@ -30,8 +40,8 @@ export class APIHelper {
   static async getGithubPaginatedRequest(
     url: string,
     pageNo = 1,
-    response: any[] = [],
-  ): Promise<any[]> {
+    response = [],
+  ) {
     const fullUrl = `${url}&page=${pageNo}`;
     const result = await this.githubRequest("GET", fullUrl);
     const body = await result.json();

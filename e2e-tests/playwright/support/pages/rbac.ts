@@ -236,7 +236,7 @@ interface Role {
 
 export class Response {
   private authToken: string;
-  private simpleRequest;
+  private simpleRequest: { headers: { authorization: string } };
 
   constructor(authToken: string) {
     this.authToken = authToken;
@@ -296,7 +296,7 @@ export class Response {
 
   async removeMetadataFromResponse(response: APIResponse) {
     const responseJson = await response.json();
-    const responseClean = responseJson.map((list: any) => {
+    const responseClean = responseJson.map((list: { metadata: object }) => {
       delete list.metadata;
       return list;
     });

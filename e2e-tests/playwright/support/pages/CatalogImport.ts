@@ -56,7 +56,9 @@ export class BackstageShowcase {
     const rep = await APIHelper.getGithubPaginatedRequest(
       githubAPIEndpoints.issues("open"),
     );
-    return rep.filter((issue: any) => !issue.pull_request);
+    return rep.filter(
+      (issue: { pull_request: boolean }) => !issue.pull_request,
+    );
   }
 
   static async getShowcasePRs(
@@ -129,7 +131,11 @@ export class BackstageShowcase {
     }
   }
 
-  async verifyPRRows(allPRs: any[], startRow: number, lastRow: number) {
+  async verifyPRRows(
+    allPRs: { title: string }[],
+    startRow: number,
+    lastRow: number,
+  ) {
     for (let i = startRow; i < lastRow; i++) {
       await this.uiHelper.verifyRowsInTable([allPRs[i].title], false);
     }

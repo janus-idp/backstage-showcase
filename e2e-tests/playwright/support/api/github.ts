@@ -1,6 +1,6 @@
-import { getOrganizationResponse } from "./github-structures";
 import { JANUS_ORG } from "../../utils/constants";
 import { APIResponse, request } from "@playwright/test";
+import { GetOrganizationResponse } from "./github-structures";
 
 // https://docs.github.com/en/rest?apiVersion=2022-11-28
 export default class GithubApi {
@@ -14,9 +14,9 @@ export default class GithubApi {
 
   public async getOrganization(
     org = JANUS_ORG,
-  ): Promise<getOrganizationResponse> {
+  ): Promise<GetOrganizationResponse> {
     const req = await this._organization(org).get();
-    return new getOrganizationResponse(req.json());
+    return new GetOrganizationResponse(req.json());
   }
 
   public async getReposFromOrg(org = JANUS_ORG) {
