@@ -248,7 +248,3 @@ You can also reach out to us in our [community Slack channel](https://join.slack
 ## License
 
 By contributing, you agree that your contributions will be licensed under the [Apache-2.0 License](https://github.com/janus-idp/backstage-showcase/blob/main/LICENSE).
-
----
-
-Janus-IDP follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
