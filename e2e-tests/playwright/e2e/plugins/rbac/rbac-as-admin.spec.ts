@@ -1,4 +1,3 @@
-/* eslint-disable no-empty-pattern */
 import test, { expect, Page } from "@playwright/test";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
 import {
@@ -20,18 +19,18 @@ type RbacAsAdminFixture = {
 let myPage: Page;
 
 const base = test.extend<RbacAsAdminFixture>({
-  uiHelper: async ({}, use) => {
+  uiHelper: async (_, use) => {
     const uiHelper = new UIhelper(myPage);
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
     await use(uiHelper);
   },
-  rolesHelper: async ({}, use) => {
+  rolesHelper: async (_, use) => {
     const rolesHelper = new Roles(myPage);
     await use(rolesHelper);
   },
-  testId: async ({}, use) => {
+  testId: async (_, use) => {
     const testId = Date.now().toString();
     const testRole = `test-role-${testId}`;
     const composedRole = `role:default/${testRole}`;
@@ -42,6 +41,7 @@ const base = test.extend<RbacAsAdminFixture>({
 base.describe.serial("Test RBAC plugin as an admin user", () => {
   base.beforeAll(async ({ browser }, testInfo) => {
     myPage = (await setupBrowser(browser, testInfo)).page;
+    await new Common(myPage).loginAsGithubUser();
   });
 
   base.beforeEach(
