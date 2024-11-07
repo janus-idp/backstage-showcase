@@ -13,6 +13,9 @@ test.describe.serial("GitHub integration with Org data fetching", () => {
     common = new Common(page);
     await common.loginAsGithubUser();
   });
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
 
   test("Verify that fetching the groups of the first org works", async () => {
     await uiHelper.openSidebar("Catalog");

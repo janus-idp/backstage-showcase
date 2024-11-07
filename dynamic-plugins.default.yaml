@@ -473,12 +473,10 @@ plugins:
           janus-idp.backstage-plugin-bulk-import:
             appIcons:
               - name: bulkImportIcon
-                module: BulkImportPlugin
                 importName: BulkImportIcon
             dynamicRoutes:
               - path: /bulk-import/repositories
                 importName: BulkImportPage
-                module: BulkImportPlugin
                 menuItem:
                   icon: bulkImportIcon
                   text: Bulk import
@@ -595,10 +593,8 @@ plugins:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon
-                module: RbacPlugin
             dynamicRoutes:
               - path: /rbac
-                module: RbacPlugin
                 importName: RbacPage
                 menuItem:
                   icon: rbacIcon
@@ -608,7 +604,7 @@ plugins:
                 parent: admin
                 icon: rbacIcon
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic
     disabled: true
     pluginConfig:
       servicenow:
@@ -619,7 +615,7 @@ plugins:
         # The password to use for authentication.
         password: ${SERVICENOW_PASSWORD}
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-scaffolder-backend-module-sonarqube-dynamic
     disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
@@ -642,7 +638,7 @@ plugins:
               baseUrl: '${THREESCALE_BASE_URL}'
               accessToken: '${THREESCALE_ACCESS_TOKEN}'
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -812,12 +808,12 @@ plugins:
                     anyOf:
                     - isAcrAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jfrog-artifactory
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-jfrog-artifactory:
+          backstage-community.plugin-jfrog-artifactory:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: JfrogArtifactoryPage
