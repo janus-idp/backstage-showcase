@@ -29,12 +29,14 @@
   },
   "sideEffects": false,
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
     "clean": "backstage-cli package clean",
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
-    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules"
+    "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-topology": "^1.29.4"
