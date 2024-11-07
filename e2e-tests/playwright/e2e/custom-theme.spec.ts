@@ -21,7 +21,8 @@ test.describe("CustomTheme should be applied", () => {
     await common.loginAsGuest();
   });
 
-  test("Verify theme colors are applied and make screenshots", async (_args, testInfo: TestInfo) => {
+  // eslint-disable-next-line no-empty-pattern
+  test("Verify theme colors are applied and make screenshots", async ({}, testInfo: TestInfo) => {
     const themes = ThemeConstants.getThemes();
 
     for (const theme of themes) {
