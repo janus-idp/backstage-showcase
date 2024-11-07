@@ -22,9 +22,7 @@ let myPage: Page;
 const base = test.extend<RbacAsAdminFixture>({
   uiHelper: async ({}, use) => {
     const uiHelper = new UIhelper(myPage);
-    await uiHelper.openSidebarButton("Administration");
-    await uiHelper.openSidebar("RBAC");
-    await uiHelper.verifyHeading("RBAC");
+    await myPage.goto("/rbac");
     await use(uiHelper);
   },
   rolesHelper: async ({}, use) => {
