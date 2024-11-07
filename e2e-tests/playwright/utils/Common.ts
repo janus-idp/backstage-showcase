@@ -28,7 +28,7 @@ export class Common {
     await this.uiHelper.waitForSideBarVisible();
   }
 
-  async waitForLoad(timeout = 120000) {
+  async waitForLoad(timeout = 30 * 1000) {
     for (const item of Object.values(waitsObjs)) {
       await this.page.waitForSelector(item, {
         state: "hidden",
@@ -61,7 +61,7 @@ export class Common {
 
     await this.page.click('[value="Sign in"]');
     await this.page.fill("#app_totp", this.getGitHub2FAOTP(userid));
-    test.setTimeout(130000);
+    test.setTimeout(30 * 1000);
     if (
       (await this.uiHelper.isTextVisible(
         "The two-factor code you entered has already been used",
@@ -71,11 +71,11 @@ export class Common {
         3000,
       ))
     ) {
-      await this.page.waitForTimeout(60000);
+      await this.page.waitForTimeout(30 * 1000);
       await this.page.fill("#app_totp", this.getGitHub2FAOTP(userid));
     }
     await expect(this.page.locator("#app_totp")).toBeHidden({
-      timeout: 120000,
+      timeout: 10 * 1000,
     });
   }
 
@@ -128,7 +128,7 @@ export class Common {
         await popup.locator("[name=totpPin]").press("Enter");
         await popup
           .getByRole("button", { name: /Continue|Weiter/ })
-          .click({ timeout: 60000 });
+          .click({ timeout: 30 * 1000 });
         resolve();
       });
     });
@@ -149,7 +149,7 @@ export class Common {
     await this.checkAndReauthorizeGithubApp();
     await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
       state: "hidden",
-      timeout: 100000,
+      timeout: 15 * 1000,
     });
   }
 
@@ -265,7 +265,7 @@ export class Common {
               .click({ timeout: 5000 });
             await popup
               .locator('[type=button]:has-text("No")')
-              .click({ timeout: 15000 });
+              .click({ timeout: 10000 });
             resolve("Login successful");
           } catch (e) {
             const usernameError = popup.locator("id=usernameError");

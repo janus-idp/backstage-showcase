@@ -144,7 +144,7 @@ export class UIhelper {
   }
 
   async waitForSideBarVisible() {
-    await this.page.waitForSelector("nav a", { timeout: 120000 });
+    await this.page.waitForSelector("nav a", { timeout: 10 * 1000 });
   }
 
   async openSidebar(navBarText: string) {
@@ -230,7 +230,7 @@ export class UIhelper {
       .filter({ hasText: heading })
       .first();
 
-    await headingLocator.waitFor({ state: "visible", timeout: 30000 });
+    await headingLocator.waitFor({ state: "visible", timeout: 20000 });
     await expect(headingLocator).toBeVisible();
   }
 
@@ -239,13 +239,13 @@ export class UIhelper {
       .locator("p")
       .filter({ hasText: paragraph })
       .first();
-    await headingLocator.waitFor({ state: "visible", timeout: 30000 });
+    await headingLocator.waitFor({ state: "visible", timeout: 20000 });
     await expect(headingLocator).toBeVisible();
   }
 
   async waitForH4Title(text: string) {
     await this.page.waitForSelector(`h4:has-text("${text}")`, {
-      timeout: 99999,
+      timeout: 10000,
     });
   }
 

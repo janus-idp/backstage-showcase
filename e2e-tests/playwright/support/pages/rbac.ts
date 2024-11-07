@@ -72,11 +72,11 @@ export class Roles {
     await this.uiHelper.clickButton("Next");
 
     await this.page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await this.uiHelper.optionSelector("catalog");
     await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await this.uiHelper.optionSelector("catalog-entity");
     await this.page.uncheck(RoleFormPO.selectPolicy(0, 1, "Delete"));
@@ -89,7 +89,7 @@ export class Roles {
 
     await this.uiHelper.clickButton("Create");
 
-    await this.page.locator(HomePagePO.searchBar).waitFor({ timeout: 60000 });
+    await this.page.locator(HomePagePO.searchBar).waitFor({ timeout: 10000 });
     await this.page.locator(HomePagePO.searchBar).fill(name);
     await this.uiHelper.verifyHeading("All roles (1)");
   }
@@ -111,11 +111,11 @@ export class Roles {
     await this.uiHelper.clickButton("Next");
 
     await this.page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await this.uiHelper.optionSelector("catalog");
     await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await this.uiHelper.optionSelector("catalog-entity");
 
@@ -173,12 +173,12 @@ export class Roles {
     await this.uiHelper.clickButton("Next");
 
     await this.page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await this.uiHelper.optionSelector("catalog");
 
     await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await this.uiHelper.optionSelector("catalog-entity");
 

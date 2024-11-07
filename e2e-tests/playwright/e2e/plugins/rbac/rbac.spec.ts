@@ -242,7 +242,7 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await uiHelper.verifyHeading("Edit Role");
     await page.click(RoleFormPO.addPermissionPolicy);
     await page.click(RoleFormPO.selectPermissionPolicyPlugin(1), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await uiHelper.optionSelector("scaffolder");
     await page.click(RoleFormPO.selectPermissionPolicyPermission(1));
@@ -280,12 +280,12 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
       await uiHelper.clickButton("Next");
 
       await page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-        timeout: 100000,
+        timeout: 10 * 1000,
       });
       await uiHelper.optionSelector("catalog");
 
       await page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-        timeout: 100000,
+        timeout: 10 * 1000,
       });
       await uiHelper.optionSelector("catalog.entity.create");
 
