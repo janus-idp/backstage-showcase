@@ -42,6 +42,7 @@ const base = test.extend<RbacAsAdminFixture>({
 base.describe.serial("Test RBAC plugin as an admin user", () => {
   base.beforeAll(async ({ browser }, testInfo) => {
     myPage = (await setupBrowser(browser, testInfo)).page;
+    await new Common(myPage).loginAsGithubUser();
   });
 
   base.beforeEach(
