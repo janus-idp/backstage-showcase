@@ -97,7 +97,7 @@ jobs:
         run: cd e2e-tests && yarn prettier:check --concurrency=75% --affected
 
       - name: Run lint for e2e
-        run: cd e2e-tests && yarn run lint:check --concurrency=75% --affected
+        run: cd e2e-tests && yarn run lint:check
 
       - name: Run tests
         run: yarn run test --concurrency=75% --affected
