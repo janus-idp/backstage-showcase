@@ -13,8 +13,7 @@
     "supported-versions": "1.32.4",
     "pluginId": "janus-idp-bulk-import-backend",
     "pluginPackages": [
-      "janus-idp-bulk-import",
-      "janus-idp-bulk-import-backend"
+      "janus-idp-backstage-plugin-bulk-import-backend"
     ]
   },
   "exports": {

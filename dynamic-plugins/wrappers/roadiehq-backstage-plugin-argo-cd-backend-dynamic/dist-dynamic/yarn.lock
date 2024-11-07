@@ -81,11 +81,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.8.4
-  resolution: "@types/node@npm:22.8.4"
+  version: 22.8.7
+  resolution: "@types/node@npm:22.8.7"
   dependencies:
     undici-types: ~6.19.8
-  checksum: 1e55594ce7942e259919283e6bb9ee814f184afcd545956d95163dd3b1d4b1923dba97e0c258c5a9dd2c96b2e754fa9ae42994437a564255c8907ae7cdc25b4b
+  checksum: c7b200d06da97a4d4f46528ae962c028bb06b6ef9ab7f7949639420f3b3d236f041756ca1945dcaec0fcefbafd07b8ca47bbc1b47b77d33a4173211425641426
   languageName: node
   linkType: hard
 
@@ -1099,8 +1099,8 @@ __metadata:
   linkType: hard
 
 "winston@npm:^3.2.1":
-  version: 3.15.0
-  resolution: "winston@npm:3.15.0"
+  version: 3.16.0
+  resolution: "winston@npm:3.16.0"
   dependencies:
     "@colors/colors": ^1.6.0
     "@dabh/diagnostics": ^2.0.2
@@ -1113,7 +1113,7 @@ __metadata:
     stack-trace: 0.0.x
     triple-beam: ^1.3.0
     winston-transport: ^4.7.0
-  checksum: 2ae6f3a3359fadd90f69a4db20d78aba6901e18114648e48c8538e925511e4820f8d488f19b1c026096ece614732338aa138f4a0fa2c5e29e8fbc53029f55473
+  checksum: 2b01d51d8dc355c7eec67fe26f1f9642a5d4fb4ad3db38612229fa95c7c925fba7cbe3d87d362f36c433f9ad15032d455f96159a5bbe77166c4a8cf440127a6d
   languageName: node
   linkType: hard
 

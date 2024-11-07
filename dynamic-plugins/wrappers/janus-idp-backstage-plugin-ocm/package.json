@@ -14,8 +14,7 @@
     "supported-versions": "1.32.4",
     "pluginId": "janus-idp-ocm",
     "pluginPackages": [
-      "janus-idp-ocm",
-      "janus-idp-ocm-backend"
+      "janus-idp-backstage-plugin-ocm"
     ]
   },
   "sideEffects": false,
@@ -57,7 +56,7 @@
   "homepage": "https://red.ht/rhdh",
   "bugs": "https://issues.redhat.com/browse/RHIDP",
   "keywords": [
-    "support:tech-preview",
+    "support:production",
     "lifecycle:active"
   ]
 }

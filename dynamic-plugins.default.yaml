@@ -28,12 +28,12 @@ plugins:
               timeout:
                 minutes: 15
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-github-actions
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-github-actions:
+          backstage-community.plugin-github-actions:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: EntityGithubActionsContent
@@ -43,12 +43,12 @@ plugins:
                   if:
                     allOf:
                       - isGithubActionsAvailable
-  - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
+  - package:  ./dynamic-plugins/dist/backstage-community-plugin-github-issues
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-github-issues:
+          backstage-community.plugin-github-issues:
             mountPoints:
               - mountPoint: entity.page.issues/cards
                 importName: GithubIssuesCard
@@ -322,19 +322,19 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
     # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
     disabled: true
-  - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
       azureDevOps:
         host: dev.azure.com
         token: ${AZURE_TOKEN}
         organization: ${AZURE_ORG}
-  - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-azure-devops
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-azure-devops:
+          backstage-community.plugin-azure-devops:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: EntityAzurePipelinesContent
@@ -352,11 +352,11 @@ plugins:
                   if:
                     allOf:
                       - isAzureDevOpsAvailable
-  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories
+  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic
     disabled: true
 
   # Group: Jenkins
-  - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic
     disabled: true
     pluginConfig:
       jenkins:
@@ -365,12 +365,12 @@ plugins:
             baseUrl: ${JENKINS_URL}
             username: ${JENKINS_USERNAME}
             apiKey: ${JENKINS_TOKEN}
-  - package: ./dynamic-plugins/dist/backstage-plugin-jenkins
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jenkins
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-jenkins:
+          backstage-community.plugin-jenkins:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: EntityJenkinsContent
@@ -424,18 +424,18 @@ plugins:
           backstage.plugin-signals: {}
 
   # Group: SonarQube
-  - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic
     disabled: true
     pluginConfig:
       sonarqube:
         baseUrl: ${SONARQUBE_URL}
         apiKey: ${SONARQUBE_TOKEN}
-  - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-sonarqube
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-sonarqube:
+          backstage-community.plugin-sonarqube:
             mountPoints:
               - mountPoint: entity.page.overview/cards
                 importName: EntitySonarQubeCard
@@ -515,12 +515,10 @@ plugins:
           janus-idp.backstage-plugin-bulk-import:
             appIcons:
               - name: bulkImportIcon
-                module: BulkImportPlugin
                 importName: BulkImportIcon
             dynamicRoutes:
               - path: /bulk-import/repositories
                 importName: BulkImportPage
-                module: BulkImportPlugin
                 menuItem:
                   icon: bulkImportIcon
                   text: Bulk import
@@ -637,10 +635,8 @@ plugins:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon
-                module: RbacPlugin
             dynamicRoutes:
               - path: /rbac
-                module: RbacPlugin
                 importName: RbacPage
                 menuItem:
                   icon: rbacIcon
@@ -650,7 +646,7 @@ plugins:
                 parent: admin
                 icon: rbacIcon
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic
     disabled: true
     pluginConfig:
       servicenow:
@@ -661,7 +657,7 @@ plugins:
         # The password to use for authentication.
         password: ${SERVICENOW_PASSWORD}
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-scaffolder-backend-module-sonarqube-dynamic
     disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
@@ -684,7 +680,7 @@ plugins:
               baseUrl: '${THREESCALE_BASE_URL}'
               accessToken: '${THREESCALE_ACCESS_TOKEN}'
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -742,12 +738,12 @@ plugins:
                 timeout:
                   minutes: 3
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-dynatrace
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-dynatrace:
+          backstage-community.plugin-dynatrace:
             mountPoints:
               - mountPoint: entity.page.monitoring/cards
                 importName: DynatraceTab
@@ -854,12 +850,12 @@ plugins:
                     anyOf:
                     - isAcrAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jfrog-artifactory
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-jfrog-artifactory:
+          backstage-community.plugin-jfrog-artifactory:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: JfrogArtifactoryPage
@@ -870,12 +866,12 @@ plugins:
                     anyOf:
                     - isJfrogArtifactoryAvailable
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-lighthouse
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-lighthouse:
+          backstage-community.plugin-lighthouse:
             appIcons:
               - name: lighthouse
                 importName: LighthouseIcon
@@ -897,12 +893,12 @@ plugins:
                     allOf:
                       - isLighthouseAvailable
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-tech-radar:
+          backstage-community.plugin-tech-radar:
             apiFactories:
               - importName: TechRadarApi
             appIcons:
@@ -918,6 +914,12 @@ plugins:
                   props:
                     width: 1500
                     height: 800
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
+    disabled: true
+    pluginConfig:
+      techRadar:
+        url: ${TECH_RADAR_DATA_URL}
+
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
     disabled: false
@@ -949,9 +951,6 @@ plugins:
       catalog:
         providers:
           microsoftGraphOrg: {}
-
-  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
-    disabled: true
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-ldap-dynamic
     disabled: true

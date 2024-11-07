@@ -13,7 +13,10 @@
     "role": "frontend-plugin",
     "supported-versions": "1.32.4",
     "pluginId": "janus-idp-quay",
-    "pluginPackage": "janus-idp-quay"
+    "pluginPackage": "janus-idp-quay",
+    "pluginPackages": [
+      "janus-idp-backstage-plugin-quay"
+    ]
   },
   "sideEffects": false,
   "scripts": {
@@ -54,7 +57,7 @@
   "homepage": "https://red.ht/rhdh",
   "bugs": "https://issues.redhat.com/browse/RHIDP",
   "keywords": [
-    "support:tech-preview",
+    "support:production",
     "lifecycle:active"
   ]
 }

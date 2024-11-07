@@ -21,10 +21,6 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {
-    "cross-fetch": "^4.0.0",
-    "winston": "^3.2.1"
-  },
   "files": [
     "dist"
   ],
@@ -44,14 +40,6 @@
     "lifecycle:active"
   ],
   "bundleDependencies": true,
-  "peerDependencies": {
-    "@backstage/backend-common": "^0.24.0",
-    "@backstage/backend-plugin-api": "^0.8.0",
-    "@backstage/core-app-api": "^1.14.2",
-    "@backstage/core-plugin-api": "^1.9.3",
-    "@backstage/plugin-scaffolder-backend": "^1.24.0",
-    "@backstage/plugin-scaffolder-node": "^0.4.9"
-  },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
       "@smithy/util-utf8": "^2.0.0"

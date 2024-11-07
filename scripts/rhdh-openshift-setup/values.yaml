@@ -22,12 +22,10 @@ global:
               janus-idp.backstage-plugin-bulk-import:
                 appIcons:
                   - name: bulkImportIcon
-                    module: BulkImportPlugin
                     importName: BulkImportIcon
                 dynamicRoutes:
                   - path: /bulk-import/repositories
                     importName: BulkImportPage
-                    module: BulkImportPlugin
                     menuItem:
                       icon: bulkImportIcon
                       text: Bulk import
@@ -121,12 +119,12 @@ global:
                       if:
                         anyOf:
                         - isQuayAvailable
-      - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              backstage.plugin-tech-radar:
+              backstage-community.plugin-tech-radar:
                 apiFactories:
                   - importName: TechRadarApi
                 appIcons:
@@ -150,7 +148,6 @@ global:
               janus-idp.backstage-plugin-rbac:
                 mountPoints:
                   - mountPoint: admin.page.rbac/cards
-                    module: RbacPlugin
                     importName: RbacPage
                     config:
                       layout:
@@ -160,7 +157,6 @@ global:
                         useHeader: false
                 dynamicRoutes:
                   - path: /admin/rbac
-                    module: RbacPlugin
                     importName: RbacPage
       # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
       #   disabled: false

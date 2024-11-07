@@ -1,0 +1,63 @@
+{
+  "name": "backstage-community-plugin-tech-radar-backend-dynamic",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs.js",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "backstage": {
+    "role": "backend-plugin",
+    "pluginId": "tech-radar",
+    "pluginPackages": [
+      "backstage-community-plugin-tech-radar",
+      "backstage-community-plugin-tech-radar-backend"
+    ]
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-promise-router": "^4.1.0",
+    "node-fetch": "^2.6.7",
+    "zod": "^3.20.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:tech-preview",
+    "lifecycle:active"
+  ],
+  "bundleDependencies": true,
+  "peerDependencies": {
+    "@backstage/backend-defaults": "^0.5.0",
+    "@backstage/backend-plugin-api": "^1.0.0",
+    "@backstage/config": "^1.2.0"
+  },
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
+  }
+}
