@@ -20,6 +20,10 @@ test.describe
     await uiHelper.verifyHeading("RBAC");
   });
 
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("Check if permission policies defined in files are loaded and effective", async () => {
     const testRole: string = "role:default/test2-role";
 
@@ -81,6 +85,10 @@ test.describe
     common = new Common(page);
     await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
+
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
 
   test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async () => {
     await uiHelper.openSidebar("Catalog");

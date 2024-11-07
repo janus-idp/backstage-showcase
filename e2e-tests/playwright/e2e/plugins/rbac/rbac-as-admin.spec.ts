@@ -7,7 +7,7 @@ import {
   HomePagePO,
   RoleOverviewPO,
 } from "../../../support/pageObjects/page-obj";
-import { setupBrowser } from "../../../utils/Common";
+import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { Roles } from "../../../support/pages/rbac";
 
@@ -43,6 +43,10 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
   base.beforeAll(async ({ browser }, testInfo) => {
     myPage = (await setupBrowser(browser, testInfo)).page;
   });
+
+  base.beforeEach(
+    async () => await new Common(myPage).checkAndClickOnGHloginPopup(),
+  );
 
   base(
     "Check if Administration side nav is present with RBAC plugin",
