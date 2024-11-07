@@ -1,6 +1,6 @@
 {
-  "name": "janus-idp-backstage-plugin-bulk-import-backend",
-  "version": "5.0.0",
+  "name": "red-hat-developer-hub-backstage-plugin-bulk-import-backend",
+  "version": "5.1.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,10 +10,10 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.4",
-    "pluginId": "janus-idp-bulk-import-backend",
+    "supported-versions": "1.32.5",
+    "pluginId": "red-hat-developer-hub-backstage-plugin-bulk-import-backend",
     "pluginPackages": [
-      "janus-idp-backstage-plugin-bulk-import-backend"
+      "red-hat-developer-hub-backstage-plugin-bulk-import-backend"
     ]
   },
   "exports": {
@@ -34,15 +34,16 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-bulk-import-backend --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-bulk-import-backend --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @red-hat-developer-hub/backstage-plugin-bulk-import-backend --override-interop default --no-embed-as-dependencies",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @red-hat-developer-hub/backstage-plugin-bulk-import-backend --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@janus-idp/backstage-plugin-bulk-import-backend": "5.0.0"
+    "@red-hat-developer-hub/backstage-plugin-bulk-import-backend": "5.1.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.17.0"
+    "@janus-idp/cli": "1.17.0",
+    "typescript": "^5.6.3"
   },
   "files": [
     "dist",
@@ -52,7 +53,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-bulk-import-backend-dynamic"
+    "directory": "dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"

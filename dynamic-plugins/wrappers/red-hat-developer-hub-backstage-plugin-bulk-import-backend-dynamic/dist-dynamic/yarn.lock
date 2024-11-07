@@ -24,8 +24,8 @@ __metadata:
   linkType: hard
 
 "@octokit/auth-app@npm:^6.0.3":
-  version: 6.1.2
-  resolution: "@octokit/auth-app@npm:6.1.2"
+  version: 6.1.3
+  resolution: "@octokit/auth-app@npm:6.1.3"
   dependencies:
     "@octokit/auth-oauth-app": ^7.1.0
     "@octokit/auth-oauth-user": ^4.1.0
@@ -33,10 +33,10 @@ __metadata:
     "@octokit/request-error": ^5.1.0
     "@octokit/types": ^13.1.0
     deprecation: ^2.3.1
-    lru-cache: ^10.0.0
+    lru-cache: "npm:@wolfy1339/lru-cache@^11.0.2-patch.1"
     universal-github-app-jwt: ^1.1.2
     universal-user-agent: ^6.0.0
-  checksum: fa9c16a9cf884a87f78ed11f4ab9b300908f3648ab9cd710037b22abbf496b3edb86440bf97acb28cf6d4ee4d64fbab4a845b75e739d0582879bc50ab0b74852
+  checksum: 997a4abd2b85b3751d63034b38ecbf8b711ee212f99df32586812e8e99637fc29f50e051f51c1dec04e0f8de3f9cb8c722c65eb1890e02b6b3e3f6dc1323fa93
   languageName: node
   linkType: hard
 
@@ -250,11 +250,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.8.4
-  resolution: "@types/node@npm:22.8.4"
+  version: 22.9.0
+  resolution: "@types/node@npm:22.9.0"
   dependencies:
     undici-types: ~6.19.8
-  checksum: 1e55594ce7942e259919283e6bb9ee814f184afcd545956d95163dd3b1d4b1923dba97e0c258c5a9dd2c96b2e754fa9ae42994437a564255c8907ae7cdc25b4b
+  checksum: c014eb3b8a110f1b87b614a40ef288d13e6b08ae9d5dafbd38951a2eebc24d352dc55330ed9d00c97ee9e64483c3cc14c4aa914c5df7ca7b9eaa1a30b2340dbd
   languageName: node
   linkType: hard
 
@@ -420,10 +420,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "cookie@npm:0.5.0"
-  checksum: 1f4bd2ca5765f8c9689a7e8954183f5332139eb72b6ff783d8947032ec1fdf43109852c178e21a953a30c0dd42257828185be01b49d1eb1a67fd054ca588a180
+"cookie@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "cookie@npm:1.0.1"
+  checksum: e2ff4879d816ea27dab69651c06d328b1f4214ccefa1023b6ebf85787bc23b3cad777ed51b4e54c01d161c374a05fc86e45e51ee3d9fafb48a836439c56b2458
   languageName: node
   linkType: hard
 
@@ -742,30 +742,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"janus-idp-backstage-plugin-bulk-import-backend-dynamic@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-bulk-import-backend-dynamic@workspace:."
-  dependencies:
-    "@octokit/auth-app": ^6.0.3
-    "@octokit/rest": ^20.0.2
-    ajv-formats: ^3.0.1
-    express: ^4.17.1
-    git-url-parse: ^14.0.0
-    js-yaml: ^4.1.0
-    luxon: ^3.4.4
-    node-fetch: ^2.6.7
-    openapi-backend: ^5.10.6
-  peerDependencies:
-    "@backstage/backend-defaults": ^0.5.2
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/errors": ^1.2.4
-    "@backstage/integration": ^1.15.1
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.4
-  languageName: unknown
-  linkType: soft
-
 "js-yaml@npm:^4.1.0":
   version: 4.1.0
   resolution: "js-yaml@npm:4.1.0"
@@ -886,10 +862,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^10.0.0":
-  version: 10.4.3
-  resolution: "lru-cache@npm:10.4.3"
-  checksum: 6476138d2125387a6d20f100608c2583d415a4f64a0fecf30c9e2dda976614f09cad4baa0842447bd37dd459a7bd27f57d9d8f8ce558805abd487c583f3d774a
+"lru-cache@npm:@wolfy1339/lru-cache@^11.0.2-patch.1":
+  version: 11.0.2-patch.1
+  resolution: "@wolfy1339/lru-cache@npm:11.0.2-patch.1"
+  checksum: 60cc2839abbae0fa50152fde143da5ac1141773cefb3505602956074dfa358ec87e107987cad7fd2292768663855497160a2c1e449d7f4e8b4684fb08f89dc25
   languageName: node
   linkType: hard
 
@@ -1016,20 +992,20 @@ __metadata:
   linkType: hard
 
 "openapi-backend@npm:^5.10.6":
-  version: 5.11.0
-  resolution: "openapi-backend@npm:5.11.0"
+  version: 5.11.1
+  resolution: "openapi-backend@npm:5.11.1"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^11.1.0
     ajv: ^8.6.2
     bath-es5: ^3.0.3
-    cookie: ^0.5.0
+    cookie: ^1.0.1
     dereference-json-schema: ^0.2.1
     lodash: ^4.17.15
     mock-json-schema: ^1.0.7
     openapi-schema-validator: ^12.0.0
     openapi-types: ^12.0.2
     qs: ^6.9.3
-  checksum: 8efcd315b542adb1912088e24fe2fbd1197e529623f392aa50c72bb431cbdf0e1e806c36fbbaf8d42bb3575e6e19a76042596b493616abeddc754c058f1cb4eb
+  checksum: cd51379e21a6fc89e8497e11dcacff398ccab54366b70e7e91740367411ce295de170957ca172c5063094786b0af854f88db85de9928d6edf89444134be667ff
   languageName: node
   linkType: hard
 
@@ -1128,6 +1104,30 @@ __metadata:
   checksum: ba1583c8d8a48e8fbb7a873fdbb2df66ea4ff83775421bfe21ee120140949ab048200668c47d9ae3880012f6e217052690628cf679ddfbd82c9fc9358d574676
   languageName: node
   linkType: hard
+
+"red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic@workspace:."
+  dependencies:
+    "@octokit/auth-app": ^6.0.3
+    "@octokit/rest": ^20.0.2
+    ajv-formats: ^3.0.1
+    express: ^4.17.1
+    git-url-parse: ^14.0.0
+    js-yaml: ^4.1.0
+    luxon: ^3.4.4
+    node-fetch: ^2.6.7
+    openapi-backend: ^5.10.6
+  peerDependencies:
+    "@backstage/backend-defaults": ^0.5.2
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/errors": ^1.2.4
+    "@backstage/integration": ^1.15.1
+    "@backstage/plugin-catalog-node": ^1.13.1
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-node": ^0.8.4
+  languageName: unknown
+  linkType: soft
 
 "require-from-string@npm:^2.0.2":
   version: 2.0.2
