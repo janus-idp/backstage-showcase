@@ -228,6 +228,13 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${JENKINS_USERNAME}` with the name of the user to be accessed through the API
      - `${JENKINS_TOKEN}` with the API token to be used
 
+   - Setup the Notifications email plugin
+
+     - `${EMAIL_HOSTNAME}`: SMTP server hostname
+     - `${EMAIL_USERNAME}`: SMTP username
+     - `${EMAIL_PASSWORD}`: SMTP password
+     - `${EMAIL_SENDER}`: Sender email address
+
    - Setup the PagerDuty plugin
 
      - `${PAGERDUTY_TOKEN}` with the [API token](https://support.pagerduty.com/docs/api-access-keys#generating-a-general-access-rest-api-key) used to make requests to the [PagerDuty API](https://developer.pagerduty.com/docs/rest-api-v2/rest-api/). Note that this will require a PaperDuty Admin role.

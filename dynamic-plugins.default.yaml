@@ -407,7 +407,7 @@ plugins:
           email:
             transportConfig:
               transport: smtp
-              hostname: ${SMTP_HOSTNAME}
+              hostname: ${EMAIL_HOSTNAME}
               port: 587
               username: ${EMAIL_USERNAME}
               password: ${EMAIL_PASSWORD}
