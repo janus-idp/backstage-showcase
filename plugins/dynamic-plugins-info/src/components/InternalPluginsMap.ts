@@ -72,14 +72,14 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-plugin-rbac',
   'backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
-  'janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic':
-    '/dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic',
+  'backstage-community-scaffolder-backend-module-sonarqube-dynamic':
+    '/dynamic-plugins/dist/backstage-community-scaffolder-backend-module-sonarqube-dynamic',
   'janus-idp-backstage-plugin-aap-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic',
   'backstage-community-plugin-3scale-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
-  'janus-idp-backstage-plugin-keycloak-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic',
+  'backstage-community-plugin-catalog-backend-module-keycloak-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic',
   'backstage-community-plugin-redhat-argocd':
     './dynamic-plugins/dist/backstage-community-plugin-redhat-argocd',
   'backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic':
@@ -104,8 +104,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager',
   'backstage-community-plugin-acr':
     './dynamic-plugins/dist/backstage-community-plugin-acr',
-  'janus-idp-backstage-plugin-jfrog-artifactory':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory',
+  'backstage-community-plugin-jfrog-artifactory':
+    './dynamic-plugins/dist/backstage-community-plugin-jfrog-artifactory',
   'pagerduty-backstage-plugin':
     './dynamic-plugins/dist/pagerduty-backstage-plugin',
   'pagerduty-backstage-plugin-backend-dynamic':

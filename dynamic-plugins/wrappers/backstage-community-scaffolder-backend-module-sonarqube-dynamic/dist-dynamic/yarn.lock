@@ -5,9 +5,9 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic@workspace:.":
+"backstage-community-scaffolder-backend-module-sonarqube-dynamic@workspace:.":
   version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic@workspace:."
+  resolution: "backstage-community-scaffolder-backend-module-sonarqube-dynamic@workspace:."
   dependencies:
     yaml: ^2.3.3
   peerDependencies:

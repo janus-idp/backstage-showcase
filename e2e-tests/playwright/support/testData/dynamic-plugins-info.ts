@@ -30,7 +30,7 @@ export const PLUGINS = [
     role: "backend-plugin-module",
   },
   {
-    name: "@janus-idp/backstage-plugin-keycloak-backend-dynamic",
+    name: "backstage-community-plugin-catalog-backend-module-keycloak",
     platform: "node",
     role: "backend-plugin-module",
   },
