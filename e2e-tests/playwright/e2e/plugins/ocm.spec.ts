@@ -3,7 +3,7 @@ import { Common, setupBrowser } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
 import { Clusters } from "../../support/pages/clusters";
 
-//Pre-req: Enable janus-idp-backstage-plugin-ocm-backend-dynamic and janus-idp-backstage-plugin-ocm Plugins
+//Pre-req: Enable backstage-community-plugin-ocm-backend-dynamic and backstage-community-plugin-ocm Plugins
 //Pre-req: Install Advanced Cluster Management for Kubernetes "MultiClusterHub"
 // https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.10/html/install/installing#installing-from-the-operatorhub
 

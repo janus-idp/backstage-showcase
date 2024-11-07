@@ -1,5 +1,5 @@
 {
-  "name": "janus-idp-backstage-plugin-ocm",
+  "name": "backstage-community-plugin-ocm",
   "version": "5.2.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -11,10 +11,10 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.32.4",
-    "pluginId": "janus-idp-ocm",
+    "supported-versions": "1.32.5",
+    "pluginId": "backstage-community-plugin-ocm",
     "pluginPackages": [
-      "janus-idp-backstage-plugin-ocm"
+      "backstage-community-plugin-ocm"
     ]
   },
   "sideEffects": false,
@@ -28,18 +28,19 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@janus-idp/backstage-plugin-ocm": "5.2.0"
+    "@backstage-community/plugin-ocm": "5.2.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.17.0"
+    "@janus-idp/cli": "1.17.0",
+    "typescript": "^5.6.3"
   },
   "files": [
     "dist",
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "janus-idp.backstage-plugin-ocm",
+    "name": "backstage-community.plugin-ocm",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
@@ -47,7 +48,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-ocm"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-ocm"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
