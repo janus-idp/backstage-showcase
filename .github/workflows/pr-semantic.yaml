@@ -1,4 +1,4 @@
-name: PR
+name: PR Semantic
 
 on:
   pull_request_target:

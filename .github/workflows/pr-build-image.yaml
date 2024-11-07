@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: PR
+name: PR Build Image
 
 on:
   pull_request_target:
@@ -85,5 +85,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'The image is available at: `quay.io/${{ github.repository }}:pr-${{ github.event.number }}`!'
+              body: 'The image is available at:\n* [`quay.io/${{ github.repository }}:pr-${{ github.event.number }}`](https://quay.io/${{ github.repository }}:pr-${{ github.event.number }}) or\n* [`quay.io/${{ github.repository }}:pr-${{ github.event.number }}-${{ env.SHORT_SHA }}`](https://quay.io/${{ github.repository }}:pr-${{ github.event.number }}-${{ env.SHORT_SHA }})'
             })

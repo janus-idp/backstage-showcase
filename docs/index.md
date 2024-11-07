@@ -212,7 +212,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the Jfrog Artifactory plugin
 
-     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/jfrog-artifactory#getting-started) explains how to use the Jfrog Artifactory plugin
+     - This [URL](https://github.com/backstage/community-plugins/tree/main/workspaces/jfrog-artifactory/plugins/jfrog-artifactory) explains how to use the Jfrog Artifactory plugin
      - `${ARTIFACTORY_URL}`: URL for the Jfrog Artifactory instance
      - `${ARTIFACTORY_TOKEN}`: API token
      - `${ARTIFACTORY_SECURE}`: Change to `false` in case of using self hosted artifactory instance with a self-signed certificate

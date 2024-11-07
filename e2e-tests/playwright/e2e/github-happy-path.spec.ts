@@ -27,6 +27,9 @@ test.describe.serial("GitHub Happy path", () => {
     backstageShowcase = new BackstageShowcase(page);
     await common.loginAsGithubUser();
   });
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
 
   test("Verify Profile is Github Account Name in the Settings page", async () => {
     await uiHelper.openSidebar("Settings");
@@ -71,7 +74,6 @@ test.describe.serial("GitHub Happy path", () => {
   test("Verify all 12 Software Templates appear in the Create page", async () => {
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
-    await uiHelper.waitForHeaderTitle();
 
     for (const template of templates) {
       await uiHelper.waitForH4Title(template);
@@ -92,6 +94,7 @@ test.describe.serial("GitHub Happy path", () => {
 
   test("Verify that the Issues tab renders all the open github issues in the repository", async () => {
     await uiHelper.clickTab("Issues");
+    await common.clickOnGHloginPopup();
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
     const issuesCountText = `All repositories (${openIssues.length} Issues)*`;
@@ -154,7 +157,7 @@ test.describe.serial("GitHub Happy path", () => {
 
   test("Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied", async () => {
     await uiHelper.clickTab("CI");
-    await common.clickOnGHloginPopup();
+    await common.checkAndClickOnGHloginPopup();
 
     const workflowRuns = await backstageShowcase.getWorkflowRuns();
 

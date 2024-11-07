@@ -44,6 +44,10 @@ test.describe.serial("Bulk Import plugin", () => {
     await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   // Select two repos: one with an existing catalog.yaml file and another without it
   test("Add a Repository from the Repository Tab and Confirm its Preview", async () => {
     await uiHelper.openSidebar("Bulk import");
@@ -251,6 +255,10 @@ test.describe
     await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
     await uiHelper.openSidebar("Bulk import");
     await common.waitForLoad();
@@ -291,8 +299,12 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
+
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
     await uiHelper.openSidebar("Bulk import");

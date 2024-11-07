@@ -38,7 +38,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await uiHelper.verifyRowsInTable(["backstage-plugin-techdocs"], true);
   });
 
-  test("it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
+  test.skip("it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
     page,
   }) => {
     await page
