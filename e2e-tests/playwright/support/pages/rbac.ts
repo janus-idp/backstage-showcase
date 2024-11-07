@@ -198,8 +198,8 @@ export class Roles {
 
   async deleteRole(name: string) {
     await this.uiHelper.openSidebar("RBAC");
-    await this.page.locator(HomePagePO.searchBar).fill(name);
-    const button = this.page.getByLabel("Delete").first();
+    await this.uiHelper.filterInputPlaceholder(name);
+    const button = this.page.locator(RoleListPO.deleteRole(name));
     await button.waitFor({ state: "visible" });
     await button.click();
     await this.uiHelper.verifyHeading("Delete this role?");
