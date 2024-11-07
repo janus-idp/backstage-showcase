@@ -1,115 +1,113 @@
-# Installing external plugins
+# Installing External Plugins
 
-RHDH supports dynamic plugins, which are plugins that are not part of the core RHDH distribution. These plugins can be installed and uninstalled without the need to rebuild the RHDH application. Only restart is required to apply the changes.
+RHDH supports dynamic plugins, which are plugins not included in the core RHDH distribution. These plugins can be installed or uninstalled without rebuilding the RHDH application—only a restart is required to apply the changes.
 
-To install external plugin in RHDH, you will first need to package the plugin into one of the supported formats before you can install it.
+If your plugin not already packaged as a dynamic plugin, you must package it into one of the supported formats before installation.
 
-## Packaging a Backstage plugin as a dynamic plugin
+## Packaging a Backstage Plugin as a Dynamic Plugin
 
-To package a Backstage plugin as a dynamic plugin, you will need access to the source code of the plugin.
+To package a Backstage plugin as a dynamic plugin, you need access to its source code.
 
-As a first step you need to create a derived package. This can be one using `@janus-idp/cli`.
+First you need to create a derived package using the `@janus-idp/cli` and than package it into one of the supported formats.
 
-### 1. Creating a derived dynamic plugin package
+There are three possible packaging formats for dynamic plugins:
 
-In the root of the plugin directory run the following command:
+- OCI image
+- `tgz` archive
+- JavaScript package
+
+**The OCI image is the recommended format.**
+
+The derived dynamic plugin JavaScript packages should **not** be pushed to the public npm registry. They should only be published to a private npm registry.
+
+### Step 1. Creating a Derived Dynamic Plugin Package
+
+In the root directory of the plugin source code, run the following command:
 
 ```bash
 npx @janus-idp/cli@latest package export-dynamic-plugin
 ```
 
-This will create `dist-dynamic` directory, which contains the derived dynamic plugin package. This directory can be then packaged into one of the supported formats.
+This will create a `dist-dynamic` directory, which contains the derived dynamic plugin package. This directory can then be packaged into one of the supported formats.
 
-There are three possible packaging formats for dynamic plugins:
+### Step 2.a Packaging a Plugin into an OCI Image
 
-- OCI image
-- tgz archive
-- JavaScript package
+**Prerequisites:**
 
-**The OCI image is the recommended format.**
+- `podman` or `docker` installed on your system.
+- An exported derived dynamic plugin package (see: [Creating a Derived Dynamic Plugin Package](#step-1-creating-a-derived-dynamic-plugin-package).
 
-The derived dynamic plugin JavaScript packages should not be pushed to the public npm registry. They should be only published to the private npm registry.
+To package the plugin into an OCI image, use the `package package-dynamic-plugins` command from `@janus-idp/cli` in the plugin’s source code root directory (not in the `dist-dynamic` directory).
 
-### 2.a Packaging plugin into OCI image
-
-Prerequisites:
-
-- `podman` or `docker` installed on your system
-- exported derived dynamic plugin package (see: [Creating a derived dynamic plugin package](#Packaging a Backstage plugin as a dynamic plugin))
-
-To package the plugin into OCI image, you can use the  `package package-dynamic-plugins` from `@janus-idp/cli` command and run it in the root of the plugin directory (not in `dist-dynamic` directory).
-
-The command will output the correct path definition for the plugin that can be used in the `dynamic-plugin-config.yaml` file.
+The command will output the correct path definition for the plugin, which can be used in the `dynamic-plugin-config.yaml` file.
 
 ```bash
 npx @janus-idp/cli@latest package package-dynamic-plugins --tag quay.io/example/image:v0.0.1
 ```
 
-`--tag` argument is required and it specifies the image name and tag. The image won't be pushed to the registry. You need to use the `podman push` or `docker push` command to push the image to the registry.
+The `--tag` argument is required and specifies the image name and tag. The image won't be pushed to the registry automatically; use the `podman push` or `docker push` command to push the image to the registry.
 
-### 2.b Packaging plugin into tgz archive
+### Step 2.b Packaging a Plugin into a `tgz` Archive
 
-Prerequisites:
+**Prerequisites:**
 
-- exported derived dynamic plugin package (see: [Creating a derived dynamic plugin package](#Packaging a Backstage plugin as a dynamic plugin))
+- An exported derived dynamic plugin package (see: [Creating a Derived Dynamic Plugin Package](#step-1-creating-a-derived-dynamic-plugin-package)).
 
-To package the plugin into tgz archive, you can use `npm pack` command in the `dist-dynamic` directory. This will create a tgz archive in the current directory that can be used to install the plugin.
+To package the plugin into a `tgz` archive, run the `npm pack` command in the `dist-dynamic` directory. This will create a `tgz` archive in the current directory that can be used to install the plugin.
 
 ```bash
 cd dist-dynamic
 npm pack
 ```
 
-For loading the plugin from tgz archive, you will need to specify integrity hash of the archive you can get the hash from the output of the `npm pack` command by when using `--json` flag.
+To load the plugin from a `tgz` archive, specify the integrity hash of the archive. You can obtain the hash from the output of the `npm pack` command by using the `--json` flag.
 
 ```bash
 cd dist-dynamic
 npm pack --json | head -n 10
-# if you have jq installed you can use this command to get the integrity hash directly
-# npm pack --json | jq -r '.[0].integrity'
+# If you have jq installed, use this command to get the integrity hash directly:
+# npm pack --json | jq -r '.[0].integrity'
 ```
 
-To be able to load the plugin from tgz archive, you need to host the archive on the web server that is accessible by your RHDH instance and specify the URL in the `dynamic-plugin-config.yaml` file.
+To load the plugin from a `tgz` archive, host the archive on a web server accessible by your RHDH instance and specify the URL in the `dynamic-plugin-config.yaml` file.
 
-When you are using OpenShift you can can use `oc new-app` to create a service that will serve those dynamic plugin packages.
+If using OpenShift, you can leavarege httpd builder to serve these dynamic plugin packages:
 
 ```bash
-# pack derived dynamic plugins into tgz archive
-# you can repeat this step for multiple plugins (place them in the same folder)
+# Pack derived dynamic plugins into `tgz` archives.
+# Repeat this step for multiple plugins (place them in the same folder).
 npm pack --pack-destination ~/test/dynamic-plugins-root/
-# makes sure that you are using the same OpenShift project as the RHDH
+# Ensure you're using the same OpenShift project as the RHDH instance.
 oc project rhdh
-# create a new build for the httpd image that will serve the tgz files with dynamic plugins
+# Create a new build for the httpd image that will serve the `tgz` files with dynamic plugins.
 oc new-build httpd --name=plugin-registry --binary
 oc start-build plugin-registry --from-dir=dynamic-plugins-root --wait
 oc new-app --image-stream=plugin-registry
 
-## configure your RHDH to use the dynamic plugins from the plugin-registry
-# edit the dynamic-plugin-config.yaml file
-#  plugins:
-#    - package: http://plugin-registry:8080/backstage-plugin-myplugin-1.9.6.tgz
-#    - package: http://plugin-registry:8080/backstage-plugin-myotherplugin-1.10.0.tgz
+## Configure your RHDH to use the dynamic plugins from the plugin-registry.
+# Edit the `dynamic-plugin-config.yaml` file:
+# plugins:
+#   - package: http://plugin-registry:8080/backstage-plugin-myplugin-1.9.6.tgz
+#   - package: http://plugin-registry:8080/backstage-plugin-myotherplugin-1.10.0.tgz
 #
-# If you add a new dynamic plugin archive in the ~/test/dynamic-plugins-root folder, and run the Openshift build again:
+# If you add a new dynamic plugin archive in the ~/test/dynamic-plugins-root folder, and run the OpenShift build again:
 # oc start-build plugin-registry --from-dir=dynamic-plugins-root --wait
 ```
 
-### 2.c Packaging plugin into npm package
+### Step 2.c Packaging a Plugin into an npm Package
 
-Prerequisites:
+**Prerequisites:**
 
-- exported derived dynamic plugin package (see: [Creating a derived dynamic plugin package](#Packaging a Backstage plugin as a dynamic plugin))
+- An exported derived dynamic plugin package (see: [Creating a Derived Dynamic Plugin Package](#step-1-creating-a-derived-dynamic-plugin-package)).
 
-To distribute the derived dynamic plugin package as an JavaScript package, you can simply publish it to the npm registry.
-Don't use public npm registry for this purpose. Derived dynamic plugin package has structure like regular JavaScript packages, but they can't be used the same way. Use private or internal npm registry to host the derived dynamic plugin packages.
+To distribute the derived dynamic plugin package as a JavaScript package, publish it to a private or internal npm registry. Avoid using the public npm registry (npmjs.com), as the derived dynamic plugin package is structured like regular JavaScript packages but cannot be used the same way.
 
 ```bash
 cd dist-dynamic
 npm publish --registry <npm_registry_url>
 ```
 
-Alernatively, you can add the following to your `package.json`.
-You have to do this before running `npx @janus-idp/cli@latest package export-dynamic-plugin`, or run `export-dynamic-plugin` again after adding the `publishConfig` to the `package.json`. Otherwise the `dist-dynamic` directory will not contain the `package.json` file with the correct `publishConfig`.
+Alternatively, add the following to your `package.json` before running `npx @janus-idp/cli@latest package export-dynamic-plugin`:
 
 ```json
 {
@@ -119,30 +117,32 @@ You have to do this before running `npx @janus-idp/cli@latest package export-dyn
 }
 ```
 
-## Installing external dynamic plugins
+If you modify the `publishConfig` after running `export-dynamic-plugin`, run it again to ensure the `dist-dynamic` directory contains a `package.json` with the correct `publishConfig`.
 
-There are three possible packaging formats for dynamic plugins:
+## Installing External Dynamic Plugins
+
+Dynamic plugins can be packaged in three formats:
 
 - OCI image
-- tar.gz archive
+- `tgz` archive
 - npm package
 
-You can also load the dynamic plugin from a plain directory. This is not recommended for production use. But it can be useful for development and testing purposes.
+You can also load the dynamic plugin from a plain directory, though this is not recommended for production use. It can be helpful for development and testing.
 
-### Loading plugin from OCI image
+To install a dynamic plugin, you need to add the plugin to the `dynamic-plugin-config.yaml` file.
 
-In your `dynamic-plugin-config.yaml` file, you can specify the plugin that is packaged inside the OCI image.
+The placement of `dynamic-plugin-config.yaml` depends on the deployment method. For more information, see [Installing Dynamic Plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about) or [Installing Dynamic Plugins Using the Helm Chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
 
-The placement of `dynamic-plugin-config.yaml` depend on the deployment method.
-For more information, see [Installing dynamic plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about)
- or [Installing dynamic plugins using the Helm chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
+Plugins are defined in the `plugins` array in the `dynamic-plugin-config.yaml` file. Each plugin is defined as an object with the following properties:
 
-When defining the plugin that is packaged into OCI image, you need to specify the `oci://` prefix followed by the image name and tag and than plugin name separated by `!` character. (`oci://<image-name>:<tag>!<plugin-name>`)
+- `package`: The package definition of the plugin. This can be an OCI image, `tgz` archive, npm package, or a directory path.
+- `disabled`: A boolean value that determines whether the plugin is enabled or disabled.
+- `integrity`: The integrity hash of the package. This is required for `tgz` archives and npm packages.
+- `pluginConfig`: The configuration for the plugin. This is optional and can be used to pass configuration to the plugin. Anything that is added to this object will be merged with the main app-config.
 
-When building OCI image using `package package-dynamic-plugins` from `@janus-idp/cli` the output will display the correct path definition for the plugin.
-See [Packaging plugin into OCI image](#2.a Packaging plugin into OCI image) for more information.
+### Loading a Plugin from an OCI Image
 
-Example of how to define plugin that is packaged into OCI image:
+When defining the plugin packaged as an OCI image, use the `oci://` prefix, followed by the image name, tag, and plugin name separated by the `!` character (`oci://<image-name>:<tag>!<plugin-name>`).
 
 ```yaml
 plugins:
@@ -150,33 +150,21 @@ plugins:
     package: oci://quay.io/example/image:v0.0.1!backstage-plugin-myplugin
 ```
 
-### Loading plugin from tgz archive
+### Loading a Plugin from a `tgz` Archive
 
-In your `dynamic-plugin-config.yaml` file, you can specify tgz file that is hosted on the web server.
-The placement of `dynamic-plugin-config.yaml` depend on the deployment method.
-For more information, see [Installing dynamic plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about)
- or [Installing dynamic plugins using the Helm chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
-
-When defining the plugin that is packaged into tgz archive, you need to specify the URL of the tgz archive.
+When defining the plugin packaged as a `tgz` archive, use the URL of the archive and the integrity hash of the archive.
 
 ```yaml
 plugins:
   - disabled: false
-    package: https://example.com/backstege-plugin-myplugin-1.0.0.tgz
+    package: https://example.com/backstage-plugin-myplugin-1.0.0.tgz
     integrity: sha512-9WlbgEdadJNeQxdn1973r5E4kNFvnT9GjLD627GWgrhCaxjCmxqdNW08cj+Bf47mwAtZMt1Ttyo+ZhDRDj9PoA==
 ```
 
-See [Packaging plugin into tgz archive](#2.b Packaging plugin into tgz archive) for information how to create tgz archive from the derived dynamic plugin package, including information on how to get the integrity hash.
+### Loading a Plugin from an npm Package
 
-### Loading plugin from npm package
+When defining the plugin packaged as an npm package, use the package name and version, and the integrity hash of the package.
 
-In your `dynamic-plugin-config.yaml` file, you can specify JavaScript package published to the npm registry.
-The placement of `dynamic-plugin-config.yaml` depend on the deployment method.
-For more information, see [Installing dynamic plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about)
- or [Installing dynamic plugins using the Helm chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
-
-When defining the plugin that is published to the npm registry, you need to specify the package name, version and integrity checksum.
-  
 ```yaml
 plugins:
   - disabled: false
@@ -184,10 +172,10 @@ plugins:
     integrity: sha512-9WlbgEdadJNeQxdn1973r5E4kNFvnT9GjLD627GWgrhCaxjCmxqdNW08cj+Bf47mwAtZMt1Ttyo+ZhDRDj9PoA==
 ```
 
-See [Packaging plugin into npm package](#2.c Packaging plugin into npm package) for information how to publish the derived dynamic plugin package to the npm registry.
-
-To get the integrity hash of the JavaScript package from npm registry, you can use the following command:
+To get the integrity hash of a JavaScript package from the npm registry, use:
 
 ```bash
 npm view --registry https://example.com:4873/ @backstage-community/plugin-todo-dynamic@0.2.40 dist.integrity
 ```
+
+See [Using a custom NPM registry](../dynamic-plugins#using-a-custom-npm-registry) on how to use your own private npm registry.
