@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { exec } from "child_process";
-import { Log } from "./log";
+import { Log } from "./logs";
 
 export class LogUtils {
   /**
