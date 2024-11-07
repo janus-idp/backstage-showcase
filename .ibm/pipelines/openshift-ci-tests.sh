@@ -309,7 +309,7 @@ check_backstage_running() {
 
   for ((i = 1; i <= max_attempts; i++)); do
     local http_status
-    http_status=$(curl --insecure -I -s "${url}" | grep HTTP | awk '{print $2}')
+    http_status=$(curl --insecure -I -s -o /dev/null -w "%{http_code}" "${url}")
 
     if [ "${http_status}" -eq 200 ]; then
       echo "Backstage is up and running!"
