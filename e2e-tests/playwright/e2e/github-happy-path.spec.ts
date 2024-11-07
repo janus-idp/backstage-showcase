@@ -1,12 +1,12 @@
 import { test, expect, Page } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
-import { resources } from "../support/testData/resources";
+import { UIhelper } from "../utils/ui-helper";
+import { Common, setupBrowser } from "../utils/common";
+import { RESOURCES } from "../support/testData/resources";
 import {
   BackstageShowcase,
   CatalogImport,
-} from "../support/pages/CatalogImport";
-import { templates } from "../support/testData/templates";
+} from "../support/pages/catalog-import";
+import { TEMPLATES } from "../support/testData/templates";
 
 let page: Page;
 test.describe.serial("GitHub Happy path", () => {
@@ -75,7 +75,7 @@ test.describe.serial("GitHub Happy path", () => {
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
 
-    for (const template of templates) {
+    for (const template of TEMPLATES) {
       await uiHelper.waitForH4Title(template);
       await uiHelper.verifyHeading(template);
     }
@@ -168,7 +168,7 @@ test.describe.serial("GitHub Happy path", () => {
 
   test("Click on the Dependencies tab and verify that all the relations have been listed and displayed", async () => {
     await uiHelper.clickTab("Dependencies");
-    for (const resource of resources) {
+    for (const resource of RESOURCES) {
       const resourceElement = page.locator(
         `#workspace:has-text("${resource}")`,
       );

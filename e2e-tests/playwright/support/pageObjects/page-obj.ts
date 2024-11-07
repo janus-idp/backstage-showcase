@@ -1,13 +1,13 @@
-export const HomePagePO = {
+export const HOME_PAGE_COMPONENTS = {
   searchBar: 'input[aria-label="Search"]',
   MuiAccordion: 'div[class*="MuiAccordion-root-"]',
 };
 
-export const CatalogImportPO = {
+export const CATALOG_IMPORT_COMPONENTS = {
   componentURL: 'input[name="url"]',
 };
 
-export const BackstageShowcasePO = {
+export const BACKSTAGE_SHOWCASE_COMPONENTS = {
   tableNextPage: 'button[aria-label="Next Page"]',
   tablePreviousPage: 'button[aria-label="Previous Page"]',
   tableLastPage: 'button[aria-label="Last Page"]',
@@ -16,12 +16,12 @@ export const BackstageShowcasePO = {
   tablePageSelectBox: 'div[class*="MuiTablePagination-input"]',
 };
 
-export const SettingsPagePO = {
+export const SETTINGS_PAGE_COMPONENTS = {
   userSettingsMenu: 'button[data-testid="user-settings-menu"]',
   signOut: 'li[data-testid="sign-out"]',
 };
 
-export const RoleFormPO = {
+export const ROLE_FORM_COMPONENTS = {
   roleName: 'input[name="name"]',
   roledescription: 'input[name="description"]',
   addUsersAndGroups: 'input[name="add-users-and-groups"]',
@@ -35,16 +35,16 @@ export const RoleFormPO = {
     `input[name="permissionPoliciesRows[${row}].policies[${policy}].policy-${policyName}"]`,
 };
 
-export const RoleListPO = {
+export const ROLE_LIST_COMPONENTS = {
   editRole: (name: string) => `span[data-testid="update-role-${name}"]`,
   deleteRole: (name: string) => `span[data-testid="delete-role-${name}"]`,
 };
 
-export const DeleteRolePO = {
+export const DELETE_ROLE_COMPONENTS = {
   roleName: 'input[name="delete-role"]',
 };
 
-export const RoleOverviewPO = {
+export const ROLE_OVERVIEW_COMPONENTS = {
   updatePolicies: 'span[data-testid="update-policies"]',
   updateMembers: 'span[data-testid="update-members"]',
 };

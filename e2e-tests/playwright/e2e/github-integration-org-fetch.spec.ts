@@ -1,6 +1,6 @@
 import { test, Page } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
+import { UIhelper } from "../utils/ui-helper";
+import { Common, setupBrowser } from "../utils/common";
 
 let page: Page;
 test.describe.serial("GitHub integration with Org data fetching", () => {

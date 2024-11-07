@@ -1,9 +1,9 @@
-export const waitsObjs = {
+export const WAIT_OBJECTS = {
   MuiLinearProgress: 'div[class*="MuiLinearProgress-root"]',
   MuiCircularProgress: '[class*="MuiCircularProgress-root"]',
 };
 
-export const UIhelperPO = {
+export const UI_HELPER_ELEMENTS = {
   MuiButtonLabel: 'span[class^="MuiButton-label"]',
   MuiToggleButtonLabel: 'span[class^="MuiToggleButton-label"]',
   MuiBoxLabel: 'div[class*="MuiBox-root"] label',

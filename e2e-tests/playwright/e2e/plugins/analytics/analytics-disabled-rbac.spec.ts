@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { Common } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
-import { UIhelperPO } from "../../../support/pageObjects/global-obj";
+import { Common } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
+import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 
 test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   let common: Common;
@@ -27,7 +27,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
         delay: 300,
       });
     const row = page.locator(
-      UIhelperPO.rowByText(
+      UI_HELPER_ELEMENTS.rowByText(
         "janus-idp-backstage-plugin-analytics-provider-segment",
       ),
     );

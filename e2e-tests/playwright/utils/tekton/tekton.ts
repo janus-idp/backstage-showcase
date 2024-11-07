@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { UIhelper } from "../UIhelper";
+import { UIhelper } from "../ui-helper";
 
 export class Tekton {
   page: Page;

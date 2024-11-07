@@ -1,6 +1,6 @@
 import * as constants from "./constants";
 import { App } from "octokit";
-import { logger } from "../Logger";
+import { LOGGER } from "../logger";
 import * as helper from "../helper";
 
 const app = new App({
@@ -71,13 +71,13 @@ export async function getTeamByName(team: string, org: string) {
 export async function getTeamMembers() {
   return await octokit.rest.teams.listMembersInOrg({
     org: constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    team_slug: "team1",
+    teamSlug: "team1",
   });
 }
 
 export async function renameTeam(team: string, org: string, newname: string) {
   return await octokit.rest.teams.updateInOrg({
-    team_slug: team,
+    teamSlug: team,
     org,
     name: newname,
   });
@@ -90,21 +90,21 @@ export async function setParentTeam(
 ) {
   const parentTeamObj = await getTeamByName(parentTeam, org);
   return await octokit.rest.teams.updateInOrg({
-    team_slug: team,
+    teamSlug: team,
     org,
-    parent_team_id: parentTeamObj.data.id,
+    parentTeamId: parentTeamObj.data.id,
   });
 }
 
 export async function deleteTeam(team: string, org: string) {
   try {
-    logger.info(`Deleting team from github ${team} in org ${org}`);
-    return await octokit.rest.teams.deleteInOrg({ team_slug: team, org });
+    LOGGER.info(`Deleting team from github ${team} in org ${org}`);
+    return await octokit.rest.teams.deleteInOrg({ teamSlug: team, org });
   } catch (e) {
     if (e.message.includes("Not Found")) {
-      logger.info(`Team already deleted: ${team} in org ${org}`);
+      LOGGER.info(`Team already deleted: ${team} in org ${org}`);
     } else {
-      logger.info(`Cannot delete team: ${e.statusCode}-${JSON.stringify(e)}`);
+      LOGGER.info(`Cannot delete team: ${e.statusCode}-${JSON.stringify(e)}`);
       throw e;
     }
   }
@@ -122,21 +122,21 @@ export async function listTeams(org: string) {
   return await octokit.rest.teams.list({ org });
 }
 
-export async function listTeamsMembers(team_slug: string, org: string) {
+export async function listTeamsMembers(teamSlug: string, org: string) {
   return await octokit.rest.teams.listMembersInOrg({
     org,
-    team_slug,
+    teamSlug: teamSlug,
   });
 }
 
 export async function addMemberToTeam(
-  team_slug: string,
+  teamSlug: string,
   org: string,
   member: string,
 ) {
   return await octokit.rest.teams.addOrUpdateMembershipForUserInOrg({
     org,
-    team_slug,
+    team_slug: teamSlug,
     username: member,
   });
 }
@@ -152,13 +152,13 @@ export async function removeUserFromAllTeams(user: string, org: string) {
 }
 
 export async function removeMemberToTeam(
-  team_slug: string,
+  teamSlug: string,
   org: string,
   member: string,
 ) {
   return await octokit.rest.teams.removeMembershipForUserInOrg({
     org,
-    team_slug,
+    team_slug: teamSlug,
     username: member,
   });
 }

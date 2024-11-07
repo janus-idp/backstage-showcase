@@ -3,14 +3,14 @@ export class GetOrganizationResponse {
 
   constructor(response: unknown) {
     enum OrganizationResponseAttributes {
-      ReposUrl = "repos_url",
+      REPOS_URL = "repos_url",
     }
-    this.reposUrl = response[OrganizationResponseAttributes.ReposUrl];
+    this.reposUrl = response[OrganizationResponseAttributes.REPOS_URL];
   }
 }
 
 export enum ItemStatus {
-  open = "open",
-  closed = "closed",
-  all = "all",
+  OPEN = "open",
+  CLOSED = "closed",
+  ALL = "all",
 }

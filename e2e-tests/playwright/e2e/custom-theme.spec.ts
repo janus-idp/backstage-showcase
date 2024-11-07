@@ -1,9 +1,9 @@
 import { test, Page, TestInfo, expect } from "@playwright/test";
-import { Common, setupBrowser } from "../utils/Common";
+import { Common, setupBrowser } from "../utils/common";
 import { ThemeVerifier } from "../utils/custom-theme/theme-verifier";
 import {
-  customTabIcon,
-  customBrandIcon,
+  CUSTOM_TAB_ICON,
+  CUSTOM_BRAND_ICON,
 } from "../support/testData/custom-theme";
 
 let page: Page;
@@ -52,13 +52,13 @@ test.describe("CustomTheme should be applied", () => {
 
   test("Verify that tab icon for Backstage can be customized", async () => {
     expect(await page.locator("#dynamic-favicon").getAttribute("href")).toEqual(
-      customTabIcon,
+      CUSTOM_TAB_ICON,
     );
   });
 
   test("Verify that brand icon for Backstage can be customized", async () => {
     expect(await page.getByTestId("home-logo").getAttribute("src")).toEqual(
-      customBrandIcon,
+      CUSTOM_BRAND_ICON,
     );
   });
 

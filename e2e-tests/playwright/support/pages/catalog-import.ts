@@ -1,8 +1,11 @@
 import { Page, expect } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
-import { BackstageShowcasePO, CatalogImportPO } from "../pageObjects/page-obj";
-import { APIHelper } from "../../utils/APIHelper";
-import { githubAPIEndpoints } from "../../utils/APIEndpoints";
+import { UIhelper } from "../../utils/ui-helper";
+import {
+  BACKSTAGE_SHOWCASE_COMPONENTS,
+  CATALOG_IMPORT_COMPONENTS,
+} from "../pageObjects/page-obj";
+import { APIHelper } from "../../utils/api-helper";
+import { GITHUB_API_ENDPOINTS } from "../../utils/api-endpoints";
 
 export class CatalogImport {
   private page: Page;
@@ -16,7 +19,7 @@ export class CatalogImport {
     url: string,
     clickViewComponent: boolean = true,
   ) {
-    await this.page.fill(CatalogImportPO.componentURL, url);
+    await this.page.fill(CATALOG_IMPORT_COMPONENTS.componentURL, url);
     await this.uiHelper.clickButton("Analyze");
 
     // Wait for the visibility of either 'Refresh' or 'Import' button
@@ -30,7 +33,7 @@ export class CatalogImport {
   }
 
   async analyzeComponent(url: string) {
-    await this.page.fill(CatalogImportPO.componentURL, url);
+    await this.page.fill(CATALOG_IMPORT_COMPONENTS.componentURL, url);
     await this.uiHelper.clickButton("Analyze");
   }
 
@@ -54,7 +57,7 @@ export class BackstageShowcase {
 
   async getGithubOpenIssues() {
     const rep = await APIHelper.getGithubPaginatedRequest(
-      githubAPIEndpoints.issues("open"),
+      GITHUB_API_ENDPOINTS.issues("open"),
     );
     return rep.filter(
       (issue: { pull_request: boolean }) => !issue.pull_request,
@@ -74,19 +77,19 @@ export class BackstageShowcase {
   }
 
   async clickNextPage() {
-    await this.page.click(BackstageShowcasePO.tableNextPage);
+    await this.page.click(BACKSTAGE_SHOWCASE_COMPONENTS.tableNextPage);
   }
 
   async clickPreviousPage() {
-    await this.page.click(BackstageShowcasePO.tablePreviousPage);
+    await this.page.click(BACKSTAGE_SHOWCASE_COMPONENTS.tablePreviousPage);
   }
 
   async clickLastPage() {
-    await this.page.click(BackstageShowcasePO.tableLastPage);
+    await this.page.click(BACKSTAGE_SHOWCASE_COMPONENTS.tableLastPage);
   }
 
   async clickFirstPage() {
-    await this.page.click(BackstageShowcasePO.tableFirstPage);
+    await this.page.click(BACKSTAGE_SHOWCASE_COMPONENTS.tableFirstPage);
   }
 
   async verifyPRRowsPerPage(rows, allPRs) {
@@ -97,19 +100,21 @@ export class BackstageShowcase {
       notVisible: false,
     });
 
-    const tableRows = this.page.locator(BackstageShowcasePO.tableRows);
+    const tableRows = this.page.locator(
+      BACKSTAGE_SHOWCASE_COMPONENTS.tableRows,
+    );
     await expect(tableRows).toHaveCount(rows);
   }
 
   async selectRowsPerPage(rows: number) {
-    await this.page.click(BackstageShowcasePO.tablePageSelectBox);
+    await this.page.click(BACKSTAGE_SHOWCASE_COMPONENTS.tablePageSelectBox);
     await this.page.click(`ul[role="listbox"] li[data-value="${rows}"]`);
   }
 
   async getWorkflowRuns() {
     const response = await APIHelper.githubRequest(
       "GET",
-      githubAPIEndpoints.workflowRuns,
+      GITHUB_API_ENDPOINTS.workflowRuns,
     );
     const responseBody = await response.json();
     return responseBody.workflow_runs;

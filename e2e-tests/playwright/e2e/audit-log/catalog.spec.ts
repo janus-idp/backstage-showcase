@@ -1,8 +1,8 @@
 import { test } from "@playwright/test";
-import { Common } from "../../utils/Common";
-import { UIhelper } from "../../utils/UIhelper";
-import { LogUtils } from "./logUtils";
-import { CatalogImport } from "../../support/pages/CatalogImport";
+import { Common } from "../../utils/common";
+import { UIhelper } from "../../utils/ui-helper";
+import { LogUtils } from "./log-utils";
+import { CatalogImport } from "../../support/pages/catalog-import";
 
 test.describe("Audit Log check for Catalog Plugin", () => {
   let uiHelper: UIhelper;

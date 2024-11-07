@@ -1,15 +1,12 @@
 import { Page } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
-import { APIHelper } from "../../utils/APIHelper";
-import { UIhelperPO } from "../pageObjects/global-obj";
+import { APIHelper } from "../../utils/api-helper";
+import { UI_HELPER_ELEMENTS } from "../pageObjects/global-obj";
 
 export class BulkImport {
   private page: Page;
-  private uiHelper: UIhelper;
 
   constructor(page: Page) {
     this.page = page;
-    this.uiHelper = new UIhelper(page);
   }
 
   async searchInOrg(searchText: string) {
@@ -30,7 +27,7 @@ export class BulkImport {
 
   async selectRepoInTable(repoName: string) {
     await this.page
-      .locator(UIhelperPO.rowByText(repoName))
+      .locator(UI_HELPER_ELEMENTS.rowByText(repoName))
       .getByRole("checkbox")
       .check();
   }

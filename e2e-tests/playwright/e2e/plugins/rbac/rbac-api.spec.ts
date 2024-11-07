@@ -1,7 +1,7 @@
 import { Page, expect, test } from "@playwright/test";
 import { Response } from "../../../support/pages/rbac";
-import { Common, setupBrowser } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
+import { Common, setupBrowser } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 

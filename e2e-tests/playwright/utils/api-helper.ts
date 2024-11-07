@@ -1,5 +1,5 @@
 import { request, APIResponse, expect } from "@playwright/test";
-import { githubAPIEndpoints } from "./APIEndpoints";
+import { GITHUB_API_ENDPOINTS } from "./api-endpoints";
 
 type FetchOptions = {
   method: string;
@@ -63,7 +63,7 @@ export class APIHelper {
   static async createGitHubRepo(owner: string, repoName: string) {
     await APIHelper.githubRequest(
       "POST",
-      githubAPIEndpoints.createRepo(owner),
+      GITHUB_API_ENDPOINTS.createRepo(owner),
       {
         name: repoName,
         private: false,
@@ -77,7 +77,7 @@ export class APIHelper {
     ).toString("base64");
     await APIHelper.githubRequest(
       "PUT",
-      `${githubAPIEndpoints.contents(owner, repo)}/initial-commit.md`,
+      `${GITHUB_API_ENDPOINTS.contents(owner, repo)}/initial-commit.md`,
       {
         message: "Initial commit",
         content: content,
@@ -89,18 +89,18 @@ export class APIHelper {
   static async deleteGitHubRepo(owner: string, repoName: string) {
     await APIHelper.githubRequest(
       "DELETE",
-      githubAPIEndpoints.deleteRepo(owner, repoName),
+      GITHUB_API_ENDPOINTS.deleteRepo(owner, repoName),
     );
   }
 
   static async mergeGitHubPR(
     owner: string,
     repoName: string,
-    pull_number: number,
+    pullNumber: number,
   ) {
     await APIHelper.githubRequest(
       "PUT",
-      githubAPIEndpoints.mergePR(owner, repoName, pull_number),
+      GITHUB_API_ENDPOINTS.mergePR(owner, repoName, pullNumber),
     );
   }
 
@@ -110,7 +110,7 @@ export class APIHelper {
     state: "open" | "closed" | "all",
     paginated = false,
   ) {
-    const url = githubAPIEndpoints.pull(owner, repoName, state);
+    const url = GITHUB_API_ENDPOINTS.pull(owner, repoName, state);
     if (paginated) {
       return await APIHelper.getGithubPaginatedRequest(url);
     }
@@ -126,15 +126,15 @@ export class APIHelper {
   ): Promise<string> {
     const response = await APIHelper.githubRequest(
       "GET",
-      githubAPIEndpoints.pull_files(owner, repoName, pr),
+      GITHUB_API_ENDPOINTS.pull_files(owner, repoName, pr),
     );
-    const file_raw_url = (await response.json()).find(
+    const fileRawUrl = (await response.json()).find(
       (file: { filename: string }) => file.filename === filename,
     ).raw_url;
-    const raw_file_content = await (
-      await APIHelper.githubRequest("GET", file_raw_url)
+    const rawFileContent = await (
+      await APIHelper.githubRequest("GET", fileRawUrl)
     ).text();
-    return raw_file_content;
+    return rawFileContent;
   }
 
   async getGuestToken(): Promise<string> {

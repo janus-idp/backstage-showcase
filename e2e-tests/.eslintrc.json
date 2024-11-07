@@ -11,15 +11,38 @@
         "format": ["camelCase"]
       },
       {
-        "selector": "class",
+        "selector": "variable",
+        "modifiers": ["const", "exported"],
+        "format": ["UPPER_CASE"]
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase"]
+      },
+      {
+        "selector": "parameter",
+        "format": ["camelCase"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "memberLike",
+        "modifiers": ["private"],
+        "format": ["camelCase"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "typeLike",
         "format": ["PascalCase"]
       },
       {
-        "selector": "variable",
-        "modifiers": ["const", "global"],
+        "selector": "enumMember",
         "format": ["UPPER_CASE"]
+      },
+      {
+        "selector": "class",
+        "format": ["PascalCase"]
       }
     ],
-    "filenames/match-regex": ["error", "^[a-z-.]+$", true]
+    "filenames/match-regex": ["error", "^[a-z0-9-.]+$", true]
   }
 }

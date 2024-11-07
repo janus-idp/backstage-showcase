@@ -1,10 +1,10 @@
 import { APIResponse, Page, expect } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
+import { UIhelper } from "../../utils/ui-helper";
 import {
-  DeleteRolePO,
-  HomePagePO,
-  RoleFormPO,
-  RoleListPO,
+  DELETE_ROLE_COMPONENTS,
+  HOME_PAGE_COMPONENTS,
+  ROLE_FORM_COMPONENTS,
+  ROLE_LIST_COMPONENTS,
 } from "../pageObjects/page-obj";
 
 export class Roles {
@@ -60,26 +60,32 @@ export class Roles {
 
     await this.uiHelper.verifyHeading("Create role");
 
-    await this.page.fill(RoleFormPO.roleName, name);
+    await this.page.fill(ROLE_FORM_COMPONENTS.roleName, name);
     await this.uiHelper.clickButton("Next");
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "guest user");
-    await this.page.click(RoleFormPO.selectMember("Guest User"));
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "tara");
-    await this.page.click(RoleFormPO.selectMember("Tara MacGovern"));
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "Backstage");
-    await this.page.click(RoleFormPO.selectMember("Backstage"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "guest user");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Guest User"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "tara");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Tara MacGovern"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "Backstage");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Backstage"));
     await this.uiHelper.verifyHeading("Users and groups (2 users, 1 group)");
     await this.uiHelper.clickButton("Next");
 
-    await this.page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-      timeout: 100000,
-    });
+    await this.page.click(
+      ROLE_FORM_COMPONENTS.selectPermissionPolicyPlugin(0),
+      {
+        timeout: 100000,
+      },
+    );
     await this.uiHelper.optionSelector("catalog");
-    await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-      timeout: 100000,
-    });
+    await this.page.click(
+      ROLE_FORM_COMPONENTS.selectPermissionPolicyPermission(0),
+      {
+        timeout: 100000,
+      },
+    );
     await this.uiHelper.optionSelector("catalog-entity");
-    await this.page.uncheck(RoleFormPO.selectPolicy(0, 1, "Delete"));
+    await this.page.uncheck(ROLE_FORM_COMPONENTS.selectPolicy(0, 1, "Delete"));
 
     await this.uiHelper.clickButton("Next");
 
@@ -89,8 +95,10 @@ export class Roles {
 
     await this.uiHelper.clickButton("Create");
 
-    await this.page.locator(HomePagePO.searchBar).waitFor({ timeout: 60000 });
-    await this.page.locator(HomePagePO.searchBar).fill(name);
+    await this.page
+      .locator(HOME_PAGE_COMPONENTS.searchBar)
+      .waitFor({ timeout: 60000 });
+    await this.page.locator(HOME_PAGE_COMPONENTS.searchBar).fill(name);
     await this.uiHelper.verifyHeading("All roles (1)");
   }
 
@@ -99,24 +107,30 @@ export class Roles {
 
     await this.uiHelper.verifyHeading("Create role");
 
-    await this.page.fill(RoleFormPO.roleName, name);
+    await this.page.fill(ROLE_FORM_COMPONENTS.roleName, name);
     await this.uiHelper.clickButton("Next");
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "guest user");
-    await this.page.click(RoleFormPO.selectMember("Guest User"));
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "rhdh-qe");
-    await this.page.click(RoleFormPO.selectMember("rhdh-qe"));
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "Backstage");
-    await this.page.click(RoleFormPO.selectMember("Backstage"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "guest user");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Guest User"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "rhdh-qe");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("rhdh-qe"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "Backstage");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Backstage"));
     await this.uiHelper.verifyHeading("Users and groups (2 users, 1 group)");
     await this.uiHelper.clickButton("Next");
 
-    await this.page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-      timeout: 100000,
-    });
+    await this.page.click(
+      ROLE_FORM_COMPONENTS.selectPermissionPolicyPlugin(0),
+      {
+        timeout: 100000,
+      },
+    );
     await this.uiHelper.optionSelector("catalog");
-    await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-      timeout: 100000,
-    });
+    await this.page.click(
+      ROLE_FORM_COMPONENTS.selectPermissionPolicyPermission(0),
+      {
+        timeout: 100000,
+      },
+    );
     await this.uiHelper.optionSelector("catalog-entity");
 
     await this.page.getByLabel("configure-access").click();
@@ -161,25 +175,31 @@ export class Roles {
 
     await this.uiHelper.verifyHeading("Create role");
 
-    await this.page.fill(RoleFormPO.roleName, name);
+    await this.page.fill(ROLE_FORM_COMPONENTS.roleName, name);
     await this.uiHelper.clickButton("Next");
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "guest user");
-    await this.page.click(RoleFormPO.selectMember("Guest User"));
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "tara");
-    await this.page.click(RoleFormPO.selectMember("Tara MacGovern"));
-    await this.page.fill(RoleFormPO.addUsersAndGroups, "Backstage");
-    await this.page.click(RoleFormPO.selectMember("Backstage"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "guest user");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Guest User"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "tara");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Tara MacGovern"));
+    await this.page.fill(ROLE_FORM_COMPONENTS.addUsersAndGroups, "Backstage");
+    await this.page.click(ROLE_FORM_COMPONENTS.selectMember("Backstage"));
     await this.uiHelper.verifyHeading("Users and groups (2 users, 1 group)");
     await this.uiHelper.clickButton("Next");
 
-    await this.page.click(RoleFormPO.selectPermissionPolicyPlugin(0), {
-      timeout: 100000,
-    });
+    await this.page.click(
+      ROLE_FORM_COMPONENTS.selectPermissionPolicyPlugin(0),
+      {
+        timeout: 100000,
+      },
+    );
     await this.uiHelper.optionSelector("catalog");
 
-    await this.page.click(RoleFormPO.selectPermissionPolicyPermission(0), {
-      timeout: 100000,
-    });
+    await this.page.click(
+      ROLE_FORM_COMPONENTS.selectPermissionPolicyPermission(0),
+      {
+        timeout: 100000,
+      },
+    );
     await this.uiHelper.optionSelector("catalog-entity");
 
     await this.page.getByLabel("configure-access").click();
@@ -202,16 +222,16 @@ export class Roles {
   async deleteRole(name: string) {
     await this.uiHelper.openSidebar("RBAC");
     await this.uiHelper.filterInputPlaceholder(name);
-    const button = this.page.locator(RoleListPO.deleteRole(name));
+    const button = this.page.locator(ROLE_LIST_COMPONENTS.deleteRole(name));
     await button.waitFor({ state: "visible" });
     await button.click();
     await this.uiHelper.verifyHeading("Delete this role?");
-    await this.page.locator(DeleteRolePO.roleName).click();
-    await this.page.fill(DeleteRolePO.roleName, name);
+    await this.page.locator(DELETE_ROLE_COMPONENTS.roleName).click();
+    await this.page.fill(DELETE_ROLE_COMPONENTS.roleName, name);
     await this.uiHelper.clickButton("Delete");
 
     await this.uiHelper.verifyText(`Role ${name} deleted successfully`);
-    await this.page.locator(HomePagePO.searchBar).fill(name);
+    await this.page.locator(HOME_PAGE_COMPONENTS.searchBar).fill(name);
     await this.uiHelper.verifyHeading("All roles (0)");
   }
 }

@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { UIhelperPO } from "../support/pageObjects/global-obj";
+import { UI_HELPER_ELEMENTS } from "../support/pageObjects/global-obj";
 
 export class UIhelper {
   private page: Page;
@@ -45,7 +45,7 @@ export class UIhelper {
       force: false,
     },
   ) {
-    const selector = `${UIhelperPO.MuiButtonLabel}`;
+    const selector = `${UI_HELPER_ELEMENTS.MuiButtonLabel}`;
     const button = this.page
       .locator(selector)
       .getByText(label, { exact: options.exact })
@@ -260,7 +260,7 @@ export class UIhelper {
   async verifyCellsInTable(texts: (string | RegExp)[]) {
     for (const text of texts) {
       const cellLocator = this.page
-        .locator(UIhelperPO.MuiTableCell)
+        .locator(UI_HELPER_ELEMENTS.MuiTableCell)
         .filter({ hasText: text });
       const count = await cellLocator.count();
 
@@ -284,7 +284,7 @@ export class UIhelper {
   }
 
   getButtonSelector(label: string): string {
-    return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
+    return `${UI_HELPER_ELEMENTS.MuiButtonLabel}:has-text("${label}")`;
   }
 
   /**
@@ -300,7 +300,7 @@ export class UIhelper {
     uniqueRowText: string,
     cellTexts: string[] | RegExp[],
   ) {
-    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    const row = this.page.locator(UI_HELPER_ELEMENTS.rowByText(uniqueRowText));
     await row.waitFor();
     for (const cellText of cellTexts) {
       await expect(
@@ -318,9 +318,9 @@ export class UIhelper {
   async clickOnLinkInTableByUniqueText(
     uniqueRowText: string,
     linkText: string | RegExp,
-    exact = true,
+    exact: boolean = true,
   ) {
-    const row = this.page.locator(UIhelperPO.rowByText(uniqueRowText));
+    const row = this.page.locator(UI_HELPER_ELEMENTS.rowByText(uniqueRowText));
     await row.waitFor();
     await row
       .locator("a")
@@ -331,14 +331,14 @@ export class UIhelper {
 
   /**
    * Clicks on a button within a table row that contains a unique text and matches a button's label or aria-label.
-   * @param {string} UniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
+   * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.
    * @param {string | RegExp} textOrLabel - The text of the button or the `aria-label` attribute, can be a string or a regular expression.
    */
   async clickOnButtonInTableByUniqueText(
-    UniqueRowText: string,
+    uniqueRowText: string,
     textOrLabel: string | RegExp,
   ) {
-    const row = this.page.locator(UIhelperPO.rowByText(UniqueRowText));
+    const row = this.page.locator(UI_HELPER_ELEMENTS.rowByText(uniqueRowText));
     await row.waitFor();
     await row
       .locator(
@@ -350,7 +350,7 @@ export class UIhelper {
 
   async verifyLinkinCard(cardHeading: string, linkText: string, exact = true) {
     const link = this.page
-      .locator(UIhelperPO.MuiCard(cardHeading))
+      .locator(UI_HELPER_ELEMENTS.MuiCard(cardHeading))
       .locator("a")
       .getByText(linkText, { exact: exact })
       .first();
@@ -364,7 +364,7 @@ export class UIhelper {
     exact = true,
   ) {
     const locator = this.page
-      .locator(UIhelperPO.MuiCard(cardHeading))
+      .locator(UI_HELPER_ELEMENTS.MuiCard(cardHeading))
       .getByText(text, { exact: exact })
       .first();
     await locator.scrollIntoViewIfNeeded();
@@ -419,7 +419,7 @@ export class UIhelper {
   }
 
   async waitForCardWithHeader(cardHeading: string) {
-    await this.page.waitForSelector(UIhelperPO.MuiCard(cardHeading));
+    await this.page.waitForSelector(UI_HELPER_ELEMENTS.MuiCard(cardHeading));
   }
 
   async verifyAlertErrorMessage(message: string | RegExp) {
