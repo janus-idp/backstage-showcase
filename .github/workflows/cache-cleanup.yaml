@@ -1,6 +1,6 @@
 # based on https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-caches
 
-name: cleanup caches by a branch
+name: Cleanup caches by a branch
 on:
   pull_request:
     types:
