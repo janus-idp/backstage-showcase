@@ -3087,6 +3087,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-jfrog-artifactory@npm:1.10.0":
+  version: 1.10.0
+  resolution: "@backstage-community/plugin-jfrog-artifactory@npm:1.10.0"
+  dependencies:
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/plugin-catalog-react": ^1.14.0
+    "@backstage/theme": ^0.6.0
+    "@janus-idp/shared-react": 2.11.1
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": ^4.0.0-alpha.45
+    react-use: ^17.4.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+  checksum: 9e9891b6e77a9dfb82c565015f28ee3df7e363a72454712862c2e30603da653b142583a981fffc0e032bb060fcf4dec789da5d8b14082ff303b7fe8ac0ddaa4a
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-lighthouse-common@npm:^0.1.10":
   version: 0.1.10
   resolution: "@backstage-community/plugin-lighthouse-common@npm:0.1.10"
@@ -9674,27 +9695,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-jfrog-artifactory@npm:1.10.0":
-  version: 1.10.0
-  resolution: "@janus-idp/backstage-plugin-jfrog-artifactory@npm:1.10.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/shared-react": ^2.13.0
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": ^4.0.0-alpha.45
-    react-use: ^17.4.0
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-  checksum: 806c2f345ca84af547e6a510f37e49718980c0c9c85df6d7c2f7c67dbdfbf957ff658f248ae4290111bfcb0dbeb7b4050e3f588c4d3ad71cfcca09c07e3b0bb8
-  languageName: node
-  linkType: hard
-
 "@janus-idp/backstage-plugin-ocm-backend@npm:5.2.0":
   version: 5.2.0
   resolution: "@janus-idp/backstage-plugin-ocm-backend@npm:5.2.0"
@@ -10132,6 +10132,30 @@ __metadata:
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
   checksum: c4130c14a6df431da80881018e821fdd57234d03c17c9e76105d77051fc2f7ddcd2ab266389dd639af355d917aa407c2eb7c0be845f57e02bec57d70b85090bc
+  languageName: node
+  linkType: hard
+
+"@janus-idp/shared-react@npm:2.11.1":
+  version: 2.11.1
+  resolution: "@janus-idp/shared-react@npm:2.11.1"
+  dependencies:
+    "@backstage/catalog-model": 1.5.0
+    "@backstage/core-components": ^0.14.9
+    "@backstage/core-plugin-api": ^1.9.3
+    "@backstage/plugin-kubernetes-common": 0.8.0
+    "@backstage/plugin-kubernetes-react": 0.4.0
+    "@kubernetes/client-node": ^0.20.0
+    "@material-ui/core": ^4.12.4
+    "@mui/icons-material": 5.15.17
+    classnames: ^2.3.2
+    date-fns: ^2.30.0
+    file-saver: ^2.0.5
+    lodash: ^4.17.21
+    mathjs: ^11.11.2
+    react-use: ^17.5.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+  checksum: 0294ad1f21fd64cb33b305d50239c41dd6bd1a2e55ccd4a0009dc9b7ea813c922ebd006b66ee0f4426f708c975a982958a528f88bbac49935757499219aee3bd
   languageName: node
   linkType: hard
 
@@ -20279,6 +20303,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-jfrog-artifactory@workspace:dynamic-plugins/wrappers/backstage-community-plugin-jfrog-artifactory":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-jfrog-artifactory@workspace:dynamic-plugins/wrappers/backstage-community-plugin-jfrog-artifactory"
+  dependencies:
+    "@backstage-community/plugin-jfrog-artifactory": 1.10.0
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-lighthouse@workspace:dynamic-plugins/wrappers/backstage-community-plugin-lighthouse":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-lighthouse@workspace:dynamic-plugins/wrappers/backstage-community-plugin-lighthouse"
@@ -29390,16 +29424,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-bulk-import": 1.7.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-jfrog-artifactory@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-jfrog-artifactory":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-jfrog-artifactory@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-jfrog-artifactory"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-jfrog-artifactory": 1.10.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
