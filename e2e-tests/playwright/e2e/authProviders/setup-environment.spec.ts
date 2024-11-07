@@ -1,14 +1,14 @@
 import { test } from "@playwright/test";
 import * as constants from "../../utils/authenticationProviders/constants";
 import {
-  k8sClient,
+  KUBERNETES_CLIENT,
   ensureEnvSecretExists,
   ensureNewPolicyConfigMapExists,
 } from "../../utils/helper";
 
 test.describe("Setup namespace and configure environment for RHDH", () => {
   test("Create namespace", async () => {
-    await k8sClient.createNamespaceIfNotExists(
+    await KUBERNETES_CLIENT.createNamespaceIfNotExists(
       constants.AUTH_PROVIDERS_NAMESPACE,
     );
   });

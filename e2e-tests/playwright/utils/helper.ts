@@ -5,7 +5,7 @@ import { expect } from "@playwright/test";
 import { KubeCLient } from "./kubernetes-helper";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
 
-export const k8sClient = new KubeCLient();
+export const KUBERNETES_CLIENT = new KubeCLient();
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
@@ -57,7 +57,7 @@ export async function upgradeHelmChartWithWait(
     dump: upgradeOutput,
   });
 
-  const configmap = await k8sClient.getConfigMap(
+  const configmap = await KUBERNETES_CLIENT.getConfigMap(
     `${release}-backstage-app-config`,
     namespace,
   );
@@ -152,7 +152,7 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await k8sClient.updateCongifmap(configMap, namespace, patch);
+  await KUBERNETES_CLIENT.updateCongifmap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
@@ -163,7 +163,7 @@ export async function ensureNewPolicyConfigMapExists(
     LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await k8sClient.getConfigMap(configMap, namespace);
+    await KUBERNETES_CLIENT.getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -173,8 +173,8 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await k8sClient.updateCongifmap(configMap, namespace, patch);
-    return await k8sClient.getConfigMap(configMap, namespace);
+    await KUBERNETES_CLIENT.updateCongifmap(configMap, namespace, patch);
+    return await KUBERNETES_CLIENT.getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       LOGGER.info(
@@ -189,7 +189,7 @@ export async function ensureNewPolicyConfigMapExists(
           "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       };
-      return await k8sClient.createCongifmap(namespace, cmBody);
+      return await KUBERNETES_CLIENT.createCongifmap(namespace, cmBody);
     } else {
       throw e;
     }
@@ -267,18 +267,18 @@ export async function ensureEnvSecretExists(
     data: secretData,
   };
   try {
-    await k8sClient.getSecret(secretName, namespace);
+    await KUBERNETES_CLIENT.getSecret(secretName, namespace);
     const patch = {
       data: secretData,
     };
-    await k8sClient.updateSecret(secretName, namespace, patch);
-    return await k8sClient.getSecret(secretName, namespace);
+    await KUBERNETES_CLIENT.updateSecret(secretName, namespace, patch);
+    return await KUBERNETES_CLIENT.getSecret(secretName, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       LOGGER.info(
         `Secret ${secretName} did not exist yet in namespace ${namespace}. Creating it..`,
       );
-      await k8sClient.createSecret(secret, namespace);
+      await KUBERNETES_CLIENT.createSecret(secret, namespace);
     } else {
       throw e;
     }
