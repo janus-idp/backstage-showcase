@@ -44,11 +44,11 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-jenkins',
   'backstage-plugin-notifications':
     './dynamic-plugins/dist/backstage-plugin-notifications',
-  'backstage-plugin-notifications-backend':
+  'backstage-plugin-notifications-backend-dynamic':
     './dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic',
-  'backstage-plugin-notifications-backend-module-email':
+  'backstage-plugin-notifications-backend-module-email-dynamic':
     './dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic',
-  'backstage-plugin-signals-backend':
+  'backstage-plugin-signals-backend-dynamic':
     './dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic',
   'backstage-plugin-signals': './dynamic-plugins/dist/backstage-plugin-signals',
   'backstage-community-plugin-sonarqube-backend-dynamic':
