@@ -4,53 +4,23 @@ We are excited that you want to be a part of this project by contributing to the
 
 ## Getting Started
 
-### Clone and Install
+Before you begin, please ensure you have followed the general setup instructions in the main [Contributing Guide](../../CONTRIBUTING.md) to clone the repository and install dependencies.
 
-1. **Fork the Repository**
+### Navigate to the e2e Tests Directory
 
-   Click the "Fork" button at the top right corner of the repository page.
+From the root of the project directory, navigate to the `e2e-tests` directory:
 
-2. **Clone Your Forked Repository**
+```bash
+cd e2e-tests
+```
 
-   ```bash
-   git clone https://github.com/your-username/backstage-showcase.git
-   ```
+### Install Playwright Browsers
 
-3. **Navigate to the Project Directory**
+The Playwright browsers should be installed automatically via the `postinstall` script in `package.json`. If not, you can manually install them:
 
-   ```bash
-   cd e2e-tests
-   ```
-
-4. **Install Dependencies**
-
-   We use **Yarn** for package management. If you don't have Yarn installed, you can install it globally:
-
-   ```bash
-   npm install -g yarn
-   ```
-
-   Then install the project dependencies:
-
-   ```bash
-   yarn install
-   ```
-
-5. **Install Playwright Browsers**
-
-   The Playwright browsers will be installed automatically via the `postinstall` script in `package.json`. If not, you can manually install them:
-
-   ```bash
-   yarn playwright install
-   ```
-
-6. **Run TypeScript Compilation**
-
-   Run type generation and checks:
-
-   ```bash
-   yarn tsc
-   ```
+```bash
+yarn playwright install
+```
 
 ### Running the Tests
 
@@ -67,31 +37,13 @@ yarn showcase-aks-ci-nightly        # Runs the showcase AKS CI nightly test suit
 yarn showcase-rbac-aks-ci-nightly   # Runs the showcase RBAC AKS CI nightly test suite
 ```
 
-### Useful Scripts
-
-Some additional scripts available in `package.json`:
-
-- **Linting:**
-
-  ```bash
-  yarn lint:check    # Checks for linting errors
-  yarn lint:fix      # Fixes linting errors automatically
-  ```
-
-- **Formatting:**
-
-  ```bash
-  yarn prettier:check   # Checks for formatting issues
-  yarn prettier:fix     # Fixes formatting issues automatically
-  ```
-
 ## Contribution Guidelines
 
 We welcome both code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, enhancement requests, and new test requests.
 
 ### Developer Guidelines
 
-Those principles are valid for new contributions. Some part of the codebase may not adhere yet to the principles yet, but improvements shall be done in that direction.
+These principles are valid for new contributions. Some parts of the codebase may not adhere yet to these principles, but improvements should be made in that direction.
 
 #### Architectural Principles
 
@@ -127,7 +79,7 @@ Those principles are valid for new contributions. Some part of the codebase may 
 
 3. **Avoid Using `uiHelper` in Spec Files**
 
-   - The `uiHelper` utility should **never** be used directly in spec files.
+   - The `uiHelper` utility should not be used directly in spec files. The reason for that is that some methods in this class are too generic and sometimes it is difficult to point what they are intended. Idellay, they shall be called from inside a POM that states what thay are looking for.
    - Use `uiHelper` methods only within the Page Object Model (POM) classes.
    - When working with tests that directly use `uiHelper` in spec files, refactor them to move `uiHelper` usage into POM classes.
    - This ensures that all UI interactions are encapsulated within page objects, promoting cleaner and more maintainable test code.
@@ -141,93 +93,8 @@ Those principles are valid for new contributions. Some part of the codebase may 
 
 ### Adding New Tests
 
-When contributing with new tests or modifying existing ones, please adhere to the guidelines.
-
-### Pull Requests
-
-If you want to contribute code changes to the project, here are some guidelines:
-
-1. **Create a Branch**
-
-   ```bash
-   git checkout -b e2e/your-test-name
-   ```
-
-2. **Implement Your Changes**
-
-   Make your code changes, ensuring that you follow the project's coding standards and best practices outlined in the [Developer Guidelines](#developer-guidelines).
-
-3. **Testing**
-
-   - **Run Tests:** Ensure all tests pass before committing.
-
-     ```bash
-     yarn showcase
-     ```
-
-   - **Note on Environment Dependencies:**
-
-     - If your new or edited tests **can't be validated locally** due to environment dependencies, you can open a **draft Pull Request (PR)**. This allows the tests to run on the test environment as described in [CI.md](./CI.md).
-
-4. **Linting and Formatting**
-
-   Ensure your code passes linting and formatting checks.
-
-   - **Check Linting:**
-
-     ```bash
-     yarn lint:check
-     ```
-
-   - **Fix Linting Issues:**
-
-     ```bash
-     yarn lint:fix
-     ```
-
-   - **Check Formatting:**
-
-     ```bash
-     yarn prettier:check
-     ```
-
-   - **Fix Formatting Issues:**
-
-     ```bash
-     yarn prettier:fix
-     ```
-
-5. **Ensure CI Passes**
-
-   Your contributions will need to pass the Continuous Integration (CI) tests for pull requests. For more information, refer to [./CI.md](./CI.md).
-
-6. **Commit Changes**
-
-   Use meaningful commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-
-   ```bash
-   git commit -m "test: add new test"
-   ```
-
-7. **Push to Your Fork**
-
-   ```bash
-   git push origin e2e/your-test-name
-   ```
-
-8. **Open a Pull Request**
-
-   Go to the original repository and click on **New Pull Request**. Provide a clear description of your changes, including any issues your PR fixes, acceptance criteria, and any special notes to the reviewers.
-
-### Commit Messages
-
-Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
-
-- `docs`: Documentation changes.
-- `style`: Code style changes (formatting, missing semi-colons, etc.).
-- `refactor`: Code changes that neither fix a bug nor add a feature.
-- `test`: Adding or correcting tests.
-- `chore`: Changes to the build process or auxiliary tools.
+When contributing new tests or modifying existing ones, please adhere to the guidelines.
+To open a PR, follow the steps described in the [general contribution guide](../../CONTRIBUTING.md)
 
 ### Collaboration and Communication
 
@@ -238,13 +105,3 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 - **Open Communication:**
 
   - Encourage discussion and feedback. All voices are important in shaping the project's direction.
-
-## Support
-
-If you have any questions or need assistance, feel free to open an issue or contact the maintainers. We appreciate your efforts and look forward to your contributions!
-
-You can also reach out to us in our [community Slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) if you run into any issues with setup, running, or testing the application. Members of the team and community can assist you with questions and concerns you might have.
-
-## License
-
-By contributing, you agree that your contributions will be licensed under the [Apache-2.0 License](https://github.com/janus-idp/backstage-showcase/blob/main/LICENSE).
