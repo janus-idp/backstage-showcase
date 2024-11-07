@@ -66,7 +66,7 @@ If the initial automatically triggered tests fail, OpenShift-CI will add a comme
 
 ### GitHub PR Testing Diagram
 
-![GitHub PR Testing Diagram](./resources/github_diagram.svg)
+![GitHub PR Testing Diagram](../images/github_diagram.svg)
 
 ## Nightly Tests
 
@@ -115,7 +115,7 @@ The nightly job for the `main` branch also runs against three OpenShift Containe
 
 ### Nightly Testing Diagram
 
-![Nightly Testing Diagram](./resources/nightly_diagram.svg)
+![Nightly Testing Diagram](../images/nightly_diagram.svg)
 
 ## Configuration and Installation of Testing Environments
 
