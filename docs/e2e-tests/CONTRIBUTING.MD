@@ -5,37 +5,7 @@ We are excited that you want to be a part of this project by contributing to the
 ## Getting Started
 
 Before you begin, please ensure you have followed the general setup instructions in the main [Contributing Guide](../../CONTRIBUTING.md) to clone the repository and install dependencies.
-
-### Navigate to the e2e Tests Directory
-
-From the root of the project directory, navigate to the `e2e-tests` directory:
-
-```bash
-cd e2e-tests
-```
-
-### Install Playwright Browsers
-
-The Playwright browsers should be installed automatically via the `postinstall` script in `package.json`. If not, you can manually install them:
-
-```bash
-yarn playwright install
-```
-
-### Running the Tests
-
-Our project contains multiple test suites for different environments and configurations. Some useful scripts to run the tests:
-
-```bash
-yarn showcase                       # Runs the showcase test suite
-yarn showcase-rbac                  # Runs the showcase RBAC test suite
-yarn showcase-1-2-x                 # Runs the showcase 1.2.x test suite
-yarn showcase-rbac-1-2-x            # Runs the showcase RBAC 1.2.x test suite
-yarn showcase-ci-nightly            # Runs the showcase CI nightly test suite
-yarn showcase-rbac-nightly          # Runs the showcase RBAC nightly test suite
-yarn showcase-aks-ci-nightly        # Runs the showcase AKS CI nightly test suite
-yarn showcase-rbac-aks-ci-nightly   # Runs the showcase RBAC AKS CI nightly test suite
-```
+**The [Readme](README.md) file contains practical information about the e2e project**
 
 ## Contribution Guidelines
 
