@@ -23,7 +23,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   let uiHelper: UIhelper;
   let usersCreated: Map<string, UserRepresentation>;
   let groupsCreated: Map<string, GroupRepresentation>;
-  const SYNC_TIME = 60;
+  const syncTime = 60;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     logger.info(
@@ -87,7 +87,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       oidcFlow ? oidcFlags : oauthFlags,
     );
 
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
   });
 
   test("Microsoft EntraID with default resolver: user_1 should login and entity is in the catalog", async () => {
@@ -99,7 +99,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
 
     await common.MicrosoftAzureLogin(
@@ -121,7 +121,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
   test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async () => {
     test.setTimeout(300 * 1000);
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     await common.MicrosoftAzureLogin(
       constants.MSGRAPH_USERS["admin"].userPrincipalName,
@@ -195,7 +195,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Remove user from Microsoft EntraID", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
 
     // remove user from azure -> authentication fails
@@ -225,7 +225,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     // after the sync
     // check user_1 is deleted from user entities and group entities
@@ -255,7 +255,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Move a user to another group in Microsoft EntraID", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
     // move a user to another group -> user can still login
     // move user_2 to group_1
@@ -293,7 +293,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     // after the sync
     // ensure the change is mirrored in the catalog
@@ -325,7 +325,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Remove a group from Microsoft EntraID", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
     // remove a group -> members still exists, member should still login
     // remove group_3
@@ -356,7 +356,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     // after the sync ensure the group entity is removed
     logger.info(
@@ -396,7 +396,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Remove a user from RHDH", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
 
     // remove user from RHDH -> authentication works, access is broken
@@ -443,7 +443,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     // after sync, user_4 is created again and can login
     logger.info(
@@ -462,7 +462,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Remove a group from RHDH", async () => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
 
     // remove group from RHDH -> user can login, but policy is broken
@@ -490,7 +490,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     // after sync, ensure group_5 is created again and memembers can login
     logger.info(
@@ -511,9 +511,9 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "microsoft");
+      await WaitForNextSync(syncTime, "microsoft");
     }
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
     // rename group from RHDH -> user can login, but policy is broken
     logger.info(`Executing testcase: Rename a user and a group.`);
 
@@ -526,7 +526,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     });
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "microsoft");
+    await WaitForNextSync(syncTime, "microsoft");
 
     // after sync, ensure group is mirrored
     // after sync, ensure user change is mirrorred

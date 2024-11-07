@@ -1,6 +1,25 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "filenames"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  "ignorePatterns": ["node_modules", "playwright-report", "test-results"]
+  "ignorePatterns": ["node_modules", "playwright-report", "test-results"],
+  "rules": {
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "variable",
+        "format": ["camelCase"]
+      },
+      {
+        "selector": "class",
+        "format": ["PascalCase"]
+      },
+      {
+        "selector": "variable",
+        "modifiers": ["const", "global"],
+        "format": ["UPPER_CASE"]
+      }
+    ],
+    "filenames/match-regex": ["error", "^[a-z-.]+$", true]
+  }
 }
