@@ -21,8 +21,8 @@ upstream:
           connection:
             host: null
             port: null
-            password: ${POSTGRESQL_ADMIN_PASSWORD}
-            user: postgres
+            password: null
+            user: null
             ssl: null
         auth:
           keys:
@@ -33,11 +33,6 @@ upstream:
           secretKeyRef:
             key: backend-secret
             name: '{{ include "janus-idp.backend-secret-name" $ }}'
-      - name: POSTGRESQL_ADMIN_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            key: postgres-password
-            name: '{{ .Release.Name }}-postgresql'
       # disable telemetry in CI
       - name: SEGMENT_TEST_MODE
         value: 'true'
@@ -54,12 +49,6 @@ upstream:
       # To have more control on underlying storage, the [emptyDir](https://docs.openshift.com/container-platform/4.13/storage/understanding-ephemeral-storage.html)
       # could be changed to a [generic ephemeral volume](https://docs.openshift.com/container-platform/4.13/storage/generic-ephemeral-vols.html#generic-ephemeral-vols-procedure_generic-ephemeral-volumes).
       - name: dynamic-plugins-root
-        emptyDir: {}
-      - name: rbac-policy
-        configMap:
-          defaultMode: 420
-          name: rbac-policy
-      - name: rbac-conditions
         emptyDir: {}
       # Volume that will expose the `dynamic-plugins.yaml` file from the `dynamic-plugins` config map.
       # The `dynamic-plugins` config map is created by the helm chart from the content of the `global.dynamic` field.
@@ -80,35 +69,10 @@ upstream:
     podSecurityContext:
       fsGroup: 2000
   postgresql:
-    enabled: true
-    postgresqlDataDir: /var/lib/pgsql/data/userdata
-    image:
-      registry: quay.io
-      repository: fedora/postgresql-15
-      tag: latest
-    auth:
-      secretKeys:
-        adminPasswordKey: postgres-password
-        userPasswordKey: password
-      existingSecret: null
     primary:
-      securityContext:
-        enabled: false
       podSecurityContext:
         enabled: true
         fsGroup: 3000
-      containerSecurityContext:
-        enabled: false
-      persistence:
-        enabled: true
-        size: 1Gi
-        mountPath: /var/lib/pgsql/data
-      extraEnvVars:
-        - name: POSTGRESQL_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: postgres-password
-              name: '{{ .Release.Name }}-postgresql'
   volumePermissions:
     enabled: true
   service:
