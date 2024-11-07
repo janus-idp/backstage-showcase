@@ -3391,15 +3391,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-topology-common@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@backstage-community/plugin-topology-common@npm:1.4.2"
-  dependencies:
-    "@backstage/plugin-permission-common": ^0.8.1
-  checksum: 6e91d51218faef90cae76d05106f378a70dbd6a31ce92bb5da6b0e457ee8ff378569fd28e0aa992a40652e93ad73b75849a7b0d2ecef40c317ad3796e5608f94
-  languageName: node
-  linkType: hard
-
 "@backstage-community/plugin-topology-common@npm:^1.4.3":
   version: 1.4.3
   resolution: "@backstage-community/plugin-topology-common@npm:1.4.3"
@@ -20562,17 +20553,6 @@ __metadata:
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.17.0
     "@mui/icons-material": 5.16.7
-  languageName: unknown
-  linkType: soft
-
-"backstage-community-plugin-topology-common@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology-common":
-  version: 0.0.0-use.local
-  resolution: "backstage-community-plugin-topology-common@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology-common"
-  dependencies:
-    "@backstage-community/plugin-topology-common": 1.4.2
-    "@backstage/cli": 0.28.2
-    "@backstage/plugin-permission-common": ^0.8.0
-    "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
 
