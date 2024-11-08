@@ -90,7 +90,6 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffo
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-tekton/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-tekton/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-quay/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-quay/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json
@@ -144,6 +143,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-rbac/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-rbac/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/dist-dynamic/package.json
@@ -168,6 +168,9 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-acr/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-acr/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/dist-dynamic/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins-root/backstage-community-tech-radar-backend/package.json ./dynamic-plugins-root/backstage-community-tech-radar-backend/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins-root/backstage-community-plugin-tech-radar/package.json ./dynamic-plugins-root/backstage-community-plugin-tech-radar/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins-root/backstage-community-plugin-catalog-module-keycloak/package.json ./dynamic-plugins-root/backstage-community-plugin-catalog-module-keycloak/package.json
 # END COPY package.json files
 
 # Increate timeout for yarn install
