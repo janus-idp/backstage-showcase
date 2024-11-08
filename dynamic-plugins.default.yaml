@@ -408,7 +408,7 @@ plugins:
                       - isSonarQubeAvailable
 
   # Group: OCM
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -419,12 +419,12 @@ plugins:
               url: "${OCM_HUB_URL}"
               serviceAccountToken: "${OCM_SA_TOKEN}"
               owner: janus-authors
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-ocm:
+          backstage-community.plugin-ocm:
             appIcons:
               - name: ocmIcon
                 importName: OcmIcon
@@ -463,14 +463,14 @@ plugins:
                     - isType: kubernetes-cluster
 
   # Group: Bulk import
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
     disabled: true
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-bulk-import:
+          red-hat-developer-hub.backstage-plugin-bulk-import:
             appIcons:
               - name: bulkImportIcon
                 importName: BulkImportIcon

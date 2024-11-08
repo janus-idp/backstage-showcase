@@ -75,7 +75,7 @@ global:
             serviceLocatorMethod:
               type: multiTenant
       # Enable OCM plugins.
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
         disabled: false
         pluginConfig:
           catalog:
@@ -87,12 +87,12 @@ global:
                   serviceAccountToken: ${OCM_CLUSTER_TOKEN}
                   skipTLSVerify: true
                   owner: janus-authors
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
         disabled: false
       # Enable bulk import plugins.
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
       # Enable tech-radar plugin.
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
