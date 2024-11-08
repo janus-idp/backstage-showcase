@@ -46,8 +46,8 @@ WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 
-# Add execute permissions to yarn
-RUN chmod +x "$YARN"
+# Add execute permissions to yarn; add yarn to path via symlink
+RUN chmod +x "$YARN" && ln -s "$YARN" /usr/local/bin/yarn
 
 # Stage 2 - Install dependencies
 COPY $EXTERNAL_SOURCE_NESTED/yarn.lock ./
@@ -215,10 +215,7 @@ RUN \
   # debug
   # ls -l /usr/; \
   # set up node dir with common.gypi and unsafe-perms=true
-  ln -s /usr/include/node/common.gypi /usr/common.gypi; "$YARN" config set nodedir /usr; "$YARN" config set unsafe-perm true; \
-  \
-  # add yarn to path via symlink
-  ln -s "$CONTAINER_SOURCE"/"$YARN" /usr/local/bin/yarn
+  ln -s /usr/include/node/common.gypi /usr/common.gypi; "$YARN" config set nodedir /usr; "$YARN" config set unsafe-perm true
 
 # Downstream only - debug
 # RUN echo $PATH; ls -la /usr/local/bin/yarn; whereis yarn;which yarn; yarn --version; \
