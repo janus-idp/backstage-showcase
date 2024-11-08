@@ -238,7 +238,7 @@ interface Role {
 
 export class Response {
   private authToken: string;
-  private simpleRequest;
+  private simpleRequest: { headers: { authorization: string } };
 
   constructor(authToken: string) {
     this.authToken = authToken;
@@ -298,16 +298,32 @@ export class Response {
 
   async removeMetadataFromResponse(response: APIResponse) {
     const responseJson = await response.json();
+    //TODO: delete console logs
+    console.log("removeMetadataFromResponse: parameterResponse");
+    console.log(response);
+    console.log("removeMetadataFromResponse: responseJson");
+    console.log(responseJson);
     const responseClean = responseJson.map((list: any) => {
       delete list.metadata;
       return list;
     });
+    console.log("removeMetadataFromResponse: responseJson after .map");
+    console.log(responseClean);
     return responseClean;
   }
 
   async checkResponse(response: APIResponse, expected: string) {
+    //TODO: delete console logs
+    console.log("checkResponse: parameterResponse");
+    console.log(response);
+    console.log("checkResponse: parameterexpected");
+    console.log(expected);
     const cleanResponse = await this.removeMetadataFromResponse(response);
+    console.log("checkResponse: response after removeMetadataFromResponse");
+    console.log(cleanResponse);
     const expectedJson = JSON.parse(expected);
+    console.log("checkResponse: expectedJson after json parse");
+    console.log(expectedJson);
     expect(cleanResponse).toEqual(expectedJson);
   }
 }
