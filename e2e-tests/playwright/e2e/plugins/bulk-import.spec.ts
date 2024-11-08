@@ -9,14 +9,9 @@ import {
   updatedCatalogInfoYaml,
 } from "../../support/testData/BulkImport";
 import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../support/extensions/sidebar-extend";
 
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
-
+const test = base.extend<{ sidebar: Sidebar }>(sidebarExtendedTest);
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial("Bulk Import plugin", () => {
   let page: Page;

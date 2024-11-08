@@ -12,14 +12,9 @@ import {
 } from "../../utils/helper";
 import * as rhssoHelper from "../../utils/authenticationProviders/rhssoHelper";
 import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../support/extensions/sidebar-extend";
 
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
-
+const test = base.extend<{ sidebar: Sidebar }>(sidebarExtendedTest);
 let page: Page;
 
 test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {

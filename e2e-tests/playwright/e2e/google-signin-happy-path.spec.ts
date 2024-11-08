@@ -1,14 +1,8 @@
-import { test as base, Page } from "@playwright/test";
+import test, { Page } from "@playwright/test";
 import { Common } from "../utils/Common";
 import { UIhelper } from "../utils/UIhelper";
-import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { SidebarOptions } from "../support/pages/sidebar";
+import { sidebarExtendedTest } from "../support/extensions/sidebar-extend";
 
 let page: Page;
 test.describe.skip("Google signin happy path", () => {
@@ -33,7 +27,7 @@ test.describe.skip("Google signin happy path", () => {
     await common.loginAsGuest();
   });
 
-  test("Verify Google Sign in", async ({ sidebar }) => {
+  sidebarExtendedTest("Verify Google Sign in", async ({ sidebar }) => {
     await sidebar.open(SidebarOptions.Settings);
     await uiHelper.clickTab("Authentication Providers");
     await page.getByTitle("Sign in to Google").click();

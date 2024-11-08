@@ -1,21 +1,16 @@
-import { test as base } from "@playwright/test";
+import test from "@playwright/test";
 import { UIhelper } from "../../../utils/UIhelper";
 import { Common } from "../../../utils/Common";
-import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
+import { SidebarOptions } from "../../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../../support/extensions/sidebar-extend";
 
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
 // Pre-req: backstage-plugin-catalog-backend-module-gitlab-dynamic
 // Pre-req: immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
 test.describe("gitlab discovery UI tests", () => {
   let uiHelper: UIhelper;
   let common: Common;
 
-  test.beforeEach(async ({ page, sidebar }) => {
+  sidebarExtendedTest.beforeEach(async ({ page, sidebar }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();

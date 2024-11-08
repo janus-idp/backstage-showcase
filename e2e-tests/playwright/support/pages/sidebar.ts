@@ -1,5 +1,5 @@
 import { Locator, Page } from "@playwright/test";
-import { PageComponent } from "../component";
+import { PageComponent } from "./component";
 
 export enum SidebarOptions {
   "Home",

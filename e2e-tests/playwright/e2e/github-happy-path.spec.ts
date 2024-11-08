@@ -1,4 +1,4 @@
-import { test as base, expect, Page } from "@playwright/test";
+import test, { expect, Page } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
 import { Common, setupBrowser } from "../utils/Common";
 import { resources } from "../support/testData/resources";
@@ -7,14 +7,8 @@ import {
   CatalogImport,
 } from "../support/pages/CatalogImport";
 import { templates } from "../support/testData/templates";
-import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { SidebarOptions } from "../support/pages/sidebar";
+import { sidebarExtendedTest } from "../support/extensions/sidebar-extend";
 
 let page: Page;
 test.describe.serial("GitHub Happy path", () => {
@@ -39,16 +33,17 @@ test.describe.serial("GitHub Happy path", () => {
     async () => await new Common(page).checkAndClickOnGHloginPopup(),
   );
 
-  test("Verify Profile is Github Account Name in the Settings page", async ({
-    sidebar,
-  }) => {
-    await sidebar.open(SidebarOptions.Settings);
-    await expect(page).toHaveURL("/settings");
-    await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
-    await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
-  });
+  sidebarExtendedTest(
+    "Verify Profile is Github Account Name in the Settings page",
+    async ({ sidebar }) => {
+      await sidebar.open(SidebarOptions.Settings);
+      await expect(page).toHaveURL("/settings");
+      await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
+      await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
+    },
+  );
 
-  test("Register an existing component", async ({ sidebar }) => {
+  sidebarExtendedTest("Register an existing component", async ({ sidebar }) => {
     await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.clickButton("Create");
@@ -56,57 +51,60 @@ test.describe.serial("GitHub Happy path", () => {
     await catalogImport.registerExistingComponent(component);
   });
 
-  test("Verify that the following components were ingested into the Catalog", async ({
-    sidebar,
-  }) => {
-    await sidebar.open(SidebarOptions.Catalog);
-    await uiHelper.selectMuiBox("Kind", "Group");
-    await uiHelper.verifyComponentInCatalog("Group", ["Janus-IDP Authors"]);
+  sidebarExtendedTest(
+    "Verify that the following components were ingested into the Catalog",
+    async ({ sidebar }) => {
+      await sidebar.open(SidebarOptions.Catalog);
+      await uiHelper.selectMuiBox("Kind", "Group");
+      await uiHelper.verifyComponentInCatalog("Group", ["Janus-IDP Authors"]);
 
-    await uiHelper.verifyComponentInCatalog("API", ["Petstore"]);
-    await uiHelper.verifyComponentInCatalog("Component", [
-      "Backstage Showcase",
-    ]);
+      await uiHelper.verifyComponentInCatalog("API", ["Petstore"]);
+      await uiHelper.verifyComponentInCatalog("Component", [
+        "Backstage Showcase",
+      ]);
 
-    await uiHelper.selectMuiBox("Kind", "Resource");
-    await uiHelper.verifyRowsInTable([
-      "ArgoCD",
-      "GitHub Showcase repository",
-      "KeyCloak",
-      "PostgreSQL cluster",
-      "S3 Object bucket storage",
-    ]);
+      await uiHelper.selectMuiBox("Kind", "Resource");
+      await uiHelper.verifyRowsInTable([
+        "ArgoCD",
+        "GitHub Showcase repository",
+        "KeyCloak",
+        "PostgreSQL cluster",
+        "S3 Object bucket storage",
+      ]);
 
-    await sidebar.open(SidebarOptions.Catalog);
-    await uiHelper.selectMuiBox("Kind", "User");
-    await uiHelper.searchInputPlaceholder("rhdh");
-    await uiHelper.verifyRowsInTable(["rhdh-qe"]);
-  });
+      await sidebar.open(SidebarOptions.Catalog);
+      await uiHelper.selectMuiBox("Kind", "User");
+      await uiHelper.searchInputPlaceholder("rhdh");
+      await uiHelper.verifyRowsInTable(["rhdh-qe"]);
+    },
+  );
 
-  test("Verify all 12 Software Templates appear in the Create page", async ({
-    sidebar,
-  }) => {
-    await sidebar.open(SidebarOptions["Create..."]);
-    await uiHelper.verifyHeading("Templates");
+  sidebarExtendedTest(
+    "Verify all 12 Software Templates appear in the Create page",
+    async ({ sidebar }) => {
+      await sidebar.open(SidebarOptions["Create..."]);
+      await uiHelper.verifyHeading("Templates");
 
-    for (const template of templates) {
-      await uiHelper.waitForH4Title(template);
-      await uiHelper.verifyHeading(template);
-    }
-  });
+      for (const template of templates) {
+        await uiHelper.waitForH4Title(template);
+        await uiHelper.verifyHeading(template);
+      }
+    },
+  );
 
-  test("Click login on the login popup and verify that Overview tab renders", async ({
-    sidebar,
-  }) => {
-    await sidebar.open(SidebarOptions.Catalog);
-    await uiHelper.selectMuiBox("Kind", "Component");
-    await uiHelper.clickByDataTestId("user-picker-all");
-    await uiHelper.clickLink("Backstage Showcase");
-    await common.clickOnGHloginPopup();
-    await uiHelper.verifyLink("Janus Website", { exact: false });
-    await backstageShowcase.verifyPRStatisticsRendered();
-    await backstageShowcase.verifyAboutCardIsDisplayed();
-  });
+  sidebarExtendedTest(
+    "Click login on the login popup and verify that Overview tab renders",
+    async ({ sidebar }) => {
+      await sidebar.open(SidebarOptions.Catalog);
+      await uiHelper.selectMuiBox("Kind", "Component");
+      await uiHelper.clickByDataTestId("user-picker-all");
+      await uiHelper.clickLink("Backstage Showcase");
+      await common.clickOnGHloginPopup();
+      await uiHelper.verifyLink("Janus Website", { exact: false });
+      await backstageShowcase.verifyPRStatisticsRendered();
+      await backstageShowcase.verifyAboutCardIsDisplayed();
+    },
+  );
 
   test("Verify that the Issues tab renders all the open github issues in the repository", async () => {
     await uiHelper.clickTab("Issues");
@@ -159,19 +157,20 @@ test.describe.serial("GitHub Happy path", () => {
   });
 
   //FIXME
-  test.skip("Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs", async ({
-    sidebar,
-  }) => {
-    await sidebar.open(SidebarOptions.Catalog);
-    await uiHelper.clickLink("Backstage Showcase");
-    await common.clickOnGHloginPopup();
-    await uiHelper.clickTab("Pull/Merge Requests");
-    await uiHelper.clickButton("ALL", { force: false });
-    const allPRs = await BackstageShowcase.getShowcasePRs("all");
-    await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
-    await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
-    await backstageShowcase.verifyPRRowsPerPage(20, allPRs);
-  });
+  sidebarExtendedTest.skip(
+    "Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs",
+    async ({ sidebar }) => {
+      await sidebar.open(SidebarOptions.Catalog);
+      await uiHelper.clickLink("Backstage Showcase");
+      await common.clickOnGHloginPopup();
+      await uiHelper.clickTab("Pull/Merge Requests");
+      await uiHelper.clickButton("ALL", { force: false });
+      const allPRs = await BackstageShowcase.getShowcasePRs("all");
+      await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
+      await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
+      await backstageShowcase.verifyPRRowsPerPage(20, allPRs);
+    },
+  );
 
   test("Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied", async () => {
     await uiHelper.clickTab("CI");
@@ -195,12 +194,13 @@ test.describe.serial("GitHub Happy path", () => {
     }
   });
 
-  test("Sign out and verify that you return back to the Sign in page", async ({
-    sidebar,
-  }) => {
-    await sidebar.open(SidebarOptions.Settings);
-    await common.signOut();
-  });
+  sidebarExtendedTest(
+    "Sign out and verify that you return back to the Sign in page",
+    async ({ sidebar }) => {
+      await sidebar.open(SidebarOptions.Settings);
+      await common.signOut();
+    },
+  );
 
   test.afterAll(async () => {
     await page.close();

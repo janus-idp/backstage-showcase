@@ -4,25 +4,25 @@ import { Common } from "../utils/Common";
 import Redis from "ioredis";
 import { spawn } from "child_process";
 import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
+import { sidebarExtendedTest } from "../support/extensions/sidebar-extend";
 
-const test = base.extend<{
-  sidebar: Sidebar;
-  uiHelper: UIhelper;
-  common: Common;
-}>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-  uiHelper: async ({ page }, use) => {
-    const uiHelper = new UIhelper(page);
-    await use(uiHelper);
-  },
-  common: async ({ page }, use) => {
-    const common = new Common(page);
-    await use(common);
-  },
-});
+const test = base
+  .extend<{
+    uiHelper: UIhelper;
+    common: Common;
+  }>({
+    uiHelper: async ({ page }, use) => {
+      const uiHelper = new UIhelper(page);
+      await use(uiHelper);
+    },
+    common: async ({ page }, use) => {
+      const common = new Common(page);
+      await use(common);
+    },
+  })
+  .extend<{
+    sidebar: Sidebar;
+  }>(sidebarExtendedTest);
 
 test.describe("Verify Redis Cache DB", () => {
   test.beforeEach(async ({ common }) => {

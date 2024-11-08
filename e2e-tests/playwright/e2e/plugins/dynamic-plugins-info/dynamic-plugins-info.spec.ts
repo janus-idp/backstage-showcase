@@ -1,21 +1,15 @@
-import { expect, test as base } from "@playwright/test";
+import test, { expect } from "@playwright/test";
 import { UIhelper } from "../../../utils/UIhelper";
 import { Common } from "../../../utils/Common";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
-import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { SidebarOptions } from "../../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../../support/extensions/sidebar-extend";
 
 test.describe("dynamic-plugins-info UI tests", () => {
   let uiHelper: UIhelper;
   let common: Common;
 
-  test.beforeEach(async ({ page, sidebar }) => {
+  sidebarExtendedTest.beforeEach(async ({ page, sidebar }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
@@ -52,7 +46,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await page
       .getByPlaceholder("Filter")
       .pressSequentially("backstage-plugin-tech-radar\n", { delay: 300 });
-    const row = await page.locator(
+    const row = page.locator(
       UIhelperPO.rowByText("backstage-plugin-tech-radar"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
@@ -67,7 +61,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
       .pressSequentially("plugin-3scale-backend-dynamic\n", {
         delay: 300,
       });
-    const row = await page.locator(
+    const row = page.locator(
       UIhelperPO.rowByText("backstage-community-plugin-3scale-backend-dynamic"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled
@@ -81,7 +75,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await page
       .getByPlaceholder("Filter")
       .pressSequentially("plugin-todo-list\n", { delay: 300 });
-    const row = await page.locator(
+    const row = page.locator(
       UIhelperPO.rowByText("@internal/plugin-todo-list"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled

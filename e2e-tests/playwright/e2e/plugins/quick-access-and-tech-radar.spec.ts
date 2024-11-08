@@ -1,16 +1,10 @@
-import { test as base } from "@playwright/test";
 import { HomePage } from "../../support/pages/HomePage";
 import { Common } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import { TechRadar } from "../../support/pages/TechRadar";
-import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { SidebarOptions } from "../../support/pages/sidebar";
+import test from "@playwright/test";
+import { sidebarExtendedTest } from "../../support/extensions/sidebar-extend";
 
 // Pre-req: Enable backstage-plugin-tech-radar and backstage-plugin-tech-radar-backend Plugin
 
@@ -27,7 +21,7 @@ test.describe.skip("Test Customized Quick Access and tech-radar plugin", () => {
     await homePage.verifyQuickAccess("SECURITY TOOLS", "Keycloak", true);
   });
 
-  test("Verify tech-radar", async ({ page, sidebar }) => {
+  sidebarExtendedTest("Verify tech-radar", async ({ page, sidebar }) => {
     const uiHelper = new UIhelper(page);
     const techRadar = new TechRadar(page);
 

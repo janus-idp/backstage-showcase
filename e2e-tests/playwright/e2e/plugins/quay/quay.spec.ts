@@ -1,21 +1,15 @@
-import { expect, test as base } from "@playwright/test";
+import test, { expect } from "@playwright/test";
 import { UIhelper } from "../../../utils/UIhelper";
 import { Common } from "../../../utils/Common";
 import { ImageRegistry } from "../../../utils/quay/quay";
-import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { SidebarOptions } from "../../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../../support/extensions/sidebar-extend";
 
 test.describe.skip("Test Quay.io plugin", () => {
   const QUAY_REPOSITORY = "janus-idp/backstage-showcase";
   let uiHelper: UIhelper;
 
-  test.beforeEach(async ({ page, sidebar }) => {
+  sidebarExtendedTest.beforeEach(async ({ page, sidebar }) => {
     const common = new Common(page);
     await common.loginAsGuest();
 

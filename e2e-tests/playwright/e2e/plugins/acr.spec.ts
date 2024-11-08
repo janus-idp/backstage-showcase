@@ -1,14 +1,8 @@
-import { test as base, Page } from "@playwright/test";
+import test, { Page } from "@playwright/test";
 import { UIhelper } from "../../utils/UIhelper";
 import { Common, setupBrowser } from "../../utils/Common";
-import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { SidebarOptions } from "../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../support/extensions/sidebar-extend";
 
 let page: Page;
 test.describe("Test ACR plugin", () => {
@@ -24,7 +18,7 @@ test.describe("Test ACR plugin", () => {
     await common.loginAsGuest();
   });
 
-  test("Verify ACR Images are visible", async ({ sidebar }) => {
+  sidebarExtendedTest("Verify ACR Images are visible", async ({ sidebar }) => {
     await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.verifyHeading("My Org Catalog");
     await uiHelper.selectMuiBox("Kind", "component");

@@ -5,14 +5,9 @@ import { UIhelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
+import { sidebarExtendedTest } from "../../../support/extensions/sidebar-extend";
 
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
-
+const test = base.extend<{ sidebar: Sidebar }>(sidebarExtendedTest);
 test.describe("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;

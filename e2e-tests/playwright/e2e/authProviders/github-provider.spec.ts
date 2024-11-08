@@ -1,4 +1,3 @@
-import { test as base, Page, expect } from "@playwright/test";
 import { Common, setupBrowser } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import * as constants from "../../utils/authenticationProviders/constants";
@@ -8,19 +7,14 @@ import {
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
 } from "../../utils/helper";
-import { BrowserContext } from "@playwright/test";
+import { test as base, BrowserContext, expect, Page } from "@playwright/test";
 import * as ghHelper from "../../utils/authenticationProviders/githubHelper";
 import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
-
-const test = base.extend<{ sidebar: Sidebar }>({
-  sidebar: async ({ page }, use) => {
-    const sidebar = new Sidebar(page);
-    await use(sidebar);
-  },
-});
+import { sidebarExtendedTest } from "../../support/extensions/sidebar-extend";
 
 let page: Page;
 
+const test = base.extend<{ sidebar: Sidebar }>(sidebarExtendedTest);
 test.describe("Standard authentication providers: Github Provider", () => {
   test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
 
