@@ -1,6 +1,6 @@
 # Installing External Plugins
 
-RHDH supports dynamic plugins, which are plugins not included in the core RHDH distribution. These plugins can be installed or uninstalled without rebuilding the RHDH application—only a restart is required to apply the changes.
+RHDH supports dynamic plugins, which are plugins not included in the core RHDH distribution. These plugins can be installed or uninstalled without rebuilding the RHDH application; only a restart is required to apply the changes.
 
 If your plugin not already packaged as a dynamic plugin, you must package it into one of the supported formats before installation.
 
@@ -8,7 +8,7 @@ If your plugin not already packaged as a dynamic plugin, you must package it int
 
 To package a Backstage plugin as a dynamic plugin, you need access to its source code.
 
-First you need to create a derived package using the `@janus-idp/cli` and than package it into one of the supported formats.
+First you need to create a derived package using the `@janus-idp/cli` and then package it into one of the supported formats.
 
 There are three possible packaging formats for dynamic plugins:
 
@@ -30,7 +30,9 @@ npx @janus-idp/cli@latest package export-dynamic-plugin
 
 This will create a `dist-dynamic` directory, which contains the derived dynamic plugin package. This directory can then be packaged into one of the supported formats.
 
-### Step 2.a Packaging a Plugin into an OCI Image
+### Step 2. Packaging a Plugin
+
+#### Creating OCI Image
 
 **Prerequisites:**
 
@@ -45,9 +47,9 @@ The command will output the correct path definition for the plugin, which can be
 npx @janus-idp/cli@latest package package-dynamic-plugins --tag quay.io/example/image:v0.0.1
 ```
 
-The `--tag` argument is required and specifies the image name and tag. The image won't be pushed to the registry automatically; use the `podman push` or `docker push` command to push the image to the registry.
+The `--tag` argument is required when using this packaging method. It specifies the image name and tag. The image won't be pushed to the registry automatically; use the `podman push` or `docker push` command to push the image to the registry.
 
-### Step 2.b Packaging a Plugin into a `tgz` Archive
+#### Creagin a `tgz` Archive
 
 **Prerequisites:**
 
@@ -71,7 +73,7 @@ npm pack --json | head -n 10
 
 To load the plugin from a `tgz` archive, host the archive on a web server accessible by your RHDH instance and specify the URL in the `dynamic-plugin-config.yaml` file.
 
-If using OpenShift, you can leavarege httpd builder to serve these dynamic plugin packages:
+If using OpenShift, you can leverage httpd builder to serve these dynamic plugin packages:
 
 ```bash
 # Pack derived dynamic plugins into `tgz` archives.
@@ -94,7 +96,7 @@ oc new-app --image-stream=plugin-registry
 # oc start-build plugin-registry --from-dir=dynamic-plugins-root --wait
 ```
 
-### Step 2.c Packaging a Plugin into an npm Package
+#### Creatign JavaScript package
 
 **Prerequisites:**
 
@@ -150,7 +152,7 @@ plugins:
     package: oci://quay.io/example/image:v0.0.1!backstage-plugin-myplugin
 ```
 
-### Loading a Plugin from a `tgz` Archive
+### Using a `tgz` Archive
 
 When defining the plugin packaged as a `tgz` archive, use the URL of the archive and the integrity hash of the archive.
 
@@ -161,7 +163,7 @@ plugins:
     integrity: sha512-9WlbgEdadJNeQxdn1973r5E4kNFvnT9GjLD627GWgrhCaxjCmxqdNW08cj+Bf47mwAtZMt1Ttyo+ZhDRDj9PoA==
 ```
 
-### Loading a Plugin from an npm Package
+### Using an JavaScript package reference
 
 When defining the plugin packaged as an npm package, use the package name and version, and the integrity hash of the package.
 
