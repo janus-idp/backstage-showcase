@@ -136,7 +136,7 @@ If you want to submit code changes to the project, here are some guidelines:
 
 7. **Update Documentation**
 
-   If there will be changes to the [app config](https://github.com/janus-idp/backstage-showcase/blob/main/app-config.yaml), we ask that [documentation](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) be updated if it will be a requirement for running the app. We also ask to ensure that the app will still work in the case of dummy information being supplied to the app config. While it is not a hard requirement, it does help others with quickly being able to get up and running with the showcase app.
+   If there will be changes to the [app config](app-config.yaml), we ask that [documentation](README.md#getting-started) be updated if it will be a requirement for running the app. We also ask to ensure that the app will still work in the case of dummy information being supplied to the app config. While it is not a hard requirement, it does help others with quickly being able to get up and running with the showcase app.
 
 8. **Push to Your Fork**
 

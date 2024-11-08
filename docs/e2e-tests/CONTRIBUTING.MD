@@ -31,7 +31,7 @@ These principles are valid for new contributions. Some parts of the codebase may
 
 4. **Control Over Test Environment**
 
-   The test framework must have full control over the test environment. All environment configurations should be managed and propagated up to the Playwright layer. This ensures consistency and reliability across all tests.
+   The test framework must have full control over the test environment. All environment configurations should be managed and propagated up to the Node.js layer, when possible. This ensures that the test environtment can be set up in case-to-case bases.
 
 5. **Team Agreement on Architecture Principles**
 
