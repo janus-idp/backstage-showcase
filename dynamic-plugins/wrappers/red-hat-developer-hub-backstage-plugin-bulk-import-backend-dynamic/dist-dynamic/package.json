@@ -1,6 +1,6 @@
 {
-  "name": "janus-idp-backstage-plugin-bulk-import-backend-dynamic",
-  "version": "5.0.0",
+  "name": "red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic",
+  "version": "5.1.0",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,11 +10,10 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.4",
-    "pluginId": "janus-idp-bulk-import-backend",
+    "supported-versions": "1.32.5",
+    "pluginId": "red-hat-developer-hub-backstage-plugin-bulk-import-backend",
     "pluginPackages": [
-      "janus-idp-bulk-import",
-      "janus-idp-bulk-import-backend"
+      "red-hat-developer-hub-backstage-plugin-bulk-import-backend"
     ]
   },
   "exports": {
@@ -41,7 +40,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-bulk-import-backend-dynamic"
+    "directory": "dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
