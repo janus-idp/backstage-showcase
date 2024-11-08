@@ -5,9 +5,9 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"janus-idp-backstage-scaffolder-backend-module-regex-dynamic@workspace:.":
+"backstage-community-scaffolder-backend-module-regex-dynamic@workspace:.":
   version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-scaffolder-backend-module-regex-dynamic@workspace:."
+  resolution: "backstage-community-scaffolder-backend-module-regex-dynamic@workspace:."
   dependencies:
     yaml: ^2.3.3
     zod: ^3.22.4
