@@ -46,8 +46,8 @@ WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
 COPY $EXTERNAL_SOURCE_NESTED/.yarnrc.yml ./
 
-# Add execute permissions to yarn
-RUN chmod +x "$YARN"
+# Add execute permissions to yarn; add yarn to path via symlink
+RUN chmod +x "$YARN" && ln -s "$YARN" /usr/local/bin/yarn
 
 # Stage 2 - Install dependencies
 FROM skeleton AS deps
