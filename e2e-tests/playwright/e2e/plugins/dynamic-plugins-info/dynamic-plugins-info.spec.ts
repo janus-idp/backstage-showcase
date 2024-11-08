@@ -1,18 +1,26 @@
-import { expect, test } from "@playwright/test";
+import { expect, test as base } from "@playwright/test";
 import { UIhelper } from "../../../utils/UIhelper";
 import { Common } from "../../../utils/Common";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
+import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 test.describe("dynamic-plugins-info UI tests", () => {
   let uiHelper: UIhelper;
   let common: Common;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, sidebar }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
-    await uiHelper.openSidebarButton("Administration");
-    await uiHelper.openSidebar("Plugins");
+    await sidebar.open(SidebarOptions.Administration);
+    await sidebar.open(SidebarOptions.Plugins);
     await uiHelper.verifyHeading("Plugins");
   });
 

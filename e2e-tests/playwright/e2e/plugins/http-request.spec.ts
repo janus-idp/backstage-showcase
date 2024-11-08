@@ -1,7 +1,15 @@
-import { test } from "@playwright/test";
+import { test as base } from "@playwright/test";
 import { UIhelper } from "../../utils/UIhelper";
 import { Common } from "../../utils/Common";
 import { CatalogImport } from "../../support/pages/CatalogImport";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 // https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-http-request
 // Pre-req: Enable roadiehq-scaffolder-backend-module-http-request-dynamic plugin
@@ -23,14 +31,16 @@ test.describe.skip(
       catalogImport = new CatalogImport(page);
     });
 
-    test("Create a software template using http-request plugin", async () => {
-      await uiHelper.openSidebar("Create...");
+    test("Create a software template using http-request plugin", async ({
+      sidebar,
+    }) => {
+      await sidebar.open(SidebarOptions["Create..."]);
       await uiHelper.verifyHeading("Templates");
       await uiHelper.waitForHeaderTitle();
       await uiHelper.clickButton("Register Existing Component");
       await catalogImport.registerExistingComponent(template);
 
-      await uiHelper.openSidebar("Catalog");
+      await sidebar.open(SidebarOptions.Catalog);
       await uiHelper.selectMuiBox("Kind", "Template");
       await uiHelper.searchInputPlaceholder("Test");
       await uiHelper.clickLink("Test HTTP Request");

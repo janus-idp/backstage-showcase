@@ -1,4 +1,4 @@
-import { test, Page, expect } from "@playwright/test";
+import { test as base, Page, expect } from "@playwright/test";
 import { Common, setupBrowser } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
@@ -12,6 +12,14 @@ import {
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
 } from "../../utils/helper";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 let page: Page;
 
@@ -90,7 +98,9 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await WaitForNextSync(SYNC_TIME, "microsoft");
   });
 
-  test("Microsoft EntraID with default resolver: user_1 should login and entity is in the catalog", async () => {
+  test("Microsoft EntraID with default resolver: user_1 should login and entity is in the catalog", async ({
+    sidebar,
+  }) => {
     // resolvers from upstream are not available in rhdh
     // testing only default settings
 
@@ -109,17 +119,19 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     // check no entities are in the catalog
     await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "User");
     await uiHelper.verifyHeading("All users");
     await uiHelper.verifyCellsInTable([
       constants.MSGRAPH_USERS["user_1"].displayName,
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async () => {
+  test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async ({
+    sidebar,
+  }) => {
     test.setTimeout(300 * 1000);
     await WaitForNextSync(SYNC_TIME, "microsoft");
 
@@ -187,12 +199,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.MSGRAPH_GROUPS["group_3"].displayName,
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Remove user from Microsoft EntraID", async () => {
+  test("Remove user from Microsoft EntraID", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "microsoft");
@@ -247,12 +259,14 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     expect(displayed.groupMembers).not.toContain(
       constants.MSGRAPH_USERS["user_1"].displayName,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Move a user to another group in Microsoft EntraID", async () => {
+  test("Move a user to another group in Microsoft EntraID", async ({
+    sidebar,
+  }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "microsoft");
@@ -277,7 +291,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
 
     await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Location");
     await uiHelper.verifyHeading("All locations");
     await uiHelper.verifyCellsInTable(["example"]);
@@ -288,7 +302,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     ).toHaveCount(0);
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -317,12 +331,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await uiHelper.verifyLocationRefreshButtonIsEnabled("example");
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Remove a group from Microsoft EntraID", async () => {
+  test("Remove a group from Microsoft EntraID", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "microsoft");
@@ -351,7 +365,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.MSGRAPH_GROUPS["group_4"].displayName,
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -372,7 +386,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       ]),
     ).rejects.toThrow();
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -388,12 +402,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await expect(navMyGroup).toHaveCount(0);
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Remove a user from RHDH", async () => {
+  test("Remove a user from RHDH", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "microsoft");
@@ -426,7 +440,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       timeout: 20 * 1000,
     });
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -454,12 +468,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.MSGRAPH_USERS["user_3"].userPrincipalName,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Remove a group from RHDH", async () => {
+  test("Remove a group from RHDH", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "microsoft");
@@ -478,14 +492,14 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.MSGRAPH_GROUPS["group_5"].displayName,
     );
     await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     await common.MicrosoftAzureLogin(
       constants.MSGRAPH_USERS["user_5"].userPrincipalName,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -503,12 +517,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await common.CheckGroupIsShowingInCatalog([
       constants.MSGRAPH_GROUPS["group_5"].displayName,
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Rename a user and a group", async () => {
+  test("Rename a user and a group", async ({ sidebar }) => {
     test.setTimeout(600 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "microsoft");
@@ -543,7 +557,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await common.CheckGroupIsShowingInCatalog([
       constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed",
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -566,7 +580,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed",
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     // user should see the entities again
     await expect(async () => {
       await page.reload();
@@ -580,12 +594,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       intervals: [5_000, 10_000],
       timeout: 120 * 1000,
     });
-    await uiHelper.openSidebar("My Group");
+    await sidebar.open(SidebarOptions["My Group"]);
     await uiHelper.verifyHeading(
       constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed",
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });

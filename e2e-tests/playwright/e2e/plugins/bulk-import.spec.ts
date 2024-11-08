@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test";
+import { expect, Page, test as base } from "@playwright/test";
 import { UIhelper } from "../../utils/UIhelper";
 import { Common, setupBrowser } from "../../utils/Common";
 import { APIHelper } from "../../utils/APIHelper";
@@ -8,6 +8,14 @@ import {
   defaultCatalogInfoYaml,
   updatedCatalogInfoYaml,
 } from "../../support/testData/BulkImport";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial("Bulk Import plugin", () => {
@@ -49,8 +57,10 @@ test.describe.serial("Bulk Import plugin", () => {
   );
 
   // Select two repos: one with an existing catalog.yaml file and another without it
-  test("Add a Repository from the Repository Tab and Confirm its Preview", async () => {
-    await uiHelper.openSidebar("Bulk import");
+  test("Add a Repository from the Repository Tab and Confirm its Preview", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Bulk import"]);
     await uiHelper.clickButton("Add");
     await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
     await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
@@ -148,8 +158,10 @@ test.describe.serial("Bulk Import plugin", () => {
     expect(prCatalogInfoYaml).toEqual(expectedCatalogInfoYaml);
   });
 
-  test("Verify Selected repositories shows catalog-info.yaml status as 'Added' and 'WAIT_PR_APPROVAL'", async () => {
-    await uiHelper.openSidebar("Bulk import");
+  test("Verify Selected repositories shows catalog-info.yaml status as 'Added' and 'WAIT_PR_APPROVAL'", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Bulk import"]);
     await uiHelper.clickButton("Add");
     await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
     await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
@@ -161,8 +173,10 @@ test.describe.serial("Bulk Import plugin", () => {
     ]);
   });
 
-  test("Merge the PR on GitHub and Confirm the Status Updates to 'Added'", async () => {
-    await uiHelper.openSidebar("Bulk import");
+  test("Merge the PR on GitHub and Confirm the Status Updates to 'Added'", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Bulk import"]);
     // Merge PR is generated for the repository without the catalog.yaml file.
     await APIHelper.mergeGitHubPR(
       newRepoDetails.owner,
@@ -189,8 +203,10 @@ test.describe.serial("Bulk Import plugin", () => {
     ]);
   });
 
-  test("Verify Added Repositories Appear in the Catalog as Expected", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Verify Added Repositories Appear in the Catalog as Expected", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
     await uiHelper.verifyRowInTableByUniqueText(catalogRepoDetails.name, [
@@ -199,8 +215,10 @@ test.describe.serial("Bulk Import plugin", () => {
     ]);
   });
 
-  test("Delete a Bulk Import Repository and Verify It's No Longer Visible in the UI", async () => {
-    await uiHelper.openSidebar("Bulk import");
+  test("Delete a Bulk Import Repository and Verify It's No Longer Visible in the UI", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Bulk import"]);
     await common.waitForLoad();
     await bulkimport.filterAddedRepo(catalogRepoDetails.name);
     await uiHelper.clickOnButtonInTableByUniqueText(
@@ -214,8 +232,10 @@ test.describe.serial("Bulk Import plugin", () => {
     });
   });
 
-  test("Verify Deleted Bulk Import Repositories Does not Appear in the Catalog", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Verify Deleted Bulk Import Repositories Does not Appear in the Catalog", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.searchInputPlaceholder(catalogRepoDetails.name);
     await uiHelper.verifyLink(catalogRepoDetails.name, {
@@ -259,8 +279,10 @@ test.describe
     async () => await new Common(page).checkAndClickOnGHloginPopup(),
   );
 
-  test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
-    await uiHelper.openSidebar("Bulk import");
+  test("Verify existing repo from app-config is displayed in bulk import Added repositories", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Bulk import"]);
     await common.waitForLoad();
     await bulkimport.filterAddedRepo(existingRepoFromAppConfig);
     await uiHelper.verifyRowInTableByUniqueText(existingRepoFromAppConfig, [
@@ -268,9 +290,11 @@ test.describe
     ]);
   });
 
-  test('Verify repo from "register existing component"  are displayed in bulk import Added repositories', async () => {
+  test('Verify repo from "register existing component"  are displayed in bulk import Added repositories', async ({
+    sidebar,
+  }) => {
     // Register Existing Component
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.clickButton("Create");
     await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(
@@ -279,7 +303,7 @@ test.describe
     );
 
     // Verify in bulk import's Added Repositories
-    await uiHelper.openSidebar("Bulk import");
+    await sidebar.open(SidebarOptions["Bulk import"]);
     await common.waitForLoad();
     await bulkimport.filterAddedRepo(existingComponentDetails.repoName);
     await uiHelper.verifyRowInTableByUniqueText(
@@ -306,8 +330,10 @@ test.describe
     async () => await new Common(page).checkAndClickOnGHloginPopup(),
   );
 
-  test("Bulk Import - Verify users without permission cannot access", async () => {
-    await uiHelper.openSidebar("Bulk import");
+  test("Bulk Import - Verify users without permission cannot access", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Bulk import"]);
     await uiHelper.verifyText("Permission required");
     expect(await uiHelper.isBtnVisible("Add")).toBeFalsy();
   });

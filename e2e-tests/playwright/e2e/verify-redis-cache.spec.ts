@@ -1,21 +1,40 @@
-import { expect, test } from "@playwright/test";
+import { expect, test as base } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
 import { Common } from "../utils/Common";
 import Redis from "ioredis";
 import { spawn } from "child_process";
+import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
+
+const test = base.extend<{
+  sidebar: Sidebar;
+  uiHelper: UIhelper;
+  common: Common;
+}>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+  uiHelper: async ({ page }, use) => {
+    const uiHelper = new UIhelper(page);
+    await use(uiHelper);
+  },
+  common: async ({ page }, use) => {
+    const common = new Common(page);
+    await use(common);
+  },
+});
 
 test.describe("Verify Redis Cache DB", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  test.beforeEach(async ({ page }) => {
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
+  test.beforeEach(async ({ common }) => {
     await common.loginAsGuest();
   });
 
-  test("Open techdoc and verify the cache generated in redis db", async () => {
-    await uiHelper.openSidebarButton("Favorites");
-    await uiHelper.openSidebar("Docs");
+  test("Open techdoc and verify the cache generated in redis db", async ({
+    uiHelper,
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Favorites);
+    await sidebar.open(SidebarOptions.Docs);
     await uiHelper.clickLink("Backstage Showcase");
 
     const portForward = spawn("/bin/sh", [

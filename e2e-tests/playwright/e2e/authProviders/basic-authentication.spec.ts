@@ -4,6 +4,7 @@ import { UIhelper } from "../../utils/UIhelper";
 import * as constants from "../../utils/authenticationProviders/constants";
 import { logger } from "../../utils/Logger";
 import { upgradeHelmChartWithWait } from "../../utils/helper";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
 
 let page: Page;
 
@@ -47,9 +48,10 @@ test.describe("Standard authentication providers: Basic authentication", () => {
 
     // Guest login should work
     await common.loginAsGuest();
-    await uiHelper.openSidebar("Settings");
+    const sidebar = new Sidebar(page);
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyHeading("Guest");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
@@ -93,6 +95,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
   test("3. Set dangerouslyAllowSignInWithoutUserInCatalog to false. Login should now work but no User Entities are in the Catalog", async () => {
     // Set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog = true
     // The Microsoft login should now be successful
+    const sidebar = new Sidebar(page);
 
     test.setTimeout(300 * 1000);
     logger.info(
@@ -120,7 +123,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       constants.AZURE_LOGIN_PASSWORD,
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyParagraph(constants.AZURE_LOGIN_USERNAME);
 
     // check no entities are in the catalog
@@ -128,7 +131,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     await uiHelper.verifyHeading("My Org Catalog");
     await uiHelper.searchInputPlaceholder(constants.AZURE_LOGIN_FIRSTNAME);
     await uiHelper.verifyRowsInTable(["No records to display"]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 

@@ -1,21 +1,24 @@
 import { Locator, Page } from "@playwright/test";
 import { UIhelper } from "../../utils/UIhelper";
 import playwrightConfig from "../../../playwright.config";
+import { Sidebar, SidebarOptions } from "./sidebar";
 
 //${BASE_URL}/catalog page
 export class Catalog {
   private page: Page;
   private uiHelper: UIhelper;
   private searchField: Locator;
+  private sidebar: Sidebar;
 
   constructor(page: Page) {
     this.page = page;
     this.uiHelper = new UIhelper(page);
     this.searchField = page.locator("#input-with-icon-adornment");
+    this.sidebar = new Sidebar(page);
   }
 
   async go() {
-    await this.uiHelper.openSidebar("Catalog");
+    await this.sidebar.open(SidebarOptions.Catalog);
   }
 
   async goToBackstageJanusProjectCITab() {
@@ -26,7 +29,7 @@ export class Catalog {
   }
 
   async goToBackstageJanusProject() {
-    await this.uiHelper.openSidebar("Catalog");
+    await this.go();
     await this.uiHelper.clickByDataTestId("user-picker-all");
     await this.uiHelper.clickLink("backstage-janus");
   }

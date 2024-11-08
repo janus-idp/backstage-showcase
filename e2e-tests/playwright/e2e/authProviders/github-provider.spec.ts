@@ -1,4 +1,4 @@
-import { test, Page, expect } from "@playwright/test";
+import { test as base, Page, expect } from "@playwright/test";
 import { Common, setupBrowser } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import * as constants from "../../utils/authenticationProviders/constants";
@@ -10,6 +10,14 @@ import {
 } from "../../utils/helper";
 import { BrowserContext } from "@playwright/test";
 import * as ghHelper from "../../utils/authenticationProviders/githubHelper";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 let page: Page;
 
@@ -67,7 +75,9 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await WaitForNextSync(SYNC_TIME, "github");
   });
 
-  test("Github with default resolver: user should login and entity is in the catalog", async () => {
+  test("Github with default resolver: user should login and entity is in the catalog", async ({
+    sidebar,
+  }) => {
     // resolvers from upstream are not available in rhdh
     // testing only default settings
 
@@ -92,16 +102,18 @@ test.describe("Standard authentication providers: Github Provider", () => {
     );
 
     await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     await page.reload();
     await uiHelper.selectMuiBox("Kind", "User");
     await uiHelper.verifyHeading("All users");
     await uiHelper.verifyCellsInTable([constants.GH_USERS["user_1"].name]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async () => {
+  test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async ({
+    sidebar,
+  }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "github");
@@ -158,11 +170,11 @@ test.describe("Standard authentication providers: Github Provider", () => {
     expect(displayed.groupMembers).toContain(constants.GH_USERS["admin"].name);
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Remove a user from RHDH", async () => {
+  test("Remove a user from RHDH", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "github");
@@ -193,7 +205,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
       timeout: 20 * 1000,
     });
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies();
 
@@ -219,12 +231,12 @@ test.describe("Standard authentication providers: Github Provider", () => {
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies();
   });
 
-  test("Remove a group from RHDH", async () => {
+  test("Remove a group from RHDH", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "github");
@@ -266,12 +278,12 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.CheckGroupIsShowingInCatalog([
       constants.GH_TEAMS["team_1"].name,
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Move a user to another group in Github", async () => {
+  test("Move a user to another group in Github", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "github");
@@ -298,7 +310,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     );
 
     await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
     await page.reload();
     await uiHelper.selectMuiBox("Kind", "Location");
@@ -311,7 +323,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     ).toHaveCount(0);
     // logout
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     await WaitForNextSync(SYNC_TIME, "github");
@@ -337,11 +349,11 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await uiHelper.verifyLocationRefreshButtonIsEnabled("example");
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Remove a group from Github", async () => {
+  test("Remove a group from Github", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "github");
@@ -380,7 +392,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     ).rejects.toThrow();
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await new Sidebar(page).open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies();
 
@@ -396,12 +408,12 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await expect(navMyGroup).toHaveCount(0);
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });
 
-  test("Rename a user and a group", async () => {
+  test("Rename a user and a group", async ({ sidebar }) => {
     test.setTimeout(600 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC_TIME, "github");
@@ -439,7 +451,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.CheckGroupIsShowingInCatalog([
       constants.GH_TEAMS["team_2"].name + "_renamed",
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
 
@@ -462,7 +474,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
       constants.GH_TEAMS["team_2"].name + "_renamed",
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     // user should see the entities again
     await expect(async () => {
       await page.reload();
@@ -476,12 +488,12 @@ test.describe("Standard authentication providers: Github Provider", () => {
       intervals: [5_000, 10_000],
       timeout: 120 * 1000,
     });
-    await uiHelper.openSidebar("My Group");
+    await sidebar.open(SidebarOptions["My Group"]);
     await uiHelper.verifyHeading(
       constants.GH_TEAMS["team_2"].name + "_renamed",
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
   });

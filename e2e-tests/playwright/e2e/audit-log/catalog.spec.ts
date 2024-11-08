@@ -3,6 +3,7 @@ import { Common } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import { LogUtils } from "./LogUtils";
 import { CatalogImport } from "../../support/pages/CatalogImport";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
 
 test.describe("Audit Log check for Catalog Plugin", () => {
   let uiHelper: UIhelper;
@@ -20,7 +21,7 @@ test.describe("Audit Log check for Catalog Plugin", () => {
     common = new Common(page);
     catalogImport = new CatalogImport(page);
     await common.loginAsGuest();
-    await uiHelper.openSidebar("Catalog");
+    await new Sidebar(page).open(SidebarOptions.Catalog);
   });
 
   /**

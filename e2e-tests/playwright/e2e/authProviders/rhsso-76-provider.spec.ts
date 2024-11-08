@@ -1,4 +1,4 @@
-import { test, Page, expect } from "@playwright/test";
+import { test as base, Page, expect } from "@playwright/test";
 import { Common, setupBrowser } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
@@ -11,6 +11,14 @@ import {
   replaceInRBACPolicyFileConfigMap,
 } from "../../utils/helper";
 import * as rhssoHelper from "../../utils/authenticationProviders/rhssoHelper";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 let page: Page;
 
@@ -40,7 +48,9 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     groupsCreated = created.groupsCreated;
   });
 
-  test("Default resolver for RHSSO should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not", async () => {
+  test("Default resolver for RHSSO should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not", async ({
+    sidebar,
+  }) => {
     test.setTimeout(600 * 1000);
 
     logger.info(
@@ -72,11 +82,9 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["user_1"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyHeading(
-      await rhssoHelper.getRHSSOUserDisplayName(
-        constants.RHSSO76_USERS["user_1"],
-      ),
+      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
     );
     await common.signOut();
 
@@ -94,7 +102,9 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     );
   });
 
-  test("Testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not", async () => {
+  test("Testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not", async ({
+    sidebar,
+  }) => {
     test.setTimeout(600 * 1000);
     logger.info(
       "Executing testcase: Testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not",
@@ -137,11 +147,9 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["user_1"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyHeading(
-      await rhssoHelper.getRHSSOUserDisplayName(
-        constants.RHSSO76_USERS["user_1"],
-      ),
+      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
     );
     await common.signOut();
 
@@ -159,7 +167,9 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     );
   });
 
-  test("Testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate", async () => {
+  test("Testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate", async ({
+    sidebar,
+  }) => {
     test.setTimeout(600 * 1000);
     logger.info(
       "Executing testcase: Testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate",
@@ -196,7 +206,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["user_1"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyHeading(
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
     );
@@ -207,7 +217,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["jenny_doe"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyHeading(
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["jenny_doe"]),
     );
@@ -218,14 +228,16 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["user_2"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await uiHelper.verifyHeading(
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_2"]),
     );
     await common.signOut();
   });
 
-  test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH", async () => {
+  test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH", async ({
+    sidebar,
+  }) => {
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
     }
@@ -284,11 +296,11 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     );
 
     // logout
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Remove user from RHSSO", async () => {
+  test("Remove user from RHSSO", async ({ sidebar }) => {
     // remove user from azure -> ensure authentication fails
     test.setTimeout(300 * 1000);
     logger.info(`Executing testcase: Remove user from RHSSO`);
@@ -323,11 +335,11 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     expect(displayed.groupMembers).not.toContain(
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
     );
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Move a user to another group in RHSSO", async () => {
+  test("Move a user to another group in RHSSO", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -351,7 +363,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
     await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
     await page.mouse.move(
       page.viewportSize().width / 2,
@@ -367,7 +379,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     ).toHaveCount(0);
     // logout
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -393,21 +405,21 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     // check RBAC permissions are updated after group update
     // new group should allow user to schedule location refresh and unregister the entity
     await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
     await page.mouse.move(
       page.viewportSize().width / 2,
       page.viewportSize().height / 2,
     );
 
-    await await uiHelper.verifyLocationRefreshButtonIsEnabled("example");
+    await uiHelper.verifyLocationRefreshButtonIsEnabled("example");
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Remove a group from RHSSO", async () => {
+  test("Remove a group from RHSSO", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -433,7 +445,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     // waiting for next sync
@@ -454,7 +466,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       ]),
     ).rejects.toThrow();
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     await common.keycloakLogin(
@@ -469,11 +481,11 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     await expect(navMyGroup).toHaveCount(0);
 
     await page.goto("/");
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Remove a user from RHDH", async () => {
+  test("Remove a user from RHDH", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
 
     // remove user from RHDH -> authentication works, access is broken
@@ -501,7 +513,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       timeout: 20 * 1000,
     });
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     const loginSucceded = await common.keycloakLogin(
@@ -530,11 +542,11 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     await common.CheckUserIsShowingInCatalog([
       rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Remove a group from RHDH", async () => {
+  test("Remove a group from RHDH", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
 
     // remove group from RHDH -> user can login, but policy is broken
@@ -561,7 +573,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       ]),
     ).rejects.toThrow(/Expected at least one cell/);
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -577,11 +589,11 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     await common.CheckGroupIsShowingInCatalog([
       constants.RHSSO76_GROUPS["group_3"].name,
     ]);
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 
-  test("Rename a user and a group", async () => {
+  test("Rename a user and a group", async ({ sidebar }) => {
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -613,15 +625,14 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
     await common.CheckUserIsShowingInCatalog([
-      (await rhssoHelper.getRHSSOUserDisplayName(
-        constants.RHSSO76_USERS["user_2"],
-      )) + " Renamed",
+      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_2"]) +
+        " Renamed",
     ]);
     await common.CheckGroupIsShowingInCatalog([
       constants.RHSSO76_GROUPS["group_2"].name + "_renamed",
     ]);
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
 
     await common.keycloakLogin(
@@ -643,7 +654,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_GROUPS["group_2"].name + "_renamed",
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     // user should see the entities again
     await expect(async () => {
       await page.reload();
@@ -658,12 +669,12 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       timeout: 120 * 1000,
     });
 
-    await uiHelper.openSidebar("My Group");
+    await sidebar.open(SidebarOptions["My Group"]);
     await uiHelper.verifyHeading(
       constants.RHSSO76_GROUPS["group_2"].name + "_renamed",
     );
 
-    await uiHelper.openSidebar("Settings");
+    await sidebar.open(SidebarOptions.Settings);
     await common.signOut();
   });
 });

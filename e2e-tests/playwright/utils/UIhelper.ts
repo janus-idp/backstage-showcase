@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { UIhelperPO } from "../support/pageObjects/global-obj";
+import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
 
 export class UIhelper {
   private page: Page;
@@ -9,7 +10,7 @@ export class UIhelper {
   }
 
   async verifyComponentInCatalog(kind: string, expectedRows: string[]) {
-    await this.openSidebar("Catalog");
+    await new Sidebar(this.page).open(SidebarOptions.Catalog);
     await this.selectMuiBox("Kind", kind);
     await this.verifyRowsInTable(expectedRows);
   }
@@ -141,26 +142,6 @@ export class UIhelper {
   async isLinkVisible(text: string): Promise<boolean> {
     const locator = `a:has-text("${text}")`;
     return await this.isElementVisible(locator);
-  }
-
-  async waitForSideBarVisible() {
-    await this.page.waitForSelector("nav a", { timeout: 120000 });
-  }
-
-  async openSidebar(navBarText: string) {
-    const navLink = this.page
-      .locator(`nav a:has-text("${navBarText}")`)
-      .first();
-    await navLink.waitFor({ state: "visible" });
-    await navLink.click();
-  }
-
-  async openSidebarButton(navBarButtonLabel: string) {
-    const navLink = this.page.locator(
-      `nav button[aria-label="${navBarButtonLabel}"]`,
-    );
-    await navLink.waitFor({ state: "visible" });
-    await navLink.click();
   }
 
   async selectMuiBox(label: string, value: string) {
@@ -437,7 +418,7 @@ export class UIhelper {
 
   async verifyLocationRefreshButtonIsEnabled(locationName: string) {
     await this.page.goto("/");
-    await this.openSidebar("Catalog");
+    await new Sidebar(this.page).open(SidebarOptions.Catalog);
     await this.selectMuiBox("Kind", "Location");
     await this.verifyHeading("All locations");
     await this.verifyCellsInTable([locationName]);

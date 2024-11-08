@@ -6,14 +6,17 @@ import {
   RoleFormPO,
   RoleListPO,
 } from "../pageObjects/page-obj";
+import { Sidebar, SidebarOptions } from "./sidebar";
 
 export class Roles {
   private page: Page;
   private uiHelper: UIhelper;
+  private sidebar: Sidebar;
 
   constructor(page: Page) {
     this.page = page;
     this.uiHelper = new UIhelper(page);
+    this.sidebar = new Sidebar(page);
   }
   static getRolesListCellsIdentifier() {
     const roleName = new RegExp(/^(role|user|group):[a-zA-Z]+\/[\w@*.~-]+$/);
@@ -152,7 +155,7 @@ export class Roles {
 
     await this.uiHelper.clickButton("Create");
     await this.uiHelper.verifyText(
-      "Role role:default/test-role created successfully",
+      `Role role:default/${name} created successfully`,
     );
   }
 
@@ -196,11 +199,13 @@ export class Roles {
     await this.uiHelper.verifyText("Permission policies (1)");
     await this.uiHelper.verifyText("1 rule");
     await this.uiHelper.clickButton("Create");
-    await this.uiHelper.verifyText("role:default/test-role");
+    await this.uiHelper.verifyText(
+      `Role role:default/${name} created successfully`,
+    );
   }
 
   async deleteRole(name: string) {
-    await this.uiHelper.openSidebar("RBAC");
+    await this.sidebar.open(SidebarOptions.RBAC);
     await this.uiHelper.filterInputPlaceholder(name);
     const button = this.page.locator(RoleListPO.deleteRole(name));
     await button.waitFor({ state: "visible" });
@@ -236,7 +241,7 @@ interface Role {
 
 export class Response {
   private authToken: string;
-  private simpleRequest;
+  private simpleRequest: { headers: { authorization: string } };
 
   constructor(authToken: string) {
     this.authToken = authToken;
@@ -296,16 +301,32 @@ export class Response {
 
   async removeMetadataFromResponse(response: APIResponse) {
     const responseJson = await response.json();
+    //TODO: delete console logs
+    console.log("removeMetadataFromResponse: parameterResponse");
+    console.log(response);
+    console.log("removeMetadataFromResponse: responseJson");
+    console.log(responseJson);
     const responseClean = responseJson.map((list: any) => {
       delete list.metadata;
       return list;
     });
+    console.log("removeMetadataFromResponse: responseJson after .map");
+    console.log(responseClean);
     return responseClean;
   }
 
   async checkResponse(response: APIResponse, expected: string) {
+    //TODO: delete console logs
+    console.log("checkResponse: parameterResponse");
+    console.log(response);
+    console.log("checkResponse: parameterexpected");
+    console.log(expected);
     const cleanResponse = await this.removeMetadataFromResponse(response);
+    console.log("checkResponse: response after removeMetadataFromResponse");
+    console.log(cleanResponse);
     const expectedJson = JSON.parse(expected);
+    console.log("checkResponse: expectedJson after json parse");
+    console.log(expectedJson);
     expect(cleanResponse).toEqual(expectedJson);
   }
 }

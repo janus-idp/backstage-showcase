@@ -3,6 +3,7 @@ import { Common } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import { LogUtils } from "./LogUtils";
 import { CatalogImport } from "../../support/pages/CatalogImport";
+import { Sidebar, SidebarOptions } from "../../support/pages/sidebar";
 
 test.describe("Audit Log check for Catalog Plugin", () => {
   let uiHelper: UIhelper;
@@ -22,15 +23,15 @@ test.describe("Audit Log check for Catalog Plugin", () => {
     common = new Common(page);
     catalogImport = new CatalogImport(page);
     await common.loginAsGuest();
-    await uiHelper.openSidebar("Create");
+    await new Sidebar(page).open(SidebarOptions.Create);
   });
 
   test.fixme(
     "Should fetch logs for ScaffolderParameterSchemaFetch event and validate log structure and values",
-    async ({ baseURL }) => {
+    async ({ page, baseURL }) => {
       await uiHelper.clickButton("Register Existing Component");
       await catalogImport.registerExistingComponent(template, false);
-      await uiHelper.openSidebar("Create");
+      await new Sidebar(page).open(SidebarOptions.Create);
       await common.waitForLoad();
       await uiHelper.searchInputPlaceholder("Hello World 2");
       await uiHelper.pressTab();

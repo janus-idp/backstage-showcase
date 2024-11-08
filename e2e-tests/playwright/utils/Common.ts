@@ -4,14 +4,17 @@ import { test, Browser, expect, Page, TestInfo } from "@playwright/test";
 import { SettingsPagePO } from "../support/pageObjects/page-obj";
 import { waitsObjs } from "../support/pageObjects/global-obj";
 import path from "path";
+import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
 
 export class Common {
   page: Page;
   uiHelper: UIhelper;
+  sidebar: Sidebar;
 
   constructor(page: Page) {
     this.page = page;
     this.uiHelper = new UIhelper(page);
+    this.sidebar = new Sidebar(page);
   }
 
   async loginAsGuest() {
@@ -25,7 +28,7 @@ export class Common {
 
     await this.uiHelper.verifyHeading("Select a sign-in method");
     await this.uiHelper.clickButton("Enter");
-    await this.uiHelper.waitForSideBarVisible();
+    await this.sidebar.waitUntilVisible;
   }
 
   async waitForLoad(timeout = 120000) {
@@ -85,7 +88,7 @@ export class Common {
     await this.waitForLoad(240000);
     await this.uiHelper.clickButton("Sign In");
     await this.checkAndReauthorizeGithubApp();
-    await this.uiHelper.waitForSideBarVisible();
+    await this.sidebar.waitUntilVisible();
   }
 
   async checkAndReauthorizeGithubApp() {
@@ -332,7 +335,7 @@ export class Common {
 
   async UnregisterUserEnittyFromCatalog(user: string) {
     await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
+    await this.sidebar.open(SidebarOptions.Catalog);
     await this.uiHelper.selectMuiBox("Kind", "User");
     await this.uiHelper.verifyHeading("All users");
 
@@ -344,7 +347,7 @@ export class Common {
 
   async UnregisterGroupEnittyFromCatalog(group: string) {
     await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
+    await this.sidebar.open(SidebarOptions.Catalog);
     await this.uiHelper.selectMuiBox("Kind", "Group");
     await this.uiHelper.verifyHeading("All groups");
 

@@ -1,4 +1,4 @@
-import { Page, expect, test } from "@playwright/test";
+import { Page, expect, test as base } from "@playwright/test";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
 import {
   HomePagePO,
@@ -9,6 +9,14 @@ import {
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
+import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
@@ -18,12 +26,12 @@ test.describe
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
-
+    const sidebar = new Sidebar(page);
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGithubUser();
-    await uiHelper.openSidebarButton("Administration");
-    await uiHelper.openSidebar("RBAC");
+    await sidebar.open(SidebarOptions.Administration);
+    await sidebar.open(SidebarOptions.RBAC);
     await uiHelper.verifyHeading("RBAC");
   });
 
@@ -97,8 +105,10 @@ test.describe
     async () => await new Common(page).checkAndClickOnGHloginPopup(),
   );
 
-  test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Component");
 
     await uiHelper.searchInputPlaceholder("test-rhdh-qe-2");
@@ -117,7 +127,7 @@ test.describe
     );
     await page.getByRole("button", { name: "Cancel" }).click();
 
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     await page.getByRole("link", { name: "test-rhdh-qe-2-team-owned" }).click();
     await expect(page.locator("header")).toContainText(
       "janus-qe/rhdh-qe-2-team",
@@ -140,13 +150,13 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
-
     uiHelper = new UIhelper(page);
     common = new Common(page);
     rolesHelper = new Roles(page);
+    const sidebar = new Sidebar(page);
     await common.loginAsGithubUser();
-    await uiHelper.openSidebarButton("Administration");
-    await uiHelper.openSidebar("RBAC");
+    await sidebar.open(SidebarOptions.Administration);
+    await sidebar.open(SidebarOptions.RBAC);
     await uiHelper.verifyHeading("RBAC");
   });
 
@@ -379,9 +389,9 @@ test.describe("Test RBAC plugin as a guest user", () => {
 
   test("Check if Administration side nav is present with no RBAC plugin", async ({
     page,
+    sidebar,
   }) => {
-    const uiHelper = new UIhelper(page);
-    await uiHelper.openSidebarButton("Administration");
+    await sidebar.open(SidebarOptions.Administration);
     const dropdownMenuLocator = page.locator(`text="RBAC"`);
     await expect(dropdownMenuLocator).not.toBeVisible();
   });

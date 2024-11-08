@@ -1,9 +1,17 @@
-import { Page, expect, test } from "@playwright/test";
+import { Page, expect, test as base } from "@playwright/test";
 import { Response } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
+import { Sidebar, SidebarOptions } from "../../../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 test.describe("Test RBAC plugin REST API", () => {
   let common: Common;
@@ -18,7 +26,7 @@ test.describe("Test RBAC plugin REST API", () => {
     common = new Common(page);
 
     await common.loginAsGithubUser();
-    await uiHelper.openSidebar("Home");
+    await new Sidebar(page).open(SidebarOptions.Home);
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
   });
@@ -91,11 +99,11 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(policyPostResponse.ok());
   });
 
-  test("Test catalog-entity read is denied", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Test catalog-entity read is denied", async ({ sidebar }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.verifyTableIsEmpty();
-    await uiHelper.openSidebar("Create...");
+    await sidebar.open(SidebarOptions["Create..."]);
     await uiHelper.verifyText(
       "No templates found that match your filter. Learn more about",
       false,
@@ -141,8 +149,8 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(createPostResponse.ok());
   });
 
-  test("Test catalog-entity read is allowed", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Test catalog-entity read is allowed", async ({ sidebar }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");
   });
@@ -153,8 +161,8 @@ test.describe("Test RBAC plugin REST API", () => {
     ).toBeFalsy();
   });
 
-  test("Test catalog-entity create is allowed", async () => {
-    await uiHelper.openSidebar("Create...");
+  test("Test catalog-entity create is allowed", async ({ sidebar }) => {
+    await sidebar.open(SidebarOptions["Create..."]);
     expect(await uiHelper.isLinkVisible("Register Existing Component"));
   });
 
@@ -197,9 +205,11 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(goodPutResponse.ok());
   });
 
-  test("Test that the bad PUT didnt go through and catalog-entities can be read", async () => {
-    await uiHelper.openSidebar("Home");
-    await uiHelper.openSidebar("Create...");
+  test("Test that the bad PUT didnt go through and catalog-entities can be read", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Home);
+    await sidebar.open(SidebarOptions["Create..."]);
     expect(
       await uiHelper.isTextVisible(
         "No templates found that match your filter. Learn more about",
@@ -207,15 +217,19 @@ test.describe("Test RBAC plugin REST API", () => {
     ).toBeFalsy();
   });
 
-  test("Test that the good PUT request went through and catalog-entities can be refreshed", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Test that the good PUT request went through and catalog-entities can be refreshed", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");
     expect(await uiHelper.isBtnVisibleByTitle("Schedule entity refresh"));
   });
 
-  test("Test that the good PUT request went through and catalog-entities cant be created", async () => {
-    await uiHelper.openSidebar("Create...");
+  test("Test that the good PUT request went through and catalog-entities cant be created", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions["Create..."]);
     expect(
       await uiHelper.isLinkVisible("Register Existing Component"),
     ).toBeFalsy();
@@ -238,8 +252,10 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(deleteResponse.ok());
   });
 
-  test("Test catalog-entity refresh is denied after DELETE", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Test catalog-entity refresh is denied after DELETE", async ({
+    sidebar,
+  }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");
     expect(await uiHelper.isBtnVisible("Schedule entity refresh")).toBeFalsy();

@@ -1,22 +1,28 @@
-import { expect, test } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
+import { expect, test as base } from "@playwright/test";
 import { Common } from "../utils/Common";
+import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 test.describe("Learning Paths", () => {
   let common: Common;
-  let uiHelper: UIhelper;
 
   test.beforeEach(async ({ page }) => {
-    uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
   });
 
   test("Verify that links in Learning Paths for Backstage opens in a new tab", async ({
     page,
+    sidebar,
   }) => {
-    await uiHelper.openSidebarButton("References");
-    await uiHelper.openSidebar("Learning Paths");
+    await sidebar.open(SidebarOptions.References);
+    await sidebar.open(SidebarOptions["Learning Paths"]);
 
     for (let i = 0; i < 5; i++) {
       const learningPathCard = page

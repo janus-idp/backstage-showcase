@@ -1,8 +1,16 @@
-import { Page, expect, test } from "@playwright/test";
+import { Page, expect, test as base } from "@playwright/test";
 import { UIhelper } from "../utils/UIhelper";
 import { Common, setupBrowser } from "../utils/Common";
 import { CatalogImport } from "../support/pages/CatalogImport";
 import { UIhelperPO } from "../support/pageObjects/global-obj";
+import { Sidebar, SidebarOptions } from "../support/pages/sidebar";
+
+const test = base.extend<{ sidebar: Sidebar }>({
+  sidebar: async ({ page }, use) => {
+    const sidebar = new Sidebar(page);
+    await use(sidebar);
+  },
+});
 
 let page: Page;
 test.describe("Test timestamp column on Catalog", () => {
@@ -23,18 +31,20 @@ test.describe("Test timestamp column on Catalog", () => {
     await common.loginAsGuest();
   });
 
-  test.beforeEach(async () => {
-    await uiHelper.openSidebar("Catalog");
+  test.beforeEach(async ({ sidebar }) => {
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.verifyHeading("My Org Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.clickByDataTestId("user-picker-all");
   });
 
-  test("Register an existing component and verify `Created At` column and value in the Catalog Page", async () => {
+  test("Register an existing component and verify `Created At` column and value in the Catalog Page", async ({
+    sidebar,
+  }) => {
     await uiHelper.clickButton("Create");
     await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(component);
-    await uiHelper.openSidebar("Catalog");
+    await sidebar.open(SidebarOptions.Catalog);
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.searchInputPlaceholder("timestamp-test");
     await uiHelper.verifyColumnHeading(["Created At"], true);
