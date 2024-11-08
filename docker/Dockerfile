@@ -168,9 +168,6 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-acr/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-acr/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/dist-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins-root/backstage-community-tech-radar-backend/package.json ./dynamic-plugins-root/backstage-community-tech-radar-backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins-root/backstage-community-plugin-tech-radar/package.json ./dynamic-plugins-root/backstage-community-plugin-tech-radar/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins-root/backstage-community-plugin-catalog-module-keycloak/package.json ./dynamic-plugins-root/backstage-community-plugin-catalog-module-keycloak/package.json
 # END COPY package.json files
 
 # Increate timeout for yarn install
