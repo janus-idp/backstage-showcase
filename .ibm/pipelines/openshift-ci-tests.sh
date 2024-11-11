@@ -24,8 +24,11 @@ cleanup() {
 trap cleanup EXIT
 
 source "${DIR}/utils.sh"
-source "${DIR}/cluster/aks/az.sh"
-source "${DIR}/cluster/gke/gcloud.sh"
+if [[ "$JOB_NAME" == *aks* ]]; then
+  source "${DIR}/cluster/aks/*"
+elif [[ "$JOB_NAME" == *gke* ]]; then
+  source "${DIR}/cluster/gke/*"
+fi
 
 set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
