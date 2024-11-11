@@ -1,9 +1,8 @@
-import { test as base } from "@playwright/test";
 import { Catalog } from "../support/pages/Catalog";
 import GithubApi from "../support/api/github";
 import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
-import { Common } from "../utils/Common";
 import { assert } from "console";
+import { githubTest } from "../utils/test-extensions/github-test";
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -11,9 +10,8 @@ type GithubDiscoveryFixture = {
   testOrganization: string;
 };
 
-const test = base.extend<GithubDiscoveryFixture>({
+const test = githubTest().extend<GithubDiscoveryFixture>({
   catalogPage: async ({ page }, use) => {
-    await new Common(page).loginAsGithubUser();
     const catalog = new Catalog(page);
     await catalog.go();
     use(catalog);
