@@ -85,7 +85,7 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   });
 
   test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
-    await common.clickOnGHloginPopup();
+    await common.checkAndClickOnGHloginPopup();
     await uiHelper.clickTab("Dependencies");
     await uiHelper.verifyText(
       `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
