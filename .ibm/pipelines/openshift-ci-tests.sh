@@ -320,6 +320,7 @@ initiate_deployments() {
 
   # Deploy `showcase-runtime` to run tests that require configuration changes at runtime
   configure_namespace "${NAME_SPACE_RUNTIME}"
+  uninstall_helmchart "${NAME_SPACE_RUNTIME}" "${RELEASE_NAME}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RUNTIME}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_RUNTIME}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
@@ -452,8 +453,8 @@ main() {
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
-    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RUNTIME}"
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
   fi
   exit "${OVERALL_RESULT}"
 }
