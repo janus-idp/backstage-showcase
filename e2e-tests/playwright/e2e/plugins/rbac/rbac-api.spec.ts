@@ -4,8 +4,9 @@ import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
+import githubTest from "../../../utils/test-extensions/github-test";
 
-test.describe("Test RBAC plugin REST API", () => {
+githubTest().describe("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;

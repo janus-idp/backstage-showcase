@@ -7,9 +7,10 @@ import {
   CatalogImport,
 } from "../support/pages/CatalogImport";
 import { templates } from "../support/testData/templates";
+import githubTest from "../utils/test-extensions/github-test";
 
 let page: Page;
-test.describe.serial("GitHub Happy path", () => {
+githubTest().describe.serial("GitHub Happy path", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let catalogImport: CatalogImport;
@@ -25,7 +26,6 @@ test.describe.serial("GitHub Happy path", () => {
     common = new Common(page);
     catalogImport = new CatalogImport(page);
     backstageShowcase = new BackstageShowcase(page);
-    await common.loginAsGithubUser();
   });
 
   test("Verify Profile is Github Account Name in the Settings page", async () => {

@@ -2,7 +2,7 @@ import { Catalog } from "../support/pages/Catalog";
 import GithubApi from "../support/api/github";
 import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
 import { assert } from "console";
-import { githubTest } from "../utils/test-extensions/github-test";
+import githubTest from "../utils/test-extensions/github-test";
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
