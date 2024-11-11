@@ -4,14 +4,12 @@ set -a  # Automatically export all variables
 #ENVS and Vault Secrets
 HELM_CHART_VALUE_FILE_NAME="values_showcase.yaml"
 HELM_CHART_RBAC_VALUE_FILE_NAME="values_showcase-rbac.yaml"
+HELM_CHART_K8S_MERGED_VALUE_FILE_NAME="merged-values_showcase_K8S.yaml"
+HELM_CHART_RBAC_K8S_MERGED_VALUE_FILE_NAME="merged-values_showcase-rbac_K8S.yaml"
 HELM_CHART_AKS_DIFF_VALUE_FILE_NAME="diff-values_showcase_AKS.yaml"
 HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME="diff-values_showcase-rbac_AKS.yaml"
-HELM_CHART_AKS_MERGED_VALUE_FILE_NAME="merged-values_showcase_AKS.yaml"
-HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME="merged-values_showcase-rbac_AKS.yaml"
 HELM_CHART_GKE_DIFF_VALUE_FILE_NAME="diff-values_showcase_GKE.yaml"
 HELM_CHART_RBAC_GKE_DIFF_VALUE_FILE_NAME="diff-values_showcase-rbac_GKE.yaml"
-HELM_CHART_GKE_MERGED_VALUE_FILE_NAME="merged-values_showcase_GKE.yaml"
-HELM_CHART_RBAC_GKE_MERGED_VALUE_FILE_NAME="merged-values_showcase-rbac_GKE.yaml"
 HELM_IMAGE_NAME=backstage
 HELM_REPO_NAME=rhdh-chart
 HELM_REPO_URL="https://redhat-developer.github.io/rhdh-chart"

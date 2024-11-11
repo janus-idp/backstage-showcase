@@ -500,8 +500,8 @@ main() {
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
-    NAME_SPACE_AKS="showcase-aks-ci-nightly"
-    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
+    NAME_SPACE_K8S="showcase-k8s-ci-nightly"
+    NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
   fi
 
   install_oc
@@ -543,18 +543,18 @@ main() {
 
   if [[ "$JOB_NAME" == *aks* ]]; then
     initiate_aks_deployment
-    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
-    delete_namespace "${NAME_SPACE_AKS}"
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}"
+    delete_namespace "${NAME_SPACE_K8S}"
     initiate_rbac_aks_deployment
-    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
-    delete_namespace "${NAME_SPACE_RBAC_AKS}"
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
+    delete_namespace "${NAME_SPACE_RBAC_K8S}"
   elif [[ "$JOB_NAME" == *gke* ]]; then
     initiate_gke_deployment
-    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_AKS}"
-    delete_namespace "${NAME_SPACE_AKS}"
+    check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}"
+    delete_namespace "${NAME_SPACE_K8S}"
     initiate_rbac_gke_deployment
-    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_AKS}"
-    delete_namespace "${NAME_SPACE_RBAC_AKS}"
+    check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
+    delete_namespace "${NAME_SPACE_RBAC_K8S}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
