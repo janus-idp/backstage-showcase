@@ -23,10 +23,6 @@ test.describe("Test RBAC plugin REST API", () => {
     responseHelper = new Response(apiToken);
   });
 
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
-
   test("Test that roles and policies from GET request are what expected", async ({
     request,
   }) => {

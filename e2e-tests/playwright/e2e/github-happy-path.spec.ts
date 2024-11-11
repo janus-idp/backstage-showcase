@@ -27,9 +27,6 @@ test.describe.serial("GitHub Happy path", () => {
     backstageShowcase = new BackstageShowcase(page);
     await common.loginAsGithubUser();
   });
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Verify Profile is Github Account Name in the Settings page", async () => {
     await uiHelper.openSidebar("Settings");
