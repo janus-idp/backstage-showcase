@@ -71,17 +71,38 @@ export class LogUtils {
    * - app.kubernetes.io/instance=redhat-developer-hub
    * - app.kubernetes.io/name=developer-hub
    *
-   * @param grepFilter The string to filter the logs using grep
+   * @param filter The string to filter the logs
    * @returns A promise that resolves with the filtered logs
    */
-  static async getPodLogsWithGrep(grepFilter: string): Promise<string> {
+  static async getPodLogsWithGrep(filter: string): Promise<string> {
     const podSelector =
       "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
     const tailNumber = 30;
-    const command = `oc logs -l ${podSelector} --tail=${tailNumber} -c backstage-backend -n ${process.env.NAME_SPACE} | grep "${grepFilter}" | head -n 1`;
-    console.log(command);
+    const namespace = process.env.NAME_SPACE || "default";
+
+    const args = [
+      "logs",
+      "-l",
+      podSelector,
+      `--tail=${tailNumber}`,
+      "-c",
+      "backstage-backend",
+      "-n",
+      namespace,
+    ];
+
+    console.log("Executing command:", "oc", args.join(" "));
+
     try {
-      return await LogUtils.executeCommand(command);
+      const output = await LogUtils.executeCommand("oc", args);
+
+      const logLines = output.split("\n");
+
+      const filteredLines = logLines.filter((line) => line.includes(filter));
+
+      const firstMatch = filteredLines[0] || "";
+
+      return firstMatch;
     } catch (error) {
       console.error("Error fetching logs:", error);
       throw new Error(`Failed to fetch logs: ${error}`);
@@ -94,10 +115,21 @@ export class LogUtils {
    * @returns A promise that resolves when the login is successful
    */
   static async loginToOpenShift(): Promise<void> {
-    const command = `oc login --token="${process.env.K8S_CLUSTER_TOKEN}" --server="${process.env.K8S_CLUSTER_URL}"`;
+    const token = process.env.K8S_CLUSTER_TOKEN;
+    const server = process.env.K8S_CLUSTER_URL;
+
+    if (!token || !server) {
+      throw new Error(
+        "Environment variables K8S_CLUSTER_TOKEN and K8S_CLUSTER_URL must be set.",
+      );
+    }
+
+    const command = "oc";
+    const args = ["login", `--token=${token}`, `--server=${server}`];
+
     try {
-      const result = await LogUtils.executeCommand(command);
-      console.log("Login successful:", result);
+      await LogUtils.executeCommand(command, args);
+      console.log("Login successful.");
     } catch (error) {
       console.error("Error during login:", error);
       throw new Error(`Failed to login to OpenShift: ${error}`);
