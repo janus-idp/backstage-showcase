@@ -11,6 +11,8 @@ Additionally, you can set the `NO_PROXY` environment variable to exclude certain
 
 `NO_PROXY` is a comma or space-separated list of hostnames or IP addresses, optionally with port numbers. If the input URL matches any of the entries listed in `NO_PROXY`, then that URL will be fetched by a direct request (i.e., bypassing the proxy settings).
 
+Note that the default value for `NO_PROXY` in the container image is `localhost,127.0.0.1`. If you want to override it, please make sure to also include at least `localhost` or `localhost:7007` in the list; otherwise, the Backend might not work correctly.
+
 Matching follows the rules below:
 
 - `NO_PROXY=*` will bypass the proxy for all requests.
@@ -19,8 +21,9 @@ Matching follows the rules below:
 - No DNS lookup is performed to decide if a request should bypass the proxy or not. For example, if DNS is known to resolve `example.com` to `1.2.3.4`, setting `NO_PROXY=1.2.3.4` will not have any effect on requests sent to `example.com`. Only requests explicitly sent to the IP address `1.2.3.4` will bypass the proxy.
 - If a port is added after the host name or IP Address, then the input request must match both the host/IP and port in order to bypass the proxy. For example, `NO_PROXY=example.com:1234` would exclude requests to `http(s)://example.com:1234` (so calling them directly), but not requests to other ports like `http(s)://example.com` (which will be sent through the proxy).
 - If no port is specified after the host name or IP address, all requests to that host/IP address will bypass the proxy regardless of the port. For example, `NO_PROXY=localhost` would exclude all requests sent to `localhost` (so calling them directly), like `http(s)://localhost:7077` and `http(s)://localhost:8888`.
-- IP Addresses in CIDR notation will not work.
-- Generally, the proxy is only bypassed if the host name is an exact match for an entry in the `NO_PROXY` list. The only exceptions are entries that start with a dot (`.`) or with a wildcard (`*`). In such a case, the proxy is bypassed if the host name ends with the entry. Please note that you should list both the domain and the wildcard domain if you want to exclude the domain and all its subdomains. For example, you would set `NO_PROXY=example.com,.example.com` to bypass the proxy for requests sent to `http(s)://example.com` and `http(s)://subdomain.example.com`.
+- IP Address blocks in CIDR notation will not work. So setting `NO_PROXY=10.11.0.0/16` will not have any effect, even if a request is explicitly sent to an IP address in that block.
+- Only IPv4 addresses are supported. IPv6 addresses like `::1` will not work.
+- Generally, the proxy is only bypassed if the host name is an exact match for an entry in the `NO_PROXY` list. The only exceptions are entries that start with a dot (`.`) or with a wildcard (`*`). In such a case, the proxy is bypassed if the host name ends with the entry. Please note that you should list both the domain and the wildcard domain if you want to exclude a domain and all its subdomains. For example, you would set `NO_PROXY=example.com,.example.com` to bypass the proxy for requests sent to `http(s)://example.com` and `http(s)://subdomain.example.com`.
 
 ## Helm deployment
 
@@ -38,7 +41,8 @@ upstream:
         value: '<my_https_proxy_url>'
       - name: NO_PROXY
         # List of comma-separated URLs that should be excluded from proxying.
-        # Example: 'foo.com,baz.com'
+        # Make sure you include 'localhost'.
+        # Example: 'localhost,foo.com,baz.com'
         value: '<my_no_proxy_settings>'
 ```
 
@@ -77,7 +81,8 @@ spec:
           value: '<my_https_proxy_url>'
         - name: NO_PROXY
           # List of comma-separated URLs that should be excluded from proxying.
-          # Example: 'foo.com,baz.com'
+          # Make sure you include 'localhost'.
+          # Example: 'localhost,foo.com,baz.com'
           value: '<my_no_proxy_settings>'
 ```
 
