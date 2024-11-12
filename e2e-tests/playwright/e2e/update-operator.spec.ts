@@ -11,6 +11,7 @@ const ocpTest = base.extend<OcFixture>({
     const api = new OcApi(namespace);
     await api.createNamespace();
     use(api);
+    api.deleteNamespace();
   },
 });
 
@@ -34,19 +35,13 @@ ocpTest.describe("OpenShift Operator Tests", () => {
 
   ocpTest("Upgrade the Developer Hub Operator", async ({ ocApi }) => {
     const operatorName = "rhdh";
-    const namespace = "rhdh-nil";
     const newChannel = "stable";
     const newStartingCSV = "rhdh.v2.0.0";
 
-    await ocApi.upgradeOperator(
-      operatorName,
-      namespace,
-      newChannel,
-      newStartingCSV,
-    );
+    await ocApi.upgradeOperator(operatorName, newChannel, newStartingCSV);
     console.log(`Operator ${operatorName} upgrade initiated.`);
 
-    const subscription = await ocApi.getSubscription(operatorName, namespace);
+    const subscription = await ocApi.getSubscription(operatorName);
 
     expect(subscription.spec.channel).toEqual(newChannel);
 
@@ -60,12 +55,7 @@ ocpTest.describe("OpenShift Operator Tests", () => {
   ocpTest.skip("List installed operators", async ({ ocApi }) => {
     const installedOperators = await ocApi.listInstalledOperators();
     expect(installedOperators.length).toBeGreaterThan(0);
-    console.log(
-      "Installed Operators in namespace",
-      namespace,
-      ":",
-      installedOperators,
-    );
+    console.log("Installed Operators in namespace", ":", installedOperators);
   });
 
   ocpTest("Delete the Developer Hub Operator", async ({ ocApi }) => {

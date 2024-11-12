@@ -351,4 +351,26 @@ export class OcApi {
       console.error(`Error deleting operator ${operatorName}:`, error);
     }
   }
+
+  async deleteNamespace(namespaceName = this.namespace): Promise<void> {
+    const _context = await this.context;
+
+    const endpoint = `/api/v1/namespaces/${namespaceName}`;
+
+    try {
+      const response = await _context.delete(endpoint);
+
+      if (!response.ok()) {
+        const errorText = await response.text();
+        throw new Error(`Failed to delete namespace: ${errorText}`);
+      }
+
+      console.log(
+        `Namespace ${namespaceName} deletion initiated successfully.`,
+      );
+    } catch (error) {
+      console.error(`Error deleting namespace ${namespaceName}:`, error);
+      throw error;
+    }
+  }
 }
