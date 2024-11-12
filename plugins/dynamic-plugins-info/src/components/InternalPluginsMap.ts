@@ -59,10 +59,10 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic',
   'backstage-community-plugin-ocm':
     './dynamic-plugins/dist/backstage-community-plugin-ocm',
-  'janus-idp-backstage-plugin-bulk-import-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic',
-  'janus-idp-backstage-plugin-bulk-import':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import',
+  'red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic',
+  'red-hat-developer-hub-backstage-plugin-bulk-import':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import',
   'backstage-plugin-techdocs-backend-dynamic':
     './dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic',
   'backstage-plugin-techdocs':
