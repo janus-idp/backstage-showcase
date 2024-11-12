@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
-import { exec } from "child_process";
 import { Log } from "./Log";
+import { execFile } from "child_process";
 
 export class LogUtils {
   /**
@@ -42,28 +42,25 @@ export class LogUtils {
   }
 
   /**
-   * Executes a shell command and returns the output as a promise.
+   * Executes a command and returns the output as a promise.
    *
-   * @param command The shell command to execute
+   * @param command The command to execute
+   * @param args An array of arguments for the command
    * @returns A promise that resolves with the command output
    */
-  static executeCommand(command: string): Promise<string> {
+  static executeCommand(command: string, args: string[] = []): Promise<string> {
     return new Promise((resolve, reject) => {
-      exec(
-        command,
-        { encoding: "utf8", shell: "/bin/bash" },
-        (error, stdout, stderr) => {
-          if (error) {
-            console.error("Error executing command:", error);
-            reject(`Error: ${error.message}`);
-            return;
-          }
-          if (stderr) {
-            console.warn("stderr warning:", stderr);
-          }
-          resolve(stdout);
-        },
-      );
+      execFile(command, args, { encoding: "utf8" }, (error, stdout, stderr) => {
+        if (error) {
+          console.error("Error executing command:", error);
+          reject(`Error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.warn("stderr warning:", stderr);
+        }
+        resolve(stdout);
+      });
     });
   }
 
