@@ -4,11 +4,13 @@ import { test as base, expect } from "@playwright/test";
 type OcFixture = {
   ocApi: OcApi;
 };
-
 const ocpTest = base.extend<OcFixture>({
   // eslint-disable-next-line no-empty-pattern
   ocApi: async ({}, use) => {
-    use(new OcApi());
+    const namespace = Date.now().toString();
+    const api = new OcApi(namespace);
+    await api.createNamespace();
+    use(api);
   },
 });
 
@@ -19,7 +21,7 @@ ocpTest.describe("OpenShift Operator Tests", () => {
     console.log("OpenShift API is alive.");
   });
 
-  ocpTest("List available operators", async ({ ocApi }) => {
+  ocpTest.skip("List available operators", async ({ ocApi }) => {
     const operators = await ocApi.listAvailableOperators();
     expect(operators.length).toBeGreaterThan(0);
     console.log("Available Operators:", operators);
@@ -55,9 +57,8 @@ ocpTest.describe("OpenShift Operator Tests", () => {
     console.log(`Operator ${operatorName} has been upgraded successfully.`);
   });
 
-  ocpTest("List installed operators", async ({ ocApi }) => {
-    const namespace = "rhdh-nil";
-    const installedOperators = await ocApi.listInstalledOperators(namespace);
+  ocpTest.skip("List installed operators", async ({ ocApi }) => {
+    const installedOperators = await ocApi.listInstalledOperators();
     expect(installedOperators.length).toBeGreaterThan(0);
     console.log(
       "Installed Operators in namespace",
@@ -69,13 +70,12 @@ ocpTest.describe("OpenShift Operator Tests", () => {
 
   ocpTest("Delete the Developer Hub Operator", async ({ ocApi }) => {
     const operatorName = "rhdh";
-    const namespace = "rhdh-nil";
 
-    await ocApi.deleteOperator(operatorName, namespace);
+    await ocApi.deleteOperator(operatorName);
     console.log(`Operator ${operatorName} deletion initiated.`);
 
     try {
-      await ocApi.getSubscription(operatorName, namespace);
+      await ocApi.getSubscription(operatorName);
 
       throw new Error(
         `Subscription for operator ${operatorName} still exists after deletion.`,

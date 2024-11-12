@@ -16,10 +16,11 @@ interface OperatorStatus {
 
 export class OcApi {
   private readonly url: string;
+  private readonly namespace: string;
   private readonly headers: Record<string, string>;
   private readonly context: Promise<APIRequestContext>;
 
-  constructor() {
+  constructor(namespace: string) {
     this.url = process.env.K8S_CLUSTER_URL;
     this.headers = {
       Accept: "application/json",
@@ -31,6 +32,37 @@ export class OcApi {
       baseURL: this.url,
       extraHTTPHeaders: this.headers,
     });
+    this.namespace = namespace;
+  }
+
+  async createNamespace(namespaceName = this.namespace): Promise<void> {
+    const _context = await this.context;
+
+    const namespacePayload = {
+      apiVersion: "v1",
+      kind: "Namespace",
+      metadata: {
+        name: namespaceName,
+      },
+    };
+
+    const endpoint = `/api/v1/namespaces`;
+
+    try {
+      const response = await _context.post(endpoint, {
+        data: JSON.stringify(namespacePayload),
+      });
+
+      if (!response.ok()) {
+        const errorText = await response.text();
+        throw new Error(`Failed to create namespace: ${errorText}`);
+      }
+
+      console.log(`Namespace ${namespaceName} created successfully.`);
+    } catch (error) {
+      console.error(`Error creating namespace ${namespaceName}:`, error);
+      throw error;
+    }
   }
 
   async isAlive(): Promise<boolean> {
@@ -74,7 +106,9 @@ export class OcApi {
     return operators;
   }
 
-  async listInstalledOperators(namespace: string): Promise<OperatorInfo[]> {
+  async listInstalledOperators(
+    namespace = this.namespace,
+  ): Promise<OperatorInfo[]> {
     const _context = await this.context;
 
     const clusterServiceVersionEndpoint = `/apis/operators.coreos.com/v1alpha1/namespaces/${namespace}/clusterserviceversions`;
@@ -108,7 +142,7 @@ export class OcApi {
 
   async getOperatorStatus(
     operatorName: string,
-    namespace: string,
+    namespace = this.namespace,
   ): Promise<OperatorStatus> {
     const _context = await this.context;
 
@@ -131,7 +165,7 @@ export class OcApi {
     };
   }
 
-  async getSubscription(operatorName: string, namespace: string) {
+  async getSubscription(operatorName: string, namespace = this.namespace) {
     const _context = await this.context;
     const subscriptionEndpoint = `/apis/operators.coreos.com/v1alpha1/namespaces/${namespace}/subscriptions/${operatorName}`;
     const res = await _context.get(subscriptionEndpoint);
@@ -144,7 +178,7 @@ export class OcApi {
     return await res.json();
   }
 
-  async getInstallPlan(operatorName: string, namespace: string) {
+  async getInstallPlan(operatorName: string, namespace = this.namespace) {
     const subscription = await this.getSubscription(operatorName, namespace);
     const installPlanName = subscription.status?.installplan?.name;
 
@@ -167,7 +201,7 @@ export class OcApi {
   /**
    * Installs the Developer Hub Operator in the specified namespace.
    */
-  async installDeveloperHubOperator(namespace = "rhdh-nil"): Promise<void> {
+  async installDeveloperHubOperator(namespace = this.namespace): Promise<void> {
     const _context = await this.context;
     const operatorName = "rhdh";
     const catalogSourceName = "rhdh-fast";
@@ -213,9 +247,9 @@ export class OcApi {
 
   async upgradeOperator(
     operatorName: string,
-    namespace = "rhdh-nil",
     newChannel?: string,
     newStartingCSV?: string,
+    namespace = this.namespace,
   ): Promise<void> {
     const _context = await this.context;
 
@@ -254,7 +288,10 @@ export class OcApi {
     );
   }
 
-  async deleteOperator(operatorName: string, namespace: string): Promise<void> {
+  async deleteOperator(
+    operatorName: string,
+    namespace = this.namespace,
+  ): Promise<void> {
     const _context = await this.context;
 
     try {
