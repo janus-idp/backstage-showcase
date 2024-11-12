@@ -6,79 +6,177 @@ We are excited to see you want to be a part of this project by contributing. Her
 
 ### Clone and Install
 
-1. For the repository here in GitHub
-2. Clone your forked version of the Showcase app
-3. Install dependencies using `yarn install`
-4. Run type generation and checks using `yarn tsc`
+```bash
+git clone https://github.com/your-username/backstage-showcase.git  # Clone your forked repository
+cd backstage-showcase                                              # Change to the project directory
+yarn install                                                       # Install dependencies
+yarn tsc                                                           # Run type generation and checks
+```
 
 ### Run the Showcase App
 
-We currently have quite a bit of moving parts for the showcase application. As such we have documentation dedicated to the requirements for running the showcase app under [getting-started.md](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md)
+We currently have quite a bit of moving parts for the showcase application. As such, we have documentation dedicated to the requirements for running the showcase app under [getting-started.md](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md).
 
-Some useful package scripts for the application
+### Useful Scripts
 
-```shell
-yarn start # Starts the application
-yarn tsc # Type generation and checks
-yarn test
-yarn test:e2e
-yarn lint # Lint packages
-yarn ci # Mirrors our CI in GitHub
-yarn prettier:check # Checks for formatting errors
-yarn prettier:fix # Fixes formatting errors
+Our project uses [Turborepo](https://turbo.build/repo) for running scripts across packages efficiently. Here are some useful scripts used in the project:
+
+```bash
+yarn start             # Starts the backend application
+yarn dev               # Starts both backend and frontend applications
+yarn build             # Builds all packages
+yarn tsc               # Runs TypeScript type checks across all packages
+yarn test              # Runs tests across all packages
+yarn lint:check        # Checks for linting errors across all packages
+yarn lint:fix          # Fixes linting errors automatically across all packages
+yarn prettier:check    # Checks for formatting issues across all packages
+yarn prettier:fix      # Fixes formatting issues automatically across all packages
+yarn clean             # Cleans up build artifacts across all packages
 ```
 
 ## Contributions
 
-We welcome code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, bug reports, enhancement and feature requests.
+We welcome code and non-code contributions to our project. Non-code contributions can come in the form of documentation updates, bug reports, enhancement requests, and feature requests.
+
+### Finding Issues to Work On
+
+Want to submit some changes to the code? The best place to start is to look through our issues for [bugs](https://github.com/janus-idp/backstage-showcase/issues?q=is%3Aopen+is%3Aissue+label%3Akind%2Fbug), [good first issues](https://github.com/janus-idp/backstage-showcase/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22), and [help wanted](https://github.com/janus-idp/backstage-showcase/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). These are a great starting point for new contributors.
 
 ### Bug Reporting
 
-If you found a bug in our showcase app, please submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fbug%2Cstatus%2Ftriage&template=bug.md) describing the problem that you ran into. Some important information to include are steps to reproduce the bug, the app-config.yaml that is being used, and any relevant logs. This will help us narrow down the potential cause of the bug and speed up the time it takes to solve the problem at hand.
+If you found a bug in our showcase app, please submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fbug%2Cstatus%2Ftriage&template=bug.md) describing the problem that you ran into. Important information to include:
 
-**Please remember to remove all secrets from the app-config.yaml before sharing.**
+- Steps to reproduce the bug
+- The `app-config.yaml` that is being used (**remember to remove all secrets before sharing**)
+- Any relevant logs
+
+This will help us narrow down the potential cause of the bug and speed up the time it takes to solve the problem at hand.
 
 ### Updating Backstage Dependencies
 
-1. Run the following command
+To update Backstage dependencies, run the following command:
 
-   ```console
-   yarn versions:all
-   ```
+```bash
+yarn versions:bump     # Updates Backstage dependencies
+```
 
 ### Enhancement Requests
 
-Want an enhancement of a feature or workflow, you can submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fenhancement%2Cstatus%2Ftriage&template=enhancement.md) describing the enhancement. Maybe you see a feature that we could provide a better experience to. This would be that opportunity to call it out. It is important to include in the issue what you are wanting to see improved, what the current behavior is, and what the new behavior you wish to see.
+If you want an enhancement of a feature or workflow, you can submit an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fenhancement%2Cstatus%2Ftriage&template=enhancement.md) describing the enhancement. Include:
+
+- What you are wanting to see improved
+- The current behavior
+- The new behavior you wish to see
 
 ### Feature Requests
 
-Want to see a new feature within the showcase app, file an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Ffeature%2Cstatus%2Ftriage&template=feature.md) detailing the new feature. Sometimes we don't know about the latest and greatest and this issue is a great way for you to communicate that to us. Be sure to include information on what you are trying to achieve with the new issue, what you will need, who will have access, and any relevant documentation / information on the new feature.
+If you want to see a new feature within the showcase app, file an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Ffeature%2Cstatus%2Ftriage&template=feature.md) detailing the new feature. Include:
+
+- What you are trying to achieve with the new feature
+- What you will need
+- Who will have access
+- Any relevant documentation or information on the new feature
 
 ### Documentation
 
-Documentation is another option for contributing to us. If there is documentation that is unclear or could use some TLC, please raise an issue.
+Documentation is another option for contributing to us. If there is documentation that is unclear or could use some improvements, please raise an issue or submit a pull request.
 
 ### Pull Requests
 
-Want to submit some changes to the code? The best place to start is to look through our issues for [bugs](https://github.com/janus-idp/backstage-showcase/issues?q=is%3Aopen+is%3Aissue+label%3Akind%2Fbug), [good first issues](https://github.com/janus-idp/backstage-showcase/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22), and [help wanted](https://github.com/janus-idp/backstage-showcase/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). Be sure to include a description of the changes made, which issue this PR will fix (if any), PR acceptance criteria, and any special notes to the reviewers.
+If you want to submit code changes to the project, here are some guidelines:
 
-Before submitting the PR, it is important to run some of our package scripts to ensure that the code changes will pass our CI workflow. These include running `yarn lint` `yarn prettier:write` `yarn test` `yarn test:e2e` and `yarn build`. This saves time from having to go back and make changes to your PR.
+1. **Create a Branch**
 
-A special note. If there will be changes to the [app config](https://github.com/janus-idp/backstage-showcase/blob/main/app-config.yaml), we ask that [documentation](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) be updated if it will be a requirement for running the app. We also ask to ensure that the app will still work in the case of dummy information being supplied to the app config. While it is not a hard requirement, it does help others with quickly being able to get up and running with the showcase app.
+   ```bash
+   git checkout -b your-feature-branch  # Create a new branch for your feature
+   ```
 
-### Adding statically linked plugins for frontend and backend
+2. **Implement Your Changes**
 
-When contributing a new @internal plugin into this repo, you must remember to add the plugin to the Dockerfiles under the section titled `Stage 2 - Install dependencies`:
+   Make your code changes, ensuring that you follow the project's coding standards and best practices.
+
+3. **Testing**
+
+   - **Run Tests:** Ensure all tests pass before committing.
+
+     ```bash
+     yarn test         # Run unit tests
+     cd e2e-tests
+     yarn showcase     # Run e2e tests
+     ```
+
+     _For more on the e2e, check the [e2e contributing guidelines](./docs/e2e-tests/CONTRIBUTING.MD)_
+
+   - **Note on Environment Dependencies:**
+
+     - If your new or edited code can't be validated locally due to environment dependencies, you can open a **draft Pull Request (PR)**. This allows the tests to run on the test environment as described in our CI documentation.
+
+4. **Linting and Formatting**
+
+   Ensure your code passes linting and formatting checks.
+
+   ```bash
+   yarn lint:check     # Checks for linting errors
+   yarn lint:fix       # Fixes linting errors automatically
+   yarn prettier:check # Checks for formatting issues
+   yarn prettier:fix   # Fixes formatting issues automatically
+   ```
+
+5. **Ensure CI Passes**
+
+   Your contributions will need to pass the Continuous Integration (CI) tests for pull requests.
+
+6. **Commit Changes**
+
+   Use meaningful commit messages following the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+   ```bash
+   git commit -m "feat: add new feature"  # Commit your changes with a meaningful message
+   ```
+
+7. **Update Documentation**
+
+   If there will be changes to the [app config](app-config.yaml), we ask that [documentation](README.md#getting-started) be updated if it will be a requirement for running the app. We also ask to ensure that the app will still work in the case of dummy information being supplied to the app config. While it is not a hard requirement, it does help others with quickly being able to get up and running with the showcase app.
+
+8. **Push to Your Fork**
+
+   ```bash
+   git push origin your-feature-branch    # Push your branch to your fork
+   ```
+
+9. **Open a Pull Request**
+
+   Go to the original repository and click on **New Pull Request**. Provide a clear description of your changes, including any issues your PR fixes, acceptance criteria, and any special notes to the reviewers.
+
+## Commit Messages
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+- `feat`: A new feature.
+- `fix`: A bug fix.
+- `docs`: Documentation changes.
+- `style`: Code style changes (formatting, missing semi-colons, etc.).
+- `refactor`: Code changes that neither fix a bug nor add a feature.
+- `test`: Adding or correcting tests.
+- `chore`: Changes to the build process or auxiliary tools.
+
+### Adding Statically Linked Plugins for Frontend and Backend
+
+When contributing a new `@internal` plugin into this repo, you must remember to add the plugin to the Dockerfiles under the section titled `Stage 2 - Install dependencies`:
 
 - [Upstream Dockerfile](.rhdh/docker/Dockerfile)
 - [Downstream Dockerfile](docker/Dockerfile)
 
 For example:
 
-```
+```dockerfile
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 ```
 
 ## Support
 
-You can reach out to us in our [community slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) if you run into any issues with setup, running, or testing the application. Members of the team and community can assist you with questions and concerns you might have. Even if you don't need help, please consider joining and being involved in our community.
+You can reach out to us in our [community Slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) if you run into any issues with setup, running, or testing the application. Members of the team and community can assist you with questions and concerns you might have. Even if you don't need help, please consider joining and being involved in our community.
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the [Apache-2.0 License](https://github.com/janus-idp/backstage-showcase/blob/main/LICENSE).
