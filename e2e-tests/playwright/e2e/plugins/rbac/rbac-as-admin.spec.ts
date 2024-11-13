@@ -187,7 +187,7 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
 
   base(
     "As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.",
-    async ({ uiHelper, testId, rolesHelper, myPage }) => {
+    async ({ uiHelper, testId, rolesHelper }) => {
       await rolesHelper.createRoleWithNotPermissionPolicy(testId.testRole);
       await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
       await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
