@@ -1,5 +1,8 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { PageObject, PagesUrl } from "./page";
+import { HomePagePO } from "./page-obj";
+
+type PermissionPolicyType = "none" | "anyOf" | "not";
 
 export class RbacPo extends PageObject {
   private readonly testUsers = {
@@ -14,22 +17,38 @@ export class RbacPo extends PageObject {
   // roles
   private roleName: Locator;
   private roledescription: Locator;
-  private addUsersAndGroups: Locator;
+  private usersAndGroupsField: Locator;
   private addPermissionPolicy: Locator;
+  private configureAccess: Locator;
+  private notButton: Locator;
+  private rulesSideBar: Locator;
+  private hasSpecButton: Locator;
+  private key: Locator;
+  private saveConditions: Locator;
+  private anyOfButton: Locator;
+  private isEntityKindButton: Locator;
+  private addRuleButton: Locator = this.page.getByRole("button", {
+    name: "Add rule",
+  });
+  private hasLabel: Locator;
+  private label: Locator;
 
-  private selectMember(label: string): string {
+  selectMember(label: string): string {
     return `span[data-testid="${label}"]`;
   }
-  private selectPermissionPolicyPlugin(row: number): string {
+
+  public selectPermissionPolicyPlugin(row: number): string {
     return `input[name="permissionPoliciesRows[${row}].plugin"]`;
   }
-  private selectPermissionPolicyPermission(row: number): string {
+
+  selectPermissionPolicyPermission(row: number): string {
     return `input[name="permissionPoliciesRows[${row}].permission"]`;
   }
+
   private selectPolicy(
     row: number,
     policy: number,
-    policyName: string,
+    policyName = "Delete",
   ): string {
     return `input[name="permissionPoliciesRows[${row}].policies[${policy}].policy-${policyName}"]`;
   }
@@ -42,83 +61,195 @@ export class RbacPo extends PageObject {
       .getByLabel("Update");
     this.roleName = this.page.locator('input[name="name"]');
     this.roledescription = this.page.locator('input[name="description"]');
-    this.addUsersAndGroups = this.page.locator(
+    this.usersAndGroupsField = this.page.locator(
       'input[name="add-users-and-groups"]',
     );
     this.addPermissionPolicy = this.page.locator(
       'button[name="add-permission-policy"]',
     );
+    this.configureAccess = this.page.getByLabel("configure-access");
+    this.notButton = this.page.getByRole("button", { name: "Not" });
+    this.rulesSideBar = this.page.getByTestId("rules-sidebar");
+    this.hasSpecButton = this.page.getByText("HAS_SPEC");
+    this.key = this.page.getByText("key *");
+    this.saveConditions = this.page.getByTestId("save-conditions");
+    this.anyOfButton = this.page.getByRole("button", { name: "AnyOf" });
+    this.isEntityKindButton = this.page.getByText("IS_ENTITY_KIND");
+    this.hasLabel = this.page.getByText("HAS_LABEL");
+    this.label = this.page.getByLabel("label *");
   }
 
-  async verifyGeneralRbacViewHeading() {
+  public async clickAddPermissionPolicy() {
+    await this.addPermissionPolicy.click();
+  }
+
+  private async verifyGeneralRbacViewHeading() {
     await this.uiHelper.verifyHeading(/All roles \(\d+\)/);
   }
 
-  async verifyUserRoleViewHeading(role: string) {
+  private async verifyUserRoleViewHeading(role: string) {
     await this.uiHelper.verifyHeading(role);
   }
 
-  async verifyRoleIsListed(role: string) {
+  private async verifyRoleIsListed(role: string) {
     await this.uiHelper.verifyLink(role);
   }
 
-  async clickOnRoleLink(role: string) {
+  private async clickOnRoleLink(role: string) {
     await this.uiHelper.clickLink(role);
   }
 
-  async switchToOverView() {
+  private async switchToOverView() {
     await this.uiHelper.clickTab("Overview");
   }
 
-  async verifyOverviewHeading(groups: number, policies: number) {
+  private async verifyOverviewHeading(groups: number) {
     await this.uiHelper.verifyHeading(`Users and groups (${groups} group)`);
+  }
+
+  private async verifyPermissionPoliciesHeader(policies: number) {
     await this.uiHelper.verifyHeading(`Permission policies (${policies})`);
   }
 
-  async verifyArticle() {
+  private async verifyArticle() {
     await expect(this.article).toContainText("catalog-entity");
     await expect(this.article).toContainText("Read, Update");
     await expect(this.article).toContainText("Delete");
   }
 
-  async updateMember(member: string) {
+  private async updateMember(member: string) {
     await this.updateMemberButton.click();
     await this.verifyATextIsVisible(member);
   }
 
-  async next() {
+  private async next() {
     this.uiHelper.clickButton("Next");
   }
 
-  async selectOption(option: "catalog" | "catalog-entity") {
+  private async create() {
+    await this.uiHelper.clickButton("Create");
+  }
+
+  public async selectOption(
+    option: "catalog" | "catalog-entity" | "scaffolder" | "scaffolder-template",
+  ) {
     const optionSelector = `li[role="option"]:has-text("${option}")`;
     await this.page.waitForSelector(optionSelector);
     await this.page.click(optionSelector);
   }
 
+  private async clickOpenSidebar() {
+    await this.rulesSideBar.getByLabel("Open").click();
+  }
+
+  private async verifyConfigureAccessNumber(rules: number) {
+    await this.uiHelper.verifyText(
+      `Configure access (${rules} ${rules > 1 ? "rules" : "rule"})`,
+    );
+  }
+
+  async addUsersAndGroups(userOrRole: string) {
+    await this.usersAndGroupsField.fill(userOrRole);
+  }
+
   async createRole(
     name: string,
-    rolesAndUsersToAdd: string[] = [
+    usersAndGroups: string[] = [
       this.testUsers.guest,
       this.testUsers.tara,
       this.testUsers.backstage,
     ],
+    permissionPolicyType: PermissionPolicyType = "none",
   ) {
     if (!this.page.url().includes("rbac")) await this.goto();
     await this.uiHelper.clickButton("Create");
     await this.uiHelper.verifyHeading("Create role");
     await this.roleName.fill(name);
     await this.uiHelper.clickButton("Next");
-    rolesAndUsersToAdd.forEach(async (userOrRole) => {
-      await this.addUsersAndGroups.fill(userOrRole);
+
+    for (const userOrRole of usersAndGroups) {
+      await this.addUsersAndGroups(userOrRole);
       await this.page.click(this.selectMember(userOrRole));
-    });
-    //TODO: this has to be dynamic
-    await this.uiHelper.verifyHeading("Users and groups (2 users, 1 group)");
+    }
+
+    // Dynamically verify the heading based on users and groups added
+    const numUsers = usersAndGroups.length;
+    const numGroups = 1; // Update this based on your logic
+    await this.uiHelper.verifyHeading(
+      `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
+    );
+
     await this.next();
     await this.page.click(this.selectPermissionPolicyPlugin(0));
     await this.selectOption("catalog");
     await this.page.click(this.selectPermissionPolicyPermission(0));
     await this.selectOption("catalog-entity");
+
+    if (permissionPolicyType === "none") {
+      await this.page.uncheck(this.selectPolicy(0, 1, "Delete"));
+      await this.next();
+      await this.uiHelper.verifyHeading("Review and create");
+      await this.uiHelper.verifyHeading(
+        `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
+      );
+      await this.verifyPermissionPoliciesHeader(2);
+      await this.create();
+      await this.page.locator(HomePagePO.searchBar).waitFor({ timeout: 10000 });
+      await this.page.locator(HomePagePO.searchBar).fill(name);
+      await this.uiHelper.verifyHeading("All roles (1)");
+    } else if (permissionPolicyType === "anyOf") {
+      // Scenario 2: Permission policies using AnyOf
+      await this.configureAccess.click();
+      await this.anyOfButton.click();
+      await this.clickOpenSidebar();
+      await this.isEntityKindButton.click();
+      await this.page.getByPlaceholder("string, string").click();
+      await this.page
+        .getByPlaceholder("string, string")
+        .fill("component,template");
+      await this.addRuleButton.click();
+      await this.page.getByLabel("Open").nth(3).click();
+      await this.hasSpecButton.click();
+      await this.key.click();
+      await this.key.fill("lifecycle");
+      await this.key.press("Tab");
+      await this.key.fill("experimental");
+      await this.addRuleButton.click();
+      await this.page.getByLabel("Open").nth(4).click();
+      await this.hasLabel.click();
+      await this.label.click();
+      await this.label.fill("partner");
+      await this.saveConditions.click();
+      await this.uiHelper.verifyText("Configure access (3 rules)");
+      await this.next();
+      await this.uiHelper.verifyHeading("Review and create");
+      await this.uiHelper.verifyHeading(
+        `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
+      );
+      await this.verifyPermissionPoliciesHeader(1);
+      await this.uiHelper.verifyText("3 rules");
+      await this.uiHelper.clickButton("Create");
+      await this.uiHelper.verifyText(
+        `Role role:default/${name} created successfully`,
+      );
+    } else if (permissionPolicyType === "not") {
+      // Scenario 3: Permission policies using Not
+      await this.configureAccess.click();
+      await this.notButton.click();
+      await this.clickOpenSidebar();
+      await this.hasSpecButton.click();
+      await this.key.click();
+      await this.key.fill("lifecycle");
+      await this.key.press("Tab");
+      await this.key.fill("experimental");
+      await this.saveConditions.click();
+      await this.uiHelper.verifyText("Configure access (1 rule)");
+      await this.next();
+      await this.uiHelper.verifyHeading("Review and create");
+      await this.verifyPermissionPoliciesHeader(1);
+      await this.uiHelper.verifyText("1 rule");
+      await this.uiHelper.clickButton("Create");
+      await this.uiHelper.verifyText(`role:default/${name}`);
+    }
   }
 }
