@@ -1,4 +1,4 @@
-import { Page, expect, test } from "@playwright/test";
+import { Page, expect, test as base } from "@playwright/test";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
 import {
   HomePagePO,
@@ -9,6 +9,13 @@ import {
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
+import { RbacPo } from "../../../support/pageObjects/rbac-po";
+
+export const test = base.extend({
+  page: async ({ page }, use) => {
+    await use(new RbacPo(page));
+  },
+});
 
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {

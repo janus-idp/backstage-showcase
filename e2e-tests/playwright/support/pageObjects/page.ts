@@ -1,16 +1,23 @@
 import { Page } from "@playwright/test";
+import { UIhelper } from "../../utils/UIhelper";
 
-enum pagesUrl {
+export enum PagesUrl {
   rbac = "/rbac",
 }
 
 export abstract class PageObject {
-  private page: Page;
-  private url: pagesUrl;
+  protected page: Page;
+  protected url: PagesUrl;
+  protected uiHelper: UIhelper;
 
-  constructor(page: Page, url: pagesUrl, go = true) {
+  constructor(page: Page, url: PagesUrl, go: boolean) {
     this.page = page;
     this.url = url;
+    this.uiHelper = new UIhelper(this.page);
     if (go) this.page.goto(this.url);
+  }
+
+  async verifyATextIsVisible(text: string) {
+    await this.uiHelper.verifyText(text);
   }
 }
