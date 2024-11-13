@@ -5,13 +5,6 @@ import { HomePagePO } from "./page-obj";
 type PermissionPolicyType = "none" | "anyOf" | "not";
 
 export class RbacPo extends PageObject {
-  private readonly testUsers = {
-    guest: "Guest User",
-    tara: "Tara MacGovern",
-    backstage: "Backstage",
-    rhdhqe: "rhdh-qe",
-  };
-
   private article: Locator;
   private updateMemberButton: Locator;
   // roles
@@ -32,6 +25,13 @@ export class RbacPo extends PageObject {
   });
   private hasLabel: Locator;
   private label: Locator;
+
+  static rbacTestUsers = {
+    guest: "Guest User",
+    tara: "Tara MacGovern",
+    backstage: "Backstage",
+    rhdhqe: "rhdh-qe",
+  };
 
   selectMember(label: string): string {
     return `span[data-testid="${label}"]`;
@@ -154,11 +154,7 @@ export class RbacPo extends PageObject {
 
   async createRole(
     name: string,
-    usersAndGroups: string[] = [
-      this.testUsers.guest,
-      this.testUsers.tara,
-      this.testUsers.backstage,
-    ],
+    usersAndGroups: string[],
     permissionPolicyType: PermissionPolicyType = "none",
   ) {
     if (!this.page.url().includes("rbac")) await this.goto();

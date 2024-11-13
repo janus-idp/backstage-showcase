@@ -1,4 +1,4 @@
-import { Page, expect, test as base } from "@playwright/test";
+import { Page, expect, test } from "@playwright/test";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
 import {
   HomePagePO,
@@ -9,12 +9,6 @@ import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
 import { RbacPo } from "../../../support/pageObjects/rbac-po";
-
-export const test = base.extend({
-  page: async ({ page }, use) => {
-    await use(new RbacPo(page));
-  },
-});
 
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
@@ -197,7 +191,11 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
   test("Create and edit a role from the roles list page", async () => {
     const rbacPo = new RbacPo(page);
     const testUser = "Jonathon Page";
-    await rbacPo.createRole("test-role");
+    await rbacPo.createRole("test-role", [
+      RbacPo.rbacTestUsers.guest,
+      RbacPo.rbacTestUsers.tara,
+      RbacPo.rbacTestUsers.backstage,
+    ]);
     await page.click(RoleListPO.editRole("role:default/test-role"));
     await uiHelper.verifyHeading("Edit Role");
     await uiHelper.clickButton("Next");
@@ -225,7 +223,11 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test("Edit users and groups and update policies of a role from the overview page", async () => {
     const rbacPo = new RbacPo(page);
-    await rbacPo.createRole("test-role1");
+    await rbacPo.createRole("test-role1", [
+      RbacPo.rbacTestUsers.guest,
+      RbacPo.rbacTestUsers.tara,
+      RbacPo.rbacTestUsers.backstage,
+    ]);
 
     await uiHelper.filterInputPlaceholder("test-role1");
 
@@ -267,7 +269,11 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
   });
 
   test("Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.", async () => {
-    await new RbacPo(page).createRole("test-role");
+    await new RbacPo(page).createRole(
+      "test-role",
+      ["Guest User", "rhdh-qe", "Backstage"],
+      "anyOf",
+    );
 
     await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
     await page.locator(HomePagePO.searchBar).fill("test-role");
