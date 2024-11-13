@@ -233,11 +233,15 @@ apply_yaml_files() {
   set -x
 
   if [[ "${project}" == *rbac* ]]; then
-    oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
+    oc create configmap app-config-rhdh --from-file "$dir/resources/config_map/app-config-rhdh-rbac.yaml" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
+  elif [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke* ]]; then
+    yq 'del(.backend.cache)' "$dir/resources/config_map/app-config-rhdh.yaml" \
+    | kubectl create configmap app-config-rhdh --from-file="app-config-rhdh.yaml"="/dev/stdin" --namespace="${project}" --dry-run=client -o yaml \
+    | kubectl apply -f -
   else
-    oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh.yaml" --namespace="${project}"
+    oc create configmap app-config-rhdh --from-file "$dir/resources/config_map/app-config-rhdh.yaml" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   fi
-  oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
+  oc create configmap rbac-policy --from-file "$dir/resources/config_map/rbac-policy.csv" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
   #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
@@ -469,7 +473,7 @@ main() {
 
   API_SERVER_URL=$(oc whoami --show-server)
   if [[ "$JOB_NAME" == *aks* ]]; then
-    K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    K8S_CLUSTER_ROUTER_BASE=$AKS_INSTANCE_DOMAIN_NAME
   else
     K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
   fi
