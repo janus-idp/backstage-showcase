@@ -3,7 +3,11 @@ import { authenticator } from "otplib";
 import { test, Browser, expect, Page, TestInfo } from "@playwright/test";
 import { SettingsPagePO } from "../support/pageObjects/page-obj";
 import { waitsObjs } from "../support/pageObjects/global-obj";
+import { APIHelper } from "./APIHelper";
+import { GroupEntity, UserEntity } from "@backstage/catalog-model";
+
 import path from "path";
+import { logger } from "./Logger";
 
 export class Common {
   page: Page;
@@ -320,28 +324,14 @@ export class Common {
     };
   }
 
-  async UnregisterUserEnittyFromCatalog(user: string) {
-    await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
-    await this.uiHelper.selectMuiBox("Kind", "User");
-    await this.uiHelper.verifyHeading("All users");
-
-    await this.uiHelper.clickLink(user);
-    await this.uiHelper.verifyHeading(user);
-
-    await this.uiHelper.clickUnregisterButtonForDisplayedEntity();
+  async UnregisterUserEntityFromCatalog(user: string) {
+    const api = new APIHelper();
+    await api.deleteUserEntityFromAPI(user);
   }
 
-  async UnregisterGroupEnittyFromCatalog(group: string) {
-    await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
-    await this.uiHelper.selectMuiBox("Kind", "Group");
-    await this.uiHelper.verifyHeading("All groups");
-
-    await this.uiHelper.clickLink(group);
-    await this.uiHelper.verifyHeading(group);
-
-    await this.uiHelper.clickUnregisterButtonForDisplayedEntity();
+  async UnregisterGroupEntityFromCatalog(group: string) {
+    const api = new APIHelper();
+    await api.deleteGroupEntityFromAPI(group);
   }
 
   async CheckGroupIsShowingInCatalog(groups: string[]) {
@@ -366,6 +356,44 @@ export class Common {
     );
     await this.uiHelper.verifyHeading("All user");
     await this.uiHelper.verifyCellsInTable(users);
+  }
+
+  async CheckUserIsIngestedInCatalog(users: string[]) {
+    const api = new APIHelper();
+    const response = await api.getAllCatalogUsersFromAPI();
+    logger.info(`Users currently in catalog: ${JSON.stringify(response)}`);
+    const catalogUsers: UserEntity[] =
+      response && response.items ? response.items : [];
+    expect(catalogUsers.length).toBeGreaterThan(0);
+    const catalogUsersDisplayNames: string[] = catalogUsers.map(
+      (u) => u.spec.profile.displayName,
+    );
+    logger.info(
+      `Checking ${JSON.stringify(catalogUsersDisplayNames)} contains users ${JSON.stringify(users)}`,
+    );
+    const hasAllElems = users.every((elem) =>
+      catalogUsersDisplayNames.includes(elem),
+    );
+    return hasAllElems;
+  }
+
+  async CheckGroupIsIngestedInCatalog(groups: string[]) {
+    const api = new APIHelper();
+    const response = await api.getAllCatalogGroupsFromAPI();
+    logger.info(`Groups currently in catalog: ${JSON.stringify(response)}`);
+    const catalogGroups: GroupEntity[] =
+      response && response.items ? response.items : [];
+    expect(catalogGroups.length).toBeGreaterThan(0);
+    const catalogGroupsDisplayNames: string[] = catalogGroups.map(
+      (u) => u.spec.profile.displayName,
+    );
+    logger.info(
+      `Checking ${JSON.stringify(catalogGroupsDisplayNames)} contains users ${JSON.stringify(groups)}`,
+    );
+    const hasAllElems = groups.every((elem) =>
+      catalogGroupsDisplayNames.includes(elem),
+    );
+    return hasAllElems;
   }
 }
 

@@ -4,6 +4,9 @@ import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
 import { kubeCLient } from "./k8sHelper";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
+import { GroupEntity } from "@backstage/catalog-model";
+import fs from "fs";
+import { APIHelper } from "./APIHelper";
 
 export const k8sClient = new kubeCLient();
 
@@ -19,10 +22,12 @@ export async function runShellCmd(command: string) {
       result = data;
     });
     process.on("exit", (code) => {
-      logger.info(`Process ended with exit code ${code}: `);
       if (code == 0) {
+        logger.info(`Process ended with exit code ${code}: `);
         resolve(result);
+        return;
       } else {
+        logger.info(`Process failed with code ${code}: `);
         throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
@@ -100,11 +105,19 @@ export async function getLastSyncTimeFromLogs(
 
   try {
     // TBD: change this to use kube api
-    const podName = await runShellCmd(
-      `oc get pods -n ${constants.AUTH_PROVIDERS_NAMESPACE} | awk '{print $1}' | grep '^${constants.AUTH_PROVIDERS_POD_STRING}'`,
+    const p = await k8sClient.coreV1Api.listNamespacedPod(
+      constants.AUTH_PROVIDERS_NAMESPACE,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "app.kubernetes.io/component=backstage",
     );
+    const pods = p.body.items.map((pod) => pod.metadata.name);
+    logger.info(JSON.stringify(pods));
+
     const log = await runShellCmd(
-      `oc logs ${podName.trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
+      `oc logs ${pods[0].trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
     );
     const syncObj = Date.parse(JSON.parse(log).timestamp);
     return syncObj;
@@ -284,4 +297,108 @@ export async function ensureEnvSecretExists(
       throw e;
     }
   }
+}
+
+export function parseGroupMemberFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "hasMember") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export function parseGroupChildrenFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "parentOf") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export function parseGroupParentFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "childOf") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export async function dumpAllPodsLogs(filePrefix?: string, folder?: string) {
+  const prefix = filePrefix ? filePrefix : "";
+  const _folder = folder ? folder : "/tmp";
+  const p = await k8sClient.coreV1Api.listNamespacedPod(
+    constants.AUTH_PROVIDERS_NAMESPACE,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    "app.kubernetes.io/component=backstage",
+  );
+  const pods = p.body.items;
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  for (const pod of pods) {
+    const backstage_backend_logs =
+      await k8sClient.coreV1Api.readNamespacedPodLog(
+        pod.metadata.name,
+        pod.metadata.namespace,
+        "backstage-backend",
+      );
+    const dynamic_plugins_logs = await k8sClient.coreV1Api.readNamespacedPodLog(
+      pod.metadata.name,
+      pod.metadata.namespace,
+      "install-dynamic-plugins",
+    );
+    fs.writeFileSync(
+      `${_folder}/${prefix}-backend.txt`,
+      backstage_backend_logs.body,
+      { flag: "w" },
+    );
+    fs.writeFileSync(
+      `${_folder}/${prefix}-init.txt`,
+      dynamic_plugins_logs.body,
+      { flag: "w" },
+    );
+  }
+}
+
+export async function dumpRHDHUsersAndGroups(
+  filePrefix?: string,
+  folder?: string,
+) {
+  const prefix = filePrefix ? filePrefix : "";
+  const _folder = folder ? folder : "/tmp";
+  const api = new APIHelper();
+  api.UseStaticToken(constants.STATIC_API_TOKEN);
+  const users = await api.getAllCatalogUsersFromAPI();
+  const groups = await api.getAllCatalogGroupsFromAPI();
+  const locations = await api.getAllCatalogLocationsFromAPI();
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  fs.writeFileSync(
+    `${_folder}/${prefix}-catalog.txt`,
+    JSON.stringify({ users, groups, locations }),
+    { flag: "w" },
+  );
 }

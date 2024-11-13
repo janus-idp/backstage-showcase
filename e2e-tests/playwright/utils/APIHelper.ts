@@ -1,8 +1,12 @@
 import { request, APIResponse, expect } from "@playwright/test";
 import { githubAPIEndpoints } from "./APIEndpoints";
+import * as authProvidersConstants from "./authenticationProviders/constants";
+import { GroupEntity, UserEntity } from "@backstage/catalog-model";
 
 export class APIHelper {
   private static githubAPIVersion = "2022-11-28";
+  private staticToken: string;
+  useStaticToken = false;
 
   static async githubRequest(
     method: string,
@@ -141,5 +145,139 @@ export class APIHelper {
       Authorization: `Bearer ${token}`,
     };
     return headers;
+  }
+
+  async UseStaticToken(token: string) {
+    this.useStaticToken = true;
+    this.staticToken = "Bearer " + token;
+  }
+
+  static async APIRequestWithStaticToken(
+    method: string,
+    url: string,
+    staticToken: string,
+    body?: string | object,
+  ): Promise<APIResponse> {
+    const context = await request.newContext();
+    const options: any = {
+      method: method,
+      headers: {
+        Accept: "application/json",
+        Authorization: `${staticToken}`,
+      },
+    };
+
+    if (body) {
+      options["data"] = body;
+    }
+
+    const response = await context.fetch(url, options);
+    return response;
+  }
+
+  async getAllCatalogUsersFromAPI() {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-query?orderField=metadata.name%2Casc&filter=kind%3Duser`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "GET",
+      url,
+      token,
+    );
+    return response.json();
+  }
+
+  async getAllCatalogLocationsFromAPI() {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-query?orderField=metadata.name%2Casc&filter=kind%3Dlocation`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "GET",
+      url,
+      token,
+    );
+    return response.json();
+  }
+
+  async getAllCatalogGroupsFromAPI() {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-query?orderField=metadata.name%2Casc&filter=kind%3Dgroup`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "GET",
+      url,
+      token,
+    );
+    return response.json();
+  }
+
+  async getGroupEntityFromAPI(group: string) {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-name/group/default/${group}`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "GET",
+      url,
+      token,
+    );
+    return response.json();
+  }
+
+  async getCatalogUserFromAPI(user: string) {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-name/user/default/${user}`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "GET",
+      url,
+      token,
+    );
+    return response.json();
+  }
+
+  async deleteUserEntityFromAPI(user: string) {
+    const r: UserEntity = await this.getCatalogUserFromAPI(user);
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-uid/${r.metadata.uid}`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "DELETE",
+      url,
+      token,
+    );
+    return response.statusText;
+  }
+
+  async getCatalogGroupFromAPI(group: string) {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-name/group/default/${group}`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "GET",
+      url,
+      token,
+    );
+    return response.json();
+  }
+
+  async deleteGroupEntityFromAPI(group: string) {
+    const r: GroupEntity = await this.getCatalogGroupFromAPI(group);
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-uid/${r.metadata.uid}`;
+    const token = this.useStaticToken ? this.staticToken : "";
+    const response = await APIHelper.APIRequestWithStaticToken(
+      "DELETE",
+      url,
+      token,
+    );
+    return response.statusText;
+  }
+
+  async scheduleEntityRefreshFromAPI(
+    entity: string,
+    kind: string,
+    token: string,
+  ) {
+    const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/refresh`;
+    const reqBody = { entityRef: `${kind}:default/${entity}` };
+    const responseRefresh = await APIHelper.APIRequestWithStaticToken(
+      "POST",
+      url,
+      token,
+      reqBody,
+    );
+    return responseRefresh.status();
   }
 }

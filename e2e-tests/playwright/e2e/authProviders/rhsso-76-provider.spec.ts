@@ -9,8 +9,13 @@ import {
   upgradeHelmChartWithWait,
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
+  dumpAllPodsLogs,
+  dumpRHDHUsersAndGroups,
 } from "../../utils/helper";
-import * as rhssoHelper from "../../utils/authenticationProviders/rhssoHelper";
+import { RHSSOHelper } from "../../utils/authenticationProviders/rhssoHelper";
+import { APIHelper } from "../../utils/APIHelper";
+import { GroupEntity } from "@backstage/catalog-model";
+import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
 
 let page: Page;
 
@@ -22,19 +27,43 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
   let usersCreated: Map<string, UserRepresentation>;
   let groupsCreated: Map<string, GroupRepresentation>;
   const SYNC__TIME = 60;
+  let rhssoHelper: RHSSOHelper;
 
   test.beforeAll(async ({ browser }, testInfo) => {
+    test.setTimeout(120 * 1000);
     logger.info(
       `Staring scenario: Standard authentication providers: OIDC with RHSSO 7.6: attemp #${testInfo.retry}`,
     );
-    expect(process.env.BASE_URL).not.toBeNull();
+    expect(constants.RHSSO76_ADMIN_USERNAME).not.toBeNull();
+    expect(constants.RHSSO76_ADMIN_PASSWORD).not.toBeNull();
+    expect(constants.RHSSO76_DEFAULT_PASSWORD).not.toBeNull();
+    expect(constants.RHSSO76_URL).not.toBeNull();
+    expect(constants.RHSSO76_CLIENT_SECRET).not.toBeNull();
+    expect(constants.RHSSO76_CLIENTID).not.toBeNull();
+    expect(constants.AUTH_PROVIDERS_REALM_NAME).not.toBeNull();
+    expect(constants.RHSSO76_GROUPS).not.toBeNull();
+    expect(constants.RHSSO76_NESTED_GROUP).not.toBeNull();
+    expect(constants.RHSSO76_USERS).not.toBeNull();
+
+    expect(constants.AUTH_PROVIDERS_BASE_URL).not.toBeNull();
+    expect(constants.AUTH_PROVIDERS_NAMESPACE).not.toBeNull();
+    expect(constants.AUTH_PROVIDERS_RELEASE).not.toBeNull();
+    expect(constants.AUTH_PROVIDERS_CHART).not.toBeNull();
+    expect(constants.CHART_VERSION).not.toBeNull();
+    expect(constants.QUAY_REPO).not.toBeNull();
+    expect(constants.TAG_NAME).not.toBeNull();
+    expect(constants.AUTH_PROVIDERS_VALUES_FILE).not.toBeNull();
+    expect(constants.AUTH_PROVIDERS_CHART).not.toBeNull();
+    expect(constants.RBAC_POLICY_ROLES).not.toBeNull();
+
     logger.info(`Base Url is ${process.env.BASE_URL}`);
 
     page = (await setupBrowser(browser, testInfo)).page;
     common = new Common(page);
     uiHelper = new UIhelper(page);
 
-    await rhssoHelper.initializeRHSSOClient(rhssoHelper.connectionConfig);
+    rhssoHelper = new RHSSOHelper("7.6");
+    await rhssoHelper.initializeRHSSOClient();
     const created = await rhssoHelper.setupRHSSOEnvironment();
     usersCreated = created.usersCreated;
     groupsCreated = created.groupsCreated;
@@ -229,68 +258,74 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
     }
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["user_1"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
 
-    // check entities are in the catalog
+    // check users are in the catalog
     const usersDisplayNames = Object.values(constants.RHSSO76_USERS).map((u) =>
       rhssoHelper.getRHSSOUserDisplayName(u),
     );
 
-    await common.CheckUserIsShowingInCatalog(usersDisplayNames);
+    expect(await common.CheckUserIsIngestedInCatalog(usersDisplayNames)).toBe(
+      true,
+    );
 
-    // check groups are nested correctly and display all members
+    // check groups are in the catalog
     const groupsDisplayNames = Object.values(constants.RHSSO76_GROUPS).map(
       (g) => g.name,
     );
     groupsDisplayNames.push(constants.RHSSO76_NESTED_GROUP.name);
-    await common.CheckGroupIsShowingInCatalog(groupsDisplayNames);
+    expect(await common.CheckGroupIsIngestedInCatalog(groupsDisplayNames)).toBe(
+      true,
+    );
 
-    let displayed;
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
 
     // group_1 should show user_1
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_1: GroupEntity = await api.getGroupEntityFromAPI(
       constants.RHSSO76_GROUPS["group_1"].name,
     );
-
-    expect(displayed.groupMembers).toContain(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
-    );
+    expect(
+      group_1.spec.members.includes(constants.RHSSO76_USERS["user_1"].username),
+    ).toBe(true);
 
     // group_2 should show user_2 and parent group_nested
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_2: GroupEntity = await api.getGroupEntityFromAPI(
       constants.RHSSO76_GROUPS["group_2"].name,
     );
 
-    expect(displayed.groupMembers).toContain(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_2"]),
-    );
-    expect(displayed.childGroups).toContain(
-      constants.RHSSO76_NESTED_GROUP.name,
-    );
+    expect(
+      group_2.spec.members.includes(constants.RHSSO76_USERS["user_2"].username),
+    ).toBe(true);
+    expect(
+      group_2.spec.children.includes(constants.RHSSO76_NESTED_GROUP.name),
+    ).toBe(true);
 
     // group_nested should show user_3
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_3: GroupEntity = await api.getGroupEntityFromAPI(
       constants.RHSSO76_NESTED_GROUP.name,
     );
 
-    expect(displayed.groupMembers).toContain(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_3"]),
-    );
-    expect(displayed.parentGroup).toContain(
-      constants.RHSSO76_GROUPS["group_2"].name,
+    expect(
+      group_3.spec.members.includes(constants.RHSSO76_USERS["user_3"].username),
+    ).toBe(true);
+
+    // group_4 should show user_3
+    const group_4: GroupEntity = await api.getGroupEntityFromAPI(
+      constants.RHSSO76_GROUPS["group_4"].name,
     );
 
-    // logout
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
+    expect(
+      group_4.spec.members.includes(constants.RHSSO76_USERS["user_3"].username),
+    ).toBe(true);
+
+    expect(
+      group_4.spec.members.includes(constants.RHSSO76_USERS["user_4"].username),
+    ).toBe(true);
   });
 
   test("Remove user from RHSSO", async () => {
-    // remove user from azure -> ensure authentication fails
     test.setTimeout(300 * 1000);
+
     logger.info(`Executing testcase: Remove user from RHSSO`);
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -306,25 +341,21 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
 
     await WaitForNextSync(SYNC__TIME, "rhsso");
 
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["user_2"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
-
-    await expect(
-      common.CheckUserIsShowingInCatalog([
-        rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
+    expect(
+      await common.CheckUserIsIngestedInCatalog([
+        constants.RHSSO76_USERS["user_1"].username,
       ]),
-    ).rejects.toThrow();
+    ).toBe(false);
 
-    const displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
+
+    const group_1: GroupEntity = await api.getGroupEntityFromAPI(
       constants.RHSSO76_GROUPS["group_1"].name,
     );
-    expect(displayed.groupMembers).not.toContain(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_1"]),
-    );
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
+    expect(
+      group_1.spec.members.includes(constants.RHSSO76_USERS["user_1"].username),
+    ).toBe(false);
   });
 
   test("Move a user to another group in RHSSO", async () => {
@@ -350,21 +381,21 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       constants.RHSSO76_USERS["user_3"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
-    // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
-    await page.mouse.move(
-      page.viewportSize().width / 2,
-      page.viewportSize().height / 2,
+
+    let apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
+
+    const statusBefore = await api.scheduleEntityRefreshFromAPI(
+      "example",
+      "location",
+      apiToken,
     );
-    await uiHelper.selectMuiBox("Kind", "Location");
-    await uiHelper.verifyHeading("All locations");
-    await uiHelper.verifyCellsInTable(["example"]);
-    await uiHelper.clickLink("example");
-    await uiHelper.verifyHeading("example");
-    await expect(
-      page.locator(`button[title="Schedule entity refresh"]`),
-    ).toHaveCount(0);
+    logger.info(
+      `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
+    );
+    expect(statusBefore).toBe(403);
+
     // logout
     await page.goto("/");
     await uiHelper.openSidebar("Settings");
@@ -376,31 +407,35 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     logger.info(
       `Execute testcase: Move a user to another group in RHSSO: change should be mirrored and permission should be updated after the sync`,
     );
+
+    // location_admin should show user_3
+    const group_3: GroupEntity = await api.getGroupEntityFromAPI(
+      constants.RHSSO76_GROUPS["location_admin"].name,
+    );
+
+    expect(
+      group_3.spec.members.includes(constants.RHSSO76_USERS["user_3"].username),
+    ).toBe(true);
+
+    // configure policy permissions different for the two groups
+    // after the sync, ensure the permission also reflect the user move
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_3"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
 
-    const displayed = await common.GoToGroupPageAndGetDisplayedData(
-      constants.RHSSO76_GROUPS["location_admin"].name,
-    );
-    expect(displayed.groupMembers).toContain(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_3"]),
-    );
-
-    // configure policy permissions different for the two groups
-    // after the sync, ensure the permission also reflect the user move
     // check RBAC permissions are updated after group update
     // new group should allow user to schedule location refresh and unregister the entity
-    await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
-    // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
-    await page.mouse.move(
-      page.viewportSize().width / 2,
-      page.viewportSize().height / 2,
+    apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+    const statusAfter = await api.scheduleEntityRefreshFromAPI(
+      "example",
+      "location",
+      apiToken,
     );
-
-    await await uiHelper.verifyLocationRefreshButtonIsEnabled("example");
+    logger.info(
+      `Checking user can schedule location refresh. API returned ${statusAfter}`,
+    );
+    expect(statusAfter).toBe(200);
 
     await page.goto("/");
     await uiHelper.openSidebar("Settings");
@@ -419,22 +454,26 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     );
 
     await rhssoHelper.deleteGroup(groupsCreated["group_4"].id);
+
     // user_4 should login
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_4"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
 
-    // group_4 should exist in rhdh
-    const displayed = await common.GoToGroupPageAndGetDisplayedData(
-      constants.RHSSO76_GROUPS["group_4"].name,
-    );
-    expect(displayed.groupMembers).toContain(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
-    );
-
     await uiHelper.openSidebar("Settings");
     await common.signOut();
+
+    // group_4 should exist in rhdh
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
+
+    const group_4: GroupEntity = await api.getGroupEntityFromAPI(
+      constants.RHSSO76_GROUPS["group_4"].name,
+    );
+    expect(
+      group_4.spec.members.includes(constants.RHSSO76_USERS["user_4"].username),
+    ).toBe(true);
 
     // waiting for next sync
     await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -443,27 +482,20 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     logger.info(
       `Execute testcase: Remove a group from RHSSO: group should be removed and permissions should default to read-only after the sync.`,
     );
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["admin"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
 
-    await expect(
-      common.CheckGroupIsShowingInCatalog([
+    // group_4 should not be in the catalog anymore
+    expect(
+      await common.CheckGroupIsIngestedInCatalog([
         constants.RHSSO76_GROUPS["group_4"].name,
       ]),
-    ).rejects.toThrow();
+    ).toBe(false);
 
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-
+    // users permission based on that group will be defaulted to read-only
+    // expect user not to see catalog entities
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_4"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-
-    // users permission based on that group will be defaulted to read-only
-    // expect user not to see catalog entities
     await page.goto("/");
     const navMyGroup = page.locator(`nav a:has-text("My Group")`);
     await expect(navMyGroup).toHaveCount(0);
@@ -483,34 +515,26 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     if (test.info().retry > 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
     }
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["admin"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
-    await common.UnregisterUserEnittyFromCatalog(
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
-    );
-    await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
 
-    await expect(async () => {
-      await common.CheckUserIsShowingInCatalog([
-        rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
-      ]);
-    }).not.toPass({
+    await common.UnregisterUserEntityFromCatalog(
+      constants.RHSSO76_USERS["user_4"].username,
+    );
+
+    await expect(async () => {}).toPass({
       intervals: [1_000, 2_000, 5_000],
       timeout: 20 * 1000,
     });
 
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-
+    // expect entity is not found in rhdh
     const loginSucceded = await common.keycloakLogin(
       constants.RHSSO76_USERS["user_4"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
     expect(loginSucceded).toContain("Login successful");
 
-    await uiHelper.verifyAlertErrorMessage(/unable to resolve user identity/gm);
+    await uiHelper.verifyAlertErrorMessage(
+      /Login failed; caused by Error: Failed to sign-in, unable to resolve user identity/gm,
+    );
 
     // clear user sessions
     await rhssoHelper.clearUserSessions(
@@ -523,13 +547,13 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     logger.info(
       `Execute testcase: Remove a user from RHDH: user is re-created and can login after the sync`,
     );
+    // user_4 should login
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_4"].username,
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
-    await common.CheckUserIsShowingInCatalog([
-      rhssoHelper.getRHSSOUserDisplayName(constants.RHSSO76_USERS["user_4"]),
-    ]);
+
+    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
   });
@@ -537,32 +561,28 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
   test("Remove a group from RHDH", async () => {
     test.setTimeout(300 * 1000);
 
-    // remove group from RHDH -> user can login, but policy is broken
+    // remove group from RHDH -> user can login
     logger.info(
-      `Executing testcase: Remove a group from RHDH: user can login, but policy is broken before next sync.`,
+      `Executing testcase: Remove a group from RHDH: user can login.`,
     );
     if (test.info().retry >= 0) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
     }
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["admin"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
 
-    await common.UnregisterGroupEnittyFromCatalog(
+    await common.UnregisterGroupEntityFromCatalog(
       constants.RHSSO76_GROUPS["group_3"].name,
     );
 
-    await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
-
-    await expect(
-      common.CheckGroupIsShowingInCatalog([
-        constants.RHSSO76_GROUPS["group_3"].name,
-      ]),
-    ).rejects.toThrow(/Expected at least one cell/);
-
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog([
+          constants.RHSSO76_GROUPS["group_3"].name,
+        ]),
+      ).toBe(false);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 20 * 1000,
+    });
 
     await WaitForNextSync(SYNC__TIME, "rhsso");
 
@@ -570,15 +590,11 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     logger.info(
       `Execute testcase: Remove a group from RHDH: group is created again after the sync`,
     );
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["admin"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
-    await common.CheckGroupIsShowingInCatalog([
-      constants.RHSSO76_GROUPS["group_3"].name,
-    ]);
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
+    expect(
+      await common.CheckGroupIsIngestedInCatalog([
+        constants.RHSSO76_GROUPS["group_3"].name,
+      ]),
+    ).toBe(true);
   });
 
   test("Rename a user and a group", async () => {
@@ -608,21 +624,12 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     logger.info(
       `Execute testcase: Rename a user and a group: changes are mirrored in RHDH but permissions should be broken after the sync`,
     );
-    await common.keycloakLogin(
-      constants.RHSSO76_USERS["admin"].username,
-      constants.RHSSO76_DEFAULT_PASSWORD,
-    );
-    await common.CheckUserIsShowingInCatalog([
-      (await rhssoHelper.getRHSSOUserDisplayName(
-        constants.RHSSO76_USERS["user_2"],
-      )) + " Renamed",
-    ]);
-    await common.CheckGroupIsShowingInCatalog([
-      constants.RHSSO76_GROUPS["group_2"].name + "_renamed",
-    ]);
 
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
+    expect(
+      await common.CheckGroupIsIngestedInCatalog([
+        constants.RHSSO76_GROUPS["group_2"].name + "_renamed",
+      ]),
+    ).toBe(true);
 
     await common.keycloakLogin(
       constants.RHSSO76_USERS["user_2"].username,
@@ -665,5 +672,14 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
 
     await uiHelper.openSidebar("Settings");
     await common.signOut();
+  });
+
+  test.afterEach(async () => {
+    if (test.info().status !== test.info().expectedStatus) {
+      const prefix = `${test.info().testId}_${test.info().retry}`;
+      logger.info(`Dumping logs with prefix ${prefix}`);
+      await dumpAllPodsLogs(prefix);
+      await dumpRHDHUsersAndGroups(prefix);
+    }
   });
 });

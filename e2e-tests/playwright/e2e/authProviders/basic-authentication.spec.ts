@@ -3,7 +3,12 @@ import { Common, setupBrowser } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import * as constants from "../../utils/authenticationProviders/constants";
 import { logger } from "../../utils/Logger";
-import { upgradeHelmChartWithWait } from "../../utils/helper";
+import {
+  upgradeHelmChartWithWait,
+  dumpAllPodsLogs,
+  dumpRHDHUsersAndGroups,
+} from "../../utils/helper";
+import { APIHelper } from "../../utils/APIHelper";
 
 let page: Page;
 
@@ -124,6 +129,10 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     await uiHelper.verifyParagraph(constants.AZURE_LOGIN_USERNAME);
 
     // check no entities are in the catalog
+    const api = new APIHelper();
+    const catalogUsers = await api.getAllCatalogUsersFromAPI();
+    console.log(catalogUsers);
+
     await page.goto("/catalog?filters[kind]=user&filters[user]=all");
     await uiHelper.verifyHeading("My Org Catalog");
     await uiHelper.searchInputPlaceholder(constants.AZURE_LOGIN_FIRSTNAME);
@@ -164,5 +173,14 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       .allInnerTexts();
     console.log(singInMethods);
     expect(singInMethods).not.toContain("Guest");
+  });
+
+  test.afterEach(async () => {
+    if (test.info().status !== test.info().expectedStatus) {
+      const prefix = `${test.info().testId}_${test.info().retry}`;
+      logger.info(`Dumping logs with prefix ${prefix}`);
+      await dumpAllPodsLogs(prefix);
+      await dumpRHDHUsersAndGroups(prefix);
+    }
   });
 });
