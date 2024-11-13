@@ -60,8 +60,8 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^1.0.1",
-    "@backstage/plugin-scaffolder-node": "^0.5.0"
+    "@backstage/backend-plugin-api": "1.0.1",
+    "@backstage/plugin-scaffolder-node": "0.5.0"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
@@ -74,6 +74,6 @@
   "devDependencies": {
     "@backstage/cli": "0.28.2",
     "@janus-idp/cli": "1.17.0",
-    "typescript": "^5.6.3"
+    "typescript": "5.6.3"
   }
 }
