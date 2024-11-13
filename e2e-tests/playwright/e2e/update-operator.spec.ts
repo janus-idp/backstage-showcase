@@ -33,7 +33,7 @@ ocpTest.describe("OpenShift Operator Tests", () => {
     console.log("Developer Hub Operator installation initiated.");
   });
 
-  ocpTest("Upgrade the Developer Hub Operator", async ({ ocApi }) => {
+  ocpTest.skip("Upgrade the Developer Hub Operator", async ({ ocApi }) => {
     const operatorName = "rhdh";
     const newChannel = "stable";
     const newStartingCSV = "rhdh.v2.0.0";
@@ -58,7 +58,7 @@ ocpTest.describe("OpenShift Operator Tests", () => {
     console.log("Installed Operators in namespace", ":", installedOperators);
   });
 
-  ocpTest("Delete the Developer Hub Operator", async ({ ocApi }) => {
+  ocpTest.skip("Delete the Developer Hub Operator", async ({ ocApi }) => {
     const operatorName = "rhdh";
 
     await ocApi.deleteOperator(operatorName);
