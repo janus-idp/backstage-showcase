@@ -60,5 +60,14 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 RUN apt-get update -y && \
     apt-get install -y skopeo
 
+# Install Podman
+RUN apt-get update -y && \
+apt-get -y install podman && \
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN curl -LO "https://github.com/operator-framework/operator-registry/releases/download/v1.19.5/linux-amd64-opm" && \ 
+chmod +x linux-amd64-opm && \
+mv linux-amd64-opm /usr/local/bin/opm
+
 # Set working directory    
 WORKDIR /tmp/

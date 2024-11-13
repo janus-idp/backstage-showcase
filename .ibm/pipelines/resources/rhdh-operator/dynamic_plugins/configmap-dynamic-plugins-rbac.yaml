@@ -19,7 +19,7 @@ data:
                     catalogPath: '/catalog-info.yaml'
                     schedule:
                       frequency:
-                        minutes: 1
+                        minutes: 3
                       timeout:
                         minutes: 1
                       initialDelay:
