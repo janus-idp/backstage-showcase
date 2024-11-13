@@ -275,12 +275,6 @@ export class UIhelper {
     }
   }
 
-  async optionSelector(value: string) {
-    const optionSelector = `li[role="option"]:has-text("${value}")`;
-    await this.page.waitForSelector(optionSelector);
-    await this.page.click(optionSelector);
-  }
-
   getButtonSelector(label: string): string {
     return `${UIhelperPO.MuiButtonLabel}:has-text("${label}")`;
   }

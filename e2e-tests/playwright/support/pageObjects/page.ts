@@ -10,11 +10,14 @@ export abstract class PageObject {
   protected url: PagesUrl;
   protected uiHelper: UIhelper;
 
-  constructor(page: Page, url: PagesUrl, go: boolean) {
+  constructor(page: Page, url: PagesUrl) {
     this.page = page;
     this.url = url;
     this.uiHelper = new UIhelper(this.page);
-    if (go) this.page.goto(this.url);
+  }
+
+  async goto() {
+    await this.page.goto(this.url);
   }
 
   async verifyATextIsVisible(text: string) {

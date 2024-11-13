@@ -1,11 +1,6 @@
 import { APIResponse, Page, expect } from "@playwright/test";
 import { UIhelper } from "../../utils/UIhelper";
-import {
-  DeleteRolePO,
-  HomePagePO,
-  RoleFormPO,
-  RoleListPO,
-} from "../pageObjects/page-obj";
+import { DeleteRolePO, HomePagePO, RoleListPO } from "../pageObjects/page-obj";
 
 export class Roles {
   private page: Page;
