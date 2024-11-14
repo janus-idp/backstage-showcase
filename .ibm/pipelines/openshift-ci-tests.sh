@@ -238,7 +238,7 @@ apply_yaml_files() {
   set -x
 
   if [[ "${project}" == *rbac* ]]; then
-    oc create configmap app-config-rhdh --from-file "$dir/resources/config_map/app-config-rhdh-rbac.yaml" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
+    oc create configmap app-config-rhdh --from-file="app-config-rhdh.yaml"="$dir/resources/config_map/app-config-rhdh-rbac.yaml" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   elif [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke* ]]; then
     yq 'del(.backend.cache)' "$dir/resources/config_map/app-config-rhdh.yaml" \
     | kubectl create configmap app-config-rhdh --from-file="app-config-rhdh.yaml"="/dev/stdin" --namespace="${project}" --dry-run=client -o yaml \
