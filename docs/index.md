@@ -283,7 +283,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the RBAC plugin
 
-     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
+     - This [URL](https://github.com/backstage/community-plugins/tree/main/workspaces/rbac/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
 
        - Requires the use of an identity provider. This plugin will not work with guest accounts.
 

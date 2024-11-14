@@ -3677,6 +3677,88 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-rbac-backend@npm:5.2.4":
+  version: 5.2.4
+  resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.4"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": ^1.12.2
+    "@backstage-community/plugin-rbac-node": ^1.8.2
+    "@backstage/backend-defaults": ^0.5.2
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-client": ^1.7.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-auth-node": ^0.5.3
+    "@backstage/plugin-permission-backend": ^0.5.50
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-node": ^0.8.4
+    "@dagrejs/graphlib": ^2.1.13
+    "@janus-idp/backstage-plugin-audit-log-node": ^1.7.1
+    casbin: ^5.27.1
+    chokidar: ^3.6.0
+    csv-parse: ^5.5.5
+    express: ^4.18.2
+    js-yaml: ^4.1.0
+    knex: ^3.0.0
+    lodash: ^4.17.21
+    typeorm-adapter: ^1.6.1
+  checksum: a855e93074dc18e9189ded5cc6af8e010f9a7d24f7f81dc18f554895b4ac638b81ec35c39c9878b2eb7253b5e12c7341e4bf13366814a647fb108d65236d309d
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-common@npm:1.12.2, @backstage-community/plugin-rbac-common@npm:^1.12.2":
+  version: 1.12.2
+  resolution: "@backstage-community/plugin-rbac-common@npm:1.12.2"
+  peerDependencies:
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-permission-common": ^0.8.1
+  checksum: e649c786650e77aac5daee65e7a71b9146391712b6bacc1d9516150ffdeb580b2770b30b1813bcb4d539b3082fd85c644e68a4805fc5d18201c7a4d981e7776f
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-node@npm:1.8.2, @backstage-community/plugin-rbac-node@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "@backstage-community/plugin-rbac-node@npm:1.8.2"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+  checksum: 32544869b139c8d255406a701f545bf673159255261b8d1f7fcef2f6cf47d93f5cfd30cdd513682322ba87422028a21037cb7ed666c86bae87ce9e21727e5812
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac@npm:1.32.3":
+  version: 1.32.3
+  resolution: "@backstage-community/plugin-rbac@npm:1.32.3"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": ^1.12.2
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/plugin-catalog": ^1.24.0
+    "@backstage/plugin-catalog-common": ^1.1.0
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-react": ^0.4.27
+    "@backstage/theme": ^0.6.0
+    "@janus-idp/shared-react": ^2.13.1
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": ^4.0.0-alpha.45
+    "@mui/icons-material": 5.16.4
+    "@mui/material": ^5.14.18
+    "@rjsf/core": ^5.21.2
+    "@rjsf/mui": ^5.21.2
+    "@rjsf/utils": ^5.21.2
+    "@rjsf/validator-ajv8": ^5.21.2
+    autosuggest-highlight: ^3.3.4
+    formik: ^2.4.5
+    react-use: ^17.4.0
+    yup: ^1.3.2
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: c7692b8b8c9978967f4594b98adb30ef5e60098f61d63a822e40762a546ff6175bbb7afa5fbe6d7023482b5a96c9396b33e62bf7134fa96e612be33ef58b2653
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-redhat-argocd-common@npm:^1.0.7":
   version: 1.0.7
   resolution: "@backstage-community/plugin-redhat-argocd-common@npm:1.0.7"
@@ -3849,6 +3931,55 @@ __metadata:
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: 6.0.0-beta.0 || ^6.3.0
   checksum: 02fbb09c9952e5f6b7fed7c98521b63be5d585ee2a251386887ef10aef3a0c182751216920dd43711525fda4c72cf21df6db2230d4423716469980c3ce8b8d7f
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-topology-common@npm:^1.4.3":
+  version: 1.4.3
+  resolution: "@backstage-community/plugin-topology-common@npm:1.4.3"
+  dependencies:
+    "@backstage/plugin-permission-common": ^0.8.1
+  checksum: 546c3ed9044144b4a6df2265e615d8d030ba413c666f4ef95f993226e7e83597d3c52416ddf7dd2f86cf21b90bc63a7c6b09bb896e9b7eee6ac5c3bffe185733
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-topology@npm:^1.29.4":
+  version: 1.29.4
+  resolution: "@backstage-community/plugin-topology@npm:1.29.4"
+  dependencies:
+    "@backstage-community/plugin-topology-common": ^1.4.3
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/plugin-catalog-react": ^1.14.0
+    "@backstage/plugin-kubernetes": ^0.11.16
+    "@backstage/plugin-kubernetes-common": ^0.8.3
+    "@backstage/plugin-kubernetes-react": ^0.4.4
+    "@backstage/plugin-permission-react": ^0.4.27
+    "@backstage/theme": ^0.6.0
+    "@janus-idp/shared-react": ^2.13.1
+    "@kubernetes/client-node": ^0.22.1
+    "@mui/icons-material": 5.15.17
+    "@mui/lab": 5.0.0-alpha.173
+    "@mui/material": ^5.15.17
+    "@mui/styles": 5.16.7
+    "@patternfly/patternfly": ^5.1.0
+    "@patternfly/react-charts": ^7.1.1
+    "@patternfly/react-core": ^5.1.1
+    "@patternfly/react-styles": ^5.1.1
+    "@patternfly/react-tokens": ^5.1.1
+    "@patternfly/react-topology": ^5.1.0
+    classnames: 2.x
+    git-url-parse: ^13.1.0
+    js-yaml: ^4.1.0
+    lodash: ^4.17.21
+    react-use: ^17.4.0
+    style-inject: ^0.3.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 1bf4b2761b9014421552c62313ec6ccc606f3efa78e45de5cf52ceea611028dfef88f0f3a63740381234bb6439aeccd5f61d4f143834180777382de621863770
   languageName: node
   linkType: hard
 
@@ -8334,7 +8465,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/hash@npm:^0.9.2":
+"@emotion/hash@npm:^0.9.1, @emotion/hash@npm:^0.9.2":
   version: 0.9.2
   resolution: "@emotion/hash@npm:0.9.2"
   checksum: 379bde2830ccb0328c2617ec009642321c0e009a46aa383dfbe75b679c6aea977ca698c832d225a893901f29d7b3eef0e38cf341f560f6b2b56f1ff23c172387
@@ -10121,7 +10252,8 @@ __metadata:
     "@backstage/plugin-search-react": 1.8.1
     "@backstage/test-utils": 1.7.0
     "@backstage/theme": 0.6.0
-    "@material-ui/core": 4.12.4
+    "@mui/material": 5.16.7
+    "@mui/styles": 5.16.7
     "@openshift/dynamic-plugin-sdk": 5.0.1
     "@redhat-developer/red-hat-developer-hub-theme": 0.4.0
     "@scalprum/react-core": 0.8.0
@@ -10133,6 +10265,7 @@ __metadata:
     prettier: 3.3.3
     react-grid-layout: 1.4.4
     react-use: 17.5.1
+    tss-react: 4.9.12
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
     react-router-dom: 6.26.2
@@ -10191,6 +10324,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@internal/plugin-licensed-users-info-backend@workspace:plugins/licensed-users-info-backend"
   dependencies:
+    "@backstage-community/plugin-rbac-common": 1.12.2
     "@backstage/backend-defaults": 0.5.2
     "@backstage/backend-plugin-api": 1.0.1
     "@backstage/backend-test-utils": 1.0.2
@@ -10203,7 +10337,6 @@ __metadata:
     "@backstage/plugin-auth-backend-module-guest-provider": 0.2.1
     "@backstage/plugin-permission-common": 0.8.1
     "@backstage/types": 1.1.1
-    "@janus-idp/backstage-plugin-rbac-common": 1.12.0
     "@types/express": 4.17.21
     "@types/supertest": 2.0.16
     express: 4.21.0
@@ -10325,12 +10458,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0, @janus-idp/backstage-plugin-audit-log-node@npm:^1.7.0":
+"@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0":
   version: 1.7.0
   resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0"
   dependencies:
     lodash: ^4.17.21
   checksum: 22557f15cffc7a22bca592d9b0efaf917ac3cb8a2693957407ccad1f160060d349dc81fbc5f823c1b9e26cf2357d7566a005ac00d5b31b94b9ef952b13b301d0
+  languageName: node
+  linkType: hard
+
+"@janus-idp/backstage-plugin-audit-log-node@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.1"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: 1d8861a8bdb88aabfd39493077f360d505dc110b310f079d64fc48f1896037afe0b7f991f9541f02437f6011d1e45ddaf42f7d9e8698c57a3e662687f2dd186a
   languageName: node
   linkType: hard
 
@@ -10369,85 +10511,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-rbac-backend@npm:5.2.1":
-  version: 5.2.1
-  resolution: "@janus-idp/backstage-plugin-rbac-backend@npm:5.2.1"
-  dependencies:
-    "@backstage/backend-defaults": ^0.5.2
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-permission-backend": ^0.5.50
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.4
-    "@dagrejs/graphlib": ^2.1.13
-    "@janus-idp/backstage-plugin-audit-log-node": ^1.7.0
-    "@janus-idp/backstage-plugin-rbac-common": ^1.12.0
-    "@janus-idp/backstage-plugin-rbac-node": ^1.8.0
-    casbin: ^5.27.1
-    chokidar: ^3.6.0
-    csv-parse: ^5.5.5
-    express: ^4.18.2
-    js-yaml: ^4.1.0
-    knex: ^3.0.0
-    lodash: ^4.17.21
-    typeorm-adapter: ^1.6.1
-  checksum: 375322422862b1fdfbf9d798021351804c47b39d90e65e9fa577c98eadbc0b256c0e8d460f71c5f0a68488ef92f75f37a510eade35cd7e72811bc08ed4ec4659
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-rbac-common@npm:1.12.0, @janus-idp/backstage-plugin-rbac-common@npm:^1.12.0":
+"@janus-idp/backstage-plugin-rbac-common@npm:1.12.0":
   version: 1.12.0
   resolution: "@janus-idp/backstage-plugin-rbac-common@npm:1.12.0"
   peerDependencies:
     "@backstage/errors": ^1.2.4
     "@backstage/plugin-permission-common": ^0.8.1
   checksum: f2de8438bf081558be39571becfaa7eae5764e8d974af73e2116bbedf21e2c4086015fcab187bc4060e45048d250ae95ca194e25fadf96a9d5564d43fb7888eb
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-rbac-node@npm:1.8.0, @janus-idp/backstage-plugin-rbac-node@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@janus-idp/backstage-plugin-rbac-node@npm:1.8.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-  checksum: 15710889dbb58a1a49356b54ebcad899003685d748b2326de60a811b4e6601def2c6e2198753f1ff611b2bbaafc74f1435520d9c404522789011df3521cabb33
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-rbac@npm:1.32.0":
-  version: 1.32.0
-  resolution: "@janus-idp/backstage-plugin-rbac@npm:1.32.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog": ^1.24.0
-    "@backstage/plugin-catalog-common": ^1.1.0
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/backstage-plugin-rbac-common": ^1.12.0
-    "@janus-idp/shared-react": ^2.13.0
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": ^4.0.0-alpha.45
-    "@mui/icons-material": 5.16.4
-    "@mui/material": ^5.14.18
-    "@rjsf/core": ^5.21.2
-    "@rjsf/mui": ^5.21.2
-    "@rjsf/utils": ^5.21.2
-    "@rjsf/validator-ajv8": ^5.21.2
-    autosuggest-highlight: ^3.3.4
-    formik: ^2.4.5
-    react-use: ^17.4.0
-    yup: ^1.3.2
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-router-dom: ^6.0.0
-  checksum: bfa38a8439e4760388c3638bc378593078881d9792248e848721808a4ebbd61f123216723653d6dfe7ca442f9d17c3b38534dbd79b5fef20d1129c36a3cc77c8
   languageName: node
   linkType: hard
 
@@ -10496,54 +10566,6 @@ __metadata:
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
   checksum: f34aebeea2928a1cc8caed72232603a311b76d86a498ca27139bb87d3a865dc43980a25a9588827a5be4d93cb0eaf6ec1efbc2a05cd33b1edd0fa68d70be369e
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-topology-common@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "@janus-idp/backstage-plugin-topology-common@npm:1.6.0"
-  peerDependencies:
-    "@backstage/plugin-permission-common": ^0.8.1
-  checksum: 4aa7dac6a9a3e1195fe2e1b3787a4aa764cc9fc40d15cea09aeeb47f7a78228b79c511d88c17957a0b84f1cea0618ffa296271632f76391f6910d5c409dad57b
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-topology@npm:1.30.0":
-  version: 1.30.0
-  resolution: "@janus-idp/backstage-plugin-topology@npm:1.30.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/plugin-kubernetes": ^0.11.16
-    "@backstage/plugin-kubernetes-common": ^0.8.3
-    "@backstage/plugin-kubernetes-react": ^0.4.4
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/backstage-plugin-topology-common": ^1.6.0
-    "@janus-idp/shared-react": ^2.13.0
-    "@kubernetes/client-node": ^0.22.1
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": ^4.0.0-alpha.45
-    "@mui/icons-material": 5.15.17
-    "@patternfly/patternfly": ^5.1.0
-    "@patternfly/react-charts": ^7.1.1
-    "@patternfly/react-core": ^5.1.1
-    "@patternfly/react-styles": ^5.1.1
-    "@patternfly/react-tokens": ^5.1.1
-    "@patternfly/react-topology": ^5.1.0
-    classnames: 2.x
-    git-url-parse: ^13.1.0
-    js-yaml: ^4.1.0
-    lodash: ^4.17.21
-    react-use: ^17.4.0
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-router-dom: ^6.0.0
-  checksum: a161ae81e18b79beac839c9d290cf52d51cbc67beb998839d4ff3c5734711d908ca7dacdabcff61689f2ef619add9ca20d9758eed3e6320ab434639b7366fcee
   languageName: node
   linkType: hard
 
@@ -11478,7 +11500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:4.12.4, @material-ui/core@npm:^4.12.2, @material-ui/core@npm:^4.12.4, @material-ui/core@npm:^4.9.13":
+"@material-ui/core@npm:^4.12.2, @material-ui/core@npm:^4.12.4, @material-ui/core@npm:^4.9.13":
   version: 4.12.4
   resolution: "@material-ui/core@npm:4.12.4"
   dependencies:
@@ -12146,7 +12168,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/base@npm:^5.0.0-beta.22, @mui/base@npm:^5.0.0-beta.40":
+"@mui/base@npm:5.0.0-beta.40, @mui/base@npm:^5.0.0-beta.22, @mui/base@npm:^5.0.0-beta.40":
   version: 5.0.0-beta.40
   resolution: "@mui/base@npm:5.0.0-beta.40"
   dependencies:
@@ -12239,7 +12261,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material@npm:5.16.7, @mui/material@npm:^5.12.2, @mui/material@npm:^5.14.18, @mui/material@npm:^5.15.19":
+"@mui/lab@npm:5.0.0-alpha.173":
+  version: 5.0.0-alpha.173
+  resolution: "@mui/lab@npm:5.0.0-alpha.173"
+  dependencies:
+    "@babel/runtime": ^7.23.9
+    "@mui/base": 5.0.0-beta.40
+    "@mui/system": ^5.16.5
+    "@mui/types": ^7.2.15
+    "@mui/utils": ^5.16.5
+    clsx: ^2.1.0
+    prop-types: ^15.8.1
+  peerDependencies:
+    "@emotion/react": ^11.5.0
+    "@emotion/styled": ^11.3.0
+    "@mui/material": ">=5.15.0"
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+    "@types/react":
+      optional: true
+  checksum: 22eda1106db35ac2a249ee049b84cd4100f39181a0fa93d983a2c3d2bced390426deffb379cb5e234f330d76bc6f9e0344b698d7656b76119c1ca8cee7445a21
+  languageName: node
+  linkType: hard
+
+"@mui/material@npm:5.16.7, @mui/material@npm:^5.12.2, @mui/material@npm:^5.14.18, @mui/material@npm:^5.15.17, @mui/material@npm:^5.15.19":
   version: 5.16.7
   resolution: "@mui/material@npm:5.16.7"
   dependencies:
@@ -12307,6 +12358,37 @@ __metadata:
     "@emotion/styled":
       optional: true
   checksum: 604f83b91801945336db211a8273061132668d01e9f456c30bb811a3b49cc5786b8b7dd8e0b5b89de15f6209abc900d9e679d3ae7a4651a6df45e323b6ed95c5
+  languageName: node
+  linkType: hard
+
+"@mui/styles@npm:5.16.7":
+  version: 5.16.7
+  resolution: "@mui/styles@npm:5.16.7"
+  dependencies:
+    "@babel/runtime": ^7.23.9
+    "@emotion/hash": ^0.9.1
+    "@mui/private-theming": ^5.16.6
+    "@mui/types": ^7.2.15
+    "@mui/utils": ^5.16.6
+    clsx: ^2.1.0
+    csstype: ^3.1.3
+    hoist-non-react-statics: ^3.3.2
+    jss: ^10.10.0
+    jss-plugin-camel-case: ^10.10.0
+    jss-plugin-default-unit: ^10.10.0
+    jss-plugin-global: ^10.10.0
+    jss-plugin-nested: ^10.10.0
+    jss-plugin-props-sort: ^10.10.0
+    jss-plugin-rule-value-function: ^10.10.0
+    jss-plugin-vendor-prefixer: ^10.10.0
+    prop-types: ^15.8.1
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 1109eb150cf40782a6f24bebf6d22d55ea8c36bbf43893664c303e679b7d235a6578b2f2e1d9ee64132aa24496a15fd32f80278cb641208c3a372bd53679e1c0
   languageName: node
   linkType: hard
 
@@ -21114,6 +21196,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend@workspace:packages/backend"
   dependencies:
+    "@backstage-community/plugin-rbac-backend": 5.2.4
+    "@backstage-community/plugin-rbac-node": 1.8.2
     "@backstage/backend-app-api": 1.0.1
     "@backstage/backend-defaults": 0.5.2
     "@backstage/backend-dynamic-feature-service": 0.4.3
@@ -21142,8 +21226,6 @@ __metadata:
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
     "@janus-idp/backstage-plugin-audit-log-node": 1.7.0
-    "@janus-idp/backstage-plugin-rbac-backend": 5.2.1
-    "@janus-idp/backstage-plugin-rbac-node": 1.8.0
     "@janus-idp/backstage-scaffolder-backend-module-annotator": 2.2.0
     "@types/express": 4.17.21
     "@types/global-agent": 2.1.3
@@ -21350,6 +21432,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac"
+  dependencies:
+    "@backstage-community/plugin-rbac": 1.32.3
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-redhat-argocd@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-redhat-argocd@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd"
@@ -21414,6 +21507,16 @@ __metadata:
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.17.0
     "@mui/icons-material": 5.16.7
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-topology@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-topology@workspace:dynamic-plugins/wrappers/backstage-community-plugin-topology"
+  dependencies:
+    "@backstage-community/plugin-topology": ^1.29.4
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
 
@@ -30493,32 +30596,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"janus-idp-backstage-plugin-rbac@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-rbac@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-rbac"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-rbac": 1.32.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
 "janus-idp-backstage-plugin-tekton@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-tekton":
   version: 0.0.0-use.local
   resolution: "janus-idp-backstage-plugin-tekton@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-tekton"
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-tekton": 3.15.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-topology@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-topology":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-topology@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-topology"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-topology": 1.30.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
@@ -31572,7 +31655,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-camel-case@npm:^10.5.1":
+"jss-plugin-camel-case@npm:^10.10.0, jss-plugin-camel-case@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-camel-case@npm:10.10.0"
   dependencies:
@@ -31583,7 +31666,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-default-unit@npm:^10.5.1":
+"jss-plugin-default-unit@npm:^10.10.0, jss-plugin-default-unit@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-default-unit@npm:10.10.0"
   dependencies:
@@ -31593,7 +31676,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-global@npm:^10.5.1":
+"jss-plugin-global@npm:^10.10.0, jss-plugin-global@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-global@npm:10.10.0"
   dependencies:
@@ -31603,7 +31686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-nested@npm:^10.5.1":
+"jss-plugin-nested@npm:^10.10.0, jss-plugin-nested@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-nested@npm:10.10.0"
   dependencies:
@@ -31614,7 +31697,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-props-sort@npm:^10.5.1":
+"jss-plugin-props-sort@npm:^10.10.0, jss-plugin-props-sort@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-props-sort@npm:10.10.0"
   dependencies:
@@ -31624,7 +31707,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-rule-value-function@npm:^10.5.1":
+"jss-plugin-rule-value-function@npm:^10.10.0, jss-plugin-rule-value-function@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-rule-value-function@npm:10.10.0"
   dependencies:
@@ -31635,7 +31718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss-plugin-vendor-prefixer@npm:^10.5.1":
+"jss-plugin-vendor-prefixer@npm:^10.10.0, jss-plugin-vendor-prefixer@npm:^10.5.1":
   version: 10.10.0
   resolution: "jss-plugin-vendor-prefixer@npm:10.10.0"
   dependencies:
@@ -31646,7 +31729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jss@npm:10.10.0, jss@npm:^10.5.1, jss@npm:~10.10.0":
+"jss@npm:10.10.0, jss@npm:^10.10.0, jss@npm:^10.5.1, jss@npm:~10.10.0":
   version: 10.10.0
   resolution: "jss@npm:10.10.0"
   dependencies:

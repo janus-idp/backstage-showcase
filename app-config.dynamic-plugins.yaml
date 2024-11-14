@@ -261,7 +261,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isTektonCIAvailable
-    janus-idp.backstage-plugin-topology:
+    backstage-community.plugin-topology:
       mountPoints:
         - mountPoint: entity.page.topology/cards
           importName: TopologyPage
@@ -437,7 +437,7 @@ dynamicPlugins:
     janus-idp.backstage-plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
-    janus-idp.backstage-plugin-rbac:
+    backstage-community.plugin-rbac:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon

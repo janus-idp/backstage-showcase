@@ -5,6 +5,24 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@backstage-community/plugin-catalog-backend-module-keycloak@file:./embedded/backstage-community-plugin-catalog-backend-module-keycloak::locator=backstage-community-plugin-catalog-backend-module-keycloak-dynamic%40workspace%3A.":
+  version: 3.2.1+embedded
+  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@file:./embedded/backstage-community-plugin-catalog-backend-module-keycloak#./embedded/backstage-community-plugin-catalog-backend-module-keycloak::hash=27b95d&locator=backstage-community-plugin-catalog-backend-module-keycloak-dynamic%40workspace%3A."
+  dependencies:
+    "@keycloak/keycloak-admin-client": 24.0.5
+    inclusion: ^1.0.1
+    lodash: ^4.17.21
+    pg-format: ^1.0.4
+    uuid: ^9.0.1
+  peerDependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-catalog-node": ^1.13.1
+  checksum: 17e096e9018dce0bd69976a9089c8da042d0d5b578e5aaa6999958bdfe0c3c1b4a55f55e6905f668fa27496d2ec699a170179e6497c9d19b1472ee29e55f76b8
+  languageName: node
+  linkType: hard
+
 "@keycloak/keycloak-admin-client@npm:24.0.5":
   version: 24.0.5
   resolution: "@keycloak/keycloak-admin-client@npm:24.0.5"
@@ -20,11 +38,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-catalog-backend-module-keycloak-dynamic@workspace:."
   dependencies:
-    "@keycloak/keycloak-admin-client": 24.0.5
-    inclusion: ^1.0.1
-    lodash: ^4.17.21
-    pg-format: ^1.0.4
-    uuid: ^9.0.1
+    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.2.1
   peerDependencies:
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-model": ^1.7.0
