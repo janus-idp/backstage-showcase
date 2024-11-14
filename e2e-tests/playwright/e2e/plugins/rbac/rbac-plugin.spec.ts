@@ -2,6 +2,7 @@ import { Page, expect, test } from "@playwright/test";
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
+import fs from "fs/promises";
 
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
