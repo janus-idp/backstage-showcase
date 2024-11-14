@@ -3,7 +3,7 @@ import { Common, setupBrowser } from "../../utils/Common";
 import { UIhelper } from "../../utils/UIhelper";
 import * as constants from "../../utils/authenticationProviders/constants";
 import { logger } from "../../utils/Logger";
-import { upgradeHelmChartWithWait } from "../../utils/helper";
+import { HelmActions } from "../../utils/helm";
 
 let page: Page;
 
@@ -30,7 +30,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       "Executing testcase: Verify guest login can work when no auth provider is configured (dangerouslyAllowSignInWithoutUserInCatalog is enabled by default but it should not conflict with the guest login).",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -65,7 +65,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       "Executing testcase: Login should fail when an authProvider is configured without the ingester.",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -99,7 +99,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       "Execute testcase: Set dangerouslyAllowSignInWithoutUserInCatalog to false. Login should now work but no User Entities are in the Catalog",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -141,7 +141,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       "Execute testcase: Ensure Guest login is disabled when setting environment to production",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
