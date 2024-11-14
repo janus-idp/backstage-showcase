@@ -300,9 +300,10 @@ run_tests() {
 check_backstage_running() {
   local release_name=$1
   local namespace=$2
-  local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   if [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke*  ]]; then
     local url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  else
+    local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
   fi
 
   local max_attempts=30
@@ -528,11 +529,11 @@ main() {
 
   API_SERVER_URL=$(oc whoami --show-server)
   if [[ "$JOB_NAME" == *aks* ]]; then
-    K8S_CLUSTER_ROUTER_BASE=$AKS_INSTANCE_DOMAIN_NAME
+    export K8S_CLUSTER_ROUTER_BASE=$AKS_INSTANCE_DOMAIN_NAME
   elif [[ "$JOB_NAME" == *gke* ]]; then
-    K8S_CLUSTER_ROUTER_BASE="${GKE_INSTANCE_DOMAIN_NAME}"
+    export K8S_CLUSTER_ROUTER_BASE=$GKE_INSTANCE_DOMAIN_NAME
   else
-    K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+    export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
   fi
 
   echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
