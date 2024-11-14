@@ -14,7 +14,7 @@ import {
 
 import { ErrorBoundary } from '@backstage/core-components';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
 // Removes the doubled scrollbar
 import 'react-grid-layout/css/styles.css';
@@ -62,7 +62,7 @@ const defaultProps: ResponsiveProps = {
   compactType: null,
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   // Make card content scrollable (so that cards don't overlap)
   cardWrapper: {
     '& > div[class*="MuiCard-root"]': {
@@ -82,7 +82,7 @@ export interface ReadOnlyGridProps {
 }
 
 export const ReadOnlyGrid = (props: ReadOnlyGridProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [measureRef, measureRect] = useMeasure<HTMLDivElement>();
 
   const cards = useMemo<Card[]>(() => {
