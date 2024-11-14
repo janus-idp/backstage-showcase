@@ -8,6 +8,7 @@ import {
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
+import fs from "fs/promises";
 import { RbacPo } from "../../../support/pageObjects/rbac-po";
 
 test.describe
@@ -161,6 +162,42 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     const allCellsIdentifier = Roles.getRolesListCellsIdentifier();
     await uiHelper.verifyCellsInTable(allCellsIdentifier);
   });
+
+  test("Should download the user list", async () => {
+    await page.locator('a:has-text("Download User List")').click();
+    const fileContent = await downloadAndReadFile(page);
+    const lines = fileContent.trim().split("\n");
+
+    const header = "userEntityRef,displayName,email,lastAuthTime";
+    if (lines[0] !== header) {
+      throw new Error("Header does not match");
+    }
+
+    // Check that each subsequent line starts with "user:default"
+    const allUsersValid = lines
+      .slice(1)
+      .every((line) => line.startsWith("user:default"));
+    if (!allUsersValid) {
+      throw new Error("Not all users info are valid");
+    }
+  });
+
+  async function downloadAndReadFile(page: Page): Promise<string | undefined> {
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator('a:has-text("Download User List")').click(),
+    ]);
+
+    const filePath = await download.path();
+
+    if (filePath) {
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      return fileContent;
+    } else {
+      console.error("Download failed or path is not available");
+      return undefined;
+    }
+  }
 
   test("View details of a role", async () => {
     await uiHelper.clickLink("role:default/rbac_admin");
