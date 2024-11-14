@@ -140,12 +140,12 @@ global:
                       props:
                         width: 1500
                         height: 800
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              janus-idp.backstage-plugin-rbac:
+              backstage-community.plugin-rbac:
                 mountPoints:
                   - mountPoint: admin.page.rbac/cards
                     importName: RbacPage

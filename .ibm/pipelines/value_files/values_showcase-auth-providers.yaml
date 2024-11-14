@@ -9,7 +9,7 @@ global:
         disabled: true
       - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-msgraph-dynamic
         disabled: true
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
         disabled: true
 upstream:
   backstage:
