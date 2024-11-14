@@ -9521,7 +9521,8 @@ __metadata:
     "@backstage/plugin-search-react": 1.8.1
     "@backstage/test-utils": 1.7.0
     "@backstage/theme": 0.6.0
-    "@material-ui/core": 4.12.4
+    "@mui/material": 5.16.7
+    "@mui/styles": 5.16.7
     "@openshift/dynamic-plugin-sdk": 5.0.1
     "@redhat-developer/red-hat-developer-hub-theme": 0.4.0
     "@scalprum/react-core": 0.8.0
@@ -9533,6 +9534,7 @@ __metadata:
     prettier: 3.3.3
     react-grid-layout: 1.4.4
     react-use: 17.5.1
+    tss-react: 4.9.12
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
     react-router-dom: 6.26.2
@@ -10830,7 +10832,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material-ui/core@npm:4.12.4, @material-ui/core@npm:^4.12.2, @material-ui/core@npm:^4.12.4, @material-ui/core@npm:^4.9.13":
+"@material-ui/core@npm:^4.12.2, @material-ui/core@npm:^4.12.4, @material-ui/core@npm:^4.9.13":
   version: 4.12.4
   resolution: "@material-ui/core@npm:4.12.4"
   dependencies:
