@@ -400,7 +400,20 @@ initiate_rbac_aks_deployment() {
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
-# Function to check if Backstage is running and then run tests.
+initiate_rds_deployment() {
+  local release_name=$1
+  local namespace=$2
+  configure_namespace "${namespace}"
+  uninstall_helmchart "${namespace}" "${release_name}"
+  sed -i "s|POSTGRES_USER:.*|POSTGRES_USER: $RDS_USER|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+  sed -i "s|POSTGRES_PASSWORD:.*|POSTGRES_PASSWORD: $(echo -n $RDS_PASSWORD | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+  sed -i "s|POSTGRES_HOST:.*|POSTGRES_HOST: $(echo -n $RDS_1_HOST | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+  oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}" 
+  oc apply -f "$DIR/resources/postgres-db/postgres-cred.yaml" -n "${namespace}"
+  oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${namespace}"
+  helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
 check_and_test() {
   local release_name=$1
   local namespace=$2
@@ -487,6 +500,7 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)  # Base64 encode the API server URL.
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)  # Base64 encode the cluster name.
 
+
   if [[ "$JOB_NAME" == *aks* ]]; then
     # Initiate deployments on AKS.
     initiate_aks_deployment
@@ -500,8 +514,14 @@ main() {
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+    # Only test TLS config with RDS in nightly jobs
+    if [[ "$JOB_NAME" == *periodic* ]]; then
+      initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+      check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+    fi
   fi
-  exit "${OVERALL_RESULT}"  # Exit with the overall result status.
+  
+  exit "${OVERALL_RESULT}"
 }
 
 main  # Start the script execution by calling the main function.
