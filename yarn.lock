@@ -3216,6 +3216,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-quay-common@npm:^1.3.2":
+  version: 1.3.2
+  resolution: "@backstage-community/plugin-quay-common@npm:1.3.2"
+  peerDependencies:
+    "@backstage/plugin-permission-common": ^0.8.1
+    react: 16.13.1 || ^17.0.0 || ^18.0.0
+  checksum: 0ad5ca6d6255f0678a9f5802abb8f873ff1d448be57191f3b7e88776d7b18a9ba26b6d039ad9245db830c002b768d70fcf69d3eb99c1839eade08c68a57c3885
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-quay@npm:1.14.2":
+  version: 1.14.2
+  resolution: "@backstage-community/plugin-quay@npm:1.14.2"
+  dependencies:
+    "@backstage-community/plugin-quay-common": ^1.3.2
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/plugin-catalog-common": ^1.1.0
+    "@backstage/plugin-catalog-react": ^1.14.0
+    "@backstage/plugin-permission-react": ^0.4.27
+    "@backstage/theme": ^0.6.0
+    "@janus-idp/shared-react": ^2.13.1
+    "@material-ui/core": ^4.12.2
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": 4.0.0-alpha.61
+    react-use: ^17.4.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 580772a73220c1c0af00e8c9ccff8fd74188e0b66f88e6b11bd0fa3c71b2cecb4525abd4ff89bf1a3e03a4debd607492ac5bed3da4f4611687ec9cc2d92d736e
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-rbac-backend@npm:5.2.4":
   version: 5.2.4
   resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.4"
@@ -9875,41 +9910,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-quay-common@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@janus-idp/backstage-plugin-quay-common@npm:1.3.0"
-  peerDependencies:
-    "@backstage/plugin-permission-common": ^0.8.1
-    react: 16.13.1 || ^17.0.0 || ^18.0.0
-  checksum: 8d7931f7b93c7a441d27eb1a359ab9d669b2a2ae0b27f2405ac38f8814f3f604bee66cb3be0880f53adaba34a9e70679678a499f2577f6976dff50e91bb407ec
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-quay@npm:1.14.0":
-  version: 1.14.0
-  resolution: "@janus-idp/backstage-plugin-quay@npm:1.14.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog-common": ^1.1.0
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/backstage-plugin-quay-common": ^1.3.0
-    "@janus-idp/shared-react": ^2.13.0
-    "@material-ui/core": ^4.12.2
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": 4.0.0-alpha.61
-    react-use: ^17.4.0
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-router-dom: ^6.0.0
-  checksum: 3674fe35f6f06cbd05a92778d7dbcc26f0acbb0b9a9d689c2cfe3f3292a97ab37a75f1b2291f4a518b57edf56a730dabd429794673b3e93458de2445788adbbc
-  languageName: node
-  linkType: hard
-
 "@janus-idp/backstage-plugin-rbac-common@npm:1.12.0":
   version: 1.12.0
   resolution: "@janus-idp/backstage-plugin-rbac-common@npm:1.12.0"
@@ -10111,30 +10111,6 @@ __metadata:
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
   checksum: 0294ad1f21fd64cb33b305d50239c41dd6bd1a2e55ccd4a0009dc9b7ea813c922ebd006b66ee0f4426f708c975a982958a528f88bbac49935757499219aee3bd
-  languageName: node
-  linkType: hard
-
-"@janus-idp/shared-react@npm:^2.13.0":
-  version: 2.13.0
-  resolution: "@janus-idp/shared-react@npm:2.13.0"
-  dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-kubernetes-common": ^0.8.3
-    "@backstage/plugin-kubernetes-react": ^0.4.4
-    "@kubernetes/client-node": ^0.22.1
-    "@material-ui/core": ^4.12.4
-    "@mui/icons-material": 5.15.17
-    classnames: ^2.3.2
-    date-fns: ^2.30.0
-    file-saver: ^2.0.5
-    lodash: ^4.17.21
-    mathjs: ^11.11.2
-    react-use: ^17.5.0
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-  checksum: 646bf1013f61926481b6c1457186d7b2f54df1f97c8249e40c66051d6ac81c360bfe1e7f4b3fb80596ee0f3e7a712724e564c96e3079e18fcb9e98a4f5bf1983
   languageName: node
   linkType: hard
 
@@ -20462,6 +20438,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-quay@workspace:dynamic-plugins/wrappers/backstage-community-plugin-quay":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-quay@workspace:dynamic-plugins/wrappers/backstage-community-plugin-quay"
+  dependencies:
+    "@backstage-community/plugin-quay": 1.14.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac"
@@ -29563,16 +29549,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-analytics-provider-segment": 1.10.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-quay@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-quay":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-quay@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-quay"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-quay": 1.14.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
