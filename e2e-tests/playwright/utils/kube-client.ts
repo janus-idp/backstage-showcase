@@ -1,7 +1,7 @@
 import k8s, { V1ConfigMap } from "@kubernetes/client-node";
 import { logger } from "./Logger";
 
-export class kubeCLient {
+export class KubeCLient {
   coreV1Api: k8s.CoreV1Api;
   appsApi: k8s.AppsV1Api;
   kc: k8s.KubeConfig;

@@ -2,10 +2,8 @@ import { logger } from "./Logger";
 import { spawn } from "child_process";
 import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
-import { kubeCLient } from "./k8sHelper";
+import { KubeCLient } from "./kube-client";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
-
-export const k8sClient = new kubeCLient();
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
@@ -57,7 +55,7 @@ export async function upgradeHelmChartWithWait(
     dump: upgradeOutput,
   });
 
-  const configmap = await k8sClient.getCongifmap(
+  const configmap = await new KubeCLient().getCongifmap(
     `${RELEASE}-backstage-app-config`,
     NAMESPACE,
   );
@@ -153,18 +151,19 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await k8sClient.updateCongifmap(configMap, namespace, patch);
+  await new KubeCLient().updateCongifmap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
   configMap: string,
   namespace: string,
 ) {
+  const kubeCLient = new KubeCLient();
   try {
     logger.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await k8sClient.getCongifmap(configMap, namespace);
+    await kubeCLient.getCongifmap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -174,8 +173,8 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await k8sClient.updateCongifmap(configMap, namespace, patch);
-    return await k8sClient.getCongifmap(configMap, namespace);
+    await kubeCLient.updateCongifmap(configMap, namespace, patch);
+    return await kubeCLient.getCongifmap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       logger.info(
@@ -190,7 +189,7 @@ export async function ensureNewPolicyConfigMapExists(
           "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       };
-      return await k8sClient.createCongifmap(namespace, cmBody);
+      return await kubeCLient.createCongifmap(namespace, cmBody);
     } else {
       throw e;
     }
@@ -201,6 +200,7 @@ export async function ensureEnvSecretExists(
   secretName: string,
   namespace: string,
 ) {
+  const kubeCLient = new KubeCLient();
   logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
     BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),
@@ -268,18 +268,18 @@ export async function ensureEnvSecretExists(
     data: secretData,
   };
   try {
-    await k8sClient.getSecret(secretName, namespace);
+    await kubeCLient.getSecret(secretName, namespace);
     const patch = {
       data: secretData,
     };
-    await k8sClient.updateSecret(secretName, namespace, patch);
-    return await k8sClient.getSecret(secretName, namespace);
+    await kubeCLient.updateSecret(secretName, namespace, patch);
+    return await kubeCLient.getSecret(secretName, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       logger.info(
         `Secret ${secretName} did not exist yet in namespace ${namespace}. Creating it..`,
       );
-      await k8sClient.createSecret(secret, namespace);
+      await kubeCLient.createSecret(secret, namespace);
     } else {
       throw e;
     }
