@@ -1,2 +1,2 @@
-export * from '@janus-idp/backstage-plugin-quay';
+export * from '@backstage-community/plugin-quay';
 
