@@ -59,8 +59,7 @@
   },
   "resolutions": {
     "@types/react": "18.2.48",
-    "@types/react-dom": "18.2.18",
-    "body-parser": "^1.20.3"
+    "@types/react-dom": "18.2.18"
   },
   "jest": {
     "testTimeout": 20000

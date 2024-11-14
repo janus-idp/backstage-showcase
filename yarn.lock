@@ -18007,7 +18007,7 @@ express-session@1.18.0, express-session@^1.17.1:
     safe-buffer "5.2.1"
     uid-safe "~2.1.5"
 
-express@4.21.1, express@^4.17.1, express@^4.17.3, express@^4.18.1, express@^4.18.2, express@^4.19.2, express@^4.21.0:
+express@4.21.1, express@^4.17.1, express@^4.17.3, express@^4.18.1, express@^4.18.2, express@^4.19.2:
   version "4.21.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.21.1.tgz#9dae5dda832f16b4eec941a4e44aa89ec481b281"
   integrity sha512-YSFlK1Ee0/GC8QaO91tHcDxJiE/X4FbpAyQWkxAvG6AXCuR65YzK8ua6D9hvi/TzUfZMpc+BwuM1IPw8fmQBiQ==
