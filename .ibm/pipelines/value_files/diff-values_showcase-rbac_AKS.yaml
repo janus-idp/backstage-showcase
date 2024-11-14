@@ -77,6 +77,8 @@ upstream:
           secretName: dynamic-plugins-npmrc
     extraEnvVarsSecrets:
       - rhdh-secrets
+    podSecurityContext:
+      fsGroup: 3000
   postgresql:
     enabled: true
     postgresqlDataDir: /var/lib/pgsql/data/userdata
