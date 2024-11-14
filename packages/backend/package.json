@@ -19,6 +19,8 @@
     "prettier:fix": "prettier --ignore-unknown --write ."
   },
   "dependencies": {
+    "@backstage-community/plugin-rbac-backend": "5.2.4",
+    "@backstage-community/plugin-rbac-node": "1.8.2",
     "@backstage/backend-app-api": "1.0.1",
     "@backstage/backend-defaults": "0.5.2",
     "@backstage/backend-dynamic-feature-service": "0.4.3",
@@ -46,8 +48,6 @@
     "@internal/plugin-licensed-users-info-backend": "*",
     "@internal/plugin-scalprum-backend": "*",
     "@janus-idp/backstage-plugin-audit-log-node": "1.7.0",
-    "@janus-idp/backstage-plugin-rbac-backend": "5.2.1",
-    "@janus-idp/backstage-plugin-rbac-node": "1.8.0",
     "@janus-idp/backstage-scaffolder-backend-module-annotator": "2.2.0",
     "app": "*",
     "express-prom-bundle": "6.6.0",
