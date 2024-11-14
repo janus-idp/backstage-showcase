@@ -163,7 +163,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isAcrAvailable
-    janus-idp.backstage-plugin-jfrog-artifactory:
+    backstage-community.plugin-jfrog-artifactory:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: JfrogArtifactoryPage
@@ -183,7 +183,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isNexusRepositoryManagerAvailable
-    janus-idp.backstage-plugin-ocm:
+    backstage-community.plugin-ocm:
       appIcons:
         - name: ocmIcon
           importName: OcmIcon
@@ -230,15 +230,13 @@ dynamicPlugins:
             if:
               anyOf:
               - isQuayAvailable
-    janus-idp.backstage-plugin-bulk-import:
+    red-hat-developer-hub.backstage-plugin-bulk-import:
       appIcons:
         - name: bulkImportIcon
-          module: BulkImportPlugin
           importName: BulkImportIcon
       dynamicRoutes:
         - path: /bulk-import/repositories
           importName: BulkImportPage
-          module: BulkImportPlugin
           menuItem:
             icon: bulkImportIcon
             text: Bulk import
@@ -252,7 +250,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isTektonCIAvailable
-    janus-idp.backstage-plugin-topology:
+    backstage-community.plugin-topology:
       mountPoints:
         - mountPoint: entity.page.topology/cards
           importName: TopologyPage
@@ -432,10 +430,8 @@ dynamicPlugins:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon
-                module: RbacPlugin
             dynamicRoutes:
               - path: /rbac
-                module: RbacPlugin
                 importName: RbacPage
                 menuItem:
                   icon: rbacIcon

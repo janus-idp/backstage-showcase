@@ -9,6 +9,7 @@ import {
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/Common";
 import { UIhelper } from "../../../utils/UIhelper";
+import fs from "fs/promises";
 
 test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
@@ -26,6 +27,10 @@ test.describe
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
   });
+
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
 
   test("Check if permission policies defined in files are loaded and effective", async () => {
     const testRole: string = "role:default/test2-role";
@@ -89,6 +94,10 @@ test.describe
     await common.loginAsGithubUser(process.env.GH_USER2_ID);
   });
 
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
@@ -142,6 +151,10 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await uiHelper.verifyHeading("RBAC");
   });
 
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("Check if Administration side nav is present with RBAC plugin", async () => {
     await uiHelper.verifyHeading(/All roles \(\d+\)/);
     const allGridColumnsText = Roles.getRolesListColumnsText();
@@ -149,6 +162,42 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     const allCellsIdentifier = Roles.getRolesListCellsIdentifier();
     await uiHelper.verifyCellsInTable(allCellsIdentifier);
   });
+
+  test("Should download the user list", async () => {
+    await page.locator('a:has-text("Download User List")').click();
+    const fileContent = await downloadAndReadFile(page);
+    const lines = fileContent.trim().split("\n");
+
+    const header = "userEntityRef,displayName,email,lastAuthTime";
+    if (lines[0] !== header) {
+      throw new Error("Header does not match");
+    }
+
+    // Check that each subsequent line starts with "user:default"
+    const allUsersValid = lines
+      .slice(1)
+      .every((line) => line.startsWith("user:default"));
+    if (!allUsersValid) {
+      throw new Error("Not all users info are valid");
+    }
+  });
+
+  async function downloadAndReadFile(page: Page): Promise<string | undefined> {
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator('a:has-text("Download User List")').click(),
+    ]);
+
+    const filePath = await download.path();
+
+    if (filePath) {
+      const fileContent = await fs.readFile(filePath, "utf-8");
+      return fileContent;
+    } else {
+      console.error("Download failed or path is not available");
+      return undefined;
+    }
+  }
 
   test("View details of a role", async () => {
     await uiHelper.clickLink("role:default/rbac_admin");
@@ -205,6 +254,9 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
 
   test("Edit users and groups and update policies of a role from the overview page", async () => {
     await rolesHelper.createRole("test-role1");
+
+    await uiHelper.filterInputPlaceholder("test-role1");
+
     await uiHelper.clickLink("role:default/test-role1");
 
     await uiHelper.verifyHeading("role:default/test-role1");

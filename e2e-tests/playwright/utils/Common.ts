@@ -134,6 +134,16 @@ export class Common {
     });
   }
 
+  async checkAndClickOnGHloginPopup(force = false) {
+    const frameLocator = this.page.getByLabel("Login Required");
+    try {
+      await frameLocator.waitFor({ state: "visible", timeout: 2000 });
+      await this.clickOnGHloginPopup();
+    } catch (error) {
+      if (force) throw error;
+    }
+  }
+
   async clickOnGHloginPopup() {
     const loginButtonExists =
       (await this.page

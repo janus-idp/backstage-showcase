@@ -46,7 +46,7 @@
     "@internal/plugin-licensed-users-info-backend": "*",
     "@internal/plugin-scalprum-backend": "*",
     "@janus-idp/backstage-plugin-audit-log-node": "1.7.0",
-    "@janus-idp/backstage-plugin-rbac-backend": "5.2.0",
+    "@janus-idp/backstage-plugin-rbac-backend": "5.2.1",
     "@janus-idp/backstage-plugin-rbac-node": "1.8.0",
     "@janus-idp/backstage-scaffolder-backend-module-annotator": "2.2.0",
     "app": "*",

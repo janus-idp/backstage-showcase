@@ -85,7 +85,7 @@ rules:
     verbs:
       - get
       - list
-  # Additional permissions to access Openshift Dev Spaces for @janus-idp/backstage-plugin-topology
+  # Additional permissions to access Openshift Dev Spaces for @backstage-community/plugin-topology
   - apiGroups:
       - org.eclipse.che
     resources:
