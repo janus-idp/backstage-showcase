@@ -240,7 +240,7 @@ dynamicPlugins:
           menuItem:
             icon: bulkImportIcon
             text: Bulk import
-    janus-idp.backstage-plugin-tekton:
+    backstage-community.plugin-tekton:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: TektonCI

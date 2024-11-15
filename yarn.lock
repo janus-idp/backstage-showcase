@@ -3473,6 +3473,54 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-tekton-common@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@backstage-community/plugin-tekton-common@npm:1.4.0"
+  peerDependencies:
+    "@backstage/plugin-permission-common": ^0.8.1
+  checksum: 69b5fd82b0364c38069ef45780227f5380b561ea2e728123e953f4d29c2ca627e84c104b2a0ca02b2bd64e1581d006750758abb4da70806b113ba7c849823a81
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-tekton@npm:3.16.1":
+  version: 3.16.1
+  resolution: "@backstage-community/plugin-tekton@npm:3.16.1"
+  dependencies:
+    "@aonic-ui/pipelines": ^1.1.1
+    "@backstage-community/plugin-tekton-common": ^1.4.0
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/plugin-catalog-react": ^1.14.0
+    "@backstage/plugin-kubernetes": ^0.11.16
+    "@backstage/plugin-kubernetes-common": ^0.8.3
+    "@backstage/plugin-kubernetes-react": ^0.4.4
+    "@backstage/plugin-permission-react": ^0.4.27
+    "@backstage/theme": ^0.6.0
+    "@janus-idp/shared-react": ^2.13.1
+    "@kubernetes/client-node": ^0.22.1
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": ^4.0.0-alpha.45
+    "@mui/icons-material": 5.15.17
+    "@patternfly/patternfly": ^5.1.0
+    "@patternfly/react-charts": ^7.1.1
+    "@patternfly/react-core": ^5.1.2
+    "@patternfly/react-tokens": ^5.1.2
+    "@patternfly/react-topology": ^5.1.0
+    classnames: ^2.3.2
+    dagre: ^0.8.5
+    lodash: ^4.17.21
+    react-measure: ^2.5.2
+    react-use: ^17.4.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 8c8d7d4bb325c5d10dbc72784f474a48709def87fb31ad5f03b893478c4b22c9264000a640a57ab206640aeea150feeeda74bce420b704a9eea2f680499851c4
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-topology-common@npm:^1.4.3":
   version: 1.4.3
   resolution: "@backstage-community/plugin-topology-common@npm:1.4.3"
@@ -9872,54 +9920,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-tekton-common@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@janus-idp/backstage-plugin-tekton-common@npm:1.3.0"
-  peerDependencies:
-    "@backstage/plugin-permission-common": ^0.8.1
-  checksum: 13232995b256b722934d0a7b90f95924086e871ccb5886291bffaea077e4f75943f69f38f51e8bdbc6921b1e1f030a2ca0228c141875ba7666a671069790da7e
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-tekton@npm:3.15.0":
-  version: 3.15.0
-  resolution: "@janus-idp/backstage-plugin-tekton@npm:3.15.0"
-  dependencies:
-    "@aonic-ui/pipelines": ^1.1.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/plugin-kubernetes": ^0.11.16
-    "@backstage/plugin-kubernetes-common": ^0.8.3
-    "@backstage/plugin-kubernetes-react": ^0.4.4
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/theme": ^0.6.0
-    "@janus-idp/backstage-plugin-tekton-common": ^1.3.0
-    "@janus-idp/shared-react": ^2.13.0
-    "@kubernetes/client-node": ^0.22.1
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": ^4.0.0-alpha.45
-    "@mui/icons-material": 5.15.17
-    "@patternfly/patternfly": ^5.1.0
-    "@patternfly/react-charts": ^7.1.1
-    "@patternfly/react-core": ^5.1.2
-    "@patternfly/react-tokens": ^5.1.2
-    "@patternfly/react-topology": ^5.1.0
-    classnames: ^2.3.2
-    dagre: ^0.8.5
-    lodash: ^4.17.21
-    react-measure: ^2.5.2
-    react-use: ^17.4.0
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-router-dom: ^6.0.0
-  checksum: f34aebeea2928a1cc8caed72232603a311b76d86a498ca27139bb87d3a865dc43980a25a9588827a5be4d93cb0eaf6ec1efbc2a05cd33b1edd0fa68d70be369e
-  languageName: node
-  linkType: hard
-
 "@janus-idp/backstage-scaffolder-backend-module-annotator@npm:2.2.0":
   version: 2.2.0
   resolution: "@janus-idp/backstage-scaffolder-backend-module-annotator@npm:2.2.0"
@@ -13161,8 +13161,8 @@ __metadata:
   linkType: hard
 
 "@patternfly/react-table@npm:^5.1.2":
-  version: 5.4.8
-  resolution: "@patternfly/react-table@npm:5.4.8"
+  version: 5.4.9
+  resolution: "@patternfly/react-table@npm:5.4.9"
   dependencies:
     "@patternfly/react-core": ^5.4.8
     "@patternfly/react-icons": ^5.4.2
@@ -13173,7 +13173,7 @@ __metadata:
   peerDependencies:
     react: ^17 || ^18
     react-dom: ^17 || ^18
-  checksum: 12c279b68367db9b3db44e01631b1d15c8dced087df1555e8327d82243236c35450e696074856381f9e3f984587a08106c48a6f2e7646abaacb1d751c2c5ab1d
+  checksum: 9a319fa18255294d77fca24f1839fc1294fbb6e2712ec99fe1bf950a6664878b75754b8b53e1d952158741c079002deac23adf776ad394c2f25a9b2d6286a030
   languageName: node
   linkType: hard
 
@@ -20537,6 +20537,16 @@ __metadata:
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.17.0
     "@mui/icons-material": 5.16.7
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-tekton@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tekton":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-tekton@workspace:dynamic-plugins/wrappers/backstage-community-plugin-tekton"
+  dependencies:
+    "@backstage-community/plugin-tekton": 3.16.1
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
 
@@ -29563,16 +29573,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-quay": 1.14.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-tekton@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-tekton":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-tekton@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-tekton"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-tekton": 3.15.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft

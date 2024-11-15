@@ -74,7 +74,7 @@ rules:
     verbs:
       - get
       - list
-  # Additional permissions for the @janus-idp/backstage-plugin-tekton
+  # Additional permissions for the @backstage-community/plugin-tekton
   - apiGroups:
       - tekton.dev
     resources:
