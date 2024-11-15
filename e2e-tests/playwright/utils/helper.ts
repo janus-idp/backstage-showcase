@@ -2,10 +2,8 @@ import { LOGGER } from "./logger";
 import { spawn } from "child_process";
 import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
-import { KubeCLient } from "./kubernetes-helper";
+import { KubeCLient } from "./kube-client";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
-
-export const KUBERNETES_CLIENT = new KubeCLient();
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
@@ -27,63 +25,6 @@ export async function runShellCmd(command: string) {
       }
     });
   });
-}
-
-export async function upgradeHelmChartWithWait(
-  release: string,
-  chart: string,
-  namespace: string,
-  values: string,
-  chartVersion: string,
-  quayRepo: string,
-  tagName: string,
-  flags: Array<string>,
-) {
-  LOGGER.info(`Deleting any existing helm release ${release}`);
-  await deleteHelmReleaseWithWait(release, namespace);
-
-  LOGGER.info(`Upgrading helm release ${release}`);
-  const upgradeOutput = await runShellCmd(`helm upgrade \
-    -i ${release} ${chart} \
-    --wait --timeout 300s -n ${namespace} \
-    --values ${values} \
-    --version "${chartVersion}" --set upstream.backstage.image.repository="${quayRepo}" --set upstream.backstage.image.tag="${tagName}" \
-    --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE} \
-    ${flags.join(" ")}`);
-
-  LOGGER.log({
-    level: "info",
-    message: `Release upgrade returned: `,
-    dump: upgradeOutput,
-  });
-
-  const configmap = await KUBERNETES_CLIENT.getConfigMap(
-    `${release}-backstage-app-config`,
-    namespace,
-  );
-  LOGGER.log({
-    level: "info",
-    message: `Applied configuration for release upgrade: `,
-    dump: configmap.body.data,
-  });
-
-  // TBD: get dynamic plugins configmap
-}
-
-export async function deleteHelmReleaseWithWait(
-  release: string,
-  namespace: string,
-) {
-  LOGGER.info(`Deleting release ${release} in namespace ${namespace}`);
-  const result = await runShellCmd(
-    `helm uninstall ${release} --wait --timeout 300s -n ${namespace} --ignore-not-found`,
-  );
-  LOGGER.log({
-    level: "info",
-    message: `Release delete returned: `,
-    dump: result,
-  });
-  return result;
 }
 
 export async function getLastSyncTimeFromLogs(
@@ -152,18 +93,19 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await KUBERNETES_CLIENT.updateCongifmap(configMap, namespace, patch);
+  await new KubeCLient().updateCongifmap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
   configMap: string,
   namespace: string,
 ) {
+  const kubeCLient = new KubeCLient();
   try {
     LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await KUBERNETES_CLIENT.getConfigMap(configMap, namespace);
+    await kubeCLient.getCongifmap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -173,8 +115,8 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await KUBERNETES_CLIENT.updateCongifmap(configMap, namespace, patch);
-    return await KUBERNETES_CLIENT.getConfigMap(configMap, namespace);
+    await kubeCLient.updateCongifmap(configMap, namespace, patch);
+    return await kubeCLient.getCongifmap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       LOGGER.info(
@@ -189,7 +131,7 @@ export async function ensureNewPolicyConfigMapExists(
           "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       };
-      return await KUBERNETES_CLIENT.createCongifmap(namespace, cmBody);
+      return await kubeCLient.createCongifmap(namespace, cmBody);
     } else {
       throw e;
     }
@@ -200,7 +142,8 @@ export async function ensureEnvSecretExists(
   secretName: string,
   namespace: string,
 ) {
-  LOGGER.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
+  const kubeCLient = new KubeCLient();
+  logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
     BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),
     AUTH_PROVIDERS_AZURE_CLIENT_SECRET: Buffer.from(
@@ -267,18 +210,18 @@ export async function ensureEnvSecretExists(
     data: secretData,
   };
   try {
-    await KUBERNETES_CLIENT.getSecret(secretName, namespace);
+    await kubeCLient.getSecret(secretName, namespace);
     const patch = {
       data: secretData,
     };
-    await KUBERNETES_CLIENT.updateSecret(secretName, namespace, patch);
-    return await KUBERNETES_CLIENT.getSecret(secretName, namespace);
+    await kubeCLient.updateSecret(secretName, namespace, patch);
+    return await kubeCLient.getSecret(secretName, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       LOGGER.info(
         `Secret ${secretName} did not exist yet in namespace ${namespace}. Creating it..`,
       );
-      await KUBERNETES_CLIENT.createSecret(secret, namespace);
+      await kubeCLient.createSecret(secret, namespace);
     } else {
       throw e;
     }
