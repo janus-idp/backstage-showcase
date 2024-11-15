@@ -36,7 +36,7 @@ yarn playwright install
 
 To incorporate a new test case, create a file with a `.spec.ts` extension in the `e2e-tests/playwright/e2e` directory.
 The tests within a spec file can run in parallel (by default) or sequentially if using the .serial like in [this example](../../e2e-tests/playwright/e2e/github-happy-path.spec.ts). Note that sequential execution is considered a bad practice and is strongly discouraged.
-Note that, in order to add or edit a test, you should adhere to the [contribution guidelines](./CONTRIBUTING.md).
+Note that, in order to add or edit a test, you should adhere to the [contribution guidelines](./CONTRIBUTING.MD).
 
 ### Running the Tests
 
