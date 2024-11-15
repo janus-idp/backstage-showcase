@@ -1,14 +1,14 @@
 import { test } from "@playwright/test";
 import * as constants from "../../utils/authenticationProviders/constants";
 import {
-  KUBERNETES_CLIENT,
   ensureEnvSecretExists,
   ensureNewPolicyConfigMapExists,
 } from "../../utils/helper";
+import { KubeCLient } from "../../utils/kube-client";
 
 test.describe("Setup namespace and configure environment for RHDH", () => {
   test("Create namespace", async () => {
-    await KUBERNETES_CLIENT.createNamespaceIfNotExists(
+    await new KubeCLient().createNamespaceIfNotExists(
       constants.AUTH_PROVIDERS_NAMESPACE,
     );
   });

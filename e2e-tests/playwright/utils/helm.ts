@@ -1,6 +1,6 @@
 import { runShellCmd } from "./helper";
 import { KubeCLient } from "./kube-client";
-import { logger } from "./Logger";
+import { LOGGER } from "./logger";
 
 export class HelmActions {
   static async upgradeHelmChartWithWait(
@@ -13,10 +13,10 @@ export class HelmActions {
     TAG_NAME: string,
     FLAGS: Array<string>,
   ) {
-    logger.info(`Deleting any exisitng helm release ${RELEASE}`);
+    LOGGER.info(`Deleting any exisitng helm release ${RELEASE}`);
     await HelmActions.deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
 
-    logger.info(`Upgrading helm release ${RELEASE}`);
+    LOGGER.info(`Upgrading helm release ${RELEASE}`);
     const upgradeOutput = await runShellCmd(`helm upgrade \
       -i ${RELEASE} ${CHART}  \
       --wait --timeout 300s -n ${NAMESPACE} \
@@ -25,17 +25,17 @@ export class HelmActions {
       --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
       ${FLAGS.join(" ")}`);
 
-    logger.log({
+    LOGGER.log({
       level: "info",
       message: `Release upgrade returned: `,
       dump: upgradeOutput,
     });
 
-    const configmap = await new KubeCLient().getCongifmap(
+    const configmap = await new KubeCLient().getConfigMap(
       `${RELEASE}-backstage-app-config`,
       NAMESPACE,
     );
-    logger.log({
+    LOGGER.log({
       level: "info",
       message: `Applied confguration for release upgrade: `,
       dump: configmap.body.data,
@@ -45,11 +45,11 @@ export class HelmActions {
   }
 
   static async deleteHelmReleaseWithWait(RELEASE: string, NAMESPACE: string) {
-    logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
+    LOGGER.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
     const result = await runShellCmd(
       `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
     );
-    logger.log({
+    LOGGER.log({
       level: "info",
       message: `Release delete returned: `,
       dump: result,

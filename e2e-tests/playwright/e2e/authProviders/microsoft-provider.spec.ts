@@ -8,10 +8,10 @@ import * as graphHelper from "../../utils/authenticationProviders/msgraph-helper
 import { BrowserContext } from "@playwright/test";
 import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import {
-  upgradeHelmChartWithWait,
   waitForNextSync,
   replaceInRBACPolicyFileConfigMap,
 } from "../../utils/helper";
+import { HelmActions } from "../../utils/helm";
 
 let page: Page;
 
@@ -76,7 +76,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       "--set upstream.backstage.appConfig.auth.providers.oidc.production.signIn.resolvers[0].resolver=emailMatchingUserEntityProfileEmail",
     ];
     // setup RHSSO provider with user ingestion
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,

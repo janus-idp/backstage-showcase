@@ -6,11 +6,11 @@ import * as constants from "../../utils/authenticationProviders/constants";
 import { LOGGER } from "../../utils/logger";
 import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import {
-  upgradeHelmChartWithWait,
   waitForNextSync,
   replaceInRBACPolicyFileConfigMap,
 } from "../../utils/helper";
 import * as rhssoHelper from "../../utils/authenticationProviders/rh-sso-helper";
+import { HelmActions } from "../../utils/helm";
 
 let page: Page;
 
@@ -47,7 +47,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
       `Executing testcase: Default resolver for RHSSO should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not`,
     );
     // setup RHSSO provider with user ingestion
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -103,7 +103,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     // disable keycloak plugin to disable ingestion
     // edit jdoe user in keycloak to have a different email than the synced one: it will not be synced
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -167,7 +167,7 @@ test.describe("Standard authentication providers: OIDC with RHSSO 7.6", () => {
     // updating the resolver
     // disable keycloak plugin to disable ingestion
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,

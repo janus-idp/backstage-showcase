@@ -105,7 +105,7 @@ export async function ensureNewPolicyConfigMapExists(
     LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await kubeCLient.getCongifmap(configMap, namespace);
+    await new KubeCLient().getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -116,7 +116,7 @@ export async function ensureNewPolicyConfigMapExists(
       },
     ];
     await kubeCLient.updateCongifmap(configMap, namespace, patch);
-    return await kubeCLient.getCongifmap(configMap, namespace);
+    return await new KubeCLient().getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       LOGGER.info(
@@ -143,7 +143,7 @@ export async function ensureEnvSecretExists(
   namespace: string,
 ) {
   const kubeCLient = new KubeCLient();
-  logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
+  LOGGER.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
     BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),
     AUTH_PROVIDERS_AZURE_CLIENT_SECRET: Buffer.from(

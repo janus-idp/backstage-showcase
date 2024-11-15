@@ -4,12 +4,12 @@ import { UIhelper } from "../../utils/ui-helper";
 import * as constants from "../../utils/authenticationProviders/constants";
 import { LOGGER } from "../../utils/logger";
 import {
-  upgradeHelmChartWithWait,
   waitForNextSync,
   replaceInRBACPolicyFileConfigMap,
 } from "../../utils/helper";
 import { BrowserContext } from "@playwright/test";
 import * as ghHelper from "../../utils/authenticationProviders/github-helper";
+import { HelmActions } from "../../utils/helm";
 
 let page: Page;
 
@@ -42,7 +42,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
       "Execute testcase: Setup Github authentication provider and wait for first sync",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
