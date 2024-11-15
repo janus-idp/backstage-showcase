@@ -21,7 +21,7 @@ export const SETTINGS_PAGE_COMPONENTS = {
   signOut: 'li[data-testid="sign-out"]',
 };
 
-export const RoleListPO = {
+export const ROLES_PAGE_COMPONENTS = {
   editRole: (name: string) => `span[data-testid="update-role-${name}"]`,
   deleteRole: (name: string) => `span[data-testid="delete-role-${name}"]`,
 };

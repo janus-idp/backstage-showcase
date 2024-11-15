@@ -4,26 +4,26 @@ import { LOGGER } from "./logger";
 
 export class HelmActions {
   static async upgradeHelmChartWithWait(
-    RELEASE: string,
-    CHART: string,
-    NAMESPACE: string,
-    VALUES: string,
-    CHART_VERSION: string,
-    QUAY_REPO: string,
-    TAG_NAME: string,
-    FLAGS: Array<string>,
+    release: string,
+    chart: string,
+    namespace: string,
+    values: string,
+    chartVersion: string,
+    quayRepo: string,
+    tagName: string,
+    flags: Array<string>,
   ) {
-    LOGGER.info(`Deleting any exisitng helm release ${RELEASE}`);
-    await HelmActions.deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
+    LOGGER.info(`Deleting any existing helm release ${release}`);
+    await HelmActions.deleteHelmReleaseWithWait(release, namespace);
 
-    LOGGER.info(`Upgrading helm release ${RELEASE}`);
+    LOGGER.info(`Upgrading helm release ${release}`);
     const upgradeOutput = await runShellCmd(`helm upgrade \
-      -i ${RELEASE} ${CHART}  \
-      --wait --timeout 300s -n ${NAMESPACE} \
-      --values ${VALUES} \
-      --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
+      -i ${release} ${chart}  \
+      --wait --timeout 300s -n ${namespace} \
+      --values ${values} \
+      --version "${chartVersion}" --set upstream.backstage.image.repository="${quayRepo}" --set upstream.backstage.image.tag="${tagName}" \
       --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-      ${FLAGS.join(" ")}`);
+      ${flags.join(" ")}`);
 
     LOGGER.log({
       level: "info",
@@ -32,22 +32,22 @@ export class HelmActions {
     });
 
     const configmap = await new KubeClient().getConfigMap(
-      `${RELEASE}-backstage-app-config`,
-      NAMESPACE,
+      `${release}-backstage-app-config`,
+      namespace,
     );
     LOGGER.log({
       level: "info",
-      message: `Applied confguration for release upgrade: `,
+      message: `Applied configuration for release upgrade: `,
       dump: configmap.body.data,
     });
 
     //TBD: get dynamic plugins configmap
   }
 
-  static async deleteHelmReleaseWithWait(RELEASE: string, NAMESPACE: string) {
-    LOGGER.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
+  static async deleteHelmReleaseWithWait(release: string, namespace: string) {
+    LOGGER.info(`Deleting release ${release} in namespace ${namespace}`);
     const result = await runShellCmd(
-      `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
+      `helm uninstall ${release} --wait --timeout 300s -n ${namespace} --ignore-not-found`,
     );
     LOGGER.log({
       level: "info",

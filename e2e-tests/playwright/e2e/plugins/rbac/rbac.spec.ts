@@ -3,7 +3,7 @@ import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 import {
   HOME_PAGE_COMPONENTS,
   ROLE_OVERVIEW_COMPONENTS,
-  RoleListPO,
+  ROLES_PAGE_COMPONENTS,
 } from "../../../support/pageObjects/page-obj";
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
@@ -233,7 +233,7 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
       RbacPo.rbacTestUsers.tara,
       RbacPo.rbacTestUsers.backstage,
     ]);
-    await page.click(RoleListPO.editRole("role:default/test-role"));
+    await page.click(ROLES_PAGE_COMPONENTS.editRole("role:default/test-role"));
     await uiHelper.verifyHeading("Edit Role");
     await uiHelper.clickButton("Next");
     await rbacPo.addUsersAndGroups(testUser);

@@ -53,7 +53,7 @@ export class RbacPo extends PageObject {
     return `input[name="permissionPoliciesRows[${row}].policies[${policy}].policy-${policyName}"]`;
   }
 
-  constructor(page: Page, url: PagesUrl = PagesUrl.rbac) {
+  constructor(page: Page, url: PagesUrl = PagesUrl.RBAC) {
     super(page, url);
     this.article = this.page.getByRole("article");
     this.updateMemberButton = this.page
