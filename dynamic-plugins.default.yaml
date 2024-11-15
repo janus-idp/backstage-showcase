@@ -578,7 +578,7 @@ plugins:
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
     disabled: true
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
     disabled: false
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
