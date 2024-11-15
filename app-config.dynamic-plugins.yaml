@@ -240,7 +240,7 @@ dynamicPlugins:
           menuItem:
             icon: bulkImportIcon
             text: Bulk import
-    janus-idp.backstage-plugin-tekton:
+    backstage-community.plugin-tekton:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: TektonCI
@@ -426,7 +426,7 @@ dynamicPlugins:
     janus-idp.backstage-plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
-    janus-idp.backstage-plugin-rbac:
+    backstage-community.plugin-rbac:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon
