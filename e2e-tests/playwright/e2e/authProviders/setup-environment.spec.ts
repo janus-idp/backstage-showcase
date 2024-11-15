@@ -4,11 +4,11 @@ import {
   ensureEnvSecretExists,
   ensureNewPolicyConfigMapExists,
 } from "../../utils/helper";
-import { KubeCLient } from "../../utils/kube-client";
+import { KubeClient } from "../../utils/kube-client";
 
 test.describe("Setup namespace and configure environment for RHDH", () => {
   test("Create namespace", async () => {
-    await new KubeCLient().createNamespaceIfNotExists(
+    await new KubeClient().createNamespaceIfNotExists(
       constants.AUTH_PROVIDERS_NAMESPACE,
     );
   });

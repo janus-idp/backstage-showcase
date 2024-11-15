@@ -2,7 +2,7 @@ import { LOGGER } from "./logger";
 import { spawn } from "child_process";
 import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
-import { KubeCLient } from "./kube-client";
+import { KubeClient } from "./kube-client";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
 
 export async function runShellCmd(command: string) {
@@ -93,19 +93,19 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await new KubeCLient().updateCongifmap(configMap, namespace, patch);
+  await new KubeClient().updateCongifmap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
   configMap: string,
   namespace: string,
 ) {
-  const kubeCLient = new KubeCLient();
+  const kubeCLient = new KubeClient();
   try {
     LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await new KubeCLient().getConfigMap(configMap, namespace);
+    await new KubeClient().getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -116,7 +116,7 @@ export async function ensureNewPolicyConfigMapExists(
       },
     ];
     await kubeCLient.updateCongifmap(configMap, namespace, patch);
-    return await new KubeCLient().getConfigMap(configMap, namespace);
+    return await new KubeClient().getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       LOGGER.info(
@@ -142,7 +142,7 @@ export async function ensureEnvSecretExists(
   secretName: string,
   namespace: string,
 ) {
-  const kubeCLient = new KubeCLient();
+  const kubeCLient = new KubeClient();
   LOGGER.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
     BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),

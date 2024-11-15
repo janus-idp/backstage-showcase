@@ -1,5 +1,5 @@
 import { runShellCmd } from "./helper";
-import { KubeCLient } from "./kube-client";
+import { KubeClient } from "./kube-client";
 import { LOGGER } from "./logger";
 
 export class HelmActions {
@@ -31,7 +31,7 @@ export class HelmActions {
       dump: upgradeOutput,
     });
 
-    const configmap = await new KubeCLient().getConfigMap(
+    const configmap = await new KubeClient().getConfigMap(
       `${RELEASE}-backstage-app-config`,
       NAMESPACE,
     );
