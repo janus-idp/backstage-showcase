@@ -8,7 +8,8 @@ import { Catalog } from "../../../support/pages/Catalog";
 // Pre-req: install Red Hat OpenShift Pipelines Operator
 // Pre-req: Create a pipeline run
 // Pre-req: A kubernetes cluster containing pipeline and pipelinerun resources labeled with backstage.io/kubernetes-id: developer-hub
-// Pre-req: A catalog entity with the matching backstage.io/kubernetes-id: developer-hub annotation as well as the janus-idp.io/tekton : <BACKSTAGE_ENTITY_NAME> annotation
+// Pre-req: A catalog entity with the matching backstage.io/kubernetes-id: developer-hub annotation as well as the tekton.dev/cicd: "true" annotation
+//          The old janus-idp.io/tekton annotation is deprecated but still supported!
 
 test.describe.skip("Test Tekton plugin", () => {
   let common: Common;

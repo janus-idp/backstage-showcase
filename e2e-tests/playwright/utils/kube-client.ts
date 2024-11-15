@@ -34,6 +34,32 @@ export class KubeCLient {
     }
   }
 
+  async scaleDeployment(
+    deploymentName: string,
+    namespace: string,
+    replicas: number,
+  ) {
+    const patch = { spec: { replicas: replicas } };
+    try {
+      await this.appsApi.patchNamespacedDeploymentScale(
+        deploymentName,
+        namespace,
+        patch,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        {
+          headers: { "Content-Type": "application/strategic-merge-patch+json" },
+        },
+      );
+      console.log(`Deployment scaled to ${replicas} replicas.`);
+    } catch (error) {
+      console.error("Error scaling deployment:", error);
+    }
+  }
+
   async getSecret(secretName: string, namespace: string) {
     try {
       logger.info(`Getting secret ${secretName} from namespace ${namespace}`);
@@ -180,5 +206,52 @@ export class KubeCLient {
       logger.error(err.body.message);
       throw err;
     }
+  }
+
+  async waitForDeploymentReady(
+    deploymentName: string,
+    namespace: string,
+    expectedReplicas: number,
+    timeout: number = 100000,
+    checkInterval: number = 10000,
+  ) {
+    const start = Date.now();
+
+    while (Date.now() - start < timeout) {
+      try {
+        const response = await this.appsApi.readNamespacedDeployment(
+          deploymentName,
+          namespace,
+        );
+        const availableReplicas = response.body.status?.availableReplicas || 0;
+
+        if (availableReplicas === expectedReplicas) {
+          console.log(
+            `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
+          );
+          return;
+        }
+
+        console.log(
+          `Waiting for ${deploymentName} to reach ${expectedReplicas} replicas, currently has ${availableReplicas}.`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, checkInterval));
+      } catch (error) {
+        console.error(`Error checking deployment status: ${error}`);
+        throw error;
+      }
+    }
+
+    throw new Error(
+      `Deployment ${deploymentName} did not become ready in time.`,
+    );
+  }
+
+  async restartDeployment(deploymentName: string, namespace: string) {
+    await this.scaleDeployment(deploymentName, namespace, 0);
+    await this.waitForDeploymentReady(deploymentName, namespace, 0);
+
+    await this.scaleDeployment(deploymentName, namespace, 1);
+    await this.waitForDeploymentReady(deploymentName, namespace, 1);
   }
 }
