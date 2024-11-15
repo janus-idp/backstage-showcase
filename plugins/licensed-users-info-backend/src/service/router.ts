@@ -14,12 +14,11 @@ import { CatalogClient } from '@backstage/catalog-client';
 import { NotAllowedError } from '@backstage/errors';
 import { AuthorizeResult } from '@backstage/plugin-permission-common';
 
+import { policyEntityReadPermission } from '@backstage-community/plugin-rbac-common';
 import express from 'express';
 import Router from 'express-promise-router';
 import { json2csv } from 'json-2-csv';
 import { DateTime } from 'luxon';
-
-import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
 import {
   DatabaseUserInfoStore,
