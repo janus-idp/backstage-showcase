@@ -104,12 +104,12 @@ global:
       #                 if:
       #                   allOf:
       #                     - isTektonCIAvailable
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              janus-idp.backstage-plugin-quay:
+              backstage-community.plugin-quay:
                 mountPoints:
                   - mountPoint: entity.page.image-registry/cards
                     importName: QuayPage
