@@ -40,7 +40,7 @@ dynamicPlugins:
 
 `default.<menu_item_name>`: The `default.` prefix is mandatory to ensure that the menu item is recognized as a main menu item. It should be used for both individual menu items and parent menu group configurations.
 
-See [Menu items](dynamic-plugins.md#menu-items) from dynamic-plugins documentation for more details.
+See [Menu items](dynamic-plugins/dynamic-plugins.md#menu-items) from dynamic-plugins documentation for more details.
 
 See [DefaultMainMenuItems](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/consts.ts#L1) for a list of main menu items, including their default priorities.
 
