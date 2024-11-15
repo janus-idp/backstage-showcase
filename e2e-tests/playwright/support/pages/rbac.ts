@@ -3,6 +3,7 @@ import { UIhelper } from "../../utils/ui-helper";
 import {
   DELETE_ROLE_COMPONENTS,
   HOME_PAGE_COMPONENTS,
+  RoleListPO,
 } from "../pageObjects/page-obj";
 
 export class Roles {
@@ -56,7 +57,7 @@ export class Roles {
   async deleteRole(name: string) {
     await this.uiHelper.openSidebar("RBAC");
     await this.uiHelper.filterInputPlaceholder(name);
-    const button = this.page.locator(ROLE_LIST_COMPONENTS.deleteRole(name));
+    const button = this.page.locator(RoleListPO.deleteRole(name));
     await button.waitFor({ state: "visible" });
     await button.click();
     await this.uiHelper.verifyHeading("Delete this role?");
