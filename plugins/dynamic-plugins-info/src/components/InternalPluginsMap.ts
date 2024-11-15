@@ -96,8 +96,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-backstage-plugin-jira',
   'roadiehq-backstage-plugin-datadog':
     './dynamic-plugins/dist/roadiehq-backstage-plugin-datadog',
-  'janus-idp-backstage-plugin-tekton':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-tekton',
+  'backstage-community-plugin-tekton':
+    './dynamic-plugins/dist/backstage-community-plugin-tekton',
   'janus-idp-backstage-plugin-quay':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-quay',
   'backstage-community-plugin-nexus-repository-manager':

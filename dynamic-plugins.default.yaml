@@ -744,12 +744,12 @@ plugins:
                     allOf:
                       - isDatadogAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-tekton:
+          backstage-community.plugin-tekton:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: TektonCI
