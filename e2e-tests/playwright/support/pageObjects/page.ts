@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
+import { UIhelper } from "../../utils/ui-helper";
 
 export enum PagesUrl {
   rbac = "/rbac",

@@ -3,8 +3,6 @@ import { UIhelper } from "../../utils/ui-helper";
 import {
   DELETE_ROLE_COMPONENTS,
   HOME_PAGE_COMPONENTS,
-  ROLE_FORM_COMPONENTS,
-  ROLE_LIST_COMPONENTS,
 } from "../pageObjects/page-obj";
 
 export class Roles {

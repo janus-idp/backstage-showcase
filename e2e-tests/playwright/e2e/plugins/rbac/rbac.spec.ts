@@ -2,9 +2,8 @@ import { Page, expect, test } from "@playwright/test";
 import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 import {
   HOME_PAGE_COMPONENTS,
-  ROLE_FORM_COMPONENTS,
-  ROLE_LIST_COMPONENTS,
   ROLE_OVERVIEW_COMPONENTS,
+  RoleListPO,
 } from "../../../support/pageObjects/page-obj";
 import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
