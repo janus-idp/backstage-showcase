@@ -921,12 +921,12 @@ plugins:
         url: ${TECH_RADAR_DATA_URL}
 
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
     disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-analytics-provider-segment:
+          backstage-community.plugin-analytics-provider-segment:
             apiFactories:
               - importName: SegmentAnalyticsApi
       backend:
