@@ -15,7 +15,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: 3,
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["html"],
@@ -46,6 +46,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
         "**/playwright/e2e/authProviders/**/*.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
       ],
     },
     {
@@ -68,6 +69,7 @@ export default defineConfig({
       testIgnore: [
         "**/playwright/e2e/authProviders/setup-environment.spec.ts",
         "**/playwright/e2e/authProviders/clear-environment.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
       ],
       dependencies: ["showcase-auth-providers-setup-environment"],
       teardown: "showcase-auth-providers-clear-environment",
@@ -96,6 +98,7 @@ export default defineConfig({
         "**/playwright/e2e/audit-log/**/*.spec.ts",
         "**/playwright/e2e/verify-redis-cache.spec.ts",
         "**/playwright/e2e/plugins/topology/topology.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
       ],
     },
     {
@@ -106,6 +109,11 @@ export default defineConfig({
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
+    },
+    {
+      name: "postgres-health-check",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: ["**/playwright/e2e/verify-tls-config-health-check.spec.ts"],
     },
   ],
 });
