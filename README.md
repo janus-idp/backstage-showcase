@@ -29,7 +29,7 @@ Our current list of plugins within the showcase app include:
 - [Security Insights plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-security-insights)
 - [Keycloak plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/keycloak/plugins/catalog-backend-module-keycloak)
 - [SonarQube plugin](https://roadie.io/backstage/plugins/sonarqube/)
-- [Tekton plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/tekton)
+- [Tekton plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/tekton/plugins/tekton)
 - [Azure DevOps plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/azure-devops)
 - [Jenkins plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins/plugins/jenkins)
 - [Notifications plugin](https://github.com/backstage/backstage/tree/master/plugins/notifications)
