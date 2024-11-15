@@ -98,6 +98,7 @@ export class Common {
       await this.page.goto("/");
       await this.waitForLoad(12000);
       await this.uiHelper.clickButton("Sign In");
+      await this.checkAndReauthorizeGithubApp();
     } else {
       // Perform login if no session file exists, then save the state
       await this.logintoGithub(userid);
