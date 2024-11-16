@@ -9,6 +9,7 @@ ENV CI=1 \
 # Define Helm and OpenShift CLI (oc) versions
 ENV HELM_VERSION="v3.12.3"
 ENV OC_VERSION="4.14.3"
+ENV OCM_VERSION="0.1.76"
 
 ARG CI_XBUILD
 
@@ -75,6 +76,11 @@ RUN curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-lin
 RUN curl -fsSL -o /tmp/openshift-client-linux.tar.gz "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OC_VERSION}/openshift-client-linux-${OC_VERSION}.tar.gz" \
     && tar -xzvf /tmp/openshift-client-linux.tar.gz -C /usr/local/bin oc kubectl \
     && rm -rf /tmp/*
+
+# Install ocm-cli
+RUN curl -Lo /tmp/ocm "https://github.com/openshift-online/ocm-cli/releases/download/v${OCM_VERSION}/ocm-linux-amd64" && \
+    chmod +x /tmp/ocm && \
+    mv /tmp/ocm /usr/local/bin/ocm
 
 # Install rsync
 RUN apt-get update -y && \
