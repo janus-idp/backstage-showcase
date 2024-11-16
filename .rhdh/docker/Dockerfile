@@ -88,7 +88,6 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffo
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-regex-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-regex-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic/dist-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-quay/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-quay/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/dist-dynamic/package.json
@@ -143,6 +142,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-rbac/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-rbac/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-quay/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-quay/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/dist-dynamic/package.json
@@ -379,6 +379,11 @@ ENV NO_PROXY='localhost,127.0.0.1'
 # The `--no-node-snapshot` node option enables the usage of the backstage scaffolder on nodejs 20
 # https://github.com/backstage/backstage/issues/20661
 
-ENTRYPOINT ["node", "packages/backend", "--no-node-snapshot", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
+# Copy instrumentation needed for surfacing metrics
+COPY --chown=1001:1001 $EXTERNAL_SOURCE_NESTED/packages/backend/src/instrumentation.js ./
+# Remove write and execute permissions
+RUN chmod a=r ./instrumentation.js
+
+ENTRYPOINT ["node", "--require", "./instrumentation.js", "packages/backend", "--no-node-snapshot", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
