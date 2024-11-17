@@ -1,6 +1,8 @@
 # Setting up Metrics Monitoring and Logging for Backstage Showcase
 
-The Backstage Showcase provides a `/metrics` endpoint that provides Prometheus metrics about your backstage application. This endpoint can be used to monitor your backstage instance using Prometheus and Grafana.
+The Backstage Showcase provides a `/metrics` endpoint on port `9464` (for application metrics) and `9463` (for host metrics) that provides OpenTelemetry metrics about your backstage application. This endpoint can be used to monitor your backstage instance using OpenTelemetry and Grafana.
+
+**Note**: Due to a limitation, the host and application metrics are exposed on separate ports. This is to be improved by making all metrics accessible on the same port (9464) in a future release. This guide will ONLY work with the application metrics from NodeJs and Backstage.
 
 When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart) or the [RHDH Operator](https://github.com/janus-idp/operator), monitoring and logging for your RHDH instance can be configured using the following steps.
 
@@ -28,7 +30,7 @@ To obtain the `values.yaml`, you can run the following command:
 helm show values redhat-developer/backstage > values.yaml
 ```
 
-Then, you will need to modify the `values.yaml` to enable metrics monitoring by adding the following configurations:
+Then, you will need to modify the `values.yaml` to enable metrics monitoring by setting `upstream.metrics.serviceMonitor.enabled` to true:
 
 ```yaml title="values.yaml"
 upstream:
@@ -37,6 +39,7 @@ upstream:
     serviceMonitor:
       enabled: true
       path: /metrics
+      port: http-metrics
 ```
 
 Then you can deploy the Janus Helm chart with the modified `values.yaml`:
@@ -45,7 +48,7 @@ Then you can deploy the Janus Helm chart with the modified `values.yaml`:
 helm upgrade -i <release_name> redhat-developer/backstage -f values.yaml
 ```
 
-You can then verify metrics are being captured by navigating to the Openshift Console. Go to `Developer` Mode, change to the namespace the showcase is deployed on, selecting `Observe` and navigating to the `Metrics` tab. Here you can create PromQL queries to query the metrics being captured by Prometheus.
+You can then verify metrics are being captured by navigating to the Openshift Console. Go to `Developer` Mode, change to the namespace the showcase is deployed on, selecting `Observe` and navigating to the `Metrics` tab. Here you can create PromQL queries to query the metrics being captured by OpenTelemetry.
 ![Openshift Metrics](./images/openshift-metrics.png)
 
 #### Operator-backed deployment
@@ -75,7 +78,7 @@ spec:
     matchLabels:
       rhdh.redhat.com/app: backstage-${CR_NAME}
   endpoints:
-  - port: backend
+  - port: http-metrics
     path: '/metrics'
 EOF
 $ oc apply -f /tmp/${CR_NAME}.ServiceMonitor.yaml
@@ -105,7 +108,7 @@ upstream:
       # Other annotations above
       prometheus.io/scrape: 'true'
       prometheus.io/path: '/metrics'
-      prometheus.io/port: '7007'
+      prometheus.io/port: '9464'
       prometheus.io/scheme: 'http'
 ```
 
@@ -122,7 +125,7 @@ $ oc annotate pods \
     --selector janus-idp.io/app="backstage-${CR_NAME}" \
     prometheus.io/scrape='true' \
     prometheus.io/path='/metrics' \
-    prometheus.io/port='7007' \
+    prometheus.io/port='9464' \
     prometheus.io/scheme='http'
 ```
 
@@ -154,7 +157,7 @@ deployment.yaml: |-
         annotations:
           prometheus.io/scrape: 'true'
           prometheus.io/path: '/metrics'
-          prometheus.io/port: '7007'
+          prometheus.io/port: '9464'
           prometheus.io/scheme: 'http'
   # --- truncated ---
 ```
