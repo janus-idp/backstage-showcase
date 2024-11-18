@@ -518,7 +518,7 @@ A plugin can specify multiple field extensions, in which case each field extensi
 
 ### Add a custom Backstage theme or replace the provided theme
 
-The look and feel of a Backstage application is handled by Backstage theming. Out of the box Developer Hub provides a theme with a number of [configuration overrides](./customization.md) that allow for user customization. It's also possible to provide additional Backstage themes as well as replace the out of box Developer Hub themes from a dynamic plugin.
+The look and feel of a Backstage application is handled by Backstage theming. Out of the box Developer Hub provides a theme with a number of [configuration overrides](../customization.md) that allow for user customization. It's also possible to provide additional Backstage themes as well as replace the out of box Developer Hub themes from a dynamic plugin.
 
 A dynamic plugin would export a theme provider function with a signature of `({ children }: { children: ReactNode }): React.JSX.Element`, for example:
 

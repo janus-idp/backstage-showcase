@@ -15,7 +15,7 @@ yarn tsc                                                           # Run type ge
 
 ### Run the Showcase App
 
-We currently have quite a bit of moving parts for the showcase application. As such, we have documentation dedicated to the requirements for running the showcase app under [getting-started.md](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md).
+We currently have quite a bit of moving parts for the showcase application. As such, we have documentation dedicated to the requirements for running the showcase app under [getting-started.md](https://github.com/janus-idp/backstage-showcase/blob/main/docs/index.md).
 
 ### Useful Scripts
 

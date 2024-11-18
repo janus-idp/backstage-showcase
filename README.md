@@ -16,7 +16,7 @@ Today, we have several plugins integrated into the showcase app as a way to demo
 
 Our current list of plugins within the showcase app include:
 
-- [OCM plugin](https://github.com/backstage/comunity-plugins/tree/main/workspaces/ocm/plugins/ocm)
+- [OCM plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/ocm/plugins/ocm)
 - [Quay plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/quay/plugins/quay)
 - [Kubernetes plugin](https://github.com/backstage/backstage/tree/master/plugins/kubernetes)
 - [Topology plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/topology)
