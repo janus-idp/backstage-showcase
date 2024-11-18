@@ -8,9 +8,6 @@ testWithHelper.describe("GitHub integration with Org data fetching", () => {
     await new Common(page).logintoGithub();
     await uiHelper.openSidebar("Catalog");
   });
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   testWithHelper(
     "Verify that fetching the groups of the first org works",
