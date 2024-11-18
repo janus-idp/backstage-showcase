@@ -4,7 +4,7 @@
 To package a Backstage plugin as a dynamic plugin, you need access to its source code.
 
 First you need to create a derived package using the `@janus-idp/cli` and then package it into one of the supported formats.
-For detailed instructions on creating a derived package, see [Creating a Derived Dynamic Plugin Package](../creating-derived-package).
+For detailed instructions on creating a derived package, see [Export Derived Dynamic Plugin Package](export-derived-package.md).
 
 There are three possible packaging formats for dynamic plugins:
 
@@ -21,7 +21,7 @@ The derived dynamic plugin JavaScript packages should **not** be pushed to the p
 **Prerequisites:**
 
 - `podman` or `docker` installed on your system.
-- An exported derived dynamic plugin package (see: [Creating a Derived Dynamic Plugin Package](creating-derived-package.md).
+- An exported derived dynamic plugin package (see: [Export Derived Dynamic Plugin Package](export-derived-package.md).
 
 To package the plugin into an OCI image, use the `package package-dynamic-plugins` command from `@janus-idp/cli` in the plugin’s source code root directory (not in the `dist-dynamic` directory).
 
@@ -37,7 +37,7 @@ The `--tag` argument is required when using this packaging method. It specifies 
 
 **Prerequisites:**
 
-- An exported derived dynamic plugin package (see: [Creating a Derived Dynamic Plugin Package](creating-derived-package.md).
+- An exported derived dynamic plugin package (see: [Export Derived Dynamic Plugin Package](export-derived-package.md).
 
 To package the plugin into a `tgz` archive, run the `npm pack` command in the `dist-dynamic` directory. This will create a `tgz` archive in the current directory that can be used to install the plugin.
 
@@ -84,7 +84,7 @@ oc new-app --image-stream=plugin-registry
 
 **Prerequisites:**
 
-- An exported derived dynamic plugin package (see: [Creating a Derived Dynamic Plugin Package](creating-derived-package.md).
+- An exported derived dynamic plugin package (see: [Export Derived Dynamic Plugin Package](export-derived-package.md).
 
 > [!WARNING]
 > Using your own internal npm registry to distribute derived dynamic plugin package is recommended.
