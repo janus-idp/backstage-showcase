@@ -244,9 +244,9 @@ apply_yaml_files() {
     | kubectl create configmap app-config-rhdh --from-file="app-config-rhdh.yaml"="/dev/stdin" --namespace="${project}" --dry-run=client -o yaml \
     | kubectl apply -f -
   else
-    oc create configmap app-config-rhdh --from-file "$dir/resources/config_map/app-config-rhdh.yaml" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
+    oc create configmap app-config-rhdh --from-file="app-config-rhdh.yaml"="$dir/resources/config_map/app-config-rhdh.yaml" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   fi
-  oc create configmap rbac-policy --from-file "$dir/resources/config_map/rbac-policy.csv" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
+  oc create configmap rbac-policy --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
   #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
