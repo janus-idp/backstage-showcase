@@ -59,13 +59,13 @@ global:
                 type: config
             customResources:
               # Add for tekton
-              - apiVersion: 'v1beta1'
+              - apiVersion: 'v1'
                 group: 'tekton.dev'
                 plural: 'pipelines'
-              - apiVersion: v1beta1
+              - apiVersion: v1
                 group: tekton.dev
                 plural: pipelineruns
-              - apiVersion: v1beta1
+              - apiVersion: v1
                 group: tekton.dev
                 plural: taskruns
               # Add for topology plugin
