@@ -4,7 +4,6 @@ import { Browser, expect, Page, TestInfo } from "@playwright/test";
 import { SettingsPagePO } from "../support/pageObjects/page-obj";
 import { waitsObjs } from "../support/pageObjects/global-obj";
 import path from "path";
-import fs from "fs";
 
 export class Common {
   page: Page;
