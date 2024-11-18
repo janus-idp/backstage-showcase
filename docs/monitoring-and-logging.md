@@ -16,7 +16,7 @@ When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm 
 
 ### Enabling Metrics Monitoring on Openshift
 
-To enable metrics monitoring on OpenShift, we need to create a `ServiceMonitor` resource in the OpenShift cluster that will be used by Prometheus to scrape metrics from your Backstage instance. For the metrics to be ingested by the built-in Prometheus instances in Openshift, please ensure you enabled [monitoring for user-defined projects](https://docs.openshift.com/container-platform/4.16/observability/monitoring/enabling-monitoring-for-user-defined-projects.html#enabling-monitoring-for-user-defined-projects).
+To enable metrics monitoring on OpenShift, we need to create a `ServiceMonitor` resource in the OpenShift cluster that will be used by Prometheus to scrape metrics from your Backstage instance. For the metrics to be ingested by the built-in Prometheus instances in Openshift, please ensure you enabled [monitoring for user-defined projects](https://docs.openshift.com/container-platform/latest/observability/monitoring/enabling-monitoring-for-user-defined-projects.html).
 
 #### Helm deployment
 
@@ -174,13 +174,13 @@ For the _metrics_ add-on, we can modify the [`ama-metrics-settings-configmap`](h
 
 Alternatively, we will can instead add/modify the `ama-metrics-prometheus-config` Config Map in the `kube-system` namespace of the AKS cluster to configure custom scrape jobs. In the [example Config Map](./configuration_files/ama-metrics-prometheus-config.yaml), please replace the values of namespace with the namespace you the backstage instance into. For more information on how to configure this refer to the [official Azure docs](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration#configure-custom-prometheus-scrape-jobs).
 
-To view the metrics, you can create a Grafana instance, [connect it to the Azure Monitor workspace](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/tutorial-logs-dashboards-with-grafana#connect-grafana-to-azure-monitor) and view the metrics using PromQL queries.
+To view the metrics, you can create a Grafana instance, [configure an Azure Monitor data source plug-in](https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in) and view the metrics using PromQL queries.
 
 #### Monitoring Add-on
 
 For the _monitoring_ add-on, we will need to add the a modified instance of this [Config Map](https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml) to the `kube-system` namespace of the AKS cluster. In the [example Config Map](./configuration_files/container-azm-ms-agentconfig.yaml), please replace the values of namespace with the namespace you deployed the backstage instance into. For more information refer to the [official Azure docs](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-logs?tabs=cluster-wide).
 
-To view the metrics, you can create a Grafana instance, [connect it to the Azure Monitor workspace](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/tutorial-logs-dashboards-with-grafana#connect-grafana-to-azure-monitor) and view the metrics using PromQL queries.
+To view the metrics, you can create a Grafana instance, [configure an Azure Monitor data source plug-in](https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in) and view the metrics using PromQL queries.
 
 Alternatively, you can use [Log Analytics](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query#prometheus-metrics) to query the metrics using KQL. The following is an example query to get a custom metric for the Backstage instance:
 
