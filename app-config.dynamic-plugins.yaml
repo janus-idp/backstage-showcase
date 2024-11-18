@@ -231,7 +231,7 @@ dynamicPlugins:
               allOf:
               - isKind: resource
               - isType: kubernetes-cluster
-    janus-idp.backstage-plugin-quay:
+    backstage-community.plugin-quay:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: QuayPage
