@@ -10,7 +10,7 @@ Plugins are defined in the `plugins` array in the `dynamic-plugin-config.yaml` f
 - `package`: The package definition of the plugin. This can be an OCI image, `tgz` archive, npm package, or a directory path.
 - `disabled`: A boolean value that determines whether the plugin is enabled or disabled.
 - `integrity`: The integrity hash of the package. This is required for `tgz` archives and npm packages.
-- `pluginConfig`: The configuration for the plugin. For backend plugins this is optional and can be used to pass configuration to the plugin. For frontend this is required, see [Layout Configuration](layoud-configuration.md) for more information on how to configure bindings and routes. This is fragment o the `app-config.yaml` file. Anything that is added to this object will be merged with the main app-config.yaml file.
+- `pluginConfig`: The configuration for the plugin. For backend plugins this is optional and can be used to pass configuration to the plugin. For frontend this is required, see [Frontend Plugin Wiring](frontend-plugin-wiring.md) for more information on how to configure bindings and routes. This is fragment o the `app-config.yaml` file. Anything that is added to this object will be merged with the main app-config.yaml file.
 
 ## Dynamic plugins included in the Showcase container image
 
