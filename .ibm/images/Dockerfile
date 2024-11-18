@@ -1,106 +1,54 @@
 FROM mcr.microsoft.com/playwright:v1.47.2-jammy
 
+# Set environment variables for the container
 ENV CI=1 \
     QT_X11_NO_MITSHM=1 \
     _X11_NO_MITSHM=1 \
     _MITSHM=0 \
-    NODE_PATH=/usr/local/lib/node_modules
+    NODE_PATH=/usr/local/lib/node_modules \
+    HELM_VERSION="v3.12.3" \
+    OC_VERSION="4.14.3" \
+    OCM_VERSION="0.1.76"
 
-# Define Helm and OpenShift CLI (oc) versions
-ENV HELM_VERSION="v3.12.3"
-ENV OC_VERSION="4.14.3"
-ENV OCM_VERSION="0.1.76"
+# Install essential dependencies and Node.js tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nodejs \
+    openssl libssl-dev ca-certificates \
+    curl wget jq colorized-logs && \
+    npm install -g typescript yarn@latest && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    echo "Node: $(node -v)\nNPM: $(npm -v)\nYarn: $(yarn -v)\nTypeScript: $(tsc -v)"
 
-ARG CI_XBUILD
-
-RUN apt-get update && \
-    apt-get install -y nodejs-dev nodejs \
-    openssl libssl-dev ca-certificates make cmake cpp gcc g++ zlib1g zlib1g-dev brotli libbrotli-dev python3 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# should be root user
+# Ensure the current user is root and verify permissions
 RUN echo "whoami: $(whoami)" \
-    # command "id" should print:
-    # uid=0(root) gid=0(root) groups=0(root)
-    # which means the current user is root
+    # The "id" command should confirm the user is root
     && id \
-    && npm install -g typescript \
-    # give every user read access to the "/root" folder where the binary is cached
-    # we really only need to worry about the top folder, fortunately
-    && ls -la /root \
+    # Make the "/root" folder readable for all users
     && chmod 755 /root \
-    # always grab the latest Yarn
-    # otherwise the base image might have old versions
-    # NPM does not need to be installed as it is already included with Node.
-    && npm i -g yarn@latest \
-    # Show where Node loads required modules from
+    # Check where Node.js loads required modules
     && node -p 'module.paths'
-# plus Electron and bundled Node versions
 
-RUN  echo  " node version:    $(node -v) \n" \
-    "npm version:     $(npm -v) \n" \
-    "yarn version:    $(yarn -v) \n" \
-    "typescript version:  $(tsc -v) \n" \
-    "debian version:  $(cat /etc/debian_version) \n" \
-    "user:            $(whoami) \n"
-
-RUN curl -fsSL https://clis.cloud.ibm.com/install/linux | sh && \
-    curl -sLO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
-    chmod +x kubectl && \
-    mv kubectl /usr/local/bin/ && \
-    apt-get update -y && \
-    apt-get install -y sshpass jq colorized-logs && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set Go version and the expected SHA256 hash for verification
-ENV GO_VERSION 1.19
-ENV GO_SHA256 464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6
-
-# Install Go and other tools used by the pipeline
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -LO "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz" && \
-    echo "${GO_SHA256} go${GO_VERSION}.linux-amd64.tar.gz" | sha256sum -c - && \
-    tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz && \
-    rm go${GO_VERSION}.linux-amd64.tar.gz && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Helm
-RUN curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" \
-    && tar -xzvf /tmp/helm.tar.gz -C /tmp \
-    && mv /tmp/linux-amd64/helm /usr/local/bin/helm \
-    && rm -rf /tmp/*
-
-# Install OpenShift CLI (oc)
-RUN curl -fsSL -o /tmp/openshift-client-linux.tar.gz "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OC_VERSION}/openshift-client-linux-${OC_VERSION}.tar.gz" \
-    && tar -xzvf /tmp/openshift-client-linux.tar.gz -C /usr/local/bin oc kubectl \
-    && rm -rf /tmp/*
-
-# Install ocm-cli
-RUN curl -Lo /tmp/ocm "https://github.com/openshift-online/ocm-cli/releases/download/v${OCM_VERSION}/ocm-linux-amd64" && \
-    chmod +x /tmp/ocm && \
-    mv /tmp/ocm /usr/local/bin/ocm
-
-# Install rsync
-RUN apt-get update -y && \
-    apt-get install -y rsync
-
-# Install yq
-RUN wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64.tar.gz -O - | tar xz && mv yq_linux_amd64 /usr/bin/yq
+# Install Helm, OpenShift CLI, ocm-cli, and yq
+RUN curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" && \
+    tar -xzvf /tmp/helm.tar.gz -C /tmp && mv /tmp/linux-amd64/helm /usr/local/bin/helm && \
+    curl -fsSL -o /tmp/openshift-client-linux.tar.gz "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OC_VERSION}/openshift-client-linux-${OC_VERSION}.tar.gz" && \
+    tar -xzvf /tmp/openshift-client-linux.tar.gz -C /usr/local/bin oc kubectl && \
+    curl -Lo /usr/local/bin/ocm "https://github.com/openshift-online/ocm-cli/releases/download/v${OCM_VERSION}/ocm-linux-amd64" && \
+    chmod +x /usr/local/bin/ocm && \
+    curl -fsSL "https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64.tar.gz" | tar -xz && \
+    mv yq_linux_amd64 /usr/local/bin/yq && \
+    rm -rf /tmp/* /var/tmp/*
 
 # Install Azure CLI
-RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install Google Cloud CLI 
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && apt-get update -y && apt-get install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin -y
+# Install Google Cloud CLI
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
+    apt-get update -y && \
+    apt-get install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Set environment variables to make Go work correctly
-ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
-
-RUN go install github.com/kadel/pr-commenter@latest && \
-    ibmcloud plugin install -f cloud-object-storage && \
-    ibmcloud plugin install -f kubernetes-service
-
+# Set working directory
 WORKDIR /tmp/
