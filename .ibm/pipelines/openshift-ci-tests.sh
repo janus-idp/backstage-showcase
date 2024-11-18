@@ -25,9 +25,9 @@ trap cleanup EXIT
 
 source "${DIR}/utils.sh"
 if [[ "$JOB_NAME" == *aks* ]]; then
-  for file in ${DIR}/cluster/aks/*; do source $file; done
+  for file in ${DIR}/cluster/aks/*.sh; do source $file; done
 elif [[ "$JOB_NAME" == *gke* ]]; then
-  for file in ${DIR}/cluster/gke/*; do source $file; done
+  for file in ${DIR}/cluster/gke/*.sh; do source $file; done
 fi
 
 set_cluster_info() {
