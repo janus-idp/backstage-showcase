@@ -91,6 +91,17 @@ dynamicPlugins:
             if:
               allOf:
                 - isLighthouseAvailable
+    backstage.plugin-notifications:
+      dynamicRoutes:
+        - importName: NotificationsPage
+          menuItem:
+            config:
+              props:
+                titleCounterEnabled: true
+                webNotificationsEnabled: false
+            importName: NotificationsSidebarItem
+          path: /notifications
+    backstage.plugin-signals: {}
     pagerduty.backstage-plugin:
       mountPoints:
         - mountPoint: entity.page.overview/cards
@@ -220,7 +231,7 @@ dynamicPlugins:
               allOf:
               - isKind: resource
               - isType: kubernetes-cluster
-    janus-idp.backstage-plugin-quay:
+    backstage-community.plugin-quay:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: QuayPage

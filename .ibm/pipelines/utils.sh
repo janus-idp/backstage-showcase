@@ -223,3 +223,93 @@ yq_merge_value_files() {
     select(fileIndex == 0) * select(fileIndex == 1) | del(.. | select(. == null))
   ' "${step_2_file}" "${step_1_file}" > "${final_file}"
 }
+
+# Waits for a Kubernetes/OpenShift deployment to become ready within a specified timeout period
+wait_for_deployment() {
+    local namespace=$1
+    local resource_name=$2
+    local timeout_minutes=${3:-5}  # Default timeout: 5 minutes
+    local check_interval=${4:-10}  # Default interval: 10 seconds
+
+    # Validate required parameters
+    if [[ -z "$namespace" || -z "$resource_name" ]]; then
+        echo "Error: Missing required parameters"
+        echo "Usage: wait_for_deployment <namespace> <resource-name> [timeout_minutes] [check_interval_seconds]"
+        echo "Example: wait_for_deployment my-namespace my-deployment 5 10"
+        return 1
+    fi
+
+    local max_attempts=$((timeout_minutes * 60 / check_interval))
+
+    echo "Waiting for resource '$resource_name' in namespace '$namespace' (timeout: ${timeout_minutes}m)..."
+
+    for ((i=1; i<=max_attempts; i++)); do
+        # Get the first pod name matching the resource name
+        local pod_name=$(oc get pods -n "$namespace" | grep "$resource_name" | awk '{print $1}' | head -n 1)
+
+        if [[ -n "$pod_name" ]]; then
+            # Check if pod's Ready condition is True
+            local is_ready=$(oc get pod "$pod_name" -n "$namespace" -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}')
+            # Verify pod is both Ready and Running
+            if [[ "$is_ready" == "True" ]] && \
+               oc get pod "$pod_name" -n "$namespace" | grep -q "Running"; then
+                echo "Pod '$pod_name' is running and ready"
+                return 0
+            else
+                echo "Pod '$pod_name' is not ready (Ready: $is_ready)"
+            fi
+        else
+            echo "No pods found matching '$resource_name' in namespace '$namespace'"
+        fi
+
+        echo "Still waiting... (${i}/${max_attempts} checks)"
+        sleep "$check_interval"
+    done
+
+    # Timeout occurred
+    echo "Timeout waiting for resource to be ready. Please check:"
+    echo "oc get pods -n $namespace | grep $resource_name"
+    return 1
+}
+
+# Creates an OpenShift Operator subscription
+install_subscription(){
+  name=$1  # Name of the subscription
+  namespace=$2 # Namespace to install the operator
+  package=$3 # Package name of the operator
+  channel=$4 # Channel to subscribe to
+  source_name=$5 # Name of the source catalog
+  # Apply the subscription manifest
+  oc apply -f - << EOD
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: $name
+  namespace: $namespace
+spec:
+  channel: $channel
+  installPlanApproval: Automatic
+  name: $package
+  source: $source_name
+  sourceNamespace: openshift-marketplace
+EOD
+}
+
+# Installs the Crunchy Postgres Operator using predefined parameters
+install_crunchy_postgres_operator(){
+  install_subscription crunchy-postgres-operator openshift-operators crunchy-postgres-operator v5 certified-operators
+}
+
+# Installs the Red Hat OpenShift Pipelines operator if not already installed
+install_pipelines_operator() {
+  DISPLAY_NAME="Red Hat OpenShift Pipelines"
+  # Check if operator is already installed
+  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
+    echo "Red Hat OpenShift Pipelines operator is already installed."
+  else
+    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
+    # Install the operator and wait for deployment
+    install_subscription openshift-pipelines-operator openshift-operators openshift-pipelines-operator-rh latest redhat-operators
+    wait_for_deployment "openshift-operators" "pipelines"
+  fi
+}

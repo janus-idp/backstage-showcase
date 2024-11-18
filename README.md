@@ -17,7 +17,7 @@ Today, we have several plugins integrated into the showcase app as a way to demo
 Our current list of plugins within the showcase app include:
 
 - [OCM plugin](https://github.com/backstage/comunity-plugins/tree/main/workspaces/ocm/plugins/ocm)
-- [Quay plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/quay)
+- [Quay plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/quay/plugins/quay)
 - [Kubernetes plugin](https://github.com/backstage/backstage/tree/master/plugins/kubernetes)
 - [Topology plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/topology)
 - [ArgoCD plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-argo-cd)
@@ -32,6 +32,8 @@ Our current list of plugins within the showcase app include:
 - [Tekton plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/tekton/plugins/tekton)
 - [Azure DevOps plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/azure-devops)
 - [Jenkins plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins/plugins/jenkins)
+- [Notifications plugin](https://github.com/backstage/backstage/tree/master/plugins/notifications)
+- [Signals plugin](https://github.com/backstage/backstage/tree/master/plugins/signals)
 - [GitLab plugin](https://github.com/immobiliare/backstage-plugin-gitlab)
 - [Jira plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira)
 - [Jfrog Artifactory plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jfrog-artifactory/plugins/jfrog-artifactory)

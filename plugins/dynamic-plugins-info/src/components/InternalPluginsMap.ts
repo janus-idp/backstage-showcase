@@ -42,6 +42,15 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic',
   'backstage-community-plugin-jenkins':
     './dynamic-plugins/dist/backstage-community-plugin-jenkins',
+  'backstage-plugin-notifications':
+    './dynamic-plugins/dist/backstage-plugin-notifications',
+  'backstage-plugin-notifications-backend-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic',
+  'backstage-plugin-notifications-backend-module-email-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic',
+  'backstage-plugin-signals-backend-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic',
+  'backstage-plugin-signals': './dynamic-plugins/dist/backstage-plugin-signals',
   'backstage-community-plugin-sonarqube-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic',
   'backstage-community-plugin-sonarqube':
@@ -98,8 +107,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-backstage-plugin-datadog',
   'backstage-community-plugin-tekton':
     './dynamic-plugins/dist/backstage-community-plugin-tekton',
-  'janus-idp-backstage-plugin-quay':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-quay',
+  'backstage-community-plugin-quay':
+    './dynamic-plugins/dist/backstage-community-plugin-quay',
   'backstage-community-plugin-nexus-repository-manager':
     './dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager',
   'backstage-community-plugin-acr':
