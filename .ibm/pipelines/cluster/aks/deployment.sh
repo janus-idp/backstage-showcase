@@ -1,6 +1,6 @@
 initiate_aks_deployment() {
-  add_helm_repos
   install_helm
+  add_helm_repos
   delete_namespace "${NAME_SPACE_RBAC_K8S}"
   configure_namespace "${NAME_SPACE_K8S}"
   # Renable when namespace termination issue is solved
@@ -19,8 +19,8 @@ initiate_aks_deployment() {
 }
 
 initiate_rbac_aks_deployment() {
-  add_helm_repos
   install_helm
+  add_helm_repos
   delete_namespace "${NAME_SPACE_K8S}"
   configure_namespace "${NAME_SPACE_RBAC_K8S}"
   # Renable when namespace termination issue is solved
