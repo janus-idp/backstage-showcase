@@ -238,14 +238,14 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
    - Setup the PagerDuty plugin
 
      - `${PAGERDUTY_TOKEN}` with the [API token](https://support.pagerduty.com/docs/api-access-keys#generating-a-general-access-rest-api-key) used to make requests to the [PagerDuty API](https://developer.pagerduty.com/docs/rest-api-v2/rest-api/). Note that this will require a PaperDuty Admin role.
-     - To integrate with a PagerDuty Service, you will need to annotate the appropriate entity with the [PagerDuty Integration key](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#integrating-with-a-pagerduty-service) in its `.yaml` configuration file:
+     - To integrate with a PagerDuty Service, you will need to annotate the appropriate entity with the [PagerDuty Integration key](https://pagerduty.github.io/backstage-plugin-docs/getting-started/pagerduty/) in its `.yaml` configuration file:
 
      ```yaml
      annotations:
        pagerduty.com/integration-key: [INTEGRATION_KEY]
      ```
 
-     - Alternatively, you can integrate with the [PagerDuty ServiceID](https://github.com/backstage/backstage/tree/master/plugins/pagerduty#annotating-with-service-id) instead of the integration key:
+     - Alternatively, you can integrate with the [PagerDuty ServiceID](https://pagerduty.github.io/backstage-plugin-docs/getting-started/backstage/#annotating-entities) instead of the integration key:
 
      ```yaml
      annotations:
@@ -272,7 +272,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the Dynatrace plugin
 
-     - This [URL](https://github.com/backstage/backstage/tree/master/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
+     - This [URL](https://github.com/backstage/community-plugins/tree/main/workspaces/dynatrace/plugins/dynatrace#getting-started) explains how to use the Dynatrace Plugin
      - `${DYNATRACE_URL}`: The baseURL for rendering links to problems in the table
      - `${DYNATRACE_API_URL}`: The URL to the Dynatrace API
      - `{DYNATRACE_ACCESS_TOKEN}`: API access token (see [documentation](https://www.dynatrace.com/support/help/dynatrace-api/basics/dynatrace-api-authentication)) with `entities.read`,`problems.read` permissions. It will also need one of the following permissions: `DataExport`, `ExternalSyntheticIntegration`, or `ReadSyntheticData`.
