@@ -73,12 +73,12 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic',
   'roadiehq-scaffolder-backend-module-http-request-dynamic':
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic',
-  'janus-idp-backstage-scaffolder-backend-module-quay-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic',
-  'janus-idp-backstage-scaffolder-backend-module-regex-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic',
+  'backstage-community-plugin-scaffolder-backend-module-quay-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic',
   'backstage-community-plugin-rbac':
     './dynamic-plugins/dist/backstage-community-plugin-rbac',
+  'backstage-community-scaffolder-backend-module-regex-dynamic':
+    './dynamic-plugins/dist/backstage-community-scaffolder-backend-module-regex-dynamic',
   'backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
   'backstage-community-scaffolder-backend-module-sonarqube-dynamic':
