@@ -1,0 +1,63 @@
+{
+  "name": "backstage-community-plugin-catalog-backend-module-keycloak-dynamic",
+  "version": "3.2.1",
+  "main": "./dist/index.cjs.js",
+  "types": "./dist/index.d.ts",
+  "license": "Apache-2.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "backstage": {
+    "role": "backend-plugin-module",
+    "supported-versions": "1.32.5",
+    "pluginId": "catalog",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@backstage-community/plugin-catalog-backend-module-keycloak": "3.2.1"
+  },
+  "files": [
+    "dist",
+    "embedded"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janus-idp/backstage-showcase",
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic"
+  },
+  "maintainers": [
+    "@janus-idp/maintainers-showcase"
+  ],
+  "author": "Red Hat",
+  "homepage": "https://red.ht/rhdh",
+  "bugs": "https://issues.redhat.com/browse/RHIDP",
+  "keywords": [
+    "support:production",
+    "lifecycle:active"
+  ],
+  "bundleDependencies": true,
+  "overrides": {
+    "@aws-sdk/util-utf8-browser": {
+      "@smithy/util-utf8": "^2.0.0"
+    }
+  },
+  "resolutions": {
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2",
+    "@backstage-community/plugin-catalog-backend-module-keycloak": "file:./embedded/backstage-community-plugin-catalog-backend-module-keycloak"
+  },
+  "peerDependencies": {
+    "@backstage/backend-plugin-api": "^1.0.1",
+    "@backstage/catalog-model": "^1.7.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/plugin-catalog-node": "^1.13.1"
+  }
+}

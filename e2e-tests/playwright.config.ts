@@ -8,14 +8,14 @@ const useCommonDeviceAndViewportConfig = {
 };
 
 export default defineConfig({
-  timeout: 20000,
+  timeout: 22000,
   testDir: "./playwright",
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: 3,
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["html"],
@@ -47,6 +47,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
         "**/playwright/e2e/authProviders/**/*.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
       ],
       dependencies: ["setup"],
     },
@@ -71,6 +72,7 @@ export default defineConfig({
       testIgnore: [
         "**/playwright/e2e/authProviders/setup-environment.spec.ts",
         "**/playwright/e2e/authProviders/clear-environment.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
       ],
       dependencies: ["showcase-auth-providers-setup-environment"],
       teardown: "showcase-auth-providers-clear-environment",
@@ -99,6 +101,7 @@ export default defineConfig({
         "**/playwright/e2e/audit-log/**/*.spec.ts",
         "**/playwright/e2e/verify-redis-cache.spec.ts",
         "**/playwright/e2e/plugins/topology/topology.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
       ],
       dependencies: ["setup"],
     },
@@ -111,6 +114,11 @@ export default defineConfig({
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
       ],
       dependencies: ["setup"],
+    },
+    {
+      name: "postgres-health-check",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: ["**/playwright/e2e/verify-tls-config-health-check.spec.ts"],
     },
   ],
 });

@@ -30,17 +30,17 @@ export const plugins = [
     role: "backend-plugin-module",
   },
   {
-    name: "@janus-idp/backstage-plugin-keycloak-backend-dynamic",
+    name: "backstage-community-plugin-catalog-backend-module-keycloak",
     platform: "node",
     role: "backend-plugin-module",
   },
   {
-    name: "@janus-idp/backstage-plugin-ocm",
+    name: "backstage-community-plugin-ocm",
     role: "frontend-plugin",
     platform: "web",
   },
   {
-    name: "@janus-idp/backstage-plugin-ocm-backend-dynamic",
+    name: "backstage-community-plugin-ocm-backend-dynamic",
     platform: "node",
     role: "backend-plugin",
   },

@@ -17,6 +17,9 @@ testWithHelper.describe("GitHub Happy path", () => {
   testWithHelper.beforeEach(async ({ page }) => {
     await new Common(page).logintoGithub();
   });
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
 
   testWithHelper(
     "Verify Profile is Github Account Name in the Settings page",

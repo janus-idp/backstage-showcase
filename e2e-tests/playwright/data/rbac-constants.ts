@@ -15,6 +15,10 @@ export class RbacConstants {
           "name": "role:default/test2-role"
         },
         {
+          "memberReferences": ["user:default/rhdh-qe-user"],
+          "name": "role:default/qe_rbac_admin"
+        },
+        {
           "memberReferences": ["group:janus-qe/rhdh-qe-2-team"],
           "name": "role:default/bulk_import"
         }
@@ -87,6 +91,30 @@ export class RbacConstants {
         },
         {
           "entityReference": "role:xyz/team_a",
+          "permission": "catalog.location.read",
+          "policy": "read",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/qe_rbac_admin",
+          "permission": "kubernetes.proxy",
+          "policy": "use",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/qe_rbac_admin",
+          "permission": "catalog.entity.create",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/qe_rbac_admin",
+          "permission": "catalog.location.create",
+          "policy": "create",
+          "effect": "allow"
+        },
+        {
+          "entityReference": "role:default/qe_rbac_admin",
           "permission": "catalog.location.read",
           "policy": "read",
           "effect": "allow"

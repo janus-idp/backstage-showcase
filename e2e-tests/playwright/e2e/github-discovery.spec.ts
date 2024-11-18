@@ -26,6 +26,10 @@ const test = base.extend<GithubDiscoveryFixture>({
 test.use({ storageState: GH_USER_IDAuthFile_rhdh });
 
 test.describe("Github Discovery Catalog", () => {
+  test.beforeEach(
+    async ({ page }) => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test(`Discover Organization's Catalog`, async ({
     catalogPage,
     githubApi,

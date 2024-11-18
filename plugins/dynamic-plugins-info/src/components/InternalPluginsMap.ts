@@ -24,8 +24,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic',
   'backstage-plugin-kubernetes':
     './dynamic-plugins/dist/backstage-plugin-kubernetes',
-  'janus-idp-backstage-plugin-topology':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-topology',
+  'backstage-community-plugin-topology':
+    './dynamic-plugins/dist/backstage-community-plugin-topology',
   'roadiehq-scaffolder-backend-argocd-dynamic':
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic',
   'roadiehq-backstage-plugin-argo-cd':
@@ -42,18 +42,27 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic',
   'backstage-community-plugin-jenkins':
     './dynamic-plugins/dist/backstage-community-plugin-jenkins',
+  'backstage-plugin-notifications':
+    './dynamic-plugins/dist/backstage-plugin-notifications',
+  'backstage-plugin-notifications-backend-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic',
+  'backstage-plugin-notifications-backend-module-email-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic',
+  'backstage-plugin-signals-backend-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic',
+  'backstage-plugin-signals': './dynamic-plugins/dist/backstage-plugin-signals',
   'backstage-community-plugin-sonarqube-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic',
   'backstage-community-plugin-sonarqube':
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube',
-  'janus-idp-backstage-plugin-ocm-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic',
-  'janus-idp-backstage-plugin-ocm':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm',
-  'janus-idp-backstage-plugin-bulk-import-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic',
-  'janus-idp-backstage-plugin-bulk-import':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import',
+  'backstage-community-plugin-ocm-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic',
+  'backstage-community-plugin-ocm':
+    './dynamic-plugins/dist/backstage-community-plugin-ocm',
+  'red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic',
+  'red-hat-developer-hub-backstage-plugin-bulk-import':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import',
   'backstage-plugin-techdocs-backend-dynamic':
     './dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic',
   'backstage-plugin-techdocs':
@@ -68,18 +77,18 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic',
   'janus-idp-backstage-scaffolder-backend-module-regex-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic',
-  'janus-idp-backstage-plugin-rbac':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-rbac',
-  'janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic',
-  'janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic':
-    '/dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic',
+  'backstage-community-plugin-rbac':
+    './dynamic-plugins/dist/backstage-community-plugin-rbac',
+  'backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
+  'backstage-community-scaffolder-backend-module-sonarqube-dynamic':
+    '/dynamic-plugins/dist/backstage-community-scaffolder-backend-module-sonarqube-dynamic',
   'janus-idp-backstage-plugin-aap-backend-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic',
   'backstage-community-plugin-3scale-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
-  'janus-idp-backstage-plugin-keycloak-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic',
+  'backstage-community-plugin-catalog-backend-module-keycloak-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic',
   'backstage-community-plugin-redhat-argocd':
     './dynamic-plugins/dist/backstage-community-plugin-redhat-argocd',
   'backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic':
@@ -96,16 +105,16 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-backstage-plugin-jira',
   'roadiehq-backstage-plugin-datadog':
     './dynamic-plugins/dist/roadiehq-backstage-plugin-datadog',
-  'janus-idp-backstage-plugin-tekton':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-tekton',
-  'janus-idp-backstage-plugin-quay':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-quay',
+  'backstage-community-plugin-tekton':
+    './dynamic-plugins/dist/backstage-community-plugin-tekton',
+  'backstage-community-plugin-quay':
+    './dynamic-plugins/dist/backstage-community-plugin-quay',
   'backstage-community-plugin-nexus-repository-manager':
     './dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager',
   'backstage-community-plugin-acr':
     './dynamic-plugins/dist/backstage-community-plugin-acr',
-  'janus-idp-backstage-plugin-jfrog-artifactory':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory',
+  'backstage-community-plugin-jfrog-artifactory':
+    './dynamic-plugins/dist/backstage-community-plugin-jfrog-artifactory',
   'pagerduty-backstage-plugin':
     './dynamic-plugins/dist/pagerduty-backstage-plugin',
   'pagerduty-backstage-plugin-backend-dynamic':

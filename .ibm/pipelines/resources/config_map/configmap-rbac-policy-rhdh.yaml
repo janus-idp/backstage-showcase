@@ -14,14 +14,12 @@ data:
     p, role:xyz/team_a, catalog.location.create, create, allow
     p, role:xyz/team_a, catalog.location.read, read, allow
 
-    p, role:default/rbac_admin, kubernetes.proxy, use, allow
-    p, role:default/rbac_admin, catalog-entity, read, allow
-    p, role:default/rbac_admin, catalog.entity.create, create, allow
-    p, role:default/rbac_admin, catalog.location.create, create, allow
-    p, role:default/rbac_admin, catalog.location.read, read, allow
-    p, role:default/rbac_admin, policy-entity, read, allow
-    p, role:default/rbac_admin, policy-entity, create, allow
-    
+    g, user:default/rhdh-qe-user, role:default/qe_rbac_admin
+    p, role:default/qe_rbac_admin, kubernetes.proxy, use, allow
+    p, role:default/qe_rbac_admin, catalog.entity.create, create, allow
+    p, role:default/qe_rbac_admin, catalog.location.create, create, allow
+    p, role:default/qe_rbac_admin, catalog.location.read, read, allow
+
     p, role:default/bulk_import, bulk.import, use, allow
     p, role:default/bulk_import, catalog.location.create, create, allow
     p, role:default/bulk_import, catalog.entity.create, create, allow

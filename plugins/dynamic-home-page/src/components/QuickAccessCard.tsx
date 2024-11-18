@@ -5,12 +5,12 @@ import {
 } from '@backstage/core-components';
 import { ComponentAccordion, HomePageToolkit } from '@backstage/plugin-home';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import { makeStyles } from 'tss-react/mui';
 
 import { useQuickAccessLinks } from '../hooks/useQuickAccessLinks';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   center: {
     height: '100%',
     display: 'flex',
@@ -34,7 +34,7 @@ export interface QuickAccessCardProps {
 }
 
 export const QuickAccessCard = (props: QuickAccessCardProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data, error, isLoading } = useQuickAccessLinks(props.path);
 
   let content: React.ReactElement;

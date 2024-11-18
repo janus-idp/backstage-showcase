@@ -28,3 +28,17 @@ testWithHelper.describe(
     });
   },
 );
+
+  test("is disabled", async ({ page }) => {
+    await page
+      .getByPlaceholder("Filter")
+      .pressSequentially("backstage-plugin-analytics-provider-segment\n", {
+        delay: 300,
+      });
+    const row = page.locator(
+      UIhelperPO.rowByText(
+        "janus-idp-backstage-plugin-analytics-provider-segment",
+      ),
+    );
+    expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled
+  });

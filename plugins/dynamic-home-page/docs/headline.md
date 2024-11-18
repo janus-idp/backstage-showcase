@@ -27,6 +27,7 @@ dynamicPlugins:
 
 ## Available props
 
-| Prop    | Default | Description |
-| ------- | ------- | ----------- |
-| `title` | none    | Title       |
+| Prop    | Default | Description                                |
+| ------- | ------- | ------------------------------------------ |
+| `title` | none    | Title                                      |
+| `align` | `left`  | Alignment like `left`, `center` or `right` |

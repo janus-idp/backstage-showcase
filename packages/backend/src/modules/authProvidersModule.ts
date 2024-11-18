@@ -166,9 +166,11 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
       return providers.gitlab.create({
         signIn: {
           async resolver({ result: { fullProfile } }, ctx) {
-            const userId = fullProfile.id;
+            const userId = fullProfile.username;
             if (!userId) {
-              throw new Error(`GitLab user profile does not contain an id`);
+              throw new Error(
+                `GitLab user profile does not contain an username`,
+              );
             }
             return await signInWithCatalogUserOptional(userId, ctx);
           },

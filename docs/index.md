@@ -212,7 +212,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the Jfrog Artifactory plugin
 
-     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/jfrog-artifactory#getting-started) explains how to use the Jfrog Artifactory plugin
+     - This [URL](https://github.com/backstage/community-plugins/tree/main/workspaces/jfrog-artifactory/plugins/jfrog-artifactory) explains how to use the Jfrog Artifactory plugin
      - `${ARTIFACTORY_URL}`: URL for the Jfrog Artifactory instance
      - `${ARTIFACTORY_TOKEN}`: API token
      - `${ARTIFACTORY_SECURE}`: Change to `false` in case of using self hosted artifactory instance with a self-signed certificate
@@ -227,6 +227,13 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
      - `${JENKINS_URL}` with the URL where your Jenkins instance can be accessed
      - `${JENKINS_USERNAME}` with the name of the user to be accessed through the API
      - `${JENKINS_TOKEN}` with the API token to be used
+
+   - Setup the Notifications email plugin
+
+     - `${EMAIL_HOSTNAME}`: SMTP server hostname
+     - `${EMAIL_USERNAME}`: SMTP username
+     - `${EMAIL_PASSWORD}`: SMTP password
+     - `${EMAIL_SENDER}`: Sender email address
 
    - Setup the PagerDuty plugin
 
@@ -276,7 +283,7 @@ The easiest and fastest method for getting started: Backstage Showcase app, runn
 
    - Setup the RBAC plugin
 
-     - This [URL](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
+     - This [URL](https://github.com/backstage/community-plugins/tree/main/workspaces/rbac/plugins/rbac-backend) explains how to use the RBAC Backend Plugin.
 
        - Requires the use of an identity provider. This plugin will not work with guest accounts.
 
