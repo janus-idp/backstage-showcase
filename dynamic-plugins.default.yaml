@@ -218,12 +218,12 @@ plugins:
                     anyOf:
                       - hasAnnotation: backstage.io/kubernetes-id
                       - hasAnnotation: backstage.io/kubernetes-namespace
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-topology:
+          backstage-community.plugin-topology:
             mountPoints:
               - mountPoint: entity.page.topology/cards
                 importName: TopologyPage
@@ -408,7 +408,7 @@ plugins:
                       - isSonarQubeAvailable
 
   # Group: OCM
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -419,12 +419,12 @@ plugins:
               url: "${OCM_HUB_URL}"
               serviceAccountToken: "${OCM_SA_TOKEN}"
               owner: janus-authors
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-ocm:
+          backstage-community.plugin-ocm:
             appIcons:
               - name: ocmIcon
                 importName: OcmIcon
@@ -463,14 +463,14 @@ plugins:
                     - isType: kubernetes-cluster
 
   # Group: Bulk import
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
     disabled: true
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-bulk-import:
+          red-hat-developer-hub.backstage-plugin-bulk-import:
             appIcons:
               - name: bulkImportIcon
                 importName: BulkImportIcon
@@ -584,12 +584,12 @@ plugins:
   - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
     disabled: false
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-rbac:
+          backstage-community.plugin-rbac:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon
@@ -744,12 +744,12 @@ plugins:
                     allOf:
                       - isDatadogAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-tekton:
+          backstage-community.plugin-tekton:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: TektonCI
@@ -760,12 +760,12 @@ plugins:
                     allOf:
                       - isTektonCIAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-quay:
+          backstage-community.plugin-quay:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: QuayPage

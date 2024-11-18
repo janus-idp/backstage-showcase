@@ -24,8 +24,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic',
   'backstage-plugin-kubernetes':
     './dynamic-plugins/dist/backstage-plugin-kubernetes',
-  'janus-idp-backstage-plugin-topology':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-topology',
+  'backstage-community-plugin-topology':
+    './dynamic-plugins/dist/backstage-community-plugin-topology',
   'roadiehq-scaffolder-backend-argocd-dynamic':
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-argocd-dynamic',
   'roadiehq-backstage-plugin-argo-cd':
@@ -46,14 +46,14 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic',
   'backstage-community-plugin-sonarqube':
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube',
-  'janus-idp-backstage-plugin-ocm-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic',
-  'janus-idp-backstage-plugin-ocm':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-ocm',
-  'janus-idp-backstage-plugin-bulk-import-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic',
-  'janus-idp-backstage-plugin-bulk-import':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import',
+  'backstage-community-plugin-ocm-backend-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic',
+  'backstage-community-plugin-ocm':
+    './dynamic-plugins/dist/backstage-community-plugin-ocm',
+  'red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic',
+  'red-hat-developer-hub-backstage-plugin-bulk-import':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import',
   'backstage-plugin-techdocs-backend-dynamic':
     './dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic',
   'backstage-plugin-techdocs':
@@ -68,8 +68,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic',
   'janus-idp-backstage-scaffolder-backend-module-regex-dynamic':
     './dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic',
-  'janus-idp-backstage-plugin-rbac':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-rbac',
+  'backstage-community-plugin-rbac':
+    './dynamic-plugins/dist/backstage-community-plugin-rbac',
   'backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
   'backstage-community-scaffolder-backend-module-sonarqube-dynamic':
@@ -96,10 +96,10 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-backstage-plugin-jira',
   'roadiehq-backstage-plugin-datadog':
     './dynamic-plugins/dist/roadiehq-backstage-plugin-datadog',
-  'janus-idp-backstage-plugin-tekton':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-tekton',
-  'janus-idp-backstage-plugin-quay':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-quay',
+  'backstage-community-plugin-tekton':
+    './dynamic-plugins/dist/backstage-community-plugin-tekton',
+  'backstage-community-plugin-quay':
+    './dynamic-plugins/dist/backstage-community-plugin-quay',
   'backstage-community-plugin-nexus-repository-manager':
     './dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager',
   'backstage-community-plugin-acr':

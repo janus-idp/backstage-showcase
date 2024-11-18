@@ -12,14 +12,14 @@ global:
     # an optional `pluginConfig` with plugin-specific backstage configuration, and an optional `disabled` flag to disable/enable a plugin
     # listed in `includes` files. It also includes an `integrity` field that is used to verify the plugin package [integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description).
     plugins:
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              janus-idp.backstage-plugin-bulk-import:
+              red-hat-developer-hub.backstage-plugin-bulk-import:
                 appIcons:
                   - name: bulkImportIcon
                     importName: BulkImportIcon
@@ -72,12 +72,12 @@ global:
       #                   anyOf:
       #                     - hasAnnotation: backstage.io/kubernetes-id
       #                     - hasAnnotation: backstage.io/kubernetes-namespace
-      # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+      # - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
       #   disabled: false
       #   pluginConfig:
       #     dynamicPlugins:
       #       frontend:
-      #         janus-idp.backstage-plugin-topology:
+      #         backstage-community.plugin-topology:
       #           mountPoints:
       #             - mountPoint: entity.page.topology/cards
       #               importName: TopologyPage
@@ -89,12 +89,12 @@ global:
       #                   anyOf:
       #                     - hasAnnotation: backstage.io/kubernetes-id
       #                     - hasAnnotation: backstage.io/kubernetes-namespace
-      # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+      # - package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
       #   disabled: false
       #   pluginConfig:
       #     dynamicPlugins:
       #       frontend:
-      #         janus-idp.backstage-plugin-tekton:
+      #         backstage-community.plugin-tekton:
       #           mountPoints:
       #             - mountPoint: entity.page.ci/cards
       #               importName: TektonCI
@@ -104,12 +104,12 @@ global:
       #                 if:
       #                   allOf:
       #                     - isTektonCIAvailable
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              janus-idp.backstage-plugin-quay:
+              backstage-community.plugin-quay:
                 mountPoints:
                   - mountPoint: entity.page.image-registry/cards
                     importName: QuayPage
@@ -140,12 +140,12 @@ global:
                       props:
                         width: 1500
                         height: 800
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
         disabled: false
         pluginConfig:
           dynamicPlugins:
             frontend:
-              janus-idp.backstage-plugin-rbac:
+              backstage-community.plugin-rbac:
                 mountPoints:
                   - mountPoint: admin.page.rbac/cards
                     importName: RbacPage
@@ -158,9 +158,9 @@ global:
                 dynamicRoutes:
                   - path: /admin/rbac
                     importName: RbacPage
-      # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+      # - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
       #   disabled: false
-      # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+      # - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
       #   disabled: false
       #   pluginConfig:
       #     catalog:
@@ -179,12 +179,12 @@ global:
       #                 seconds: 15
       #               timeout:
       #                 minutes: 1
-      # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+      # - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
       #   disabled: false
       #   pluginConfig:
       #     dynamicPlugins:
       #       frontend:
-      #         janus-idp.backstage-plugin-ocm:
+      #         backstage-community.plugin-ocm:
       #           appIcons:
       #             - name: ocmIcon
       #               importName: OcmIcon

@@ -9,7 +9,6 @@ import { CommonJSModuleLoader } from './loader';
 import { transports } from './logger';
 import {
   healthCheckPlugin,
-  metricsPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules';
@@ -44,7 +43,6 @@ backend.add(
   }),
 );
 
-backend.add(metricsPlugin);
 backend.add(healthCheckPlugin);
 
 backend.add(import('@backstage/plugin-app-backend/alpha'));
@@ -76,7 +74,7 @@ backend.add(import('@backstage/plugin-search-backend-module-catalog'));
 // TODO: We should test it more deeply. The structure is not exactly the same as the old backend implementation
 backend.add(import('@backstage/plugin-events-backend'));
 
-backend.add(import('@janus-idp/backstage-plugin-rbac-backend'));
+backend.add(import('@backstage-community/plugin-rbac-backend'));
 backend.add(import('@janus-idp/backstage-scaffolder-backend-module-annotator'));
 backend.add(pluginIDProviderService);
 backend.add(rbacDynamicPluginsProvider);

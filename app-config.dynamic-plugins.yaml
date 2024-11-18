@@ -183,7 +183,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isNexusRepositoryManagerAvailable
-    janus-idp.backstage-plugin-ocm:
+    backstage-community.plugin-ocm:
       appIcons:
         - name: ocmIcon
           importName: OcmIcon
@@ -220,7 +220,7 @@ dynamicPlugins:
               allOf:
               - isKind: resource
               - isType: kubernetes-cluster
-    janus-idp.backstage-plugin-quay:
+    backstage-community.plugin-quay:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: QuayPage
@@ -230,7 +230,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isQuayAvailable
-    janus-idp.backstage-plugin-bulk-import:
+    red-hat-developer-hub.backstage-plugin-bulk-import:
       appIcons:
         - name: bulkImportIcon
           importName: BulkImportIcon
@@ -240,7 +240,7 @@ dynamicPlugins:
           menuItem:
             icon: bulkImportIcon
             text: Bulk import
-    janus-idp.backstage-plugin-tekton:
+    backstage-community.plugin-tekton:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: TektonCI
@@ -250,7 +250,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isTektonCIAvailable
-    janus-idp.backstage-plugin-topology:
+    backstage-community.plugin-topology:
       mountPoints:
         - mountPoint: entity.page.topology/cards
           importName: TopologyPage
@@ -426,7 +426,7 @@ dynamicPlugins:
     janus-idp.backstage-plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
-    janus-idp.backstage-plugin-rbac:
+    backstage-community.plugin-rbac:
             appIcons:
               - name: rbacIcon
                 importName: RbacIcon

@@ -38,11 +38,11 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-github-actions
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
         disabled: false
@@ -75,7 +75,7 @@ global:
             serviceLocatorMethod:
               type: multiTenant
       # Enable OCM plugins.
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
         disabled: false
         pluginConfig:
           catalog:
@@ -87,12 +87,12 @@ global:
                   serviceAccountToken: ${OCM_CLUSTER_TOKEN}
                   skipTLSVerify: true
                   owner: janus-authors
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
         disabled: false
       # Enable bulk import plugins.
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
       # Enable tech-radar plugin.
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
@@ -109,7 +109,7 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
         disabled: false
 
 # -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)

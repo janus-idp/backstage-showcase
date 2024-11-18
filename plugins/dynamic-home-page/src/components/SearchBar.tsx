@@ -3,18 +3,22 @@ import { useNavigate } from 'react-router-dom';
 
 import { SearchBarBase } from '@backstage/plugin-search-react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   searchBar: {
-    backgroundColor: theme.palette.type === 'dark' ? '#36373A' : '#FFFFFF',
-    boxShadow: 'none',
-    border: `1px solid ${theme.palette.type === 'dark' ? '#57585a' : '#E4E4E4'}`,
-    borderRadius: '50px',
-    margin: 0,
+    '&&': {
+      backgroundColor: theme.palette.mode === 'dark' ? '#36373A' : '#FFFFFF',
+      boxShadow: 'none',
+      border: `1px solid ${theme.palette.mode === 'dark' ? '#57585a' : '#E4E4E4'}`,
+      borderRadius: '50px',
+      margin: 0,
+    },
   },
   notchedOutline: {
-    borderStyle: 'none !important',
+    '&&': {
+      borderStyle: 'none',
+    },
   },
 }));
 
@@ -24,7 +28,7 @@ export interface SearchBarProps {
 }
 
 export const SearchBar = ({ path, queryParam }: SearchBarProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [value, setValue] = useState('');
   const ref = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
