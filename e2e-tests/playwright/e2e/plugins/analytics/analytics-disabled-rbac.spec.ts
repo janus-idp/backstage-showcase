@@ -24,7 +24,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
     await page
       .getByPlaceholder("Filter")
       .pressSequentially(
-        "backstage-community-plugin-analytics-provider-segment\n",
+        "plugin-analytics-provider-segment\n",
         {
           delay: 300,
         },
