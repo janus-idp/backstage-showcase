@@ -42,6 +42,15 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic',
   'backstage-community-plugin-jenkins':
     './dynamic-plugins/dist/backstage-community-plugin-jenkins',
+  'backstage-plugin-notifications':
+    './dynamic-plugins/dist/backstage-plugin-notifications',
+  'backstage-plugin-notifications-backend-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic',
+  'backstage-plugin-notifications-backend-module-email-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic',
+  'backstage-plugin-signals-backend-dynamic':
+    './dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic',
+  'backstage-plugin-signals': './dynamic-plugins/dist/backstage-plugin-signals',
   'backstage-community-plugin-sonarqube-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic',
   'backstage-community-plugin-sonarqube':
