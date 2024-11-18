@@ -1,5 +1,6 @@
 import k8s, { V1ConfigMap } from "@kubernetes/client-node";
 import { logger } from "./Logger";
+import * as yaml from "js-yaml";
 
 export class kubeCLient {
   coreV1Api: k8s.CoreV1Api;
@@ -10,7 +11,30 @@ export class kubeCLient {
     logger.info(`Initializing Kubernetes API client`);
     try {
       this.kc = new k8s.KubeConfig();
-      this.kc.loadFromDefault();
+      this.kc.loadFromOptions({
+        clusters: [
+          {
+            name: "my-openshift-cluster",
+            server: process.env.K8S_CLUSTER_URL,
+            skipTLSVerify: true,
+          },
+        ],
+        users: [
+          {
+            name: "ci-user",
+            token: process.env.K8S_CLUSTER_TOKEN,
+          },
+        ],
+        contexts: [
+          {
+            name: "default-context",
+            user: "ci-user",
+            cluster: "my-openshift-cluster",
+          },
+        ],
+        currentContext: "default-context",
+      });
+
       this.appsApi = this.kc.makeApiClient(k8s.AppsV1Api);
       this.coreV1Api = this.kc.makeApiClient(k8s.CoreV1Api);
     } catch (e) {
@@ -19,7 +43,7 @@ export class kubeCLient {
     }
   }
 
-  async getCongifmap(configmapName: string, namespace: string) {
+  async getConfigMap(configmapName: string, namespace: string) {
     try {
       logger.info(
         `Getting configmap ${configmapName} from namespace ${namespace}`,
@@ -70,7 +94,7 @@ export class kubeCLient {
     }
   }
 
-  async updateCongifmap(
+  async updateConfigMap(
     configmapName: string,
     namespace: string,
     patch: object,
@@ -96,6 +120,38 @@ export class kubeCLient {
     } catch (e) {
       logger.error(e.statusCode, e);
       throw e;
+    }
+  }
+
+  async updateConfigMapTitle(
+    configMapName: string,
+    namespace: string,
+    newTitle: string,
+  ) {
+    try {
+      const configMapResponse = await this.getConfigMap(
+        configMapName,
+        namespace,
+      );
+      const configMap = configMapResponse.body;
+
+      const appConfigYaml = configMap.data[`${configMapName}.yaml`];
+      const appConfigObj = yaml.load(appConfigYaml) as any;
+
+      appConfigObj.app.title = newTitle;
+      configMap.data[`${configMapName}.yaml`] = yaml.dump(appConfigObj);
+
+      delete configMap.metadata.creationTimestamp;
+
+      await this.coreV1Api.replaceNamespacedConfigMap(
+        configMapName,
+        namespace,
+        configMap,
+      );
+      console.log("ConfigMap updated successfully.");
+    } catch (error) {
+      console.error("Error updating ConfigMap:", error);
+      throw new Error("Failed to update ConfigMap");
     }
   }
 

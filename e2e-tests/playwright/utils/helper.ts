@@ -57,7 +57,7 @@ export async function upgradeHelmChartWithWait(
     dump: upgradeOutput,
   });
 
-  const configmap = await k8sClient.getCongifmap(
+  const configmap = await k8sClient.getConfigMap(
     `${RELEASE}-backstage-app-config`,
     NAMESPACE,
   );
@@ -153,7 +153,7 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await k8sClient.updateCongifmap(configMap, namespace, patch);
+  await k8sClient.updateConfigMap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
@@ -164,7 +164,7 @@ export async function ensureNewPolicyConfigMapExists(
     logger.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await k8sClient.getCongifmap(configMap, namespace);
+    await k8sClient.getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -174,12 +174,12 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await k8sClient.updateCongifmap(configMap, namespace, patch);
-    return await k8sClient.getCongifmap(configMap, namespace);
+    await k8sClient.updateConfigMap(configMap, namespace, patch);
+    return await k8sClient.getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
       logger.info(
-        `Configmap ${configMap} did not exsist in namespace ${namespace}. Creating it..`,
+        `Configmap ${configMap} did not exist in namespace ${namespace}. Creating it..`,
       );
       const cmBody: V1ConfigMap = {
         metadata: {

@@ -17,6 +17,7 @@
     "showcase-k8s-ci-nightly": "playwright test --project=showcase-k8s",
     "showcase-rbac-k8s-ci-nightly": "playwright test --project=showcase-rbac-k8s",
     "showcase-rds-nightly": "playwright test --project=postgres-health-check",
+    "showcase-runtime": "playwright test --project=showcase-runtime",
     "lint:check": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "postinstall": "playwright install",
@@ -41,6 +42,7 @@
     "@kubernetes/client-node": "0.21.0",
     "@microsoft/microsoft-graph-client": "3.0.7",
     "isomorphic-fetch": "3.0.0",
+    "js-yaml": "^4.1.0",
     "node-fetch": "3.3.2",
     "octokit": "4.0.2",
     "winston": "3.14.2"
