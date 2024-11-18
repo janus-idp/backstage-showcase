@@ -53,7 +53,7 @@ The specified directory will be created automatically if it does not exist.
 
 ---
 
-By default, the audit log files will be in the following format: `redhat-developer-hub-audit-%DATE%.log` where `%DATE%` is the format specified in [`auditLog.rotateFile.dateFormat`](#configuring-the-file-rotation-frequency).
+By default, the audit log files will be in the following format: `redhat-developer-hub-audit-%DATE%.log` where `%DATE%` is the format specified in [`auditLog.rotateFile.dateFormat`](#configuring-file-retention-policy).
 
 To customize the log file name format, use:
 
