@@ -23,12 +23,9 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   test("is disabled", async ({ page }) => {
     await page
       .getByPlaceholder("Filter")
-      .pressSequentially(
-        "plugin-analytics-provider-segment\n",
-        {
-          delay: 300,
-        },
-      );
+      .pressSequentially("plugin-analytics-provider-segment\n", {
+        delay: 300,
+      });
     const row = page.locator(
       UIhelperPO.rowByText(
         "backstage-community-plugin-analytics-provider-segment",
