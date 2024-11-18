@@ -3836,6 +3836,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-scaffolder-backend-module-quay@npm:2.2.2":
+  version: 2.2.2
+  resolution: "@backstage-community/plugin-scaffolder-backend-module-quay@npm:2.2.2"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+    yaml: ^2.6.0
+  checksum: d76d498e49c0010e8268e76d1628d96bc3203c9034b7d2f5c13776cf375bf291b1f0ec29fd9d0a0a063c0631ed102513b8d207056221b3d4ed8246ac44e208bd
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-scaffolder-backend-module-servicenow@npm:2.2.1":
   version: 2.2.1
   resolution: "@backstage-community/plugin-scaffolder-backend-module-servicenow@npm:2.2.1"
@@ -10589,16 +10600,6 @@ __metadata:
     lodash: ^4.17.21
     yaml: ^2.0.0
   checksum: 9156f5856b79479bff83ba61236a46b2a3506570330113faa2c746057d90943ec615aeebf4548dc509327b98ac052aa71df2837c12f93bde518923f07866b113
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-scaffolder-backend-module-quay@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@janus-idp/backstage-scaffolder-backend-module-quay@npm:2.2.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/plugin-scaffolder-node": ^0.5.0
-  checksum: f700d60f7444307ea34e9df63f3217eb71ae6ef385c0b7d5a54f2a00c87f47cfbe6c532ae5ce8bbc1466f52a2dd1592fb96162b1a14139557e922e100dd0dbac
   languageName: node
   linkType: hard
 
@@ -22617,6 +22618,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-scaffolder-backend-module-quay@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-quay-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-scaffolder-backend-module-quay@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-quay-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-quay": 2.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic"
@@ -31763,16 +31774,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-analytics-provider-segment": 1.10.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-scaffolder-backend-module-quay@workspace:dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-scaffolder-backend-module-quay@workspace:dynamic-plugins/wrappers/janus-idp-backstage-scaffolder-backend-module-quay-dynamic"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-scaffolder-backend-module-quay": 2.2.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
@@ -45836,7 +45837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:2.6.0, yaml@npm:^2.0.0, yaml@npm:^2.1.1, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.3.3, yaml@npm:^2.3.4":
+"yaml@npm:2.6.0, yaml@npm:^2.0.0, yaml@npm:^2.1.1, yaml@npm:^2.2.1, yaml@npm:^2.2.2, yaml@npm:^2.3.3, yaml@npm:^2.3.4, yaml@npm:^2.6.0":
   version: 2.6.0
   resolution: "yaml@npm:2.6.0"
   bin:
