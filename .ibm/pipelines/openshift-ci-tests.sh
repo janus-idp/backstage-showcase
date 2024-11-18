@@ -7,8 +7,6 @@ LOGFILE="test-log"
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
-JOB_NAME=zdrapela-periodic-gke
-TAG_NAME=next
 
 cleanup() {
   echo "Cleaning up before exiting"
@@ -201,10 +199,10 @@ apply_yaml_files() {
   done
 
   if [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke* || "$JOB_NAME" == *operator* ]]; then
-    GITHUB_APP_APP_ID=$GITHUB_APP_2_APP_ID
-    GITHUB_APP_CLIENT_ID=$GITHUB_APP_2_CLIENT_ID
-    GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_2_PRIVATE_KEY
-    GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_2_CLIENT_SECRET
+    GITHUB_APP_APP_ID=$GITHUB_APP_3_APP_ID
+    GITHUB_APP_CLIENT_ID=$GITHUB_APP_3_CLIENT_ID
+    GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_3_PRIVATE_KEY
+    GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_3_CLIENT_SECRET
   elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
     # GITHUB_APP_4 for all pr's on main branch.
     GITHUB_APP_APP_ID=$(cat /tmp/secrets/GITHUB_APP_4_APP_ID)
