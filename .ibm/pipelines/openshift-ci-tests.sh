@@ -391,7 +391,7 @@ install_rhdh_operator() {
   
   # Make sure script is up to date
   rm -f /tmp/install-rhdh-catalog-source.sh
-  curl -L https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/main/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
+  curl -L https://raw.githubusercontent.com/rm3l/redhat-developer-hub-operator/refs/heads/RHIDP-4934--unable-to-use-ci-install-script-in-prow-containers-where-podman-is-restricted/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
   chmod +x /tmp/install-rhdh-catalog-source.sh
   /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
 }
