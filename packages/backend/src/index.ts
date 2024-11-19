@@ -5,18 +5,30 @@ import { PackageRoles } from '@backstage/cli-node';
 import * as path from 'path';
 
 import { configureCorporateProxyAgent } from './corporate-proxy';
+import { getDefaultServiceFactories } from './defaultServiceFactories';
 import { CommonJSModuleLoader } from './loader';
-import { transports } from './logger';
+import { createStaticLogger, transports } from './logger';
 import {
   healthCheckPlugin,
   pluginIDProviderService,
   rbacDynamicPluginsProvider,
 } from './modules';
 
+// Create a logger to cover logging static initialization tasks
+const staticLogger = createStaticLogger({ service: 'developer-hub-init' });
+staticLogger.info('Starting Developer Hub backend');
+
 // RHIDP-2217: adds support for corporate proxy
 configureCorporateProxyAgent();
 
 const backend = createBackend();
+
+const defaultServiceFactories = getDefaultServiceFactories({
+  logger: staticLogger,
+});
+defaultServiceFactories.forEach(serviceFactory => {
+  backend.add(serviceFactory);
+});
 
 backend.add(
   dynamicPluginsFeatureLoader({
