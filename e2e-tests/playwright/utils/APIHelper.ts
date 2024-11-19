@@ -2,6 +2,7 @@ import { request, APIResponse, expect } from "@playwright/test";
 import { githubAPIEndpoints } from "./APIEndpoints";
 import * as authProvidersConstants from "./authenticationProviders/constants";
 import { GroupEntity, UserEntity } from "@backstage/catalog-model";
+import { logger } from "./Logger";
 
 export class APIHelper {
   private static githubAPIVersion = "2022-11-28";
@@ -232,6 +233,10 @@ export class APIHelper {
 
   async deleteUserEntityFromAPI(user: string) {
     const r: UserEntity = await this.getCatalogUserFromAPI(user);
+    if (!r.metadata || !r.metadata.uid) {
+      logger.info("No user found for deletion: " + JSON.stringify(r));
+      return;
+    }
     const url = `${authProvidersConstants.AUTH_PROVIDERS_BASE_URL}/api/catalog/entities/by-uid/${r.metadata.uid}`;
     const token = this.useStaticToken ? this.staticToken : "";
     const response = await APIHelper.APIRequestWithStaticToken(

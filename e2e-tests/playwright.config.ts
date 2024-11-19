@@ -76,7 +76,7 @@ export default defineConfig({
         "**/playwright/e2e/authProviders/clear-environment.spec.ts",
       ],
       dependencies: ["showcase-auth-providers-setup-environment"],
-      teardown: "showcase-auth-providers-clear-environment",
+      //teardown: "showcase-auth-providers-clear-environment",
       retries: 1,
     },
     {

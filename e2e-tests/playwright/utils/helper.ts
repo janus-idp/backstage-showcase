@@ -12,7 +12,7 @@ export const k8sClient = new kubeCLient();
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
-    logger.info(`Executing command ${command}`);
+    //logger.info(`Executing command ${command}`);
     const process = spawn("/bin/sh", ["-c", command]);
     let result: string;
     process.stdout.on("data", (data) => {
@@ -23,11 +23,10 @@ export async function runShellCmd(command: string) {
     });
     process.on("exit", (code) => {
       if (code == 0) {
-        logger.info(`Process ended with exit code ${code}: `);
         resolve(result);
         return;
       } else {
-        logger.info(`Process failed with code ${code}: `);
+        logger.info(`Process failed with code ${code}: ${result}`);
         throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
@@ -48,18 +47,21 @@ export async function upgradeHelmChartWithWait(
   await deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
 
   logger.info(`Upgrading helm release ${RELEASE}`);
-  const upgradeOutput = await runShellCmd(`helm upgrade \
+  const upgradeCMD = `helm upgrade \
     -i ${RELEASE} ${CHART}  \
     --wait --timeout 300s -n ${NAMESPACE} \
     --values ${VALUES} \
     --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-    ${FLAGS.join(" ")}`);
+    ${FLAGS.join(" ")}`;
+  logger.info(`Running upgrade with command ${upgradeCMD}`);
+
+  const upgradeOutput = await runShellCmd(upgradeCMD);
 
   logger.log({
     level: "info",
     message: `Release upgrade returned: `,
-    dump: upgradeOutput,
+    dump: upgradeOutput.toString(),
   });
 
   const configmap = await k8sClient.getCongifmap(
@@ -86,9 +88,9 @@ export async function deleteHelmReleaseWithWait(
   logger.log({
     level: "info",
     message: `Release delete returned: `,
-    dump: result,
+    dump: result.toString(),
   });
-  return result;
+  return result.toString();
 }
 
 export async function getLastSyncTimeFromLogs(
@@ -114,7 +116,6 @@ export async function getLastSyncTimeFromLogs(
       "app.kubernetes.io/component=backstage",
     );
     const pods = p.body.items.map((pod) => pod.metadata.name);
-    logger.info(JSON.stringify(pods));
 
     const log = await runShellCmd(
       `oc logs ${pods[0].trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
@@ -257,6 +258,28 @@ export async function ensureEnvSecretExists(
     RHSSO76_CLIENT_SECRET: Buffer.from(
       constants.RHSSO76_CLIENT_SECRET,
     ).toString("base64"),
+
+    RHBK_DEFAULT_PASSWORD: Buffer.from(
+      constants.RHSSO76_DEFAULT_PASSWORD,
+    ).toString("base64"),
+    RHBK_METADATA_URL: Buffer.from(
+      `${constants.RHBK_URL}/realms/authProviders`,
+    ).toString("base64"),
+    RHBK_CLIENT_ID: Buffer.from(constants.RHBK_CLIENTID).toString("base64"),
+    RHBK_ADMIN_USERNAME: Buffer.from(constants.RHBK_ADMIN_USERNAME).toString(
+      "base64",
+    ),
+    RHBK_ADMIN_PASSWORD: Buffer.from(constants.RHBK_ADMIN_PASSWORD).toString(
+      "base64",
+    ),
+    RHBK_CALLBACK_URL: Buffer.from(
+      `${process.env.BASE_URL}/api/auth/oidc/handler/frame`,
+    ).toString("base64"),
+    RHBK_CLIENT_SECRET: Buffer.from(constants.RHBK_CLIENT_SECRET).toString(
+      "base64",
+    ),
+    RHBK_URL: Buffer.from(constants.RHBK_URL).toString("base64"),
+
     AUTH_ORG_APP_ID: Buffer.from(constants.AUTH_ORG_APP_ID).toString("base64"),
     AUTH_ORG_CLIENT_ID: Buffer.from(constants.AUTH_ORG_CLIENT_ID).toString(
       "base64",

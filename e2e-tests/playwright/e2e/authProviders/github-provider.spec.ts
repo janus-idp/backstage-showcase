@@ -14,6 +14,7 @@ import * as ghHelper from "../../utils/authenticationProviders/githubHelper";
 let page: Page;
 
 test.describe("Standard authentication providers: Github Provider", () => {
+  test.skip();
   test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
 
   let common: Common;

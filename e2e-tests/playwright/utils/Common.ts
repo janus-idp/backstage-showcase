@@ -324,13 +324,15 @@ export class Common {
     };
   }
 
-  async UnregisterUserEntityFromCatalog(user: string) {
+  async UnregisterUserEntityFromCatalog(user: string, APIToken: string) {
     const api = new APIHelper();
+    api.UseStaticToken(APIToken);
     await api.deleteUserEntityFromAPI(user);
   }
 
-  async UnregisterGroupEntityFromCatalog(group: string) {
+  async UnregisterGroupEntityFromCatalog(group: string, APIToken: string) {
     const api = new APIHelper();
+    api.UseStaticToken(APIToken);
     await api.deleteGroupEntityFromAPI(group);
   }
 
@@ -358,8 +360,9 @@ export class Common {
     await this.uiHelper.verifyCellsInTable(users);
   }
 
-  async CheckUserIsIngestedInCatalog(users: string[]) {
+  async CheckUserIsIngestedInCatalog(users: string[], APIToken: string) {
     const api = new APIHelper();
+    api.UseStaticToken(APIToken);
     const response = await api.getAllCatalogUsersFromAPI();
     logger.info(`Users currently in catalog: ${JSON.stringify(response)}`);
     const catalogUsers: UserEntity[] =
@@ -377,8 +380,9 @@ export class Common {
     return hasAllElems;
   }
 
-  async CheckGroupIsIngestedInCatalog(groups: string[]) {
+  async CheckGroupIsIngestedInCatalog(groups: string[], APIToken: string) {
     const api = new APIHelper();
+    api.UseStaticToken(APIToken);
     const response = await api.getAllCatalogGroupsFromAPI();
     logger.info(`Groups currently in catalog: ${JSON.stringify(response)}`);
     const catalogGroups: GroupEntity[] =

@@ -10,6 +10,18 @@ export const RHSSO76_DEFAULT_PASSWORD = process.env.RHSSO76_DEFAULT_PASSWORD;
 export const RHSSO76_URL = process.env.RHSSO76_URL;
 export const RHSSO76_CLIENT_SECRET = process.env.RHSSO76_CLIENT_SECRET;
 export const RHSSO76_CLIENTID = process.env.RHSSO76_CLIENT_ID;
+export const RHSSO76_METADATA_URL =
+  "https://keycloak-rhsso.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud/auth/realms/authProviders";
+
+export const RHBK_ADMIN_USERNAME = process.env.RHBK_ADMIN_USERNAME;
+export const RHBK_ADMIN_PASSWORD = process.env.RHBK_ADMIN_PASSWORD;
+export const RHBK_DEFAULT_PASSWORD = process.env.RHBK_DEFAULT_PASSWORD;
+export const RHBK_URL = process.env.RHBK_URL;
+export const RHBK_CLIENT_SECRET = process.env.RHBK_CLIENT_SECRET;
+export const RHBK_CLIENTID = process.env.RHBK_CLIENT_ID;
+export const RHBK_METADATA_URL =
+  "https://rhbk-rhbk.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud/realms/authProviders";
+
 export const AUTH_PROVIDERS_REALM_NAME = process.env.AUTH_PROVIDERS_REALM_NAME;
 
 export const RHSSO76_GROUPS: { [key: string]: GroupRepresentation } = {

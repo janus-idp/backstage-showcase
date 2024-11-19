@@ -12,9 +12,11 @@ export class RHSSOHelper {
   kcAdminClient: KcAdminClient | undefined;
   connectionConfig: ConnectionConfig;
   cred: Credentials;
+  version: string;
 
   constructor(version: string) {
-    if (version == "7.6") {
+    this.version = version;
+    if (version == "RHSSO") {
       this.connectionConfig = {
         baseUrl: constants.RHSSO76_URL,
         realmName: constants.AUTH_PROVIDERS_REALM_NAME,
@@ -25,16 +27,27 @@ export class RHSSOHelper {
         clientId: constants.RHSSO76_CLIENTID,
         scopes: ["openid", "profile"],
       };
+    } else if (version == "RHBK") {
+      this.connectionConfig = {
+        baseUrl: constants.RHBK_URL,
+        realmName: constants.AUTH_PROVIDERS_REALM_NAME,
+      };
+      this.cred = {
+        clientSecret: constants.RHBK_CLIENT_SECRET,
+        grantType: "client_credentials",
+        clientId: constants.RHBK_CLIENTID,
+        scopes: ["openid", "profile"],
+      };
     }
   }
 
   async initializeRHSSOClient() {
     // Ensure settings isn't null
     if (!this.connectionConfig) {
-      logger.error(`RHSSO config cannot be undefined`);
+      logger.error(`${this.version} config cannot be undefined`);
       throw new Error("Config cannot be undefined");
     }
-    logger.info(`Initializing RHSSO client`);
+    logger.info(`Initializing ${this.version} client`);
     this.kcAdminClient = new KcAdminClient(this.connectionConfig);
     await this.kcAdminClient.auth(this.cred);
     setInterval(() => this.kcAdminClient.auth(this.cred), 58 * 1000);
@@ -44,7 +57,7 @@ export class RHSSOHelper {
     usersCreated: Map<string, UserRepresentation>;
     groupsCreated: Map<string, GroupRepresentation>;
   }> {
-    logger.info("Setting up RHSSO environment");
+    logger.info(`Setting up ${this.version} environment`);
     const usersCreated = new Map<string, UserRepresentation>();
     const groupsCreated = new Map<string, GroupRepresentation>();
 
@@ -87,6 +100,7 @@ export class RHSSOHelper {
         { id: groupsCreated["group_2"].id },
         constants.RHSSO76_NESTED_GROUP,
       );
+      logger.info(JSON.stringify(nestedgroup));
 
       await this.kcAdminClient.users.addToGroup({
         id: usersCreated["user_3"].id,
@@ -101,10 +115,10 @@ export class RHSSOHelper {
     } catch (e) {
       logger.log({
         level: "error",
-        message: "RHSSO setup failed:",
+        message: `${this.version} setup failed:`,
         dump: JSON.stringify(e),
       });
-      throw new Error("RHSSO setup failed: " + JSON.stringify(e));
+      throw new Error(`${this.version} setup failed: ${JSON.stringify(e)}`);
     }
     return {
       usersCreated,
@@ -135,7 +149,7 @@ export class RHSSOHelper {
 
   async updateUser(userId: string, userObj: UserRepresentation) {
     try {
-      logger.info(`Update user ${userId} from RHSSO`);
+      logger.info(`Update user ${userId} from ${this.version}`);
       await this.kcAdminClient.users.update({ id: userId }, userObj);
     } catch (e) {
       logger.error(e);
@@ -145,7 +159,7 @@ export class RHSSOHelper {
 
   async updateGruop(groupId: string, groupObj: GroupRepresentation) {
     try {
-      logger.info(`Update group ${groupId} from RHSSO`);
+      logger.info(`Update group ${groupId} from ${this.version}`);
       await this.kcAdminClient.groups.update({ id: groupId }, groupObj);
     } catch (e) {
       logger.error(e);
@@ -172,7 +186,7 @@ export class RHSSOHelper {
     } catch (e) {
       logger.log({
         level: "info",
-        message: "RHSSO update email failed:",
+        message: `${this.version} update email failed:`,
         dump: JSON.stringify(e),
       });
       throw new Error("Cannot update user: " + JSON.stringify(e));
@@ -181,7 +195,7 @@ export class RHSSOHelper {
 
   async deleteUser(id: string) {
     try {
-      logger.info(`Deleting user ${id} from RHSSO`);
+      logger.info(`Deleting user ${id} from ${this.version}`);
       await this.kcAdminClient.users.del({ id: id });
     } catch (e) {
       logger.error(e);
@@ -191,7 +205,9 @@ export class RHSSOHelper {
 
   async removeUserFromGroup(userId: string, groupId: string) {
     try {
-      logger.info(`Remove user ${userId} from  group ${groupId} from RHSSO`);
+      logger.info(
+        `Remove user ${userId} from  group ${groupId} from ${this.version}`,
+      );
       await this.kcAdminClient.users.delFromGroup({
         id: userId,
         groupId: groupId,
@@ -204,7 +220,9 @@ export class RHSSOHelper {
 
   async addUserToGroup(userId: string, groupId: string) {
     try {
-      logger.info(`Add user ${userId} from  group ${groupId} from RHSSO`);
+      logger.info(
+        `Add user ${userId} from  group ${groupId} from ${this.version}`,
+      );
       await this.kcAdminClient.users.addToGroup({
         id: userId,
         groupId: groupId,
@@ -217,7 +235,7 @@ export class RHSSOHelper {
 
   async deleteGroup(groupId: string) {
     try {
-      logger.info(`Deleting group ${groupId} from RHSSO`);
+      logger.info(`Deleting group ${groupId} from ${this.version}`);
       await this.kcAdminClient.groups.del({ id: groupId });
     } catch (e) {
       logger.error(e);
