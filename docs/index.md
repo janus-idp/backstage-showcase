@@ -39,7 +39,7 @@ Add the following code in your Helm configuration file:
 global:
   dynamic:
     plugins:
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      - package: './dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment'
         disabled: true
 ```
 
@@ -58,7 +58,7 @@ data:
     includes:
       - dynamic-plugins.default.yaml
     plugins:
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      - package: './dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment'
         disabled: true
 ```
 
@@ -70,11 +70,11 @@ However, if you run your application using the `dynamic-plugins.default.yaml` fi
 ```yaml
 dynamicPlugins:
   plugins:
-    - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+    - package: './dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment'
       disabled: true
 ```
 
-Than delete the `dynamic-plugins-root/janus-idp-backstage-plugin-analytics-provider-segment` plugin directory, to stop plugin from loading.
+Than delete the `dynamic-plugins-root/backstage-community-plugin-analytics-provider-segment` plugin directory, to stop plugin from loading.
 
 ### Disabling Telemetry in Continuous Integration (CI) Environments
 
@@ -94,7 +94,7 @@ Add the following code in your Helm configuration file:
 global:
   dynamic:
     plugins:
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      - package: './dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment'
         disabled: false
 ```
 
@@ -114,7 +114,7 @@ data:
     includes:
       - dynamic-plugins.default.yaml
     plugins:
-      - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
+      - package: './dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment'
         disabled: false
 ```
 
