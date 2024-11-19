@@ -200,8 +200,7 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
-  # Renable when namespace termination issue is solved
+  #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
@@ -294,7 +293,7 @@ install_tekton_pipelines() {
 
 initiate_deployments() {
 
-  install_pipelines_operator
+  #install_pipelines_operator
   install_crunchy_postgres_operator
   install_helm
   add_helm_repos
@@ -313,7 +312,7 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
-  
+
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
@@ -358,7 +357,7 @@ initiate_rds_deployment() {
   sed -i "s|POSTGRES_USER:.*|POSTGRES_USER: $RDS_USER|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
   sed -i "s|POSTGRES_PASSWORD:.*|POSTGRES_PASSWORD: $(echo -n $RDS_PASSWORD | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
   sed -i "s|POSTGRES_HOST:.*|POSTGRES_HOST: $(echo -n $RDS_1_HOST | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
-  oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}" 
+  oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/postgres-cred.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${namespace}"
   helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
@@ -460,7 +459,7 @@ main() {
       check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
     fi
   fi
-  
+
   exit "${OVERALL_RESULT}"
 }
 

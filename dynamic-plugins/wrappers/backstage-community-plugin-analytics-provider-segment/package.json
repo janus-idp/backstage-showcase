@@ -1,6 +1,6 @@
 {
-  "name": "janus-idp-backstage-plugin-analytics-provider-segment",
-  "version": "1.10.0",
+  "name": "backstage-community-plugin-analytics-provider-segment",
+  "version": "1.10.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,10 +11,10 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.32.4",
-    "pluginId": "janus-idp-analytics-provider-segment",
+    "supported-versions": "1.32.5",
+    "pluginId": "backstage-community-analytics-provider-segment",
     "pluginPackages": [
-      "janus-idp-backstage-plugin-analytics-provider-segment"
+      "backstage-community-plugin-analytics-provider-segment"
     ]
   },
   "sideEffects": false,
@@ -28,7 +28,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@janus-idp/backstage-plugin-analytics-provider-segment": "1.10.0"
+    "@backstage-community/plugin-analytics-provider-segment": "1.10.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
@@ -39,7 +39,7 @@
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "janus-idp.backstage-plugin-analytics-provider-segment",
+    "name": "backstage-community.plugin-analytics-provider-segment",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
@@ -47,7 +47,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-analytics-provider-segment"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
