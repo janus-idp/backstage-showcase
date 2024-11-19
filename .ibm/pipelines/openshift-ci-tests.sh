@@ -267,14 +267,6 @@ apply_yaml_files() {
   # Renable when namespace termination issue is solved
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
-
-  if [[ "${project}" == "showcase-operator-nightly" ]]; then
-    oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins.yaml" --namespace="${project}"
-  fi
-
-  if [[ "${project}" == "showcase-op-rbac-nightly" ]]; then
-    oc apply -f "$dir/resources/rhdh-operator/dynamic_plugins/configmap-dynamic-plugins-rbac.yaml" --namespace="${project}"
-  fi
 }
 
 run_tests() {
@@ -393,7 +385,7 @@ install_rhdh_operator() {
   rm -f /tmp/install-rhdh-catalog-source.sh
   curl -L https://raw.githubusercontent.com/rm3l/redhat-developer-hub-operator/refs/heads/RHIDP-4934--unable-to-use-ci-install-script-in-prow-containers-where-podman-is-restricted/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
   chmod +x /tmp/install-rhdh-catalog-source.sh
-  /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
+  bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
 }
 
 deploy_rhdh_operator() {
@@ -422,7 +414,7 @@ initiate_deployments() {
 
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${NAME_SPACE}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
@@ -431,7 +423,7 @@ initiate_deployments() {
 
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
-  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE : ${RELEASE_NAME_RBAC}"
+  echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
@@ -453,10 +445,14 @@ initiate_deployments_operator() {
   install_rhdh_operator "${DIR}" "${OPERATOR_MANAGER}"
   configure_namespace "${NAME_SPACE}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
+  create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins.yaml"
+  oc apply -f /tmp/configmap-dynamic-plugins.yaml -n "${NAME_SPACE}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE}"
 
   configure_namespace "${NAME_SPACE_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins-rbac.yaml"
+  oc apply -f /tmp/configmap-dynamic-plugins-rbac.yaml -n "${NAME_SPACE}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
 }
 
