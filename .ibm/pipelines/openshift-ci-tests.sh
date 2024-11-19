@@ -503,7 +503,7 @@ main() {
   source "${DIR}/env_variables.sh"
   ############# REMOVE ONCE PR IS READY ############################
   NAME_SPACE="showcase-operator-nightly"
-  NAME_SPACE_RBAC="showcase-operator-rbac-nightly"
+  NAME_SPACE_RBAC="showcase-op-rbac-nightly"
   JOB_NAME=e2e-tests-operator-nightly
   ##################################################################
   install_oc
