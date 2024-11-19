@@ -10,7 +10,7 @@ test('Check "analytics-provider-segment" plugin is enabled', async () => {
   const pluginsList = await analytics.getDynamicPluginsList(authHeader);
   const isPluginListed = analytics.checkPluginListed(
     pluginsList,
-    "@janus-idp/backstage-plugin-analytics-provider-segment",
+    "backstage-community-plugin-analytics-provider-segment",
   );
 
   expect(isPluginListed).toBe(true);

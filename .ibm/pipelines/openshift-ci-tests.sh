@@ -187,8 +187,10 @@ apply_yaml_files() {
   fi
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
+  set +x
   token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
   sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
+  set -x
 
   if [[ "${project}" == *rbac* ]]; then
     oc apply -f "$dir/resources/config_map/configmap-app-config-rhdh-rbac.yaml" --namespace="${project}"
@@ -198,8 +200,7 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
-  # Renable when namespace termination issue is solved
+  #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
@@ -283,18 +284,6 @@ check_backstage_running() {
   return 1
 }
 
-install_pipelines_operator() {
-  local dir=$1
-  DISPLAY_NAME="Red Hat OpenShift Pipelines"
-
-  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
-    echo "Red Hat OpenShift Pipelines operator is already installed."
-  else
-    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
-    oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
-  fi
-}
-
 install_tekton_pipelines() {
   local dir=$1
 
@@ -307,11 +296,13 @@ install_tekton_pipelines() {
 }
 
 initiate_deployments() {
-  add_helm_repos
+
+  #install_pipelines_operator
+  install_crunchy_postgres_operator
   install_helm
+  add_helm_repos
 
   configure_namespace "${NAME_SPACE}"
-  install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
   # Deploy redis cache db.
@@ -326,7 +317,6 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
-  install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
@@ -361,6 +351,20 @@ initiate_rbac_aks_deployment() {
   yq_merge_value_files "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE_RBAC_AKS}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC_AKS}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "/tmp/${HELM_CHART_RBAC_AKS_MERGED_VALUE_FILE_NAME}" --set global.host="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_rds_deployment() {
+  local release_name=$1
+  local namespace=$2
+  configure_namespace "${namespace}"
+  uninstall_helmchart "${namespace}" "${release_name}"
+  sed -i "s|POSTGRES_USER:.*|POSTGRES_USER: $RDS_USER|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+  sed -i "s|POSTGRES_PASSWORD:.*|POSTGRES_PASSWORD: $(echo -n $RDS_PASSWORD | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+  sed -i "s|POSTGRES_HOST:.*|POSTGRES_HOST: $(echo -n $RDS_1_HOST | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+  oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}"
+  oc apply -f "$DIR/resources/postgres-db/postgres-cred.yaml" -n "${namespace}"
+  oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${namespace}"
+  helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
@@ -456,6 +460,11 @@ main() {
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
+    # Only test TLS config with RDS in nightly jobs
+    if [[ "$JOB_NAME" == *periodic* ]]; then
+      initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+      check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+    fi
   fi
 
   exit "${OVERALL_RESULT}"

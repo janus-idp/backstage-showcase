@@ -1,2 +1,1 @@
-export { default } from '@roadiehq/scaffolder-backend-module-http-request';
-
+export { default } from "@roadiehq/scaffolder-backend-module-http-request/new-backend";

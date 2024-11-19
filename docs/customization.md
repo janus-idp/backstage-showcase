@@ -2,6 +2,8 @@
 
 To customize the look of your showcase instance, you can edit the `app-config.yaml` file in the root of this repository. The customizations used to configure the app are loaded by the backstage app at startup, with certain values being queried by the app at runtime.
 
+Plugins can use field `developerHub.flavor` of the `app-config.yaml` to identify which Backstage flavor they are running on (e.g `backstage`, `rhdh` or `rhtap`).
+
 ## Changing the Sidebar Logo
 
 The sidebar uses two logos - one for the expanded sidebar and one for the collapsed sidebar.
@@ -40,7 +42,7 @@ dynamicPlugins:
 
 `default.<menu_item_name>`: The `default.` prefix is mandatory to ensure that the menu item is recognized as a main menu item. It should be used for both individual menu items and parent menu group configurations.
 
-See [Menu items](dynamic-plugins.md#menu-items) from dynamic-plugins documentation for more details.
+See [Menu items](dynamic-plugins/dynamic-plugins.md#menu-items) from dynamic-plugins documentation for more details.
 
 See [DefaultMainMenuItems](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/consts.ts#L1) for a list of main menu items, including their default priorities.
 

@@ -1,3 +1,5 @@
+name: On New Issue
+
 on:
   issues:
     types:

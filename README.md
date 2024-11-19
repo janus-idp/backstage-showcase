@@ -1,4 +1,4 @@
-# [Janus Showcase](https://showcase.janus-idp.io)
+# Janus Showcase
 
 [0]: https://quay.io/repository/janus-idp/backstage-showcase
 
@@ -16,8 +16,8 @@ Today, we have several plugins integrated into the showcase app as a way to demo
 
 Our current list of plugins within the showcase app include:
 
-- [OCM plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/ocm)
-- [Quay plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/quay)
+- [OCM plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/ocm/plugins/ocm)
+- [Quay plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/quay/plugins/quay)
 - [Kubernetes plugin](https://github.com/backstage/backstage/tree/master/plugins/kubernetes)
 - [Topology plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/topology)
 - [ArgoCD plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-argo-cd)
@@ -27,14 +27,16 @@ Our current list of plugins within the showcase app include:
 - [GitHub Issues plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/github-issues/plugins/github-issues)
 - [GitHub Discovery](https://backstage.io/docs/integrations/github/discovery) & [Org Data](https://backstage.io/docs/integrations/github/org)
 - [Security Insights plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-security-insights)
-- [Keycloak plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/keycloak-backend)
+- [Keycloak plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/keycloak/plugins/catalog-backend-module-keycloak)
 - [SonarQube plugin](https://roadie.io/backstage/plugins/sonarqube/)
-- [Tekton plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/tekton)
+- [Tekton plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/tekton/plugins/tekton)
 - [Azure DevOps plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/azure-devops)
 - [Jenkins plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins/plugins/jenkins)
+- [Notifications plugin](https://github.com/backstage/backstage/tree/master/plugins/notifications)
+- [Signals plugin](https://github.com/backstage/backstage/tree/master/plugins/signals)
 - [GitLab plugin](https://github.com/immobiliare/backstage-plugin-gitlab)
 - [Jira plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-jira)
-- [Jfrog Artifactory plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/jfrog-artifactory)
+- [Jfrog Artifactory plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/jfrog-artifactory/plugins/jfrog-artifactory)
 - [Datadog plugin](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog)
 - [PagerDuty](https://github.com/PagerDuty/backstage-plugin)
 - [Lighthouse plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse/plugins/lighthouse)
@@ -51,7 +53,7 @@ Dependencies:
 - [Node.js](https://nodejs.org/en/) 18
 - [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable)
 
-Information on running the showcase app can be found in our [Getting Started](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/getting-started.md) documentation. In the documentation is how to set up and run an instance of the showcase app locally. We plan to expand upon the documentation at a later point if there is enough interest in other methods for getting the app up and running.
+Information on running the showcase app can be found in our [Getting Started](https://github.com/janus-idp/backstage-showcase/blob/main/docs/index.md) documentation. In the documentation is how to set up and run an instance of the showcase app locally. We plan to expand upon the documentation at a later point if there is enough interest in other methods for getting the app up and running.
 
 We are excited to see people wanting to contribute to our project and welcome anyone who wishes to participate. You are more than welcome to browse through our open issues and tackle anything you feel confident in working on.
 
@@ -59,21 +61,11 @@ We also welcome non code contributions in the form of bug reporting and document
 
 ## Community, Discussion, and Support
 
-The Janus Community meeting is held biweekly on Thursday at 1:30 UTC via [Google Meet](https://meet.google.com/taq-tpfs-rre). An [agenda](https://docs.google.com/document/d/1RYkKxBRj6uMT5PTIugAuxAIYK9WxTkKgqdcdw1752Dc/edit?usp=sharing) can be found for the meeting and we encourage you to add any topics that you wish to discuss.
-
-[Bugs](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Fbug%2Cstatus%2Ftriage&template=bug.md) should be filled out here on GitHub.
-
-Join the [community slack channel](https://join.slack.com/t/janus-idp/shared_invite/zt-1pxtehxom-fCFtF9rRe3vFqUiFFeAkmg) for a quick way to reach us or members of the community for discussion and collaboration.
-
-Want to see a plugin in the showcase? Create an [issue](https://github.com/janus-idp/backstage-showcase/issues/new?assignees=&labels=kind%2Ffeature%2Cstatus%2Ftriage&template=feature.md) and we will discuss if it is right for the project.
-
-Have an idea for a plugin? Submit a [proposal](https://github.com/janus-idp/backstage-plugins/issues/new?assignees=&labels=plugin&template=plugin.yaml&title=%F0%9F%94%8C+Plugin%3A+) to the Janus IDP Backstage Plugins repo.
+[Bugs](https://issues.redhat.com/projects/RHIDP) should be filled out here on RHIDP Jira.
 
 ## Resources
 
 Our [blog](https://janus-idp.io/blog) is a great way to see what we are up to.
-
-You can find the Backstage Showcase app running at <https://showcase.janus-idp.io>.
 
 For more information on our plugin offerings, consult the [Janus IDP Backstage Plugins](https://github.com/janus-idp/backstage-plugins) repo.
 

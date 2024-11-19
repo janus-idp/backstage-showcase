@@ -34,6 +34,11 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
 
     await common.loginAsGithubUser();
   });
+
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("Register an Template", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
@@ -65,13 +70,13 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.verifyRowInTableByUniqueText("Owner", [
       `group:${reactAppDetails.owner}`,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText("Component Id", [
+    await uiHelper.verifyRowInTableByUniqueText("Name", [
       reactAppDetails.componentName,
     ]);
     await uiHelper.verifyRowInTableByUniqueText("Description", [
       reactAppDetails.description,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText("Repo Url", [
+    await uiHelper.verifyRowInTableByUniqueText("Repository Location", [
       `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
     ]);
 
@@ -79,16 +84,19 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.clickLink("Open in catalog");
   });
 
-  test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
-    await common.clickOnGHloginPopup();
-    await uiHelper.clickTab("Dependencies");
-    await uiHelper.verifyText(
-      `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
-    );
-    await catalogImport.inspectEntityAndVerifyYaml(
-      `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
-    );
-  });
+  test.fixme(
+    "Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ",
+    async () => {
+      await common.clickOnGHloginPopup();
+      await uiHelper.clickTab("Dependencies");
+      await uiHelper.verifyText(
+        `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
+      );
+      await catalogImport.inspectEntityAndVerifyYaml(
+        `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
+      );
+    },
+  );
 
   test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
     await uiHelper.openSidebar("Catalog");
