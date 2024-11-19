@@ -12,10 +12,11 @@ cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  # elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then # Delete the created namespace for main's PR's
-  #   delete_namespace "${NAME_SPACE}"
-  #   delete_namespace "${NAME_SPACE_POSTGRES_DB}"
-  #   delete_namespace "${NAME_SPACE_RBAC}"
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    # Cleanup namespaces after main branch PR e2e tests execution.
+    delete_namespace "${NAME_SPACE}"
+    delete_namespace "${NAME_SPACE_POSTGRES_DB}"
+    delete_namespace "${NAME_SPACE_RBAC}"
   fi
   rm -rf ~/tmpbin
 }
@@ -48,10 +49,10 @@ set_namespace() {
     NAME_SPACE_AKS="showcase-aks-ci-nightly"
     NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
   elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
-    # Look for available namespace to use to make main's PR's parallel.
+    # Enable parallel PR testing for main branch by utilizing a pool of namespaces
     local namespaces_pool=("pr-1" "pr-2" "pr-3")
     local namespace_found=false
-
+    # Iterate through namespace pool to find an available set
     for ns in "${namespaces_pool[@]}"; do
       if ! oc get namespace "showcase-rbac-$ns" >/dev/null 2>&1; then
         echo "Namespace "showcase-rbac-$ns" does not exist, Using NS: showcase-$ns, showcase-rbac-$ns"
@@ -248,7 +249,7 @@ run_tests() {
   local release_name=$1
   local project=$2
 
-  project=${project%-pr-*} # remove -pr- suffix if any.
+  project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
   yarn playwright install
