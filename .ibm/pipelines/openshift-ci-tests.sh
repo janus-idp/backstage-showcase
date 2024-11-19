@@ -12,6 +12,10 @@ cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  # elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then # Delete the created namespace for main's PR's
+  #   delete_namespace "${NAME_SPACE}"
+  #   delete_namespace "${NAME_SPACE_POSTGRES_DB}"
+  #   delete_namespace "${NAME_SPACE_RBAC}"
   fi
   rm -rf ~/tmpbin
 }
@@ -33,6 +37,35 @@ set_cluster_info() {
   elif [[ "$JOB_NAME" == *aks* ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
+  fi
+}
+
+set_namespace() {
+  if [[ "$JOB_NAME" == *periodic-* ]]; then
+    NAME_SPACE="showcase-ci-nightly"
+    NAME_SPACE_RBAC="showcase-rbac-nightly"
+    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_AKS="showcase-aks-ci-nightly"
+    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    # Look for available namespace to use to make main's PR's parallel.
+    local namespaces_pool=("pr-1" "pr-2" "pr-3")
+    local namespace_found=false
+
+    for ns in "${namespaces_pool[@]}"; do
+      if ! oc get namespace "showcase-rbac-$ns" >/dev/null 2>&1; then
+        echo "Namespace "showcase-rbac-$ns" does not exist, Using NS: showcase-$ns, showcase-rbac-$ns"
+        NAME_SPACE="showcase-$ns"
+        NAME_SPACE_RBAC="showcase-rbac-$ns"
+        NAME_SPACE_POSTGRES_DB="postgress-external-db-$ns"
+        namespace_found=true
+        break
+      fi
+    done
+    if ! $namespace_found; then
+      echo "Error: All namespaces (showcase-pr-1, showcase-pr-2, showcase-pr-3) already in Use"
+      exit 1
+    fi
   fi
 }
 
@@ -164,6 +197,12 @@ apply_yaml_files() {
     GITHUB_APP_CLIENT_ID=$GITHUB_APP_2_CLIENT_ID
     GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_2_PRIVATE_KEY
     GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_2_CLIENT_SECRET
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    # GITHUB_APP_4 for all pr's on main branch.
+    GITHUB_APP_APP_ID=$(cat /tmp/secrets/GITHUB_APP_4_APP_ID)
+    GITHUB_APP_CLIENT_ID=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_ID)
+    GITHUB_APP_PRIVATE_KEY=$(cat /tmp/secrets/GITHUB_APP_4_PRIVATE_KEY)
+    GITHUB_APP_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_SECRET)
   fi
 
   for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
@@ -208,6 +247,8 @@ apply_yaml_files() {
 run_tests() {
   local release_name=$1
   local project=$2
+
+  project=${project%-pr-*} # remove -pr- suffix if any.
   cd "${DIR}/../../e2e-tests"
   yarn install
   yarn playwright install
@@ -408,18 +449,6 @@ main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info
   source "${DIR}/env_variables.sh"
-  if [[ "$JOB_NAME" == *periodic-* ]]; then
-    NAME_SPACE="showcase-ci-nightly"
-    NAME_SPACE_RBAC="showcase-rbac-nightly"
-    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
-    NAME_SPACE_AKS="showcase-aks-ci-nightly"
-    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
-  fi
-  if [[ "$JOB_NAME" == *aks* ]]; then
-    az_login
-    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  fi
 
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
@@ -428,6 +457,14 @@ main() {
     oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
   fi
   echo "OCP version: $(oc version)"
+
+  set_namespace
+
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_login
+    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  fi
 
   API_SERVER_URL=$(oc whoami --show-server)
   if [[ "$JOB_NAME" == *aks* ]]; then
