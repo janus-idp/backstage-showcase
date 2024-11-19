@@ -15,6 +15,11 @@ cleanup() {
   if [[ "$JOB_NAME" == *aks* ]]; then
     # If the job is for Azure Kubernetes Service (AKS), stop the AKS cluster.
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    # Cleanup namespaces after main branch PR e2e tests execution.
+    delete_namespace "${NAME_SPACE}"
+    delete_namespace "${NAME_SPACE_POSTGRES_DB}"
+    delete_namespace "${NAME_SPACE_RBAC}"
   fi
   rm -rf ~/tmpbin  # Remove temporary binaries directory.
 }
@@ -40,6 +45,35 @@ set_cluster_info() {
     # Use cluster credentials for AKS.
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
+  fi
+}
+
+set_namespace() {
+  if [[ "$JOB_NAME" == *periodic-* ]]; then
+    NAME_SPACE="showcase-ci-nightly"
+    NAME_SPACE_RBAC="showcase-rbac-nightly"
+    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_AKS="showcase-aks-ci-nightly"
+    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    # Enable parallel PR testing for main branch by utilizing a pool of namespaces
+    local namespaces_pool=("pr-1" "pr-2" "pr-3")
+    local namespace_found=false
+    # Iterate through namespace pool to find an available set
+    for ns in "${namespaces_pool[@]}"; do
+      if ! oc get namespace "showcase-$ns" >/dev/null 2>&1 && ! oc get namespace "showcase-rbac-$ns" >/dev/null 2>&1; then
+        echo "Namespace "showcase-$ns" and "showcase-rbac-$ns" does not exist, Using NS: showcase-$ns, showcase-rbac-$ns"
+        NAME_SPACE="showcase-$ns"
+        NAME_SPACE_RBAC="showcase-rbac-$ns"
+        NAME_SPACE_POSTGRES_DB="postgress-external-db-$ns"
+        namespace_found=true
+        break
+      fi
+    done
+    if ! $namespace_found; then
+      echo "Error: All namespaces (showcase-pr-1, showcase-pr-2, showcase-pr-3) already in Use"
+      exit 1
+    fi
   fi
 }
 
@@ -185,6 +219,12 @@ apply_yaml_files() {
     GITHUB_APP_CLIENT_ID=$GITHUB_APP_2_CLIENT_ID
     GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_2_PRIVATE_KEY
     GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_2_CLIENT_SECRET
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    # GITHUB_APP_4 for all pr's on main branch.
+    GITHUB_APP_APP_ID=$(cat /tmp/secrets/GITHUB_APP_4_APP_ID)
+    GITHUB_APP_CLIENT_ID=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_ID)
+    GITHUB_APP_PRIVATE_KEY=$(cat /tmp/secrets/GITHUB_APP_4_PRIVATE_KEY)
+    GITHUB_APP_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_SECRET)
   fi
 
   # Replace placeholders in the secrets file with actual values.
@@ -229,8 +269,7 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/config_map/configmap-rbac-policy-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
-  # Renable when namespace termination issue is solved
+  #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
@@ -238,6 +277,8 @@ apply_yaml_files() {
 run_tests() {
   local release_name=$1
   local project=$2
+
+  project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
   yarn playwright install
@@ -315,18 +356,6 @@ check_backstage_running() {
   return 1  # Failure
 }
 
-install_pipelines_operator() {
-  local dir=$1
-  DISPLAY_NAME="Red Hat OpenShift Pipelines"
-
-  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
-    echo "Red Hat OpenShift Pipelines operator is already installed."
-  else
-    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
-    oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
-  fi
-}
-
 install_tekton_pipelines() {
   local dir=$1
 
@@ -340,11 +369,13 @@ install_tekton_pipelines() {
 
 # Function to initiate deployments on OpenShift clusters.
 initiate_deployments() {
-  add_helm_repos
+
+  #install_pipelines_operator
+  install_crunchy_postgres_operator
   install_helm
+  add_helm_repos
 
   configure_namespace "${NAME_SPACE}"
-  install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
   # Deploy Redis cache database.
@@ -361,7 +392,6 @@ initiate_deployments() {
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
-  install_pipelines_operator "${DIR}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
@@ -410,7 +440,7 @@ initiate_rds_deployment() {
   sed -i "s|POSTGRES_USER:.*|POSTGRES_USER: $RDS_USER|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
   sed -i "s|POSTGRES_PASSWORD:.*|POSTGRES_PASSWORD: $(echo -n $RDS_PASSWORD | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
   sed -i "s|POSTGRES_HOST:.*|POSTGRES_HOST: $(echo -n $RDS_1_HOST | base64 -w 0)|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
-  oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}" 
+  oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/postgres-cred.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${namespace}"
   helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
@@ -459,24 +489,8 @@ force_delete_namespace() {
 
 main() {
   echo "Log file: ${LOGFILE}"
-  set_cluster_info  # Set cluster credentials.
-
-  source "${DIR}/env_variables.sh"  # Source environment variables.
-
-  # Set namespace names based on the job name.
-  if [[ "$JOB_NAME" == *periodic-* ]]; then
-    NAME_SPACE="showcase-ci-nightly"
-    NAME_SPACE_RBAC="showcase-rbac-nightly"
-    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
-    NAME_SPACE_AKS="showcase-aks-ci-nightly"
-    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
-  fi
-  if [[ "$JOB_NAME" == *aks* ]]; then
-    # For AKS jobs, log in and start the cluster.
-    az_login
-    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  fi
+  set_cluster_info
+  source "${DIR}/env_variables.sh"
 
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
@@ -488,7 +502,15 @@ main() {
   fi
   echo "OCP version: $(oc version)"  # Display the OpenShift version.
 
-  API_SERVER_URL=$(oc whoami --show-server)  # Get the API server URL.
+  set_namespace
+
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_login
+    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  fi
+
+  API_SERVER_URL=$(oc whoami --show-server)
   if [[ "$JOB_NAME" == *aks* ]]; then
     # Get the router base for AKS.
     K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -522,7 +544,7 @@ main() {
       check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
     fi
   fi
-  
+
   exit "${OVERALL_RESULT}"
 }
 

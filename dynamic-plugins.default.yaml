@@ -381,6 +381,48 @@ plugins:
                     allOf:
                       - isJenkinsAvailable
 
+  # Group: Notifications
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-notifications:
+            dynamicRoutes:
+              - importName: NotificationsPage
+                menuItem:
+                  config:
+                    props:
+                      titleCounterEnabled: true
+                      webNotificationsEnabled: false
+                  importName: NotificationsSidebarItem
+                path: /notifications
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic
+    disabled: true
+    pluginConfig:
+      notifications:
+        processors:
+          email:
+            transportConfig:
+              transport: smtp
+              hostname: ${EMAIL_HOSTNAME}
+              port: 587
+              username: ${EMAIL_USERNAME}
+              password: ${EMAIL_PASSWORD}
+            sender: ${EMAIL_SENDER}
+            broadcastConfig:
+              receiver: 'users'
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-signals: {}
+
   # Group: SonarQube
   - package: ./dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic
     disabled: true
@@ -578,10 +620,10 @@ plugins:
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
     disabled: true
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
     disabled: false
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-scaffolder-backend-module-regex-dynamic
     disabled: false
 
   - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
@@ -879,12 +921,12 @@ plugins:
         url: ${TECH_RADAR_DATA_URL}
 
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
     disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-analytics-provider-segment:
+          backstage-community.plugin-analytics-provider-segment:
             apiFactories:
               - importName: SegmentAnalyticsApi
       backend:

@@ -91,6 +91,17 @@ dynamicPlugins:
             if:
               allOf:
                 - isLighthouseAvailable
+    backstage.plugin-notifications:
+      dynamicRoutes:
+        - importName: NotificationsPage
+          menuItem:
+            config:
+              props:
+                titleCounterEnabled: true
+                webNotificationsEnabled: false
+            importName: NotificationsSidebarItem
+          path: /notifications
+    backstage.plugin-signals: {}
     pagerduty.backstage-plugin:
       mountPoints:
         - mountPoint: entity.page.overview/cards
@@ -423,7 +434,7 @@ dynamicPlugins:
             props:
               width: 1500
               height: 800
-    janus-idp.backstage-plugin-analytics-provider-segment:
+    backstage-community.plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
     backstage-community.plugin-rbac:
