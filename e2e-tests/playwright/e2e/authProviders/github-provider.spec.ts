@@ -179,8 +179,9 @@ test.describe("Standard authentication providers: Github Provider", () => {
     );
     logger.info("Unregistering user1 from catalog");
 
-    await common.UnregisterUserEnittyFromCatalog(
+    await common.UnregisterUserEntityFromCatalog(
       constants.GH_USERS["user_1"].name,
+      constants.STATIC_API_TOKEN,
     );
     logger.info("Checking alert message after login");
     await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
@@ -240,8 +241,9 @@ test.describe("Standard authentication providers: Github Provider", () => {
       constants.GH_USERS["admin"].name,
       constants.GH_USER_PASSWORD,
     );
-    await common.UnregisterGroupEnittyFromCatalog(
+    await common.UnregisterGroupEntityFromCatalog(
       constants.GH_TEAMS["team_1"].name,
+      constants.STATIC_API_TOKEN,
     );
     await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
 
