@@ -127,9 +127,10 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
 
     expect(
-      await common.CheckUserIsIngestedInCatalog([
-        constants.MSGRAPH_USERS["user_1"].displayName,
-      ]),
+      await common.CheckUserIsIngestedInCatalog(
+        [constants.MSGRAPH_USERS["user_1"].displayName],
+        constants.STATIC_API_TOKEN,
+      ),
     ).toBe(true);
 
     await uiHelper.openSidebar("Settings");
@@ -145,17 +146,23 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     const usersDisplayNames = Object.values(constants.MSGRAPH_USERS).map(
       (u) => u.displayName,
     );
-    expect(await common.CheckUserIsIngestedInCatalog(usersDisplayNames)).toBe(
-      true,
-    );
+    expect(
+      await common.CheckUserIsIngestedInCatalog(
+        usersDisplayNames,
+        constants.STATIC_API_TOKEN,
+      ),
+    ).toBe(true);
 
     // check groups are nested correctly and display all members
     const groupsDisplayNames = Object.values(constants.MSGRAPH_GROUPS).map(
       (g) => g.displayName,
     );
-    expect(await common.CheckGroupIsIngestedInCatalog(groupsDisplayNames)).toBe(
-      true,
-    );
+    expect(
+      await common.CheckGroupIsIngestedInCatalog(
+        groupsDisplayNames,
+        constants.STATIC_API_TOKEN,
+      ),
+    ).toBe(true);
 
     const api = new APIHelper();
     api.UseStaticToken(constants.STATIC_API_TOKEN);
@@ -267,9 +274,10 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     await expect(async () => {
       expect(
-        await common.CheckUserIsIngestedInCatalog([
-          constants.MSGRAPH_USERS["user_1"].displayName,
-        ]),
+        await common.CheckUserIsIngestedInCatalog(
+          [constants.MSGRAPH_USERS["user_1"].displayName],
+          constants.STATIC_API_TOKEN,
+        ),
       ).toBe(false);
     }).toPass({
       intervals: [5_000, 10_000],
@@ -394,9 +402,10 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     // group_3 should exist in rhdh
     expect(
-      await common.CheckGroupIsIngestedInCatalog([
-        constants.MSGRAPH_GROUPS["group_3"].displayName,
-      ]),
+      await common.CheckGroupIsIngestedInCatalog(
+        [constants.MSGRAPH_GROUPS["group_3"].displayName],
+        constants.STATIC_API_TOKEN,
+      ),
     ).toBe(true);
 
     // user_3 should login
@@ -418,9 +427,10 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
 
     expect(
-      await common.CheckGroupIsIngestedInCatalog([
-        constants.MSGRAPH_GROUPS["group_3"].displayName,
-      ]),
+      await common.CheckGroupIsIngestedInCatalog(
+        [constants.MSGRAPH_GROUPS["group_3"].displayName],
+        constants.STATIC_API_TOKEN,
+      ),
     ).toBe(false);
 
     await common.MicrosoftAzureLogin(
@@ -456,15 +466,19 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       graphHelper.formatUPNToEntity(
         constants.MSGRAPH_USERS["user_3"].userPrincipalName,
       ),
+      constants.STATIC_API_TOKEN,
     );
 
     await expect(async () => {
       expect(
-        await common.CheckUserIsIngestedInCatalog([
-          graphHelper.formatUPNToEntity(
-            constants.MSGRAPH_USERS["user_3"].userPrincipalName,
-          ),
-        ]),
+        await common.CheckUserIsIngestedInCatalog(
+          [
+            graphHelper.formatUPNToEntity(
+              constants.MSGRAPH_USERS["user_3"].userPrincipalName,
+            ),
+          ],
+          constants.STATIC_API_TOKEN,
+        ),
       ).toBe(false);
     }).toPass({
       intervals: [1_000, 2_000, 5_000],
@@ -514,13 +528,15 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     await common.UnregisterGroupEntityFromCatalog(
       constants.MSGRAPH_GROUPS["group_5"].displayName,
+      constants.STATIC_API_TOKEN,
     );
 
     await expect(async () => {
       expect(
-        await common.CheckGroupIsIngestedInCatalog([
-          constants.MSGRAPH_USERS["user_5"].userPrincipalName,
-        ]),
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.MSGRAPH_USERS["user_5"].userPrincipalName],
+          constants.STATIC_API_TOKEN,
+        ),
       ).toBe(false);
     }).toPass({
       intervals: [1_000, 2_000, 5_000],
@@ -545,9 +561,10 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
 
     expect(
-      await common.CheckGroupIsIngestedInCatalog([
-        constants.MSGRAPH_GROUPS["group_5"].displayName,
-      ]),
+      await common.CheckGroupIsIngestedInCatalog(
+        [constants.MSGRAPH_GROUPS["group_5"].displayName],
+        constants.STATIC_API_TOKEN,
+      ),
     ).toBe(true);
   });
 
@@ -579,14 +596,16 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     await expect(async () => {
       expect(
-        await common.CheckGroupIsIngestedInCatalog([
-          constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed",
-        ]),
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed"],
+          constants.STATIC_API_TOKEN,
+        ),
       ).toBe(true);
       expect(
-        await common.CheckUserIsIngestedInCatalog([
-          usersCreated["user_6"].displayName + " Renamed",
-        ]),
+        await common.CheckUserIsIngestedInCatalog(
+          [usersCreated["user_6"].displayName + " Renamed"],
+          constants.STATIC_API_TOKEN,
+        ),
       ).toBe(true);
     }).toPass({
       intervals: [5_000, 10_000],
