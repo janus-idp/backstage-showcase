@@ -16,10 +16,6 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
     await uiHelper.verifyHeading("Plugins");
   });
 
-  test.beforeEach(
-    async ({ page }) => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
-
   test("is disabled", async ({ page }) => {
     await page
       .getByPlaceholder("Filter")
