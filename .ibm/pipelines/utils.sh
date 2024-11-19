@@ -11,6 +11,7 @@ retrieve_pod_logs() {
 save_all_pod_logs(){
   set +e
   local namespace=$1
+  namespace=${namespace%-pr-*} # remove -pr- suffix if any.
   mkdir -p pod_logs
 
   # Get all pod names in the namespace
