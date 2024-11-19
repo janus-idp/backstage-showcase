@@ -31,4 +31,13 @@ subjects:
   - kind: ServiceAccount
     name: rhdh-k8s-plugin
     namespace: showcase-rbac-1-3-x
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-pr-1
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-pr-2
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-pr-3
 
