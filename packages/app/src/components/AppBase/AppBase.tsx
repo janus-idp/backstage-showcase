@@ -20,6 +20,8 @@ import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 
+import { VisitListener } from '@internal/backstage-plugin-dynamic-home-page';
+
 import { entityPage } from '../catalog/EntityPage';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
@@ -74,6 +76,8 @@ const AppBase = () => {
       <OAuthRequestDialog />
       <AppRouter>
         <ConfigUpdater />
+        {/* RHIDP-4234: VisitListener should be replaced with a mount point */}
+        <VisitListener />
         <Root>
           <FlatRoutes>
             <Route

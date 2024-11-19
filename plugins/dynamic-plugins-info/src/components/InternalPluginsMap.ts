@@ -125,8 +125,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-tech-radar',
   'backstage-community-plugin-tech-radar-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic',
-  'janus-idp-backstage-plugin-analytics-provider-segment':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment',
+  'backstage-community-plugin-analytics-provider-segment':
+    './dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment',
   'parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic':
     './dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic',
   'immobiliarelabs-backstage-plugin-gitlab-backend-dynamic':
