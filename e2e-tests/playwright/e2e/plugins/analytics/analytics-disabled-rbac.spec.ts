@@ -37,7 +37,7 @@ testWithHelper("is disabled", async ({ page }) => {
     });
   const row = page.locator(
     UIhelperPO.rowByText(
-      "janus-idp-backstage-plugin-analytics-provider-segment",
+      "backstage-community-plugin-analytics-provider-segment",
     ),
   );
   expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled

@@ -3307,6 +3307,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-analytics-provider-segment@npm:1.10.2":
+  version: 1.10.2
+  resolution: "@backstage-community/plugin-analytics-provider-segment@npm:1.10.2"
+  dependencies:
+    "@backstage/config": ^1.2.0
+    "@backstage/core-components": ^0.15.1
+    "@backstage/core-plugin-api": ^1.10.0
+    "@backstage/theme": ^0.6.0
+    "@material-ui/core": ^4.9.13
+    "@material-ui/icons": ^4.11.3
+    "@material-ui/lab": 4.0.0-alpha.61
+    "@segment/analytics-next": ^1.58.0
+    prop-types: ^15.8.1
+    react-use: ^17.4.0
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: ebc8a2d6fe9094ab3d9c7384a0eaffae226f1148e48488eefbb18358c58ffc775819f1c040c5139e93b3c38c8ad3c3fc8d6056bcf6adc7e09700f19b93cd9b70
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-azure-devops-backend@npm:0.7.3":
   version: 0.7.3
   resolution: "@backstage-community/plugin-azure-devops-backend@npm:0.7.3"
@@ -10361,10 +10383,10 @@ __metadata:
     "@backstage/core-components": 0.15.1
     "@backstage/core-plugin-api": 1.10.0
     "@backstage/dev-utils": 1.1.2
+    "@backstage/plugin-catalog": ^1.24.0
     "@backstage/plugin-catalog-react": 1.14.0
     "@backstage/plugin-home": 0.8.0
     "@backstage/plugin-home-react": 0.1.18
-    "@backstage/plugin-search": 1.4.18
     "@backstage/plugin-search-react": 1.8.1
     "@backstage/test-utils": 1.7.0
     "@backstage/theme": 0.6.0
@@ -10549,28 +10571,6 @@ __metadata:
     "@backstage/errors": ^1.2.4
     "@backstage/plugin-catalog-node": ^1.13.1
   checksum: 40359b8caa03008bcbe565d7c6e04f23e6f569a1d0cb2790806ebf82ff1822dee5d5b29afcdc0957d42a31d9af1319c29d7c285f03b8fefda43ac64a084e6efe
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-plugin-analytics-provider-segment@npm:1.10.0":
-  version: 1.10.0
-  resolution: "@janus-idp/backstage-plugin-analytics-provider-segment@npm:1.10.0"
-  dependencies:
-    "@backstage/config": ^1.2.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/theme": ^0.6.0
-    "@material-ui/core": ^4.9.13
-    "@material-ui/icons": ^4.11.3
-    "@material-ui/lab": 4.0.0-alpha.61
-    "@segment/analytics-next": ^1.58.0
-    prop-types: ^15.8.1
-    react-use: ^17.4.0
-  peerDependencies:
-    react: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
-    react-router-dom: ^6.0.0
-  checksum: a65c16af591878b7140cf5705a5c99e47bc398ba07c3583bde082ae84bf56581b07dd979af5a13c5687fc3384a00b9da6bf4ea93e7b9c2cf4d3a34900dffd009
   languageName: node
   linkType: hard
 
@@ -16504,8 +16504,8 @@ __metadata:
   linkType: hard
 
 "@segment/analytics-next@npm:^1.58.0":
-  version: 1.75.0
-  resolution: "@segment/analytics-next@npm:1.75.0"
+  version: 1.76.0
+  resolution: "@segment/analytics-next@npm:1.76.0"
   dependencies:
     "@lukeed/uuid": ^2.0.0
     "@segment/analytics-core": 1.8.0
@@ -16517,7 +16517,7 @@ __metadata:
     node-fetch: ^2.6.7
     tslib: ^2.4.1
     unfetch: ^4.1.0
-  checksum: 92bc7ad1b1364e2446d8df3869a87d4014dc2a096248fdbd0c3bda9f2206e482eedbe044f348f21738f4139925d2d1997cff83df0879659c3accf1a4edf2c2b5
+  checksum: 0819212b39499b4ba5a02dd9c58ed0716bbb236237f458f641842b72f3766620142d57bbb583fb5fe8be13d6d3871ff970f0c76002ebcf691411e92b32089cc7
   languageName: node
   linkType: hard
 
@@ -22433,6 +22433,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-analytics-provider-segment@workspace:dynamic-plugins/wrappers/backstage-community-plugin-analytics-provider-segment":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-analytics-provider-segment@workspace:dynamic-plugins/wrappers/backstage-community-plugin-analytics-provider-segment"
+  dependencies:
+    "@backstage-community/plugin-analytics-provider-segment": 1.10.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-azure-devops-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-azure-devops-backend@workspace:dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic"
@@ -24963,13 +24973,13 @@ __metadata:
   linkType: hard
 
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "cross-spawn@npm:7.0.3"
+  version: 7.0.6
+  resolution: "cross-spawn@npm:7.0.6"
   dependencies:
     path-key: ^3.1.0
     shebang-command: ^2.0.0
     which: ^2.0.1
-  checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
+  checksum: 8d306efacaf6f3f60e0224c287664093fa9185680b2d195852ba9a863f85d02dcc737094c6e512175f8ee0161f9b87c73c6826034c2422e39de7d6569cf4503b
   languageName: node
   linkType: hard
 
@@ -31774,16 +31784,6 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/backstage-plugin-aap-backend": 2.2.0
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"janus-idp-backstage-plugin-analytics-provider-segment@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-analytics-provider-segment@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-analytics-provider-segment"
-  dependencies:
-    "@backstage/cli": 0.28.2
-    "@janus-idp/backstage-plugin-analytics-provider-segment": 1.10.0
     "@janus-idp/cli": 1.17.0
   languageName: unknown
   linkType: soft
