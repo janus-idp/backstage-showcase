@@ -54,8 +54,8 @@ set_namespace() {
     local namespace_found=false
     # Iterate through namespace pool to find an available set
     for ns in "${namespaces_pool[@]}"; do
-      if ! oc get namespace "showcase-rbac-$ns" >/dev/null 2>&1; then
-        echo "Namespace "showcase-rbac-$ns" does not exist, Using NS: showcase-$ns, showcase-rbac-$ns"
+      if ! oc get namespace "showcase-$ns" >/dev/null 2>&1 && ! oc get namespace "showcase-rbac-$ns" >/dev/null 2>&1; then
+        echo "Namespace "showcase-$ns" and "showcase-rbac-$ns" does not exist, Using NS: showcase-$ns, showcase-rbac-$ns"
         NAME_SPACE="showcase-$ns"
         NAME_SPACE_RBAC="showcase-rbac-$ns"
         NAME_SPACE_POSTGRES_DB="postgress-external-db-$ns"
