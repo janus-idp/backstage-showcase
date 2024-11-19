@@ -196,6 +196,19 @@ yq_merge_value_files() {
   ' "${step_2_file}" "${step_1_file}" > "${final_file}"
 }
 
+# Uses the base YAML value file to create the dynamic plugins config map for the operator
+create_dynamic_plugins_config() {
+  local base_file=$1
+  local final_file=$2
+  echo "kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins
+data:
+  dynamic-plugins.yaml: |" >> ${final_file}
+  yq '.global.dynamic' ${base_file} | sed -e 's/^/    /' >> ${final_file}
+}
+
 # Waits for a Kubernetes/OpenShift deployment to become ready within a specified timeout period
 wait_for_deployment() {
     local namespace=$1
