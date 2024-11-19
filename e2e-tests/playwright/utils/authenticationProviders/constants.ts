@@ -22,7 +22,9 @@ export const RHBK_CLIENTID = process.env.RHBK_CLIENT_ID;
 export const RHBK_METADATA_URL =
   "https://rhbk-rhbk.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud/realms/authProviders";
 
-export const AUTH_PROVIDERS_REALM_NAME = process.env.AUTH_PROVIDERS_REALM_NAME;
+export const AUTH_PROVIDERS_REALM_NAME = process.env.AUTH_PROVIDERS_REALM_NAME
+  ? process.env.AUTH_PROVIDERS_REALM_NAME
+  : "authProviders";
 
 export const RHSSO76_GROUPS: { [key: string]: GroupRepresentation } = {
   group_1: {

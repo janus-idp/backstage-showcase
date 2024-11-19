@@ -179,8 +179,8 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     if (test.info().status !== test.info().expectedStatus) {
       const prefix = `${test.info().testId}_${test.info().retry}`;
       logger.info(`Dumping logs with prefix ${prefix}`);
-      await dumpAllPodsLogs(prefix);
-      await dumpRHDHUsersAndGroups(prefix);
+      await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
+      await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
     }
   });
 });
