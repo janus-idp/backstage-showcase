@@ -1,6 +1,6 @@
 {
   "name": "backstage-community-plugin-catalog-backend-module-pingidentity",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -36,7 +36,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-pingidentity --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-catalog-backend-module-pingidentity": "0.1.4"
+    "@backstage-community/plugin-catalog-backend-module-pingidentity": "0.1.5"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
