@@ -50,7 +50,7 @@ set_namespace() {
     NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
   elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
     # Enable parallel PR testing for main branch by utilizing a pool of namespaces
-    local namespaces_pool=("pr-1" "pr-2" "pr-3" "pr-4" "pr-5")
+    local namespaces_pool=("pr-1" "pr-2" "pr-3")
     local namespace_found=false
     # Iterate through namespace pool to find an available set
     for ns in "${namespaces_pool[@]}"; do
