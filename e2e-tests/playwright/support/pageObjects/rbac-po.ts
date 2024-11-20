@@ -185,7 +185,7 @@ export class RbacPo extends PageObject {
       await this.page.uncheck(this.selectPolicy(0, 1, "Delete"));
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
-      await this.uiHelper.verifyHeading(
+      await this.uiHelper.verifyText(
         `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
       );
       await this.verifyPermissionPoliciesHeader(2);
