@@ -37,6 +37,13 @@ These principles are valid for new contributions. Some parts of the codebase may
 
    All architecture principles and guidelines must be agreed upon by the team. Every team member's voice is important, and open communication ensures alignment and shared understanding of the project's direction.
 
+6. **General Rules**
+
+   All tests have to follow a set of simple rules:
+   I. Check the preconditions. If tests are running in parallel, try to create the preconditions you need to avoid race conditions.
+   II. Each test has to test one and only one thing.
+   III. All tests have to contain preconditions, actions, and assertions. _Think in [Gherkin](https://cucumber.io/docs/guides/overview/) terms_.
+
 #### Technical Guidelines
 
 1. **Page Object Model (POM)**
