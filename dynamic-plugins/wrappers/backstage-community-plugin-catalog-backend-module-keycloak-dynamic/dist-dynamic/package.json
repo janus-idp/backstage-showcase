@@ -1,6 +1,6 @@
 {
   "name": "backstage-community-plugin-catalog-backend-module-keycloak-dynamic",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "main": "./dist/index.cjs.js",
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.4",
     "pluginId": "catalog",
     "pluginPackage": "@backstage/plugin-catalog-backend"
   },
@@ -23,7 +23,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@backstage-community/plugin-catalog-backend-module-keycloak": "3.2.1"
+    "@backstage-community/plugin-catalog-backend-module-keycloak": "3.2.2"
   },
   "files": [
     "dist",

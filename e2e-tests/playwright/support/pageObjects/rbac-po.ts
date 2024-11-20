@@ -108,7 +108,7 @@ export class RbacPo extends PageObject {
   }
 
   private async verifyPermissionPoliciesHeader(policies: number) {
-    await this.uiHelper.verifyHeading(`Permission policies (${policies})`);
+    await this.uiHelper.verifyText(`Permission policies (${policies})`);
   }
 
   private async verifyArticle() {
