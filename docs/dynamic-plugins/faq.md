@@ -4,7 +4,7 @@
 
 This is a special JavaScript package that is derived from an original plugin package source code.
 You find more information about process of creating derived packages in the [Export Derived Dynamic Plugin Package](export-derived-package.md) document.
-The derived plugins shouldn't be pushed into the [public npm registry](https://www.npmjs.com), but it can be published to a private or internal npm registry.
+The dynamic plugin derived packages shouldn't be pushed into the [public npm registry](https://www.npmjs.com), but it can be published to a private or internal npm registry.
 You can find more information about publishing dynamic plugins in the [Packaging Dynamic Plugins](packaging-dynamic-plugins.md) document.
 
 ## How to configure up a dynamic plugin project to publish to a npm registry?
