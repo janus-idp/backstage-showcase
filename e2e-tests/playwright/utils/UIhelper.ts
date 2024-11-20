@@ -1,12 +1,6 @@
-import test, { expect, Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { UIhelperPO } from "../support/pageObjects/global-obj";
 
-export const testWithHelper = test.extend<{ uiHelper: UIhelper }>({
-  uiHelper: async ({ page }, use) => {
-    const uiHelper = new UIhelper(page);
-    await use(uiHelper);
-  },
-});
 export class UIhelper {
   private page: Page;
 

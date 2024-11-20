@@ -1,4 +1,3 @@
-import { Page, expect } from "@playwright/test";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
 import {
   HomePagePO,
@@ -8,139 +7,139 @@ import {
 } from "../../../support/pageObjects/page-obj";
 import { Roles } from "../../../support/pages/rbac";
 import { Common } from "../../../utils/Common";
-import { testWithHelper } from "../../../utils/UIhelper";
+import { expect, test as base, Page } from "@playwright/test";
 import { RBAC_IDAuthFile } from "../../../support/auth/auth_constants";
+import { UIhelper } from "../../../utils/UIhelper";
 
-testWithHelper.use({
+const test = base.extend<{ uiHelper: UIhelper }>({
+  uiHelper: async ({ page }, use) => {
+    const uiHelper = new UIhelper(page);
+    await use(uiHelper);
+  },
+});
+
+test.use({
   actionTimeout: 0,
   navigationTimeout: 0,
   storageState: RBAC_IDAuthFile,
 });
 
-testWithHelper.describe.serial(
-  "Test RBAC plugin: load permission policies and conditions from files",
-  () => {
-    let page: Page;
+test.describe
+  .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
+  let page: Page;
 
-    testWithHelper.beforeEach(async ({ uiHelper, page }) => {
-      await new Common(page).logintoGithub();
-      await uiHelper.openSidebarButton("Administration");
-      await uiHelper.openSidebar("RBAC");
-      await uiHelper.verifyHeading("RBAC");
-    });
-
-    testWithHelper(
-      "Check if permission policies defined in files are loaded and effective",
-      async ({ uiHelper }) => {
-        const testRole: string = "role:default/test2-role";
-
-        await uiHelper.verifyHeading(/All roles \(\d+\)/);
-        await uiHelper.verifyLink(testRole);
-        await uiHelper.clickLink(testRole);
-
-        await uiHelper.verifyHeading(testRole);
-        await uiHelper.clickTab("Overview");
-
-        await uiHelper.verifyText("About");
-        await uiHelper.verifyText("csv permission policy file");
-
-        await uiHelper.verifyHeading("Users and groups (1 group");
-        await uiHelper.verifyHeading("Permission policies (2)");
-        const permissionPoliciesColumnsText =
-          Roles.getPermissionPoliciesListColumnsText();
-        await uiHelper.verifyColumnHeading(permissionPoliciesColumnsText);
-        const permissionPoliciesCellsIdentifier =
-          Roles.getPermissionPoliciesListCellsIdentifier();
-        await uiHelper.verifyCellsInTable(permissionPoliciesCellsIdentifier);
-
-        await expect(page.getByRole("article")).toContainText("catalog-entity");
-        await expect(page.getByRole("article")).toContainText("Read, Update");
-        await expect(page.getByRole("article")).toContainText("Delete");
-
-        await page.getByTestId("update-members").getByLabel("Update").click();
-        await expect(page.locator("tbody")).toContainText("rhdh-qe-2-team");
-        await uiHelper.clickButton("Next");
-        await page.getByLabel("configure-access").first().click();
-        await expect(page.getByPlaceholder("string, string")).toHaveValue(
-          "group:janus-qe/rhdh-qe-2-team,$currentUser",
-        );
-        await page.getByTestId("cancel-conditions").click();
-        await page.getByLabel("configure-access").nth(1).click();
-        await expect(page.getByPlaceholder("string, string")).toHaveValue(
-          "$currentUser",
-        );
-        await page.getByTestId("cancel-conditions").click();
-        await uiHelper.clickButton("Next");
-        await uiHelper.clickButton("Cancel");
-      },
-    );
-  },
-);
-
-testWithHelper.describe.serial(
-  "Test RBAC plugin: Aliases used in conditional access policies",
-  () => {
-    testWithHelper.beforeEach(async ({ page }) => {
-      await new Common(page).logintoGithub();
-    });
-
-    testWithHelper(
-      "Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.",
-      async ({ uiHelper, page }) => {
-        await uiHelper.openSidebar("Catalog");
-        await uiHelper.selectMuiBox("Kind", "Component");
-
-        await uiHelper.searchInputPlaceholder("test-rhdh-qe-2");
-        await page
-          .getByRole("link", { name: "test-rhdh-qe-2", exact: true })
-          .click();
-
-        await expect(page.locator("header")).toContainText("user:rhdh-qe-2");
-        await page.getByTestId("menu-button").click();
-        const unregisterUserOwned = page.getByText("Unregister entity");
-        await expect(unregisterUserOwned).toBeEnabled();
-
-        await page.getByText("Unregister entity").click();
-        await expect(page.getByRole("heading")).toContainText(
-          "Are you sure you want to unregister this entity?",
-        );
-        await page.getByRole("button", { name: "Cancel" }).click();
-
-        await uiHelper.openSidebar("Catalog");
-        await page
-          .getByRole("link", { name: "test-rhdh-qe-2-team-owned" })
-          .click();
-        await expect(page.locator("header")).toContainText(
-          "janus-qe/rhdh-qe-2-team",
-        );
-        await page.getByTestId("menu-button").click();
-        const unregisterGroupOwned = page.getByText("Unregister entity");
-        await expect(unregisterGroupOwned).toBeDisabled();
-      },
-    );
-  },
-);
-
-testWithHelper.describe.serial("Test RBAC plugin as an admin user", () => {
-  testWithHelper.beforeEach(async ({ uiHelper, page }) => {
+  test.beforeEach(async ({ uiHelper, page }) => {
     await new Common(page).logintoGithub();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
   });
 
-  testWithHelper(
-    "Check if Administration side nav is present with RBAC plugin",
-    async ({ uiHelper }) => {
-      await uiHelper.verifyHeading(/All roles \(\d+\)/);
-      const allGridColumnsText = Roles.getRolesListColumnsText();
-      await uiHelper.verifyColumnHeading(allGridColumnsText);
-      const allCellsIdentifier = Roles.getRolesListCellsIdentifier();
-      await uiHelper.verifyCellsInTable(allCellsIdentifier);
-    },
-  );
+  test("Check if permission policies defined in files are loaded and effective", async ({
+    uiHelper,
+  }) => {
+    const testRole: string = "role:default/test2-role";
 
-  testWithHelper("View details of a role", async ({ uiHelper }) => {
+    await uiHelper.verifyHeading(/All roles \(\d+\)/);
+    await uiHelper.verifyLink(testRole);
+    await uiHelper.clickLink(testRole);
+
+    await uiHelper.verifyHeading(testRole);
+    await uiHelper.clickTab("Overview");
+
+    await uiHelper.verifyText("About");
+    await uiHelper.verifyText("csv permission policy file");
+
+    await uiHelper.verifyHeading("Users and groups (1 group");
+    await uiHelper.verifyHeading("Permission policies (2)");
+    const permissionPoliciesColumnsText =
+      Roles.getPermissionPoliciesListColumnsText();
+    await uiHelper.verifyColumnHeading(permissionPoliciesColumnsText);
+    const permissionPoliciesCellsIdentifier =
+      Roles.getPermissionPoliciesListCellsIdentifier();
+    await uiHelper.verifyCellsInTable(permissionPoliciesCellsIdentifier);
+
+    await expect(page.getByRole("article")).toContainText("catalog-entity");
+    await expect(page.getByRole("article")).toContainText("Read, Update");
+    await expect(page.getByRole("article")).toContainText("Delete");
+
+    await page.getByTestId("update-members").getByLabel("Update").click();
+    await expect(page.locator("tbody")).toContainText("rhdh-qe-2-team");
+    await uiHelper.clickButton("Next");
+    await page.getByLabel("configure-access").first().click();
+    await expect(page.getByPlaceholder("string, string")).toHaveValue(
+      "group:janus-qe/rhdh-qe-2-team,$currentUser",
+    );
+    await page.getByTestId("cancel-conditions").click();
+    await page.getByLabel("configure-access").nth(1).click();
+    await expect(page.getByPlaceholder("string, string")).toHaveValue(
+      "$currentUser",
+    );
+    await page.getByTestId("cancel-conditions").click();
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Cancel");
+  });
+});
+
+test.describe
+  .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {
+  test.beforeEach(async ({ page }) => {
+    await new Common(page).logintoGithub();
+  });
+
+  test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
+    uiHelper,
+    page,
+  }) => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.selectMuiBox("Kind", "Component");
+
+    await uiHelper.searchInputPlaceholder("test-rhdh-qe-2");
+    await page
+      .getByRole("link", { name: "test-rhdh-qe-2", exact: true })
+      .click();
+
+    await expect(page.locator("header")).toContainText("user:rhdh-qe-2");
+    await page.getByTestId("menu-button").click();
+    const unregisterUserOwned = page.getByText("Unregister entity");
+    await expect(unregisterUserOwned).toBeEnabled();
+
+    await page.getByText("Unregister entity").click();
+    await expect(page.getByRole("heading")).toContainText(
+      "Are you sure you want to unregister this entity?",
+    );
+    await page.getByRole("button", { name: "Cancel" }).click();
+
+    await uiHelper.openSidebar("Catalog");
+    await page.getByRole("link", { name: "test-rhdh-qe-2-team-owned" }).click();
+    await expect(page.locator("header")).toContainText(
+      "janus-qe/rhdh-qe-2-team",
+    );
+    await page.getByTestId("menu-button").click();
+    const unregisterGroupOwned = page.getByText("Unregister entity");
+    await expect(unregisterGroupOwned).toBeDisabled();
+  });
+});
+
+test.describe.serial("Test RBAC plugin as an admin user", () => {
+  test.beforeEach(async ({ uiHelper, page }) => {
+    await new Common(page).logintoGithub();
+    await uiHelper.openSidebarButton("Administration");
+    await uiHelper.openSidebar("RBAC");
+    await uiHelper.verifyHeading("RBAC");
+  });
+
+  test("Check if Administration side nav is present with RBAC plugin", async ({
+    uiHelper,
+  }) => {
+    await uiHelper.verifyHeading(/All roles \(\d+\)/);
+    const allGridColumnsText = Roles.getRolesListColumnsText();
+    await uiHelper.verifyColumnHeading(allGridColumnsText);
+    const allCellsIdentifier = Roles.getRolesListCellsIdentifier();
+    await uiHelper.verifyCellsInTable(allCellsIdentifier);
+  });
+
+  test("View details of a role", async ({ uiHelper }) => {
     await uiHelper.clickLink("role:default/rbac_admin");
 
     await uiHelper.verifyHeading("role:default/rbac_admin");
@@ -166,96 +165,96 @@ testWithHelper.describe.serial("Test RBAC plugin as an admin user", () => {
     await uiHelper.clickLink("RBAC");
   });
 
-  testWithHelper(
-    "Create and edit a role from the roles list page",
-    async ({ uiHelper, page }) => {
-      const rolesHelper = new Roles(page);
+  test("Create and edit a role from the roles list page", async ({
+    uiHelper,
+    page,
+  }) => {
+    const rolesHelper = new Roles(page);
 
-      await rolesHelper.createRole("test-role");
-      await page.click(RoleListPO.editRole("role:default/test-role"));
-      await uiHelper.verifyHeading("Edit Role");
-      await uiHelper.clickButton("Next");
-      await page.fill(RoleFormPO.addUsersAndGroups, "Jonathon Page");
-      await page.click(RoleFormPO.selectMember("Jonathon Page"));
-      await uiHelper.verifyHeading("Users and groups (3 users, 1 group)");
-      await uiHelper.clickButton("Next");
-      await uiHelper.clickButton("Next");
-      await uiHelper.clickButton("Save");
-      await uiHelper.verifyText(
-        "Role role:default/test-role updated successfully",
-      );
+    await rolesHelper.createRole("test-role");
+    await page.click(RoleListPO.editRole("role:default/test-role"));
+    await uiHelper.verifyHeading("Edit Role");
+    await uiHelper.clickButton("Next");
+    await page.fill(RoleFormPO.addUsersAndGroups, "Jonathon Page");
+    await page.click(RoleFormPO.selectMember("Jonathon Page"));
+    await uiHelper.verifyHeading("Users and groups (3 users, 1 group)");
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Save");
+    await uiHelper.verifyText(
+      "Role role:default/test-role updated successfully",
+    );
 
-      await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await page.locator(HomePagePO.searchBar).fill("test-role");
-      await uiHelper.verifyHeading("All roles (1)");
-      const usersAndGroupsLocator = page
-        .locator(UIhelperPO.MuiTableCell)
-        .filter({ hasText: "3 users, 1 group" });
-      await usersAndGroupsLocator.waitFor();
-      await expect(usersAndGroupsLocator).toBeVisible();
+    await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
+    await page.locator(HomePagePO.searchBar).fill("test-role");
+    await uiHelper.verifyHeading("All roles (1)");
+    const usersAndGroupsLocator = page
+      .locator(UIhelperPO.MuiTableCell)
+      .filter({ hasText: "3 users, 1 group" });
+    await usersAndGroupsLocator.waitFor();
+    await expect(usersAndGroupsLocator).toBeVisible();
 
-      await rolesHelper.deleteRole("role:default/test-role");
-    },
-  );
+    await rolesHelper.deleteRole("role:default/test-role");
+  });
 
-  testWithHelper(
-    "Edit users and groups and update policies of a role from the overview page",
-    async ({ uiHelper, page }) => {
-      const rolesHelper = new Roles(page);
-      await rolesHelper.createRole("test-role1");
-      await uiHelper.clickLink("role:default/test-role1");
+  test("Edit users and groups and update policies of a role from the overview page", async ({
+    uiHelper,
+    page,
+  }) => {
+    const rolesHelper = new Roles(page);
+    await rolesHelper.createRole("test-role1");
+    await uiHelper.clickLink("role:default/test-role1");
 
-      await uiHelper.verifyHeading("role:default/test-role1");
-      await uiHelper.clickTab("Overview");
+    await uiHelper.verifyHeading("role:default/test-role1");
+    await uiHelper.clickTab("Overview");
 
-      await page.click(RoleOverviewPO.updateMembers);
-      await uiHelper.verifyHeading("Edit Role");
-      await page.locator(HomePagePO.searchBar).fill("Guest User");
-      await page.click('button[aria-label="Remove"]');
-      await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
-      await uiHelper.clickButton("Next");
-      await uiHelper.clickButton("Next");
-      await uiHelper.clickButton("Save");
-      await uiHelper.verifyText(
-        "Role role:default/test-role1 updated successfully",
-      );
-      await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
+    await page.click(RoleOverviewPO.updateMembers);
+    await uiHelper.verifyHeading("Edit Role");
+    await page.locator(HomePagePO.searchBar).fill("Guest User");
+    await page.click('button[aria-label="Remove"]');
+    await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Save");
+    await uiHelper.verifyText(
+      "Role role:default/test-role1 updated successfully",
+    );
+    await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
 
-      await page.click(RoleOverviewPO.updatePolicies);
-      await uiHelper.verifyHeading("Edit Role");
-      await page.click(RoleFormPO.addPermissionPolicy);
-      await page.click(RoleFormPO.selectPermissionPolicyPlugin(1), {
-        timeout: 100000,
-      });
-      await uiHelper.optionSelector("scaffolder");
-      await page.click(RoleFormPO.selectPermissionPolicyPermission(1));
-      await uiHelper.optionSelector("scaffolder-template");
-      await uiHelper.clickButton("Next");
-      await uiHelper.clickButton("Save");
-      await uiHelper.verifyText(
-        "Role role:default/test-role1 updated successfully",
-      );
-      await uiHelper.verifyHeading("Permission Policies (3)");
+    await page.click(RoleOverviewPO.updatePolicies);
+    await uiHelper.verifyHeading("Edit Role");
+    await page.click(RoleFormPO.addPermissionPolicy);
+    await page.click(RoleFormPO.selectPermissionPolicyPlugin(1), {
+      timeout: 100000,
+    });
+    await uiHelper.optionSelector("scaffolder");
+    await page.click(RoleFormPO.selectPermissionPolicyPermission(1));
+    await uiHelper.optionSelector("scaffolder-template");
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Save");
+    await uiHelper.verifyText(
+      "Role role:default/test-role1 updated successfully",
+    );
+    await uiHelper.verifyHeading("Permission Policies (3)");
 
-      await rolesHelper.deleteRole("role:default/test-role1");
-    },
-  );
+    await rolesHelper.deleteRole("role:default/test-role1");
+  });
 
-  testWithHelper(
-    "Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.",
-    async ({ uiHelper, page }) => {
-      const rolesHelper = new Roles(page);
-      await rolesHelper.createRoleWithPermissionPolicy("test-role");
+  test("Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.", async ({
+    uiHelper,
+    page,
+  }) => {
+    const rolesHelper = new Roles(page);
+    await rolesHelper.createRoleWithPermissionPolicy("test-role");
 
-      await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await page.locator(HomePagePO.searchBar).fill("test-role");
-      await uiHelper.verifyHeading("All roles (1)");
-      await rolesHelper.deleteRole("role:default/test-role");
-    },
-  );
+    await page.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
+    await page.locator(HomePagePO.searchBar).fill("test-role");
+    await uiHelper.verifyHeading("All roles (1)");
+    await rolesHelper.deleteRole("role:default/test-role");
+  });
 
   //FIXME
-  testWithHelper.fixme(
+  test.fixme(
     "Admin cannot create a role if there are no rules defined for the selected resource type.",
     async ({ uiHelper, page }) => {
       await uiHelper.clickButton("Create");
@@ -282,7 +281,7 @@ testWithHelper.describe.serial("Test RBAC plugin as an admin user", () => {
     },
   );
 
-  testWithHelper.fixme(
+  test.fixme(
     "As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.",
     async ({ uiHelper, page }) => {
       const rolesHelper = new Roles(page);
@@ -295,7 +294,7 @@ testWithHelper.describe.serial("Test RBAC plugin as an admin user", () => {
     },
   );
 
-  testWithHelper.fixme(
+  test.fixme(
     "As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.",
     async ({ uiHelper, page }) => {
       const rolesHelper = new Roles(page);
@@ -327,7 +326,7 @@ testWithHelper.describe.serial("Test RBAC plugin as an admin user", () => {
     },
   );
 
-  testWithHelper.fixme(
+  test.fixme(
     "As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.",
     async ({ uiHelper, page }) => {
       const rolesHelper = new Roles(page);
@@ -358,14 +357,14 @@ testWithHelper.describe.serial("Test RBAC plugin as an admin user", () => {
   );
 });
 
-testWithHelper.describe("Test RBAC plugin as a guest user", () => {
-  testWithHelper(
-    "Check if Administration side nav is present with no RBAC plugin",
-    async ({ uiHelper, page }) => {
-      await new Common(page).loginAsGuest();
-      await uiHelper.openSidebarButton("Administration");
-      const dropdownMenuLocator = page.locator(`text="RBAC"`);
-      await expect(dropdownMenuLocator).not.toBeVisible();
-    },
-  );
+test.describe("Test RBAC plugin as a guest user", () => {
+  test("Check if Administration side nav is present with no RBAC plugin", async ({
+    uiHelper,
+    page,
+  }) => {
+    await new Common(page).loginAsGuest();
+    await uiHelper.openSidebarButton("Administration");
+    const dropdownMenuLocator = page.locator(`text="RBAC"`);
+    await expect(dropdownMenuLocator).not.toBeVisible();
+  });
 });
