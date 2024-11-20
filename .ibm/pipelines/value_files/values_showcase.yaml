@@ -111,6 +111,9 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
         disabled: false
+      - package: '@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5'
+        disabled: false
+        integrity: sha512-srTnFDYn3Ett6z33bX4nL2NQY8wqux8TkpgBQNsE8S73nMfsor/wAdmVgHL+xW7pxQ09DT4YTdaG3GkH+cyyNQ==
 
 # -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)
 upstream:
