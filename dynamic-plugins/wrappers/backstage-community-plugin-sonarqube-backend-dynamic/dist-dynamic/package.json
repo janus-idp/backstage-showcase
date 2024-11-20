@@ -1,6 +1,6 @@
 {
   "name": "backstage-community-plugin-sonarqube-backend-dynamic",
-  "version": "0.2.25",
+  "version": "0.3.0",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -52,6 +52,7 @@
   "bundleDependencies": true,
   "peerDependencies": {
     "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-defaults": "^0.5.2",
     "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4"

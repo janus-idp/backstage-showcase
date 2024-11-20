@@ -55,7 +55,7 @@
     "@backstage/cli": "0.28.2",
     "@backstage/core-app-api": "1.15.1",
     "@backstage/dev-utils": "1.1.2",
-    "@backstage/plugin-catalog": "^1.24.0",
+    "@backstage/plugin-catalog": "1.24.0",
     "@backstage/test-utils": "1.7.0",
     "@openshift/dynamic-plugin-sdk": "5.0.1",
     "@redhat-developer/red-hat-developer-hub-theme": "0.4.0",
