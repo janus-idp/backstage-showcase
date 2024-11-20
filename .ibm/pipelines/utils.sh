@@ -57,7 +57,27 @@ droute_send() {
       ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}/artifacts/e2e-tests/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
     else
       JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
-      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/${JOB_NAME}/${BUILD_ID}/artifacts/${JOB_NAME##periodic-ci-janus-idp-backstage-showcase-main-}/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
+      # OpenShift CI artifact storage URL cannot be parametrized and need to be updated manually, same as `report_template` at https://github.com/openshift/release/tree/master/ci-operator/jobs/janus-idp/backstage-showcase
+      case "$JOB_NAME" in
+        "periodic-ci-janus-idp-backstage-showcase-1.2.x-e2e-tests-nightly")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-1.2.x-e2e-tests-nightly/${BUILD_ID}/artifacts/e2e-tests-nightly/janus-idp-backstage-showcase-1.2.x-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly/${BUILD_ID}/artifacts/e2e-tests-nightly/janus-idp-backstage-showcase-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-aks")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-aks/${BUILD_ID}/artifacts/e2e-tests-nightly-aks/janus-idp-backstage-showcase-helm-aks-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-14")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-14/${BUILD_ID}/artifacts/e2e-tests-nightly-ocp-v4-14/janus-idp-backstage-showcase-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-15")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-main-e2e-tests-nightly-ocp-v4-15/${BUILD_ID}/artifacts/e2e-tests-nightly-ocp-v4-15/janus-idp-backstage-showcase-nightly/artifacts/${project}"
+          ;;
+        "periodic-ci-janus-idp-backstage-showcase-release-1.3-e2e-tests-nightly")
+          ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/periodic-ci-janus-idp-backstage-showcase-release-1.3-e2e-tests-nightly/${BUILD_ID}/artifacts/e2e-tests-nightly/janus-idp-backstage-showcase-release-1.3-nightly/artifacts/${project}"
+          ;;
+      esac
     fi
 
     # Remove properties (only used for skipped test and invalidates the file if empty)
@@ -96,13 +116,13 @@ droute_send() {
 
     # "Install" Data Router
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      curl -fsSLk -o /tmp/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
-      && chmod +x /tmp/droute-linux-amd64 \
-      && /tmp/droute-linux-amd64 version"
+      curl -fsSLk -o ${temp_droute}/droute-linux-amd64 'https://${DATA_ROUTER_NEXUS_HOSTNAME}/nexus/repository/dno-raw/droute-client/${droute_version}/droute-linux-amd64' \
+      && chmod +x ${temp_droute}/droute-linux-amd64 \
+      && ${temp_droute}/droute-linux-amd64 version"
 
     # Send test results through DataRouter and save the request ID.
     DATA_ROUTER_REQUEST_ID=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
+      ${temp_droute}/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
       --url '${DATA_ROUTER_URL}' \
       --username '${DATA_ROUTER_USERNAME}' \
       --password '${DATA_ROUTER_PASSWORD}' \
@@ -110,13 +130,13 @@ droute_send() {
       --verbose" | grep "request:" | awk '{print $2}')
 
     if [[ "$JOB_NAME" == *periodic-* ]]; then
-      local max_attempts=30
-      local wait_seconds=2
+      local max_attempts=12
+      local wait_seconds=5
       set +e
       for ((i = 1; i <= max_attempts; i++)); do
         # Get DataRouter request information.
         DATA_ROUTER_REQUEST_OUTPUT=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-          /tmp/droute-linux-amd64 request get \
+          ${temp_droute}/droute-linux-amd64 request get \
           --url ${DATA_ROUTER_URL} \
           --username ${DATA_ROUTER_USERNAME} \
           --password ${DATA_ROUTER_PASSWORD} \
@@ -124,32 +144,7 @@ droute_send() {
         # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
         REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
         if [[ $? -eq 0 ]]; then
-          if [[ "$release_name" == *rbac* ]]; then
-            RUN_TYPE="rbac-nightly"
-          else
-            RUN_TYPE="nightly"
-          fi
-          if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
-            RUN_STATUS_EMOJI=":done-circle-check:"
-            RUN_STATUS="passed"
-          else
-            RUN_STATUS_EMOJI=":failed:"
-            RUN_STATUS="failed"
-          fi
-          jq -n \
-            --arg run_status "$RUN_STATUS" \
-            --arg run_type "$RUN_TYPE" \
-            --arg reportportal_launch_url "$REPORTPORTAL_LAUNCH_URL" \
-            --arg job_name "$JOB_NAME" \
-            --arg run_status_emoji "$RUN_STATUS_EMOJI" \
-            '{
-              "RUN_STATUS": $run_status,
-              "RUN_TYPE": $run_type,
-              "REPORTPORTAL_LAUNCH_URL": $reportportal_launch_url,
-              "JOB_NAME": $job_name,
-              "RUN_STATUS_EMOJI": $run_status_emoji
-            }' > /tmp/data_router_slack_message.json
-          curl -X POST -H 'Content-type: application/json' --data @/tmp/data_router_slack_message.json  $SLACK_DATA_ROUTER_WEBHOOK_URL
+          reportportal_slack_alert $release_name $REPORTPORTAL_LAUNCH_URL
           return 0
         else
           echo "Attempt ${i} of ${max_attempts}: ReportPortal launch URL not ready yet."
@@ -159,9 +154,42 @@ droute_send() {
       set -e
     fi
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
+    export KUBECONFIG=""
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
+}
+
+reportportal_slack_alert() {
+  local release_name=$1
+  local reportportal_launch_url=$2
+
+  if [[ "$release_name" == *rbac* ]]; then
+    RUN_TYPE="rbac-nightly"
+  else
+    RUN_TYPE="nightly"
+  fi
+  if [[ ${RESULT} -eq 0 ]]; then
+    RUN_STATUS_EMOJI=":done-circle-check:"
+    RUN_STATUS="passed"
+  else
+    RUN_STATUS_EMOJI=":failed:"
+    RUN_STATUS="failed"
+  fi
+  jq -n \
+    --arg run_status "$RUN_STATUS" \
+    --arg run_type "$RUN_TYPE" \
+    --arg reportportal_launch_url "$reportportal_launch_url" \
+    --arg job_name "$JOB_NAME" \
+    --arg run_status_emoji "$RUN_STATUS_EMOJI" \
+    '{
+      "RUN_STATUS": $run_status,
+      "RUN_TYPE": $run_type,
+      "REPORTPORTAL_LAUNCH_URL": $reportportal_launch_url,
+      "JOB_NAME": $job_name,
+      "RUN_STATUS_EMOJI": $run_status_emoji
+    }' > /tmp/data_router_slack_message.json
+  curl -X POST -H 'Content-type: application/json' --data @/tmp/data_router_slack_message.json  $SLACK_DATA_ROUTER_WEBHOOK_URL
 }
 
 az_login() {
