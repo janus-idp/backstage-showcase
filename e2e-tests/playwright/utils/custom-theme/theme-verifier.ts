@@ -11,7 +11,7 @@ export class ThemeVerifier {
     this.uiHelper = new UIhelper(page);
   }
 
-  async setTheme(theme: "Light" | "Dark") {
+  async setTheme(theme: "Light" | "Dark" | "Light Dynamic" | "Dark Dynamic") {
     await this.uiHelper.openSidebar("Settings");
     await this.uiHelper.clickBtnByTitleIfNotPressed(`Select theme ${theme}`);
   }
