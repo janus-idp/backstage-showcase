@@ -21,7 +21,7 @@ cleanup() {
   rm -rf ~/tmpbin
 }
 
-trap cleanup EXIT
+trap cleanup EXIT INT ERR
 
 source "${DIR}/utils.sh"
 
@@ -50,7 +50,7 @@ set_namespace() {
     NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
   elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
     # Enable parallel PR testing for main branch by utilizing a pool of namespaces
-    local namespaces_pool=("pr-1" "pr-2" "pr-3")
+    local namespaces_pool=("pr-1" "pr-2" "pr-3" "pr-4" "pr-5")
     local namespace_found=false
     # Iterate through namespace pool to find an available set
     for ns in "${namespaces_pool[@]}"; do
@@ -64,7 +64,7 @@ set_namespace() {
       fi
     done
     if ! $namespace_found; then
-      echo "Error: All namespaces (showcase-pr-1, showcase-pr-2, showcase-pr-3) already in Use"
+      echo "Error: All namespaces $namespaces_pool already in Use"
       exit 1
     fi
   fi
