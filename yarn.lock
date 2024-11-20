@@ -3869,6 +3869,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-scaffolder-backend-module-regex@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@backstage-community/plugin-scaffolder-backend-module-regex@npm:2.2.3"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+    yaml: ^2.3.3
+    zod: ^3.22.4
+  checksum: 28cfd4a635f29b71edc579c728d659260df7716eb5b931d39ec57679661c7ca92510d7f98a3ca647dd0776e44f2a86730e00482edb3e527c216a78e24f577e6e
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-scaffolder-backend-module-servicenow@npm:2.2.1":
   version: 2.2.1
   resolution: "@backstage-community/plugin-scaffolder-backend-module-servicenow@npm:2.2.1"
@@ -4096,18 +4108,6 @@ __metadata:
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
   checksum: 1bf4b2761b9014421552c62313ec6ccc606f3efa78e45de5cf52ceea611028dfef88f0f3a63740381234bb6439aeccd5f61d4f143834180777382de621863770
-  languageName: node
-  linkType: hard
-
-"@backstage-community/scaffolder-backend-module-regex@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@backstage-community/scaffolder-backend-module-regex@npm:2.2.2"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/plugin-scaffolder-node": ^0.5.0
-    yaml: ^2.3.3
-    zod: ^3.22.4
-  checksum: bd9257bd0b732f1792116407f7c76a5cf733d58ac89ab1fb47ea4f34fa48e66153c0a375486f4f95423a06f9b293d07a4c16376561305dc0cc6872906b2d6297
   languageName: node
   linkType: hard
 
@@ -6764,7 +6764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-events-node@npm:^0.4.1":
+"@backstage/plugin-events-node@npm:^0.4.1, @backstage/plugin-events-node@npm:^0.4.4":
   version: 0.4.4
   resolution: "@backstage/plugin-events-node@npm:0.4.4"
   dependencies:
@@ -22368,6 +22368,7 @@ __metadata:
     "@backstage/plugin-catalog-backend-module-openapi": 0.2.3
     "@backstage/plugin-catalog-backend-module-scaffolder-entity-model": 0.2.1
     "@backstage/plugin-events-backend": 0.3.15
+    "@backstage/plugin-events-node": ^0.4.4
     "@backstage/plugin-proxy-backend": 0.5.7
     "@backstage/plugin-scaffolder-backend": 1.26.2
     "@backstage/plugin-search-backend": 1.6.1
@@ -22638,6 +22639,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"backstage-community-plugin-scaffolder-backend-module-regex@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-regex-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-scaffolder-backend-module-regex@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-regex-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-regex": 2.2.3
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+  languageName: unknown
+  linkType: soft
+
 "backstage-community-plugin-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic":
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-scaffolder-backend-module-servicenow@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic"
@@ -22649,6 +22660,17 @@ __metadata:
   peerDependencies:
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/plugin-scaffolder-node": ^0.5.0
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-sonarqube": 2.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.17.0
+    typescript: ^5.6.3
   languageName: unknown
   linkType: soft
 
@@ -22712,27 +22734,6 @@ __metadata:
     "@backstage-community/plugin-topology": ^1.29.4
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"backstage-community-scaffolder-backend-module-regex@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-regex-dynamic":
-  version: 0.0.0-use.local
-  resolution: "backstage-community-scaffolder-backend-module-regex@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-regex-dynamic"
-  dependencies:
-    "@backstage-community/scaffolder-backend-module-regex": 2.2.2
-    "@backstage/cli": 0.28.2
-    "@janus-idp/cli": 1.17.0
-  languageName: unknown
-  linkType: soft
-
-"backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic":
-  version: 0.0.0-use.local
-  resolution: "backstage-community-scaffolder-backend-module-sonarqube@workspace:dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-sonarqube-dynamic"
-  dependencies:
-    "@backstage-community/plugin-scaffolder-backend-module-sonarqube": 2.2.2
-    "@backstage/cli": 0.28.2
-    "@janus-idp/cli": 1.17.0
-    typescript: ^5.6.3
   languageName: unknown
   linkType: soft
 

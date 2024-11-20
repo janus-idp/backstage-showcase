@@ -9,8 +9,14 @@ import {
 import { Roles } from "../../../support/pages/rbac";
 import { Common } from "../../../utils/Common";
 import { testWithHelper } from "../../../utils/UIhelper";
+import { GH_USER_IDAuthFile_rhdh } from "../../../support/auth/auth_constants";
 
-testWithHelper.use({ actionTimeout: 0, navigationTimeout: 0 });
+testWithHelper.use({
+  actionTimeout: 0,
+  navigationTimeout: 0,
+  storageState: GH_USER_IDAuthFile_rhdh,
+});
+
 testWithHelper.describe.serial(
   "Test RBAC plugin: load permission policies and conditions from files",
   () => {

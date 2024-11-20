@@ -623,7 +623,7 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
     disabled: false
 
-  - package: ./dynamic-plugins/dist/backstage-community-scaffolder-backend-module-regex-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-regex-dynamic
     disabled: false
 
   - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
@@ -657,7 +657,7 @@ plugins:
         # The password to use for authentication.
         password: ${SERVICENOW_PASSWORD}
 
-  - package: ./dynamic-plugins/dist/backstage-community-scaffolder-backend-module-sonarqube-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic
     disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
