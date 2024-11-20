@@ -51,8 +51,8 @@ set_namespace() {
     NAME_SPACE="showcase-ci-nightly"
     NAME_SPACE_RBAC="showcase-rbac-nightly"
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
-    NAME_SPACE_AKS="showcase-aks-ci-nightly"
-    NAME_SPACE_RBAC_AKS="showcase-rbac-aks-ci-nightly"
+    NAME_SPACE_K8S="showcase-k8s-ci-nightly"
+    NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
   elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
     # Enable parallel PR testing for main branch by utilizing a pool of namespaces
     local namespaces_pool=("pr-1" "pr-2" "pr-3")
@@ -430,13 +430,6 @@ main() {
   echo "Log file: ${LOGFILE}"
   set_cluster_info
   source "${DIR}/env_variables.sh"
-  if [[ "$JOB_NAME" == *periodic* ]]; then
-    NAME_SPACE="showcase-ci-nightly"
-    NAME_SPACE_RBAC="showcase-rbac-nightly"
-    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
-    NAME_SPACE_K8S="showcase-k8s-ci-nightly"
-    NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
-  fi
 
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
@@ -453,12 +446,6 @@ main() {
   echo "OCP version: $(oc version)"
 
   set_namespace
-
-  if [[ "$JOB_NAME" == *aks* ]]; then
-    az_login
-    az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-    az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  fi
 
   API_SERVER_URL=$(oc whoami --show-server)
   if [[ "$JOB_NAME" == *aks* ]]; then
