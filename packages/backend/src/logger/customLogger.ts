@@ -1,3 +1,4 @@
+import { WinstonLogger } from '@backstage/backend-defaults/rootLogger';
 import type { Config } from '@backstage/config';
 
 import * as winston from 'winston';
@@ -72,4 +73,19 @@ export const transports = {
       }),
     ];
   },
+};
+
+export const createStaticLogger = ({ service }: { service: string }) => {
+  const logger = WinstonLogger.create({
+    meta: {
+      service,
+    },
+    level: process.env.LOG_LEVEL || 'info',
+    format:
+      process.env.NODE_ENV === 'production'
+        ? defaultFormat
+        : WinstonLogger.colorFormat(),
+    transports: transports.log,
+  });
+  return logger;
 };

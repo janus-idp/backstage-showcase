@@ -1,5 +1,5 @@
 {
-  "name": "backstage-community-scaffolder-backend-module-regex-dynamic",
+  "name": "backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic",
   "version": "2.2.2",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.4",
     "pluginId": "scaffolder",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
@@ -22,8 +22,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "yaml": "^2.3.3",
-    "zod": "^3.22.4"
+    "yaml": "^2.3.3"
   },
   "files": [
     "dist"
@@ -31,7 +30,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-regex-dynamic"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
@@ -40,7 +39,7 @@
   "homepage": "https://red.ht/rhdh",
   "bugs": "https://issues.redhat.com/browse/RHIDP",
   "keywords": [
-    "support:production",
+    "support:tech-preview",
     "lifecycle:active"
   ],
   "bundleDependencies": true,

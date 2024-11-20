@@ -6,8 +6,8 @@ __metadata:
   cacheKey: 8
 
 "@backstage-community/plugin-catalog-backend-module-keycloak@file:./embedded/backstage-community-plugin-catalog-backend-module-keycloak::locator=backstage-community-plugin-catalog-backend-module-keycloak-dynamic%40workspace%3A.":
-  version: 3.2.1+embedded
-  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@file:./embedded/backstage-community-plugin-catalog-backend-module-keycloak#./embedded/backstage-community-plugin-catalog-backend-module-keycloak::hash=27b95d&locator=backstage-community-plugin-catalog-backend-module-keycloak-dynamic%40workspace%3A."
+  version: 3.2.2+embedded
+  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@file:./embedded/backstage-community-plugin-catalog-backend-module-keycloak#./embedded/backstage-community-plugin-catalog-backend-module-keycloak::hash=ca24d2&locator=backstage-community-plugin-catalog-backend-module-keycloak-dynamic%40workspace%3A."
   dependencies:
     "@keycloak/keycloak-admin-client": 24.0.5
     inclusion: ^1.0.1
@@ -19,7 +19,7 @@ __metadata:
     "@backstage/catalog-model": ^1.7.0
     "@backstage/errors": ^1.2.4
     "@backstage/plugin-catalog-node": ^1.13.1
-  checksum: 17e096e9018dce0bd69976a9089c8da042d0d5b578e5aaa6999958bdfe0c3c1b4a55f55e6905f668fa27496d2ec699a170179e6497c9d19b1472ee29e55f76b8
+  checksum: 6cc96878a405af18f8b5e673aefca261a103e03e53a8800b8778e74a5b91c3379023e8b860c7ec715c81ff61487f7bcdea2b8ad5a44920bc0744d16a63c38604
   languageName: node
   linkType: hard
 
@@ -38,7 +38,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-catalog-backend-module-keycloak-dynamic@workspace:."
   dependencies:
-    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.2.1
+    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.2.2
   peerDependencies:
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-model": ^1.7.0
