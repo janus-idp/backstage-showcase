@@ -9,13 +9,13 @@ import {
   updatedCatalogInfoYaml,
 } from "../../support/testData/BulkImport";
 import {
-  GH_USER2_IDAuthFile_rhdh,
-  GH_USER_IDAuthFile_rhdh,
+  GH_USER2_IDAuthFile,
+  GH_USER_IDAuthFile,
 } from "../../support/auth/auth_constants";
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 testWithHelper.describe("Bulk Import plugin", () => {
-  testWithHelper.use({ storageState: GH_USER2_IDAuthFile_rhdh });
+  testWithHelper.use({ storageState: GH_USER2_IDAuthFile });
 
   let page: Page;
   let common: Common;
@@ -271,7 +271,7 @@ testWithHelper.describe("Bulk Import plugin", () => {
 testWithHelper.describe.serial(
   "Bulk Import - Verify existing repo are displayed in bulk import Added repositories",
   () => {
-    testWithHelper.use({ storageState: GH_USER2_IDAuthFile_rhdh });
+    testWithHelper.use({ storageState: GH_USER2_IDAuthFile });
 
     let uiHelper: UIhelper;
     let common: Common;
@@ -332,7 +332,7 @@ testWithHelper.describe.serial(
 testWithHelper.describe.serial(
   "Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin",
   () => {
-    testWithHelper.use({ storageState: GH_USER_IDAuthFile_rhdh });
+    testWithHelper.use({ storageState: GH_USER_IDAuthFile });
 
     let uiHelper: UIhelper;
     testWithHelper.beforeAll(async ({ browser, page }, testInfo) => {

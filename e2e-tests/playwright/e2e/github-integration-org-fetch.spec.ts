@@ -1,8 +1,8 @@
 import { testWithHelper } from "../utils/UIhelper";
 import { Common } from "../utils/Common";
-import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
-testWithHelper.use({ storageState: GH_USER_IDAuthFile_rhdh });
+testWithHelper.use({ storageState: GH_USER_IDAuthFile });
 testWithHelper.describe("GitHub integration with Org data fetching", () => {
   testWithHelper.beforeEach(async ({ uiHelper, page }) => {
     await new Common(page).logintoGithub();

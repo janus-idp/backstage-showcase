@@ -3,9 +3,9 @@ import { Common } from "../utils/Common";
 import { CatalogImport } from "../support/pages/CatalogImport";
 import { APIHelper } from "../utils/APIHelper";
 import { githubAPIEndpoints } from "../utils/APIEndpoints";
-import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
-testWithHelper.use({ storageState: GH_USER_IDAuthFile_rhdh });
+testWithHelper.use({ storageState: GH_USER_IDAuthFile });
 testWithHelper.describe("Link Scaffolded Templates to Catalog Items", () => {
   const template =
     "https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml";

@@ -4,12 +4,12 @@ import { testWithHelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 import { Common } from "../../../utils/Common";
-import { GH_USER_IDAuthFile_rhdh } from "../../../support/auth/auth_constants";
+import { RBAC_IDAuthFile } from "../../../support/auth/auth_constants";
 
 testWithHelper.use({
   actionTimeout: 0,
   navigationTimeout: 0,
-  storageState: GH_USER_IDAuthFile_rhdh,
+  storageState: RBAC_IDAuthFile,
 });
 testWithHelper.describe("Test RBAC plugin REST API", () => {
   let responseHelper: Response;

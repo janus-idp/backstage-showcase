@@ -7,9 +7,9 @@ import {
   CatalogImport,
 } from "../support/pages/CatalogImport";
 import { templates } from "../support/testData/templates";
-import { GH_USER_IDAuthFile_rhdh } from "../support/auth/auth_constants";
+import { GH_USER_IDAuthFile } from "../support/auth/auth_constants";
 
-testWithHelper.use({ storageState: GH_USER_IDAuthFile_rhdh });
+testWithHelper.use({ storageState: GH_USER_IDAuthFile });
 testWithHelper.describe("GitHub Happy path", () => {
   const component =
     "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";

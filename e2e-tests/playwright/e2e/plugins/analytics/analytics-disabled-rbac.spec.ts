@@ -2,12 +2,12 @@ import { expect } from "@playwright/test";
 import { Common } from "../../../utils/Common";
 import { testWithHelper } from "../../../utils/UIhelper";
 import { UIhelperPO } from "../../../support/pageObjects/global-obj";
-import { GH_USER_IDAuthFile_rhdh } from "../../../support/auth/auth_constants";
+import { GH_USER_IDAuthFile } from "../../../support/auth/auth_constants";
 
 testWithHelper.describe(
   'Check RBAC "analytics-provider-segment" plugin',
   () => {
-    testWithHelper.use({ storageState: GH_USER_IDAuthFile_rhdh });
+    testWithHelper.use({ storageState: GH_USER_IDAuthFile });
 
     testWithHelper("is disabled", async ({ uiHelper, page }) => {
       await new Common(page).logintoGithub();
