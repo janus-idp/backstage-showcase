@@ -66,9 +66,9 @@ RUN curl -LO "https://github.com/opencontainers/umoci/releases/download/v0.4.7/u
     mv umoci.amd64 /usr/local/bin/umoci
 
 # Install opm
-RUN curl -LO "https://github.com/operator-framework/operator-registry/releases/download/v1.19.5/linux-amd64-opm" && \ 
-chmod +x linux-amd64-opm && \
-mv linux-amd64-opm /usr/local/bin/opm
+RUN curl -LO "https://github.com/operator-framework/operator-registry/releases/download/v1.23.0/linux-amd64-opm" && \ 
+    chmod +x linux-amd64-opm && \
+    mv linux-amd64-opm /usr/local/bin/opm
 
 # Set working directory    
 WORKDIR /tmp/
