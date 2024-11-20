@@ -137,8 +137,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-s3@npm:^3.350.0":
-  version: 3.696.0
-  resolution: "@aws-sdk/client-s3@npm:3.696.0"
+  version: 3.697.0
+  resolution: "@aws-sdk/client-s3@npm:3.697.0"
   dependencies:
     "@aws-crypto/sha1-browser": 5.2.0
     "@aws-crypto/sha256-browser": 5.2.0
@@ -149,7 +149,7 @@ __metadata:
     "@aws-sdk/credential-provider-node": 3.696.0
     "@aws-sdk/middleware-bucket-endpoint": 3.696.0
     "@aws-sdk/middleware-expect-continue": 3.696.0
-    "@aws-sdk/middleware-flexible-checksums": 3.696.0
+    "@aws-sdk/middleware-flexible-checksums": 3.697.0
     "@aws-sdk/middleware-host-header": 3.696.0
     "@aws-sdk/middleware-location-constraint": 3.696.0
     "@aws-sdk/middleware-logger": 3.696.0
@@ -198,7 +198,7 @@ __metadata:
     "@smithy/util-utf8": ^3.0.0
     "@smithy/util-waiter": ^3.1.9
     tslib: ^2.6.2
-  checksum: 020f689f216e93c3c519c9432bc5320da20e2650aae374bfcd68b00eec1e2274f05ef5d25024e0cad3fae57fc13a0a4d17a8372bf78dbe069c45035e28008dc4
+  checksum: c488918c3a484d067a907597a398e4d967e7e8beb666c082d62319a1f761b5ac9dfb8c4d244e8c4144ad3b8ef65d1dfe94df91bdf38aa2ecfdb97925ef8dfc3d
   languageName: node
   linkType: hard
 
@@ -521,8 +521,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/lib-storage@npm:^3.350.0":
-  version: 3.696.0
-  resolution: "@aws-sdk/lib-storage@npm:3.696.0"
+  version: 3.697.0
+  resolution: "@aws-sdk/lib-storage@npm:3.697.0"
   dependencies:
     "@smithy/abort-controller": ^3.1.7
     "@smithy/middleware-endpoint": ^3.2.3
@@ -532,8 +532,8 @@ __metadata:
     stream-browserify: 3.0.0
     tslib: ^2.6.2
   peerDependencies:
-    "@aws-sdk/client-s3": ^3.696.0
-  checksum: 0154d0797d95d4fc31ab27f892d9beff2b0d03c4cd6e04b4c71131defb672f59566daffb5527fb06c9d0f6ac6d6784f259ae489627ecaf73d429b74a7d2dd2cf
+    "@aws-sdk/client-s3": ^3.697.0
+  checksum: 672fe98ded4002a98a44ef179c4c506de46ad08bcc42e747f86d522d5bb3d6fe1670691fdcc5f8a0e2f6fb178fc7b7351d06a1f6b78275c650034c431e20bc28
   languageName: node
   linkType: hard
 
@@ -564,9 +564,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/middleware-flexible-checksums@npm:3.696.0":
-  version: 3.696.0
-  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.696.0"
+"@aws-sdk/middleware-flexible-checksums@npm:3.697.0":
+  version: 3.697.0
+  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.697.0"
   dependencies:
     "@aws-crypto/crc32": 5.2.0
     "@aws-crypto/crc32c": 5.2.0
@@ -581,7 +581,7 @@ __metadata:
     "@smithy/util-stream": ^3.3.1
     "@smithy/util-utf8": ^3.0.0
     tslib: ^2.6.2
-  checksum: 8f061dadde94a8f733f89c9c5115943110f8ca8a1bd4ded0be3b7c18749c75e8c2211cad32443fa31056add31d9e82257f963beff09e3191c67f64e86dfa8693
+  checksum: b8991f8fee5896952d5201cebf8cabebfa21e94bab56cc57ed62530659a56cb7b5911272297bf76b86513e86500873be5ecab3c2d6e9174471a6fabc0af6f805
   languageName: node
   linkType: hard
 
@@ -973,8 +973,8 @@ __metadata:
   linkType: hard
 
 "@azure/storage-blob@npm:^12.5.0":
-  version: 12.25.0
-  resolution: "@azure/storage-blob@npm:12.25.0"
+  version: 12.26.0
+  resolution: "@azure/storage-blob@npm:12.26.0"
   dependencies:
     "@azure/abort-controller": ^2.1.2
     "@azure/core-auth": ^1.4.0
@@ -989,7 +989,7 @@ __metadata:
     "@azure/logger": ^1.0.0
     events: ^3.0.0
     tslib: ^2.2.0
-  checksum: e592a27d9b8c76654c255544c4b53faea1468bf58f6acb9839115785de46fb6cbd3dce61bb11335af13b932bc651a53eb99140427c7cfcb3f8bd36ecedf38c17
+  checksum: c3f7572bc54cd9e74ac73fa9225cc9398a716e574ff9b637e5b27faf4ac2d6207dc64b39f5dcff1671c4cb6730fbd765ebf796abd3e18ef95f5071d613ce3a13
   languageName: node
   linkType: hard
 
