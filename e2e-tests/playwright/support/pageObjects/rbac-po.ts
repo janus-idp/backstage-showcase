@@ -71,7 +71,7 @@ export class RbacPo extends PageObject {
     this.notButton = this.page.getByRole("button", { name: "Not" });
     this.rulesSideBar = this.page.getByTestId("rules-sidebar");
     this.hasSpecButton = this.page.getByText("HAS_SPEC");
-    this.key = this.page.getByText("key *");
+    this.key = this.page.getByLabel("key *");
     this.saveConditions = this.page.getByTestId("save-conditions");
     this.anyOfButton = this.page.getByRole("button", { name: "AnyOf" });
     this.isEntityKindButton = this.page.getByText("IS_ENTITY_KIND");
