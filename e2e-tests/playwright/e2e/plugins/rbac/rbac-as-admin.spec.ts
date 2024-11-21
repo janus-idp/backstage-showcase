@@ -20,19 +20,19 @@ type RbacAsAdminFixture = {
 let myPage: Page;
 
 const base = test.extend<RbacAsAdminFixture>({
-  //NOSONAR
-  uiHelper: async ({}, use) => {
+  //prettier-ignore
+  uiHelper: async ({}, use) => { //NOSONAR
     const uiHelper = new UIhelper(myPage);
     await myPage.goto("/rbac");
     await use(uiHelper);
   },
-  //NOSONAR
-  rolesHelper: async ({}, use) => {
+  //prettier-ignore
+  rolesHelper: async ({}, use) => { //NOSONAR
     const rolesHelper = new Roles(myPage);
     await use(rolesHelper);
   },
-  //NOSONAR
-  testId: async ({}, use) => {
+  //prettier-ignore
+  testId: async ({}, use) => { //NOSONAR
     const testId = Date.now().toString();
     const testRole = `test-role-${testId}`;
     const composedRole = `role:default/${testRole}`;
