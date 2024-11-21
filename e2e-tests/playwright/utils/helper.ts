@@ -83,7 +83,7 @@ export async function deleteHelmReleaseWithWait(
 ) {
   logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
   const result = await runShellCmd(
-    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
+    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} || true`,
   );
   logger.log({
     level: "info",
