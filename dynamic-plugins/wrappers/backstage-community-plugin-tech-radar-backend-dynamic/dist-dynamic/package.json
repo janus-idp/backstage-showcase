@@ -13,7 +13,8 @@
     "pluginPackages": [
       "backstage-community-plugin-tech-radar",
       "backstage-community-plugin-tech-radar-backend"
-    ]
+    ],
+    "supported-versions": "1.32.4"
   },
   "exports": {
     ".": {

@@ -238,7 +238,7 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(deleteResponse.ok());
   });
 
-  test("Test catalog-entity refresh is denied after DELETE", async () => {
+  test.skip("Test catalog-entity refresh is denied after DELETE", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");

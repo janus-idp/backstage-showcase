@@ -1,5 +1,5 @@
 {
-  "name": "backstage-community-scaffolder-backend-module-regex",
+  "name": "backstage-community-plugin-scaffolder-backend-module-sonarqube",
   "version": "2.2.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.4",
     "pluginId": "scaffolder",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
@@ -32,15 +32,16 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/scaffolder-backend-module-regex --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/scaffolder-backend-module-regex --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-scaffolder-backend-module-sonarqube --override-interop default --no-embed-as-dependencies",
+    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-scaffolder-backend-module-sonarqube --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage-community/scaffolder-backend-module-regex": "2.2.2"
+    "@backstage-community/plugin-scaffolder-backend-module-sonarqube": "2.2.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.17.0"
+    "@janus-idp/cli": "1.17.0",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",
@@ -50,7 +51,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-community-scaffolder-backend-module-regex-dynamic"
+    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"
@@ -59,7 +60,7 @@
   "homepage": "https://red.ht/rhdh",
   "bugs": "https://issues.redhat.com/browse/RHIDP",
   "keywords": [
-    "support:production",
+    "support:tech-preview",
     "lifecycle:active"
   ]
 }

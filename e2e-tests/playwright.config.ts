@@ -90,7 +90,7 @@ export default defineConfig({
       testMatch: ["**/playwright/e2e/authProviders/clear-environment.spec.ts"],
     },
     {
-      name: "showcase-aks",
+      name: "showcase-k8s",
       ...useCommonDeviceAndViewportConfig,
       testIgnore: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
@@ -108,7 +108,7 @@ export default defineConfig({
       ],
     },
     {
-      name: "showcase-rbac-aks",
+      name: "showcase-rbac-k8s",
       ...useCommonDeviceAndViewportConfig,
       testMatch: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
