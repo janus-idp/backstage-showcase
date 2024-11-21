@@ -15,14 +15,14 @@ See [Creating JavaScript package](packaging-dynamic-plugins.md#creating-javascri
 
 See [Using a custom NPM registry](installing-plugins.md#using-a-custom-npm-registry) in [Installing Plugins](installing-plugins.md) document.
 
-## How to install community Backstage plugin to the RHDH?
+## How to install external Backstage plugin to the RHDH?
 
-1. Clone the community plugins repository.
+1. Get the source code of the plugin.
 2. [Export](export-derived-package.md) the selected plugin as a derived dynamic plugin package.
 3. [Package and publish](packaging-dynamic-plugins.md) the derived dynamic plugin package.
 4. [Install](installing-plugins.md) the plugin in the RHDH. If plugin is frontend plugin you need to properly [wire it (define mount points and bindings)](frontend-plugin-wiring.md).
 
-Example of this process on the [todo](https://github.com/backstage/community-plugins/tree/main/workspaces/todo/plugins) plugin:
+Example of this process on the [todo](https://github.com/backstage/community-plugins/tree/main/workspaces/todo/plugins) plugin from Backstage community plugins:
 
 1. Getting the plugin source code
 
