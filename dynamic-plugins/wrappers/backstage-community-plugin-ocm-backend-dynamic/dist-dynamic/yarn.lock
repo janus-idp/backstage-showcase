@@ -1103,11 +1103,11 @@ __metadata:
   linkType: hard
 
 "psl@npm:^1.1.28":
-  version: 1.10.0
-  resolution: "psl@npm:1.10.0"
+  version: 1.11.0
+  resolution: "psl@npm:1.11.0"
   dependencies:
     punycode: ^2.3.1
-  checksum: e2662c74def5f4a4db214363be905835da1e989fc66b07a95c9c4bc3e733aada0045f031777d28510a241f7d682f792163a44a7cbbf20a953cdb6e981e3b565c
+  checksum: c4ab2533a41c993d7cc68c4174c7212df0e3ee7cfbc674da0df3e714a58537652f8838175239fb4dbd371c5e50d6ce475f57bc9e4e4014a1ca2ffc5414edc95d
   languageName: node
   linkType: hard
 
