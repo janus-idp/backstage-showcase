@@ -20,7 +20,7 @@ See [Using a custom NPM registry](installing-plugins.md#using-a-custom-npm-regis
 1. Get the source code of the plugin.
 2. [Export](export-derived-package.md) the selected plugin as a derived dynamic plugin package.
 3. [Package and publish](packaging-dynamic-plugins.md) the derived dynamic plugin package.
-4. [Install](installing-plugins.md) the plugin in the RHDH. If plugin is frontend plugin you need to  "wire it by [defining mount points, dynamic routes, etc](frontend-plugin-wiring.md).
+4. [Install](installing-plugins.md) the plugin in the RHDH. If plugin is frontend plugin you need to wire it by [defining mount points, dynamic routes, etc](frontend-plugin-wiring.md).
 
 Example of this process on the [todo](https://github.com/backstage/community-plugins/tree/main/workspaces/todo/plugins) plugin from Backstage community plugins:
 
