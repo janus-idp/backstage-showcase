@@ -14,6 +14,7 @@ import { UIhelper } from "../../../utils/UIhelper";
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
+    await new Common(page).logintoGithub();
     await use(uiHelper);
   },
 });
@@ -28,8 +29,7 @@ test.describe
   .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
   let page: Page;
 
-  test.beforeEach(async ({ uiHelper, page }) => {
-    await new Common(page).logintoGithub();
+  test.beforeEach(async ({ uiHelper }) => {
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");
@@ -83,10 +83,6 @@ test.describe
 
 test.describe
   .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {
-  test.beforeEach(async ({ page }) => {
-    await new Common(page).logintoGithub();
-  });
-
   test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
     uiHelper,
     page,
@@ -122,8 +118,7 @@ test.describe
 });
 
 test.describe.serial("Test RBAC plugin as an admin user", () => {
-  test.beforeEach(async ({ uiHelper, page }) => {
-    await new Common(page).logintoGithub();
+  test.beforeEach(async ({ uiHelper }) => {
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("RBAC");
     await uiHelper.verifyHeading("RBAC");

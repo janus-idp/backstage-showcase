@@ -9,6 +9,7 @@ import { RBAC_IDAuthFile } from "../../../support/auth/auth_constants";
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
+    await new Common(page).logintoGithub();
     await use(uiHelper);
   },
 });
@@ -21,8 +22,8 @@ test.use({
 
 test.describe("Test RBAC plugin REST API", () => {
   let responseHelper: Response;
+
   test.beforeEach(async ({ page }) => {
-    await new Common(page).logintoGithub();
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
   });

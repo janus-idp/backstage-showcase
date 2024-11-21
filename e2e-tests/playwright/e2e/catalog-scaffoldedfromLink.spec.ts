@@ -8,7 +8,9 @@ import { UIhelper } from "../utils/UIhelper";
 
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
+    await new Common(page).logintoGithub();
     const uiHelper = new UIhelper(page);
+    await uiHelper.openSidebar("Catalog");
     await use(uiHelper);
   },
 });
@@ -28,10 +30,6 @@ test.describe("Link Scaffolded Templates to Catalog Items", () => {
       "base64",
     ).toString("utf8"), // Default repoOwner janus-qe
   };
-
-  test.beforeEach(({ uiHelper }) => {
-    uiHelper.openSidebar("Catalog");
-  });
 
   test("Register an Template", async ({ uiHelper, page }) => {
     const catalogImport = new CatalogImport(page);

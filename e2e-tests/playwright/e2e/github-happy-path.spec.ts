@@ -11,6 +11,7 @@ import { UIhelper } from "../utils/UIhelper";
 
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
+    await new Common(page).logintoGithub();
     const uiHelper = new UIhelper(page);
     await use(uiHelper);
   },
@@ -20,10 +21,6 @@ test.use({ storageState: GH_USER_IDAuthFile });
 test.describe("GitHub Happy path", () => {
   const component =
     "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";
-
-  test.beforeEach(async ({ page }) => {
-    await new Common(page).logintoGithub();
-  });
 
   test("Verify Profile is Github Account Name in the Settings page", async ({
     uiHelper,

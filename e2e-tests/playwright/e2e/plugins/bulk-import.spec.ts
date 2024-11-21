@@ -16,6 +16,7 @@ import { expect, test as base, Page } from "@playwright/test";
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
+    await new Common(page).logintoGithub();
     await use(uiHelper);
   },
 });
@@ -52,7 +53,6 @@ test.describe("Bulk Import plugin", () => {
   test.beforeEach(async ({ page }) => {
     common = new Common(page);
     bulkimport = new BulkImport(page);
-    await new Common(page).logintoGithub();
   });
 
   // Select two repos: one with an existing catalog.yaml file and another without it
@@ -276,7 +276,6 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await new Common(page).logintoGithub();
   });
 
   test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
@@ -318,7 +317,6 @@ test.describe
     page = (await setupBrowser(browser, testInfo)).page;
 
     uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
   });
 
   test("Bulk Import - Verify users without permission cannot access", async () => {

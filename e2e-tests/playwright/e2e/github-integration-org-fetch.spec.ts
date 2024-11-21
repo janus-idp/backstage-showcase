@@ -6,17 +6,14 @@ import { test as base } from "@playwright/test";
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
+    await new Common(page).logintoGithub();
+    await uiHelper.openSidebar("Catalog");
     await use(uiHelper);
   },
 });
 
 test.use({ storageState: GH_USER_IDAuthFile });
 test.describe("GitHub integration with Org data fetching", () => {
-  test.beforeEach(async ({ uiHelper, page }) => {
-    await new Common(page).logintoGithub();
-    await uiHelper.openSidebar("Catalog");
-  });
-
   test("Verify that fetching the groups of the first org works", async ({
     uiHelper,
   }) => {
