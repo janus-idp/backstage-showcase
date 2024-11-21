@@ -639,7 +639,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
         "Reloading page, permission should be updated automatically.",
       );
       await expect(page.locator(`nav a:has-text("My Group")`)).toBeVisible({
-        timeout: 2000,
+        timeout: 5000,
       });
     }).toPass({
       intervals: [5_000, 10_000],

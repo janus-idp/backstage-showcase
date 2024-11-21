@@ -244,8 +244,10 @@ export class Common {
         } else {
           await popup.waitForTimeout(3000);
           try {
-            await popup.locator("#login_field").fill(username);
-            await popup.locator("#password").fill(password);
+            await popup
+              .locator("#login_field")
+              .fill(username, { timeout: 2000 });
+            await popup.locator("#password").fill(password, { timeout: 2000 });
             await popup.locator("[type='submit']").click({ timeout: 5000 });
             //await this.checkAndReauthorizeGithubApp()
             await popup.waitForEvent("close", { timeout: 2000 });
@@ -279,12 +281,18 @@ export class Common {
           resolve("Already logged in");
         } else {
           try {
-            await popup.locator("[name=loginfmt]").fill(username);
+            await popup.locator("[name=loginfmt]").click();
+            await popup
+              .locator("[name=loginfmt]")
+              .fill(username, { timeout: 5000 });
             await popup
               .locator('[type=submit]:has-text("Next")')
               .click({ timeout: 5000 });
 
-            await popup.locator("[name=passwd]").fill(password);
+            await popup.locator("[name=passwd]").click();
+            await popup
+              .locator("[name=passwd]")
+              .fill(password, { timeout: 5000 });
             await popup
               .locator('[type=submit]:has-text("Sign in")')
               .click({ timeout: 5000 });
