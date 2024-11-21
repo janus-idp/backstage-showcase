@@ -130,4 +130,4 @@ export const DynamicEntityTechdocsContent = {
 };
 ```
 
-Important part of the frontend dynamic plugins is its layout configuration (bindings and routes). For more information on how to configure bindings and routes, see [Layout Configuration](layoud-configuration.md).
+Important part of the frontend dynamic plugins is its layout configuration (bindings and routes). For more information on how to configure bindings and routes, see [Frontend Plugin Wiring](frontend-plugin-wiring.md).
