@@ -46,10 +46,6 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
     await new Common(myPage).loginAsGithubUser();
   });
 
-  base.beforeEach(
-    async () => await new Common(myPage).checkAndClickOnGHloginPopup(),
-  );
-
   base(
     "Check if Administration side nav is present with RBAC plugin",
     async ({ uiHelper }) => {
