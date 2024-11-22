@@ -221,7 +221,7 @@ export class RbacPo extends PageObject {
       await this.uiHelper.verifyText("Configure access (3 rules)");
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
-      await this.uiHelper.verifyHeading(
+      await this.uiHelper.verifyText(
         `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
       );
       await this.verifyPermissionPoliciesHeader(1);
