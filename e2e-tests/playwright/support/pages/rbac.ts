@@ -71,7 +71,7 @@ export class Roles {
   }
 }
 
-interface PolicyComplete {
+export interface PolicyComplete {
   entityReference: string;
   permission: string;
   policy: string;
@@ -149,7 +149,7 @@ export class Response {
     };
   }
 
-  async removeMetadataFromResponse(response: APIResponse): Promise<any[]> {
+  async removeMetadataFromResponse(response: APIResponse): Promise<unknown[]> {
     try {
       const responseJson = await response.json();
 
@@ -162,7 +162,7 @@ export class Response {
       }
 
       // Clean metadata from the response
-      const responseClean = responseJson.map((item: any) => {
+      const responseClean = responseJson.map((item: { metadata: unknown }) => {
         if (item.metadata) {
           delete item.metadata;
         }

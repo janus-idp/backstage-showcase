@@ -1,5 +1,5 @@
 import { Page, expect, test } from "@playwright/test";
-import { Response } from "../../../support/pages/rbac";
+import { PolicyComplete, Response } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
@@ -288,7 +288,9 @@ test.describe("Test RBAC plugin REST API", () => {
 
       const deleteRemainingPolicies = await request.delete(
         "/api/permission/policies/role/default/test",
-        responseHelper.createOrDeletePolicyRequest(remainingPolicies),
+        responseHelper.createOrDeletePolicyRequest(
+          remainingPolicies as PolicyComplete[],
+        ),
       );
 
       const deleteRole = await request.delete(
