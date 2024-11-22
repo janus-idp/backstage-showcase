@@ -343,6 +343,18 @@ install_tekton_pipelines() {
   fi
 }
 
+install_pipelines_operator() {
+  local dir=$1
+  DISPLAY_NAME="Red Hat OpenShift Pipelines"
+
+  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
+    echo "Red Hat OpenShift Pipelines operator is already installed."
+  else
+    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
+    oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
+  fi
+}
+
 initiate_deployments() {
 
   #install_pipelines_operator

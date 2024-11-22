@@ -1,9 +1,9 @@
-import { expect, test as base } from "@playwright/test";
+import { expect, test as base, Page } from "@playwright/test";
 import { Response } from "../../../support/pages/rbac";
 import { UIhelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
-import { Common } from "../../../utils/Common";
+import { Common, setupBrowser } from "../../../utils/Common";
 import { RBAC_IDAuthFile } from "../../../support/auth/auth_constants";
 
 const test = base.extend<{ uiHelper: UIhelper }>({
@@ -21,11 +21,30 @@ test.use({
 });
 
 test.describe("Test RBAC plugin REST API", () => {
+  let uiHelper: UIhelper;
+  let page: Page;
   let responseHelper: Response;
+  // Variable to track errors or test states
+  let hasErrors = false;
+  let retriesRemaining: number;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
+    retriesRemaining = testInfo.project.retries;
+
+    uiHelper = new UIhelper(page);
+
+    await Common.logintoGithub(page);
+    await uiHelper.openSidebar("Home");
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
+  });
+
+  // eslint-disable-next-line no-empty-pattern
+  test.beforeEach(async ({}, testInfo) => {
+    console.log(
+      `beforeEach: Attempting setup for ${testInfo.title}, retry: ${testInfo.retry}`,
+    );
   });
 
   test("Test that roles and policies from GET request are what expected", async ({
@@ -92,7 +111,7 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(policyPostResponse.ok());
   });
 
-  test("Test catalog-entity read is denied", async ({ uiHelper }) => {
+  test("Test catalog-entity read is denied", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.verifyTableIsEmpty();
@@ -103,7 +122,7 @@ test.describe("Test RBAC plugin REST API", () => {
     );
   });
 
-  test("Test catalog-entity creation is denied", async ({ uiHelper }) => {
+  test("Test catalog-entity creation is denied", async () => {
     expect(
       await uiHelper.isLinkVisible("Register Existing Component"),
     ).toBeFalsy();
@@ -142,19 +161,19 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(createPostResponse.ok());
   });
 
-  test("Test catalog-entity read is allowed", async ({ uiHelper }) => {
+  test("Test catalog-entity read is allowed", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");
   });
 
-  test("Test catalog-entity refresh is denied", async ({ uiHelper }) => {
+  test("Test catalog-entity refresh is denied", async () => {
     expect(
       await uiHelper.isBtnVisibleByTitle("Schedule entity refresh"),
     ).toBeFalsy();
   });
 
-  test("Test catalog-entity create is allowed", async ({ uiHelper }) => {
+  test("Test catalog-entity create is allowed", async () => {
     await uiHelper.openSidebar("Create...");
     expect(await uiHelper.isLinkVisible("Register Existing Component"));
   });
@@ -198,9 +217,7 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(goodPutResponse.ok());
   });
 
-  test("Test that the bad PUT didnt go through and catalog-entities can be read", async ({
-    uiHelper,
-  }) => {
+  test("Test that the bad PUT didnt go through and catalog-entities can be read", async () => {
     await uiHelper.openSidebar("Home");
     await uiHelper.openSidebar("Create...");
     expect(
@@ -210,18 +227,14 @@ test.describe("Test RBAC plugin REST API", () => {
     ).toBeFalsy();
   });
 
-  test("Test that the good PUT request went through and catalog-entities can be refreshed", async ({
-    uiHelper,
-  }) => {
+  test("Test that the good PUT request went through and catalog-entities can be refreshed", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");
     expect(await uiHelper.isBtnVisibleByTitle("Schedule entity refresh"));
   });
 
-  test("Test that the good PUT request went through and catalog-entities cant be created", async ({
-    uiHelper,
-  }) => {
+  test("Test that the good PUT request went through and catalog-entities cant be created", async () => {
     await uiHelper.openSidebar("Create...");
     expect(
       await uiHelper.isLinkVisible("Register Existing Component"),
@@ -245,18 +258,38 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(deleteResponse.ok());
   });
 
-  test.skip("Test catalog-entity refresh is denied after DELETE", async ({
-    uiHelper,
-  }) => {
+  test("Test catalog-entity refresh is denied after DELETE", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "API");
     await uiHelper.clickLink("Nexus Repo Manager 3");
     expect(await uiHelper.isBtnVisible("Schedule entity refresh")).toBeFalsy();
   });
 
-  test.afterAll(
-    "Cleanup by deleting all new policies and roles",
-    async ({ request }) => {
+  // eslint-disable-next-line no-empty-pattern
+  test.afterEach(async ({}, testInfo) => {
+    if (testInfo.status === "failed") {
+      console.log(`Test failed: ${testInfo.title}`);
+      hasErrors = true;
+
+      // Calculate the remaining retries by subtracting the current retry count from the total retries and adjusting for zero-based indexing.
+      retriesRemaining = testInfo.project.retries - testInfo.retry - 1;
+      console.log(`Retries remaining: ${retriesRemaining}`);
+    }
+  });
+
+  test.afterAll(async ({ request }) => {
+    if (hasErrors && retriesRemaining > 0) {
+      console.log(
+        `Skipping cleanup due to errors. Retries remaining: ${retriesRemaining}`,
+      );
+      return;
+    }
+
+    console.log(
+      `afterAll: Proceeding with cleanup. Retries remaining: ${retriesRemaining}`,
+    );
+
+    try {
       const remainingPoliciesResponse = await request.get(
         "/api/permission/policies/role/default/test",
         responseHelper.getSimpleRequest(),
@@ -276,8 +309,10 @@ test.describe("Test RBAC plugin REST API", () => {
         responseHelper.getSimpleRequest(),
       );
 
-      expect(deleteRemainingPolicies.ok());
-      expect(deleteRole.ok());
-    },
-  );
+      expect(deleteRemainingPolicies.ok()).toBeTruthy();
+      expect(deleteRole.ok()).toBeTruthy();
+    } catch (error) {
+      console.error("Error during cleanup in afterAll:", error);
+    }
+  });
 });
