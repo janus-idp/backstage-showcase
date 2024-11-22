@@ -31,7 +31,7 @@ plugins:
 
 ## Extend internal library of available icons
 
-Backstage offers an internal catalog of system icons available across the application. This is traditionally used within Catalog items as icons for links for example. Dynamic plugins also use this catalog when fetching icons for [dynamically configured routes with sidebar navigation menu entry](#dynamic-routes). Therefore if a plugin requires a custom icon to be used for menu item, this icon must be added to the internal icon catalog. This is done via `appIcons` configuration:
+Backstage offers an internal catalog of system icons available across the application. This is traditionally used within Catalog items as icons for links for example. Dynamic plugins also use this catalog when fetching icons for [dynamically configured routes with sidebar navigation menu entry](#dynamic-routes). Therefore, if a plugin requires a custom icon to be used for menu item, this icon must be added to the internal icon catalog. This is done via `appIcons` configuration:
 
 ```yaml
 # dynamic-plugins-config.yaml
@@ -76,7 +76,7 @@ Traditionally, [Backstage full page extensions](https://backstage.io/docs/plugin
 
 This change is usually coupled with an extension to the main sidebar navigation, achieved by editing `packages/app/src/components/Root/Root.tsx`.
 
-In dynamic plugins this mechanism has changed and users are no longer allowed to edit `.tsx` files. Instead they declare their desire to expose additional routes within dynamic plugin configuration:
+In dynamic plugins this mechanism has changed and users are no longer allowed to edit `.tsx` files. Instead, they declare their desire to expose additional routes within dynamic plugin configuration:
 
 ```yaml
 # dynamic-plugins-config.yaml
@@ -100,16 +100,16 @@ plugins:
 
 Each plugin can expose multiple routes and each route is required to define its `path` and `importName` (if it differs from the default export).
 
-- `path` - Unique path in the app. Cannot override existing routes with the exception of the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
+- `path` - Unique path in the app. Cannot override existing routes except the `/` home route: the main home page can be replaced via the dynamic plugins mechanism.
 - `module` - Optional. Since dynamic plugins can expose multiple distinct modules, you may need to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 - `importName` - Optional. The actual component name that should be rendered as a standalone page. If not specified the `default` export is used.
 - `menuItem` - This property allows users to extend the main sidebar navigation and point to their new route. It accepts the following properties:
   - `text`: The label shown to the user
   - `icon`: refers to a Backstage system icon name. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the list of default icons and [Extending Icons Library](#extend-internal-library-of-available-icons) to extend this with dynamic plugins.
-  - `importName`: optional name of an exported SidebarItem component.  The component will receive a `to` property as well as any properties specified in `config.props`
+  - `importName`: optional name of an exported `SidebarItem` component. The component will receive a `to` property as well as any properties specified in `config.props`
 - `config` - An optional field which is a holder to pass `props` to a custom sidebar item
 
-A custom SidebarItem offers opportunities to provide a richer user experience such as notification badges.  The component should accept the following properties:
+A custom `SidebarItem` offers opportunities to provide a richer user experience such as notification badges.  The component should accept the following properties:
 
 ```typescript
 export type MySidebarItemProps = {
@@ -119,7 +119,7 @@ export type MySidebarItemProps = {
 
 Other properties can be specified as well and configured using the `config.props` property on the dynamic route.
 
-Here is an example configuration specifying a custom SidebarItem component:
+Here is an example configuration specifying a custom `SidebarItem` component:
 
 ```yaml
 # dynamic-plugins-config.yaml
@@ -163,7 +163,7 @@ plugins:
 
 Up to 3 levels of nested menu items are supported.
 
-- <menu_item_name> - A unique name in the main sidebar navigation. This can represent either a standalone menu item or a parent menu item. If it represents a plugin menu item, the name must match the corresponding path in `dynamicRoutes`. For example, if dynamicRoutes defines `path: /my-plugin`, the `menu_item_name` must be `my-plugin`.
+- <menu_item_name> - A unique name in the main sidebar navigation. This can represent either a standalone menu item or a parent menu item. If it represents a plugin menu item, the name must match the corresponding path in `dynamicRoutes`. For example, if `dynamicRoutes` defines `path: /my-plugin`, the `menu_item_name` must be `my-plugin`.
 
   - Handling Complex Paths:
     - For simple paths like `path: /my-plugin`, the `menu_item_name` should be `my-plugin`.
@@ -287,7 +287,7 @@ The following mount points are available:
 | `search.page.filters`        | Search filters                      | YES, default catalog kind and lifecycle filters are visible    |
 | `search.page.results`        | Search results content              | YES, default catalog search is present                         |
 
-Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them or they can render static content (see column 3 in previous table).
+Mount points within Catalog aka `entity.page.*` are rendered as tabs. They become visible only if at least one plugin contributes to them, or they can render static content (see column 3 in previous table).
 
 Each `entity.page.*` mount point has 2 complementary variations:
 
@@ -337,7 +337,7 @@ Each mount point supports additional configuration:
   - `isKind`: Accepts a string or a list of string with entity kinds. For example `isKind: component` will render the component only for entity of `kind: Component`.
   - `isType`: Accepts a string or a list of string with entity types. For example `isType: service` will render the component only for entities of `spec.type: 'service'`.
   - `hasAnnotation`: Accepts a string or a list of string with annotation keys. For example `hasAnnotation: my-annotation` will render the component only for entities that have `metadata.annotations['my-annotation']` defined.
-  - condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have following signature: `(e: Entity) => boolean`
+  - Condition imported from the plugin's `module`: Must be function name exported from the same `module` within the plugin. For example `isMyPluginAvailable` will render the component only if `isMyPluginAvailable` function returns `true`. The function must have the following signature: `(e: Entity) => boolean`
 
 The entity page also supports adding more items to the context menu at the top right of the page.  Components targeting the `entity.context.menu` mount point have some constraints to follow.  The exported component should be some form of dialog wrapper component that accepts an `open` boolean property and an `onClose` event handler property, like so:
 
@@ -427,10 +427,10 @@ The visibility of a tab is derived from the kind of entity that is being display
 
 ### Provide additional Utility APIs
 
-Backstage offers an Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
+Backstage offers a Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
 
 - Core APIs, which are always present in any Backstage application
-- Custom plugin-made API that can be already self contained within any plugin (including dynamic plugins)
+- Custom plugin-made API that can be already self-contained within any plugin (including dynamic plugins)
 - [App API implementations and overrides](https://backstage.io/docs/api/utility-apis/#app-apis) which needs to be added separately.
 
 and a plugin can potentially expose multiple API Factories.  Dynamic plugins allow a couple different ways to take advantage of this functionality.
@@ -444,7 +444,7 @@ dynamicPlugins:
     my-dynamic-plugin-package-with-api-factories: {}
 ```
 
-However if the dynamic plugin doesn't export it's plugin object then it will be necessary to explicitly configure each API factory that should be registered with the `createApp` API via the `apiFactories` configuration:
+However, if the dynamic plugin doesn't export it's plugin object then it will be necessary to explicitly configure each API factory that should be registered with the `createApp` API via the `apiFactories` configuration:
 
 ```yaml
 # app-config.yaml
@@ -485,7 +485,7 @@ dynamicPlugins:
         - importName: customScmAuthApiFactory
 ```
 
-which would override the default ScmAuth API factory that DeveloperHub defaults to.
+which would override the default `ScmAuth` API factory that Developer Hub defaults to.
 
 ### Provide custom Scaffolder field extensions
 
