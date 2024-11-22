@@ -6,7 +6,7 @@ import { test as base } from "@playwright/test";
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    await Common.logintoGithub(page);
     await uiHelper.openSidebar("Catalog");
     await use(uiHelper);
   },

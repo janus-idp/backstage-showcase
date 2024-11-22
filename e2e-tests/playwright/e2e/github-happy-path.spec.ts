@@ -11,7 +11,7 @@ import { UIhelper } from "../utils/UIhelper";
 
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
-    await new Common(page).logintoGithub();
+    await Common.logintoGithub(page);
     const uiHelper = new UIhelper(page);
     await use(uiHelper);
   },

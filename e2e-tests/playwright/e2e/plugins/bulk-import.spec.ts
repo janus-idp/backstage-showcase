@@ -16,7 +16,7 @@ import { expect, test as base, Page } from "@playwright/test";
 const test = base.extend<{ uiHelper: UIhelper }>({
   uiHelper: async ({ page }, use) => {
     const uiHelper = new UIhelper(page);
-    await new Common(page).logintoGithub();
+    await Common.logintoGithub(page);
     await use(uiHelper);
   },
 });

@@ -15,11 +15,11 @@ export class Common {
     this.uiHelper = new UIhelper(page);
   }
 
-  public async logintoGithub() {
-    await this.page.goto("/settings");
-    await this.page.waitForURL("/settings");
-    await this.page.goto("/");
-    await this.page.waitForURL("/");
+  public static async logintoGithub(page: Page) {
+    await page.goto("/settings");
+    await page.waitForURL("/settings");
+    await page.goto("/");
+    await page.waitForURL("/");
   }
 
   public async loginAsGuest() {

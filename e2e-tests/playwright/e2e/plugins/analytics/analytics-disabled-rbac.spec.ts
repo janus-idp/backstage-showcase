@@ -15,7 +15,7 @@ test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
   test.use({ storageState: GH_USER_IDAuthFile });
 
   test("is disabled", async ({ uiHelper, page }) => {
-    await new Common(page).logintoGithub();
+    await Common.logintoGithub(page);
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("Plugins");
     await uiHelper.verifyHeading("Plugins");
