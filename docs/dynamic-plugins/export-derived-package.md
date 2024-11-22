@@ -1,6 +1,6 @@
 # Export Derived Dynamic Plugin Package
 
-In order to be able to use dynamic plugins in the RHDH, they need to be exported as a separate package. Which is than used by the RHDH to load the plugin.
+In order to be able to use dynamic plugins in the RHDH, they need to be exported as a separate package. Which is then used by the RHDH to load the plugin.
 Exporting a dynamic plugin package is a process of creating a new package that contains the plugin code and its dependencies, and is ready to be used as a dynamic plugin in the RHDH.
 
 This document describes how to export a dynamic plugin package from an existing Backstage plugin.
@@ -50,7 +50,7 @@ The dynamic export mechanism identifies private, non-backstage dependencies, and
 ### Shared dependencies
 
 During the exporting process some dependencies are marked as shared dependencies, and are expected to be provided by the main Backstage application. These dependencies are not bundled in the dynamic plugin package, but are marked as `peerDependencies` in the `package.json` file.
-By default all the `@backstage`-scoped packages are considered shared packages.
+By default, all the `@backstage`-scoped packages are considered shared packages.
 
 Using `--shared-package` flag you can control which packages are considered shared packages.
 Shared packages are expected to be provided by the main Backstage application, and are not bundled in the dynamic plugin package.
@@ -67,7 +67,7 @@ By default, all packages with `-node` or `-common` suffix are automatically embe
 Using `--embed-package` flag you can control which packages are embedded in the dynamic plugin package.
 The `--embed-package` flag can be used multiple times to specify multiple embedded packages.
 
-If plugin depends on another package that is in the same monorepo workspace and it doesn't follow stadart naming convention (`-node`, or `-common`), you can use the `--embed-package` flag to embed it in the dynamic plugin package.
+If a plugin depends on another package in the same monorepo workspace, and it doesn't follow standard naming convention (`-node`, or `-common`), you can use the `--embed-package` flag to embed it in the dynamic plugin package.
 
 Example of exporting a dynamic plugin with shared and embedded packages:
 
@@ -95,7 +95,7 @@ Our CLI can generate the default configuration for Scalprum on the fly. For gene
 
 //TODO document how to use a separate file for the Scalprum configuration which should be a preferred way to customize Scalprum's behavior.
 
-However if you want to customize Scalprum's behavior, you can do so by including additional section to the `package.json` under `scalprum` key:
+However, if you want to customize Scalprum's behavior, you can do so by including additional section to the `package.json` under `scalprum` key:
 
 ```json
   ...
@@ -111,7 +111,7 @@ However if you want to customize Scalprum's behavior, you can do so by including
   ...
 ```
 
-Dynamic plugins may also need to adopt to specific Backstage needs like static JSX children for mountpoints and dynamic routes. These changes are strictly optional and exported symbols are incompatible with static plugins.
+Dynamic plugins may also need to be adopted to specific Backstage needs like static JSX children for mount points and dynamic routes. These changes are strictly optional and exported symbols are incompatible with static plugins.
 
 To include static JSX as element children with your dynamically imported component, please define an additional export as follows and use that as your dynamic plugin `importName`:
 
