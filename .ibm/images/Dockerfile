@@ -1,3 +1,4 @@
+# Base image from Microsoft Playwright
 FROM mcr.microsoft.com/playwright:v1.47.2-jammy
 
 # Set environment variables for the container
@@ -8,10 +9,15 @@ ENV CI=1 \
     NODE_PATH=/usr/local/lib/node_modules \
     HELM_VERSION="v3.12.3" \
     OC_VERSION="4.14.3" \
-    OCM_VERSION="0.1.76"
+    OCM_VERSION="0.1.76" \
+    GO_VERSION="1.19" \
+    GO_SHA256="464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6" \
+    GOPATH="/go" \
+    PATH="$GOPATH/bin:/usr/local/go/bin:$PATH"
 
 # Install essential dependencies and Node.js tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    make gcc g++ python3 rsync sshpass \
     nodejs \
     openssl libssl-dev ca-certificates \
     curl wget jq colorized-logs && \
