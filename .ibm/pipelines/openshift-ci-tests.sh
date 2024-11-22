@@ -21,7 +21,7 @@ cleanup() {
   rm -rf ~/tmpbin
 }
 
-trap cleanup EXIT
+trap cleanup EXIT INT ERR
 
 source "${DIR}/utils.sh"
 if [[ "$JOB_NAME" == *aks* ]]; then
@@ -69,7 +69,7 @@ set_namespace() {
       fi
     done
     if ! $namespace_found; then
-      echo "Error: All namespaces (showcase-pr-1, showcase-pr-2, showcase-pr-3) already in Use"
+      echo "Error: All namespaces $namespaces_pool already in Use"
       exit 1
     fi
   fi

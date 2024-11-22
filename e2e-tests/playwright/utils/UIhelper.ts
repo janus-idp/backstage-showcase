@@ -34,10 +34,6 @@ export class UIhelper {
     await this.page.keyboard.press("Tab");
   }
 
-  async waitForHeaderTitle() {
-    await this.page.waitForSelector('h2[data-testid="header-title"]');
-  }
-
   async clickButton(
     label: string | RegExp,
     options: { exact?: boolean; force?: boolean } = {

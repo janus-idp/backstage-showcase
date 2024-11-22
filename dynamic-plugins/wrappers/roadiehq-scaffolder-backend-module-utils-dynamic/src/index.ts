@@ -1,1 +1,1 @@
-export { scaffolderBackendModuleUtils as default } from "@roadiehq/scaffolder-backend-module-utils/new-backend";
+export { default } from "@roadiehq/scaffolder-backend-module-utils";
