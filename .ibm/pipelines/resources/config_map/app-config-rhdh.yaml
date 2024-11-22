@@ -120,6 +120,12 @@ proxy:
         Authorization: '${ACR_SECRET}'
       # Change to "false" in case of using self hosted artifactory instance with a self-signed certificate
       secure: false
+    '/quay/api':
+      target: https://quay.io/
+      headers:
+        X-Requested-With: 'XMLHttpRequest'
+      changeOrigin: true
+      secure: true
 catalog:
   import:
     entityFilename: catalog-info.yaml
