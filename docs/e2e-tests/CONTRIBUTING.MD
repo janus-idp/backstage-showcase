@@ -42,7 +42,7 @@ These principles are valid for new contributions. Some parts of the codebase may
    All tests have to follow a set of simple rules:
    I. Check the preconditions. If tests are running in parallel, try to create the preconditions you need to avoid race conditions.
    II. Each test has to test one and only one thing.
-   III. All tests have to contain preconditions, actions, and assertions. _Think in [Gherkin](https://cucumber.io/docs/guides/overview/) terms_.
+   III. All tests have to contain preconditions, actions, and assertions, like you whould do in [Gherkin](https://cucumber.io/docs/guides/overview/); think in those terms.
 
 #### Technical Guidelines
 
