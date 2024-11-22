@@ -47,6 +47,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.auth.providers.guest.dangerouslyAllowOutsideDevelopment=false",
         "--set upstream.backstage.appConfig.auth.environment=development",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
@@ -82,6 +83,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.auth.environment=development",
         "--set upstream.backstage.appConfig.signInPage=microsoft",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
@@ -117,6 +119,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.signInPage=microsoft",
         "--set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog=true",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
@@ -163,6 +166,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.signInPage=microsoft",
         "--set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog=true",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 

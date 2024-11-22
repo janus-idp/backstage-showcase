@@ -211,7 +211,9 @@ export class Common {
         } else {
           await popup.waitForTimeout(3000);
           try {
+            await popup.locator("#username").click();
             await popup.locator("#username").fill(username);
+            await popup.locator("#password").click();
             await popup.locator("#password").fill(password);
             await popup.locator("[name=login]").click({ timeout: 5000 });
             await popup.waitForEvent("close", { timeout: 2000 });
@@ -244,10 +246,8 @@ export class Common {
         } else {
           await popup.waitForTimeout(3000);
           try {
-            await popup
-              .locator("#login_field")
-              .fill(username, { timeout: 2000 });
-            await popup.locator("#password").fill(password, { timeout: 2000 });
+            await popup.locator("#login_field").fill(username);
+            await popup.locator("#password").fill(password);
             await popup.locator("[type='submit']").click({ timeout: 5000 });
             //await this.checkAndReauthorizeGithubApp()
             await popup.waitForEvent("close", { timeout: 2000 });
