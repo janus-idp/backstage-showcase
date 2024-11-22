@@ -24,7 +24,6 @@ test.describe("Testing scaffolder-backend-module-http-request to invoke an exter
   test("Create a software template using http-request plugin", async () => {
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
-    await uiHelper.waitForHeaderTitle();
     await uiHelper.clickButton("Register Existing Component");
     await catalogImport.registerExistingComponent(template);
 
