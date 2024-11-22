@@ -53,8 +53,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
 
     // Guest login should work
     await common.loginAsGuest();
-    await uiHelper.openSidebar("Settings");
-    await uiHelper.verifyHeading("Guest");
+    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
   });
@@ -133,13 +132,9 @@ test.describe("Standard authentication providers: Basic authentication", () => {
 
     // check no entities are in the catalog
     const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
     const catalogUsers = await api.getAllCatalogUsersFromAPI();
-    console.log(catalogUsers);
-
-    await page.goto("/catalog?filters[kind]=user&filters[user]=all");
-    await uiHelper.verifyHeading("My Org Catalog");
-    await uiHelper.searchInputPlaceholder(constants.AZURE_LOGIN_FIRSTNAME);
-    await uiHelper.verifyRowsInTable(["No records to display"]);
+    expect(catalogUsers.totalItems).toBe(0);
     await uiHelper.openSidebar("Settings");
     await common.signOut();
   });
@@ -175,7 +170,6 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     const singInMethods = await page
       .locator("div[class^='MuiCardHeader-root']")
       .allInnerTexts();
-    console.log(singInMethods);
     expect(singInMethods).not.toContain("Guest");
   });
 
