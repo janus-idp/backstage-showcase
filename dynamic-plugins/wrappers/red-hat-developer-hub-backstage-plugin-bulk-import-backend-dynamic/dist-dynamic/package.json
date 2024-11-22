@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.33.2",
     "pluginId": "red-hat-developer-hub-backstage-plugin-bulk-import-backend",
     "pluginPackages": [
       "red-hat-developer-hub-backstage-plugin-bulk-import",

@@ -93,7 +93,7 @@ function updateDynamicPluginVersion(pluginDir) {
       packageJson.dependencies = Object.fromEntries(
         Object.entries(dependencies).map(([depName, depVersion]) => [
           depName,
-          distDynamicPackageJson.peerDependencies[depName] || depVersion,
+          distDynamicPackageJson.peerDependencies?.[depName] || depVersion,
         ]),
       );
     }

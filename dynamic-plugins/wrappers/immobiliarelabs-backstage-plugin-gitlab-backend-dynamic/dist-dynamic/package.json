@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.33.2",
     "pluginId": "immobiliarelabs-gitlab",
     "pluginPackages": [
       "immobiliarelabs-backstage-plugin-gitlab",

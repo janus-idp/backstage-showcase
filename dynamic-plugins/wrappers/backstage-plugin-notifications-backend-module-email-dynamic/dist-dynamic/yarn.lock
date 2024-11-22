@@ -530,74 +530,71 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-notifications-backend-module-email@file:./embedded/backstage-plugin-notifications-backend-module-email::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
-  version: 0.3.1+embedded
-  resolution: "@backstage/plugin-notifications-backend-module-email@file:./embedded/backstage-plugin-notifications-backend-module-email#./embedded/backstage-plugin-notifications-backend-module-email::hash=f053bc&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
+"@backstage/plugin-notifications-backend-module-email@file:./embedded\\backstage-plugin-notifications-backend-module-email::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
+  version: 0.3.3+embedded
+  resolution: "@backstage/plugin-notifications-backend-module-email@file:./embedded/backstage-plugin-notifications-backend-module-email#./embedded/backstage-plugin-notifications-backend-module-email::hash=d4b009&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
   dependencies:
     "@aws-sdk/client-ses": ^3.550.0
     "@aws-sdk/types": ^3.347.0
-    "@backstage/plugin-notifications-common": ^0.0.5
-    "@backstage/plugin-notifications-node": ^0.2.7
+    "@backstage/plugin-notifications-common": ^0.0.6
+    "@backstage/plugin-notifications-node": ^0.2.9
     lodash: ^4.17.21
     nodemailer: ^6.9.13
     p-throttle: ^4.1.1
   peerDependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/config": ^1.2.0
-    "@backstage/integration-aws-node": ^0.1.12
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/types": ^1.1.1
-  checksum: 183d74bb0779315b9c0bf7aef139a7e1c0fea7ff5ba28a141cb857f55e0ce0ae30ec10e26c290fb5edd24565362e1155e565037879578858a59d00e50a4236a4
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/catalog-client": ^1.8.0
+    "@backstage/catalog-model": ^1.7.1
+    "@backstage/config": ^1.3.0
+    "@backstage/integration-aws-node": ^0.1.13
+    "@backstage/plugin-catalog-node": ^1.14.0
+    "@backstage/types": ^1.2.0
+  checksum: 907383408b601da7b8073ee28a6a14c7cac0b5cd012192562553712279e330faa5f543d4ba48a79f870c4fdaea29d1df65246f27402ea38dfdc4dc9ea846cdda
   languageName: node
   linkType: hard
 
-"@backstage/plugin-notifications-common@file:./embedded/backstage-plugin-notifications-common::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
-  version: 0.0.5+embedded
-  resolution: "@backstage/plugin-notifications-common@file:./embedded/backstage-plugin-notifications-common#./embedded/backstage-plugin-notifications-common::hash=0fdd04&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
+"@backstage/plugin-notifications-common@file:./embedded\\backstage-plugin-notifications-common::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
+  version: 0.0.6+embedded
+  resolution: "@backstage/plugin-notifications-common@file:./embedded/backstage-plugin-notifications-common#./embedded/backstage-plugin-notifications-common::hash=aa6d2c&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
   dependencies:
     "@material-ui/icons": ^4.9.1
   peerDependencies:
-    "@backstage/config": ^1.2.0
-  checksum: 3ca9e4eb3fda57c953c03b9c829375295c908232ecf72818cf9e71d4411874a1b2d3cb070d4338644cba0e01885c12dd58d4792aed846df33b591f342829ed33
+    "@backstage/config": ^1.3.0
+  checksum: 1933666b255f57853f1ce47f39e58d0f8ac1d8f97a0f74b343499cdb8ffce9c3a682b5b53c1f3e2305bfbd5ca14deb8b0b764e6c89e3177189ca698aef2ac65a
   languageName: node
   linkType: hard
 
-"@backstage/plugin-notifications-node@file:./embedded/backstage-plugin-notifications-node::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
-  version: 0.2.8+embedded
-  resolution: "@backstage/plugin-notifications-node@file:./embedded/backstage-plugin-notifications-node#./embedded/backstage-plugin-notifications-node::hash=8082cd&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
+"@backstage/plugin-notifications-node@file:./embedded\\backstage-plugin-notifications-node::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
+  version: 0.2.9+embedded
+  resolution: "@backstage/plugin-notifications-node@file:./embedded/backstage-plugin-notifications-node#./embedded/backstage-plugin-notifications-node::hash=5faf0d&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
   dependencies:
-    "@backstage/plugin-notifications-common": ^0.0.5
-    "@backstage/plugin-signals-node": ^0.1.13
+    "@backstage/plugin-notifications-common": ^0.0.6
+    "@backstage/plugin-signals-node": ^0.1.14
     knex: ^3.0.0
     node-fetch: ^2.7.0
-    uuid: ^9.0.0
+    uuid: ^11.0.0
   peerDependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-  checksum: 7ece5846ae58dfb899603d2ca222c14169d3414acb3a60a784b662e90cd150f8c6af12715d681dad5c733a3d760acbbb7c45c008049af78643bad5e40f1faf2a
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/catalog-client": ^1.8.0
+    "@backstage/catalog-model": ^1.7.1
+  checksum: 748bd5a7168e2d360dee1b15b134755b49b686d3baba8b187e794976822ccf988e4b4c6785aeef745cd0f89e8f5b9f476ee417a6feaf1ea14265245288e0101e
   languageName: node
   linkType: hard
 
-"@backstage/plugin-signals-node@file:./embedded/backstage-plugin-signals-node::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
-  version: 0.1.13+embedded
-  resolution: "@backstage/plugin-signals-node@file:./embedded/backstage-plugin-signals-node#./embedded/backstage-plugin-signals-node::hash=e8011f&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
+"@backstage/plugin-signals-node@file:./embedded\\backstage-plugin-signals-node::locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A.":
+  version: 0.1.14+embedded
+  resolution: "@backstage/plugin-signals-node@file:./embedded/backstage-plugin-signals-node#./embedded/backstage-plugin-signals-node::hash=a9d6a4&locator=backstage-plugin-notifications-backend-module-email-dynamic%40workspace%3A."
   dependencies:
     express: ^4.17.1
-    uuid: ^9.0.0
+    uuid: ^11.0.0
     ws: ^8.18.0
   peerDependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/config": ^1.2.0
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-events-node": ^0.4.2
-    "@backstage/types": ^1.1.1
-  checksum: d89b5ccd53abf3e1cdc37591de402db22224a65ce20712047b257f2ffeaad7bea34009a28f7aa19c1758de2abc3a03b3e72cbbf426e7319f502f4484f93f935d
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/config": ^1.3.0
+    "@backstage/plugin-auth-node": ^0.5.4
+    "@backstage/plugin-events-node": ^0.4.5
+    "@backstage/types": ^1.2.0
+  checksum: 738558dfed92b657aeeee951d95a266a958cf0687ad319436e67d44096c9a05bff6a581e52c9b91d2bf7d86658f3aa81391014abba821d365504f366df3b3f3c
   languageName: node
   linkType: hard
 
@@ -1127,18 +1124,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-plugin-notifications-backend-module-email-dynamic@workspace:."
   dependencies:
-    "@backstage/plugin-notifications-backend-module-email": 0.3.1
+    "@backstage/plugin-notifications-backend-module-email": 0.3.3
   peerDependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/config": ^1.2.0
-    "@backstage/integration-aws-node": ^0.1.12
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/plugin-events-node": ^0.4.2
-    "@backstage/types": ^1.1.1
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/catalog-client": ^1.8.0
+    "@backstage/catalog-model": ^1.7.1
+    "@backstage/config": ^1.3.0
+    "@backstage/integration-aws-node": ^0.1.13
+    "@backstage/plugin-auth-node": ^0.5.4
+    "@backstage/plugin-catalog-node": ^1.14.0
+    "@backstage/plugin-events-node": ^0.4.5
+    "@backstage/types": ^1.2.0
   languageName: unknown
   linkType: soft
 
@@ -1959,9 +1955,9 @@ __metadata:
   linkType: hard
 
 "tslib@npm:^2.5.0, tslib@npm:^2.6.2":
-  version: 2.8.0
-  resolution: "tslib@npm:2.8.0"
-  checksum: de852ecd81adfdb4870927e250763345f07dc13fe7f395ce261424966bb122a0992ad844c3ec875c9e63e72afe2220a150712984e44dfd1a8a7e538a064e3d46
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 
@@ -1989,7 +1985,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^9.0.0, uuid@npm:^9.0.1":
+"uuid@npm:^11.0.0":
+  version: 11.0.3
+  resolution: "uuid@npm:11.0.3"
+  bin:
+    uuid: dist/esm/bin/uuid
+  checksum: 646181c77e8b8df9bd07254faa703943e1c4d5ccde7d080312edf12f443f6c5750801fd9b27bf2e628594182165e6b1b880c0382538f7eca00b26622203741dc
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.1":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
   bin:
