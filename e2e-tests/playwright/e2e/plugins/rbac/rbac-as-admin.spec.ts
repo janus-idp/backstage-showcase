@@ -229,7 +229,7 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
     },
   );
 
-  base.fixme(
+  base(
     "As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.",
     async ({ uiHelper, rolesHelper, testId }) => {
       await rolesHelper.createRoleWithPermissionPolicy(testId.testRole);
