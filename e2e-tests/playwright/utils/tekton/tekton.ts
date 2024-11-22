@@ -51,10 +51,4 @@ export class Tekton {
       await this.uiHelper.verifyHeading(text);
     }
   }
-
-  async checkPipelineOutput(texts: string[]) {
-    for (const text of texts) {
-      await this.uiHelper.verifyText(text);
-    }
-  }
 }

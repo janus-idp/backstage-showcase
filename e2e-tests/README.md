@@ -2,14 +2,14 @@
 
 ### How to setup backstage configuration during the pipeline
 
-[configmap-app-config-rhdh.yaml](../.ibm/pipelines/resources/config_map/configmap-app-config-rhdh.yaml) is the
+[app-config-rhdh.yaml](../.ibm/pipelines/resources/config_map/app-config-rhdh.yaml) is the
 configuration file
 to add plugins or any other kind of configuration into Backstage
 
-### Environment Variables into configmap-app-config-rhdh.yaml
+### Environment Variables into app-config-rhdh.yaml
 
 To use environment variables
-on [configmap-app-config-rhdh.yaml](../.ibm/pipelines/resources/config_map/configmap-app-config-rhdh.yaml)
+on [app-config-rhdh.yaml](../.ibm/pipelines/resources/config_map/app-config-rhdh.yaml)
 we need to set the envs encoded as Base64 in the
 [secrets-rhdh-secrets.yaml](.ibm/pipelines/auth/secrets-rhdh-secrets.yaml) .
 You can use temporary values for the secrets because it can be replaced by the pipeline.

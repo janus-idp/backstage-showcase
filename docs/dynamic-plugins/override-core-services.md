@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Backstage backend platform consists of a number of core services that are well encapsulated.  The configuration of these core services is normally done by directly customizing the backend source code and rebuilding.  However the dynamic plugin functionality adds the ability for core service customization via installing it as a `BackendFeature`.  The Developer Hub backend normally installs all of these default core services statically during initialization.  Environment variables can configure the backend to avoid statically installing a given default core service, allowing for dynamic plugin installation.
+The Backstage backend platform consists of a number of core services that are well encapsulated.  The configuration of these core services is normally done by directly customizing the backend source code and rebuilding. However, the dynamic plugin functionality adds the ability for core service customization via installing it as a `BackendFeature`.  The Developer Hub backend normally installs all of these default core services statically during initialization.  Environment variables can configure the backend to avoid statically installing a given default core service, allowing for dynamic plugin installation.
 
 ## An Example
 
@@ -38,7 +38,6 @@ This `BackendFeature` overrides the default HTTP router service factory.  Becaus
 ## Override Environment Variables
 
 To allow a dynamic plugin to load a core service override, start the Developer Hub backend with the environment variable set that corresponds with the core service ID to be overridden.  Here is a list of the available environment variables and core service IDs:
-
 
 - `ENABLE_CORE_AUTH_OVERRIDE` - allow overriding the `core.auth` service
 - `ENABLE_CORE_CACHE_OVERRIDE` - allow overriding the `core.cache` service

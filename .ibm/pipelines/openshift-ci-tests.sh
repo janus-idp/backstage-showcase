@@ -21,7 +21,7 @@ cleanup() {
   rm -rf ~/tmpbin
 }
 
-trap cleanup EXIT
+trap cleanup EXIT INT ERR
 
 source "${DIR}/utils.sh"
 if [[ "$JOB_NAME" == *aks* ]]; then
@@ -69,7 +69,7 @@ set_namespace() {
       fi
     done
     if ! $namespace_found; then
-      echo "Error: All namespaces (showcase-pr-1, showcase-pr-2, showcase-pr-3) already in Use"
+      echo "Error: All namespaces $namespaces_pool already in Use"
       exit 1
     fi
   fi
@@ -340,6 +340,18 @@ install_tekton_pipelines() {
   else
     echo "Tekton Pipelines is not installed. Installing..."
     oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+  fi
+}
+
+install_pipelines_operator() {
+  local dir=$1
+  DISPLAY_NAME="Red Hat OpenShift Pipelines"
+
+  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
+    echo "Red Hat OpenShift Pipelines operator is already installed."
+  else
+    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
+    oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
   fi
 }
 
