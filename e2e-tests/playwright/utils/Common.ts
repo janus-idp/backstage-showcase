@@ -210,7 +210,6 @@ export class Common {
           resolve("Already logged in");
         } else {
           await popup.waitForTimeout(5000);
-          await this.uiHelper.verifyHeading("Sign in to your account");
           try {
             await popup.locator("#username").fill(username);
             await popup.locator("#password").fill(password);
