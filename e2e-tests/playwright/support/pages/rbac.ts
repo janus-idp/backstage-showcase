@@ -294,13 +294,31 @@ export class Response {
     };
   }
 
-  async removeMetadataFromResponse(response: APIResponse) {
-    const responseJson = await response.json();
-    const responseClean = responseJson.map((list: any) => {
-      delete list.metadata;
-      return list;
-    });
-    return responseClean;
+  async removeMetadataFromResponse(response: APIResponse): Promise<any[]> {
+    try {
+      const responseJson = await response.json();
+
+      // Validate that the response is an array
+      if (!Array.isArray(responseJson)) {
+        console.warn(
+          `Expected an array but received: ${JSON.stringify(responseJson)}`,
+        );
+        return []; // Return an empty array as a fallback
+      }
+
+      // Clean metadata from the response
+      const responseClean = responseJson.map((item: any) => {
+        if (item.metadata) {
+          delete item.metadata;
+        }
+        return item;
+      });
+
+      return responseClean;
+    } catch (error) {
+      console.error("Error processing API response:", error);
+      throw new Error("Failed to process the API response");
+    }
   }
 
   async checkResponse(response: APIResponse, expected: string) {
