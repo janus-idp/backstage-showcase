@@ -447,7 +447,7 @@ initiate_deployments_operator() {
   configure_namespace "${NAME_SPACE_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins-rbac.yaml"
-  oc apply -f /tmp/configmap-dynamic-plugins-rbac.yaml -n "${NAME_SPACE}"
+  oc apply -f /tmp/configmap-dynamic-plugins-rbac.yaml -n "${NAME_SPACE_RBAC}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
 }
 
