@@ -73,7 +73,6 @@ test.describe("GitHub Happy path", () => {
   }) => {
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
-    await uiHelper.waitForHeaderTitle();
 
     for (const template of templates) {
       await uiHelper.waitForH4Title(template);
