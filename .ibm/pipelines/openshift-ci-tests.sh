@@ -24,7 +24,7 @@ cleanup() {
   rm -rf ~/tmpbin  # Remove temporary binaries directory.
 }
 
-trap cleanup EXIT  # Ensure the cleanup function runs on script exit.
+trap cleanup EXIT INT ERR
 
 source "${DIR}/utils.sh"
 if [[ "$JOB_NAME" == *aks* ]]; then
@@ -76,7 +76,7 @@ set_namespace() {
       fi
     done
     if ! $namespace_found; then
-      echo "Error: All namespaces (showcase-pr-1, showcase-pr-2, showcase-pr-3) already in Use"
+      echo "Error: All namespaces $namespaces_pool already in Use"
       exit 1
     fi
   fi
