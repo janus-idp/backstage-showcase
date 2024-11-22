@@ -22301,6 +22301,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aws-ssl-profiles@npm:^1.1.1":
+  version: 1.1.2
+  resolution: "aws-ssl-profiles@npm:1.1.2"
+  checksum: bfcf9b2cbb9788e24e4af39a1e8b4a8afbdf65773b6a1636e643c10068ffbae46b28277c4c9f9321179400b2080092db040ba4513f9143f22d1bb053a12dab2b
+  languageName: node
+  linkType: hard
+
 "aws4@npm:^1.8.0":
   version: 1.12.0
   resolution: "aws4@npm:1.12.0"
@@ -33974,17 +33981,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^8.0.0":
-  version: 8.0.5
-  resolution: "lru-cache@npm:8.0.5"
-  checksum: 87d72196d8f46e8299c4ab576ed2ec8a07e3cbef517dc9874399c0b2470bd9bf62aacec3b67f84ed6d74aaa1ef31636d048edf996f76248fd17db72bfb631609
-  languageName: node
-  linkType: hard
-
 "lru-cache@npm:^9.0.0":
   version: 9.1.2
   resolution: "lru-cache@npm:9.1.2"
   checksum: d3415634be3908909081fc4c56371a8d562d9081eba70543d86871b978702fffd0e9e362b83921b27a29ae2b37b90f55675aad770a54ac83bb3e4de5049d4b15
+  languageName: node
+  linkType: hard
+
+"lru.min@npm:^1.0.0":
+  version: 1.1.1
+  resolution: "lru.min@npm:1.1.1"
+  checksum: 26ec06c656220a240427f29c3528871b9cfb3214bd5d1bf4c5f2b2cb69402f7558c560e30055fc09bd61e4bf651c1eda2f9b1ab1b16336616fca381b7d42ecba
   languageName: node
   linkType: hard
 
@@ -36046,18 +36053,19 @@ __metadata:
   linkType: hard
 
 "mysql2@npm:^3.0.0":
-  version: 3.9.2
-  resolution: "mysql2@npm:3.9.2"
+  version: 3.11.4
+  resolution: "mysql2@npm:3.11.4"
   dependencies:
+    aws-ssl-profiles: ^1.1.1
     denque: ^2.1.0
     generate-function: ^2.3.1
     iconv-lite: ^0.6.3
     long: ^5.2.1
-    lru-cache: ^8.0.0
+    lru.min: ^1.0.0
     named-placeholders: ^1.1.3
     seq-queue: ^0.0.5
     sqlstring: ^2.3.2
-  checksum: a236a52659d67812af494bc41d09a2bd906d12755887ba75bbdf271c25ad5668030e0a2e91dc61ba4b3b225fb2b5a6aa07a168e077fcdaf50d6a73930c11de5d
+  checksum: b4415028fad374b5bd5303968c28fc95feee60c1c946ef47f3581e0303c0e5978a306f44d6f665e3fdada5d6a0dd6c55515427a195700b90943d188f6db2f7ed
   languageName: node
   linkType: hard
 
