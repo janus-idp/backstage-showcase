@@ -209,7 +209,8 @@ export class Common {
           // an active rhsso session is already logged in and the popup will automatically close
           resolve("Already logged in");
         } else {
-          await popup.waitForTimeout(3000);
+          await popup.waitForTimeout(5000);
+          await this.uiHelper.verifyText("Sign in to your account");
           try {
             await popup.locator("#username").click();
             await popup.locator("#username").fill(username);
