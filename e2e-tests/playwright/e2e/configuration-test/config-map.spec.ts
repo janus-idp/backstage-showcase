@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { Common } from "../../utils/Common";
 import { kubeCLient } from "../../utils/k8sHelper";
+import {logger} from "../../utils/Logger";
 
 test.describe("Change app-config at e2e test runtime", () => {
   test("Verify title change after ConfigMap modification", async ({ page }) => {
@@ -10,25 +11,36 @@ test.describe("Change app-config at e2e test runtime", () => {
     const namespace = "showcase-runtime";
     const deploymentName = "rhdh-backstage";
 
-    // Initialize Kubernetes API
     const kubeUtils = new kubeCLient();
     const dynamicTitle = generateDynamicTitle();
 
-    // Updates the ConfigMap
-    await kubeUtils.updateConfigMapTitle(
-      configMapName,
-      namespace,
-      dynamicTitle,
-    );
+    try {
+      logger.info(`Updating ConfigMap '${configMapName}' with new title.`);
+      await kubeUtils.updateConfigMapTitle(
+          configMapName,
+          namespace,
+          dynamicTitle,
+      );
 
-    // Restarts the deployment and ensures it scales correctly
-    await kubeUtils.restartDeployment(deploymentName, namespace);
+      logger.info(
+          `Restarting deployment '${deploymentName}' to apply ConfigMap changes.`,
+      );
+      await kubeUtils.restartDeployment(deploymentName, namespace);
 
-    // Checks the title in the frontend after the restart
-    await new Common(page).loginAsGuest();
-    console.log("Checking the title: ", dynamicTitle);
-    expect(await page.title()).toContain(dynamicTitle);
+      const common = new Common(page);
+      await common.loginAsGuest();
+      logger.info("Verifying new title in the UI...");
+      expect(await page.title()).toContain(dynamicTitle);
+      logger.info("Title successfully verified in the UI.");
+    } catch (error) {
+      logger.error(
+          `Test failed during ConfigMap update or deployment restart:`,
+          error,
+      );
+      throw error;
+    }
   });
+
 });
 
 function generateDynamicTitle() {

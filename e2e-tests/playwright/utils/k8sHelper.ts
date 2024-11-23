@@ -279,35 +279,74 @@ export class kubeCLient {
           deploymentName,
           namespace,
         );
-        const availableReplicas = response.body.status?.availableReplicas || 0;
+        const status = response.body.status;
+
+        logger.info(
+          `Deployment '${deploymentName}' status: replicas=${status?.replicas || 0}, ` +
+          `availableReplicas=${status?.availableReplicas || 0}, ` +
+          `readyReplicas=${status?.readyReplicas || 0}`,
+        );
+
+        const availableReplicas = status?.availableReplicas || 0;
 
         if (availableReplicas === expectedReplicas) {
-          console.log(
-            `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
+          logger.info(
+            `Deployment '${deploymentName}' is ready with ${availableReplicas} replicas.`,
           );
           return;
         }
 
-        console.log(
-          `Waiting for ${deploymentName} to reach ${expectedReplicas} replicas, currently has ${availableReplicas}.`,
+        logger.info(
+          `Waiting for deployment '${deploymentName}' to reach ${expectedReplicas} replicas.`,
         );
         await new Promise((resolve) => setTimeout(resolve, checkInterval));
       } catch (error) {
-        console.error(`Error checking deployment status: ${error}`);
+        logger.error(
+          `Error checking deployment '${deploymentName}' status in namespace '${namespace}':`,
+          error,
+        );
         throw error;
       }
     }
 
-    throw new Error(
-      `Deployment ${deploymentName} did not become ready in time.`,
-    );
+    const errorMessage = `Deployment '${deploymentName}' did not become ready in time.`;
+    logger.error(errorMessage);
+    throw new Error(errorMessage);
   }
 
   async restartDeployment(deploymentName: string, namespace: string) {
-    await this.scaleDeployment(deploymentName, namespace, 0);
-    await this.waitForDeploymentReady(deploymentName, namespace, 0);
+    try {
+      logger.info(
+        `Restarting deployment '${deploymentName}' in namespace '${namespace}'`,
+      );
 
-    await this.scaleDeployment(deploymentName, namespace, 1);
-    await this.waitForDeploymentReady(deploymentName, namespace, 1);
+      logger.info(
+        `Scaling down deployment '${deploymentName}' to 0 replicas.`,
+      );
+      await this.scaleDeployment(deploymentName, namespace, 0);
+      await this.waitForDeploymentReady(deploymentName, namespace, 0);
+      logger.info(
+        `Deployment '${deploymentName}' successfully scaled down.`,
+      );
+
+      logger.info(
+        `Scaling up deployment '${deploymentName}' to 1 replica.`,
+      );
+      await this.scaleDeployment(deploymentName, namespace, 1);
+      await this.waitForDeploymentReady(deploymentName, namespace, 1);
+      logger.info(
+        `Deployment '${deploymentName}' successfully restarted and scaled up to 1 replica.`,
+      );
+    } catch (error) {
+      logger.error(
+        `Error during deployment restart for '${deploymentName}' in namespace '${namespace}':`,
+        error,
+      );
+
+      throw new Error(
+        `Failed to restart deployment '${deploymentName}' in namespace '${namespace}'.`,
+      );
+    }
   }
+
 }
