@@ -232,7 +232,7 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
       await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
       await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
       await uiHelper.verifyHeading("All roles (1)");
-      await myPage.reload();
+      await myPage.reload({ waitUntil: "domcontentloaded" });
       await myPage.click(RoleListPO.editRole(testId.composedRole));
       await uiHelper.verifyHeading("Edit Role");
       await uiHelper.clickButton("Next");

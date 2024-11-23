@@ -120,7 +120,7 @@ export class Roles {
     await this.uiHelper.optionSelector("catalog-entity");
 
     await this.page.getByLabel("configure-access").click();
-    await this.page.getByRole("button", { name: "AnyOf" }).click();
+    await this.page.getByRole("button", { name: "AllOf" }).click();
     await this.page.getByTestId("rules-sidebar").getByLabel("Open").click();
     await this.page.getByText("IS_ENTITY_KIND").click();
     await this.page.getByPlaceholder("string, string").click();
