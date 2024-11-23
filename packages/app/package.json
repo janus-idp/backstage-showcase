@@ -47,14 +47,14 @@
     "@mui/material": "5.16.7",
     "@mui/styled-engine": "5.16.6",
     "@redhat-developer/red-hat-developer-hub-theme": "0.4.0",
-    "@scalprum/core": "0.7.0",
-    "@scalprum/react-core": "0.8.0",
+    "@scalprum/core": "0.8.1",
+    "@scalprum/react-core": "0.9.3",
     "lodash": "4.17.21",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-router-dom": "6.26.1",
+    "react-router-dom": "6.26.2",
     "react-use": "17.5.1",
-    "tss-react": "4.9.12"
+    "tss-react": "4.9.13"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
