@@ -279,11 +279,15 @@ export class kubeCLient {
           deploymentName,
           namespace,
         );
-        const availableReplicas = response.body.status?.availableReplicas || 0;
 
-        // Check if the available replicas match the expected replicas
+        const availableReplicas = response.body.status?.availableReplicas || 0;
+        const conditions = response.body.status?.conditions || [];
+
+        console.log(
+          `Deployment conditions: ${JSON.stringify(conditions, null, 2)}`,
+        );
+
         if (availableReplicas === expectedReplicas) {
-          const conditions = response.body.status?.conditions || [];
           const readyCondition = conditions.find(
             (condition) =>
               condition.type === "Available" && condition.status === "True",
@@ -296,7 +300,7 @@ export class kubeCLient {
             return;
           } else {
             console.log(
-              `Deployment ${deploymentName} has ${availableReplicas} replicas, but not all are ready.`,
+              `Deployment ${deploymentName} has ${availableReplicas} replicas, but readiness condition is not met.`,
             );
           }
         } else {
@@ -304,9 +308,12 @@ export class kubeCLient {
             `Waiting for ${deploymentName} to reach ${expectedReplicas} replicas, currently has ${availableReplicas}.`,
           );
         }
+
         await new Promise((resolve) => setTimeout(resolve, checkInterval));
       } catch (error) {
-        console.error(`Error checking deployment status: ${error}`);
+        console.error(
+          `Error checking deployment status for ${deploymentName}: ${error}`,
+        );
         throw error;
       }
     }
@@ -331,8 +338,39 @@ export class kubeCLient {
       console.error(
         `Error during deployment restart: Deployment '${deploymentName}' in namespace '${namespace}'.`,
       );
+
+      await this.logDeploymentEvents(deploymentName, namespace); // Adicione esta linha
+
       throw new Error(
         `Failed to restart deployment '${deploymentName}' in namespace '${namespace}'.`,
+      );
+    }
+  }
+
+  async logDeploymentEvents(deploymentName: string, namespace: string) {
+    try {
+      const eventsResponse = await this.coreV1Api.listNamespacedEvent(
+        namespace,
+        undefined,
+        undefined,
+        undefined,
+        `involvedObject.name=${deploymentName}`,
+      );
+
+      console.log(
+        `Events for deployment ${deploymentName}: ${JSON.stringify(
+          eventsResponse.body.items.map((event) => ({
+            message: event.message,
+            reason: event.reason,
+            type: event.type,
+          })),
+          null,
+          2,
+        )}`,
+      );
+    } catch (error) {
+      console.error(
+        `Error retrieving events for deployment ${deploymentName}: ${error}`,
       );
     }
   }
