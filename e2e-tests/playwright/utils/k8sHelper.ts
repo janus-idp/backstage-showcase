@@ -268,8 +268,8 @@ export class kubeCLient {
     deploymentName: string,
     namespace: string,
     expectedReplicas: number,
-    timeout: number = 100000,
-    checkInterval: number = 10000,
+    timeout: number = 300000, // 5 minutes
+    checkInterval: number = 10000, // 10 seconds
   ) {
     const start = Date.now();
 
@@ -283,39 +283,42 @@ export class kubeCLient {
         const availableReplicas = response.body.status?.availableReplicas || 0;
         const conditions = response.body.status?.conditions || [];
 
-        console.log(
-          `Deployment conditions: ${JSON.stringify(conditions, null, 2)}`,
-        );
+        console.log(`Available replicas: ${availableReplicas}`);
+        console.log("Deployment conditions:", JSON.stringify(conditions, null, 2));
+
+        // Log pod conditions for detailed insights
+        await this.logPodConditions(namespace, `app=${deploymentName}`);
 
         if (availableReplicas === expectedReplicas) {
-          const readyCondition = conditions.find(
-            (condition) =>
-              condition.type === "Available" && condition.status === "True",
-          );
-
-          if (readyCondition) {
-            console.log(
-              `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
-            );
-            return;
-          } else {
-            console.log(
-              `Deployment ${deploymentName} has ${availableReplicas} replicas, but readiness condition is not met.`,
-            );
-          }
-        } else {
           console.log(
-            `Waiting for ${deploymentName} to reach ${expectedReplicas} replicas, currently has ${availableReplicas}.`,
+            `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
           );
+          return;
         }
 
-        await new Promise((resolve) => setTimeout(resolve, checkInterval));
-      } catch (error) {
-        console.error(
-          `Error checking deployment status for ${deploymentName}: ${error}`,
+        const progressingCondition = conditions.find(
+          (cond) => cond.type === "Progressing" && cond.status === "True",
         );
-        throw error;
+
+        const availableCondition = conditions.find(
+          (cond) => cond.type === "Available" && cond.status === "True",
+        );
+
+        if (progressingCondition && availableCondition) {
+          console.log(
+            `Deployment ${deploymentName} is progressing and available.`,
+          );
+          return;
+        }
+
+        console.log(
+          `Waiting for ${deploymentName} to reach ${expectedReplicas} replicas, currently has ${availableReplicas}.`,
+        );
+      } catch (error) {
+        console.error(`Error checking deployment status: ${error}`);
       }
+
+      await new Promise((resolve) => setTimeout(resolve, checkInterval));
     }
 
     throw new Error(
@@ -326,24 +329,40 @@ export class kubeCLient {
   async restartDeployment(deploymentName: string, namespace: string) {
     try {
       console.log(`Scaling down deployment ${deploymentName} to 0 replicas.`);
+      await this.logPodConditions(namespace, `app=${deploymentName}`);
       await this.scaleDeployment(deploymentName, namespace, 0);
+
       await this.waitForDeploymentReady(deploymentName, namespace, 0);
 
       console.log(`Scaling up deployment ${deploymentName} to 1 replica.`);
       await this.scaleDeployment(deploymentName, namespace, 1);
+
       await this.waitForDeploymentReady(deploymentName, namespace, 1);
 
-      console.log(`Deployment ${deploymentName} restarted successfully.`);
+      console.log(`Restart of deployment ${deploymentName} completed successfully.`);
     } catch (error) {
       console.error(
         `Error during deployment restart: Deployment '${deploymentName}' in namespace '${namespace}'.`,
       );
-
-      await this.logDeploymentEvents(deploymentName, namespace); // Adicione esta linha
-
+      await this.logPodConditions(namespace, `app=${deploymentName}`);
       throw new Error(
         `Failed to restart deployment '${deploymentName}' in namespace '${namespace}'.`,
       );
+    }
+  }
+
+  async logPodConditions(namespace: string, labelSelector: string) {
+    const pods = await this.coreV1Api.listNamespacedPod(
+      namespace,
+      undefined,
+      undefined,
+      undefined,
+      labelSelector,
+    );
+
+    for (const pod of pods.body.items) {
+      console.log(`Pod: ${pod.metadata.name}`);
+      console.log("Conditions:", JSON.stringify(pod.status?.conditions, null, 2));
     }
   }
 
