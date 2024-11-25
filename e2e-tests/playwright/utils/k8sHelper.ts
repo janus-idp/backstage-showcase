@@ -277,6 +277,7 @@ export class kubeCLient {
 
     while (Date.now() - start < timeout) {
       try {
+        // Check deployment status
         const response = await this.appsApi.readNamespacedDeployment(
           deploymentName,
           namespace,
@@ -291,8 +292,10 @@ export class kubeCLient {
           JSON.stringify(conditions, null, 2),
         );
 
-        await this.logPodConditions(namespace);
+        // Log pod conditions using label selector
+        await this.logPodConditions(namespace, labelSelector);
 
+        // Check if the expected replicas match
         if (availableReplicas === expectedReplicas) {
           console.log(
             `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
