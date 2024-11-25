@@ -249,9 +249,9 @@ apply_yaml_files() {
   oc create configmap rbac-policy --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
-  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
+  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
 
 run_tests() {
@@ -357,7 +357,7 @@ install_pipelines_operator() {
 
 initiate_deployments() {
 
-  #install_pipelines_operator
+  install_pipelines_operator
   install_crunchy_postgres_operator
   install_helm
   add_helm_repos
