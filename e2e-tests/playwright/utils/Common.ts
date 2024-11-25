@@ -208,12 +208,18 @@ export class Common {
     await this.uiHelper.clickButton("Sign In");
 
     // Wait for the popup to appear
-    await expect(popup).toBeTruthy();
+    await expect(async () => {
+      await popup.waitForLoadState("domcontentloaded");
+      expect(popup).toBeTruthy();
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 20 * 1000,
+    });
+
     if (popup.url().startsWith(process.env.BASE_URL)) {
       // an active rhsso session is already logged in and the popup will automatically close
       return "Already logged in";
     } else {
-      await popup.waitForTimeout(5000);
       try {
         await popup.locator("#username").click();
         await popup.locator("#username").fill(username);
