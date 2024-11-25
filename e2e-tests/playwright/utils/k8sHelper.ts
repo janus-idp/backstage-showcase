@@ -272,6 +272,8 @@ export class kubeCLient {
     checkInterval: number = 10000, // 10 seconds
   ) {
     const start = Date.now();
+    const labelSelector =
+      "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
 
     while (Date.now() - start < timeout) {
       try {
@@ -284,29 +286,16 @@ export class kubeCLient {
         const conditions = response.body.status?.conditions || [];
 
         console.log(`Available replicas: ${availableReplicas}`);
-        console.log("Deployment conditions:", JSON.stringify(conditions, null, 2));
+        console.log(
+          "Deployment conditions:",
+          JSON.stringify(conditions, null, 2),
+        );
 
-        // Log pod conditions for detailed insights
-        await this.logPodConditions(namespace, `app=${deploymentName}`);
+        await this.logPodConditions(namespace);
 
         if (availableReplicas === expectedReplicas) {
           console.log(
             `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
-          );
-          return;
-        }
-
-        const progressingCondition = conditions.find(
-          (cond) => cond.type === "Progressing" && cond.status === "True",
-        );
-
-        const availableCondition = conditions.find(
-          (cond) => cond.type === "Available" && cond.status === "True",
-        );
-
-        if (progressingCondition && availableCondition) {
-          console.log(
-            `Deployment ${deploymentName} is progressing and available.`,
           );
           return;
         }
@@ -329,7 +318,7 @@ export class kubeCLient {
   async restartDeployment(deploymentName: string, namespace: string) {
     try {
       console.log(`Scaling down deployment ${deploymentName} to 0 replicas.`);
-      await this.logPodConditions(namespace, `app=${deploymentName}`);
+      await this.logPodConditions(namespace);
       await this.scaleDeployment(deploymentName, namespace, 0);
 
       await this.waitForDeploymentReady(deploymentName, namespace, 0);
@@ -339,30 +328,51 @@ export class kubeCLient {
 
       await this.waitForDeploymentReady(deploymentName, namespace, 1);
 
-      console.log(`Restart of deployment ${deploymentName} completed successfully.`);
+      console.log(
+        `Restart of deployment ${deploymentName} completed successfully.`,
+      );
     } catch (error) {
       console.error(
         `Error during deployment restart: Deployment '${deploymentName}' in namespace '${namespace}'.`,
       );
-      await this.logPodConditions(namespace, `app=${deploymentName}`);
+      await this.logPodConditions(namespace);
+      await this.logDeploymentEvents(deploymentName, namespace);
       throw new Error(
         `Failed to restart deployment '${deploymentName}' in namespace '${namespace}'.`,
       );
     }
   }
 
-  async logPodConditions(namespace: string, labelSelector: string) {
-    const pods = await this.coreV1Api.listNamespacedPod(
-      namespace,
-      undefined,
-      undefined,
-      undefined,
-      labelSelector,
-    );
+  async logPodConditions(namespace: string) {
+    const labelSelector =
+      "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
 
-    for (const pod of pods.body.items) {
-      console.log(`Pod: ${pod.metadata.name}`);
-      console.log("Conditions:", JSON.stringify(pod.status?.conditions, null, 2));
+    try {
+      const response = await this.coreV1Api.listNamespacedPod(
+        namespace,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        labelSelector,
+      );
+
+      if (response.body.items.length === 0) {
+        console.warn(`No pods found for selector: ${labelSelector}`);
+      }
+
+      for (const pod of response.body.items) {
+        console.log(`Pod: ${pod.metadata?.name}`);
+        console.log(
+          "Conditions:",
+          JSON.stringify(pod.status?.conditions, null, 2),
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error while retrieving pod conditions for selector '${labelSelector}':`,
+        error,
+      );
     }
   }
 
