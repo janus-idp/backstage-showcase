@@ -14,7 +14,7 @@ Plugins are defined in the `plugins` array in the `dynamic-plugin-config.yaml` f
 
 ## Dynamic plugins included in the Showcase container image
 
-The showcase container image is pre-loaded with a variety of dynamic plugins, the majority of which are initially disabled due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
+The showcase container image is preloaded with a variety of dynamic plugins, the majority of which are initially disabled due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
 
 Upon the application startup, for each plugin disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will exhibit a line similar to the following:
 
@@ -62,7 +62,7 @@ plugins:
 
 For private registries, you can set the `REGISTRY_AUTH_FILE` environment variable to the path of the configuration file containing the authentication details for the registry. This file is typically located at `~/.config/containers/auth.json` or `~/.docker/config.json`.
 
-For integratity check one may use [image digest](https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests), making it possible to refer to the image diggest in the dynamic plugin package:
+For integrity check one may use [image digest](https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests), making it possible to refer to the image digest in the dynamic plugin package:
 
 ```yaml
 plugins:
@@ -100,7 +100,7 @@ npm view --registry https://example.com:4873/ @backstage-community/plugin-todo-d
 
 #### Using a custom NPM registry
 
-To configure the NPM registry URL and authentication information, you can utilize a `.npmrc` file. When using OpenShift or Kubernetes, you can add this file by creating a secret with the `.npmrc` file content and mounting it into `install-dynamic-plugins` initContainer.
+To configure the NPM registry URL and authentication information, you can utilize a `.npmrc` file. When using OpenShift or Kubernetes, you can add this file by creating a secret with the `.npmrc` file content and mounting it into `install-dynamic-plugins` init container.
 
 ```yaml
 apiVersion: v1
@@ -114,7 +114,7 @@ stringData:
     //<registry-url>:_authToken=<auth-token>
 ```
 
-When using RHDH Helm Chart you can just name the Secret using following pattern `{{ .Release.Name }}-dynamic-plugins-npmrc` and it will be mounted automatically. (If you installed RHDH using `helm install rhdh ....` than the secret should be named `rhdh-dynamic-plugins-npmrc`)
+When using RHDH Helm Chart you can just name the Secret using following pattern `{{ .Release.Name }}-dynamic-plugins-npmrc`, and it will be mounted automatically. (If you installed RHDH using `helm install rhdh ....` than the secret should be named `rhdh-dynamic-plugins-npmrc`)
 
 When using the Operator ....
 

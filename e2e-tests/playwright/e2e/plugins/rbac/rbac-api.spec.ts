@@ -10,9 +10,13 @@ test.describe("Test RBAC plugin REST API", () => {
   let uiHelper: UIhelper;
   let page: Page;
   let responseHelper: Response;
+  // Variable to track errors or test states
+  let hasErrors = false;
+  let retriesRemaining: number;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
+    retriesRemaining = testInfo.project.retries;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
@@ -23,9 +27,12 @@ test.describe("Test RBAC plugin REST API", () => {
     responseHelper = new Response(apiToken);
   });
 
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
+  // eslint-disable-next-line no-empty-pattern
+  test.beforeEach(async ({}, testInfo) => {
+    console.log(
+      `beforeEach: Attempting setup for ${testInfo.title}, retry: ${testInfo.retry}`,
+    );
+  });
 
   test("Test that roles and policies from GET request are what expected", async ({
     request,
@@ -245,9 +252,31 @@ test.describe("Test RBAC plugin REST API", () => {
     expect(await uiHelper.isBtnVisible("Schedule entity refresh")).toBeFalsy();
   });
 
-  test.afterAll(
-    "Cleanup by deleting all new policies and roles",
-    async ({ request }) => {
+  // eslint-disable-next-line no-empty-pattern
+  test.afterEach(async ({}, testInfo) => {
+    if (testInfo.status === "failed") {
+      console.log(`Test failed: ${testInfo.title}`);
+      hasErrors = true;
+
+      // Calculate the remaining retries by subtracting the current retry count from the total retries and adjusting for zero-based indexing.
+      retriesRemaining = testInfo.project.retries - testInfo.retry - 1;
+      console.log(`Retries remaining: ${retriesRemaining}`);
+    }
+  });
+
+  test.afterAll(async ({ request }) => {
+    if (hasErrors && retriesRemaining > 0) {
+      console.log(
+        `Skipping cleanup due to errors. Retries remaining: ${retriesRemaining}`,
+      );
+      return;
+    }
+
+    console.log(
+      `afterAll: Proceeding with cleanup. Retries remaining: ${retriesRemaining}`,
+    );
+
+    try {
       const remainingPoliciesResponse = await request.get(
         "/api/permission/policies/role/default/test",
         responseHelper.getSimpleRequest(),
@@ -267,8 +296,10 @@ test.describe("Test RBAC plugin REST API", () => {
         responseHelper.getSimpleRequest(),
       );
 
-      expect(deleteRemainingPolicies.ok());
-      expect(deleteRole.ok());
-    },
-  );
+      expect(deleteRemainingPolicies.ok()).toBeTruthy();
+      expect(deleteRole.ok()).toBeTruthy();
+    } catch (error) {
+      console.error("Error during cleanup in afterAll:", error);
+    }
+  });
 });

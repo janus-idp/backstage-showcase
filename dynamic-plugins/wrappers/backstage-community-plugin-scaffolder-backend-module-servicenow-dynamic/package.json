@@ -1,6 +1,6 @@
 {
   "name": "backstage-community-plugin-scaffolder-backend-module-servicenow",
-  "version": "2.2.1",
+  "version": "2.2.3",
   "main": "./dist/index.cjs.js",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.4",
     "pluginId": "scaffolder",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
@@ -36,7 +36,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-scaffolder-backend-module-servicenow --override-interop default --no-embed-as-dependencies --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-scaffolder-backend-module-servicenow": "2.2.1"
+    "@backstage-community/plugin-scaffolder-backend-module-servicenow": "2.2.3"
   },
   "files": [
     "dist",
@@ -60,8 +60,8 @@
   ],
   "bundleDependencies": true,
   "peerDependencies": {
-    "@backstage/backend-plugin-api": "^1.0.1",
-    "@backstage/plugin-scaffolder-node": "^0.5.0"
+    "@backstage/backend-plugin-api": "1.0.1",
+    "@backstage/plugin-scaffolder-node": "0.5.0"
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
@@ -74,6 +74,6 @@
   "devDependencies": {
     "@backstage/cli": "0.28.2",
     "@janus-idp/cli": "1.17.0",
-    "typescript": "^5.6.3"
+    "typescript": "5.6.3"
   }
 }
