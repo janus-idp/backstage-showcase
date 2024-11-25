@@ -24,7 +24,6 @@ import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
 let page: Page;
 
 test.describe("Standard authentication providers: Micorsoft Azure EntraID", () => {
-  test.skip();
   test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
   let common: Common;
   let context: BrowserContext;

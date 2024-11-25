@@ -240,84 +240,99 @@ export class Common {
   }
 
   async githubLogin(username: string, password: string) {
+    let popup: Page;
+    this.page.once("popup", (asyncnewPage) => {
+      popup = asyncnewPage;
+    });
+
     await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
     await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator("#login_field").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[type='submit']").click({ timeout: 5000 });
-            //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const authorization = popup.locator(
-              "button.js-oauth-authorize-btn",
-            );
-            if (await authorization.isVisible()) {
-              authorization.click();
-              resolve("Login successful with app authorization");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
+    // Wait for the popup to appear
+    await expect(async () => {
+      await popup.waitForLoadState("domcontentloaded");
+      expect(popup).toBeTruthy();
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 20 * 1000,
     });
+
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      // an active rhsso session is already logged in and the popup will automatically close
+      return "Already logged in";
+    } else {
+      try {
+        await popup.locator("#login_field").click({ timeout: 5000 });
+        await popup.locator("#login_field").fill(username, { timeout: 5000 });
+        await popup.locator("#password").click({ timeout: 5000 });
+        await popup.locator("#password").fill(password, { timeout: 5000 });
+        await popup.locator("[type='submit']").click({ timeout: 5000 });
+        //await this.checkAndReauthorizeGithubApp()
+        await popup.waitForEvent("close", { timeout: 2000 });
+        return "Login successful";
+      } catch (e) {
+        const authorization = popup.locator("button.js-oauth-authorize-btn");
+        if (await authorization.isVisible()) {
+          authorization.click();
+          return "Login successful with app authorization";
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   async MicrosoftAzureLogin(username: string, password: string) {
+    let popup: Page;
+    this.page.once("popup", (asyncnewPage) => {
+      popup = asyncnewPage;
+    });
+
     await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
     await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active microsoft session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          try {
-            await popup.locator("[name=loginfmt]").click();
-            await popup
-              .locator("[name=loginfmt]")
-              .fill(username, { timeout: 5000 });
-            await popup
-              .locator('[type=submit]:has-text("Next")')
-              .click({ timeout: 5000 });
-
-            await popup.locator("[name=passwd]").click();
-            await popup
-              .locator("[name=passwd]")
-              .fill(password, { timeout: 5000 });
-            await popup
-              .locator('[type=submit]:has-text("Sign in")')
-              .click({ timeout: 5000 });
-            await popup
-              .locator('[type=button]:has-text("No")')
-              .click({ timeout: 15000 });
-            resolve("Login successful");
-          } catch (e) {
-            const usernameError = popup.locator("id=usernameError");
-            if (await usernameError.isVisible()) {
-              resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
+    // Wait for the popup to appear
+    await expect(async () => {
+      await popup.waitForLoadState("domcontentloaded");
+      expect(popup).toBeTruthy();
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 20 * 1000,
     });
+
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      // an active microsoft session is already logged in and the popup will automatically close
+      return "Already logged in";
+    } else {
+      try {
+        await popup.locator("[name=loginfmt]").click();
+        await popup
+          .locator("[name=loginfmt]")
+          .fill(username, { timeout: 5000 });
+        await popup
+          .locator('[type=submit]:has-text("Next")')
+          .click({ timeout: 5000 });
+
+        await popup.locator("[name=passwd]").click();
+        await popup.locator("[name=passwd]").fill(password, { timeout: 5000 });
+        await popup
+          .locator('[type=submit]:has-text("Sign in")')
+          .click({ timeout: 5000 });
+        await popup
+          .locator('[type=button]:has-text("No")')
+          .click({ timeout: 15000 });
+        return "Login successful";
+      } catch (e) {
+        const usernameError = popup.locator("id=usernameError");
+        if (await usernameError.isVisible()) {
+          return "User does not exist";
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   async GetParentGroupDisplayed(): Promise<string[]> {
