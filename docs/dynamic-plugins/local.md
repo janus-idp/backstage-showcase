@@ -36,7 +36,7 @@ backend:start: {"level":"info","message":"Loaded dynamic frontend plugin '<plugi
 
 For frontend plugins you should see that the plugin is enabled and loaded on the Web Console:
 
-```
+```plaintext
 Loading plugin <plugin-id> version <version>
 Plugin <plugin-id> has been loaded
 Plugin <plugin-id> will be enabled
