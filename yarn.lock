@@ -10960,7 +10960,7 @@ __metadata:
     "@mui/styles": 5.16.7
     "@openshift/dynamic-plugin-sdk": 5.0.1
     "@redhat-developer/red-hat-developer-hub-theme": 0.4.0
-    "@scalprum/react-core": 0.8.0
+    "@scalprum/react-core": 0.9.3
     "@testing-library/jest-dom": 6.6.3
     "@testing-library/react": 14.3.1
     "@testing-library/user-event": 14.5.2
@@ -11020,7 +11020,7 @@ __metadata:
     react-use: 17.5.1
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
-    react-router-dom: 6.26.1
+    react-router-dom: 6.26.2
   languageName: unknown
   linkType: soft
 
@@ -11045,7 +11045,7 @@ __metadata:
     "@types/supertest": 2.0.16
     express: 4.21.0
     express-promise-router: 4.1.1
-    json-2-csv: 5.5.5
+    json-2-csv: 5.5.6
     knex: 3.1.0
     luxon: 3.5.0
     msw: 2.4.9
@@ -16287,10 +16287,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.19.1":
-  version: 1.19.1
-  resolution: "@remix-run/router@npm:1.19.1"
-  checksum: ebe4474ba0c1046093976b48a4eb4e39bd2f47368aacea21400126d72e133d2cfbfb50254cf1bde0b66dacdf0344452f743049d1595a22e86130668f60112376
+"@remix-run/router@npm:1.19.2":
+  version: 1.19.2
+  resolution: "@remix-run/router@npm:1.19.2"
+  checksum: fb2f297b392c75b34c73981e1ef3ce31edd88448bc4ffc2fbc3386e705470d7537ca89e901ec57c07f3cca3a771151f58f7ed6bfcb3e8ef929596637984f068b
   languageName: node
   linkType: hard
 
@@ -16912,7 +16912,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scalprum/core@npm:0.7.0, @scalprum/core@npm:^0.7.0":
+"@scalprum/core@npm:0.8.1, @scalprum/core@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "@scalprum/core@npm:0.8.1"
+  dependencies:
+    "@openshift/dynamic-plugin-sdk": ^5.0.1
+    tslib: ^2.6.2
+  checksum: 581631848bda2081dfe797c4c4326b442ce086d69117cc1eb74c18d345124825d87f570d09e8edaaa132d32a7720db0e728971834f1509aca9349aff21246a52
+  languageName: node
+  linkType: hard
+
+"@scalprum/core@npm:^0.7.0":
   version: 0.7.0
   resolution: "@scalprum/core@npm:0.7.0"
   dependencies:
@@ -16922,17 +16932,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scalprum/react-core@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@scalprum/react-core@npm:0.8.0"
+"@scalprum/react-core@npm:0.9.3":
+  version: 0.9.3
+  resolution: "@scalprum/react-core@npm:0.9.3"
   dependencies:
     "@openshift/dynamic-plugin-sdk": ^5.0.1
-    "@scalprum/core": ^0.7.0
+    "@scalprum/core": ^0.8.1
     lodash: ^4.17.0
   peerDependencies:
     react: ">=16.8.0 || >=17.0.0 || ^18.0.0"
     react-dom: ">=16.8.0 || >=17.0.0 || ^18.0.0"
-  checksum: 1eff07a1efa4cded62bc3602ef5745e2ff39f8291af1af4486bc6fa703b59f5e94fc6c76929f5653c15d5a5e70dd85d41c145982f605042d4ec2eb983b531031
+  checksum: 19c29a54e25c8025b668a96291741ce4b68dc0c87684cc39c260fc29aa2e0fc0d3e01266e0b5f64a290607e3df8d766539b619d23b756e2d09534b37034c313c
   languageName: node
   linkType: hard
 
@@ -21772,8 +21782,8 @@ __metadata:
     "@mui/material": 5.16.7
     "@mui/styled-engine": 5.16.6
     "@redhat-developer/red-hat-developer-hub-theme": 0.4.0
-    "@scalprum/core": 0.7.0
-    "@scalprum/react-core": 0.8.0
+    "@scalprum/core": 0.8.1
+    "@scalprum/react-core": 0.9.3
     "@scalprum/react-test-utils": 0.2.2
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": 6.6.3
@@ -21787,9 +21797,9 @@ __metadata:
     prettier: 3.3.3
     react: 18.3.1
     react-dom: 18.3.1
-    react-router-dom: 6.26.1
+    react-router-dom: 6.26.2
     react-use: 17.5.1
-    tss-react: 4.9.12
+    tss-react: 4.9.13
   languageName: unknown
   linkType: soft
 
@@ -32705,13 +32715,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-2-csv@npm:5.5.5":
-  version: 5.5.5
-  resolution: "json-2-csv@npm:5.5.5"
+"json-2-csv@npm:5.5.6":
+  version: 5.5.6
+  resolution: "json-2-csv@npm:5.5.6"
   dependencies:
     deeks: 3.1.0
     doc-path: 4.1.1
-  checksum: b9e4470108e054fd3c7e8b435b4c649aa4e2eb9333721a62b61079df583175c4b546e536c604ac58f2d3ef48ac40959de139e5b45a6933271c811c6dd7b323f7
+  checksum: 0be4068b68decc708742ff88c8154deba2e7e03dc84d9c9986a595d5e261ebf8a4b653a07516327f120153a4cfd0902f2cce4e5c84ca57e996a4df27da71bdde
   languageName: node
   linkType: hard
 
@@ -39735,27 +39745,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.26.1":
-  version: 6.26.1
-  resolution: "react-router-dom@npm:6.26.1"
+"react-router-dom@npm:6.26.2":
+  version: 6.26.2
+  resolution: "react-router-dom@npm:6.26.2"
   dependencies:
-    "@remix-run/router": 1.19.1
-    react-router: 6.26.1
+    "@remix-run/router": 1.19.2
+    react-router: 6.26.2
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: e393ab62e3239585d44d598e6bc8cc138ac8353f3dc46262680c6ad83dea35773662ada2f1c353921a05c37d1f369c0a2cb097848a6210689e9b6076550c7de0
+  checksum: d65507ffb920e03212bf32d294eb608df7f6cb85c26ec24f88e8f2a2718ffedeccfe0a8e1bc8d23561d6d796f8af61a8bed4a9a0541fbfd83096ecc93eaad5c7
   languageName: node
   linkType: hard
 
-"react-router@npm:6.26.1":
-  version: 6.26.1
-  resolution: "react-router@npm:6.26.1"
+"react-router@npm:6.26.2":
+  version: 6.26.2
+  resolution: "react-router@npm:6.26.2"
   dependencies:
-    "@remix-run/router": 1.19.1
+    "@remix-run/router": 1.19.2
   peerDependencies:
     react: ">=16.8"
-  checksum: 810949febc1bf2a6f8dd65f4c0532a2413d0532df462b3e78891aec81dca5a088d387b32c9922cde52bd9770f32263590993cab2383c94ddc1cdb50a20fd7adc
+  checksum: 80ad9db316ad11761b7d5de0c9ed61f3e4345d8984929db802d37d9a6a2174b42a952b0b01ba45833b00f8cd7b5755f198d2f0a8a62a486ebbfbacabbe379be5
   languageName: node
   linkType: hard
 
@@ -43479,6 +43489,27 @@ __metadata:
     "@mui/material":
       optional: true
   checksum: b1bec7c6d80b93d325ceca040ff5629b8a898b9f86a6d3260f2614943b64873afacd1f56d65a7850090a01869ea4fdac045da77ec96b80fbf157d475bcbd7187
+  languageName: node
+  linkType: hard
+
+"tss-react@npm:4.9.13":
+  version: 4.9.13
+  resolution: "tss-react@npm:4.9.13"
+  dependencies:
+    "@emotion/cache": "*"
+    "@emotion/serialize": "*"
+    "@emotion/utils": "*"
+  peerDependencies:
+    "@emotion/react": ^11.4.1
+    "@emotion/server": ^11.4.0
+    "@mui/material": ^5.0.0 || ^6.0.0
+    react: ^16.8.0 || ^17.0.2 || ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/server":
+      optional: true
+    "@mui/material":
+      optional: true
+  checksum: 9327cef392007237020df5d388b4aeabbf7cc06f6d5ac32e2781367244c2de34688922a345878408f45a38890324d67d9a0f7b48cf6b1c968d66d52b3e14e28f
   languageName: node
   linkType: hard
 
