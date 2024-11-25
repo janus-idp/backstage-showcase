@@ -346,8 +346,9 @@ export class kubeCLient {
     }
   }
 
-  async logPodConditions(namespace: string) {
-    const labelSelector =
+  async logPodConditions(namespace: string, labelSelector?: string) {
+    const selector =
+      labelSelector ||
       "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
 
     try {
@@ -357,11 +358,11 @@ export class kubeCLient {
         undefined,
         undefined,
         undefined,
-        labelSelector,
+        selector,
       );
 
       if (response.body.items.length === 0) {
-        console.warn(`No pods found for selector: ${labelSelector}`);
+        console.warn(`No pods found for selector: ${selector}`);
       }
 
       for (const pod of response.body.items) {
@@ -373,7 +374,7 @@ export class kubeCLient {
       }
     } catch (error) {
       console.error(
-        `Error while retrieving pod conditions for selector '${labelSelector}':`,
+        `Error while retrieving pod conditions for selector '${selector}':`,
         error,
       );
     }
