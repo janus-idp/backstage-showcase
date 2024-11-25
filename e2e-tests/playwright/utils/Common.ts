@@ -198,36 +198,39 @@ export class Common {
   }
 
   async keycloakLogin(username: string, password: string) {
+    let popup: Page;
+    this.page.once("popup", (asyncnewPage) => {
+      popup = asyncnewPage;
+    });
+
     await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using OIDC")');
     await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
+    // Wait for the popup to appear
+    await expect(popup).toBeTruthy();
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      // an active rhsso session is already logged in and the popup will automatically close
+      return "Already logged in";
+    } else {
+      await popup.waitForTimeout(5000);
+      try {
+        await popup.locator("#username").click();
+        await popup.locator("#username").fill(username);
+        await popup.locator("#password").fill(password);
+        await popup.locator("[name=login]").click({ timeout: 5000 });
+        await popup.waitForEvent("close", { timeout: 2000 });
+        return "Login successful";
+      } catch (e) {
+        const usernameError = popup.locator("id=input-error");
+        if (await usernameError.isVisible()) {
+          await popup.close();
+          return "User does not exist";
         } else {
-          await popup.waitForTimeout(5000);
-          try {
-            await popup.locator("#username").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[name=login]").click({ timeout: 5000 });
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const usernameError = popup.locator("id=input-error");
-            if (await usernameError.isVisible()) {
-              await popup.close();
-              resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
+          throw e;
         }
-      });
-    });
+      }
+    }
   }
 
   async githubLogin(username: string, password: string) {

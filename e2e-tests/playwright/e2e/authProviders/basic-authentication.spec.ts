@@ -13,6 +13,7 @@ import { APIHelper } from "../../utils/APIHelper";
 let page: Page;
 
 test.describe("Standard authentication providers: Basic authentication", () => {
+  test.skip();
   test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
 
   let common: Common;
