@@ -1,6 +1,6 @@
 import { ServiceFactory } from '@backstage/backend-plugin-api';
 
-import { defaultServiceFactories } from './defaultServiceFactories';
+import { DEFAULT_SERVICE_FACTORIES } from './defaultServiceFactories';
 
 // explicitly check this against the module inside the installed package
 const {
@@ -28,7 +28,7 @@ describe('Default service factory list comparison', () => {
     const upstreamServiceFactoryIds = upstreamDefaultServiceFactories.map(
       (serviceFactory: ServiceFactory) => serviceFactory.service.id,
     );
-    const serviceFactoryIds = defaultServiceFactories.map(
+    const serviceFactoryIds = DEFAULT_SERVICE_FACTORIES.map(
       (serviceFactory: ServiceFactory) => serviceFactory.service.id,
     );
     expect(
