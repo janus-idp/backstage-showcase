@@ -453,7 +453,7 @@ export class Common {
       (u) => u.spec.profile.displayName,
     );
     logger.info(
-      `Checking ${JSON.stringify(catalogGroupsDisplayNames)} contains users ${JSON.stringify(groups)}`,
+      `Checking ${JSON.stringify(catalogGroupsDisplayNames)} contains groups ${JSON.stringify(groups)}`,
     );
     const hasAllElems = groups.every((elem) =>
       catalogGroupsDisplayNames.includes(elem),
