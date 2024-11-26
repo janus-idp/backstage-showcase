@@ -4,7 +4,8 @@ export const waitsObjs = {
 };
 
 export const UIhelperPO = {
-  MuiButtonLabel: 'span[class^="MuiButton-label"]',
+  MuiButtonLabel:
+    'span[class^="MuiButton-label"],button[class~="MuiButton-root"]',
   MuiToggleButtonLabel: 'span[class^="MuiToggleButton-label"]',
   MuiBoxLabel: 'div[class*="MuiBox-root"] label',
   MuiTableHead: 'th[class*="MuiTableCell-root"]',
