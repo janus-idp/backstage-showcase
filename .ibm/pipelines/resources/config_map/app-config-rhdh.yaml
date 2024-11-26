@@ -53,6 +53,9 @@ dynamicPlugins:
         title: Dark Dynamic
         variant: dark
 backend:
+  reading:
+    allow:
+      - host: 'github.com'
   auth:
     keys:
       - secret: temp
@@ -101,17 +104,19 @@ auth:
       development:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
+techRadar:
+  url: ${DH_TARGET_URL}
 proxy:
   skipInvalidProxies: true
   # endpoints: {}
   endpoints:
     # Other Proxies
     # customize developer hub instance
-    '/developer-hub':
-      target: ${DH_TARGET_URL}
-      changeOrigin: true
-      # Change to "false" in case of using self hosted cluster with a self-signed certificate
-      secure: false
+    # '/developer-hub':
+    #   target: ${DH_TARGET_URL}
+    #   changeOrigin: true
+    #   # Change to "false" in case of using self hosted cluster with a self-signed certificate
+    #   secure: false
     '/acr/api':
       target: 'https://rhdhqetest.azurecr.io/acr/v1/'
       changeOrigin: true
