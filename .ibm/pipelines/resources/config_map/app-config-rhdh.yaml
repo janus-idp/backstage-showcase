@@ -53,6 +53,10 @@ dynamicPlugins:
         title: Dark Dynamic
         variant: dark
 backend:
+  reading:
+    allow:
+      - host: ${DH_TARGET_URL}
+      - host: 'github.com'
   auth:
     keys:
       - secret: temp
@@ -101,6 +105,8 @@ auth:
       development:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
+techRadar:
+  url: ${DH_TARGET_URL}
 proxy:
   skipInvalidProxies: true
   # endpoints: {}
