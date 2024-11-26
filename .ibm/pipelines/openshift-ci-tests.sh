@@ -442,14 +442,14 @@ initiate_deployments_operator() {
   apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
   create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins.yaml"
   oc apply -f /tmp/configmap-dynamic-plugins.yaml -n "${NAME_SPACE}"
-  oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${NAME_SPACE}"
+  oc apply -f "$DIR/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${NAME_SPACE}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE}"
 
   configure_namespace "${NAME_SPACE_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins-rbac.yaml"
   oc apply -f /tmp/configmap-dynamic-plugins-rbac.yaml -n "${NAME_SPACE_RBAC}"
-  oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${NAME_SPACE_RBAC}"
+  oc apply -f "$DIR/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${NAME_SPACE_RBAC}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
 }
 
