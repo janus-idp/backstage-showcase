@@ -24,7 +24,7 @@ save_all_pod_logs(){
     for init_container in $init_containers; do
       retrieve_pod_logs $pod_name $init_container $namespace
     done
-    
+
     containers=$(kubectl get pod $pod_name -n $namespace -o jsonpath='{.spec.containers[*].name}')
     for container in $containers; do
       retrieve_pod_logs $pod_name $container $namespace
@@ -48,7 +48,7 @@ droute_send() {
     local project=$2
     local droute_project="droute"
     METEDATA_OUTPUT="data_router_metadata_output.json"
-    
+
     oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
     oc whoami --show-server
     local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
@@ -285,3 +285,127 @@ install_pipelines_operator() {
     wait_for_deployment "openshift-operators" "pipelines"
   fi
 }
+
+#!/bin/bash
+
+install_oc() {
+  if command -v oc >/dev/null 2>&1; then
+    echo "oc is already installed."
+  else
+    curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
+    tar -xf oc.tar.gz
+    mv oc /usr/local/bin/
+    rm oc.tar.gz
+    echo "oc installed successfully."
+  fi
+}
+
+install_helm() {
+  if command -v helm >/dev/null 2>&1; then
+    echo "Helm is already installed."
+  else
+    echo "Installing Helm 3 client"
+    mkdir ~/tmpbin && cd ~/tmpbin
+    curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -f
+    export PATH=$(pwd):$PATH
+    echo "Helm client installed successfully."
+  fi
+}
+
+add_helm_repos() {
+  helm version
+  local repos=(
+    "bitnami=https://charts.bitnami.com/bitnami"
+    "backstage=https://backstage.github.io/charts"
+    "${HELM_REPO_NAME}=${HELM_REPO_URL}"
+  )
+
+  for repo in "${repos[@]}"; do
+    local key="${repo%%=*}"
+    local value="${repo##*=}"
+
+    if ! helm repo list | grep -q "^$key"; then
+      helm repo add "$key" "$value"
+    else
+      echo "Repository $key already exists - updating repository instead."
+    fi
+  done
+
+  helm repo update
+}
+
+set_cluster_info() {
+  export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
+  export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
+
+  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
+    export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
+    export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
+    export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
+    export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
+  elif [[ "$JOB_NAME" == *aks* ]]; then
+    export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_URL)
+    export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_AKS_CLUSTER_TOKEN)
+  fi
+}
+
+set_namespace() {
+  if [[ "$JOB_NAME" == *periodic-* ]]; then
+    NAME_SPACE="showcase-ci-nightly"
+    NAME_SPACE_RBAC="showcase-rbac-nightly"
+    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE_K8S="showcase-k8s-ci-nightly"
+    NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
+    NAME_SPACE_RUNTIME="showcase-runtime-nightly"
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    local namespaces_pool=("pr-1" "pr-2" "pr-3")
+    local namespace_found=false
+    for ns in "${namespaces_pool[@]}"; do
+      if ! oc get namespace "showcase-$ns" >/dev/null 2>&1; then
+        NAME_SPACE="showcase-$ns"
+        NAME_SPACE_RBAC="showcase-rbac-$ns"
+        NAME_SPACE_POSTGRES_DB="postgress-external-db-$ns"
+        namespace_found=true
+        break
+      fi
+    done
+    if ! $namespace_found; then
+      echo "Error: All namespaces $namespaces_pool already in use"
+      exit 1
+    fi
+  fi
+}
+
+perform_cleanup() {
+  if [[ "$JOB_NAME" == *aks* ]]; then
+    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+    delete_namespace "${NAME_SPACE}"
+    delete_namespace "${NAME_SPACE_POSTGRES_DB}"
+    delete_namespace "${NAME_SPACE_RBAC}"
+  fi
+}
+
+apply_yaml_files() {
+  local dir=$1
+  local project=$2
+
+  oc config set-context --current --namespace="${project}"
+
+  local files=(
+    "$dir/resources/service_account/service-account-rhdh.yaml"
+    "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml"
+    "$dir/resources/cluster_role/cluster-role-k8s.yaml"
+    "$dir/resources/cluster_role/cluster-role-ocm.yaml"
+    "$dir/auth/secrets-rhdh-secrets.yaml"
+  )
+
+  for file in "${files[@]}"; do
+    sed -i "s/namespace:.*/namespace: ${project}/g" "$file"
+  done
+
+  oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
+  oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
+}
+

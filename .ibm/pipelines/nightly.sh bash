@@ -1,8 +1,0 @@
-#!/bin/sh
-
-handle_nightly() {
-  initiate_deployments
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
-  initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
-}
