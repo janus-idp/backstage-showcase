@@ -65,11 +65,11 @@
   },
   "overrides": {
     "@aws-sdk/util-utf8-browser": {
-      "@smithy/util-utf8": "^2.0.0"
+      "@smithy/util-utf8": "2.1.1"
     }
   },
   "resolutions": {
-    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@~2"
+    "@aws-sdk/util-utf8-browser": "npm:@smithy/util-utf8@2.3.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
