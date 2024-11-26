@@ -8,7 +8,7 @@ test.describe("Change app-config at e2e test runtime", () => {
     test.setTimeout(300000); // Increasing to 5 minutes
 
     const configMapName = "app-config-rhdh";
-    const namespace = "showcase-runtime";
+    const namespace = process.env.NAME_SPACE
     const deploymentName = "rhdh-backstage";
 
     const kubeUtils = new KubeClient();
