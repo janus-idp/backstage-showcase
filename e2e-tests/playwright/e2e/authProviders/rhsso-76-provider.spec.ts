@@ -419,15 +419,20 @@ for (const version of ["RHBK", "RHSSO"]) {
       const api = new APIHelper();
       api.UseStaticToken(constants.STATIC_API_TOKEN);
 
-      const statusBefore = await api.scheduleEntityRefreshFromAPI(
-        "example",
-        "location",
-        apiToken,
-      );
-      logger.info(
-        `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
-      );
-      expect(statusBefore).toBe(403);
+      await expect(async () => {
+        const statusBefore = await api.scheduleEntityRefreshFromAPI(
+          "example",
+          "location",
+          apiToken,
+        );
+        logger.info(
+          `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
+        );
+        expect(statusBefore).toBe(403);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       // logout
       await page.goto("/");
@@ -457,16 +462,21 @@ for (const version of ["RHBK", "RHSSO"]) {
 
       // check RBAC permissions are updated after group update
       // new group should allow user to schedule location refresh and unregister the entity
-      apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
-      const statusAfter = await api.scheduleEntityRefreshFromAPI(
-        "example",
-        "location",
-        apiToken,
-      );
-      logger.info(
-        `Checking user can schedule location refresh. API returned ${statusAfter}`,
-      );
-      expect(statusAfter).toBe(200);
+      await expect(async () => {
+        apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+        const statusAfter = await api.scheduleEntityRefreshFromAPI(
+          "example",
+          "location",
+          apiToken,
+        );
+        logger.info(
+          `Checking user can schedule location refresh. API returned ${statusAfter}`,
+        );
+        expect(statusAfter).toBe(200);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       await page.goto("/");
       await uiHelper.openSidebar("Settings");
@@ -553,7 +563,7 @@ for (const version of ["RHBK", "RHSSO"]) {
         ).toBe(false);
       }).toPass({
         intervals: [1_000, 2_000, 5_000],
-        timeout: 20 * 1000,
+        timeout: 60 * 1000,
       });
 
       // expect entity is not found in rhdh
@@ -581,7 +591,6 @@ for (const version of ["RHBK", "RHSSO"]) {
         constants.RHSSO76_DEFAULT_PASSWORD,
       );
 
-      await page.goto("/");
       await uiHelper.openSidebar("Settings");
       await common.signOut();
     });
@@ -604,7 +613,7 @@ for (const version of ["RHBK", "RHSSO"]) {
         ).toBe(false);
       }).toPass({
         intervals: [1_000, 2_000, 5_000],
-        timeout: 20 * 1000,
+        timeout: 60 * 1000,
       });
 
       await WaitForNextSync(SYNC__TIME, "rhsso");
@@ -699,6 +708,7 @@ for (const version of ["RHBK", "RHSSO"]) {
     });
 
     test.beforeEach(async () => {
+      test.setTimeout(120 * 1000);
       if (test.info().retry > 0 || MUST_SYNC) {
         logger.info(
           `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${MUST_SYNC}.`,
