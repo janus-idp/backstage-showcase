@@ -310,11 +310,12 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
 
-    let apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+    let apiToken;
     const api = new APIHelper();
     api.UseStaticToken(constants.STATIC_API_TOKEN);
 
     await expect(async () => {
+      apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
       const statusBefore = await api.scheduleEntityRefreshFromAPI(
         "example",
         "location",

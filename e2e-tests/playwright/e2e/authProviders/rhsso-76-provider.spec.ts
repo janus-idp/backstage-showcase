@@ -415,11 +415,12 @@ for (const version of ["RHBK", "RHSSO"]) {
         constants.RHSSO76_DEFAULT_PASSWORD,
       );
 
-      let apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
       const api = new APIHelper();
       api.UseStaticToken(constants.STATIC_API_TOKEN);
+      let apiToken: string;
 
       await expect(async () => {
+        apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
         const statusBefore = await api.scheduleEntityRefreshFromAPI(
           "example",
           "location",
