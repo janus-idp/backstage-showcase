@@ -1,0 +1,7 @@
+#!/bin/sh
+
+handle_operator() {
+  install_pipelines_operator
+  install_tekton_pipelines
+  initiate_deployments
+}
