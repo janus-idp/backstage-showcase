@@ -15,7 +15,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: 1,
+  workers: 3,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["html"],
@@ -48,6 +48,7 @@ export default defineConfig({
         "**/playwright/e2e/authProviders/**/*.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
+        "**/playwright/e2e/configuration-test/config-map.spec.ts",
       ],
       dependencies: ["setup"],
     },
@@ -119,6 +120,11 @@ export default defineConfig({
       name: "postgres-health-check",
       ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/verify-tls-config-health-check.spec.ts"],
+    },
+    {
+      name: "showcase-runtime",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: ["**/playwright/e2e/configuration-test/config-map.spec.ts"],
     },
   ],
 });
