@@ -28,6 +28,7 @@ for (const version of ["RHBK", "RHSSO"]) {
     let usersCreated: Map<string, UserRepresentation>;
     let groupsCreated: Map<string, GroupRepresentation>;
     const SYNC__TIME = 60;
+    let MUST_SYNC = false;
     let rhssoHelper: RHSSOHelper;
 
     let helm_params = [];
@@ -275,10 +276,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
-      if (test.info().retry > -1) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
-
       // check users are in the catalog
       const usersDisplayNames = Object.values(constants.RHSSO76_USERS).map(
         (u) => rhssoHelper.getRHSSOUserDisplayName(u),
@@ -363,9 +360,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
-      if (test.info().retry > -1) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
       await rhssoHelper.deleteUser(usersCreated["user_1"].id);
       await page.waitForTimeout(2000); // give rhsso a few seconds
       await common.keycloakLogin(
@@ -405,9 +399,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
-      if (test.info().retry > 0) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
       // move a user to another group -> ensure user can still login
       // move user_3 to group_3
 
@@ -486,9 +477,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
-      if (test.info().retry > 0) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
       // remove a group -> ensure group and its members still exists, member should still login
       // remove group_3
 
@@ -547,10 +535,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
-      if (test.info().retry > 0) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
-
       await common.UnregisterUserEntityFromCatalog(
         constants.RHSSO76_USERS["user_4"].username,
         constants.STATIC_API_TOKEN,
@@ -606,10 +590,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
-      if (test.info().retry >= 0) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
-
       await common.UnregisterGroupEntityFromCatalog(
         constants.RHSSO76_GROUPS["group_3"].name,
         constants.STATIC_API_TOKEN,
@@ -641,10 +621,6 @@ for (const version of ["RHBK", "RHSSO"]) {
     test(`${version} - rename a user and a group`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
-
-      if (test.info().retry > 0) {
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-      }
 
       await rhssoHelper.updateUser(usersCreated["user_2"].id, {
         lastName: constants.RHSSO76_USERS["user_2"].lastName + " Renamed",
@@ -718,6 +694,17 @@ for (const version of ["RHBK", "RHSSO"]) {
         logger.info(`Dumping logs with prefix ${prefix}`);
         await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
         await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
+        MUST_SYNC = true;
+      }
+    });
+
+    test.beforeEach(async () => {
+      if (test.info().retry > 0 || MUST_SYNC) {
+        logger.info(
+          `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${MUST_SYNC}.`,
+        );
+        await WaitForNextSync(SYNC__TIME, "rhsso");
+        MUST_SYNC = false;
       }
     });
   });

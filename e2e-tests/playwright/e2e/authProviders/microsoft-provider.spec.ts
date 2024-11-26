@@ -31,6 +31,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   let usersCreated: Map<string, UserRepresentation>;
   let groupsCreated: Map<string, GroupRepresentation>;
   const SYNC_TIME = 60;
+  let MUST_SYNC = false;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     test.setTimeout(60 * 1000);
@@ -60,7 +61,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     const created = await graphHelper.setupMicrosoftEntraIDEnvironment();
     usersCreated = created.usersCreated;
     groupsCreated = created.groupsCreated;
-    await WaitForNextSync(SYNC_TIME, "microsoft");
   });
 
   test("Setup RHDH with Microsoft EntraID ingestion and eventually wait for the first sync", async () => {
@@ -113,7 +113,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   test("Microsoft EntraID with default resolver: user_1 should login and entity is in the catalog", async () => {
     // resolvers from upstream are not available in rhdh
     // testing only default settings
-
     logger.info(
       "Executing testcase: Setup Microsoft EntraID with default resolver: user_1 should login and entity is in the catalog",
     );
@@ -138,7 +137,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
   test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async () => {
     test.setTimeout(300 * 1000);
-
     // check entities are in the catalog
     const usersDisplayNames = Object.values(constants.MSGRAPH_USERS).map(
       (u) => u.displayName,
@@ -233,7 +231,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
   test("Remove user from Microsoft EntraID", async () => {
     test.setTimeout(300 * 1000);
-
     // remove user from azure -> authentication fails
     logger.info(
       `Executing testcase: Remove user from Microsoft EntraID: authenticatin should fail before next sync.`,
@@ -293,7 +290,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
   test("Move a user to another group in Microsoft EntraID", async () => {
     test.setTimeout(300 * 1000);
-
     // move a user to another group -> user can still login
     // move user_2 to location_admin
     logger.info(
@@ -559,7 +555,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
   test("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
-
     // rename group from RHDH -> user can login, but policy is broken
     logger.info(`Executing testcase: Rename a user and a group.`);
 
@@ -647,6 +642,17 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       logger.info(`Dumping logs with prefix ${prefix}`);
       await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
       await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
+      MUST_SYNC = true;
+    }
+  });
+
+  test.beforeEach(async () => {
+    if (test.info().retry > 0 || MUST_SYNC) {
+      logger.info(
+        `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${MUST_SYNC}.`,
+      );
+      await WaitForNextSync(SYNC_TIME, "microsoft");
+      MUST_SYNC = false;
     }
   });
 });
