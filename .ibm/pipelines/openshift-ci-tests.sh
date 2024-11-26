@@ -277,6 +277,7 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
   #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
+  # Renable when namespace termination issue is solved
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
@@ -288,7 +289,7 @@ run_tests() {
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
-  yarn playwright install
+  yarn playwright install chromium
 
   Xvfb :99 &  # Start a virtual framebuffer for GUI applications.
   export DISPLAY=:99  # Set the display environment variable.
@@ -508,7 +509,6 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)  # Base64 encode the API server URL.
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)  # Base64 encode the cluster name.
 
-
   if [[ "$JOB_NAME" == *aks* ]]; then
     # Initiate deployments on AKS.
     initiate_aks_deployment
@@ -529,10 +529,18 @@ main() {
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
-    # Only test TLS config with RDS in nightly jobs
+    # Only test TLS config with RDS and Change configuration at runtime in nightly jobs
     if [[ "$JOB_NAME" == *periodic* ]]; then
       initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
       check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+
+      # Deploy `showcase-runtime` to run tests that require configuration changes at runtime
+      configure_namespace "${NAME_SPACE_RUNTIME}"
+      uninstall_helmchart "${NAME_SPACE_RUNTIME}" "${RELEASE_NAME}"
+      oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE_RUNTIME}"
+      apply_yaml_files "${DIR}" "${NAME_SPACE_RUNTIME}"
+      helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_RUNTIME}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+      check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RUNTIME}"
     fi
   fi
 

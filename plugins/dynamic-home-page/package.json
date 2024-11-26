@@ -42,7 +42,7 @@
     "@backstage/theme": "0.6.0",
     "@mui/material": "5.16.7",
     "@mui/styles": "5.16.7",
-    "@scalprum/react-core": "0.8.0",
+    "@scalprum/react-core": "0.9.3",
     "react-grid-layout": "1.4.4",
     "react-use": "17.5.1",
     "tss-react": "4.9.12"
