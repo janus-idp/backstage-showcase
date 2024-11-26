@@ -3,8 +3,7 @@
   "include": ["src", "dev", "migrations"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "../../dist-types/plugins/dynamic-home-page",
-    "rootDir": ".",
-    "jsx": "preserve"
+    "outDir": "../../../dist-types/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page",
+    "rootDir": "."
   }
 }

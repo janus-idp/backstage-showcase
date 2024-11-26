@@ -7,7 +7,6 @@ import { RemotePlugins } from '../../components/DynamicRoot/DynamicRootContext';
 const ignoreStaticPlugins = [
   'default.main-menu-items',
   'internal.plugin-dynamic-plugins-info',
-  'janus-idp.backstage-plugin-dynamic-home-page',
 ];
 
 const initializeRemotePlugins = async (
