@@ -44,9 +44,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await page
       .getByPlaceholder("Filter")
       .pressSequentially("plugin-tech-radar\n", { delay: 300 });
-    const row = await page.locator(
-      UI_HELPER_ELEMENTS.rowByText("backstage-plugin-tech-radar"),
-    );
+    const row = await page.locator(UI_HELPER_ELEMENTS.rowByText("backstage-community-plugin-tech-radar"));
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
     expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
   });
