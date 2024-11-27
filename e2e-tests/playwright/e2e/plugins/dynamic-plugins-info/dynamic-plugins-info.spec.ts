@@ -38,12 +38,12 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await uiHelper.verifyRowsInTable(["backstage-plugin-techdocs"], true);
   });
 
-  test("it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
+  test("it should have a plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
     page,
   }) => {
     await page
       .getByPlaceholder("Filter")
-      .pressSequentially("backstage-plugin-tech-radar\n", { delay: 300 });
+      .pressSequentially("plugin-tech-radar\n", { delay: 300 });
     const row = await page.locator(
       UI_HELPER_ELEMENTS.rowByText("backstage-plugin-tech-radar"),
     );
