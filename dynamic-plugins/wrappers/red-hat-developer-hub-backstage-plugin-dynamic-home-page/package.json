@@ -1,6 +1,6 @@
 {
-  "name": "backstage-plugin-techdocs",
-  "version": "1.11.0",
+  "name": "red-hat-developer-hub-backstage-plugin-dynamic-home-page",
+  "version": "1.0.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,11 +11,10 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.32.4",
-    "pluginId": "techdocs",
+    "supported-versions": "1.32.5",
+    "pluginId": "red-hat-developer-hub-backstage-plugin-dynamic-home-page",
     "pluginPackages": [
-      "backstage-plugin-techdocs",
-      "backstage-plugin-techdocs-backend"
+      "red-hat-developer-hub-backstage-plugin-dynamic-home-page"
     ]
   },
   "sideEffects": false,
@@ -29,27 +28,19 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage/core-plugin-api": "1.10.0",
-    "@backstage/plugin-catalog-react": "1.14.0",
-    "@backstage/plugin-search-react": "1.8.1",
-    "@backstage/plugin-techdocs": "1.11.0",
-    "@backstage/plugin-techdocs-module-addons-contrib": "1.1.16",
-    "@backstage/plugin-techdocs-react": "1.2.9"
-  },
-  "peerDependencies": {
-    "react": "16.13.1 || ^17.0.0 || ^18.0.0"
+    "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": "^1.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
     "@janus-idp/cli": "1.17.0",
-    "react": "18.3.1"
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "backstage.plugin-techdocs",
+    "name": "red-hat-developer-hub.backstage-plugin-dynamic-home-page",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
@@ -57,7 +48,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/janus-idp/backstage-showcase",
-    "directory": "dynamic-plugins/wrappers/backstage-plugin-techdocs"
+    "directory": "dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"

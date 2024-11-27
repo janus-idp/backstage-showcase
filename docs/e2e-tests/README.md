@@ -29,7 +29,7 @@ yarn install
 The Playwright browsers should be installed automatically via the `postinstall` script in `package.json`. If not, you can manually install them:
 
 ```bash
-yarn playwright install
+yarn playwright install chromium
 ```
 
 ### Adding a Test

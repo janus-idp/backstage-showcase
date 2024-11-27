@@ -1,17 +1,21 @@
 approvers:
  - 04kash
+ - albarbaro
  - christoph-jerolimov
  - coreydaley
  - davidfestal
  - debsmita1
  - divyanshiGupta
+ - Fortune-Ndlovu
  - gashcrumb 
+ - gustavolira
  - invincibleJai
  - JessicaJHee  
  - josephca
  - kadel
  - kim-tsao
  - nickboldt
+ - nilgaar
  - PatAKnight
  - rm3l
  - schultzp2020
@@ -19,5 +23,4 @@ approvers:
 
 reviewers:
  - dzemanov 
- - Fortune-Ndlovu
  - its-mitesh-kumar
