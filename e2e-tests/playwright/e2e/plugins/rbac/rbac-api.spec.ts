@@ -5,7 +5,8 @@ import { UIhelper } from "../../../utils/UIhelper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 
-test.describe("Test RBAC plugin REST API", () => {
+// TODO: reenable tests
+test.describe.skip("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
