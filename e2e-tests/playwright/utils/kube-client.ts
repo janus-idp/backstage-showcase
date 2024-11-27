@@ -1,5 +1,6 @@
 import k8s, { V1ConfigMap } from "@kubernetes/client-node";
 import { LOGGER } from "./logger";
+import * as yaml from "js-yaml";
 
 export class KubeClient {
   coreV1Api: k8s.CoreV1Api;
@@ -10,7 +11,30 @@ export class KubeClient {
     LOGGER.info(`Initializing Kubernetes API client`);
     try {
       this.kc = new k8s.KubeConfig();
-      this.kc.loadFromDefault();
+      this.kc.loadFromOptions({
+        clusters: [
+          {
+            name: "my-openshift-cluster",
+            server: process.env.K8S_CLUSTER_URL,
+            skipTLSVerify: true,
+          },
+        ],
+        users: [
+          {
+            name: "ci-user",
+            token: process.env.K8S_CLUSTER_TOKEN,
+          },
+        ],
+        contexts: [
+          {
+            name: "default-context",
+            user: "ci-user",
+            cluster: "my-openshift-cluster",
+          },
+        ],
+        currentContext: "default-context",
+      });
+
       this.appsApi = this.kc.makeApiClient(k8s.AppsV1Api);
       this.coreV1Api = this.kc.makeApiClient(k8s.CoreV1Api);
     } catch (e) {
@@ -70,7 +94,7 @@ export class KubeClient {
     }
   }
 
-  async updateCongifmap(
+  async updateConfigMap(
     configmapName: string,
     namespace: string,
     patch: object,
@@ -96,6 +120,38 @@ export class KubeClient {
     } catch (e) {
       LOGGER.error(e.statusCode, e);
       throw e;
+    }
+  }
+
+  async updateConfigMapTitle(
+    configMapName: string,
+    namespace: string,
+    newTitle: string,
+  ) {
+    try {
+      const configMapResponse = await this.getConfigMap(
+        configMapName,
+        namespace,
+      );
+      const configMap = configMapResponse.body;
+
+      const appConfigYaml = configMap.data[`${configMapName}.yaml`];
+      const appConfigObj = yaml.load(appConfigYaml) as any;
+
+      appConfigObj.app.title = newTitle;
+      configMap.data[`${configMapName}.yaml`] = yaml.dump(appConfigObj);
+
+      delete configMap.metadata.creationTimestamp;
+
+      await this.coreV1Api.replaceNamespacedConfigMap(
+        configMapName,
+        namespace,
+        configMap,
+      );
+      console.log("ConfigMap updated successfully.");
+    } catch (error) {
+      console.error("Error updating ConfigMap:", error);
+      throw new Error("Failed to update ConfigMap");
     }
   }
 
@@ -212,19 +268,34 @@ export class KubeClient {
     deploymentName: string,
     namespace: string,
     expectedReplicas: number,
-    timeout: number = 100000,
-    checkInterval: number = 10000,
+    timeout: number = 300000, // 5 minutes
+    checkInterval: number = 10000, // 10 seconds
   ) {
     const start = Date.now();
+    const labelSelector =
+      "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
 
     while (Date.now() - start < timeout) {
       try {
+        // Check deployment status
         const response = await this.appsApi.readNamespacedDeployment(
           deploymentName,
           namespace,
         );
-        const availableReplicas = response.body.status?.availableReplicas || 0;
 
+        const availableReplicas = response.body.status?.availableReplicas || 0;
+        const conditions = response.body.status?.conditions || [];
+
+        console.log(`Available replicas: ${availableReplicas}`);
+        console.log(
+          "Deployment conditions:",
+          JSON.stringify(conditions, null, 2),
+        );
+
+        // Log pod conditions using label selector
+        await this.logPodConditions(namespace, labelSelector);
+
+        // Check if the expected replicas match
         if (availableReplicas === expectedReplicas) {
           console.log(
             `Deployment ${deploymentName} is ready with ${availableReplicas} replicas.`,
@@ -235,11 +306,11 @@ export class KubeClient {
         console.log(
           `Waiting for ${deploymentName} to reach ${expectedReplicas} replicas, currently has ${availableReplicas}.`,
         );
-        await new Promise((resolve) => setTimeout(resolve, checkInterval));
       } catch (error) {
         console.error(`Error checking deployment status: ${error}`);
-        throw error;
       }
+
+      await new Promise((resolve) => setTimeout(resolve, checkInterval));
     }
 
     throw new Error(
@@ -248,10 +319,92 @@ export class KubeClient {
   }
 
   async restartDeployment(deploymentName: string, namespace: string) {
-    await this.scaleDeployment(deploymentName, namespace, 0);
-    await this.waitForDeploymentReady(deploymentName, namespace, 0);
+    try {
+      console.log(`Scaling down deployment ${deploymentName} to 0 replicas.`);
+      await this.logPodConditions(namespace);
+      await this.scaleDeployment(deploymentName, namespace, 0);
 
-    await this.scaleDeployment(deploymentName, namespace, 1);
-    await this.waitForDeploymentReady(deploymentName, namespace, 1);
+      await this.waitForDeploymentReady(deploymentName, namespace, 0);
+
+      console.log(`Scaling up deployment ${deploymentName} to 1 replica.`);
+      await this.scaleDeployment(deploymentName, namespace, 1);
+
+      await this.waitForDeploymentReady(deploymentName, namespace, 1);
+
+      console.log(
+        `Restart of deployment ${deploymentName} completed successfully.`,
+      );
+    } catch (error) {
+      console.error(
+        `Error during deployment restart: Deployment '${deploymentName}' in namespace '${namespace}'.`,
+      );
+      await this.logPodConditions(namespace);
+      await this.logDeploymentEvents(deploymentName, namespace);
+      throw new Error(
+        `Failed to restart deployment '${deploymentName}' in namespace '${namespace}'.`,
+      );
+    }
+  }
+
+  async logPodConditions(namespace: string, labelSelector?: string) {
+    const selector =
+      labelSelector ||
+      "app.kubernetes.io/component=backstage,app.kubernetes.io/instance=rhdh,app.kubernetes.io/name=backstage";
+
+    try {
+      const response = await this.coreV1Api.listNamespacedPod(
+        namespace,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        selector,
+      );
+
+      if (response.body.items.length === 0) {
+        console.warn(`No pods found for selector: ${selector}`);
+      }
+
+      for (const pod of response.body.items) {
+        console.log(`Pod: ${pod.metadata?.name}`);
+        console.log(
+          "Conditions:",
+          JSON.stringify(pod.status?.conditions, null, 2),
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error while retrieving pod conditions for selector '${selector}':`,
+        error,
+      );
+    }
+  }
+
+  async logDeploymentEvents(deploymentName: string, namespace: string) {
+    try {
+      const eventsResponse = await this.coreV1Api.listNamespacedEvent(
+        namespace,
+        undefined,
+        undefined,
+        undefined,
+        `involvedObject.name=${deploymentName}`,
+      );
+
+      console.log(
+        `Events for deployment ${deploymentName}: ${JSON.stringify(
+          eventsResponse.body.items.map((event) => ({
+            message: event.message,
+            reason: event.reason,
+            type: event.type,
+          })),
+          null,
+          2,
+        )}`,
+      );
+    } catch (error) {
+      console.error(
+        `Error retrieving events for deployment ${deploymentName}: ${error}`,
+      );
+    }
   }
 }

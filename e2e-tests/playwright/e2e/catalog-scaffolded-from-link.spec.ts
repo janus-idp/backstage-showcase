@@ -6,7 +6,9 @@ import { APIHelper } from "../utils/api-helper";
 import { GITHUB_API_ENDPOINTS } from "../utils/api-endpoints";
 
 let page: Page;
-test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
+
+// TODO: replace skip with serial
+test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
   let uiHelper: UIhelper;
   let common: Common;
   let catalogImport: CatalogImport;

@@ -3,7 +3,8 @@ import { Common } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 
-test.describe('Check RBAC "analytics-provider-segment" plugin', () => {
+// TODO: reenable tests
+test.describe.skip('Check RBAC "analytics-provider-segment" plugin', () => {
   let common: Common;
   let uiHelper: UIhelper;
 

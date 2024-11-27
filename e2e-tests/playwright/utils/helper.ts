@@ -27,6 +27,63 @@ export async function runShellCmd(command: string) {
   });
 }
 
+export async function upgradeHelmChartWithWait(
+  RELEASE: string,
+  CHART: string,
+  NAMESPACE: string,
+  VALUES: string,
+  CHART_VERSION: string,
+  QUAY_REPO: string,
+  TAG_NAME: string,
+  FLAGS: Array<string>,
+) {
+  logger.info(`Deleting any exisitng helm release ${RELEASE}`);
+  await deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
+
+  logger.info(`Upgrading helm release ${RELEASE}`);
+  const upgradeOutput = await runShellCmd(`helm upgrade \
+    -i ${RELEASE} ${CHART}  \
+    --wait --timeout 300s -n ${NAMESPACE} \
+    --values ${VALUES} \
+    --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
+    --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
+    ${FLAGS.join(" ")}`);
+
+  logger.log({
+    level: "info",
+    message: `Release upgrade returned: `,
+    dump: upgradeOutput,
+  });
+
+  const configmap = await k8sClient.getConfigMap(
+    `${RELEASE}-backstage-app-config`,
+    NAMESPACE,
+  );
+  logger.log({
+    level: "info",
+    message: `Applied confguration for release upgrade: `,
+    dump: configmap.body.data,
+  });
+
+  //TBD: get dynamic plugins configmap
+}
+
+export async function deleteHelmReleaseWithWait(
+  RELEASE: string,
+  NAMESPACE: string,
+) {
+  logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
+  const result = await runShellCmd(
+    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
+  );
+  logger.log({
+    level: "info",
+    message: `Release delete returned: `,
+    dump: result,
+  });
+  return result;
+}
+
 export async function getLastSyncTimeFromLogs(
   provider: string,
 ): Promise<number> {
@@ -93,7 +150,7 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await new KubeClient().updateCongifmap(configMap, namespace, patch);
+  await k8sClient.updateConfigMap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
@@ -105,7 +162,7 @@ export async function ensureNewPolicyConfigMapExists(
     LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await new KubeClient().getConfigMap(configMap, namespace);
+    await k8sClient.getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -115,12 +172,12 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await kubeCLient.updateCongifmap(configMap, namespace, patch);
-    return await new KubeClient().getConfigMap(configMap, namespace);
+    await k8sClient.updateConfigMap(configMap, namespace, patch);
+    return await k8sClient.getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
-      LOGGER.info(
-        `Configmap ${configMap} did not exsist in namespace ${namespace}. Creating it..`,
+      logger.info(
+        `Configmap ${configMap} did not exist in namespace ${namespace}. Creating it..`,
       );
       const cmBody: V1ConfigMap = {
         metadata: {

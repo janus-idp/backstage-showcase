@@ -15,6 +15,7 @@ import { WinstonLogger } from '@backstage/backend-defaults/rootLogger';
 import { schedulerServiceFactory } from '@backstage/backend-defaults/scheduler';
 import { urlReaderServiceFactory } from '@backstage/backend-defaults/urlReader';
 import { userInfoServiceFactory } from '@backstage/backend-defaults/userInfo';
+import type { ServiceFactory } from '@backstage/backend-plugin-api';
 import { eventsServiceFactory } from '@backstage/plugin-events-node';
 
 /**
@@ -22,7 +23,7 @@ import { eventsServiceFactory } from '@backstage/plugin-events-node';
  * should be kept up to date with the upstream package code, which is currently
  * not exported.
  */
-export const defaultServiceFactories = [
+export const DEFAULT_SERVICE_FACTORIES: ServiceFactory[] = [
   authServiceFactory,
   cacheServiceFactory,
   rootConfigServiceFactory,
@@ -41,14 +42,14 @@ export const defaultServiceFactories = [
   userInfoServiceFactory,
   urlReaderServiceFactory,
   eventsServiceFactory,
-];
+] as const;
 
 export const getDefaultServiceFactories = ({
   logger,
 }: {
   logger: WinstonLogger;
 }) => {
-  return defaultServiceFactories.filter(serviceFactory => {
+  return DEFAULT_SERVICE_FACTORIES.filter(serviceFactory => {
     const envName = `ENABLE_${serviceFactory.service.id.toLocaleUpperCase().replace('.', '_')}_OVERRIDE`;
     if ((process.env[envName] || '').toLocaleLowerCase() !== 'true') {
       logger.debug(
