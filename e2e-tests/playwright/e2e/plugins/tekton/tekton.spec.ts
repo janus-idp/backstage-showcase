@@ -1,8 +1,8 @@
 import { test } from "@playwright/test";
-import { Common, setupBrowser } from "../../../../playwright/utils/Common";
-import { UIhelper } from "../../../../playwright/utils/UIhelper";
+import { Common, setupBrowser } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
 import { Tekton } from "../../../utils/tekton/tekton";
-import { Catalog } from "../../../support/pages/Catalog";
+import { Catalog } from "../../../support/pages/catalog";
 
 // Pre-req: Enable tekton, kubernetes, kubernetes-backend plugins
 // Pre-req: install Red Hat OpenShift Pipelines Operator

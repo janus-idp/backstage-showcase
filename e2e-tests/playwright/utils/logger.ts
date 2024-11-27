@@ -15,7 +15,7 @@ const myFormat = format.printf(({ level, message, timestamp, dump }) => {
   return `${timestamp} ${level}: ${message} ${dumpData(dump)}`;
 });
 
-export const logger = createLogger({
+export const LOGGER = createLogger({
   format: format.combine(
     format.timestamp({
       format: "YYYY-MM-DD HH:mm:ss",

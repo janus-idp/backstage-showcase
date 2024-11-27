@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
 import playwrightConfig from "../../../playwright.config";
+import { UIhelper } from "../../utils/ui-helper";
 
 //${BASE_URL}/catalog page
 export class Catalog {

@@ -12,7 +12,7 @@ export class Analytics {
     return plugins;
   }
 
-  checkPluginListed(plugins: any, expected: string) {
-    return plugins.some((plugin: { name: string }) => plugin.name === expected);
+  checkPluginListed(plugins: { name: string }[], expected: string) {
+    return plugins.some((plugin) => plugin.name === expected);
   }
 }
