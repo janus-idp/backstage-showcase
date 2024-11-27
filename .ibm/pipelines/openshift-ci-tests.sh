@@ -30,7 +30,6 @@ main() {
   set_cluster_info
   . "${DIR}/env_variables.sh"
 
-  install_oc
   set_namespace
 
   case "$JOB_NAME" in

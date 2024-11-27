@@ -286,32 +286,6 @@ install_pipelines_operator() {
   fi
 }
 
-#!/bin/bash
-
-install_oc() {
-  if command -v oc >/dev/null 2>&1; then
-    echo "oc is already installed."
-  else
-    curl -LO https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz
-    tar -xf oc.tar.gz
-    mv oc /usr/local/bin/
-    rm oc.tar.gz
-    echo "oc installed successfully."
-  fi
-}
-
-install_helm() {
-  if command -v helm >/dev/null 2>&1; then
-    echo "Helm is already installed."
-  else
-    echo "Installing Helm 3 client"
-    mkdir ~/tmpbin && cd ~/tmpbin
-    curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -f
-    export PATH=$(pwd):$PATH
-    echo "Helm client installed successfully."
-  fi
-}
-
 add_helm_repos() {
   helm version
   local repos=(
