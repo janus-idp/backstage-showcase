@@ -28,38 +28,38 @@ export async function runShellCmd(command: string) {
 }
 
 export async function upgradeHelmChartWithWait(
-  RELEASE: string,
-  CHART: string,
-  NAMESPACE: string,
-  VALUES: string,
-  CHART_VERSION: string,
-  QUAY_REPO: string,
-  TAG_NAME: string,
-  FLAGS: Array<string>,
+  release: string,
+  chart: string,
+  namespace: string,
+  value: string,
+  chartVersion: string,
+  quayRepo: string,
+  tag: string,
+  flags: Array<string>,
 ) {
-  logger.info(`Deleting any exisitng helm release ${RELEASE}`);
-  await deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
+  LOGGER.info(`Deleting any exisitng helm release ${release}`);
+  await deleteHelmReleaseWithWait(release, namespace);
 
-  logger.info(`Upgrading helm release ${RELEASE}`);
+  LOGGER.info(`Upgrading helm release ${release}`);
   const upgradeOutput = await runShellCmd(`helm upgrade \
-    -i ${RELEASE} ${CHART}  \
-    --wait --timeout 300s -n ${NAMESPACE} \
-    --values ${VALUES} \
-    --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
+    -i ${release} ${chart}  \
+    --wait --timeout 300s -n ${namespace} \
+    --values ${value} \
+    --version "${chartVersion}" --set upstream.backstage.image.repository="${quayRepo}" --set upstream.backstage.image.tag="${tag}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-    ${FLAGS.join(" ")}`);
+    ${flags.join(" ")}`);
 
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Release upgrade returned: `,
     dump: upgradeOutput,
   });
 
-  const configmap = await k8sClient.getConfigMap(
-    `${RELEASE}-backstage-app-config`,
-    NAMESPACE,
+  const configmap = await new KubeClient().getConfigMap(
+    `${release}-backstage-app-config`,
+    namespace,
   );
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Applied confguration for release upgrade: `,
     dump: configmap.body.data,
@@ -69,14 +69,14 @@ export async function upgradeHelmChartWithWait(
 }
 
 export async function deleteHelmReleaseWithWait(
-  RELEASE: string,
-  NAMESPACE: string,
+  release: string,
+  namespace: string,
 ) {
-  logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
+  LOGGER.info(`Deleting release ${release} in namespace ${namespace}`);
   const result = await runShellCmd(
-    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
+    `helm uninstall ${release} --wait --timeout 300s -n ${namespace} --ignore-not-found`,
   );
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Release delete returned: `,
     dump: result,
@@ -150,7 +150,7 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await k8sClient.updateConfigMap(configMap, namespace, patch);
+  await new KubeClient().updateConfigMap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
@@ -162,7 +162,7 @@ export async function ensureNewPolicyConfigMapExists(
     LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await k8sClient.getConfigMap(configMap, namespace);
+    await kubeCLient.getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -172,11 +172,11 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await k8sClient.updateConfigMap(configMap, namespace, patch);
-    return await k8sClient.getConfigMap(configMap, namespace);
+    await kubeCLient.updateConfigMap(configMap, namespace, patch);
+    return await kubeCLient.getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
-      logger.info(
+      LOGGER.info(
         `Configmap ${configMap} did not exist in namespace ${namespace}. Creating it..`,
       );
       const cmBody: V1ConfigMap = {
