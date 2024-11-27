@@ -13,7 +13,7 @@ OVERALL_RESULT=0
 . "${DIR}/aks.sh"
 . "${DIR}/gke.sh"
 . "${DIR}/nightly.sh"
-. "${DIR}/operator.sh"
+#. "${DIR}/operator.sh"
 . "${DIR}/finalizers.sh"
 . "${DIR}/deployments.sh"
 
@@ -49,6 +49,9 @@ main() {
       check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
       delete_namespace "${NAME_SPACE_RBAC_K8S}"
       ;;
+#    *operator*)
+#      handle_operator
+#      ;;
     *periodic*)
       handle_nightly
       ;;
