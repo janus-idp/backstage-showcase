@@ -9,7 +9,6 @@ OVERALL_RESULT=0
 
 # Load utility and environment-specific scripts
 . "${DIR}/utils.sh"
-. "${DIR}/oc-utils.sh"
 . "${DIR}/postgres.sh"
 . "${DIR}/aks.sh"
 . "${DIR}/gke.sh"
