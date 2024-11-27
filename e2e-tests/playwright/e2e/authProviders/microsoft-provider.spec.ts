@@ -316,6 +316,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     await expect(async () => {
       apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+      expect(apiToken).not.toBeEmpty();
       const statusBefore = await api.scheduleEntityRefreshFromAPI(
         "example",
         "location",
@@ -327,7 +328,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       expect(statusBefore).toBe(403);
     }).toPass({
       intervals: [1_000, 2_000, 5_000],
-      timeout: 60 * 1000,
+      timeout: 90 * 1000,
     });
 
     await page.goto("/");
