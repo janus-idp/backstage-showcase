@@ -136,6 +136,7 @@ export class KubeClient {
       const configMap = configMapResponse.body;
 
       const appConfigYaml = configMap.data[`${configMapName}.yaml`];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const appConfigObj = yaml.load(appConfigYaml) as any;
 
       appConfigObj.app.title = newTitle;
