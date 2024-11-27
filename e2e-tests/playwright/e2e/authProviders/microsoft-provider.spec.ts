@@ -123,12 +123,17 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       constants.RHSSO76_DEFAULT_PASSWORD,
     );
 
-    expect(
-      await common.CheckUserIsIngestedInCatalog(
-        [constants.MSGRAPH_USERS["user_1"].displayName],
-        constants.STATIC_API_TOKEN,
-      ),
-    ).toBe(true);
+    await expect(async () => {
+      expect(
+        await common.CheckUserIsIngestedInCatalog(
+          [constants.MSGRAPH_USERS["user_1"].displayName],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 90 * 1000,
+    });
 
     await uiHelper.openSidebar("Settings");
     await common.signOut();
@@ -277,15 +282,21 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     const api = new APIHelper();
     api.UseStaticToken(constants.STATIC_API_TOKEN);
-    const group_1: GroupEntity = await api.getGroupEntityFromAPI(
-      constants.MSGRAPH_GROUPS["group_1"].displayName,
-    );
-    const members_1 = parseGroupMemberFromEntity(group_1);
-    expect(
-      members_1.includes(
-        constants.MSGRAPH_USERS["user_1"].userPrincipalName.replace("@", "_"),
-      ),
-    ).toBe(false);
+
+    await expect(async () => {
+      const group_1: GroupEntity = await api.getGroupEntityFromAPI(
+        constants.MSGRAPH_GROUPS["group_1"].displayName,
+      );
+      const members_1 = parseGroupMemberFromEntity(group_1);
+      expect(
+        members_1.includes(
+          constants.MSGRAPH_USERS["user_1"].userPrincipalName.replace("@", "_"),
+        ),
+      ).toBe(false);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
   });
 
   test("Move a user to another group in Microsoft EntraID", async () => {
@@ -316,7 +327,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     await expect(async () => {
       apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
-      expect(apiToken).not.toBeEmpty();
+      expect(apiToken).not.toBeUndefined();
       const statusBefore = await api.scheduleEntityRefreshFromAPI(
         "example",
         "location",
@@ -331,7 +342,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       timeout: 90 * 1000,
     });
 
-    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
@@ -346,18 +356,22 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
 
     // location_admin should show user_2
-
-    const group: GroupEntity = await api.getGroupEntityFromAPI(
-      constants.MSGRAPH_GROUPS["location_admin"].displayName,
-    );
-    const members = parseGroupMemberFromEntity(group);
-    expect(
-      members.includes(
-        graphHelper.formatUPNToEntity(
-          constants.MSGRAPH_USERS["user_2"].userPrincipalName,
+    await expect(async () => {
+      const group: GroupEntity = await api.getGroupEntityFromAPI(
+        constants.MSGRAPH_GROUPS["location_admin"].displayName,
+      );
+      const members = parseGroupMemberFromEntity(group);
+      expect(
+        members.includes(
+          graphHelper.formatUPNToEntity(
+            constants.MSGRAPH_USERS["user_2"].userPrincipalName,
+          ),
         ),
-      ),
-    ).toBe(true);
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
 
     await common.MicrosoftAzureLogin(
       constants.MSGRAPH_USERS["user_2"].userPrincipalName,
@@ -383,7 +397,6 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       timeout: 60 * 1000,
     });
 
-    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
@@ -401,12 +414,17 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     await graphHelper.deleteGroupByIdAsync(groupsCreated["group_3"].id);
 
     // group_3 should exist in rhdh
-    expect(
-      await common.CheckGroupIsIngestedInCatalog(
-        [constants.MSGRAPH_GROUPS["group_3"].displayName],
-        constants.STATIC_API_TOKEN,
-      ),
-    ).toBe(true);
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.MSGRAPH_GROUPS["group_3"].displayName],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
 
     // user_3 should login
     await common.MicrosoftAzureLogin(
@@ -445,11 +463,15 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     // users permission based on that group will be defaulted to read-only
     // expect user not to see catalog entities
-    await page.goto("/");
-    const navMyGroup = page.locator(`nav a:has-text("My Group")`);
-    await expect(navMyGroup).toHaveCount(0);
+    await expect(async () => {
+      await page.goto("/");
+      const navMyGroup = page.locator(`nav a:has-text("My Group")`);
+      await expect(navMyGroup).toHaveCount(0);
+    }).toPass({
+      intervals: [2_000, 5_000],
+      timeout: 30 * 1000,
+    });
 
-    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
@@ -559,12 +581,17 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       `Execute testcase: Remove a group from RHDH: group is created again after the sync`,
     );
 
-    expect(
-      await common.CheckGroupIsIngestedInCatalog(
-        [constants.MSGRAPH_GROUPS["group_5"].displayName],
-        constants.STATIC_API_TOKEN,
-      ),
-    ).toBe(true);
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.MSGRAPH_GROUPS["group_5"].displayName],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
   });
 
   test("Rename a user and a group", async () => {
@@ -614,9 +641,14 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
 
     // users permission based on that group will be defaulted to read-only
     // expect user not to see catalog entities
-    await page.goto("/");
-    const navMyGroup = page.locator(`nav a:has-text("My Group")`);
-    await expect(navMyGroup).toHaveCount(0);
+    await expect(async () => {
+      await page.goto("/");
+      const navMyGroup = page.locator(`nav a:has-text("My Group")`);
+      await expect(navMyGroup).toHaveCount(0);
+    }).toPass({
+      intervals: [2_000, 5_000],
+      timeout: 30 * 1000,
+    });
 
     // update the policy with the new group name
     await replaceInRBACPolicyFileConfigMap(

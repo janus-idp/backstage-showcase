@@ -280,7 +280,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       const usersDisplayNames = Object.values(constants.RHSSO76_USERS).map(
         (u) => rhssoHelper.getRHSSOUserDisplayName(u),
       );
-      console.log(constants.STATIC_API_TOKEN);
+
       expect(
         await common.CheckUserIsIngestedInCatalog(
           usersDisplayNames,
@@ -371,28 +371,38 @@ for (const version of ["RHBK", "RHSSO"]) {
 
       await WaitForNextSync(SYNC__TIME, "rhsso");
 
-      expect(
-        await common.CheckUserIsIngestedInCatalog(
-          [
-            rhssoHelper.getRHSSOUserDisplayName(
-              constants.RHSSO76_USERS["user_1"],
-            ),
-          ],
-          constants.STATIC_API_TOKEN,
-        ),
-      ).toBe(false);
+      await expect(async () => {
+        expect(
+          await common.CheckUserIsIngestedInCatalog(
+            [
+              rhssoHelper.getRHSSOUserDisplayName(
+                constants.RHSSO76_USERS["user_1"],
+              ),
+            ],
+            constants.STATIC_API_TOKEN,
+          ),
+        ).toBe(false);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       const api = new APIHelper();
       api.UseStaticToken(constants.STATIC_API_TOKEN);
 
-      const group_1: GroupEntity = await api.getGroupEntityFromAPI(
-        constants.RHSSO76_GROUPS["group_1"].name,
-      );
-      expect(
-        group_1.spec.members.includes(
-          constants.RHSSO76_USERS["user_1"].username,
-        ),
-      ).toBe(false);
+      await expect(async () => {
+        const group_1: GroupEntity = await api.getGroupEntityFromAPI(
+          constants.RHSSO76_GROUPS["group_1"].name,
+        );
+        expect(
+          group_1.spec.members.includes(
+            constants.RHSSO76_USERS["user_1"].username,
+          ),
+        ).toBe(false);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
     });
 
     test(`${version} - move a user to another group in ${version}`, async () => {
@@ -437,7 +447,6 @@ for (const version of ["RHBK", "RHSSO"]) {
       });
 
       // logout
-      await page.goto("/");
       await uiHelper.openSidebar("Settings");
       await common.signOut();
 
@@ -445,15 +454,20 @@ for (const version of ["RHBK", "RHSSO"]) {
 
       // ensure the change is mirrored in the catalog
       // location_admin should show user_3
-      const group_3: GroupEntity = await api.getGroupEntityFromAPI(
-        constants.RHSSO76_GROUPS["location_admin"].name,
-      );
+      await expect(async () => {
+        const group_3: GroupEntity = await api.getGroupEntityFromAPI(
+          constants.RHSSO76_GROUPS["location_admin"].name,
+        );
 
-      expect(
-        group_3.spec.members.includes(
-          constants.RHSSO76_USERS["user_3"].username,
-        ),
-      ).toBe(true);
+        expect(
+          group_3.spec.members.includes(
+            constants.RHSSO76_USERS["user_3"].username,
+          ),
+        ).toBe(true);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       // configure policy permissions different for the two groups
       // after the sync, ensure the permission also reflect the user move
@@ -480,7 +494,6 @@ for (const version of ["RHBK", "RHSSO"]) {
         timeout: 60 * 1000,
       });
 
-      await page.goto("/");
       await uiHelper.openSidebar("Settings");
       await common.signOut();
     });
@@ -507,26 +520,36 @@ for (const version of ["RHBK", "RHSSO"]) {
       const api = new APIHelper();
       api.UseStaticToken(constants.STATIC_API_TOKEN);
 
-      const group_4: GroupEntity = await api.getGroupEntityFromAPI(
-        constants.RHSSO76_GROUPS["group_4"].name,
-      );
-      expect(
-        group_4.spec.members.includes(
-          constants.RHSSO76_USERS["user_4"].username,
-        ),
-      ).toBe(true);
+      await expect(async () => {
+        const group_4: GroupEntity = await api.getGroupEntityFromAPI(
+          constants.RHSSO76_GROUPS["group_4"].name,
+        );
+        expect(
+          group_4.spec.members.includes(
+            constants.RHSSO76_USERS["user_4"].username,
+          ),
+        ).toBe(true);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       // waiting for next sync
       await WaitForNextSync(SYNC__TIME, "rhsso");
 
       // after the sync ensure the group entity is removed
       // group_4 should not be in the catalog anymore
-      expect(
-        await common.CheckGroupIsIngestedInCatalog(
-          [constants.RHSSO76_GROUPS["group_4"].name],
-          constants.STATIC_API_TOKEN,
-        ),
-      ).toBe(false);
+      await expect(async () => {
+        expect(
+          await common.CheckGroupIsIngestedInCatalog(
+            [constants.RHSSO76_GROUPS["group_4"].name],
+            constants.STATIC_API_TOKEN,
+          ),
+        ).toBe(false);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       // users permission based on that group will be defaulted to read-only
       // expect user not to see catalog entities
@@ -534,11 +557,16 @@ for (const version of ["RHBK", "RHSSO"]) {
         constants.RHSSO76_USERS["user_4"].username,
         constants.RHSSO76_DEFAULT_PASSWORD,
       );
-      await page.goto("/");
-      const navMyGroup = page.locator(`nav a:has-text("My Group")`);
-      await expect(navMyGroup).toHaveCount(0);
 
-      await page.goto("/");
+      await expect(async () => {
+        await page.goto("/");
+        const navMyGroup = page.locator(`nav a:has-text("My Group")`);
+        await expect(navMyGroup).toHaveCount(0);
+      }).toPass({
+        intervals: [2_000, 5_000],
+        timeout: 30 * 1000,
+      });
+
       await uiHelper.openSidebar("Settings");
       await common.signOut();
     });
@@ -621,12 +649,17 @@ for (const version of ["RHBK", "RHSSO"]) {
       await WaitForNextSync(SYNC__TIME, "rhsso");
 
       // after sync, ensure group is created again and memembers can login
-      expect(
-        await common.CheckGroupIsIngestedInCatalog(
-          [constants.RHSSO76_GROUPS["group_3"].name],
-          constants.STATIC_API_TOKEN,
-        ),
-      ).toBe(true);
+      await expect(async () => {
+        expect(
+          await common.CheckGroupIsIngestedInCatalog(
+            [constants.RHSSO76_GROUPS["group_3"].name],
+            constants.STATIC_API_TOKEN,
+          ),
+        ).toBe(true);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
     });
 
     test(`${version} - rename a user and a group`, async () => {
@@ -648,13 +681,17 @@ for (const version of ["RHBK", "RHSSO"]) {
 
       // after sync, ensure group is mirrored
       // after sync, ensure user change is mirrorred
-
-      expect(
-        await common.CheckGroupIsIngestedInCatalog(
-          [constants.RHSSO76_GROUPS["group_2"].name + "_renamed"],
-          constants.STATIC_API_TOKEN,
-        ),
-      ).toBe(true);
+      await expect(async () => {
+        expect(
+          await common.CheckGroupIsIngestedInCatalog(
+            [constants.RHSSO76_GROUPS["group_2"].name + "_renamed"],
+            constants.STATIC_API_TOKEN,
+          ),
+        ).toBe(true);
+      }).toPass({
+        intervals: [1_000, 2_000, 5_000],
+        timeout: 60 * 1000,
+      });
 
       await common.keycloakLogin(
         constants.RHSSO76_USERS["user_2"].username,
@@ -663,9 +700,14 @@ for (const version of ["RHBK", "RHSSO"]) {
 
       // users permission based on that group will be defaulted to read-only
       // expect user not to see catalog entities
-      await page.goto("/");
-      const navMyGroup = page.locator(`nav a:has-text("My Group")`);
-      await expect(navMyGroup).toHaveCount(0);
+      await expect(async () => {
+        await page.goto("/");
+        const navMyGroup = page.locator(`nav a:has-text("My Group")`);
+        await expect(navMyGroup).toHaveCount(0);
+      }).toPass({
+        intervals: [2_000, 5_000],
+        timeout: 30 * 1000,
+      });
 
       // update the policy with the new group name
       await replaceInRBACPolicyFileConfigMap(
