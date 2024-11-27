@@ -420,18 +420,20 @@ for (const version of ["RHBK", "RHSSO"]) {
         usersCreated["user_3"].id,
         groupsCreated["location_admin"].id,
       );
-      await common.keycloakLogin(
-        constants.RHSSO76_USERS["user_3"].username,
-        constants.RHSSO76_DEFAULT_PASSWORD,
-      );
 
       const api = new APIHelper();
-      api.UseStaticToken(constants.STATIC_API_TOKEN);
       let apiToken: string;
 
       await expect(async () => {
+        await common.keycloakLogin(
+          constants.RHSSO76_USERS["user_3"].username,
+          constants.RHSSO76_DEFAULT_PASSWORD,
+        );
+
         apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
         expect(apiToken).not.toBeUndefined();
+        api.UseStaticToken(apiToken);
+
         const statusBefore = await api.scheduleEntityRefreshFromAPI(
           "example",
           "location",
@@ -441,14 +443,14 @@ for (const version of ["RHBK", "RHSSO"]) {
           `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
         );
         expect(statusBefore).toBe(403);
+
+        // logout
+        await uiHelper.openSidebar("Settings");
+        await common.signOut();
       }).toPass({
         intervals: [1_000, 2_000, 5_000],
         timeout: 90 * 1000,
       });
-
-      // logout
-      await uiHelper.openSidebar("Settings");
-      await common.signOut();
 
       await WaitForNextSync(SYNC__TIME, "rhsso");
 
