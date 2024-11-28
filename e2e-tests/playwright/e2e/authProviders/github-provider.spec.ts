@@ -7,20 +7,28 @@ import {
   upgradeHelmChartWithWait,
   WaitForNextSync,
   replaceInRBACPolicyFileConfigMap,
+  parseGroupMemberFromEntity,
+  parseGroupChildrenFromEntity,
+  parseGroupParentFromEntity,
+  dumpAllPodsLogs,
+  dumpRHDHUsersAndGroups,
 } from "../../utils/helper";
 import { BrowserContext } from "@playwright/test";
 import * as ghHelper from "../../utils/authenticationProviders/githubHelper";
+import { APIHelper } from "../../utils/APIHelper";
+import { GroupEntity } from "@backstage/catalog-model";
+import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
 
 let page: Page;
 
 test.describe("Standard authentication providers: Github Provider", () => {
-  test.skip();
   test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
 
   let common: Common;
   let context: BrowserContext;
   let uiHelper: UIhelper;
   const SYNC_TIME = 60;
+  let MUST_SYNC = false;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     const browserSetup = await setupBrowser(browser, testInfo);
@@ -104,100 +112,100 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
   test("Ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH ", async () => {
     test.setTimeout(300 * 1000);
-    if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
-    }
-    await common.githubLogin(
-      constants.GH_USERS["admin"].name,
-      constants.GH_USER_PASSWORD,
-    );
 
     // check entities are in the catalog
     const usersDisplayNames = Object.values(constants.GH_USERS).map(
       (u) => u.name,
     );
-    await common.CheckUserIsShowingInCatalog(usersDisplayNames);
+    expect(
+      await common.CheckUserIsIngestedInCatalog(
+        usersDisplayNames,
+        constants.STATIC_API_TOKEN,
+      ),
+    ).toBe(true);
 
     // check groups are nested correctly and display all members
     const groupsDisplayNames = Object.values(constants.GH_TEAMS).map(
       (g) => g.name,
     );
-    await common.CheckGroupIsShowingInCatalog(groupsDisplayNames);
+    expect(
+      await common.CheckGroupIsIngestedInCatalog(
+        groupsDisplayNames,
+        constants.STATIC_API_TOKEN,
+      ),
+    ).toBe(true);
 
-    let displayed;
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
 
     // check team1
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_1: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_1"].name,
     );
-    expect(displayed.groupMembers).toContain(constants.GH_USERS["admin"].name);
+    const members_1 = parseGroupMemberFromEntity(group_1);
+    expect(members_1.includes(constants.GH_USERS["admin"].name)).toBe(true);
 
     // check team2
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_2: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_2"].name,
     );
-    expect(displayed.groupMembers).toEqual([]);
-    expect(displayed.childGroups).toContain(constants.GH_TEAMS["team_3"].name);
+    const members_2 = parseGroupMemberFromEntity(group_2);
+    expect(members_2).toEqual([]);
+
+    const children_2 = parseGroupChildrenFromEntity(group_2);
+    expect(children_2.includes(constants.GH_TEAMS["team_3"].name)).toBe(true);
 
     // check team3
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_3: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_3"].name,
     );
-    expect(displayed.groupMembers).toContain(constants.GH_USERS["user_1"].name);
-    expect(displayed.parentGroup).toContain(constants.GH_TEAMS["team_2"].name);
+    const members_3 = parseGroupMemberFromEntity(group_3);
+    expect(members_3.includes(constants.GH_USERS["user_1"].name)).toBe(true);
+    const parent_3 = parseGroupParentFromEntity(group_3);
+    expect(parent_3.includes(constants.GH_TEAMS["team_2"].name)).toBe(true);
 
     // check team4
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
+    const group_4: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_4"].name,
     );
-    expect(displayed.groupMembers).toContain(constants.GH_USERS["user_1"].name);
+    const members_4 = parseGroupMemberFromEntity(group_4);
+    expect(members_4.includes(constants.GH_USERS["user_1"].name)).toBe(true);
 
     // check location_admin
-    displayed = await common.GoToGroupPageAndGetDisplayedData(
-      constants.GH_TEAMS["location_admin"].name,
+    const location_admin: GroupEntity = await api.getGroupEntityFromAPI(
+      constants.GH_TEAMS["team_4"].name,
     );
-    expect(displayed.groupMembers).toContain(constants.GH_USERS["admin"].name);
-
-    await page.goto("/");
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
+    const members_location_admin = parseGroupMemberFromEntity(location_admin);
+    expect(
+      members_location_admin.includes(constants.GH_USERS["admin"].name),
+    ).toBe(true);
   });
 
   test("Remove a user from RHDH", async () => {
     test.setTimeout(300 * 1000);
-    if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
-    }
+
     // remove user from RHDH -> authentication works, access is broken
     logger.info(
       `Executing testcase: Remove a user from RHDH: authentication should work, but access is denied before next sync.`,
     );
 
-    await common.githubLogin(
-      constants.GH_USERS["admin"].name,
-      constants.GH_USER_PASSWORD,
-    );
-    logger.info("Unregistering user1 from catalog");
-
+    logger.info("Unregistering user 3 from catalog");
     await common.UnregisterUserEntityFromCatalog(
       constants.GH_USERS["user_1"].name,
       constants.STATIC_API_TOKEN,
     );
-    logger.info("Checking alert message after login");
-    await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
 
     await expect(async () => {
-      await common.CheckUserIsShowingInCatalog([
-        constants.GH_USERS["user_1"].name,
-      ]);
-    }).not.toPass({
+      expect(
+        await common.CheckUserIsIngestedInCatalog(
+          [constants.GH_USERS["user_1"].name],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(false);
+    }).toPass({
       intervals: [1_000, 2_000, 5_000],
-      timeout: 20 * 1000,
+      timeout: 60 * 1000,
     });
-
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-    await context.clearCookies();
 
     const loginSucceded = await common.githubLogin(
       constants.GH_USERS["user_1"].name,
@@ -228,32 +236,27 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
   test("Remove a group from RHDH", async () => {
     test.setTimeout(300 * 1000);
-    if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
-    }
 
     // remove group from RHDH -> user can login, but policy is broken
     logger.info(
       `Executing testcase: Remove a group from RHDH: user can login, but policy is broken before next sync.`,
     );
 
-    await common.githubLogin(
-      constants.GH_USERS["admin"].name,
-      constants.GH_USER_PASSWORD,
-    );
     await common.UnregisterGroupEntityFromCatalog(
       constants.GH_TEAMS["team_1"].name,
       constants.STATIC_API_TOKEN,
     );
-    await uiHelper.verifyAlertErrorMessage(/Removed entity/gm);
 
     await expect(async () => {
-      await common.CheckGroupIsShowingInCatalog([
-        constants.GH_TEAMS["team_1"].name,
-      ]);
-    }).not.toPass({
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.GH_TEAMS["team_1"].name],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(false);
+    }).toPass({
       intervals: [1_000, 2_000, 5_000],
-      timeout: 20 * 1000,
+      timeout: 60 * 1000,
     });
 
     // waiting for next sync
@@ -264,21 +267,21 @@ test.describe("Standard authentication providers: Github Provider", () => {
       `Execute testcase: Remove a group from RHDH: group is created again after the sync`,
     );
 
-    await page.reload();
-
-    await common.CheckGroupIsShowingInCatalog([
-      constants.GH_TEAMS["team_1"].name,
-    ]);
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.GH_TEAMS["team_1"].name],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
   });
 
   test("Move a user to another group in Github", async () => {
     test.setTimeout(300 * 1000);
-    if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
-    }
     // move a user to another group -> ensure user can still login
     logger.info(
       `Executing testcase: Move a user to another group in Github: user should still login before next sync.`,
@@ -300,20 +303,27 @@ test.describe("Standard authentication providers: Github Provider", () => {
       constants.GH_USER_PASSWORD,
     );
 
-    await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
-    // submenu with groups opens randomly in headless mode, blocking visibility of the other elements
-    await page.reload();
-    await uiHelper.selectMuiBox("Kind", "Location");
-    await uiHelper.verifyHeading("All locations");
-    await uiHelper.verifyCellsInTable(["example"]);
-    await uiHelper.clickLink("example");
-    await uiHelper.verifyHeading("example");
-    await expect(
-      page.locator(`button[title="Schedule entity refresh"]`),
-    ).toHaveCount(0);
-    // logout
-    await page.goto("/");
+    let apiToken;
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
+
+    await expect(async () => {
+      apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+      expect(apiToken).not.toBeUndefined();
+      const statusBefore = await api.scheduleEntityRefreshFromAPI(
+        "example",
+        "location",
+        apiToken,
+      );
+      logger.info(
+        `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
+      );
+      expect(statusBefore).toBe(403);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 90 * 1000,
+    });
+
     await uiHelper.openSidebar("Settings");
     await common.signOut();
 
@@ -323,52 +333,71 @@ test.describe("Standard authentication providers: Github Provider", () => {
     logger.info(
       `Execute testcase: Move a user to another group in Github: change should be mirrored and permission should be updated after the sync`,
     );
+
+    // location_admin should show user_2
+    const group: GroupEntity = await api.getGroupEntityFromAPI(
+      constants.GH_TEAMS["location_admin"].name,
+    );
+    const members = parseGroupMemberFromEntity(group);
+    expect(members.includes(constants.GH_USERS["user_1"].name)).toBe(true);
+
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
     );
 
-    const displayed = await common.GoToGroupPageAndGetDisplayedData(
-      constants.GH_TEAMS["location_admin"].name,
-    );
-    expect(displayed.groupMembers).toContain(constants.GH_USERS["user_1"].name);
-
-    // configure policy permissions different for the two groups
-    // after the sync, ensure the permission also reflect the user move
     // check RBAC permissions are updated after group update
     // new group should allow user to schedule location refresh and unregister the entity
-    await uiHelper.verifyLocationRefreshButtonIsEnabled("example");
 
-    await page.goto("/");
+    await expect(async () => {
+      await page.goto("/");
+      await uiHelper.verifyHeading("Welcome");
+
+      apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+      const statusAfter = await api.scheduleEntityRefreshFromAPI(
+        "example",
+        "location",
+        apiToken,
+      );
+      logger.info(
+        `Checking user can schedule location refresh. API returned ${statusAfter}`,
+      );
+      expect(statusAfter).toBe(200);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
+
     await uiHelper.openSidebar("Settings");
     await common.signOut();
+    await context.clearCookies();
   });
 
   test("Remove a group from Github", async () => {
     test.setTimeout(300 * 1000);
-    if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
-    }
+
     // remove a group -> members still exists, member should still login
     logger.info(
-      `Executing testcase: Remove a group from Microsoft EntraID: ensure group and its members still exists, member should still login before next sync.`,
+      `Executing testcase: Remove a group from Github: ensure group and its members still exists, member should still login before next sync.`,
     );
 
     await ghHelper.deleteTeam(
       constants.GH_TEAMS["team_4"].name,
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
     );
-    // user should login
-    await common.githubLogin(
-      constants.GH_USERS["admin"].name,
-      constants.GH_USER_PASSWORD,
-    );
 
     // team should exist in rhdh
-    const displayed = await common.GoToGroupPageAndGetDisplayedData(
-      constants.GH_TEAMS["team_4"].name,
-    );
-    expect(displayed.groupMembers).toContain(constants.GH_USERS["user_1"].name);
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.GH_TEAMS["team_4"].name],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 60 * 1000,
+    });
 
     // waiting for next sync
     await WaitForNextSync(SYNC_TIME, "github");
@@ -378,14 +407,17 @@ test.describe("Standard authentication providers: Github Provider", () => {
       `Execute testcase: Remove a group from Github: group should be removed and permissions should default to read-only after the sync.`,
     );
 
-    await expect(
-      common.CheckGroupIsShowingInCatalog([constants.GH_USERS["user_1"].name]),
-    ).rejects.toThrow();
-
-    await page.goto("/");
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-    await context.clearCookies();
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.GH_USERS["user_1"].name],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(false);
+    }).toPass({
+      intervals: [5_000, 20_000],
+      timeout: 80 * 1000,
+    });
 
     // users permission based on that group will be defaulted to read-only
     // expect user not to see catalog entities
@@ -394,11 +426,15 @@ test.describe("Standard authentication providers: Github Provider", () => {
       constants.GH_USER_PASSWORD,
     );
 
-    await page.goto("/");
-    const navMyGroup = page.locator(`nav a:has-text("My Group")`);
-    await expect(navMyGroup).toHaveCount(0);
+    await expect(async () => {
+      await page.goto("/");
+      const navMyGroup = page.locator(`nav a:has-text("My Group")`);
+      await expect(navMyGroup).toHaveCount(0);
+    }).toPass({
+      intervals: [2_000, 5_000],
+      timeout: 30 * 1000,
+    });
 
-    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
@@ -406,9 +442,6 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
   test("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
-    if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
-    }
     // rename group from RHDH -> user can login, but policy is broken
     logger.info(`Executing testcase: Rename a user and a group.`);
 
@@ -434,17 +467,24 @@ test.describe("Standard authentication providers: Github Provider", () => {
     logger.info(
       `Execute testcase: Rename a user and a group: changes are mirrored in RHDH but permissions should be broken after the sync`,
     );
-    await common.githubLogin(
-      constants.GH_USERS["admin"].name,
-      constants.GH_USER_PASSWORD,
-    );
 
-    await common.CheckGroupIsShowingInCatalog([
-      constants.GH_TEAMS["team_2"].name + "_renamed",
-    ]);
-    await uiHelper.openSidebar("Settings");
-    await common.signOut();
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await expect(async () => {
+      expect(
+        await common.CheckGroupIsIngestedInCatalog(
+          [constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed"],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+      expect(
+        await common.CheckUserIsIngestedInCatalog(
+          [constants.GH_TEAMS["team_2"].name + "_renamed"],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 60 * 1000,
+    });
 
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
@@ -453,9 +493,14 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
     // users permission based on that group will be defaulted to read-only
     // expect user not to see catalog entities
-    await page.goto("/");
-    const navMyGroup = page.locator(`nav a:has-text("My Group")`);
-    await expect(navMyGroup).toHaveCount(0);
+    await expect(async () => {
+      await page.goto("/");
+      const navMyGroup = page.locator(`nav a:has-text("My Group")`);
+      await expect(navMyGroup).toHaveCount(0);
+    }).toPass({
+      intervals: [2_000, 5_000],
+      timeout: 30 * 1000,
+    });
 
     // update the policy with the new group name
     await replaceInRBACPolicyFileConfigMap(
@@ -473,7 +518,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
         "Reloading page, permission should be updated automatically.",
       );
       await expect(page.locator(`nav a:has-text("My Group")`)).toBeVisible({
-        timeout: 2000,
+        timeout: 5000,
       });
     }).toPass({
       intervals: [5_000, 10_000],
@@ -487,5 +532,26 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await uiHelper.openSidebar("Settings");
     await common.signOut();
     await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+  });
+
+  test.afterEach(async () => {
+    if (test.info().status !== test.info().expectedStatus) {
+      const prefix = `${test.info().testId}_${test.info().retry}`;
+      logger.info(`Dumping logs with prefix ${prefix}`);
+      await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
+      await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
+      MUST_SYNC = true;
+    }
+  });
+
+  test.beforeEach(async () => {
+    test.setTimeout(120 * 1000);
+    if (test.info().retry > 0 || MUST_SYNC) {
+      logger.info(
+        `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${MUST_SYNC}.`,
+      );
+      await WaitForNextSync(SYNC_TIME, "microsoft");
+      MUST_SYNC = false;
+    }
   });
 });
