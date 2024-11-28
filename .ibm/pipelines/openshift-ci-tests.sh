@@ -388,9 +388,13 @@ deploy_rhdh_operator() {
   local namespace=$2
 
   if [[ "${namespace}" == "showcase-op-rbac-nightly" ]]; then
+    oc apply -f "${dir}/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${namespace}"
     oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start-rbac.yaml" -n "${namespace}"
+    oc apply -f "${dir}/resources/rhdh-operator/patch/rhdh-patch-rbac.yaml" -n "${namespace}"
   else 
+    oc apply -f "${dir}/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${namespace}"
     oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start.yaml" -n "${namespace}"
+    oc apply -f "${dir}/resources/rhdh-operator/patch/rhdh-patch.yaml" -n "${namespace}"
   fi
 }
 
@@ -444,7 +448,6 @@ initiate_deployments_operator() {
   apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}"
   create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins.yaml"
   oc apply -f /tmp/configmap-dynamic-plugins.yaml -n "${NAME_SPACE}"
-  oc apply -f "$DIR/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${NAME_SPACE}"
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE}"
 
@@ -452,7 +455,6 @@ initiate_deployments_operator() {
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins-rbac.yaml"
   oc apply -f /tmp/configmap-dynamic-plugins-rbac.yaml -n "${NAME_SPACE_RBAC}"
-  oc apply -f "$DIR/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${NAME_SPACE_RBAC}"
   deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
 }
 
