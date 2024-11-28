@@ -295,7 +295,7 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     await uiHelper.verifyHeading("Edit Role");
     await rbacPo.clickAddPermissionPolicy();
     await page.click(rbacPo.selectPermissionPolicyPlugin(1), {
-      timeout: 100000,
+      timeout: 10 * 1000,
     });
     await rbacPo.selectOption("scaffolder");
     await page.click(rbacPo.selectPermissionPolicyPermission(1));
