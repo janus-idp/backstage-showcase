@@ -1,5 +1,5 @@
-import { HomePagePO } from "../pageObjects/page-obj";
-import { UIhelper } from "../../utils/UIhelper";
+import { HOME_PAGE_COMPONENTS } from "../pageObjects/page-obj";
+import { UIhelper } from "../../utils/ui-helper";
 import { Page, expect } from "@playwright/test";
 
 export class HomePage {
@@ -11,7 +11,7 @@ export class HomePage {
     this.uiHelper = new UIhelper(page);
   }
   async verifyQuickSearchBar(text: string) {
-    const searchBar = this.page.locator(HomePagePO.searchBar);
+    const searchBar = this.page.locator(HOME_PAGE_COMPONENTS.searchBar);
     await searchBar.waitFor();
     await searchBar.fill("");
     await searchBar.type(text + "\n"); // '\n' simulates pressing the Enter key
@@ -23,12 +23,12 @@ export class HomePage {
     quickAccessItem: string,
     expand = false,
   ) {
-    await this.page.waitForSelector(HomePagePO.MuiAccordion, {
+    await this.page.waitForSelector(HOME_PAGE_COMPONENTS.MuiAccordion, {
       state: "visible",
     });
 
     const sectionLocator = this.page
-      .locator(HomePagePO.MuiAccordion)
+      .locator(HOME_PAGE_COMPONENTS.MuiAccordion)
       .filter({ hasText: section });
 
     if (expand) {

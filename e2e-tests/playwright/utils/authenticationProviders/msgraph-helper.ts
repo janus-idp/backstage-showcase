@@ -4,41 +4,38 @@ import { Client, PageCollection } from "@microsoft/microsoft-graph-client";
 import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials/index.js";
 import { AppSettings } from "./constants";
 import { User, Group } from "@microsoft/microsoft-graph-types";
-import { logger } from "../Logger";
+import { LOGGER } from "../logger";
 import * as constants from "./constants";
 import * as helper from "../helper";
 
-let _settings: AppSettings | undefined = undefined;
-let _clientSecretCredential: ClientSecretCredential | undefined = undefined;
-let _appClient: Client | undefined = undefined;
+let clientSecretCredential: ClientSecretCredential | undefined = undefined;
+let appClient: Client | undefined = undefined;
 
 export function initializeGraphForAppOnlyAuth(settings: AppSettings) {
-  logger.info(`Initializing MSGraph client`);
+  LOGGER.info(`Initializing MSGraph client`);
 
   if (!settings) {
-    logger.error(`MSGraph settings undefined`);
+    LOGGER.error(`MSGraph settings undefined`);
     throw new Error("Settings cannot be undefined");
   }
 
-  _settings = settings;
-
-  if (!_clientSecretCredential) {
-    _clientSecretCredential = new ClientSecretCredential(
-      _settings.tenantId,
-      _settings.clientId,
-      _settings.clientSecret,
+  if (!clientSecretCredential) {
+    clientSecretCredential = new ClientSecretCredential(
+      settings.tenantId,
+      settings.clientId,
+      settings.clientSecret,
     );
   }
 
-  if (!_appClient) {
+  if (!appClient) {
     const authProvider = new TokenCredentialAuthenticationProvider(
-      _clientSecretCredential,
+      clientSecretCredential,
       {
         scopes: ["https://graph.microsoft.com/.default"],
       },
     );
 
-    _appClient = Client.initWithMiddleware({
+    appClient = Client.initWithMiddleware({
       authProvider: authProvider,
     });
   }
@@ -46,14 +43,14 @@ export function initializeGraphForAppOnlyAuth(settings: AppSettings) {
 
 export async function getAppOnlyTokenAsync(): Promise<string> {
   // Ensure credential isn't undefined
-  if (!_clientSecretCredential) {
-    logger.error("Graph has not been initialized for app-only auth");
+  if (!clientSecretCredential) {
+    LOGGER.error("Graph has not been initialized for app-only auth");
     throw new Error("Graph has not been initialized for app-only auth");
   }
 
   // Request token with given scopes
-  logger.info(`Getting MSGraph token`);
-  const response = await _clientSecretCredential.getToken([
+  LOGGER.info(`Getting MSGraph token`);
+  const response = await clientSecretCredential.getToken([
     "https://graph.microsoft.com/.default",
   ]);
   return response.token;
@@ -61,18 +58,18 @@ export async function getAppOnlyTokenAsync(): Promise<string> {
 
 export async function getGroupsAsync(): Promise<PageCollection> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
 
-  logger.info(`Listing groups from Microsoft EntraID`);
+  LOGGER.info(`Listing groups from Microsoft EntraID`);
   try {
-    return _appClient
+    return appClient
       ?.api("/groups")
       .select(["id", "displayName", "members", "owners"])
       .get();
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -81,24 +78,24 @@ export async function getGroupByNameAsync(
   groupName: string,
 ): Promise<PageCollection> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   let group: PageCollection;
 
   try {
-    logger.info(`Getting group ${groupName} from Microsoft EntraID`);
-    group = await await _appClient
+    LOGGER.info(`Getting group ${groupName} from Microsoft EntraID`);
+    group = await await appClient
       ?.api("/groups")
       .filter(`displayName eq '${groupName}'`)
       .top(1)
       .get();
   } catch (e) {
     if (e && e.statusCode && e.statusCode == 404) {
-      logger.info(`Group ${groupName} not found in Microsoft EntraID`);
+      LOGGER.info(`Group ${groupName} not found in Microsoft EntraID`);
       return null;
     } else {
-      logger.error(e);
+      LOGGER.error(e);
       throw new Error(e);
     }
   }
@@ -109,14 +106,14 @@ export async function getGroupMembersAsync(
   groupId: string,
 ): Promise<PageCollection> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(
+    LOGGER.info(
       `Getting group members of group ${groupId} from Microsoft EntraID`,
     );
-    return _appClient
+    return appClient
       ?.api(`/groups/${groupId}/members`)
       .select([
         "displayName",
@@ -128,47 +125,47 @@ export async function getGroupMembersAsync(
       ])
       .get();
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function createUserAsync(user: User): Promise<User> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Creating user ${user.userPrincipalName} in Microsoft EntraID`);
-    return await _appClient?.api("/users").post(user);
+    LOGGER.info(`Creating user ${user.userPrincipalName} in Microsoft EntraID`);
+    return await appClient?.api("/users").post(user);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function createGrouprAsync(group: Group): Promise<Group> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Creating group ${group.displayName} in Microsoft EntraID`);
-    return await _appClient?.api("/groups").post(group);
+    LOGGER.info(`Creating group ${group.displayName} in Microsoft EntraID`);
+    return await appClient?.api("/groups").post(group);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function getUsersAsync(): Promise<PageCollection> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Listing users from Microsoft EntraID`);
-    return _appClient
+    LOGGER.info(`Listing users from Microsoft EntraID`);
+    return appClient
       ?.api("/users")
       .select([
         "displayName",
@@ -182,52 +179,52 @@ export async function getUsersAsync(): Promise<PageCollection> {
       .orderby("userPrincipalName")
       .get();
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function deleteUserByUpnAsync(upn: string): Promise<User> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Deleting user ${upn} from Microsoft EntraID`);
-    return _appClient?.api("/users/" + upn).delete();
+    LOGGER.info(`Deleting user ${upn} from Microsoft EntraID`);
+    return appClient?.api("/users/" + upn).delete();
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function deleteGroupByIdAsync(id: string): Promise<User> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Deleting group ${id} from Microsoft EntraID`);
-    return _appClient?.api("/groups/" + id).delete();
+    LOGGER.info(`Deleting group ${id} from Microsoft EntraID`);
+    return appClient?.api("/groups/" + id).delete();
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function getUserByUpnAsync(upn: string): Promise<User | null> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   let user: User;
 
   try {
-    logger.info(`Getting user ${upn} from Microsoft EntraID`);
-    user = await _appClient?.api("/users/" + upn).get();
+    LOGGER.info(`Getting user ${upn} from Microsoft EntraID`);
+    user = await appClient?.api("/users/" + upn).get();
   } catch (e) {
     if (e && e.statusCode && e.statusCode == 404) {
-      logger.info(`User ${upn} not found in Microsoft EntraID`);
+      LOGGER.info(`User ${upn} not found in Microsoft EntraID`);
       return null;
     } else {
       throw new Error(e);
@@ -241,7 +238,7 @@ export async function addUserToGroupAsync(
   group: Group,
 ): Promise<Group> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
 
@@ -250,14 +247,14 @@ export async function addUserToGroupAsync(
       "https://graph.microsoft.com/v1.0/users/" + user.userPrincipalName,
   };
   try {
-    logger.info(
+    LOGGER.info(
       `Adding user ${user.userPrincipalName} to group ${group.displayName} in Microsoft EntraID`,
     );
-    return await _appClient
+    return await appClient
       ?.api("/groups/" + group.id + "/members/$ref")
       .post(userDirectoryObject);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -267,18 +264,18 @@ export async function removeUserFromGroupAsync(
   group: Group,
 ): Promise<Group> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(
+    LOGGER.info(
       `Removing user ${user.userPrincipalName} from group ${group.displayName} in Microsoft EntraID`,
     );
-    return await _appClient
+    return await appClient
       ?.api(`/groups/${group.id}/members/${user.id}/$ref`)
       .delete();
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -288,7 +285,7 @@ export async function addGroupToGroupAsync(
   target: Group,
 ): Promise<Group> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
 
@@ -296,14 +293,14 @@ export async function addGroupToGroupAsync(
     "@odata.id": "https://graph.microsoft.com/v1.0/groups/" + subject.id,
   };
   try {
-    logger.info(
+    LOGGER.info(
       `Nesting group ${target.displayName} in group ${subject.displayName} in Microsoft EntraID`,
     );
-    return await _appClient
+    return await appClient
       ?.api("/groups/" + target.id + "/members/$ref")
       .post(userDirectoryObject);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -313,16 +310,16 @@ export async function updateUserAsync(
   updatedUser: User,
 ): Promise<User> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Updating ${user.userPrincipalName} in Microsoft EntraID`);
-    return await _appClient
+    LOGGER.info(`Updating ${user.userPrincipalName} in Microsoft EntraID`);
+    return await appClient
       ?.api("/users/" + user.userPrincipalName)
       .update(updatedUser);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -332,14 +329,14 @@ export async function updateGrouprAsync(
   updatedGroup: Group,
 ): Promise<Group> {
   // Ensure client isn't undefined
-  if (!_appClient) {
+  if (!appClient) {
     throw new Error("Graph has not been initialized for app-only auth");
   }
   try {
-    logger.info(`Updating group ${group.displayName} in Microsoft EntraID`);
-    return await _appClient?.api("/groups/" + group.id).update(updatedGroup);
+    LOGGER.info(`Updating group ${group.displayName} in Microsoft EntraID`);
+    return await appClient?.api("/groups/" + group.id).update(updatedGroup);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -353,14 +350,14 @@ export async function setupMicrosoftEntraIDEnvironment(): Promise<{
 
   try {
     await initializeGraphForAppOnlyAuth(constants.MSGRAPH_SETTINGS);
-    logger.info("Setting up users and groups in Microsoft EntraID");
+    LOGGER.info("Setting up users and groups in Microsoft EntraID");
 
     // explictily remove the renamed user and group to avoid inconsistencies
     const userExists = await getUserByUpnAsync(
       "renamed_" + constants.MSGRAPH_USERS["user_6"].userPrincipalName,
     );
     if (userExists) {
-      logger.info(
+      LOGGER.info(
         `User ${"renamed_" + constants.MSGRAPH_USERS["user_6"].userPrincipalName} already exists. Deleting..`,
       );
       await deleteUserByUpnAsync(
@@ -372,7 +369,7 @@ export async function setupMicrosoftEntraIDEnvironment(): Promise<{
     );
     if (groupExists && groupExists.value) {
       for (const g of groupExists.value) {
-        logger.info(
+        LOGGER.info(
           `Group with name ${constants.MSGRAPH_GROUPS["group_6"].displayName + "_renamed"} already exists having id ${g.id}. Deleting..`,
         );
         await deleteGroupByIdAsync(g.id);
@@ -388,7 +385,7 @@ export async function setupMicrosoftEntraIDEnvironment(): Promise<{
         userExists &&
         userExists.userPrincipalName == user.userPrincipalName
       ) {
-        logger.info(
+        LOGGER.info(
           `User ${user.userPrincipalName} already exists. Deleting..`,
         );
         await deleteUserByUpnAsync(user.userPrincipalName);
@@ -402,7 +399,7 @@ export async function setupMicrosoftEntraIDEnvironment(): Promise<{
       const groupExists = await getGroupByNameAsync(group.displayName);
       if (groupExists && groupExists.value) {
         for (const g of groupExists.value) {
-          logger.info(
+          LOGGER.info(
             `Group with name ${g.displayName} already exists having id ${g.id}. Deleting..`,
           );
           await deleteGroupByIdAsync(g.id);
@@ -437,7 +434,7 @@ export async function setupMicrosoftEntraIDEnvironment(): Promise<{
       constants.AUTH_PROVIDERS_NAMESPACE,
     );
   } catch (e) {
-    logger.error({
+    LOGGER.error({
       level: "info",
       message: "Azure EntraID setup failed:",
       dump: JSON.stringify(e),

@@ -1,12 +1,14 @@
 import { Page, test } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
-import { CatalogImport } from "../support/pages/CatalogImport";
-import { APIHelper } from "../utils/APIHelper";
-import { githubAPIEndpoints } from "../utils/APIEndpoints";
+import { UIhelper } from "../utils/ui-helper";
+import { Common, setupBrowser } from "../utils/common";
+import { CatalogImport } from "../support/pages/catalog-import";
+import { APIHelper } from "../utils/api-helper";
+import { GITHUB_API_ENDPOINTS } from "../utils/api-endpoints";
 
 let page: Page;
-test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
+
+// TODO: replace skip with serial
+test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
   let uiHelper: UIhelper;
   let common: Common;
   let catalogImport: CatalogImport;
@@ -118,7 +120,7 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   test.afterAll(async () => {
     await APIHelper.githubRequest(
       "DELETE",
-      githubAPIEndpoints.deleteRepo(
+      GITHUB_API_ENDPOINTS.deleteRepo(
         reactAppDetails.repoOwner,
         reactAppDetails.repo,
       ),

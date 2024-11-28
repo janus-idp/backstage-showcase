@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { UIhelperPO } from "../../support/pageObjects/global-obj";
+import { UI_HELPER_ELEMENTS } from "../../support/pageObjects/global-obj";
 
 export class ImageRegistry {
   static getAllCellsIdentifier() {
@@ -63,7 +63,7 @@ export class ImageRegistry {
 
   static async getScanCell(page: Page) {
     const locator = page
-      .locator(UIhelperPO.MuiTableCell)
+      .locator(UI_HELPER_ELEMENTS.MuiTableCell)
       .filter({ hasText: this.securityScanRegex() });
     await locator.first().waitFor();
     return locator.first();

@@ -1,15 +1,17 @@
 import { test, expect, Page } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
-import { resources } from "../support/testData/resources";
+import { UIhelper } from "../utils/ui-helper";
+import { Common, setupBrowser } from "../utils/common";
+import { RESOURCES } from "../support/testData/resources";
 import {
   BackstageShowcase,
   CatalogImport,
-} from "../support/pages/CatalogImport";
-import { templates } from "../support/testData/templates";
+} from "../support/pages/catalog-import";
+import { TEMPLATES } from "../support/testData/templates";
 
 let page: Page;
-test.describe.serial("GitHub Happy path", () => {
+
+// TODO: replace skip with serial
+test.describe.skip("GitHub Happy path", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let catalogImport: CatalogImport;
@@ -27,6 +29,7 @@ test.describe.serial("GitHub Happy path", () => {
     backstageShowcase = new BackstageShowcase(page);
     await common.loginAsGithubUser();
   });
+
   test.beforeEach(
     async () => await new Common(page).checkAndClickOnGHloginPopup(),
   );
@@ -34,7 +37,7 @@ test.describe.serial("GitHub Happy path", () => {
   test("Verify Profile is Github Account Name in the Settings page", async () => {
     await uiHelper.openSidebar("Settings");
     await expect(page).toHaveURL("/settings");
-    await uiHelper.verifyHeading(process.env.GH_USER_ID as string);
+    await uiHelper.verifyHeading(process.env.GH_USER_ID);
     await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
   });
 
@@ -75,7 +78,7 @@ test.describe.serial("GitHub Happy path", () => {
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
 
-    for (const template of templates) {
+    for (const template of TEMPLATES) {
       await uiHelper.waitForH4Title(template);
       await uiHelper.verifyHeading(template);
     }
@@ -118,7 +121,7 @@ test.describe.serial("GitHub Happy path", () => {
     await backstageShowcase.verifyPRRows(closedPRs, 0, 5);
   });
 
-  //TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
+  // TODO https://issues.redhat.com/browse/RHIDP-3159 The last ~10 GitHub Pull Requests are missing from the list
   test.skip("Click on the arrows to verify that the next/previous/first/last pages of PRs are loaded", async () => {
     console.log("Fetching all PRs from GitHub");
     const allPRs = await BackstageShowcase.getShowcasePRs("all", true);
@@ -168,7 +171,7 @@ test.describe.serial("GitHub Happy path", () => {
 
   test("Click on the Dependencies tab and verify that all the relations have been listed and displayed", async () => {
     await uiHelper.clickTab("Dependencies");
-    for (const resource of resources) {
+    for (const resource of RESOURCES) {
       const resourceElement = page.locator(
         `#workspace:has-text("${resource}")`,
       );

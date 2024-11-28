@@ -1,8 +1,6 @@
 import { test } from "@playwright/test";
-import { Common } from "../utils/Common";
-import { kubeCLient } from "../utils/k8sHelper";
-
-export const k8sClient = new kubeCLient();
+import { Common } from "../utils/common";
+import { KubeClient } from "../utils/kube-client";
 
 test.describe
   .serial("Verify TLS configuration with Postgres DB health check", () => {
@@ -20,6 +18,7 @@ test.describe
   });
 
   test("Change the config to use the latest-2 postgres version", async () => {
+    const kubeCLient = new KubeClient();
     test.setTimeout(120000);
     const secretData = {
       POSTGRES_HOST: hostLatest2,
@@ -27,8 +26,8 @@ test.describe
     const patch = {
       data: secretData,
     };
-    await k8sClient.updateSecret(secretName, namespace, patch);
-    await k8sClient.restartDeployment(deploymentName, namespace);
+    await kubeCLient.updateSecret(secretName, namespace, patch);
+    await kubeCLient.restartDeployment(deploymentName, namespace);
   });
 
   test("Verify successful DB connection and successful initialization of plugins with latest-2 postgres version", async ({
@@ -39,6 +38,7 @@ test.describe
   });
 
   test("Change the config to use the latest-3 postgres version", async () => {
+    const kubeCLient = new KubeClient();
     test.setTimeout(120000);
     const secretData = {
       POSTGRES_HOST: hostLatest3,
@@ -46,8 +46,8 @@ test.describe
     const patch = {
       data: secretData,
     };
-    await k8sClient.updateSecret(secretName, namespace, patch);
-    await k8sClient.restartDeployment(deploymentName, namespace);
+    await kubeCLient.updateSecret(secretName, namespace, patch);
+    await kubeCLient.restartDeployment(deploymentName, namespace);
   });
 
   test("Verify successful DB connection and successful initialization of plugins with latest-3 postgres version", async ({

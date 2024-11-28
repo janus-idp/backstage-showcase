@@ -1,9 +1,9 @@
 import { test, Page, expect } from "@playwright/test";
-import { Common, setupBrowser } from "../../utils/Common";
-import { UIhelper } from "../../utils/UIhelper";
+import { Common, setupBrowser } from "../../utils/common";
+import { UIhelper } from "../../utils/ui-helper";
 import * as constants from "../../utils/authenticationProviders/constants";
-import { logger } from "../../utils/Logger";
-import { upgradeHelmChartWithWait } from "../../utils/helper";
+import { LOGGER } from "../../utils/logger";
+import { HelmActions } from "../../utils/helm";
 
 let page: Page;
 
@@ -18,19 +18,19 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     expect(process.env.BASE_URL).not.toBeNull();
-    logger.info(`Base Url is ${process.env.BASE_URL}`);
-    logger.info(
+    LOGGER.info(`Base Url is ${process.env.BASE_URL}`);
+    LOGGER.info(
       `Starting scenario: Standard authentication providers: Basic authentication: attemp #${testInfo.retry}`,
     );
   });
 
   test("1. Verify guest login can work when no auth provider is configured (dangerouslyAllowSignInWithoutUserInCatalog is enabled by default but it should not conflict with the guest login).", async () => {
     test.setTimeout(300 * 1000);
-    logger.info(
+    LOGGER.info(
       "Executing testcase: Verify guest login can work when no auth provider is configured (dangerouslyAllowSignInWithoutUserInCatalog is enabled by default but it should not conflict with the guest login).",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -61,11 +61,11 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     // "Login failed; caused by Error: Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider."
 
     test.setTimeout(300 * 1000);
-    logger.info(
+    LOGGER.info(
       "Executing testcase: Login should fail when an authProvider is configured without the ingester.",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -95,11 +95,11 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     // The Microsoft login should now be successful
 
     test.setTimeout(300 * 1000);
-    logger.info(
+    LOGGER.info(
       "Execute testcase: Set dangerouslyAllowSignInWithoutUserInCatalog to false. Login should now work but no User Entities are in the Catalog",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -137,11 +137,11 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     // The Microsoft login should now be successful
 
     test.setTimeout(300 * 1000);
-    logger.info(
+    LOGGER.info(
       "Execute testcase: Ensure Guest login is disabled when setting environment to production",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,

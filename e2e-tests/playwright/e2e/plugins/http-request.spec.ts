@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
-import { Common } from "../../utils/Common";
-import { CatalogImport } from "../../support/pages/CatalogImport";
+import { UIhelper } from "../../utils/ui-helper";
+import { Common } from "../../utils/common";
+import { CatalogImport } from "../../support/pages/catalog-import";
 
 // https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-http-request
 // Pre-req: Enable roadiehq-scaffolder-backend-module-http-request-dynamic plugin
