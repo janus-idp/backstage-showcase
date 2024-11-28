@@ -258,7 +258,6 @@ apply_yaml_files() {
 run_tests() {
   local release_name=$1
   local project=$2
-  export NAME_SPACE="${project}"
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
