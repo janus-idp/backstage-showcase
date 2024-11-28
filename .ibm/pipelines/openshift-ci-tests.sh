@@ -465,10 +465,6 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
-  if [[ "$JOB_NAME" == "pull-ci-janus-idp-backstage-showcase-main-e2e-tests" ]]; then
-    run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
-  fi
-
   if [[ "$JOB_NAME" == *aks* ]]; then
     initiate_aks_deployment
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}"
@@ -483,6 +479,8 @@ main() {
     initiate_rbac_gke_deployment
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
     delete_namespace "${NAME_SPACE_RBAC_K8S}"
+  elif [[ "$JOB_NAME" == *auth-providers* ]]; then
+    run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
