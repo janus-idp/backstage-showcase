@@ -142,6 +142,8 @@ upstream:
         value: 'true'
       - name: NODE_OPTIONS
         value: '--no-node-snapshot'
+      - name: ENABLE_CORE_ROOTHTTPROUTER_OVERRIDE
+        value: 'true' 
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
