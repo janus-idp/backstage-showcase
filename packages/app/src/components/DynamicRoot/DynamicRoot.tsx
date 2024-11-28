@@ -5,7 +5,6 @@ import { createApp } from '@backstage/app-defaults';
 import { BackstageApp } from '@backstage/core-app-api';
 import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
 
-import { useThemes } from '@redhat-developer/red-hat-developer-hub-theme';
 import { AppsConfig } from '@scalprum/core';
 import { useScalprum } from '@scalprum/react-core';
 
@@ -16,11 +15,9 @@ import extractDynamicConfig, {
   DynamicRoute,
 } from '../../utils/dynamicUI/extractDynamicConfig';
 import initializeRemotePlugins from '../../utils/dynamicUI/initializeRemotePlugins';
-import { MenuIcon } from '../Root/MenuIcon';
 import CommonIcons from './CommonIcons';
 import defaultAppComponents from './defaultAppComponents';
 import DynamicRootContext, {
-  AppThemeProvider,
   ComponentRegistry,
   EntityTabOverrides,
   MountPoints,
@@ -63,8 +60,6 @@ export const DynamicRoot = ({
   // registry of remote components loaded at bootstrap
   const [components, setComponents] = useState<ComponentRegistry | undefined>();
   const { initialized, pluginStore, api: scalprumApi } = useScalprum();
-
-  const themes = useThemes();
 
   // Fills registry of remote components
   const initializeRemoteModules = useCallback(async () => {
@@ -365,35 +360,7 @@ export const DynamicRoot = ({
       return acc;
     }, []);
 
-    const dynamicThemeProviders = pluginThemes.reduce<AppThemeProvider[]>(
-      (acc, { scope, module, importName, icon, ...rest }) => {
-        const provider = allPlugins[scope]?.[module]?.[importName];
-        if (provider) {
-          acc.push({
-            ...rest,
-            icon: <MenuIcon icon={icon} />,
-            Provider: provider as (props: {
-              children: React.ReactNode;
-            }) => JSX.Element | null,
-          });
-        } else {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring theme: ${importName}`,
-          );
-        }
-        return acc;
-      },
-      [],
-    );
-
     if (!app.current) {
-      const filteredStaticThemes = themes.filter(
-        theme =>
-          !dynamicThemeProviders.some(
-            dynamicTheme => dynamicTheme.id === theme.id,
-          ),
-      );
       const filteredStaticApis = staticApis.filter(
         api => !remoteApis.some(remoteApi => remoteApi.api.id === api.api.id),
       );
@@ -407,7 +374,6 @@ export const DynamicRoot = ({
           ...Object.values(staticPluginStore).map(entry => entry.plugin),
           ...remoteBackstagePlugins,
         ],
-        themes: [...filteredStaticThemes, ...dynamicThemeProviders],
         components: defaultAppComponents,
       });
     }
@@ -445,7 +411,6 @@ export const DynamicRoot = ({
     scalprumConfig,
     staticApis,
     staticPluginStore,
-    themes,
   ]);
 
   useEffect(() => {
