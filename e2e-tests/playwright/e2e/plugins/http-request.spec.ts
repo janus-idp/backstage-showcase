@@ -25,7 +25,7 @@ test.describe("Testing scaffolder-backend-module-http-request to invoke an exter
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
     await uiHelper.clickButton("Register Existing Component");
-    await catalogImport.registerExistingComponent(template);
+    await catalogImport.registerExistingComponent(template, false);
 
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
