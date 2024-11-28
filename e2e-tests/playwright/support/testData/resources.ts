@@ -1,4 +1,4 @@
-export const resources = [
+export const RESOURCES = [
   "Janus-IDP Authors",
   "Janus-IDP",
   "ArgoCD",

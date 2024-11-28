@@ -7,7 +7,6 @@ import { RemotePlugins } from '../../components/DynamicRoot/DynamicRootContext';
 const ignoreStaticPlugins = [
   'default.main-menu-items',
   'internal.plugin-dynamic-plugins-info',
-  'janus-idp.backstage-plugin-dynamic-home-page',
 ];
 
 const initializeRemotePlugins = async (
@@ -28,9 +27,9 @@ const initializeRemotePlugins = async (
           .getExposedModule<{
             [importName: string]: React.ComponentType<{}>;
           }>(scope, module)
-          .catch(() => {
+          .catch(error => {
             // eslint-disable-next-line no-console
-            console.error(`Failed to load plugin ${scope}`);
+            console.error(`Failed to load plugin ${scope}`, error);
             return undefined;
           })
           .then(remoteModule => ({

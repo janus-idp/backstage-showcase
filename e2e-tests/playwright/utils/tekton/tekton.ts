@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { UIhelper } from "../UIhelper";
+import { UIhelper } from "../ui-helper";
 
 export class Tekton {
   page: Page;
@@ -49,12 +49,6 @@ export class Tekton {
   async checkPipelineStages(texts: string[]) {
     for (const text of texts) {
       await this.uiHelper.verifyHeading(text);
-    }
-  }
-
-  async checkPipelineOutput(texts: string[]) {
-    for (const text of texts) {
-      await this.uiHelper.verifyText(text);
     }
   }
 }

@@ -59,13 +59,13 @@ global:
                 type: config
             customResources:
               # Add for tekton
-              - apiVersion: 'v1beta1'
+              - apiVersion: 'v1'
                 group: 'tekton.dev'
                 plural: 'pipelines'
-              - apiVersion: v1beta1
+              - apiVersion: v1
                 group: tekton.dev
                 plural: pipelineruns
-              - apiVersion: v1beta1
+              - apiVersion: v1
                 group: tekton.dev
                 plural: taskruns
               # Add for topology plugin
@@ -102,7 +102,7 @@ global:
       - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
         disabled: false
       - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
-        disabled: true
+        disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
         disabled: false
       - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
@@ -111,6 +111,9 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
         disabled: false
+      - package: '@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5'
+        disabled: false
+        integrity: sha512-srTnFDYn3Ett6z33bX4nL2NQY8wqux8TkpgBQNsE8S73nMfsor/wAdmVgHL+xW7pxQ09DT4YTdaG3GkH+cyyNQ==
 
 # -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)
 upstream:
