@@ -278,11 +278,11 @@ export class UIhelper {
   }
 
   async verifyButtonURL(label: string | RegExp, url: string | RegExp) {
-    const button_url = await this.page
+    const buttonUrl = await this.page
       .getByRole("button", { name: label })
       .first()
       .getAttribute("href");
-    expect(button_url).toContain(url);
+    expect(buttonUrl).toContain(url);
   }
 
   /**
