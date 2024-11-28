@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { UIhelper } from "../../../utils/UIhelper";
-import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Common } from "../../../utils/common";
 import { ImageRegistry } from "../../../utils/quay/quay";
 
 test.describe.skip("Test Quay.io plugin", () => {
-  const QUAY_REPOSITORY = "janus-idp/backstage-showcase";
+  const quayRepository = "janus-idp/backstage-showcase";
   let uiHelper: UIhelper;
 
   test.beforeEach(async ({ page }) => {
@@ -22,7 +22,7 @@ test.describe.skip("Test Quay.io plugin", () => {
   test("Check if Image Registry is present", async () => {
     const allGridColumnsText = ImageRegistry.getAllGridColumnsText();
     await uiHelper.verifyColumnHeading(allGridColumnsText);
-    await uiHelper.verifyHeading(`Quay repository: ${QUAY_REPOSITORY}`);
+    await uiHelper.verifyHeading(`Quay repository: ${quayRepository}`);
 
     const allCellsIdentifier = ImageRegistry.getAllCellsIdentifier();
     await uiHelper.verifyCellsInTable(allCellsIdentifier);

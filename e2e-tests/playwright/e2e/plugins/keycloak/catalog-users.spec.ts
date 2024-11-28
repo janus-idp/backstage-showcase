@@ -1,7 +1,7 @@
 import { CatalogUsersPO } from "../../../support/pageObjects/catalog/catalog-users-obj";
 import Keycloak from "../../../utils/keycloak/keycloak";
-import { UIhelper } from "../../../utils/UIhelper";
-import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Common } from "../../../utils/common";
 import { test, expect } from "@playwright/test";
 
 test.describe("Test Keycloak plugin", () => {

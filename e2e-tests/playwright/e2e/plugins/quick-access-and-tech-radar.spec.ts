@@ -1,8 +1,8 @@
 import { test } from "@playwright/test";
-import { HomePage } from "../../support/pages/HomePage";
-import { Common } from "../../utils/Common";
-import { UIhelper } from "../../utils/UIhelper";
-import { TechRadar } from "../../support/pages/TechRadar";
+import { HomePage } from "../../support/pages/home-page";
+import { Common } from "../../utils/common";
+import { UIhelper } from "../../utils/ui-helper";
+import { TechRadar } from "../../support/pages/tech-radar";
 
 // Pre-req: Enable backstage-plugin-tech-radar and backstage-plugin-tech-radar-backend Plugin
 

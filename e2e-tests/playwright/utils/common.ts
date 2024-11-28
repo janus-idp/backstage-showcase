@@ -1,8 +1,8 @@
-import { UIhelper } from "./UIhelper";
+import { UIhelper } from "./ui-helper";
 import { authenticator } from "otplib";
 import { test, Browser, expect, Page, TestInfo } from "@playwright/test";
-import { SettingsPagePO } from "../support/pageObjects/page-obj";
-import { waitsObjs } from "../support/pageObjects/global-obj";
+import { SETTINGS_PAGE_COMPONENTS } from "../support/pageObjects/page-obj";
+import { WAIT_OBJECTS } from "../support/pageObjects/global-obj";
 import path from "path";
 import fs from "fs";
 
@@ -31,7 +31,7 @@ export class Common {
   }
 
   async waitForLoad(timeout = 120000) {
-    for (const item of Object.values(waitsObjs)) {
+    for (const item of Object.values(WAIT_OBJECTS)) {
       await this.page.waitForSelector(item, {
         state: "hidden",
         timeout: timeout,
@@ -40,8 +40,8 @@ export class Common {
   }
 
   async signOut() {
-    await this.page.click(SettingsPagePO.userSettingsMenu);
-    await this.page.click(SettingsPagePO.signOut);
+    await this.page.click(SETTINGS_PAGE_COMPONENTS.userSettingsMenu);
+    await this.page.click(SETTINGS_PAGE_COMPONENTS.signOut);
     await this.uiHelper.verifyHeading("Select a sign-in method");
   }
 

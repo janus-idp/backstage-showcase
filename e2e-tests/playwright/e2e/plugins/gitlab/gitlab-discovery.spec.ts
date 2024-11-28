@@ -1,6 +1,6 @@
 import { test } from "@playwright/test";
-import { UIhelper } from "../../../utils/UIhelper";
-import { Common } from "../../../utils/Common";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Common } from "../../../utils/common";
 
 // Pre-req: backstage-plugin-catalog-backend-module-gitlab-dynamic
 // Pre-req: immobiliarelabs-backstage-plugin-gitlab-backend-dynamic

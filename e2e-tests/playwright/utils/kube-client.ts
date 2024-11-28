@@ -1,14 +1,14 @@
 import k8s, { V1ConfigMap } from "@kubernetes/client-node";
-import { logger } from "./Logger";
+import { LOGGER } from "./logger";
 import * as yaml from "js-yaml";
 
-export class kubeCLient {
+export class KubeClient {
   coreV1Api: k8s.CoreV1Api;
   appsApi: k8s.AppsV1Api;
   kc: k8s.KubeConfig;
 
   constructor() {
-    logger.info(`Initializing Kubernetes API client`);
+    LOGGER.info(`Initializing Kubernetes API client`);
     try {
       this.kc = new k8s.KubeConfig();
       this.kc.loadFromOptions({
@@ -38,14 +38,14 @@ export class kubeCLient {
       this.appsApi = this.kc.makeApiClient(k8s.AppsV1Api);
       this.coreV1Api = this.kc.makeApiClient(k8s.CoreV1Api);
     } catch (e) {
-      logger.info(e);
+      LOGGER.info(e);
       throw e;
     }
   }
 
   async getConfigMap(configmapName: string, namespace: string) {
     try {
-      logger.info(
+      LOGGER.info(
         `Getting configmap ${configmapName} from namespace ${namespace}`,
       );
       return await this.coreV1Api.readNamespacedConfigMap(
@@ -53,7 +53,7 @@ export class kubeCLient {
         namespace,
       );
     } catch (e) {
-      logger.error(e.body.message);
+      LOGGER.error(e.body.message);
       throw e;
     }
   }
@@ -86,10 +86,10 @@ export class kubeCLient {
 
   async getSecret(secretName: string, namespace: string) {
     try {
-      logger.info(`Getting secret ${secretName} from namespace ${namespace}`);
+      LOGGER.info(`Getting secret ${secretName} from namespace ${namespace}`);
       return await this.coreV1Api.readNamespacedSecret(secretName, namespace);
     } catch (e) {
-      logger.error(e.body.message);
+      LOGGER.error(e.body.message);
       throw e;
     }
   }
@@ -103,7 +103,7 @@ export class kubeCLient {
       const options = {
         headers: { "Content-type": k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
       };
-      logger.info(
+      LOGGER.info(
         `Updating configmap ${configmapName} in namespace ${namespace}`,
       );
       await this.coreV1Api.patchNamespacedConfigMap(
@@ -118,7 +118,7 @@ export class kubeCLient {
         options,
       );
     } catch (e) {
-      logger.error(e.statusCode, e);
+      LOGGER.error(e.statusCode, e);
       throw e;
     }
   }
@@ -136,6 +136,7 @@ export class kubeCLient {
       const configMap = configMapResponse.body;
 
       const appConfigYaml = configMap.data[`${configMapName}.yaml`];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const appConfigObj = yaml.load(appConfigYaml) as any;
 
       appConfigObj.app.title = newTitle;
@@ -162,7 +163,7 @@ export class kubeCLient {
           "Content-type": k8s.PatchUtils.PATCH_FORMAT_JSON_MERGE_PATCH,
         },
       };
-      logger.info(`Updating secret ${secretName} in namespace ${namespace}`);
+      LOGGER.info(`Updating secret ${secretName} in namespace ${namespace}`);
       await this.coreV1Api.patchNamespacedSecret(
         secretName,
         namespace,
@@ -175,19 +176,19 @@ export class kubeCLient {
         options,
       );
     } catch (e) {
-      logger.error(e.statusCode, e.body.message);
+      LOGGER.error(e.statusCode, e.body.message);
       throw e;
     }
   }
 
   async createCongifmap(namespace: string, body: V1ConfigMap) {
     try {
-      logger.info(
+      LOGGER.info(
         `Creating configmap ${body.metadata.name} in namespace ${namespace}`,
       );
       return await this.coreV1Api.createNamespacedConfigMap(namespace, body);
     } catch (err) {
-      logger.error(err.body.message);
+      LOGGER.error(err.body.message);
       throw err;
     }
   }
@@ -196,7 +197,7 @@ export class kubeCLient {
     const watch = new k8s.Watch(this.kc);
     try {
       await this.coreV1Api.deleteNamespace(namespace);
-      logger.info(`Namespace '${namespace}' deletion initiated.`);
+      LOGGER.info(`Namespace '${namespace}' deletion initiated.`);
 
       await new Promise<void>((resolve, reject) => {
         watch.watch(
@@ -204,14 +205,14 @@ export class kubeCLient {
           {},
           (type) => {
             if (type === "DELETED") {
-              logger.info(`Namespace '${namespace}' has been deleted.`);
+              LOGGER.info(`Namespace '${namespace}' has been deleted.`);
               resolve();
             }
           },
           (err) => {
             if (err && err.statusCode === 404) {
               // Namespace was already deleted or does not exist
-              logger.info(`Namespace '${namespace}' is already deleted.`);
+              LOGGER.info(`Namespace '${namespace}' is already deleted.`);
               resolve();
             } else {
               reject(err);
@@ -221,7 +222,7 @@ export class kubeCLient {
         );
       });
     } catch (err) {
-      logger.error("Error deleting or waiting for namespace deletion:", err);
+      LOGGER.error("Error deleting or waiting for namespace deletion:", err);
       throw err;
     }
   }
@@ -230,11 +231,11 @@ export class kubeCLient {
     const nsList = await this.coreV1Api.listNamespace();
     const ns = nsList.body.items.map((ns) => ns.metadata.name);
     if (ns.includes(namespace)) {
-      logger.info(`Delete and re-create namespace ${namespace}`);
+      LOGGER.info(`Delete and re-create namespace ${namespace}`);
       try {
         await this.deleteNamespaceAndWait(namespace);
       } catch (err) {
-        logger.error(err);
+        LOGGER.error(err);
         throw err;
       }
     }
@@ -245,21 +246,21 @@ export class kubeCLient {
           name: namespace,
         },
       });
-      logger.info(`Created namespace ${createNamespaceRes.body.metadata.name}`);
+      LOGGER.info(`Created namespace ${createNamespaceRes.body.metadata.name}`);
     } catch (err) {
-      logger.error(err.body.message);
+      LOGGER.error(err.body.message);
       throw err;
     }
   }
 
   async createSecret(secret: k8s.V1Secret, namespace: string) {
     try {
-      logger.info(
+      LOGGER.info(
         `Creating secret ${secret.metadata.name} in namespace ${namespace}`,
       );
       await this.coreV1Api.createNamespacedSecret(namespace, secret);
     } catch (err) {
-      logger.error(err.body.message);
+      LOGGER.error(err.body.message);
       throw err;
     }
   }

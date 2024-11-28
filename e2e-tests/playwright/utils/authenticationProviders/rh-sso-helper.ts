@@ -1,4 +1,4 @@
-import { logger } from "../Logger";
+import { LOGGER } from "../logger";
 import { expect } from "@playwright/test";
 import * as constants from "./constants";
 import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
@@ -10,7 +10,7 @@ import * as helper from "../helper";
 
 let kcAdminClient: KcAdminClient | undefined;
 
-export const connectionConfig: ConnectionConfig = {
+export const CONNECTION_CONFIG: ConnectionConfig = {
   baseUrl: constants.RHSSO76_URL,
   realmName: constants.AUTH_PROVIDERS_REALM_NAME,
 };
@@ -27,10 +27,10 @@ export async function initializeRHSSOClient(
 ) {
   // Ensure settings isn't null
   if (!connectionConfig) {
-    logger.error(`RHSSO config cannot be undefined`);
+    LOGGER.error(`RHSSO config cannot be undefined`);
     throw new Error("Config cannot be undefined");
   }
-  logger.info(`Initializing RHSSO client`);
+  LOGGER.info(`Initializing RHSSO client`);
   kcAdminClient = new KcAdminClient(connectionConfig);
   await kcAdminClient.auth(cred);
   setInterval(() => kcAdminClient.auth(cred), 58 * 1000);
@@ -40,7 +40,7 @@ export async function setupRHSSOEnvironment(): Promise<{
   usersCreated: Map<string, UserRepresentation>;
   groupsCreated: Map<string, GroupRepresentation>;
 }> {
-  logger.info("Setting up RHSSO environment");
+  LOGGER.info("Setting up RHSSO environment");
   const usersCreated = new Map<string, UserRepresentation>();
   const groupsCreated = new Map<string, GroupRepresentation>();
 
@@ -95,7 +95,7 @@ export async function setupRHSSOEnvironment(): Promise<{
       constants.AUTH_PROVIDERS_NAMESPACE,
     );
   } catch (e) {
-    logger.log({
+    LOGGER.log({
       level: "error",
       message: "RHSSO setup failed:",
       dump: JSON.stringify(e),
@@ -115,7 +115,7 @@ export async function clearUserSessions(username: string, realm: string) {
   const sessions = await kcAdminClient.users.listSessions({
     id: usr[0].id,
   });
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Clearing ${username} sessions`,
     dump: JSON.stringify(sessions.map((s) => s.id)),
@@ -131,10 +131,10 @@ export async function clearUserSessions(username: string, realm: string) {
 
 export async function updateUser(userId: string, userObj: UserRepresentation) {
   try {
-    logger.info(`Update user ${userId} from RHSSO`);
+    LOGGER.info(`Update user ${userId} from RHSSO`);
     await kcAdminClient.users.update({ id: userId }, userObj);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -144,10 +144,10 @@ export async function updateGruop(
   groupObj: GroupRepresentation,
 ) {
   try {
-    logger.info(`Update group ${groupId} from RHSSO`);
+    LOGGER.info(`Update group ${groupId} from RHSSO`);
     await kcAdminClient.groups.update({ id: groupId }, groupObj);
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
@@ -163,13 +163,13 @@ export async function updateUserEmail(username: string, newEmail: string) {
       { id: jd[0].id },
       { email: newEmail },
     );
-    logger.log({
+    LOGGER.log({
       level: "info",
       message: `Updated user: ${username}: `,
       dump: JSON.stringify(res),
     });
   } catch (e) {
-    logger.log({
+    LOGGER.log({
       level: "info",
       message: "RHSSO update email failed:",
       dump: JSON.stringify(e),
@@ -180,40 +180,40 @@ export async function updateUserEmail(username: string, newEmail: string) {
 
 export async function deleteUser(id: string) {
   try {
-    logger.info(`Deleting user ${id} from RHSSO`);
+    LOGGER.info(`Deleting user ${id} from RHSSO`);
     await kcAdminClient.users.del({ id: id });
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function removeUserFromGroup(userId: string, groupId: string) {
   try {
-    logger.info(`Remove user ${userId} from  group ${groupId} from RHSSO`);
+    LOGGER.info(`Remove user ${userId} from  group ${groupId} from RHSSO`);
     await kcAdminClient.users.delFromGroup({ id: userId, groupId: groupId });
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function addUserToGroup(userId: string, groupId: string) {
   try {
-    logger.info(`Add user ${userId} from  group ${groupId} from RHSSO`);
+    LOGGER.info(`Add user ${userId} from  group ${groupId} from RHSSO`);
     await kcAdminClient.users.addToGroup({ id: userId, groupId: groupId });
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
 
 export async function deleteGroup(groupId: string) {
   try {
-    logger.info(`Deleting group ${groupId} from RHSSO`);
+    LOGGER.info(`Deleting group ${groupId} from RHSSO`);
     await kcAdminClient.groups.del({ id: groupId });
   } catch (e) {
-    logger.error(e);
+    LOGGER.error(e);
     throw e;
   }
 }
