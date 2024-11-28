@@ -356,22 +356,17 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     );
 
     // location_admin should show user_2
-    await expect(async () => {
-      const group: GroupEntity = await api.getGroupEntityFromAPI(
-        constants.MSGRAPH_GROUPS["location_admin"].displayName,
-      );
-      const members = parseGroupMemberFromEntity(group);
-      expect(
-        members.includes(
-          graphHelper.formatUPNToEntity(
-            constants.MSGRAPH_USERS["user_2"].userPrincipalName,
-          ),
+    const group: GroupEntity = await api.getGroupEntityFromAPI(
+      constants.MSGRAPH_GROUPS["location_admin"].displayName,
+    );
+    const members = parseGroupMemberFromEntity(group);
+    expect(
+      members.includes(
+        graphHelper.formatUPNToEntity(
+          constants.MSGRAPH_USERS["user_2"].userPrincipalName,
         ),
-      ).toBe(true);
-    }).toPass({
-      intervals: [1_000, 2_000, 5_000],
-      timeout: 60 * 1000,
-    });
+      ),
+    ).toBe(true);
 
     await common.MicrosoftAzureLogin(
       constants.MSGRAPH_USERS["user_2"].userPrincipalName,
@@ -382,6 +377,9 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
     // new group should allow user to schedule location refresh and unregister the entity
 
     await expect(async () => {
+      await page.goto("/");
+      await uiHelper.verifyHeading("Welcome");
+
       apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
       const statusAfter = await api.scheduleEntityRefreshFromAPI(
         "example",

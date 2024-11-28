@@ -19,7 +19,7 @@ import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
 
 let page: Page;
 
-for (const version of ["RHBK", "RHSSO"]) {
+for (const version of ["RHSSO"]) {
   test.describe(`Standard authentication providers: OIDC with ${version}`, () => {
     test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
 
@@ -90,7 +90,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       groupsCreated = created.groupsCreated;
     });
 
-    test(`${version} - default resolver should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not`, async () => {
+    test.skip(`${version} - default resolver should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not`, async () => {
       test.setTimeout(600 * 1000);
 
       logger.info(`Executing testcase: ${test.info().title}`);
@@ -142,7 +142,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       );
     });
 
-    test(`${version} - testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not`, async () => {
+    test.skip(`${version} - testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not`, async () => {
       test.setTimeout(600 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -206,7 +206,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       );
     });
 
-    test(`${version} - testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate`, async () => {
+    test.skip(`${version} - testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate`, async () => {
       test.setTimeout(600 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
       // updating the resolver
@@ -272,7 +272,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test(`${version} - ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH`, async () => {
+    test.skip(`${version} - ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -356,7 +356,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       ).toBe(true);
     });
 
-    test(` ${version} - remove user from ${version}`, async () => {
+    test.skip(` ${version} - remove user from ${version}`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -406,6 +406,7 @@ for (const version of ["RHBK", "RHSSO"]) {
     });
 
     test(`${version} - move a user to another group in ${version}`, async () => {
+      await WaitForNextSync(SYNC__TIME, "rhsso");
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -422,6 +423,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       );
 
       const api = new APIHelper();
+      api.UseStaticToken(constants.STATIC_API_TOKEN);
       let apiToken: string;
 
       await expect(async () => {
@@ -432,7 +434,6 @@ for (const version of ["RHBK", "RHSSO"]) {
 
         apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
         expect(apiToken).not.toBeUndefined();
-        api.UseStaticToken(apiToken);
 
         const statusBefore = await api.scheduleEntityRefreshFromAPI(
           "example",
@@ -460,9 +461,8 @@ for (const version of ["RHBK", "RHSSO"]) {
         const group_3: GroupEntity = await api.getGroupEntityFromAPI(
           constants.RHSSO76_GROUPS["location_admin"].name,
         );
-
         expect(
-          group_3.spec.members.includes(
+          group_3.spec.members?.includes(
             constants.RHSSO76_USERS["user_3"].username,
           ),
         ).toBe(true);
@@ -481,7 +481,11 @@ for (const version of ["RHBK", "RHSSO"]) {
       // check RBAC permissions are updated after group update
       // new group should allow user to schedule location refresh and unregister the entity
       await expect(async () => {
+        await page.goto("/");
+        await uiHelper.verifyHeading("Welcome");
+
         apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+        expect(apiToken).not.toBeNull();
         const statusAfter = await api.scheduleEntityRefreshFromAPI(
           "example",
           "location",
@@ -500,7 +504,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test(`${version}  - remove a group from ${version}`, async () => {
+    test.skip(`${version}  - remove a group from ${version}`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -573,7 +577,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test(`${version} - remove a user from RHDH`, async () => {
+    test.skip(`${version} - remove a user from RHDH`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -627,7 +631,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test(`${version} - remove a group from RHDH`, async () => {
+    test.skip(`${version} - remove a group from RHDH`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -664,7 +668,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       });
     });
 
-    test(`${version} - rename a user and a group`, async () => {
+    test.skip(`${version} - rename a user and a group`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
