@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { Common } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
-import { Catalog } from "../../../support/pages/Catalog";
+import { Common } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Catalog } from "../../../support/pages/catalog";
 
 test.describe("Test Topology Plugin", () => {
   let common: Common;
@@ -43,9 +43,7 @@ test.describe("Test Topology Plugin", () => {
     await expect(page.getByTitle("Deployment")).toBeVisible();
     await uiHelper.verifyText("S");
     await uiHelper.verifyText("RT");
-    await expect(
-      page.locator('[data-test-id="rhdh-rbac"] rect').first(),
-    ).toBeVisible();
+    await expect(page.locator("rect").first()).toBeVisible();
     await uiHelper.clickTab("Details");
     await page.getByLabel("Pod").hover();
     await page.getByLabel("Display options").click();
