@@ -1,5 +1,33 @@
 #!/bin/bash
 
+initiate_deployments() {
+  configure_namespace "${NAME_SPACE}"
+  uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
+
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
+
+  cd "${DIR}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
+    -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
+
+  configure_namespace "${NAME_SPACE_POSTGRES_DB}"
+
+  configure_namespace "${NAME_SPACE_RBAC}"
+  configure_external_postgres_db "${NAME_SPACE_RBAC}"
+
+  uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
+  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
+    -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
 configure_namespace() {
   local project=$1
   delete_namespace "$project"
@@ -34,6 +62,18 @@ check_backstage_running() {
   done
 
   return 1
+}
+
+check_and_test() {
+  local release_name=$1
+  local namespace=$2
+  if check_backstage_running "${release_name}" "${namespace}"; then
+    oc get pods -n "${namespace}"
+    run_tests "${release_name}" "${namespace}"
+  else
+    OVERALL_RESULT=1
+  fi
+  save_all_pod_logs "${namespace}"
 }
 
 run_tests() {
