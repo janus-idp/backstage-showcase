@@ -20,6 +20,7 @@ RELEASE_NAME=rhdh
 RELEASE_NAME_RBAC=rhdh-rbac
 NAME_SPACE="${NAME_SPACE:-showcase}"
 NAME_SPACE_RBAC="${NAME_SPACE_RBAC:-showcase-rbac}"
+NAME_SPACE_RUNTIME="${NAME_SPACE_RUNTIME:-showcase-runtime}"
 NAME_SPACE_POSTGRES_DB="${NAME_SPACE_POSTGRES_DB:-postgress-external-db}"
 NAME_SPACE_RDS="showcase-rds-nightly"
 CHART_VERSION="2.15.2"

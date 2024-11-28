@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { Common } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
-import { Catalog } from "../../../support/pages/Catalog";
+import { Common } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Catalog } from "../../../support/pages/catalog";
 
 test.describe("Test Topology Plugin", () => {
   let common: Common;

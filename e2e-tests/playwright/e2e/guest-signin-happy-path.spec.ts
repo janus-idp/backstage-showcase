@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { HomePage } from "../support/pages/HomePage";
-import { Common } from "../utils/Common";
+import { UIhelper } from "../utils/ui-helper";
+import { HomePage } from "../support/pages/home-page";
+import { Common } from "../utils/common";
 
 test.describe("Guest Signing Happy path", () => {
   let uiHelper: UIhelper;

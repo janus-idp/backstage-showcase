@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "engines": {
     "node": "20"
@@ -20,6 +20,8 @@
     "lint:check": "turbo run lint:check",
     "lint:fix": "turbo run lint:fix",
     "lint": "turbo run lint",
+    "monorepo:check": "sherif && manypkg check",
+    "monorepo:fix": "sherif --fix --no-install && manypkg fix && yarn dedupe",
     "lint-staged": "lint-staged -p 10",
     "prettier:check": "turbo run prettier:check",
     "prettier:fix": "turbo run prettier:fix",
@@ -40,13 +42,15 @@
   "devDependencies": {
     "@backstage/cli": "0.28.2",
     "@ianvs/prettier-plugin-sort-imports": "4.2.1",
+    "@manypkg/cli": "0.23.0",
     "@spotify/prettier-config": "15.0.0",
     "glob": "11.0.0",
     "husky": "8.0.3",
     "lint-staged": "15.2.10",
     "node-gyp": "10.2.0",
+    "sherif": "1.0.2",
     "turbo": "2.2.3",
-    "typescript": "5.6.2"
+    "typescript": "5.6.3"
   },
   "resolutions": {
     "@types/react": "18.3.12",

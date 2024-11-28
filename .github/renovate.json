@@ -21,6 +21,7 @@
   "major": {
     "dependencyDashboardApproval": true
   },
+  "recreateWhen": "never",
   "packageRules": [
     {
       "matchCategories": [

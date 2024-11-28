@@ -1,11 +1,10 @@
 import { test, Page, expect } from "@playwright/test";
-import { Common, setupBrowser } from "../../utils/Common";
-import { UIhelper } from "../../utils/UIhelper";
+import { Common, setupBrowser } from "../../utils/common";
+import { UIhelper } from "../../utils/ui-helper";
 import * as constants from "../../utils/authenticationProviders/constants";
-import { logger } from "../../utils/Logger";
+import { LOGGER } from "../../utils/logger";
 import {
-  upgradeHelmChartWithWait,
-  WaitForNextSync,
+  waitForNextSync,
   replaceInRBACPolicyFileConfigMap,
   parseGroupMemberFromEntity,
   parseGroupChildrenFromEntity,
@@ -14,10 +13,11 @@ import {
   dumpRHDHUsersAndGroups,
 } from "../../utils/helper";
 import { BrowserContext } from "@playwright/test";
-import * as ghHelper from "../../utils/authenticationProviders/githubHelper";
-import { APIHelper } from "../../utils/APIHelper";
+import { APIHelper } from "../../utils/api-helper";
 import { GroupEntity } from "@backstage/catalog-model";
 import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
+import * as ghHelper from "../../utils/authenticationProviders/github-helper";
+import { HelmActions } from "../../utils/helm";
 
 let page: Page;
 
@@ -27,8 +27,8 @@ test.describe("Standard authentication providers: Github Provider", () => {
   let common: Common;
   let context: BrowserContext;
   let uiHelper: UIhelper;
-  const SYNC_TIME = 60;
-  let MUST_SYNC = false;
+  let mustSync = false;
+  const syncTime = 60;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     const browserSetup = await setupBrowser(browser, testInfo);
@@ -37,8 +37,8 @@ test.describe("Standard authentication providers: Github Provider", () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     expect(process.env.BASE_URL).not.toBeNull();
-    logger.info(`Base Url is ${process.env.BASE_URL}`);
-    logger.info(
+    LOGGER.info(`Base Url is ${process.env.BASE_URL}`);
+    LOGGER.info(
       `Starting scenario: Standard authentication providers: Basic authentication: attemp #${testInfo.retry}`,
     );
 
@@ -47,11 +47,11 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
   test("Setup Github authentication provider and wait for first sync", async () => {
     test.setTimeout(300 * 1000);
-    logger.info(
+    LOGGER.info(
       "Execute testcase: Setup Github authentication provider and wait for first sync",
     );
 
-    await upgradeHelmChartWithWait(
+    await HelmActions.upgradeHelmChartWithWait(
       constants.AUTH_PROVIDERS_RELEASE,
       constants.AUTH_PROVIDERS_CHART,
       constants.AUTH_PROVIDERS_NAMESPACE,
@@ -73,19 +73,19 @@ test.describe("Standard authentication providers: Github Provider", () => {
       ],
     );
 
-    await WaitForNextSync(SYNC_TIME, "github");
+    await waitForNextSync("github", syncTime);
   });
 
   test("Github with default resolver: user should login and entity is in the catalog", async () => {
     // resolvers from upstream are not available in rhdh
     // testing only default settings
 
-    logger.info(
+    LOGGER.info(
       "Executing testcase: Github with default resolver: user should login and entity is in the catalog",
     );
     test.setTimeout(300 * 1000);
     if (test.info().retry > 0) {
-      await WaitForNextSync(SYNC_TIME, "github");
+      await waitForNextSync("github", syncTime);
     }
 
     await page.goto("/");
@@ -139,57 +139,56 @@ test.describe("Standard authentication providers: Github Provider", () => {
     api.UseStaticToken(constants.STATIC_API_TOKEN);
 
     // check team1
-    const group_1: GroupEntity = await api.getGroupEntityFromAPI(
+    const group1: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_1"].name,
     );
-    const members_1 = parseGroupMemberFromEntity(group_1);
-    expect(members_1.includes(constants.GH_USERS["admin"].name)).toBe(true);
+    const members1 = parseGroupMemberFromEntity(group1);
+    expect(members1.includes(constants.GH_USERS["admin"].name)).toBe(true);
 
     // check team2
-    const group_2: GroupEntity = await api.getGroupEntityFromAPI(
+    const group2: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_2"].name,
     );
-    const members_2 = parseGroupMemberFromEntity(group_2);
-    expect(members_2).toEqual([]);
+    const members2 = parseGroupMemberFromEntity(group2);
+    expect(members2).toEqual([]);
 
-    const children_2 = parseGroupChildrenFromEntity(group_2);
-    expect(children_2.includes(constants.GH_TEAMS["team_3"].name)).toBe(true);
+    const children2 = parseGroupChildrenFromEntity(group2);
+    expect(children2.includes(constants.GH_TEAMS["team_3"].name)).toBe(true);
 
     // check team3
-    const group_3: GroupEntity = await api.getGroupEntityFromAPI(
+    const group3: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_3"].name,
     );
-    const members_3 = parseGroupMemberFromEntity(group_3);
-    expect(members_3.includes(constants.GH_USERS["user_1"].name)).toBe(true);
-    const parent_3 = parseGroupParentFromEntity(group_3);
-    expect(parent_3.includes(constants.GH_TEAMS["team_2"].name)).toBe(true);
+    const members3 = parseGroupMemberFromEntity(group3);
+    expect(members3.includes(constants.GH_USERS["user_1"].name)).toBe(true);
+    const parent3 = parseGroupParentFromEntity(group3);
+    expect(parent3.includes(constants.GH_TEAMS["team_2"].name)).toBe(true);
 
     // check team4
-    const group_4: GroupEntity = await api.getGroupEntityFromAPI(
+    const group4: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_4"].name,
     );
-    const members_4 = parseGroupMemberFromEntity(group_4);
-    expect(members_4.includes(constants.GH_USERS["user_1"].name)).toBe(true);
+    const members4 = parseGroupMemberFromEntity(group4);
+    expect(members4.includes(constants.GH_USERS["user_1"].name)).toBe(true);
 
     // check location_admin
-    const location_admin: GroupEntity = await api.getGroupEntityFromAPI(
+    const locationAdmin: GroupEntity = await api.getGroupEntityFromAPI(
       constants.GH_TEAMS["team_4"].name,
     );
-    const members_location_admin = parseGroupMemberFromEntity(location_admin);
+    const membersLocationAdmin = parseGroupMemberFromEntity(locationAdmin);
     expect(
-      members_location_admin.includes(constants.GH_USERS["admin"].name),
+      membersLocationAdmin.includes(constants.GH_USERS["admin"].name),
     ).toBe(true);
   });
 
   test("Remove a user from RHDH", async () => {
     test.setTimeout(300 * 1000);
-
     // remove user from RHDH -> authentication works, access is broken
-    logger.info(
+    LOGGER.info(
       `Executing testcase: Remove a user from RHDH: authentication should work, but access is denied before next sync.`,
     );
 
-    logger.info("Unregistering user 3 from catalog");
+    LOGGER.info("Unregistering user 3 from catalog");
     await common.UnregisterUserEntityFromCatalog(
       constants.GH_USERS["user_1"].name,
       constants.STATIC_API_TOKEN,
@@ -218,10 +217,10 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await context.clearCookies();
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "github");
+    await waitForNextSync("github", syncTime);
 
     // after sync, user_4 is created again and can login
-    logger.info(
+    LOGGER.info(
       `Execute testcase: Remove a user from RHDH: user is re-created and can login after the sync`,
     );
 
@@ -238,7 +237,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     test.setTimeout(300 * 1000);
 
     // remove group from RHDH -> user can login, but policy is broken
-    logger.info(
+    LOGGER.info(
       `Executing testcase: Remove a group from RHDH: user can login, but policy is broken before next sync.`,
     );
 
@@ -260,10 +259,10 @@ test.describe("Standard authentication providers: Github Provider", () => {
     });
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "github");
+    await waitForNextSync("github", syncTime);
 
     // after sync, ensure group is created again and memembers can login
-    logger.info(
+    LOGGER.info(
       `Execute testcase: Remove a group from RHDH: group is created again after the sync`,
     );
 
@@ -283,7 +282,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Move a user to another group in Github", async () => {
     test.setTimeout(300 * 1000);
     // move a user to another group -> ensure user can still login
-    logger.info(
+    LOGGER.info(
       `Executing testcase: Move a user to another group in Github: user should still login before next sync.`,
     );
 
@@ -315,7 +314,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
         "location",
         apiToken,
       );
-      logger.info(
+      LOGGER.info(
         `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
       );
       expect(statusBefore).toBe(403);
@@ -327,10 +326,10 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await uiHelper.openSidebar("Settings");
     await common.signOut();
 
-    await WaitForNextSync(SYNC_TIME, "github");
+    await waitForNextSync("github", syncTime);
 
     // ensure the change is mirrored in the catalog
-    logger.info(
+    LOGGER.info(
       `Execute testcase: Move a user to another group in Github: change should be mirrored and permission should be updated after the sync`,
     );
 
@@ -359,7 +358,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
         "location",
         apiToken,
       );
-      logger.info(
+      LOGGER.info(
         `Checking user can schedule location refresh. API returned ${statusAfter}`,
       );
       expect(statusAfter).toBe(200);
@@ -377,7 +376,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     test.setTimeout(300 * 1000);
 
     // remove a group -> members still exists, member should still login
-    logger.info(
+    LOGGER.info(
       `Executing testcase: Remove a group from Github: ensure group and its members still exists, member should still login before next sync.`,
     );
 
@@ -400,10 +399,10 @@ test.describe("Standard authentication providers: Github Provider", () => {
     });
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "github");
+    await waitForNextSync("github", syncTime);
 
     // after the sync ensure the group entity is removed
-    logger.info(
+    LOGGER.info(
       `Execute testcase: Remove a group from Github: group should be removed and permissions should default to read-only after the sync.`,
     );
 
@@ -443,7 +442,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
     // rename group from RHDH -> user can login, but policy is broken
-    logger.info(`Executing testcase: Rename a user and a group.`);
+    LOGGER.info(`Executing testcase: Rename a user and a group.`);
 
     await ghHelper.removeUserFromAllTeams(
       constants.GH_USERS["user_1"].name,
@@ -461,10 +460,10 @@ test.describe("Standard authentication providers: Github Provider", () => {
     );
 
     // waiting for next sync
-    await WaitForNextSync(SYNC_TIME, "github");
+    await waitForNextSync("github", syncTime);
 
     // after sync, ensure group is mirrored
-    logger.info(
+    LOGGER.info(
       `Execute testcase: Rename a user and a group: changes are mirrored in RHDH but permissions should be broken after the sync`,
     );
 
@@ -514,7 +513,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     // user should see the entities again
     await expect(async () => {
       await page.reload();
-      logger.info(
+      LOGGER.info(
         "Reloading page, permission should be updated automatically.",
       );
       await expect(page.locator(`nav a:has-text("My Group")`)).toBeVisible({
@@ -537,21 +536,21 @@ test.describe("Standard authentication providers: Github Provider", () => {
   test.afterEach(async () => {
     if (test.info().status !== test.info().expectedStatus) {
       const prefix = `${test.info().testId}_${test.info().retry}`;
-      logger.info(`Dumping logs with prefix ${prefix}`);
+      LOGGER.info(`Dumping logs with prefix ${prefix}`);
       await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
       await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
-      MUST_SYNC = true;
+      mustSync = true;
     }
   });
 
   test.beforeEach(async () => {
     test.setTimeout(120 * 1000);
-    if (test.info().retry > 0 || MUST_SYNC) {
-      logger.info(
-        `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${MUST_SYNC}.`,
+    if (test.info().retry > 0 || mustSync) {
+      LOGGER.info(
+        `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${mustSync}.`,
       );
-      await WaitForNextSync(SYNC_TIME, "microsoft");
-      MUST_SYNC = false;
+      await waitForNextSync("github", syncTime);
+      mustSync = false;
     }
   });
 });

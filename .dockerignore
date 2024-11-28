@@ -4,7 +4,6 @@
 **/node_modules
 plugins
 !plugins/auth-backend-module-oidc-provider
-!plugins/dynamic-home-page
 !plugins/dynamic-plugins-info
 !plugins/dynamic-plugins-info-backend
 !plugins/licensed-users-info-backend

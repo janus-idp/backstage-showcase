@@ -1,12 +1,12 @@
 import { test, Page } from "@playwright/test";
-import { Common } from "../utils/Common";
-import { UIhelper } from "../utils/UIhelper";
+import { Common } from "../utils/common";
+import { UIhelper } from "../utils/ui-helper";
 
 let page: Page;
 test.describe.skip("Google signin happy path", () => {
   let uiHelper: UIhelper;
   let common: Common;
-  const google_user_id = process.env.GOOGLE_USER_ID;
+  const googleUserId = process.env.GOOGLE_USER_ID;
 
   test.beforeAll(async ({ browser }) => {
     const cookiesBase64 = process.env.GOOGLE_ACC_COOKIE;
@@ -30,8 +30,8 @@ test.describe.skip("Google signin happy path", () => {
     await uiHelper.clickTab("Authentication Providers");
     await page.getByTitle("Sign in to Google").click();
     await uiHelper.clickButton("Log in");
-    await common.googleSignIn(google_user_id);
-    await uiHelper.verifyText(google_user_id, false);
+    await common.googleSignIn(googleUserId);
+    await uiHelper.verifyText(googleUserId, false);
   });
 
   test.afterAll(async () => {

@@ -1,14 +1,12 @@
-import { logger } from "./Logger";
+import { LOGGER } from "./logger";
 import { spawn } from "child_process";
 import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
-import { kubeCLient } from "./k8sHelper";
+import { KubeClient } from "./kube-client";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
 import { GroupEntity } from "@backstage/catalog-model";
 import fs from "fs";
-import { APIHelper } from "./APIHelper";
-
-export const k8sClient = new kubeCLient();
+import { APIHelper } from "./api-helper";
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
@@ -26,7 +24,7 @@ export async function runShellCmd(command: string) {
         resolve(result);
         return;
       } else {
-        logger.info(`Process failed with code ${code}: ${result}`);
+        LOGGER.info(`Process failed with code ${code}: ${result}`);
         throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
@@ -34,41 +32,41 @@ export async function runShellCmd(command: string) {
 }
 
 export async function upgradeHelmChartWithWait(
-  RELEASE: string,
-  CHART: string,
-  NAMESPACE: string,
-  VALUES: string,
-  CHART_VERSION: string,
-  QUAY_REPO: string,
-  TAG_NAME: string,
-  FLAGS: Array<string>,
+  release: string,
+  chart: string,
+  namespace: string,
+  value: string,
+  chartVersion: string,
+  quayRepo: string,
+  tag: string,
+  flags: Array<string>,
 ) {
-  logger.info(`Deleting any exisitng helm release ${RELEASE}`);
-  await deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
+  LOGGER.info(`Deleting any exisitng helm release ${release}`);
+  await deleteHelmReleaseWithWait(release, namespace);
 
-  logger.info(`Upgrading helm release ${RELEASE}`);
+  LOGGER.info(`Upgrading helm release ${release}`);
   const upgradeCMD = `helm upgrade \
-    -i ${RELEASE} ${CHART}  \
-    --wait --timeout 300s -n ${NAMESPACE} \
-    --values ${VALUES} \
-    --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
+    -i ${release} ${chart}  \
+    --wait --timeout 300s -n ${namespace} \
+    --values ${value} \
+    --version "${chartVersion}" --set upstream.backstage.image.repository="${quayRepo}" --set upstream.backstage.image.tag="${tag}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-    ${FLAGS.join(" ")}`;
-  logger.info(`Running upgrade with command ${upgradeCMD}`);
+    ${flags.join(" ")}`;
+  LOGGER.info(`Running upgrade with command ${upgradeCMD}`);
 
   const upgradeOutput = await runShellCmd(upgradeCMD);
 
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Release upgrade returned: `,
     dump: upgradeOutput.toString(),
   });
 
-  const configmap = await k8sClient.getCongifmap(
-    `${RELEASE}-backstage-app-config`,
-    NAMESPACE,
+  const configmap = await new KubeClient().getConfigMap(
+    `${release}-backstage-app-config`,
+    namespace,
   );
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Applied confguration for release upgrade: `,
     dump: configmap.body.data,
@@ -78,14 +76,14 @@ export async function upgradeHelmChartWithWait(
 }
 
 export async function deleteHelmReleaseWithWait(
-  RELEASE: string,
-  NAMESPACE: string,
+  release: string,
+  namespace: string,
 ) {
-  logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
+  LOGGER.info(`Deleting release ${release} in namespace ${namespace}`);
   const result = await runShellCmd(
-    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} || true`,
+    `helm uninstall ${release} --wait --timeout 300s -n ${namespace} || true`,
   );
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Release delete returned: `,
     dump: result.toString(),
@@ -107,7 +105,7 @@ export async function getLastSyncTimeFromLogs(
 
   try {
     // TBD: change this to use kube api
-    const p = await k8sClient.coreV1Api.listNamespacedPod(
+    const p = await new KubeClient().coreV1Api.listNamespacedPod(
       constants.AUTH_PROVIDERS_NAMESPACE,
       undefined,
       undefined,
@@ -123,26 +121,25 @@ export async function getLastSyncTimeFromLogs(
     const syncObj = Date.parse(JSON.parse(log).timestamp);
     return syncObj;
   } catch (e) {
-    logger.error(JSON.stringify(e));
+    LOGGER.error(JSON.stringify(e));
     return null;
   }
 }
 
-export async function WaitForNextSync(SYNC__TIME: number, provider: string) {
-  let syncTime: number | null = null;
+export async function waitForNextSync(provider: string, syncTime?: number) {
   await expect(async () => {
-    const _syncTime = await getLastSyncTimeFromLogs(provider);
-    if (syncTime == null) {
-      syncTime = _syncTime;
+    const lastSyncTimeFromLogs = await getLastSyncTimeFromLogs(provider);
+    if (syncTime === undefined) {
+      syncTime = lastSyncTimeFromLogs;
     }
-    logger.info(
-      `Last registered sync time was: ${new Date(syncTime).toUTCString()}; last detected in logs:${new Date(_syncTime).toUTCString()}`,
+    LOGGER.info(
+      `Last registered sync time was: ${new Date(syncTime).toUTCString()}; last detected in logs: ${new Date(lastSyncTimeFromLogs).toUTCString()}`,
     );
-    expect(_syncTime).not.toBeNull();
-    expect(_syncTime).toBeGreaterThan(syncTime);
+    expect(lastSyncTimeFromLogs).not.toBeNull();
+    expect(lastSyncTimeFromLogs).toBeGreaterThan(syncTime);
   }).toPass({
     intervals: [1_000, 2_000, 10_000],
-    timeout: SYNC__TIME * 2 * 1000,
+    timeout: syncTime * 2 * 1000,
   });
 }
 
@@ -152,12 +149,12 @@ export async function replaceInRBACPolicyFileConfigMap(
   match: RegExp | string,
   value: string,
 ) {
-  logger.info(
+  LOGGER.info(
     `Replacing ${match} with ${value} in existing configmap ${configMap} in namespace ${namespace}`,
   );
   const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
   const patched = cm.body.data["rbac-policy.csv"].replace(match, value);
-  logger.info(`Patch ${patched}`);
+  LOGGER.info(`Patch ${patched}`);
   const patch = [
     {
       op: "replace",
@@ -167,18 +164,19 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await k8sClient.updateCongifmap(configMap, namespace, patch);
+  await new KubeClient().updateConfigMap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
   configMap: string,
   namespace: string,
 ) {
+  const kubeCLient = new KubeClient();
   try {
-    logger.info(
+    LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await k8sClient.getCongifmap(configMap, namespace);
+    await kubeCLient.getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -188,12 +186,12 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await k8sClient.updateCongifmap(configMap, namespace, patch);
-    return await k8sClient.getCongifmap(configMap, namespace);
+    await kubeCLient.updateConfigMap(configMap, namespace, patch);
+    return await kubeCLient.getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
-      logger.info(
-        `Configmap ${configMap} did not exsist in namespace ${namespace}. Creating it..`,
+      LOGGER.info(
+        `Configmap ${configMap} did not exist in namespace ${namespace}. Creating it..`,
       );
       const cmBody: V1ConfigMap = {
         metadata: {
@@ -204,7 +202,7 @@ export async function ensureNewPolicyConfigMapExists(
           "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       };
-      return await k8sClient.createCongifmap(namespace, cmBody);
+      return await kubeCLient.createCongifmap(namespace, cmBody);
     } else {
       throw e;
     }
@@ -215,7 +213,8 @@ export async function ensureEnvSecretExists(
   secretName: string,
   namespace: string,
 ) {
-  logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
+  const kubeCLient = new KubeClient();
+  LOGGER.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
     BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),
     AUTH_PROVIDERS_AZURE_CLIENT_SECRET: Buffer.from(
@@ -304,18 +303,18 @@ export async function ensureEnvSecretExists(
     data: secretData,
   };
   try {
-    await k8sClient.getSecret(secretName, namespace);
+    await kubeCLient.getSecret(secretName, namespace);
     const patch = {
       data: secretData,
     };
-    await k8sClient.updateSecret(secretName, namespace, patch);
-    return await k8sClient.getSecret(secretName, namespace);
+    await kubeCLient.updateSecret(secretName, namespace, patch);
+    return await kubeCLient.getSecret(secretName, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
-      logger.info(
+      LOGGER.info(
         `Secret ${secretName} did not exist yet in namespace ${namespace}. Creating it..`,
       );
-      await k8sClient.createSecret(secret, namespace);
+      await kubeCLient.createSecret(secret, namespace);
     } else {
       throw e;
     }
@@ -363,8 +362,8 @@ export function parseGroupParentFromEntity(group: GroupEntity) {
 
 export async function dumpAllPodsLogs(filePrefix?: string, folder?: string) {
   const prefix = filePrefix ? filePrefix : "";
-  const _folder = folder ? folder : "/tmp";
-  const p = await k8sClient.coreV1Api.listNamespacedPod(
+  const folderString = folder ? folder : "/tmp";
+  const p = await new KubeClient().coreV1Api.listNamespacedPod(
     constants.AUTH_PROVIDERS_NAMESPACE,
     undefined,
     undefined,
@@ -379,25 +378,26 @@ export async function dumpAllPodsLogs(filePrefix?: string, folder?: string) {
   }
 
   for (const pod of pods) {
-    const backstage_backend_logs =
-      await k8sClient.coreV1Api.readNamespacedPodLog(
+    const backstageBackendLogs =
+      await new KubeClient().coreV1Api.readNamespacedPodLog(
         pod.metadata.name,
         pod.metadata.namespace,
         "backstage-backend",
       );
-    const dynamic_plugins_logs = await k8sClient.coreV1Api.readNamespacedPodLog(
-      pod.metadata.name,
-      pod.metadata.namespace,
-      "install-dynamic-plugins",
-    );
+    const dynamicPluginsLogs =
+      await new KubeClient().coreV1Api.readNamespacedPodLog(
+        pod.metadata.name,
+        pod.metadata.namespace,
+        "install-dynamic-plugins",
+      );
     fs.writeFileSync(
-      `${_folder}/${prefix}-backend.txt`,
-      backstage_backend_logs.body,
+      `${folderString}/${prefix}-backend.txt`,
+      backstageBackendLogs.body,
       { flag: "w" },
     );
     fs.writeFileSync(
-      `${_folder}/${prefix}-init.txt`,
-      dynamic_plugins_logs.body,
+      `${folderString}/${prefix}-init.txt`,
+      dynamicPluginsLogs.body,
       { flag: "w" },
     );
   }
@@ -408,7 +408,7 @@ export async function dumpRHDHUsersAndGroups(
   folder?: string,
 ) {
   const prefix = filePrefix ? filePrefix : "";
-  const _folder = folder ? folder : "/tmp";
+  const folderString = folder ? folder : "/tmp";
   const api = new APIHelper();
   api.UseStaticToken(constants.STATIC_API_TOKEN);
   const users = await api.getAllCatalogUsersFromAPI();
@@ -420,7 +420,7 @@ export async function dumpRHDHUsersAndGroups(
   }
 
   fs.writeFileSync(
-    `${_folder}/${prefix}-catalog.txt`,
+    `${folderString}/${prefix}-catalog.txt`,
     JSON.stringify({ users, groups, locations }),
     { flag: "w" },
   );

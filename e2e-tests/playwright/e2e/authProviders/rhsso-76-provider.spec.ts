@@ -1,20 +1,20 @@
 import { test, Page, expect } from "@playwright/test";
-import { Common, setupBrowser } from "../../utils/Common";
-import { UIhelper } from "../../utils/UIhelper";
+import { Common, setupBrowser } from "../../utils/common";
+import { UIhelper } from "../../utils/ui-helper";
 import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import * as constants from "../../utils/authenticationProviders/constants";
-import { logger } from "../../utils/Logger";
+import { LOGGER } from "../../utils/logger";
 import GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import {
-  upgradeHelmChartWithWait,
-  WaitForNextSync,
+  waitForNextSync,
   replaceInRBACPolicyFileConfigMap,
   dumpAllPodsLogs,
   dumpRHDHUsersAndGroups,
 } from "../../utils/helper";
-import { RHSSOHelper } from "../../utils/authenticationProviders/rhssoHelper";
-import { APIHelper } from "../../utils/APIHelper";
+import { HelmActions } from "../../utils/helm";
 import { GroupEntity } from "@backstage/catalog-model";
+import { APIHelper } from "../../utils/api-helper";
+import { RHSSOHelper } from "../../utils/authenticationProviders/rh-sso-helper";
 import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
 
 let page: Page;
@@ -27,15 +27,15 @@ for (const version of ["RHBK", "RHSSO"]) {
     let uiHelper: UIhelper;
     let usersCreated: Map<string, UserRepresentation>;
     let groupsCreated: Map<string, GroupRepresentation>;
-    const SYNC__TIME = 60;
-    let MUST_SYNC = false;
+    const syntTime = 60;
+    let mustSync = false;
     let rhssoHelper: RHSSOHelper;
 
-    let helm_params = [];
+    let helmParams = [];
 
     test.beforeAll(async ({ browser }, testInfo) => {
       test.setTimeout(120 * 1000);
-      logger.info(
+      LOGGER.info(
         `Staring scenario: Standard authentication providers: OIDC with ${version}: attemp #${testInfo.retry}`,
       );
       expect(constants.RHSSO76_ADMIN_USERNAME).not.toBeNull();
@@ -69,16 +69,16 @@ for (const version of ["RHBK", "RHSSO"]) {
       expect(constants.RBAC_POLICY_ROLES).not.toBeNull();
       expect(constants.STATIC_API_TOKEN).not.toBeNull();
 
-      logger.info(`Base Url is ${process.env.BASE_URL}`);
+      LOGGER.info(`Base Url is ${process.env.BASE_URL}`);
 
       page = (await setupBrowser(browser, testInfo)).page;
       common = new Common(page);
       uiHelper = new UIhelper(page);
 
       if (version == "RHSSO") {
-        helm_params = [];
+        helmParams = [];
       } else if (version == "RHBK") {
-        helm_params = [
+        helmParams = [
           "--values ../.ibm/pipelines/value_files/values_showcase-auth-provider-diff-rhbk.yaml",
         ];
       }
@@ -93,9 +93,9 @@ for (const version of ["RHBK", "RHSSO"]) {
     test(`${version} - default resolver should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not`, async () => {
       test.setTimeout(600 * 1000);
 
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
       // setup RHSSO provider with user ingestion
-      await upgradeHelmChartWithWait(
+      await HelmActions.upgradeHelmChartWithWait(
         constants.AUTH_PROVIDERS_RELEASE,
         constants.AUTH_PROVIDERS_CHART,
         constants.AUTH_PROVIDERS_NAMESPACE,
@@ -110,11 +110,11 @@ for (const version of ["RHBK", "RHSSO"]) {
           "--set upstream.backstage.appConfig.catalog.providers.microsoftOrg=null",
           "--set global.dynamic.plugins[3].disabled=false",
           "--set upstream.backstage.appConfig.permission.enabled=true",
-          ...helm_params,
+          ...helmParams,
         ],
       );
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       await common.keycloakLogin(
         constants.RHSSO76_USERS["user_1"].username,
@@ -144,13 +144,13 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not`, async () => {
       test.setTimeout(600 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       // updating the resolver
       // disable keycloak plugin to disable ingestion
       // edit jdoe user in keycloak to have a different email than the synced one: it will not be synced
 
-      await upgradeHelmChartWithWait(
+      await HelmActions.upgradeHelmChartWithWait(
         constants.AUTH_PROVIDERS_RELEASE,
         constants.AUTH_PROVIDERS_CHART,
         constants.AUTH_PROVIDERS_NAMESPACE,
@@ -166,11 +166,11 @@ for (const version of ["RHBK", "RHSSO"]) {
           "--set upstream.backstage.appConfig.auth.providers.oidc.production.signIn.resolvers[0].resolver=emailMatchingUserEntityProfileEmail",
           "--set global.dynamic.plugins[3].disabled=false",
           "--set upstream.backstage.appConfig.permission.enabled=true",
-          ...helm_params,
+          ...helmParams,
         ],
       );
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // emailMatchingUserEntityProfileEmail should only allow authentication of keycloak users that match the email attribute with the entity one.
       // update jdoe email -> login should fail with error Login failed; caused by Error: Failed to sign-in, unable to resolve user identity
@@ -208,11 +208,11 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate`, async () => {
       test.setTimeout(600 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
       // updating the resolver
       // disable keycloak plugin to disable ingestion
 
-      await upgradeHelmChartWithWait(
+      await HelmActions.upgradeHelmChartWithWait(
         constants.AUTH_PROVIDERS_RELEASE,
         constants.AUTH_PROVIDERS_CHART,
         constants.AUTH_PROVIDERS_NAMESPACE,
@@ -228,13 +228,13 @@ for (const version of ["RHBK", "RHSSO"]) {
           "--set upstream.backstage.appConfig.auth.providers.oidc.production.signIn.resolvers[0].resolver=preferredUsernameMatchingUserEntityName",
           "--set global.dynamic.plugins[3].disabled=false",
           "--set upstream.backstage.appConfig.permission.enabled=true",
-          ...helm_params,
+          ...helmParams,
         ],
       );
 
       // preferredUsernameMatchingUserEntityName should allow authentication of any keycloak.
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // login with testuser1 -> login should succeed
       await common.keycloakLogin(
@@ -274,7 +274,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       // check users are in the catalog
       const usersDisplayNames = Object.values(constants.RHSSO76_USERS).map(
@@ -304,53 +304,53 @@ for (const version of ["RHBK", "RHSSO"]) {
       api.UseStaticToken(constants.STATIC_API_TOKEN);
 
       // group_1 should show user_1
-      const group_1: GroupEntity = await api.getGroupEntityFromAPI(
+      const group1: GroupEntity = await api.getGroupEntityFromAPI(
         constants.RHSSO76_GROUPS["group_1"].name,
       );
       expect(
-        group_1.spec.members.includes(
+        group1.spec.members.includes(
           constants.RHSSO76_USERS["user_1"].username,
         ),
       ).toBe(true);
 
       // group_2 should show user_2 and parent group_nested
-      const group_2: GroupEntity = await api.getGroupEntityFromAPI(
+      const group2: GroupEntity = await api.getGroupEntityFromAPI(
         constants.RHSSO76_GROUPS["group_2"].name,
       );
 
       expect(
-        group_2.spec.members.includes(
+        group2.spec.members.includes(
           constants.RHSSO76_USERS["user_2"].username,
         ),
       ).toBe(true);
       expect(
-        group_2.spec.children.includes(constants.RHSSO76_NESTED_GROUP.name),
+        group2.spec.children.includes(constants.RHSSO76_NESTED_GROUP.name),
       ).toBe(true);
 
       // group_nested should show user_3
-      const group_3: GroupEntity = await api.getGroupEntityFromAPI(
+      const group3: GroupEntity = await api.getGroupEntityFromAPI(
         constants.RHSSO76_NESTED_GROUP.name,
       );
 
       expect(
-        group_3.spec.members.includes(
+        group3.spec.members.includes(
           constants.RHSSO76_USERS["user_3"].username,
         ),
       ).toBe(true);
 
       // group_4 should show user_3
-      const group_4: GroupEntity = await api.getGroupEntityFromAPI(
+      const group4: GroupEntity = await api.getGroupEntityFromAPI(
         constants.RHSSO76_GROUPS["group_4"].name,
       );
 
       expect(
-        group_4.spec.members.includes(
+        group4.spec.members.includes(
           constants.RHSSO76_USERS["user_3"].username,
         ),
       ).toBe(true);
 
       expect(
-        group_4.spec.members.includes(
+        group4.spec.members.includes(
           constants.RHSSO76_USERS["user_4"].username,
         ),
       ).toBe(true);
@@ -358,7 +358,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(` ${version} - remove user from ${version}`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       await rhssoHelper.deleteUser(usersCreated["user_1"].id);
       await page.waitForTimeout(2000); // give rhsso a few seconds
@@ -369,7 +369,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
       await uiHelper.verifyAlertErrorMessage(/Login failed/gm);
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       await expect(async () => {
         expect(
@@ -391,11 +391,11 @@ for (const version of ["RHBK", "RHSSO"]) {
       api.UseStaticToken(constants.STATIC_API_TOKEN);
 
       await expect(async () => {
-        const group_1: GroupEntity = await api.getGroupEntityFromAPI(
+        const group1: GroupEntity = await api.getGroupEntityFromAPI(
           constants.RHSSO76_GROUPS["group_1"].name,
         );
         expect(
-          group_1.spec.members.includes(
+          group1.spec.members.includes(
             constants.RHSSO76_USERS["user_1"].username,
           ),
         ).toBe(false);
@@ -407,7 +407,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - move a user to another group in ${version}`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       // move a user to another group -> ensure user can still login
       // move user_3 to group_3
@@ -439,7 +439,7 @@ for (const version of ["RHBK", "RHSSO"]) {
           "location",
           apiToken,
         );
-        logger.info(
+        LOGGER.info(
           `Checking user can schedule location refresh. API returned ${JSON.stringify(statusBefore)}`,
         );
         expect(statusBefore).toBe(403);
@@ -452,16 +452,16 @@ for (const version of ["RHBK", "RHSSO"]) {
         timeout: 90 * 1000,
       });
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // ensure the change is mirrored in the catalog
       // location_admin should show user_3
       await expect(async () => {
-        const group_3: GroupEntity = await api.getGroupEntityFromAPI(
+        const group3: GroupEntity = await api.getGroupEntityFromAPI(
           constants.RHSSO76_GROUPS["location_admin"].name,
         );
         expect(
-          group_3.spec.members?.includes(
+          group3.spec.members?.includes(
             constants.RHSSO76_USERS["user_3"].username,
           ),
         ).toBe(true);
@@ -490,7 +490,7 @@ for (const version of ["RHBK", "RHSSO"]) {
           "location",
           apiToken,
         );
-        logger.info(
+        LOGGER.info(
           `Checking user can schedule location refresh. API returned ${statusAfter}`,
         );
         expect(statusAfter).toBe(200);
@@ -505,7 +505,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version}  - remove a group from ${version}`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       // remove a group -> ensure group and its members still exists, member should still login
       // remove group_3
@@ -526,11 +526,11 @@ for (const version of ["RHBK", "RHSSO"]) {
       api.UseStaticToken(constants.STATIC_API_TOKEN);
 
       await expect(async () => {
-        const group_4: GroupEntity = await api.getGroupEntityFromAPI(
+        const group4: GroupEntity = await api.getGroupEntityFromAPI(
           constants.RHSSO76_GROUPS["group_4"].name,
         );
         expect(
-          group_4.spec.members.includes(
+          group4.spec.members.includes(
             constants.RHSSO76_USERS["user_4"].username,
           ),
         ).toBe(true);
@@ -540,7 +540,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       });
 
       // waiting for next sync
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // after the sync ensure the group entity is removed
       // group_4 should not be in the catalog anymore
@@ -578,7 +578,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - remove a user from RHDH`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       await common.UnregisterUserEntityFromCatalog(
         constants.RHSSO76_USERS["user_4"].username,
@@ -618,7 +618,7 @@ for (const version of ["RHBK", "RHSSO"]) {
         constants.AUTH_PROVIDERS_REALM_NAME,
       );
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // user_4 should login
       await common.keycloakLogin(
@@ -632,7 +632,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - remove a group from RHDH`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       await common.UnregisterGroupEntityFromCatalog(
         constants.RHSSO76_GROUPS["group_3"].name,
@@ -651,7 +651,7 @@ for (const version of ["RHBK", "RHSSO"]) {
         timeout: 60 * 1000,
       });
 
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // after sync, ensure group is created again and memembers can login
       await expect(async () => {
@@ -669,7 +669,7 @@ for (const version of ["RHBK", "RHSSO"]) {
 
     test(`${version} - rename a user and a group`, async () => {
       test.setTimeout(300 * 1000);
-      logger.info(`Executing testcase: ${test.info().title}`);
+      LOGGER.info(`Executing testcase: ${test.info().title}`);
 
       await rhssoHelper.updateUser(usersCreated["user_2"].id, {
         lastName: constants.RHSSO76_USERS["user_2"].lastName + " Renamed",
@@ -682,7 +682,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       });
 
       // waiting for next sync
-      await WaitForNextSync(SYNC__TIME, "rhsso");
+      await waitForNextSync("rhsso", syntTime);
 
       // after sync, ensure group is mirrored
       // after sync, ensure user change is mirrorred
@@ -726,7 +726,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       // user should see the entities again
       await expect(async () => {
         await page.reload();
-        logger.info(
+        LOGGER.info(
           "Reloading page, permission should be updated automatically.",
         );
         await expect(page.locator(`nav a:has-text("My Group")`)).toBeVisible({
@@ -749,21 +749,21 @@ for (const version of ["RHBK", "RHSSO"]) {
     test.afterEach(async () => {
       if (test.info().status !== test.info().expectedStatus) {
         const prefix = `${test.info().testId}_${test.info().retry}`;
-        logger.info(`Dumping logs with prefix ${prefix}`);
+        LOGGER.info(`Dumping logs with prefix ${prefix}`);
         await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
         await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
-        MUST_SYNC = true;
+        mustSync = true;
       }
     });
 
     test.beforeEach(async () => {
       test.setTimeout(120 * 1000);
-      if (test.info().retry > 0 || MUST_SYNC) {
-        logger.info(
-          `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${MUST_SYNC}.`,
+      if (test.info().retry > 0 || mustSync) {
+        LOGGER.info(
+          `Waiting for sync. Retry #${test.info().retry}. Needed sync after failure: ${mustSync}.`,
         );
-        await WaitForNextSync(SYNC__TIME, "rhsso");
-        MUST_SYNC = false;
+        await waitForNextSync("rhsso", syntTime);
+        mustSync = false;
       }
     });
   });
