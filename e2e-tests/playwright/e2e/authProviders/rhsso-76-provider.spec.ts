@@ -90,7 +90,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       groupsCreated = created.groupsCreated;
     });
 
-    test.skip(`${version} - default resolver should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not`, async () => {
+    test(`${version} - default resolver should be emailLocalPartMatchingUserEntityName: user_1 should authenticate, user_2 should not`, async () => {
       test.setTimeout(600 * 1000);
 
       logger.info(`Executing testcase: ${test.info().title}`);
@@ -142,7 +142,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       );
     });
 
-    test.skip(`${version} - testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not`, async () => {
+    test(`${version} - testing resolver emailMatchingUserEntityProfileEmail: user_1 should authenticate, jdoe should not`, async () => {
       test.setTimeout(600 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -206,7 +206,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       );
     });
 
-    test.skip(`${version} - testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate`, async () => {
+    test(`${version} - testing resolver preferredUsernameMatchingUserEntityName: user_1 and jenny_doe should both authenticate`, async () => {
       test.setTimeout(600 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
       // updating the resolver
@@ -272,7 +272,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test.skip(`${version} - ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH`, async () => {
+    test(`${version} - ingestion of Users and Nested Groups: verify the UserEntities and Groups are created with the correct relationships in RHDH`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -356,7 +356,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       ).toBe(true);
     });
 
-    test.skip(` ${version} - remove user from ${version}`, async () => {
+    test(` ${version} - remove user from ${version}`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -503,7 +503,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test.skip(`${version}  - remove a group from ${version}`, async () => {
+    test(`${version}  - remove a group from ${version}`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -576,7 +576,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test.skip(`${version} - remove a user from RHDH`, async () => {
+    test(`${version} - remove a user from RHDH`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -630,7 +630,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       await common.signOut();
     });
 
-    test.skip(`${version} - remove a group from RHDH`, async () => {
+    test(`${version} - remove a group from RHDH`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
@@ -667,7 +667,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       });
     });
 
-    test.skip(`${version} - rename a user and a group`, async () => {
+    test(`${version} - rename a user and a group`, async () => {
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
