@@ -361,11 +361,11 @@ async function main() {
 
     if (hasSkipExportDynamicFlag) {
       console.log(
-        `Skipping 'Updating dynamic-plugins folder...' step because '--skip-export-dynamic' is provided.`,
+        `Skipping 'Checking if dynamic plugins can successfully export...' step because '--skip-export-dynamic' is provided.`,
       );
     } else {
-      console.log("Updating dynamic-plugins folder...");
-      execSync("yarn run export-dynamic:clean --affected", {
+      console.log("Checking if dynamic plugins can successfully export...");
+      execSync("yarn run export-dynamic --affected", {
         stdio: "inherit",
       });
     }

@@ -32,7 +32,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @roadiehq/scaffolder-backend-argocd --embed-package @roadiehq/backstage-plugin-argo-cd-backend --override-interop default --no-embed-as-dependencies",
+    "export-dynamic": "janus-cli package export-dynamic-plugin",
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {

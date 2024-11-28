@@ -35,7 +35,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-kubernetes-backend --embed-package @backstage/plugin-kubernetes-node --override-interop default --no-embed-as-dependencies",
+    "export-dynamic": "janus-cli package export-dynamic-plugin",
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
