@@ -289,8 +289,7 @@ run_tests() {
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
 
-  # TODO Re-enable `droute` once outage is resolved
-  # droute_send "${release_name}" "${project}"
+  droute_send "${release_name}" "${project}"
 
   echo "${project} RESULT: ${RESULT}"
   if [ "${RESULT}" -ne 0 ]; then
