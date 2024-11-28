@@ -406,7 +406,6 @@ for (const version of ["RHBK", "RHSSO"]) {
     });
 
     test(`${version} - move a user to another group in ${version}`, async () => {
-      await WaitForNextSync(SYNC__TIME, "rhsso");
       test.setTimeout(300 * 1000);
       logger.info(`Executing testcase: ${test.info().title}`);
 
