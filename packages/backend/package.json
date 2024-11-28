@@ -60,6 +60,7 @@
     "@opentelemetry/sdk-node": "0.53.0",
     "app": "*",
     "global-agent": "3.0.0",
+    "jose": "^5.9.6",
     "undici": "6.19.8",
     "winston": "3.14.2"
   },
