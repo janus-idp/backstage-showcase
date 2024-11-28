@@ -75,7 +75,8 @@ Nightly tests are run to ensure the stability and reliability of our codebase ov
 ### Nightly Test Environments
 
 - **AKS Nightly Tests:** Nightly tests for Azure Kubernetes Service (AKS) run on a dedicated cluster. We do not have AKS PR checks; the AKS environment is exclusively used for nightly runs.
-- **IBM Cloud Tests:** All nightly tests for the `main`, `release-1.3`, and `1.2.x` branches run against OpenShift clusters on IBM Cloud.
+- **IBM Cloud Tests:** All nightly tests for the `main` and `release-1.n`(depending on the latest release versions) branches run against OpenShift clusters on IBM Cloud.
+- **GKE Nightly Tests:** Nightly tests on top of Google Kubernetes Engine. As the AKS, GKE is only used for nightly tests.
 
 ### Additional Nightly Jobs for Main Branch
 
