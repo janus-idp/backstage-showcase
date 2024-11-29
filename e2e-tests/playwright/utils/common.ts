@@ -238,7 +238,7 @@ export class Common {
     }
   }
 
-  async githubLogin(username: string, password: string) {
+  async githubLogin(username: string, password: string, twofactor: string) {
     let popup: Page;
     this.page.once("popup", (asyncnewPage) => {
       popup = asyncnewPage;
@@ -267,8 +267,11 @@ export class Common {
         await popup.locator("#password").click({ timeout: 5000 });
         await popup.locator("#password").fill(password, { timeout: 5000 });
         await popup.locator("[type='submit']").click({ timeout: 5000 });
-        //await this.checkAndReauthorizeGithubApp()
-        await popup.waitForEvent("close", { timeout: 2000 });
+        const twofactorcode = authenticator.generate(twofactor);
+        await popup.locator("#app_totp").click({ timeout: 5000 });
+        await popup.locator("#app_totp").fill(twofactorcode, { timeout: 5000 });
+
+        await popup.waitForEvent("close", { timeout: 20000 });
         return "Login successful";
       } catch (e) {
         const authorization = popup.locator("button.js-oauth-authorize-btn");

@@ -65,7 +65,7 @@ upstream:
               githubUrl: https://github.com
               orgs: ['${AUTH_PROVIDERS_GH_ORG_NAME}']
               schedule:
-                initialDelay: { seconds: 10 }
+                initialDelay: { seconds: 0 }
                 frequency: { minutes: 1 }
                 timeout: { minutes: 1 }
           microsoftGraphOrg:

@@ -357,12 +357,16 @@ export const GH_TEAMS: { [key: string]: { name: string } } = {
     name: "gh_team_location_reader",
   },
 };
-export const GH_USERS: { [key: string]: { name: string } } = {
+export const GH_USERS: {
+  [key: string]: { name: string; displayName: string };
+} = {
   user_1: {
     name: "rhdhqeauth1",
+    displayName: "RHDH QE User 1",
   },
   admin: {
     name: "rhdhqeauthadmin",
+    displayName: "RHDH QE Admin",
   },
 };
 
@@ -376,6 +380,10 @@ export const AUTH_ORG1_PRIVATE_KEY = process.env.AUTH_ORG1_PRIVATE_KEY;
 export const AUTH_ORG_PK = process.env.AUTH_ORG_PK;
 export const AUTH_ORG_WEBHOOK_SECRET = process.env.AUTH_ORG_WEBHOOK_SECRET;
 export const GH_USER_PASSWORD = process.env.GH_USER_PASSWORD;
+export const AUTH_PROVIDERS_GH_USER_2FA =
+  process.env.AUTH_PROVIDERS_GH_USER_2FA;
+export const AUTH_PROVIDERS_GH_ADMIN_2FA =
+  process.env.AUTH_PROVIDERS_GH_ADMIN_2FA;
 
 // required by all auth scenarios
 export const AUTH_PROVIDERS_NAMESPACE = process.env.AUTH_PROVIDERS_NAMESPACE

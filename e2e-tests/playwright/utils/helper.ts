@@ -126,20 +126,21 @@ export async function getLastSyncTimeFromLogs(
   }
 }
 
-export async function waitForNextSync(provider: string, syncTime?: number) {
+export async function waitForNextSync(provider: string, synTimeOut: number) {
+  let syncTime: number | null = null;
   await expect(async () => {
-    const lastSyncTimeFromLogs = await getLastSyncTimeFromLogs(provider);
-    if (syncTime === undefined) {
-      syncTime = lastSyncTimeFromLogs;
+    const nextSyncTime = await getLastSyncTimeFromLogs(provider);
+    if (syncTime == null) {
+      syncTime = nextSyncTime;
     }
     LOGGER.info(
-      `Last registered sync time was: ${new Date(syncTime).toUTCString()}; last detected in logs: ${new Date(lastSyncTimeFromLogs).toUTCString()}`,
+      `Last registered sync time was: ${new Date(syncTime).toUTCString()}(${syncTime}); last detected in logs:${new Date(nextSyncTime).toUTCString()}(${nextSyncTime})`,
     );
-    expect(lastSyncTimeFromLogs).not.toBeNull();
-    expect(lastSyncTimeFromLogs).toBeGreaterThan(syncTime);
+    expect(nextSyncTime).not.toBeNull();
+    expect(nextSyncTime).toBeGreaterThan(syncTime);
   }).toPass({
     intervals: [1_000, 2_000, 10_000],
-    timeout: syncTime * 2 * 1000,
+    timeout: synTimeOut * 2 * 1000,
   });
 }
 
@@ -294,6 +295,15 @@ export async function ensureEnvSecretExists(
     ).toString("base64"),
     AUTH_PROVIDERS_GH_ORG_NAME: Buffer.from(
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
+    ).toString("base64"),
+    GH_USER_PASSWORD: Buffer.from(constants.GH_USER_PASSWORD).toString(
+      "base64",
+    ),
+    AUTH_PROVIDERS_GH_USER_2FA: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
+    ).toString("base64"),
+    AUTH_PROVIDERS_GH_ADMIN_2FA: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_ADMIN_2FA,
     ).toString("base64"),
   };
   const secret: V1Secret = {

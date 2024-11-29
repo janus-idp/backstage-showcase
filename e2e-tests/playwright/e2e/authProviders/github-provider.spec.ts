@@ -37,6 +37,9 @@ test.describe("Standard authentication providers: Github Provider", () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     expect(process.env.BASE_URL).not.toBeNull();
+    expect(process.env.AUTH_PROVIDERS_GH_USER_2FA).not.toBeNull();
+    expect(process.env.AUTH_PROVIDERS_GH_ADMIN_2FA).not.toBeNull();
+
     LOGGER.info(`Base Url is ${process.env.BASE_URL}`);
     LOGGER.info(
       `Starting scenario: Standard authentication providers: Basic authentication: attemp #${testInfo.retry}`,
@@ -83,7 +86,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     LOGGER.info(
       "Executing testcase: Github with default resolver: user should login and entity is in the catalog",
     );
-    test.setTimeout(300 * 1000);
+    test.setTimeout(30 * 1000);
     if (test.info().retry > 0) {
       await waitForNextSync("github", syncTime);
     }
@@ -98,14 +101,21 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.githubLogin(
       constants.GH_USERS["admin"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_ADMIN_2FA,
     );
 
-    await page.goto("/");
-    await uiHelper.openSidebar("Catalog");
-    await page.reload();
-    await uiHelper.selectMuiBox("Kind", "User");
-    await uiHelper.verifyHeading("All users");
-    await uiHelper.verifyCellsInTable([constants.GH_USERS["user_1"].name]);
+    await expect(async () => {
+      expect(
+        await common.CheckUserIsIngestedInCatalog(
+          [constants.GH_USERS["user_1"].displayName],
+          constants.STATIC_API_TOKEN,
+        ),
+      ).toBe(true);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 90 * 1000,
+    });
+
     await uiHelper.openSidebar("Settings");
     await common.signOut();
   });
@@ -115,7 +125,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
     // check entities are in the catalog
     const usersDisplayNames = Object.values(constants.GH_USERS).map(
-      (u) => u.name,
+      (u) => u.displayName,
     );
     expect(
       await common.CheckUserIsIngestedInCatalog(
@@ -173,7 +183,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
     // check location_admin
     const locationAdmin: GroupEntity = await api.getGroupEntityFromAPI(
-      constants.GH_TEAMS["team_4"].name,
+      constants.GH_TEAMS["location_admin"].name,
     );
     const membersLocationAdmin = parseGroupMemberFromEntity(locationAdmin);
     expect(
@@ -183,6 +193,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
   test("Remove a user from RHDH", async () => {
     test.setTimeout(300 * 1000);
+
     // remove user from RHDH -> authentication works, access is broken
     LOGGER.info(
       `Executing testcase: Remove a user from RHDH: authentication should work, but access is denied before next sync.`,
@@ -209,6 +220,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     const loginSucceded = await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
     );
     expect(loginSucceded).toContain("Login successful");
 
@@ -227,6 +239,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
     );
     await uiHelper.openSidebar("Settings");
     await common.signOut();
@@ -281,6 +294,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
   test("Move a user to another group in Github", async () => {
     test.setTimeout(300 * 1000);
+
     // move a user to another group -> ensure user can still login
     LOGGER.info(
       `Executing testcase: Move a user to another group in Github: user should still login before next sync.`,
@@ -300,6 +314,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
     );
 
     let apiToken;
@@ -343,6 +358,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
     );
 
     // check RBAC permissions are updated after group update
@@ -423,6 +439,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
     );
 
     await expect(async () => {
@@ -436,11 +453,13 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
     await uiHelper.openSidebar("Settings");
     await common.signOut();
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await context.clearCookies();
   });
 
   test("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
+    await waitForNextSync("github", syncTime);
+
     // rename group from RHDH -> user can login, but policy is broken
     LOGGER.info(`Executing testcase: Rename a user and a group.`);
 
@@ -488,6 +507,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await common.githubLogin(
       constants.GH_USERS["user_1"].name,
       constants.GH_USER_PASSWORD,
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
     );
 
     // users permission based on that group will be defaulted to read-only
@@ -530,7 +550,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
 
     await uiHelper.openSidebar("Settings");
     await common.signOut();
-    await context.clearCookies(); // If we don't clear cookies, Microsoft Login popup will present the last logger user
+    await context.clearCookies();
   });
 
   test.afterEach(async () => {
