@@ -16203,9 +16203,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@red-hat-developer-hub/backstage-plugin-dynamic-home-page@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@red-hat-developer-hub/backstage-plugin-dynamic-home-page@npm:1.0.0"
+"@red-hat-developer-hub/backstage-plugin-dynamic-home-page@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@red-hat-developer-hub/backstage-plugin-dynamic-home-page@npm:1.0.1"
   dependencies:
     "@backstage/core-components": 0.15.1
     "@backstage/core-plugin-api": 1.10.0
@@ -16216,14 +16216,14 @@ __metadata:
     "@backstage/theme": 0.6.0
     "@mui/material": 5.16.7
     "@mui/styles": 5.16.7
-    "@scalprum/react-core": 0.8.0
+    "@scalprum/react-core": 0.9.3
     react-grid-layout: 1.4.4
     react-use: 17.5.1
-    tss-react: 4.9.12
+    tss-react: 4.9.13
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
     react-router-dom: 6.26.2
-  checksum: 7b36cce6a50b60d80f8e3e957fd31051453d1de5d805e9d838ba4b36f8a7a95b26b63eed6e379e8d63fbdb9ca34ca46f99548d2c53568c69386eae4aa772adb7
+  checksum: 8eb2827e03f20fa075217f9af243102fcddc8922c8d10a727589b1f45556d4643bc1f5f53326161691fc9718804d8fbc18c060b5b6d9ed4a2ada7949ee1e6e43
   languageName: node
   linkType: hard
 
@@ -16884,20 +16884,6 @@ __metadata:
     "@openshift/dynamic-plugin-sdk": ^5.0.1
     tslib: ^2.6.2
   checksum: 0698e2520a9a9a7c220b5067792e81f267659ae0e9c0e117d9dc5aa24f28be2b8c72d5c79aedf3a68fc803e47c1f473ff25945299c03b978ea5360d766975fc2
-  languageName: node
-  linkType: hard
-
-"@scalprum/react-core@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@scalprum/react-core@npm:0.8.0"
-  dependencies:
-    "@openshift/dynamic-plugin-sdk": ^5.0.1
-    "@scalprum/core": ^0.7.0
-    lodash: ^4.17.0
-  peerDependencies:
-    react: ">=16.8.0 || >=17.0.0 || ^18.0.0"
-    react-dom: ">=16.8.0 || >=17.0.0 || ^18.0.0"
-  checksum: 1eff07a1efa4cded62bc3602ef5745e2ff39f8291af1af4486bc6fa703b59f5e94fc6c76929f5653c15d5a5e70dd85d41c145982f605042d4ec2eb983b531031
   languageName: node
   linkType: hard
 
@@ -39960,7 +39946,7 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.17.0
-    "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": ^1.0.0
+    "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": ^1.0.1
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -43502,27 +43488,6 @@ __metadata:
   version: 2.8.0
   resolution: "tslib@npm:2.8.0"
   checksum: de852ecd81adfdb4870927e250763345f07dc13fe7f395ce261424966bb122a0992ad844c3ec875c9e63e72afe2220a150712984e44dfd1a8a7e538a064e3d46
-  languageName: node
-  linkType: hard
-
-"tss-react@npm:4.9.12":
-  version: 4.9.12
-  resolution: "tss-react@npm:4.9.12"
-  dependencies:
-    "@emotion/cache": "*"
-    "@emotion/serialize": "*"
-    "@emotion/utils": "*"
-  peerDependencies:
-    "@emotion/react": ^11.4.1
-    "@emotion/server": ^11.4.0
-    "@mui/material": ^5.0.0
-    react: ^16.8.0 || ^17.0.2 || ^18.0.0
-  peerDependenciesMeta:
-    "@emotion/server":
-      optional: true
-    "@mui/material":
-      optional: true
-  checksum: b1bec7c6d80b93d325ceca040ff5629b8a898b9f86a6d3260f2614943b64873afacd1f56d65a7850090a01869ea4fdac045da77ec96b80fbf157d475bcbd7187
   languageName: node
   linkType: hard
 
