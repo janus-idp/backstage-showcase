@@ -12,11 +12,13 @@ cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+  else
     # Cleanup namespaces after main branch PR e2e tests execution.
     delete_namespace "${NAME_SPACE}"
     delete_namespace "${NAME_SPACE_POSTGRES_DB}"
     delete_namespace "${NAME_SPACE_RBAC}"
+    delete_namespace "${NAME_SPACE_RDS}"
+    delete_namespace "${NAME_SPACE_RUNTIME}"
   fi
   rm -rf ~/tmpbin
 }
@@ -48,14 +50,14 @@ set_cluster_info() {
 
 set_namespace() {
   if [[ "$JOB_NAME" == *periodic-* ]]; then
-    NAME_SPACE="showcase-ci-nightly"
-    NAME_SPACE_RBAC="showcase-rbac-nightly"
-    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
+    NAME_SPACE="showcase-ci-nightly-1-4"
+    NAME_SPACE_RBAC="showcase-rbac-nightly-1-4"
+    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly-1-4"
     NAME_SPACE_K8S="showcase-k8s-ci-nightly"
     NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
-  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+  elif [[ "$JOB_NAME" == *pull-*-release-1.4-e2e-tests* ]]; then
     # Enable parallel PR testing for main branch by utilizing a pool of namespaces
-    local namespaces_pool=("pr-1" "pr-2" "pr-3")
+    local namespaces_pool=("pr-1-4-1" "pr-1-4-2" "pr-1-4-3")
     local namespace_found=false
     # Iterate through namespace pool to find an available set
     for ns in "${namespaces_pool[@]}"; do
