@@ -15,26 +15,32 @@ initiate_deployments() {
   echo "Applying YAML files and deploying Helm chart for namespace: ${NAME_SPACE}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}"
+
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
     -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" \
     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
     --set upstream.backstage.image.repository="${QUAY_REPO}" \
     --set upstream.backstage.image.tag="${TAG_NAME}"
 
-  echo "Configuring namespaces for PostgreSQL and RBAC"
+  echo "Configuring Postgres DB namespace: ${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
 
+  echo "Configuring RBAC namespace: ${NAME_SPACE_RBAC}"
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
-  echo "Uninstalling and redeploying Helm chart for RBAC namespace: ${NAME_SPACE_RBAC}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
+
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
     -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" \
     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
     --set upstream.backstage.image.repository="${QUAY_REPO}" \
     --set upstream.backstage.image.tag="${TAG_NAME}"
+
+  echo "Checking and testing deployments"
+  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
+  check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
 }
 
 configure_namespace() {
