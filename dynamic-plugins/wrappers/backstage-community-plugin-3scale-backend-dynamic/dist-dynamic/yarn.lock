@@ -5,6 +5,23 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@backstage-community/plugin-3scale-backend@file:./embedded/backstage-community-plugin-3scale-backend::locator=backstage-community-plugin-3scale-backend-dynamic%40workspace%3A.":
+  version: 3.0.3+embedded
+  resolution: "@backstage-community/plugin-3scale-backend@file:./embedded/backstage-community-plugin-3scale-backend#./embedded/backstage-community-plugin-3scale-backend::hash=4bbf5b&locator=backstage-community-plugin-3scale-backend-dynamic%40workspace%3A."
+  dependencies:
+    atlassian-openapi: ^1.0.19
+    openapi-merge: ^1.3.3
+    swagger-converter: 2.1.0
+    swagger2openapi: ^7.0.4
+  peerDependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-catalog-node": ^1.13.1
+  checksum: d340ce0a6f26aa387d0132893d7800565d45d2dc92c10b06b9f092afa63099c68f63620f4a9592b1d9682c750f21a7834e9275adc85c9c7bed48c20dfbe0e551
+  languageName: node
+  linkType: hard
+
 "@exodus/schemasafe@npm:^1.0.0-rc.2":
   version: 1.3.0
   resolution: "@exodus/schemasafe@npm:1.3.0"
@@ -42,10 +59,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-3scale-backend-dynamic@workspace:."
   dependencies:
-    atlassian-openapi: ^1.0.19
-    openapi-merge: ^1.3.3
-    swagger-converter: 2.1.0
-    swagger2openapi: ^7.0.4
+    "@backstage-community/plugin-3scale-backend": 3.0.3
   peerDependencies:
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-model": ^1.7.0
