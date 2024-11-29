@@ -140,7 +140,9 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
 
       await myPage.click(ROLE_OVERVIEW_COMPONENTS.updateMembers);
       await uiHelper.verifyHeading("Edit Role");
-      await myPage.locator(HOME_PAGE_COMPONENTS.searchBar).fill("Guest User");
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .fill("Guest User".toLowerCase());
       await myPage.click('button[aria-label="Remove"]');
       await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
       await uiHelper.clickButton("Next");
