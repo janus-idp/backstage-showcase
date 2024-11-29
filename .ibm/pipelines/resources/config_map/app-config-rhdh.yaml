@@ -106,7 +106,7 @@ auth:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
 techRadar:
-  url: http://${DH_TARGET_URL}/tech-radar
+  url: http://test-backstage-customization-provider-showcase.apps.rosa.b8osy-eswc6-795.ctx5.p3.openshiftapps.com/tech-radar
 proxy:
   skipInvalidProxies: true
   # endpoints: {}
