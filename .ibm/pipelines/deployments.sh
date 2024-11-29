@@ -1,11 +1,18 @@
 #!/bin/bash
 
 initiate_deployments() {
+  echo "Installing Helm and adding Helm repositories"
+  install_helm
+  add_helm_repos
+
+  echo "Configuring namespace: ${NAME_SPACE}"
   configure_namespace "${NAME_SPACE}"
   uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
 
+  echo "Applying Redis deployment in namespace: ${NAME_SPACE}"
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
+  echo "Applying YAML files and deploying Helm chart for namespace: ${NAME_SPACE}"
   cd "${DIR}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
@@ -14,11 +21,13 @@ initiate_deployments() {
     --set upstream.backstage.image.repository="${QUAY_REPO}" \
     --set upstream.backstage.image.tag="${TAG_NAME}"
 
+  echo "Configuring namespaces for PostgreSQL and RBAC"
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
 
   configure_namespace "${NAME_SPACE_RBAC}"
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
+  echo "Uninstalling and redeploying Helm chart for RBAC namespace: ${NAME_SPACE_RBAC}"
   uninstall_helmchart "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
