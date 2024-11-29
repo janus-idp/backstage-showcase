@@ -376,8 +376,12 @@ apply_yaml_files() {
   )
 
   for file in "${files[@]}"; do
-    sed -i "s/namespace:.*/namespace: ${project}/g" "$file"
-  done
+      sed -i "s/namespace:.*/namespace: ${project}/g" "$file"
+      if ! oc apply -f "$file" --namespace="${project}"; then
+        echo "Error applying $file in namespace ${project}" >&2
+        return 1
+      fi
+    done
 
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"

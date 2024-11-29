@@ -30,8 +30,14 @@ initiate_deployments() {
 
 configure_namespace() {
   local project=$1
-  delete_namespace "$project"
-  oc create namespace "${project}"
+  if oc get namespace "$project" >/dev/null 2>&1; then
+    echo "Namespace ${project} already exists. Skipping creation."
+  else
+    oc create namespace "${project}" || {
+      echo "Error creating namespace ${project}" >&2
+      return 1
+    }
+  fi
   oc config set-context --current --namespace="${project}"
 }
 

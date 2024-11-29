@@ -29,6 +29,20 @@ main() {
   set_cluster_info
   . "${DIR}/env_variables.sh"
 
+  if [[ "$JOB_NAME" == *aks* ]]; then
+      az_login
+      az_aks_start "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+      az_aks_approuting_enable "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+      az_aks_get_credentials "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+    elif [[ "$JOB_NAME" == *gke* ]]; then
+      gcloud_auth "${GKE_SERVICE_ACCOUNT_NAME}" "/tmp/secrets/GKE_SERVICE_ACCOUNT_KEY"
+      gcloud_gke_get_credentials "${GKE_CLUSTER_NAME}" "${GKE_CLUSTER_REGION}" "${GOOGLE_CLOUD_PROJECT}"
+    else
+      oc login --token="${K8S_CLUSTER_TOKEN}" --server="${K8S_CLUSTER_URL}"
+    fi
+
+    echo "Cluster login complete. OCP version: $(oc version)"
+
   set_namespace
 
   case "$JOB_NAME" in
