@@ -83,6 +83,11 @@ export class RbacPo extends PageObject {
     await this.addPermissionPolicy.click();
   }
 
+  public async clickSelectMember(member: string) {
+    const selector = this.page.locator(this.selectMember(member));
+    selector.click();
+  }
+
   private async verifyGeneralRbacViewHeading() {
     await this.uiHelper.verifyHeading(/All roles \(\d+\)/);
   }
@@ -122,7 +127,7 @@ export class RbacPo extends PageObject {
     await this.verifyATextIsVisible(member);
   }
 
-  private async next() {
+  async next() {
     this.uiHelper.clickButton("Next");
   }
 
@@ -131,7 +136,12 @@ export class RbacPo extends PageObject {
   }
 
   public async selectOption(
-    option: "catalog" | "catalog-entity" | "scaffolder" | "scaffolder-template",
+    option:
+      | "catalog"
+      | "catalog-entity"
+      | "scaffolder"
+      | "scaffolder-template"
+      | "catalog.entity.create",
   ) {
     const optionSelector = `li[role="option"]:has-text("${option}")`;
     await this.page.waitForSelector(optionSelector);
@@ -249,5 +259,9 @@ export class RbacPo extends PageObject {
       await this.uiHelper.clickButton("Create");
       await this.uiHelper.verifyText(`role:default/${name}`);
     }
+  }
+
+  async fillRoleName(content: string) {
+    await this.roleName.fill(content);
   }
 }

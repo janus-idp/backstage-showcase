@@ -3,6 +3,13 @@ import test, { expect, Page } from "@playwright/test";
 import { Roles } from "../../../support/pages/rbac";
 import { setupBrowser, Common } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
+import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
+import {
+  ROLES_PAGE_COMPONENTS,
+  HOME_PAGE_COMPONENTS,
+  ROLE_OVERVIEW_COMPONENTS,
+} from "../../../support/pageObjects/page-obj";
+import { RbacPo } from "../../../support/pageObjects/rbac-po";
 
 type RbacAsAdminFixture = {
   uiHelper: UIhelper;
@@ -76,101 +83,129 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
 
   base(
     "Create and edit a role from the roles list page",
-    async ({ uiHelper, testId, rolesHelper }) => {
-      await rolesHelper.createRole(testId.testRole);
-      await myPage.click(RoleListPO.editRole(testId.composedRole));
+    async ({ uiHelper, rolesHelper }) => {
+      const rbacPo = new RbacPo(myPage);
+      const testUser = "Jonathon Page";
+      await rbacPo.createRole("test-role", [
+        RbacPo.rbacTestUsers.guest,
+        RbacPo.rbacTestUsers.tara,
+        RbacPo.rbacTestUsers.backstage,
+      ]);
+      await myPage.click(
+        ROLES_PAGE_COMPONENTS.editRole("role:default/test-role"),
+      );
       await uiHelper.verifyHeading("Edit Role");
       await uiHelper.clickButton("Next");
-      await myPage.fill(RoleFormPO.addUsersAndGroups, "Jonathon Page");
-      await myPage.click(RoleFormPO.selectMember("Jonathon Page"));
+      await rbacPo.addUsersAndGroups(testUser);
+      await myPage.click(rbacPo.selectMember(testUser));
       await uiHelper.verifyHeading("Users and groups (3 users, 1 group)");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Save");
       await uiHelper.verifyText(
-        `Role ${testId.composedRole} updated successfully`,
+        "Role role:default/test-role updated successfully",
       );
-      await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
+
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .waitFor({ state: "visible" });
+      await myPage.locator(HOME_PAGE_COMPONENTS.searchBar).fill("test-role");
       await uiHelper.verifyHeading("All roles (1)");
       const usersAndGroupsLocator = myPage
-        .locator(UIhelperPO.MuiTableCell)
+        .locator(UI_HELPER_ELEMENTS.MuiTableCell)
         .filter({ hasText: "3 users, 1 group" });
       await usersAndGroupsLocator.waitFor();
       await expect(usersAndGroupsLocator).toBeVisible();
-      await rolesHelper.deleteRole(testId.composedRole);
+
+      await rolesHelper.deleteRole("role:default/test-role");
     },
   );
 
   base(
     "Edit users and groups and update policies of a role from the overview page",
-    async ({ uiHelper, testId, rolesHelper }) => {
-      await rolesHelper.createRole(testId.testRole);
-      await uiHelper.clickLink(testId.composedRole);
+    async ({ uiHelper, rolesHelper }) => {
+      const rbacPo = new RbacPo(myPage);
+      await rbacPo.createRole("test-role1", [
+        RbacPo.rbacTestUsers.guest,
+        RbacPo.rbacTestUsers.tara,
+        RbacPo.rbacTestUsers.backstage,
+      ]);
 
-      await uiHelper.verifyHeading(testId.composedRole);
+      await uiHelper.filterInputPlaceholder("test-role1");
+
+      await uiHelper.clickLink("role:default/test-role1");
+
+      await uiHelper.verifyHeading("role:default/test-role1");
       await uiHelper.clickTab("Overview");
 
-      await myPage.click(RoleOverviewPO.updateMembers);
+      await myPage.click(ROLE_OVERVIEW_COMPONENTS.updateMembers);
       await uiHelper.verifyHeading("Edit Role");
-      await myPage.locator(HomePagePO.searchBar).fill("Guest User");
+      await myPage.locator(HOME_PAGE_COMPONENTS.searchBar).fill("Guest User");
       await myPage.click('button[aria-label="Remove"]');
       await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Save");
       await uiHelper.verifyText(
-        `Role ${testId.composedRole} updated successfully`,
+        "Role role:default/test-role1 updated successfully",
       );
       await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
 
-      await myPage.click(RoleOverviewPO.updatePolicies);
+      await myPage.click(ROLE_OVERVIEW_COMPONENTS.updatePolicies);
       await uiHelper.verifyHeading("Edit Role");
-      await myPage.click(RoleFormPO.addPermissionPolicy);
-      await myPage.click(RoleFormPO.selectPermissionPolicyPlugin(1));
-      await uiHelper.optionSelector("scaffolder");
-      await myPage.click(RoleFormPO.selectPermissionPolicyPermission(1));
-      await uiHelper.optionSelector("scaffolder-template");
+      await rbacPo.clickAddPermissionPolicy();
+      await myPage.click(rbacPo.selectPermissionPolicyPlugin(1), {
+        timeout: 10_1000,
+      });
+      await rbacPo.selectOption("scaffolder");
+      await myPage.click(rbacPo.selectPermissionPolicyPermission(1));
+      await rbacPo.selectOption("scaffolder-template");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Save");
       await uiHelper.verifyText(
-        `Role ${testId.composedRole} updated successfully`,
+        "Role role:default/test-role1 updated successfully",
       );
       await uiHelper.verifyHeading("Permission Policies (3)");
 
-      await rolesHelper.deleteRole(testId.composedRole);
+      await rolesHelper.deleteRole("role:default/test-role1");
     },
   );
 
   base(
     "Create a role with a permission policy per resource type and verify that the only authorized users can access specific resources.",
-    async ({ uiHelper, rolesHelper, testId }) => {
-      await rolesHelper.createRoleWithPermissionPolicy(testId.testRole);
+    async ({ uiHelper, rolesHelper }) => {
+      await new RbacPo(myPage).createRole(
+        "test-role",
+        ["Guest User", "rhdh-qe", "Backstage"],
+        "anyOf",
+      );
 
-      await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .waitFor({ state: "visible" });
+      await myPage.locator(HOME_PAGE_COMPONENTS.searchBar).fill("test-role");
       await uiHelper.verifyHeading("All roles (1)");
-      await rolesHelper.deleteRole(testId.composedRole);
+      await rolesHelper.deleteRole("role:default/test-role");
     },
   );
 
   base(
     "Admin cannot create a role if there are no rules defined for the selected resource type.",
     async ({ uiHelper, testId }) => {
+      const rbacPo = new RbacPo(myPage);
       await uiHelper.clickButton("Create");
       await uiHelper.verifyHeading("Create role");
 
-      await myPage.fill(RoleFormPO.roleName, testId.testRole);
-      await uiHelper.clickButton("Next");
-      await myPage.fill(RoleFormPO.addUsersAndGroups, "guest user");
-      await myPage.click(RoleFormPO.selectMember("Guest User"));
-      await uiHelper.clickButton("Next");
+      await rbacPo.fillRoleName(testId.testRole);
+      await rbacPo.next();
+      await rbacPo.addUsersAndGroups(RbacPo.rbacTestUsers.guest);
+      await rbacPo.clickSelectMember(RbacPo.rbacTestUsers.guest);
+      await rbacPo.next();
+      await myPage.click(rbacPo.selectPermissionPolicyPlugin(0));
+      await rbacPo.selectOption("catalog");
 
-      await myPage.click(RoleFormPO.selectPermissionPolicyPlugin(0));
-      await uiHelper.optionSelector("catalog");
-
-      await myPage.click(RoleFormPO.selectPermissionPolicyPermission(0));
-      await uiHelper.optionSelector("catalog.entity.create");
+      await myPage.click(rbacPo.selectPermissionPolicyPermission(0));
+      await rbacPo.selectOption("catalog.entity.create");
 
       await expect(myPage.getByLabel("configure-access")).not.toBeVisible();
       await uiHelper.clickButton("Cancel");
@@ -180,9 +215,15 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
   base(
     "As an RHDH admin, I want to be able to restrict access by using the Not condition to part of the plugin, so that some information is protected from unauthorized access.",
     async ({ uiHelper, testId, rolesHelper }) => {
-      await rolesHelper.createRoleWithNotPermissionPolicy(testId.testRole);
-      await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
+      const rbacPo = new RbacPo(myPage);
+      // TODO: likely
+      await rbacPo.createRole(testId.testRole, []);
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .waitFor({ state: "visible" });
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .fill(testId.testRole);
       await uiHelper.verifyHeading("All roles (1)");
 
       await rolesHelper.deleteRole(testId.composedRole);
@@ -191,13 +232,19 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
 
   base(
     "As an RHDH admin, I want to be able to edit the access rule, so I can keep it up to date and be able to add more plugins in the future.",
-    async ({ uiHelper, rolesHelper, testId }) => {
-      await rolesHelper.createRoleWithNotPermissionPolicy(testId.testRole);
-      await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
+    async ({ uiHelper, testId }) => {
+      const rbacPo = new RbacPo(myPage);
+      // TODO: likely
+      await rbacPo.createRole(testId.testRole, []);
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .waitFor({ state: "visible" });
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .fill(testId.testRole);
       await uiHelper.verifyHeading("All roles (1)");
 
-      await myPage.click(RoleListPO.editRole(testId.composedRole));
+      await myPage.click(ROLES_PAGE_COMPONENTS.editRole(testId.composedRole));
       await uiHelper.verifyHeading("Edit Role");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Next");
@@ -220,14 +267,20 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
 
   base(
     "As an RHDH admin, I want to be able to remove an access rule from an existing permission policy.",
-    async ({ uiHelper, rolesHelper, testId }) => {
+    async ({ uiHelper, testId }) => {
       base.slow();
-      await rolesHelper.createRoleWithPermissionPolicy(testId.testRole);
-      await myPage.locator(HomePagePO.searchBar).waitFor({ state: "visible" });
-      await myPage.locator(HomePagePO.searchBar).fill(testId.testRole);
+      const rbacPo = new RbacPo(myPage);
+      // TODO: likely
+      await rbacPo.createRole(testId.testRole, []);
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .waitFor({ state: "visible" });
+      await myPage
+        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .fill(testId.testRole);
       await uiHelper.verifyHeading("All roles (1)");
       await myPage.reload({ waitUntil: "domcontentloaded" });
-      await myPage.click(RoleListPO.editRole(testId.composedRole));
+      await myPage.click(ROLES_PAGE_COMPONENTS.editRole(testId.composedRole));
       await uiHelper.verifyHeading("Edit Role");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Next");
