@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
-import { Common } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
+import { Common } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
 
 type RbacGuestFixture = {
   uiHelper: UIhelper;

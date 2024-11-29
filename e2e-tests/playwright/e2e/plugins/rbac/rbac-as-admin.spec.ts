@@ -1,15 +1,8 @@
 /* eslint-disable no-empty-pattern */
 import test, { expect, Page } from "@playwright/test";
-import { UIhelperPO } from "../../../support/pageObjects/global-obj";
-import {
-  RoleListPO,
-  RoleFormPO,
-  HomePagePO,
-  RoleOverviewPO,
-} from "../../../support/pageObjects/page-obj";
-import { Common, setupBrowser } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
 import { Roles } from "../../../support/pages/rbac";
+import { setupBrowser, Common } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
 
 type RbacAsAdminFixture = {
   uiHelper: UIhelper;

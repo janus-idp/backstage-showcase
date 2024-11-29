@@ -1,7 +1,7 @@
 import { Page, expect, test } from "@playwright/test";
 import { Roles } from "../../../support/pages/rbac";
-import { Common, setupBrowser } from "../../../utils/Common";
-import { UIhelper } from "../../../utils/UIhelper";
+import { Common, setupBrowser } from "../../../utils/common";
+import { UIhelper } from "../../../utils/ui-helper";
 import fs from "fs/promises";
 
 test.describe
