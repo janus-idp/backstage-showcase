@@ -387,6 +387,19 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
 }
 
+install_helm() {
+  if command -v helm >/dev/null 2>&1; then
+    echo "Helm is already installed."
+  else
+    echo "Installing Helm 3 client"
+    mkdir -p ~/tmpbin && cd ~/tmpbin
+    curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -f
+    export PATH=$(pwd):$PATH
+    echo "Helm client installed successfully."
+  fi
+}
+
+
 uninstall_helmchart() {
   local project=$1
   local release=$2
