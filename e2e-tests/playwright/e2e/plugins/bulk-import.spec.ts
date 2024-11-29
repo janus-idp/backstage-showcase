@@ -1,13 +1,13 @@
 import { expect, Page, test } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
-import { Common, setupBrowser } from "../../utils/Common";
-import { APIHelper } from "../../utils/APIHelper";
-import { BulkImport } from "../../support/pages/BulkImport";
-import { CatalogImport } from "../../support/pages/CatalogImport";
+import { UIhelper } from "../../utils/ui-helper";
+import { Common, setupBrowser } from "../../utils/common";
+import { APIHelper } from "../../utils/api-helper";
+import { BulkImport } from "../../support/pages/bulk-import";
+import { CatalogImport } from "../../support/pages/catalog-import";
 import {
-  defaultCatalogInfoYaml,
-  updatedCatalogInfoYaml,
-} from "../../support/testData/BulkImport";
+  DEFAULT_CATALOG_INFO_YAML,
+  UPDATED_CATALOG_INFO_YAML,
+} from "../../support/testData/bulk-import";
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial("Bulk Import plugin", () => {
@@ -111,7 +111,7 @@ test.describe.serial("Bulk Import plugin", () => {
       1,
       "catalog-info.yaml",
     );
-    const expectedCatalogInfoYaml = defaultCatalogInfoYaml(
+    const expectedCatalogInfoYaml = DEFAULT_CATALOG_INFO_YAML(
       newRepoDetails.repoName,
       `${newRepoDetails.owner}/${newRepoDetails.repoName}`,
       process.env.GH_USER2_ID,
@@ -139,7 +139,7 @@ test.describe.serial("Bulk Import plugin", () => {
       1,
       "catalog-info.yaml",
     );
-    const expectedCatalogInfoYaml = updatedCatalogInfoYaml(
+    const expectedCatalogInfoYaml = UPDATED_CATALOG_INFO_YAML(
       newRepoDetails.updatedComponentName,
       `${newRepoDetails.owner}/${newRepoDetails.repoName}`,
       newRepoDetails.labels,

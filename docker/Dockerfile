@@ -57,7 +57,6 @@ COPY $EXTERNAL_SOURCE_NESTED/plugins/scalprum-backend/package.json ./plugins/sca
 COPY $EXTERNAL_SOURCE_NESTED/plugins/licensed-users-info-backend/package.json ./plugins/licensed-users-info-backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info/package.json ./plugins/dynamic-plugins-info/package.json
 COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-plugins-info-backend/package.json ./plugins/dynamic-plugins-info-backend/package.json
-COPY $EXTERNAL_SOURCE_NESTED/plugins/dynamic-home-page/package.json ./plugins/dynamic-home-page/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/backend/package.json ./packages/backend/package.json
 COPY $EXTERNAL_SOURCE_NESTED/packages/app/package.json ./packages/app/package.json
 COPY $EXTERNAL_SOURCE_NESTED/package.json ./package.json
@@ -77,6 +76,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/dist-dynamic/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/dist-dynamic/package.json

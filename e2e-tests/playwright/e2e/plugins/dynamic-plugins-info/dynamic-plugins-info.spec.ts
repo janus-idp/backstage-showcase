@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
-import { UIhelper } from "../../../utils/UIhelper";
-import { Common } from "../../../utils/Common";
-import { UIhelperPO } from "../../../support/pageObjects/global-obj";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Common } from "../../../utils/common";
+import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 
 test.describe("dynamic-plugins-info UI tests", () => {
   let uiHelper: UIhelper;
@@ -45,7 +45,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
       .getByPlaceholder("Filter")
       .pressSequentially("backstage-plugin-tech-radar\n", { delay: 300 });
     const row = await page.locator(
-      UIhelperPO.rowByText("backstage-plugin-tech-radar"),
+      UI_HELPER_ELEMENTS.rowByText("backstage-plugin-tech-radar"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
     expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
@@ -60,7 +60,9 @@ test.describe("dynamic-plugins-info UI tests", () => {
         delay: 300,
       });
     const row = await page.locator(
-      UIhelperPO.rowByText("backstage-community-plugin-3scale-backend-dynamic"),
+      UI_HELPER_ELEMENTS.rowByText(
+        "backstage-community-plugin-3scale-backend-dynamic",
+      ),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled
     expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
@@ -74,7 +76,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
       .getByPlaceholder("Filter")
       .pressSequentially("plugin-todo-list\n", { delay: 300 });
     const row = await page.locator(
-      UIhelperPO.rowByText("@internal/plugin-todo-list"),
+      UI_HELPER_ELEMENTS.rowByText("@internal/plugin-todo-list"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
     expect(await row.locator("td").nth(3).innerText()).toBe("No"); // not preinstalled

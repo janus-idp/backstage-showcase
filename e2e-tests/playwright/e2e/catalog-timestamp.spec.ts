@@ -1,8 +1,8 @@
 import { Page, expect, test } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { Common, setupBrowser } from "../utils/Common";
-import { CatalogImport } from "../support/pages/CatalogImport";
-import { UIhelperPO } from "../support/pageObjects/global-obj";
+import { UIhelper } from "../utils/ui-helper";
+import { Common, setupBrowser } from "../utils/common";
+import { CatalogImport } from "../support/pages/catalog-import";
+import { UI_HELPER_ELEMENTS } from "../support/pageObjects/global-obj";
 
 let page: Page;
 test.describe("Test timestamp column on Catalog", () => {
@@ -50,7 +50,7 @@ test.describe("Test timestamp column on Catalog", () => {
     await expect(page.locator(createdAtFirstRow)).toBeEmpty();
 
     const column = page
-      .locator(`${UIhelperPO.MuiTableHead}`)
+      .locator(`${UI_HELPER_ELEMENTS.MuiTableHead}`)
       .getByText("Created At", { exact: true });
     await column.dblclick(); // Double click to Toggle into decending order.
     await expect(page.locator(createdAtFirstRow)).not.toBeEmpty();

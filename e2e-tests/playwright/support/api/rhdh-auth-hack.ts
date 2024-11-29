@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
+import { UIhelper } from "../../utils/ui-helper";
 import playwrightConfig from "../../../playwright.config";
 
 //https://redhatquickcourses.github.io/devhub-admin/devhub-admin/1/chapter2/rbac.html#_lab_rbac_rest_api
@@ -18,8 +18,8 @@ export class RhdhAuthHack {
 
   async getApiToken(page: Page): Promise<string> {
     if (!this.token) {
-      const _t = await this._getApiToken(page);
-      this.token = _t;
+      const apiToken = await this._getApiToken(page);
+      this.token = apiToken;
     }
     return this.token;
   }

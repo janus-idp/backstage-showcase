@@ -1,22 +1,22 @@
-import { getOrganizationResponse } from "./github-structures";
 import { JANUS_ORG } from "../../utils/constants";
 import { APIResponse, request } from "@playwright/test";
+import { GetOrganizationResponse } from "./github-structures";
 
 // https://docs.github.com/en/rest?apiVersion=2022-11-28
 export default class GithubApi {
-  private readonly API_URL = "https://api.github.com";
-  private readonly API_VERSION = "2022-11-28";
-  private readonly AUTH_HEADER = {
+  private readonly apiUrl = "https://api.github.com";
+  private readonly apiVersion = "2022-11-28";
+  private readonly authHeader = {
     Accept: "application/vnd.github+json",
     Authorization: `Bearer ${process.env.GH_RHDH_QE_USER_TOKEN}`,
-    "X-GitHub-Api-Version": this.API_VERSION,
+    "X-GitHub-Api-Version": this.apiVersion,
   };
 
   public async getOrganization(
     org = JANUS_ORG,
-  ): Promise<getOrganizationResponse> {
+  ): Promise<GetOrganizationResponse> {
     const req = await this._organization(org).get();
-    return new getOrganizationResponse(req.json());
+    return new GetOrganizationResponse(req.json());
   }
 
   public async getReposFromOrg(org = JANUS_ORG) {
@@ -34,8 +34,8 @@ export default class GithubApi {
   }
 
   private _myContext = request.newContext({
-    baseURL: this.API_URL,
-    extraHTTPHeaders: this.AUTH_HEADER,
+    baseURL: this.apiUrl,
+    extraHTTPHeaders: this.authHeader,
   });
 
   private _repo(repo: string) {

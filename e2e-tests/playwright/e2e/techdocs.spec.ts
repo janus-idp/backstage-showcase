@@ -1,6 +1,6 @@
 import { test } from "@playwright/test";
-import { UIhelper } from "../utils/UIhelper";
-import { Common } from "../utils/Common";
+import { UIhelper } from "../utils/ui-helper";
+import { Common } from "../utils/common";
 
 test.describe("TechDocs", () => {
   let common: Common;

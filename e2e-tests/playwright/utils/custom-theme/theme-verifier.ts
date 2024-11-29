@@ -1,6 +1,6 @@
 import { Page, expect, TestInfo } from "@playwright/test";
-import { UIhelper } from "../UIhelper";
-import { UIhelperPO } from "../../support/pageObjects/global-obj";
+import { UIhelper } from "../ui-helper";
+import { UI_HELPER_ELEMENTS } from "../../support/pageObjects/global-obj";
 
 export class ThemeVerifier {
   private readonly page: Page;
@@ -32,18 +32,18 @@ export class ThemeVerifier {
   async verifyPrimaryColors(colorPrimary: string) {
     await this.uiHelper.checkCssColor(
       this.page,
-      UIhelperPO.MuiTypographyColorPrimary,
+      UI_HELPER_ELEMENTS.MuiTypographyColorPrimary,
       colorPrimary,
     );
     await this.uiHelper.checkCssColor(
       this.page,
-      UIhelperPO.MuiSwitchColorPrimary,
+      UI_HELPER_ELEMENTS.MuiSwitchColorPrimary,
       colorPrimary,
     );
     await this.uiHelper.openSidebar("Catalog");
     await this.uiHelper.checkCssColor(
       this.page,
-      UIhelperPO.MuiButtonTextPrimary,
+      UI_HELPER_ELEMENTS.MuiButtonTextPrimary,
       colorPrimary,
     );
     await this.uiHelper.openSidebar("Settings");
