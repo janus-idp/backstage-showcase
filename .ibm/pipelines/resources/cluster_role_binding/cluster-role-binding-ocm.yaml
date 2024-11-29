@@ -40,4 +40,16 @@ subjects:
   - kind: ServiceAccount
     name: rhdh-k8s-plugin
     namespace: showcase-pr-3
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-pr-1-4-1
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-pr-1-4-2
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-pr-1-4-3
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-ci-nightly-1-4
 
