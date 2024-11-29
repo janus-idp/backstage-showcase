@@ -387,3 +387,12 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-k8s.yaml" --namespace="${project}"
 }
 
+uninstall_helmchart() {
+  local project=$1
+  local release=$2
+  if helm list -n "${project}" | grep -q "${release}"; then
+    echo "Chart ${release} exists in namespace ${project}. Removing it before reinstalling."
+    helm uninstall "${release}" -n "${project}"
+  fi
+}
+
