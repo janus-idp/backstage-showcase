@@ -56,7 +56,7 @@ backend:
   reading:
     allow:
       - host: 'github.com'
-      - host: ${DH_TARGET_URL}
+      - host: 'test-backstage-customization-provider-showcase.apps.rosa.b8osy-eswc6-795.ctx5.p3.openshiftapps.com'
   auth:
     keys:
       - secret: temp
