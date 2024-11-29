@@ -44,6 +44,8 @@ configure_namespace() {
 delete_namespace() {
   local project=$1
   if oc get namespace "$project" >/dev/null 2>&1; then
+    echo "Namespace ${project} exists. Attempting to delete..."
+    remove_finalizers_from_resources "$project"
     oc delete namespace "$project" --grace-period=0 --force || true
   fi
 }
