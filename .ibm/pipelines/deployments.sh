@@ -68,22 +68,34 @@ delete_namespace() {
 check_backstage_running() {
   local release_name=$1
   local namespace=$2
+
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
 
   local max_attempts=30
   local wait_seconds=30
 
+  echo "Checking if Backstage is up and running at ${url}"
+
   for ((i = 1; i <= max_attempts; i++)); do
+    # Captura o status HTTP
     local http_status
     http_status=$(curl --insecure -I -s -o /dev/null -w "%{http_code}" "${url}")
-    if [ "${http_status}" -eq 200 ]; then
+
+    if [[ "${http_status}" -eq 200 ]]; then
+      echo "Backstage is up and running!"
       export BASE_URL="${url}"
+      echo "######## BASE URL ########"
+      echo "${BASE_URL}"
       return 0
     else
+      echo "Attempt ${i} of ${max_attempts}: Backstage not yet available (HTTP Status: ${http_status})"
       sleep "${wait_seconds}"
     fi
   done
 
+  echo "Failed to reach Backstage at ${url} after ${max_attempts} attempts." | tee -a "/tmp/${LOGFILE}"
+  mkdir -p "${ARTIFACT_DIR}/${namespace}/"
+  cp -a "/tmp/${LOGFILE}" "${ARTIFACT_DIR}/${namespace}/"
   return 1
 }
 
