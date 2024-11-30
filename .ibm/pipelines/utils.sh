@@ -409,3 +409,27 @@ uninstall_helmchart() {
   fi
 }
 
+check_prerequisites() {
+  log_info "Checking prerequisites..."
+  for cmd in curl helm oc kubectl; do
+    if ! command -v "$cmd" &>/dev/null; then
+      log_error "Command '$cmd' is required but not found."
+      exit 1
+    fi
+  done
+}
+
+run_command() {
+  local cmd="$*"
+  log_info "Running command: $cmd"
+  if ! output=$(eval "$cmd" 2>&1); then
+    log_error "Command failed: $cmd"
+    log_error "Output: $output"
+    return 1
+  fi
+  log_debug "Command output: $output"
+  echo "$output"
+}
+
+
+

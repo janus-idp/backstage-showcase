@@ -65,32 +65,66 @@ delete_namespace() {
   fi
 }
 
+wait_for_pods_ready() {
+  local namespace=$1
+  local max_attempts=10
+  local wait_seconds=10
+
+  log_info "Waiting for pods in namespace '${namespace}' to be ready..."
+  for ((i = 1; i <= max_attempts; i++)); do
+    local ready_pods=$(kubectl get pods -n "${namespace}" --no-headers | grep 'Running' | wc -l)
+    local total_pods=$(kubectl get pods -n "${namespace}" --no-headers | wc -l)
+
+    if [[ "$ready_pods" -eq "$total_pods" && "$total_pods" -gt 0 ]]; then
+      log_info "All pods are ready in namespace '${namespace}' (${ready_pods}/${total_pods})."
+      return 0
+    fi
+
+    log_info "Attempt ${i}/${max_attempts}: Pods not ready (${ready_pods}/${total_pods}). Retrying in ${wait_seconds}s..."
+    sleep "$wait_seconds"
+  done
+
+  log_error "Pods in namespace '${namespace}' failed to become ready after ${max_attempts} attempts."
+  return 1
+}
+
 check_backstage_running() {
   local release_name=$1
   local namespace=$2
 
+  if ! command -v curl &>/dev/null; then
+    echo "Error: curl is required but not installed. Exiting."
+    return 1
+  fi
+
+  wait_for_pods_ready "${namespace}"
+
   local url="https://${release_name}-backstage-${namespace}.${K8S_CLUSTER_ROUTER_BASE}"
+  echo "Generated URL for Backstage: ${url}"
 
   local max_attempts=30
   local wait_seconds=30
 
   echo "Checking if Backstage is up and running at ${url}"
+  local start_time=$(date +%s)
 
   for ((i = 1; i <= max_attempts; i++)); do
-    # Captura o status HTTP
     local http_status
     http_status=$(curl --insecure -I -s -o /dev/null -w "%{http_code}" "${url}")
 
     if [[ "${http_status}" -eq 200 ]]; then
-      echo "Backstage is up and running!"
+      local end_time=$(date +%s)
+      local elapsed_time=$((end_time - start_time))
+      echo "Backstage is up and running at ${url}! (Time: ${elapsed_time}s)"
       export BASE_URL="${url}"
       echo "######## BASE URL ########"
       echo "${BASE_URL}"
       return 0
-    else
-      echo "Attempt ${i} of ${max_attempts}: Backstage not yet available (HTTP Status: ${http_status})"
-      sleep "${wait_seconds}"
     fi
+
+    echo "Attempt ${i}/${max_attempts}: Backstage not yet available (HTTP Status: ${http_status})"
+    curl --insecure -I -s "${url}" || echo "Error fetching response headers."
+    sleep "${wait_seconds}"
   done
 
   echo "Failed to reach Backstage at ${url} after ${max_attempts} attempts." | tee -a "/tmp/${LOGFILE}"
@@ -134,4 +168,14 @@ run_tests() {
   if [ "${RESULT}" -ne 0 ]; then
     OVERALL_RESULT=1
   fi
+}
+
+generate_failure_report() {
+  local namespace=$1
+  log_info "Generating failure report for namespace: ${namespace}"
+
+  kubectl get all -n "${namespace}" > "/tmp/${namespace}_resources.txt"
+  kubectl describe all -n "${namespace}" > "/tmp/${namespace}_describe.txt"
+  kubectl logs -l app.kubernetes.io/name=backstage -n "${namespace}" > "/tmp/${namespace}_backstage_logs.txt"
+  log_info "Failure report saved to /tmp/"
 }
