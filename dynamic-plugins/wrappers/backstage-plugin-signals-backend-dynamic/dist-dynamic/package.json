@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-signals-backend-dynamic",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "./dist/index.cjs.js",
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
@@ -9,7 +9,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.32.5",
     "pluginId": "signals",
     "pluginPackages": [
       "backstage-plugin-signals",
@@ -25,7 +25,7 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@backstage/plugin-signals-backend": "0.2.1"
+    "@backstage/plugin-signals-backend": "0.2.2"
   },
   "files": [
     "dist"
@@ -58,10 +58,10 @@
   },
   "peerDependencies": {
     "@backstage/backend-common": "^0.25.0",
-    "@backstage/backend-plugin-api": "^1.0.1",
-    "@backstage/config": "^1.2.0",
-    "@backstage/plugin-auth-node": "^0.5.3",
-    "@backstage/plugin-events-node": "^0.4.2",
-    "@backstage/types": "^1.1.1"
+    "@backstage/backend-plugin-api": "^1.0.2",
+    "@backstage/config": "^1.3.0",
+    "@backstage/plugin-auth-node": "^0.5.4",
+    "@backstage/plugin-events-node": "^0.4.5",
+    "@backstage/types": "^1.2.0"
   }
 }
