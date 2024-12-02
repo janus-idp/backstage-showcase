@@ -6,10 +6,10 @@ __metadata:
   cacheKey: 8
 
 "@backstage/plugin-signals-backend@file:./embedded/backstage-plugin-signals-backend::locator=backstage-plugin-signals-backend-dynamic%40workspace%3A.":
-  version: 0.2.1+embedded
-  resolution: "@backstage/plugin-signals-backend@file:./embedded/backstage-plugin-signals-backend#./embedded/backstage-plugin-signals-backend::hash=f65fb0&locator=backstage-plugin-signals-backend-dynamic%40workspace%3A."
+  version: 0.2.2+embedded
+  resolution: "@backstage/plugin-signals-backend@file:./embedded/backstage-plugin-signals-backend#./embedded/backstage-plugin-signals-backend::hash=19ae59&locator=backstage-plugin-signals-backend-dynamic%40workspace%3A."
   dependencies:
-    "@backstage/plugin-signals-node": ^0.1.12
+    "@backstage/plugin-signals-node": ^0.1.13
     "@types/express": "*"
     express: ^4.17.1
     express-promise-router: ^4.1.0
@@ -24,27 +24,26 @@ __metadata:
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/config": ^1.2.0
     "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-events-node": ^0.4.1
+    "@backstage/plugin-events-node": ^0.4.2
     "@backstage/types": ^1.1.1
-  checksum: d09fa419bb9a24a320d99fc9371bc84f4fd83ebade4ffdd84fc8c703435481205be34549b9e7b0f89ab2478ec2f7d980538629ee0d020fa83e8899b9ec97451e
+  checksum: 3c185b7f016f2354f82cd83beedb4f487b52ad49ef1a81e36363a7e7a46b65d4541cd98340bdc6e40be0f39718de93c6bc142e009e2a8b3d5ce85bfbe9fee58b
   languageName: node
   linkType: hard
 
 "@backstage/plugin-signals-node@file:./embedded/backstage-plugin-signals-node::locator=backstage-plugin-signals-backend-dynamic%40workspace%3A.":
-  version: 0.1.13+embedded
-  resolution: "@backstage/plugin-signals-node@file:./embedded/backstage-plugin-signals-node#./embedded/backstage-plugin-signals-node::hash=e8011f&locator=backstage-plugin-signals-backend-dynamic%40workspace%3A."
+  version: 0.1.14+embedded
+  resolution: "@backstage/plugin-signals-node@file:./embedded/backstage-plugin-signals-node#./embedded/backstage-plugin-signals-node::hash=1da0dc&locator=backstage-plugin-signals-backend-dynamic%40workspace%3A."
   dependencies:
     express: ^4.17.1
-    uuid: ^9.0.0
+    uuid: ^11.0.0
     ws: ^8.18.0
   peerDependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/config": ^1.2.0
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-events-node": ^0.4.2
-    "@backstage/types": ^1.1.1
-  checksum: d89b5ccd53abf3e1cdc37591de402db22224a65ce20712047b257f2ffeaad7bea34009a28f7aa19c1758de2abc3a03b3e72cbbf426e7319f502f4484f93f935d
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/config": ^1.3.0
+    "@backstage/plugin-auth-node": ^0.5.4
+    "@backstage/plugin-events-node": ^0.4.5
+    "@backstage/types": ^1.2.0
+  checksum: b60bf2196d9259d53c6b161a7a4bec8f8ceab7b4da3b0870828445029071f90b45b820cc009aa9302613abe256c6f6f9d5e28ecc4db8054d096d73be032fbc2e
   languageName: node
   linkType: hard
 
@@ -211,14 +210,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-plugin-signals-backend-dynamic@workspace:."
   dependencies:
-    "@backstage/plugin-signals-backend": 0.2.1
+    "@backstage/plugin-signals-backend": 0.2.2
   peerDependencies:
     "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/config": ^1.2.0
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-events-node": ^0.4.2
-    "@backstage/types": ^1.1.1
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/config": ^1.3.0
+    "@backstage/plugin-auth-node": ^0.5.4
+    "@backstage/plugin-events-node": ^0.4.5
+    "@backstage/types": ^1.2.0
   languageName: unknown
   linkType: soft
 
@@ -1160,6 +1159,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: c81095493225ecfc28add49c106ca4f09cdf56bc66731aa8dabc2edbbccb1e1bfe2de6a115e5c6a380d3ea166d1636410b62ef216bb07b3feb1cfde1d95d5080
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^11.0.0":
+  version: 11.0.3
+  resolution: "uuid@npm:11.0.3"
+  bin:
+    uuid: dist/esm/bin/uuid
+  checksum: 646181c77e8b8df9bd07254faa703943e1c4d5ccde7d080312edf12f443f6c5750801fd9b27bf2e628594182165e6b1b880c0382538f7eca00b26622203741dc
   languageName: node
   linkType: hard
 

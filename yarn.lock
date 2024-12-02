@@ -7038,7 +7038,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-events-node@npm:^0.4.1, @backstage/plugin-events-node@npm:^0.4.2, @backstage/plugin-events-node@npm:^0.4.3, @backstage/plugin-events-node@npm:^0.4.5":
+"@backstage/plugin-events-node@npm:^0.4.2, @backstage/plugin-events-node@npm:^0.4.3, @backstage/plugin-events-node@npm:^0.4.5":
   version: 0.4.5
   resolution: "@backstage/plugin-events-node@npm:0.4.5"
   dependencies:
@@ -7261,9 +7261,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-notifications-backend-module-email@npm:0.3.1":
-  version: 0.3.1
-  resolution: "@backstage/plugin-notifications-backend-module-email@npm:0.3.1"
+"@backstage/plugin-notifications-backend-module-email@npm:0.3.2":
+  version: 0.3.2
+  resolution: "@backstage/plugin-notifications-backend-module-email@npm:0.3.2"
   dependencies:
     "@aws-sdk/client-ses": ^3.550.0
     "@aws-sdk/types": ^3.347.0
@@ -7275,18 +7275,18 @@ __metadata:
     "@backstage/integration-aws-node": ^0.1.12
     "@backstage/plugin-catalog-node": ^1.13.1
     "@backstage/plugin-notifications-common": ^0.0.5
-    "@backstage/plugin-notifications-node": ^0.2.7
+    "@backstage/plugin-notifications-node": ^0.2.8
     "@backstage/types": ^1.1.1
     lodash: ^4.17.21
     nodemailer: ^6.9.13
     p-throttle: ^4.1.1
-  checksum: a4b9ad99f3f55501ddca7dc2c0c2113d2358c32357f43bff8ce1d29f7b1b25f151b9624ae461f8c98cccfccf71fb90f624fdf7e5eeb6c14a5fadeb3fbecad2a8
+  checksum: 6920b57dc6843c81c19ef2bba6baa621bfc9bf0379ccfac6b097d8f922ded21cf8bef0d6b15c258618aa4cda52d497eece4f943f9c13fae167cd4196880672b3
   languageName: node
   linkType: hard
 
-"@backstage/plugin-notifications-backend@npm:0.4.1":
-  version: 0.4.1
-  resolution: "@backstage/plugin-notifications-backend@npm:0.4.1"
+"@backstage/plugin-notifications-backend@npm:0.4.2":
+  version: 0.4.2
+  resolution: "@backstage/plugin-notifications-backend@npm:0.4.2"
   dependencies:
     "@backstage/backend-common": ^0.25.0
     "@backstage/backend-plugin-api": ^1.0.1
@@ -7296,10 +7296,10 @@ __metadata:
     "@backstage/errors": ^1.2.4
     "@backstage/plugin-auth-node": ^0.5.3
     "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/plugin-events-node": ^0.4.1
+    "@backstage/plugin-events-node": ^0.4.2
     "@backstage/plugin-notifications-common": ^0.0.5
-    "@backstage/plugin-notifications-node": ^0.2.7
-    "@backstage/plugin-signals-node": ^0.1.12
+    "@backstage/plugin-notifications-node": ^0.2.8
+    "@backstage/plugin-signals-node": ^0.1.13
     express: ^4.17.1
     express-promise-router: ^4.1.0
     knex: ^3.0.0
@@ -7307,7 +7307,7 @@ __metadata:
     uuid: ^9.0.0
     winston: ^3.2.1
     yn: ^4.0.0
-  checksum: 952b5e6d404769c665f815a31832d474c9da88bb99641352e93b6685f7efe2ee7087922ba847c4bb99bab8f240b9bff3040035ea504a76fdabc350f0e226d078
+  checksum: 8a75f870e4fd5c1832108aed134729a04fe8e2f9e8a345c53a8ce54f1a9a803c772fd4020272e8eabf50e9d5352239cd9df5c74d5accb83d24cb5d6594911707
   languageName: node
   linkType: hard
 
@@ -7321,20 +7321,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-notifications-node@npm:^0.2.7":
-  version: 0.2.8
-  resolution: "@backstage/plugin-notifications-node@npm:0.2.8"
+"@backstage/plugin-notifications-common@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "@backstage/plugin-notifications-common@npm:0.0.6"
   dependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/plugin-notifications-common": ^0.0.5
-    "@backstage/plugin-signals-node": ^0.1.13
+    "@backstage/config": ^1.3.0
+    "@material-ui/icons": ^4.9.1
+  checksum: 6ec6482ad805d2f8b8f35069b201ce0089ecd6cc5760bd0b53c61348c4ab295767a0325e4aa9121ac3df59c0c6da2ecf8b2a1c0ff1551190eac017e08f60f8d9
+  languageName: node
+  linkType: hard
+
+"@backstage/plugin-notifications-node@npm:^0.2.8":
+  version: 0.2.9
+  resolution: "@backstage/plugin-notifications-node@npm:0.2.9"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/catalog-client": ^1.8.0
+    "@backstage/catalog-model": ^1.7.1
+    "@backstage/plugin-notifications-common": ^0.0.6
+    "@backstage/plugin-signals-node": ^0.1.14
     knex: ^3.0.0
     node-fetch: ^2.7.0
-    uuid: ^9.0.0
-  checksum: 7accf7b543801b3a76b1f7eb69fe8d8f025eaff0a4c360f994251292896c9cd7c16d96e5d003b52c78a8d863a36c097e610ea650be59c221c6461326c48a76d0
+    uuid: ^11.0.0
+  checksum: 82c623b72ab6d2a1802696b873e241bb9753ab06536add365998ce7bcd291c72d9c82d4a35ae867383b6cfe4a183b1f590501f0f328cee8b48ec50478c129537
   languageName: node
   linkType: hard
 
@@ -8338,16 +8347,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-signals-backend@npm:0.2.1":
-  version: 0.2.1
-  resolution: "@backstage/plugin-signals-backend@npm:0.2.1"
+"@backstage/plugin-signals-backend@npm:0.2.2":
+  version: 0.2.2
+  resolution: "@backstage/plugin-signals-backend@npm:0.2.2"
   dependencies:
     "@backstage/backend-common": ^0.25.0
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/config": ^1.2.0
     "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-events-node": ^0.4.1
-    "@backstage/plugin-signals-node": ^0.1.12
+    "@backstage/plugin-events-node": ^0.4.2
+    "@backstage/plugin-signals-node": ^0.1.13
     "@backstage/types": ^1.1.1
     "@types/express": "*"
     express: ^4.17.1
@@ -8358,24 +8367,23 @@ __metadata:
     winston: ^3.2.1
     ws: ^8.18.0
     yn: ^4.0.0
-  checksum: 06802d770ac75c827d809d05923f6468adfa2d77eaee8a0911be82bfe823fd8f5484f439d6c5ae1135cd4efdd27799e692b21efcf13987b9cd68cf5ea0694cc7
+  checksum: f9dbbe67485bb7160781cb5e4c4365ab85b268e1516c394c86e8d0ecffbe6f601d502e49315f8a2b56272908459aee3b21c5deaf58f79e6349850c06e3d3679d
   languageName: node
   linkType: hard
 
-"@backstage/plugin-signals-node@npm:^0.1.12, @backstage/plugin-signals-node@npm:^0.1.13":
-  version: 0.1.13
-  resolution: "@backstage/plugin-signals-node@npm:0.1.13"
+"@backstage/plugin-signals-node@npm:^0.1.13, @backstage/plugin-signals-node@npm:^0.1.14":
+  version: 0.1.14
+  resolution: "@backstage/plugin-signals-node@npm:0.1.14"
   dependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/config": ^1.2.0
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-events-node": ^0.4.2
-    "@backstage/types": ^1.1.1
+    "@backstage/backend-plugin-api": ^1.0.2
+    "@backstage/config": ^1.3.0
+    "@backstage/plugin-auth-node": ^0.5.4
+    "@backstage/plugin-events-node": ^0.4.5
+    "@backstage/types": ^1.2.0
     express: ^4.17.1
-    uuid: ^9.0.0
+    uuid: ^11.0.0
     ws: ^8.18.0
-  checksum: 62a0c5364d55fbbe2ab21d64e298266e23d23d28e2388ef18915a42b6da3a5e112a29879c3abd5ba0c0d58ac1f59e186fd55d7e06d761da61d94ad151d0c0680
+  checksum: 43a481ac6b63c25b8fa274a32f135f17c6dbfc4310631ac8e0deb5eec45959aae3123fecf121e8c882278a5e8613510d6b19b49b62f211733e762b18771b56bd
   languageName: node
   linkType: hard
 
@@ -22820,7 +22828,7 @@ __metadata:
   resolution: "backstage-plugin-notifications-backend-module-email@workspace:dynamic-plugins/wrappers/backstage-plugin-notifications-backend-module-email-dynamic"
   dependencies:
     "@backstage/cli": 0.28.2
-    "@backstage/plugin-notifications-backend-module-email": 0.3.1
+    "@backstage/plugin-notifications-backend-module-email": 0.3.2
     "@janus-idp/cli": 1.18.3
   languageName: unknown
   linkType: soft
@@ -22830,7 +22838,7 @@ __metadata:
   resolution: "backstage-plugin-notifications-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-notifications-backend-dynamic"
   dependencies:
     "@backstage/cli": 0.28.2
-    "@backstage/plugin-notifications-backend": 0.4.1
+    "@backstage/plugin-notifications-backend": 0.4.2
     "@janus-idp/cli": 1.18.3
   languageName: unknown
   linkType: soft
@@ -22910,7 +22918,7 @@ __metadata:
   resolution: "backstage-plugin-signals-backend@workspace:dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic"
   dependencies:
     "@backstage/cli": 0.28.2
-    "@backstage/plugin-signals-backend": 0.2.1
+    "@backstage/plugin-signals-backend": 0.2.2
     "@janus-idp/cli": 1.18.3
   languageName: unknown
   linkType: soft
