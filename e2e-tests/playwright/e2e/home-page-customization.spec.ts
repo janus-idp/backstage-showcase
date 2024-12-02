@@ -2,7 +2,7 @@ import { test } from "@playwright/test";
 import { UIhelper } from "../utils/ui-helper";
 import { Common } from "../utils/common";
 
-test.describe("Learning Paths", () => {
+test.describe("Home page customization", () => {
   let common: Common;
   let uiHelper: UIhelper;
 
@@ -12,7 +12,7 @@ test.describe("Learning Paths", () => {
     await common.loginAsGuest();
   });
 
-  test("Verify that home page is customizable", async () => {
+  test("Verify that home page is customized", async () => {
     await uiHelper.verifyTextinCard("Quick Access", "Quick Access");
     await uiHelper.verifyTextinCard(
       "Your Starred Entities",
