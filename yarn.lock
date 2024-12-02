@@ -16877,17 +16877,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scalprum/core@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@scalprum/core@npm:0.7.0"
-  dependencies:
-    "@openshift/dynamic-plugin-sdk": ^5.0.1
-    tslib: ^2.6.2
-  checksum: 0698e2520a9a9a7c220b5067792e81f267659ae0e9c0e117d9dc5aa24f28be2b8c72d5c79aedf3a68fc803e47c1f473ff25945299c03b978ea5360d766975fc2
-  languageName: node
-  linkType: hard
-
-"@scalprum/react-core@npm:0.9.3":
+"@scalprum/react-core@npm:0.9.3, @scalprum/react-core@npm:^0.9.3":
   version: 0.9.3
   resolution: "@scalprum/react-core@npm:0.9.3"
   dependencies:
@@ -16901,30 +16891,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scalprum/react-core@npm:^0.7.1":
-  version: 0.7.1
-  resolution: "@scalprum/react-core@npm:0.7.1"
+"@scalprum/react-test-utils@npm:0.2.4":
+  version: 0.2.4
+  resolution: "@scalprum/react-test-utils@npm:0.2.4"
   dependencies:
     "@openshift/dynamic-plugin-sdk": ^5.0.1
-    "@scalprum/core": ^0.7.0
-    lodash: ^4.17.0
-  peerDependencies:
-    react: ">=16.8.0 || >=17.0.0 || ^18.0.0"
-    react-dom: ">=16.8.0 || >=17.0.0 || ^18.0.0"
-  checksum: e1104b6ef4423a1a93c8470e94a1e15931581f88c8cc7e789a8f92f25627962a38f279ce3072251c5b034b631424e45476ffba23b097bb447360c61147980434
-  languageName: node
-  linkType: hard
-
-"@scalprum/react-test-utils@npm:0.2.2":
-  version: 0.2.2
-  resolution: "@scalprum/react-test-utils@npm:0.2.2"
-  dependencies:
-    "@openshift/dynamic-plugin-sdk": ^5.0.1
-    "@scalprum/core": ^0.7.0
-    "@scalprum/react-core": ^0.7.1
+    "@scalprum/core": ^0.8.1
+    "@scalprum/react-core": ^0.9.3
     tslib: ^2.6.2
     whatwg-fetch: ^3.6.0
-  checksum: 47e6d4559e02deaa67036ce0bf04f11295773388c7d88db5f3a5774167f8208644e8f0345d54e54bba6374aac81a344d6ea2e656a6abee1d3632edbc7a052801
+  checksum: cc20bd4e4b6e12981aa1d745e50bf4825dd4395d2be19812251d75cfe0e23a1ceba9d5576dcab018a1ed9ab5c6578e668597744d22d850ca3062ee4848fd049e
   languageName: node
   linkType: hard
 
@@ -21688,7 +21664,7 @@ __metadata:
     "@redhat-developer/red-hat-developer-hub-theme": 0.4.0
     "@scalprum/core": 0.8.1
     "@scalprum/react-core": 0.9.3
-    "@scalprum/react-test-utils": 0.2.2
+    "@scalprum/react-test-utils": 0.2.4
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": 6.6.3
     "@testing-library/react": 14.3.1
