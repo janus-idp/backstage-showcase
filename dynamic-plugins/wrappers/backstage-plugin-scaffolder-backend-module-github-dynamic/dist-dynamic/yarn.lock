@@ -238,15 +238,15 @@ __metadata:
   linkType: hard
 
 "@octokit/plugin-retry@npm:^6.0.0":
-  version: 6.0.1
-  resolution: "@octokit/plugin-retry@npm:6.0.1"
+  version: 6.1.0
+  resolution: "@octokit/plugin-retry@npm:6.1.0"
   dependencies:
     "@octokit/request-error": ^5.0.0
-    "@octokit/types": ^12.0.0
+    "@octokit/types": ^13.0.0
     bottleneck: ^2.15.3
   peerDependencies:
-    "@octokit/core": ">=5"
-  checksum: 9c8663b5257cf4fa04cc737c064e9557501719d6d3af7cf8f46434a2117e1cf4b8d25d9eb4294ed255ad17a0ede853542649870612733f4b8ece97e24e391d22
+    "@octokit/core": 5
+  checksum: 95233dcd4c9a3e8a6a448eec95cc850b0d0b24ddfbfb8bb7f082bdedfcb81aca598cbc18d6e50f9c10976414ad3b83a6a2c4edb4c617da9b3399d4726b77ee82
   languageName: node
   linkType: hard
 
@@ -306,11 +306,11 @@ __metadata:
   linkType: hard
 
 "@octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0, @octokit/types@npm:^13.5.0":
-  version: 13.6.1
-  resolution: "@octokit/types@npm:13.6.1"
+  version: 13.6.2
+  resolution: "@octokit/types@npm:13.6.2"
   dependencies:
     "@octokit/openapi-types": ^22.2.0
-  checksum: 05bb427bc3c84088e2367b8d1b7a9834732116bb3d35ef51d1aae34b3919027159dd496b9362dab1cb047918da15be1dc1cafc512c97f9b77458bd273b5a2ba9
+  checksum: c4e51da1ccabc028b70fc90ca58d65091862a7fe3a65ec2692681f473a0aee4c355abfd15fd547bce3a9800d07c1592603fe84b4223e7beea0d493e4fcc1a65e
   languageName: node
   linkType: hard
 
@@ -385,9 +385,9 @@ __metadata:
   linkType: hard
 
 "@types/aws-lambda@npm:^8.10.83":
-  version: 8.10.145
-  resolution: "@types/aws-lambda@npm:8.10.145"
-  checksum: 4beb4febe8eb7da3087e009b4d1df61de5e9a7336792424254ca1e24740e17ee701de21423a125dcd26afb499003557e717cc824e24c47c916d2de6b0c245482
+  version: 8.10.146
+  resolution: "@types/aws-lambda@npm:8.10.146"
+  checksum: bc200f22c2914b9a81e7e52343ed6c0e829bed1af63a530d190ba6b65370656381763db10aebf8c4fba66d6e1b69fe1bd2b008fa58652b2ddf8c3edfbe1fa194
   languageName: node
   linkType: hard
 
@@ -408,11 +408,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.9.1
-  resolution: "@types/node@npm:22.9.1"
+  version: 22.10.1
+  resolution: "@types/node@npm:22.10.1"
   dependencies:
-    undici-types: ~6.19.8
-  checksum: dee25051e8d89f38b2b26c0714ce60acd1e3f9b1b946131ce3c6e64d626a134f1bec2d948f7ead3da0136aeb7672234f066f97f8290e6aead236e43f4ecb5a68
+    undici-types: ~6.20.0
+  checksum: 5a9b81500f288a8fb757b61bd939f99f72b6cb59347a5bae52dd1c2c87100ebbaa9da4256ef3cb9add2090e8704cda1d9a1ffc14ccd5db47a6466c8bae10ebcb
   languageName: node
   linkType: hard
 
@@ -675,10 +675,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.8":
-  version: 6.19.8
-  resolution: "undici-types@npm:6.19.8"
-  checksum: de51f1b447d22571cf155dfe14ff6d12c5bdaec237c765085b439c38ca8518fc360e88c70f99469162bf2e14188a7b0bcb06e1ed2dc031042b984b0bb9544017
+"undici-types@npm:~6.20.0":
+  version: 6.20.0
+  resolution: "undici-types@npm:6.20.0"
+  checksum: b7bc50f012dc6afbcce56c9fd62d7e86b20a62ff21f12b7b5cbf1973b9578d90f22a9c7fe50e638e96905d33893bf2f9f16d98929c4673c2480de05c6c96ea8b
   languageName: node
   linkType: hard
 
