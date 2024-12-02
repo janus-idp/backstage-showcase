@@ -1,7 +1,7 @@
 import { Page, test } from "@playwright/test";
-import { Common, setupBrowser } from "../../utils/Common";
-import { UIhelper } from "../../utils/UIhelper";
-import { Clusters } from "../../support/pages/Clusters";
+import { Common, setupBrowser } from "../../utils/common";
+import { UIhelper } from "../../utils/ui-helper";
+import { Clusters } from "../../support/pages/clusters";
 
 //Pre-req: Enable backstage-community-plugin-ocm-backend-dynamic and backstage-community-plugin-ocm Plugins
 //Pre-req: Install Advanced Cluster Management for Kubernetes "MultiClusterHub"

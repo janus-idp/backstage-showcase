@@ -42,8 +42,7 @@ set_cluster_info() {
     # Use cluster credentials for OpenShift version 4.14.
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
-  elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
-    # Use cluster credentials for OpenShift version 4.13.
+  elif [[ "$JOB_NAME" == *ocp-v4-15 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
   elif [[ "$JOB_NAME" == *aks* ]]; then
@@ -285,7 +284,6 @@ apply_yaml_files() {
 run_tests() {
   local release_name=$1
   local project=$2
-
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
@@ -322,8 +320,7 @@ run_tests() {
   # Copy the Playwright report.
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
 
-  # TODO Re-enable `droute` once outage is resolved
-  # droute_send "${release_name}" "${project}"
+  droute_send "${release_name}" "${project}"
 
   echo "${project} RESULT: ${RESULT}"
   if [ "${RESULT}" -ne 0 ]; then

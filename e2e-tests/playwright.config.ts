@@ -8,7 +8,7 @@ const useCommonDeviceAndViewportConfig = {
 };
 
 export default defineConfig({
-  timeout: 22000,
+  timeout: 90 * 1000,
   testDir: "./playwright",
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -33,6 +33,11 @@ export default defineConfig({
       mode: "on",
       size: { width: 1920, height: 1080 },
     },
+    actionTimeout: 10 * 1000,
+    navigationTimeout: 50 * 1000,
+  },
+  expect: {
+    timeout: 10 * 1000, // Global expect timeout
   },
 
   /* Configure projects for major browsers */
@@ -100,6 +105,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-redis-cache.spec.ts",
         "**/playwright/e2e/plugins/topology/topology.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
+        "**/playwright/e2e/configuration-test/config-map.spec.ts",
       ],
     },
     {

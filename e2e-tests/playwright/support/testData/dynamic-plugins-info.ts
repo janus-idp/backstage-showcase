@@ -1,4 +1,4 @@
-export const plugins = [
+export const PLUGINS = [
   {
     name: "backstage-plugin-catalog-backend-module-github-dynamic",
     platform: "node",
