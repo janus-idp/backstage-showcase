@@ -32,7 +32,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-pingidentity --override-interop default --no-embed-as-dependencies",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-pingidentity",
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.18.3",
+    "@janus-idp/cli": "1.18.5",
     "typescript": "5.6.3"
   },
   "files": [
