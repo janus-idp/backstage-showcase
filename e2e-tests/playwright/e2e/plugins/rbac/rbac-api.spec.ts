@@ -3,10 +3,9 @@ import { PolicyComplete, Response } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
-import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 
 // TODO: reenable tests
-test.describe.serial("Test RBAC plugin REST API", () => {
+test.describe.serial.only("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -23,7 +22,7 @@ test.describe.serial("Test RBAC plugin REST API", () => {
     common = new Common(page);
 
     await common.loginAsGithubUser();
-    const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+    const apiToken = process.env.BACKEND_SECRET;
     responseHelper = new Response(apiToken);
   });
 
@@ -45,6 +44,18 @@ test.describe.serial("Test RBAC plugin REST API", () => {
       "/api/permission/policies",
       responseHelper.getSimpleRequest(),
     );
+
+    if (!rolesResponse.ok()) {
+      throw Error(
+        `RBAC rolesResponse API call failed with status code ${rolesResponse} and body: ${await rolesResponse.json()}`,
+      );
+    }
+
+    if (!policiesResponse.ok()) {
+      throw Error(
+        `RBAC rolesResponse API call failed with status code ${policiesResponse} and body: ${await policiesResponse.json()}`,
+      );
+    }
 
     await responseHelper.checkResponse(
       rolesResponse,
