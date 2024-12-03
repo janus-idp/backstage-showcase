@@ -3,7 +3,7 @@ import { PolicyComplete, Response } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
-import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
+import { RhdhAuthHack } from "../../../support/api/rhdh-auth-api-hack";
 
 // TODO: reenable tests
 test.describe.serial.only("Test RBAC plugin REST API", () => {

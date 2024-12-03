@@ -15,7 +15,7 @@ import {
 import { BrowserContext } from "@playwright/test";
 import { APIHelper } from "../../utils/api-helper";
 import { GroupEntity } from "@backstage/catalog-model";
-import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
+import { RhdhAuthHack } from "../../support/api/rhdh-auth-api-hack";
 import * as ghHelper from "../../utils/authenticationProviders/github-helper";
 import { HelmActions } from "../../utils/helm";
 

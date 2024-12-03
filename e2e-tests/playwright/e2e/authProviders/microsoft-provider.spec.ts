@@ -18,7 +18,7 @@ import {
 } from "../../utils/helper";
 import { GroupEntity } from "@backstage/catalog-model";
 import { APIHelper } from "../../utils/api-helper";
-import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
+import { RhdhAuthHack } from "../../support/api/rhdh-auth-api-hack";
 import { HelmActions } from "../../utils/helm";
 
 let page: Page;

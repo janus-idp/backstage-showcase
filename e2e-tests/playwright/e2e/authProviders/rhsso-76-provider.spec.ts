@@ -15,7 +15,7 @@ import { HelmActions } from "../../utils/helm";
 import { GroupEntity } from "@backstage/catalog-model";
 import { APIHelper } from "../../utils/api-helper";
 import { RHSSOHelper } from "../../utils/authenticationProviders/rh-sso-helper";
-import { RhdhAuthHack } from "../../support/api/rhdh-auth-hack";
+import { RhdhAuthHack } from "../../support/api/rhdh-auth-api-hack";
 
 let page: Page;
 
