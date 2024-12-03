@@ -21,20 +21,22 @@
   "scripts": {
     "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-acr": "1.8.5",
     "@backstage/core-plugin-api": "1.10.0",
-    "@mui/icons-material": "5.16.7"
+    "@mui/icons-material": "5.16.7",
+    "@mui/material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.18.3"
+    "@janus-idp/cli": "1.18.3",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",

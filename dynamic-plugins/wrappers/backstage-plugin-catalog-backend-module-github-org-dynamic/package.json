@@ -28,19 +28,20 @@
   "scripts": {
     "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-github-org --embed-package @backstage/plugin-catalog-backend-module-github --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage/plugin-catalog-backend-module-github": "0.7.6",
     "@backstage/plugin-catalog-backend-module-github-org": "0.3.3"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.18.3"
+    "@janus-idp/cli": "1.18.3",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",
