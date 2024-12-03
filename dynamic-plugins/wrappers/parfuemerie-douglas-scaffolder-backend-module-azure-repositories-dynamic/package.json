@@ -33,7 +33,7 @@
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @parfuemerie-douglas/scaffolder-backend-module-azure-repositories --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @parfuemerie-douglas/scaffolder-backend-module-azure-repositories --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@parfuemerie-douglas/scaffolder-backend-module-azure-repositories": "0.3.0"

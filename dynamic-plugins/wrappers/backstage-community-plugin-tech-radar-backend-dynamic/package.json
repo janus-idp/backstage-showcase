@@ -36,7 +36,7 @@
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-tech-radar-backend --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-tech-radar-backend --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-tech-radar-backend": "1.0.0"

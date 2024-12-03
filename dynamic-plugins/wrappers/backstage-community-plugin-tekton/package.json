@@ -25,7 +25,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-tekton": "3.16.2",

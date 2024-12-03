@@ -35,7 +35,7 @@
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
     "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-aap-backend --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @janus-idp/backstage-plugin-aap-backend --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@janus-idp/backstage-plugin-aap-backend": "2.2.0"
