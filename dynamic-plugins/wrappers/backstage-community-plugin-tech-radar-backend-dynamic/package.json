@@ -35,7 +35,7 @@
     "test": "backstage-cli package test",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-tech-radar-backend",
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
