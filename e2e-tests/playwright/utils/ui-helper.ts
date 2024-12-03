@@ -436,29 +436,39 @@ export class UIhelper {
   }
 
   async verifyLocationRefreshButtonIsEnabled(locationName: string) {
-    await this.page.goto("/");
-    await this.openSidebar("Catalog");
-    await this.selectMuiBox("Kind", "Location");
-    await this.verifyHeading("All locations");
-    await this.verifyCellsInTable([locationName]);
-    await this.clickLink(locationName);
-    await this.verifyHeading(locationName);
+    await expect(async () => {
+      await this.page.goto("/");
+      await this.openSidebar("Catalog");
+      await this.selectMuiBox("Kind", "Location");
+      await this.verifyHeading("All locations");
+      await this.verifyCellsInTable([locationName]);
+      await this.clickLink(locationName);
+      await this.verifyHeading(locationName);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 20 * 1000,
+    });
+
+    await expect(
+      this.page.locator(`button[title="Schedule entity refresh"]`),
+    ).toHaveCount(1);
+
     await this.page.locator(`button[title="Schedule entity refresh"]`).click();
     await this.verifyAlertErrorMessage("Refresh scheduled");
 
     const moreButton = await this.page
       .locator("button[aria-label='more']")
       .first();
-    await moreButton.waitFor({ state: "visible" });
-    await moreButton.waitFor({ state: "attached" });
+    await moreButton.waitFor({ state: "visible", timeout: 4000 });
+    await moreButton.waitFor({ state: "attached", timeout: 4000 });
     await moreButton.click();
 
     const unregisterItem = await this.page
       .locator("li[role='menuitem']")
       .filter({ hasText: "Unregister entity" })
       .first();
-    await unregisterItem.waitFor({ state: "visible" });
-    await unregisterItem.waitFor({ state: "attached" });
+    await unregisterItem.waitFor({ state: "visible", timeout: 4000 });
+    await unregisterItem.waitFor({ state: "attached", timeout: 4000 });
     expect(unregisterItem).not.toBeDisabled();
   }
 

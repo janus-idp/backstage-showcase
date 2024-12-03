@@ -19,17 +19,12 @@ export async function setupGithubEnvironment() {
   }
   // recreate them
   for (const key in constants.GH_TEAMS) {
+    //TBD: improve nested team creation
     await createTeam(
       constants.GH_TEAMS[key].name,
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
     );
   }
-
-  await setParentTeam(
-    constants.GH_TEAMS["team_3"].name,
-    constants.AUTH_PROVIDERS_GH_ORG_NAME,
-    constants.GH_TEAMS["team_2"].name,
-  );
 
   await addMemberToTeam(
     constants.GH_TEAMS["team_3"].name,
@@ -50,6 +45,12 @@ export async function setupGithubEnvironment() {
     constants.GH_TEAMS["location_admin"].name,
     constants.AUTH_PROVIDERS_GH_ORG_NAME,
     constants.GH_USERS["admin"].name,
+  );
+
+  await setParentTeam(
+    constants.GH_TEAMS["team_3"].name,
+    constants.AUTH_PROVIDERS_GH_ORG_NAME,
+    constants.GH_TEAMS["team_2"].name,
   );
 
   await helper.ensureNewPolicyConfigMapExists(
@@ -83,19 +84,6 @@ export async function renameTeam(team: string, org: string, newname: string) {
   });
 }
 
-export async function setParentTeam(
-  team: string,
-  org: string,
-  parentTeam: string,
-) {
-  const parentTeamObj = await getTeamByName(parentTeam, org);
-  return await octokit.rest.teams.updateInOrg({
-    team_slug: team,
-    org,
-    parentTeamId: parentTeamObj.data.id,
-  });
-}
-
 export async function deleteTeam(team: string, org: string) {
   try {
     LOGGER.info(`Deleting team from github ${team} in org ${org}`);
@@ -110,12 +98,35 @@ export async function deleteTeam(team: string, org: string) {
   }
 }
 
+export async function setParentTeam(
+  team: string,
+  org: string,
+  parentTeam: string,
+) {
+  try {
+    const parentTeamObj = await getTeamByName(parentTeam, org);
+    LOGGER.info(
+      `Adding parent team ${JSON.stringify(parentTeamObj.data.name)} to team ${team}`,
+    );
+    const r = await octokit.rest.teams.updateInOrg({
+      team_slug: team,
+      org,
+      parent_team_id: parentTeamObj.data.id,
+    });
+    return r;
+  } catch (e) {
+    LOGGER.info(`Error setting github parent team: ${JSON.stringify(e)}`);
+  }
+}
+
 export async function createTeam(team: string, org: string) {
-  return await octokit.rest.teams.create({
+  const r = await octokit.rest.teams.create({
     name: team,
     org,
     privacy: "closed",
   });
+  LOGGER.info(`Creation team response: ${JSON.stringify(r.status)}`);
+  return r;
 }
 
 export async function listTeams(org: string) {
