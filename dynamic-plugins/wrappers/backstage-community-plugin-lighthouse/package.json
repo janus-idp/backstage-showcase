@@ -25,7 +25,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-lighthouse": "0.4.24",
@@ -33,7 +33,8 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.18.3"
+    "@janus-idp/cli": "1.18.5",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",

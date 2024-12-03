@@ -35,15 +35,16 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-jenkins-backend --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-jenkins-backend --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-jenkins-backend",
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-jenkins-backend": "0.6.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.18.3"
+    "@janus-idp/cli": "1.18.5",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",
