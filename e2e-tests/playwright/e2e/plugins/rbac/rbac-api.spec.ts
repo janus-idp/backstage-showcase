@@ -3,6 +3,7 @@ import { PolicyComplete, Response } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
+import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 
 // TODO: reenable tests
 test.describe.serial.only("Test RBAC plugin REST API", () => {
@@ -22,7 +23,7 @@ test.describe.serial.only("Test RBAC plugin REST API", () => {
     common = new Common(page);
 
     await common.loginAsGithubUser();
-    const apiToken = process.env.BACKEND_SECRET;
+    const apiToken = await RhdhAuthHack.getToken(page);
     responseHelper = new Response(apiToken);
   });
 

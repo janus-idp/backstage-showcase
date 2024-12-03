@@ -1,42 +1,41 @@
 import { Page } from "@playwright/test";
-import { UIhelper } from "../../utils/ui-helper";
-import playwrightConfig from "../../../playwright.config";
 
-//https://redhatquickcourses.github.io/devhub-admin/devhub-admin/1/chapter2/rbac.html#_lab_rbac_rest_api
+//here, we spy on the request to get the Backstage token to use APIs
+// for context see https://redhat-internal.slack.com/archives/C04CUSD4JSG/p1733209200187279
 export class RhdhAuthHack {
-  private static instance: RhdhAuthHack;
-  private token?: string;
+  static token: string;
 
-  private constructor() {}
+  static async getToken(page: Page) {
+    try {
+      const response = await page.request.get(
+        "/api/auth/github/refresh?optional=&scope=&env=development",
+        {
+          headers: {
+            "x-requested-with": "XMLHttpRequest",
+          },
+        },
+      );
 
-  public static getInstance(): RhdhAuthHack {
-    if (!RhdhAuthHack.instance) {
-      RhdhAuthHack.instance = new RhdhAuthHack();
+      if (!response.ok()) {
+        throw new Error(`HTTP error! Status: ${response.status()}`);
+      }
+
+      const body = await response.json();
+
+      if (
+        body &&
+        body.backstageIdentity &&
+        typeof body.backstageIdentity.token === "string"
+      ) {
+        RhdhAuthHack.token = body.backstageIdentity.token;
+        return RhdhAuthHack.token;
+      } else {
+        throw new Error("Token not found in response body");
+      }
+    } catch (error) {
+      console.error("Failed to retrieve the token:", error);
+
+      throw error;
     }
-    return RhdhAuthHack.instance;
-  }
-
-  async getApiToken(page: Page): Promise<string> {
-    if (!this.token) {
-      const apiToken = await this._getApiToken(page);
-      this.token = apiToken;
-    }
-    return this.token;
-  }
-
-  private async _getApiToken(page: Page) {
-    const uiHelper = new UIhelper(page);
-
-    await uiHelper.openSidebar("Catalog");
-    const requestPromise = page.waitForRequest(
-      (request) =>
-        request.url() ===
-          `${playwrightConfig.use.baseURL}/api/search/query?term=` &&
-        request.method() === "GET",
-    );
-    await uiHelper.openSidebar("Home");
-    const getRequest = await requestPromise;
-    const authToken = await getRequest.headerValue("Authorization");
-    return authToken;
   }
 }
