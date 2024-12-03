@@ -35,12 +35,14 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default --no-embed-as-dependencies",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @immobiliarelabs/backstage-plugin-gitlab-backend --override-interop default",
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "1.0.1",
     "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.7.0"
+  },
+  "resolutions": {
+    "@backstage/backend-plugin-api": "1.0.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
