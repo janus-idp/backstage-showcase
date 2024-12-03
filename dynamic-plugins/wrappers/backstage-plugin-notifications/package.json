@@ -29,7 +29,8 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-notifications": "0.3.2"
+    "@backstage/plugin-notifications": "0.3.2",
+    "@mui/material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import type { StylesOptions } from '@material-ui/styles';
+import type { StylesOptions } from "@material-ui/styles";
 
 // It's neccessary that this provider is loaded from `core/styles` not just `styles`!
-import { StylesProvider as WrappedStylesProvider, jssPreset } from '@material-ui/core/styles';
-import { create as createJss } from 'jss';
+import {
+  StylesProvider as WrappedStylesProvider,
+  jssPreset,
+} from "@material-ui/core/styles";
+import { create as createJss } from "jss";
 
 /**
  * Creates a new JSS StylesProvider that inserts additional styles
@@ -13,7 +16,8 @@ import { create as createJss } from 'jss';
  * styles are handled globally.
  */
 export const ShadowRootStylesProvider = ({ children }: { children: any }) => {
-  const [insertionPoint, setInsertionPoint] = React.useState<HTMLDivElement | null>(null);
+  const [insertionPoint, setInsertionPoint] =
+    React.useState<HTMLDivElement | null>(null);
 
   const stylesOptions = React.useMemo<StylesOptions | null>(() => {
     if (!insertionPoint) {
@@ -25,12 +29,12 @@ export const ShadowRootStylesProvider = ({ children }: { children: any }) => {
         insertionPoint,
       }),
       sheetsManager: new Map(),
-    }
-  }, [insertionPoint])
+    };
+  }, [insertionPoint]);
 
   return (
     <div>
-      <div ref={setInsertionPoint}></div>
+      <div ref={setInsertionPoint} />
       {stylesOptions ? (
         <WrappedStylesProvider {...stylesOptions}>
           {children}

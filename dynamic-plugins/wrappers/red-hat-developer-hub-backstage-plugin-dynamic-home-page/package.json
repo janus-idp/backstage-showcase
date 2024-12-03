@@ -28,6 +28,7 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
+    "@mui/material": "5.16.7",
     "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": "1.0.1"
   },
   "devDependencies": {

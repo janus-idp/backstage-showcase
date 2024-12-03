@@ -28,7 +28,8 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-tekton": "3.16.2"
+    "@backstage-community/plugin-tekton": "3.16.2",
+    "@mui/material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

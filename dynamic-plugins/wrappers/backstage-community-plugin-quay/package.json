@@ -29,7 +29,8 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-quay": "1.14.4"
+    "@backstage-community/plugin-quay": "1.14.4",
+    "@mui/material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

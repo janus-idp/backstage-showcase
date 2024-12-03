@@ -27,7 +27,8 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@backstage-community/plugin-nexus-repository-manager": "1.10.6"
+    "@backstage-community/plugin-nexus-repository-manager": "1.10.6",
+    "@mui/material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

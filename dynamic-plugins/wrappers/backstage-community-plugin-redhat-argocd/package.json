@@ -39,7 +39,8 @@
     "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-redhat-argocd": "1.10.4"
+    "@backstage-community/plugin-redhat-argocd": "1.10.4",
+    "@mui/material": "5.16.7"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
