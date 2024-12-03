@@ -4,8 +4,7 @@ import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import fs from "fs/promises";
 
-test.describe
-  .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
+test.describe("Test RBAC plugin: load permission policies and conditions from files", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -107,8 +106,7 @@ test.describe
   });
 });
 
-test.describe
-  .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {
+test.describe("Test RBAC plugin: Aliases used in conditional access policies", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
