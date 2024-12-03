@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
 import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import {
   TechDocsReaderPage as TechDocsReaderPageBase,
@@ -14,6 +13,8 @@ import {
 } from '@backstage/plugin-catalog-react';
 
 import { useApi } from '@backstage/core-plugin-api';
+
+import { ReportIssue } from './addons';
 
 export const TechDocsReaderPage = {
   element: TechDocsReaderPageBase,
