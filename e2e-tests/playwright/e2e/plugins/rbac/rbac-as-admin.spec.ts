@@ -200,10 +200,12 @@ base.describe.serial("Test RBAC plugin as an admin user", () => {
 
       await rbacPo.fillRoleName(testId.testRole);
       await rbacPo.next();
-      await rbacPo.addUsersAndGroups(RbacPo.rbacTestUsers.guest);
+      await rbacPo.addUsersAndGroups(RbacPo.rbacTestUsers.guest.toLowerCase());
       await rbacPo.clickSelectMember(RbacPo.rbacTestUsers.guest);
       await rbacPo.next();
-      const policy = myPage.locator(rbacPo.selectPermissionPolicyPlugin(0));
+      const policy = myPage.locator(rbacPo.selectPermissionPolicyPlugin(0), {
+        hasText: RbacPo.rbacTestUsers.guest,
+      });
 
       await policy.first().click();
       await rbacPo.selectOption("catalog");
