@@ -2,7 +2,8 @@ import { Page } from "@playwright/test";
 
 //here, we spy on the request to get the Backstage token to use APIs
 // for context see https://redhat-internal.slack.com/archives/C04CUSD4JSG/p1733209200187279
-export class RhdhAuthHack {
+// NOTE THAT AT THIS POINT IN TIME, THIS IS ONLY WORKING FOR GITHUB
+export class RhdhAuthApiHack {
   static token: string;
 
   static async getToken(page: Page) {
@@ -27,8 +28,8 @@ export class RhdhAuthHack {
         body.backstageIdentity &&
         typeof body.backstageIdentity.token === "string"
       ) {
-        RhdhAuthHack.token = body.backstageIdentity.token;
-        return RhdhAuthHack.token;
+        RhdhAuthApiHack.token = body.backstageIdentity.token;
+        return RhdhAuthApiHack.token;
       } else {
         throw new Error("Token not found in response body");
       }
