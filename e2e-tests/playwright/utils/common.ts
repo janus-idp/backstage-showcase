@@ -1,6 +1,9 @@
 import { UIhelper } from "./ui-helper";
 import { authenticator } from "otplib";
 import { test, Browser, expect, Page, TestInfo } from "@playwright/test";
+import { APIHelper } from "./api-helper";
+import { GroupEntity, UserEntity } from "@backstage/catalog-model";
+import { LOGGER } from "./logger";
 import { SETTINGS_PAGE_COMPONENTS } from "../support/pageObjects/page-obj";
 import { WAIT_OBJECTS } from "../support/pageObjects/global-obj";
 import path from "path";
@@ -194,111 +197,144 @@ export class Common {
   }
 
   async keycloakLogin(username: string, password: string) {
+    let popup: Page;
+    this.page.once("popup", (asyncnewPage) => {
+      popup = asyncnewPage;
+    });
+
     await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using OIDC")');
     await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator("#username").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[name=login]").click({ timeout: 5000 });
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const usernameError = popup.locator("id=input-error");
-            if (await usernameError.isVisible()) {
-              await popup.close();
-              resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
+    // Wait for the popup to appear
+    await expect(async () => {
+      await popup.waitForLoadState("domcontentloaded");
+      expect(popup).toBeTruthy();
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 20 * 1000,
     });
+
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      // an active rhsso session is already logged in and the popup will automatically close
+      return "Already logged in";
+    } else {
+      try {
+        await popup.locator("#username").click();
+        await popup.locator("#username").fill(username);
+        await popup.locator("#password").fill(password);
+        await popup.locator("[name=login]").click({ timeout: 5000 });
+        await popup.waitForEvent("close", { timeout: 2000 });
+        return "Login successful";
+      } catch (e) {
+        const usernameError = popup.locator("id=input-error");
+        if (await usernameError.isVisible()) {
+          await popup.close();
+          return "User does not exist";
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
-  async githubLogin(username: string, password: string) {
+  async githubLogin(username: string, password: string, twofactor: string) {
+    let popup: Page;
+    this.page.once("popup", (asyncnewPage) => {
+      popup = asyncnewPage;
+    });
+
     await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using GitHub")');
     await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active rhsso session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          await popup.waitForTimeout(3000);
-          try {
-            await popup.locator("#login_field").fill(username);
-            await popup.locator("#password").fill(password);
-            await popup.locator("[type='submit']").click({ timeout: 5000 });
-            //await this.checkAndReauthorizeGithubApp()
-            await popup.waitForEvent("close", { timeout: 2000 });
-            resolve("Login successful");
-          } catch (e) {
-            const authorization = popup.locator(
-              "button.js-oauth-authorize-btn",
-            );
-            if (await authorization.isVisible()) {
-              authorization.click();
-              resolve("Login successful with app authorization");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
+    // Wait for the popup to appear
+    await expect(async () => {
+      await popup.waitForLoadState("domcontentloaded");
+      expect(popup).toBeTruthy();
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 20 * 1000,
     });
+
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      // an active rhsso session is already logged in and the popup will automatically close
+      return "Already logged in";
+    } else {
+      try {
+        await popup.locator("#login_field").click({ timeout: 5000 });
+        await popup.locator("#login_field").fill(username, { timeout: 5000 });
+        await popup.locator("#password").click({ timeout: 5000 });
+        await popup.locator("#password").fill(password, { timeout: 5000 });
+        await popup.locator("[type='submit']").click({ timeout: 5000 });
+        const twofactorcode = authenticator.generate(twofactor);
+        await popup.locator("#app_totp").click({ timeout: 5000 });
+        await popup.locator("#app_totp").fill(twofactorcode, { timeout: 5000 });
+
+        await popup.waitForEvent("close", { timeout: 20000 });
+        return "Login successful";
+      } catch (e) {
+        const authorization = popup.locator("button.js-oauth-authorize-btn");
+        if (await authorization.isVisible()) {
+          authorization.click();
+          return "Login successful with app authorization";
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   async MicrosoftAzureLogin(username: string, password: string) {
+    let popup: Page;
+    this.page.once("popup", (asyncnewPage) => {
+      popup = asyncnewPage;
+    });
+
     await this.page.goto("/");
     await this.page.waitForSelector('p:has-text("Sign in using Microsoft")');
     await this.uiHelper.clickButton("Sign In");
 
-    return await new Promise<string>((resolve) => {
-      this.page.once("popup", async (popup) => {
-        await popup.waitForLoadState();
-        if (popup.url().startsWith(process.env.BASE_URL)) {
-          // an active microsoft session is already logged in and the popup will automatically close
-          resolve("Already logged in");
-        } else {
-          try {
-            await popup.locator("[name=loginfmt]").fill(username);
-            await popup
-              .locator('[type=submit]:has-text("Next")')
-              .click({ timeout: 5000 });
-
-            await popup.locator("[name=passwd]").fill(password);
-            await popup
-              .locator('[type=submit]:has-text("Sign in")')
-              .click({ timeout: 5000 });
-            await popup
-              .locator('[type=button]:has-text("No")')
-              .click({ timeout: 15000 });
-            resolve("Login successful");
-          } catch (e) {
-            const usernameError = popup.locator("id=usernameError");
-            if (await usernameError.isVisible()) {
-              resolve("User does not exist");
-            } else {
-              throw e;
-            }
-          }
-        }
-      });
+    // Wait for the popup to appear
+    await expect(async () => {
+      await popup.waitForLoadState("domcontentloaded");
+      expect(popup).toBeTruthy();
+    }).toPass({
+      intervals: [5_000, 10_000],
+      timeout: 20 * 1000,
     });
+
+    if (popup.url().startsWith(process.env.BASE_URL)) {
+      // an active microsoft session is already logged in and the popup will automatically close
+      return "Already logged in";
+    } else {
+      try {
+        await popup.locator("[name=loginfmt]").click();
+        await popup
+          .locator("[name=loginfmt]")
+          .fill(username, { timeout: 5000 });
+        await popup
+          .locator('[type=submit]:has-text("Next")')
+          .click({ timeout: 5000 });
+
+        await popup.locator("[name=passwd]").click();
+        await popup.locator("[name=passwd]").fill(password, { timeout: 5000 });
+        await popup
+          .locator('[type=submit]:has-text("Sign in")')
+          .click({ timeout: 5000 });
+        await popup
+          .locator('[type=button]:has-text("No")')
+          .click({ timeout: 15000 });
+        return "Login successful";
+      } catch (e) {
+        const usernameError = popup.locator("id=usernameError");
+        if (await usernameError.isVisible()) {
+          return "User does not exist";
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   async GetParentGroupDisplayed(): Promise<string[]> {
@@ -351,28 +387,16 @@ export class Common {
     };
   }
 
-  async UnregisterUserEnittyFromCatalog(user: string) {
-    await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
-    await this.uiHelper.selectMuiBox("Kind", "User");
-    await this.uiHelper.verifyHeading("All users");
-
-    await this.uiHelper.clickLink(user);
-    await this.uiHelper.verifyHeading(user);
-
-    await this.uiHelper.clickUnregisterButtonForDisplayedEntity();
+  async UnregisterUserEntityFromCatalog(user: string, apiToken: string) {
+    const api = new APIHelper();
+    api.UseStaticToken(apiToken);
+    await api.deleteUserEntityFromAPI(user);
   }
 
-  async UnregisterGroupEnittyFromCatalog(group: string) {
-    await this.page.goto("/");
-    await this.uiHelper.openSidebar("Catalog");
-    await this.uiHelper.selectMuiBox("Kind", "Group");
-    await this.uiHelper.verifyHeading("All groups");
-
-    await this.uiHelper.clickLink(group);
-    await this.uiHelper.verifyHeading(group);
-
-    await this.uiHelper.clickUnregisterButtonForDisplayedEntity();
+  async UnregisterGroupEntityFromCatalog(group: string, apiToken: string) {
+    const api = new APIHelper();
+    api.UseStaticToken(apiToken);
+    await api.deleteGroupEntityFromAPI(group);
   }
 
   async CheckGroupIsShowingInCatalog(groups: string[]) {
@@ -397,6 +421,46 @@ export class Common {
     );
     await this.uiHelper.verifyHeading("All user");
     await this.uiHelper.verifyCellsInTable(users);
+  }
+
+  async CheckUserIsIngestedInCatalog(users: string[], apiToken: string) {
+    const api = new APIHelper();
+    api.UseStaticToken(apiToken);
+    const response = await api.getAllCatalogUsersFromAPI();
+    LOGGER.info(`Users currently in catalog: ${JSON.stringify(response)}`);
+    const catalogUsers: UserEntity[] =
+      response && response.items ? response.items : [];
+    expect(catalogUsers.length).toBeGreaterThan(0);
+    const catalogUsersDisplayNames: string[] = catalogUsers.map(
+      (u) => u.spec.profile.displayName,
+    );
+    LOGGER.info(
+      `Checking ${JSON.stringify(catalogUsersDisplayNames)} contains users ${JSON.stringify(users)}`,
+    );
+    const hasAllElems = users.every((elem) =>
+      catalogUsersDisplayNames.includes(elem),
+    );
+    return hasAllElems;
+  }
+
+  async CheckGroupIsIngestedInCatalog(groups: string[], apiToken: string) {
+    const api = new APIHelper();
+    api.UseStaticToken(apiToken);
+    const response = await api.getAllCatalogGroupsFromAPI();
+    LOGGER.info(`Groups currently in catalog: ${JSON.stringify(response)}`);
+    const catalogGroups: GroupEntity[] =
+      response && response.items ? response.items : [];
+    expect(catalogGroups.length).toBeGreaterThan(0);
+    const catalogGroupsDisplayNames: string[] = catalogGroups.map(
+      (u) => u.spec.profile.displayName,
+    );
+    LOGGER.info(
+      `Checking ${JSON.stringify(catalogGroupsDisplayNames)} contains groups ${JSON.stringify(groups)}`,
+    );
+    const hasAllElems = groups.every((elem) =>
+      catalogGroupsDisplayNames.includes(elem),
+    );
+    return hasAllElems;
   }
 }
 

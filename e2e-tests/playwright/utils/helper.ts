@@ -4,10 +4,13 @@ import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
 import { KubeClient } from "./kube-client";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
+import { GroupEntity } from "@backstage/catalog-model";
+import fs from "fs";
+import { APIHelper } from "./api-helper";
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
-    LOGGER.info(`Executing command ${command}`);
+    //logger.info(`Executing command ${command}`);
     const process = spawn("/bin/sh", ["-c", command]);
     let result: string;
     process.stdout.on("data", (data) => {
@@ -17,10 +20,11 @@ export async function runShellCmd(command: string) {
       result = data;
     });
     process.on("exit", (code) => {
-      LOGGER.info(`Process ended with exit code ${code}: `);
       if (code == 0) {
         resolve(result);
+        return;
       } else {
+        LOGGER.info(`Process failed with code ${code}: ${result}`);
         throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
@@ -41,18 +45,21 @@ export async function upgradeHelmChartWithWait(
   await deleteHelmReleaseWithWait(release, namespace);
 
   LOGGER.info(`Upgrading helm release ${release}`);
-  const upgradeOutput = await runShellCmd(`helm upgrade \
+  const upgradeCMD = `helm upgrade \
     -i ${release} ${chart}  \
     --wait --timeout 300s -n ${namespace} \
     --values ${value} \
     --version "${chartVersion}" --set upstream.backstage.image.repository="${quayRepo}" --set upstream.backstage.image.tag="${tag}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-    ${flags.join(" ")}`);
+    ${flags.join(" ")}`;
+  LOGGER.info(`Running upgrade with command ${upgradeCMD}`);
+
+  const upgradeOutput = await runShellCmd(upgradeCMD);
 
   LOGGER.log({
     level: "info",
     message: `Release upgrade returned: `,
-    dump: upgradeOutput,
+    dump: upgradeOutput.toString(),
   });
 
   const configmap = await new KubeClient().getConfigMap(
@@ -74,14 +81,14 @@ export async function deleteHelmReleaseWithWait(
 ) {
   LOGGER.info(`Deleting release ${release} in namespace ${namespace}`);
   const result = await runShellCmd(
-    `helm uninstall ${release} --wait --timeout 300s -n ${namespace} --ignore-not-found`,
+    `helm uninstall ${release} --wait --timeout 300s -n ${namespace} || true`,
   );
   LOGGER.log({
     level: "info",
     message: `Release delete returned: `,
-    dump: result,
+    dump: result.toString(),
   });
-  return result;
+  return result.toString();
 }
 
 export async function getLastSyncTimeFromLogs(
@@ -98,11 +105,18 @@ export async function getLastSyncTimeFromLogs(
 
   try {
     // TBD: change this to use kube api
-    const podName = await runShellCmd(
-      `oc get pods -n ${constants.AUTH_PROVIDERS_NAMESPACE} | awk '{print $1}' | grep '^${constants.AUTH_PROVIDERS_POD_STRING}'`,
+    const p = await new KubeClient().coreV1Api.listNamespacedPod(
+      constants.AUTH_PROVIDERS_NAMESPACE,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "app.kubernetes.io/component=backstage",
     );
+    const pods = p.body.items.map((pod) => pod.metadata.name);
+
     const log = await runShellCmd(
-      `oc logs ${podName.trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
+      `oc logs ${pods[0].trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
     );
     const syncObj = Date.parse(JSON.parse(log).timestamp);
     return syncObj;
@@ -112,20 +126,21 @@ export async function getLastSyncTimeFromLogs(
   }
 }
 
-export async function waitForNextSync(provider: string, syncTime?: number) {
+export async function waitForNextSync(provider: string, synTimeOut: number) {
+  let syncTime: number | null = null;
   await expect(async () => {
-    const lastSyncTimeFromLogs = await getLastSyncTimeFromLogs(provider);
-    if (syncTime === undefined) {
-      syncTime = lastSyncTimeFromLogs;
+    const nextSyncTime = await getLastSyncTimeFromLogs(provider);
+    if (syncTime == null) {
+      syncTime = nextSyncTime;
     }
     LOGGER.info(
-      `Last registered sync time was: ${new Date(syncTime).toUTCString()}; last detected in logs: ${new Date(lastSyncTimeFromLogs).toUTCString()}`,
+      `Last registered sync time was: ${new Date(syncTime).toUTCString()}(${syncTime}); last detected in logs:${new Date(nextSyncTime).toUTCString()}(${nextSyncTime})`,
     );
-    expect(lastSyncTimeFromLogs).not.toBeNull();
-    expect(lastSyncTimeFromLogs).toBeGreaterThan(syncTime);
+    expect(nextSyncTime).not.toBeNull();
+    expect(nextSyncTime).toBeGreaterThan(syncTime);
   }).toPass({
     intervals: [1_000, 2_000, 10_000],
-    timeout: syncTime * 2 * 1000,
+    timeout: synTimeOut * 2 * 1000,
   });
 }
 
@@ -243,6 +258,28 @@ export async function ensureEnvSecretExists(
     RHSSO76_CLIENT_SECRET: Buffer.from(
       constants.RHSSO76_CLIENT_SECRET,
     ).toString("base64"),
+
+    RHBK_DEFAULT_PASSWORD: Buffer.from(
+      constants.RHSSO76_DEFAULT_PASSWORD,
+    ).toString("base64"),
+    RHBK_METADATA_URL: Buffer.from(
+      `${constants.RHBK_URL}/realms/authProviders`,
+    ).toString("base64"),
+    RHBK_CLIENT_ID: Buffer.from(constants.RHBK_CLIENTID).toString("base64"),
+    RHBK_ADMIN_USERNAME: Buffer.from(constants.RHBK_ADMIN_USERNAME).toString(
+      "base64",
+    ),
+    RHBK_ADMIN_PASSWORD: Buffer.from(constants.RHBK_ADMIN_PASSWORD).toString(
+      "base64",
+    ),
+    RHBK_CALLBACK_URL: Buffer.from(
+      `${process.env.BASE_URL}/api/auth/oidc/handler/frame`,
+    ).toString("base64"),
+    RHBK_CLIENT_SECRET: Buffer.from(constants.RHBK_CLIENT_SECRET).toString(
+      "base64",
+    ),
+    RHBK_URL: Buffer.from(constants.RHBK_URL).toString("base64"),
+
     AUTH_ORG_APP_ID: Buffer.from(constants.AUTH_ORG_APP_ID).toString("base64"),
     AUTH_ORG_CLIENT_ID: Buffer.from(constants.AUTH_ORG_CLIENT_ID).toString(
       "base64",
@@ -258,6 +295,15 @@ export async function ensureEnvSecretExists(
     ).toString("base64"),
     AUTH_PROVIDERS_GH_ORG_NAME: Buffer.from(
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
+    ).toString("base64"),
+    GH_USER_PASSWORD: Buffer.from(constants.GH_USER_PASSWORD).toString(
+      "base64",
+    ),
+    AUTH_PROVIDERS_GH_USER_2FA: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
+    ).toString("base64"),
+    AUTH_PROVIDERS_GH_ADMIN_2FA: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_ADMIN_2FA,
     ).toString("base64"),
   };
   const secret: V1Secret = {
@@ -283,4 +329,109 @@ export async function ensureEnvSecretExists(
       throw e;
     }
   }
+}
+
+export function parseGroupMemberFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "hasMember") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export function parseGroupChildrenFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "parentOf") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export function parseGroupParentFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "childOf") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export async function dumpAllPodsLogs(filePrefix?: string, folder?: string) {
+  const prefix = filePrefix ? filePrefix : "";
+  const folderString = folder ? folder : "/tmp";
+  const p = await new KubeClient().coreV1Api.listNamespacedPod(
+    constants.AUTH_PROVIDERS_NAMESPACE,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    "app.kubernetes.io/component=backstage",
+  );
+  const pods = p.body.items;
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  for (const pod of pods) {
+    const backstageBackendLogs =
+      await new KubeClient().coreV1Api.readNamespacedPodLog(
+        pod.metadata.name,
+        pod.metadata.namespace,
+        "backstage-backend",
+      );
+    const dynamicPluginsLogs =
+      await new KubeClient().coreV1Api.readNamespacedPodLog(
+        pod.metadata.name,
+        pod.metadata.namespace,
+        "install-dynamic-plugins",
+      );
+    fs.writeFileSync(
+      `${folderString}/${prefix}-backend.txt`,
+      backstageBackendLogs.body,
+      { flag: "w" },
+    );
+    fs.writeFileSync(
+      `${folderString}/${prefix}-init.txt`,
+      dynamicPluginsLogs.body,
+      { flag: "w" },
+    );
+  }
+}
+
+export async function dumpRHDHUsersAndGroups(
+  filePrefix?: string,
+  folder?: string,
+) {
+  const prefix = filePrefix ? filePrefix : "";
+  const folderString = folder ? folder : "/tmp";
+  const api = new APIHelper();
+  api.UseStaticToken(constants.STATIC_API_TOKEN);
+  const users = await api.getAllCatalogUsersFromAPI();
+  const groups = await api.getAllCatalogGroupsFromAPI();
+  const locations = await api.getAllCatalogLocationsFromAPI();
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  fs.writeFileSync(
+    `${folderString}/${prefix}-catalog.txt`,
+    JSON.stringify({ users, groups, locations }),
+    { flag: "w" },
+  );
 }
