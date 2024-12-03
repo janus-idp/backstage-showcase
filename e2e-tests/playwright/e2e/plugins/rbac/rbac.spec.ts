@@ -145,9 +145,7 @@ test.describe.serial("Test RBAC plugin as an admin user", () => {
     common = new Common(page);
     rolesHelper = new Roles(page);
     await common.loginAsGithubUser();
-    await uiHelper.openSidebarButton("Administration");
-    await uiHelper.openSidebar("RBAC");
-    await uiHelper.verifyHeading("RBAC");
+    await page.goto("/rbac");
   });
 
   test.beforeEach(
