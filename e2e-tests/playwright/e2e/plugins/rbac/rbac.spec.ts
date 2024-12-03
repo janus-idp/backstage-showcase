@@ -12,76 +12,72 @@ import fs from "fs/promises";
 import { RbacPo } from "../../../support/pageObjects/rbac-po";
 
 // TODO: reenable tests, replace skip with serial
-test.describe.skip(
-  "Test RBAC plugin: load permission policies and conditions from files",
-  () => {
-    let common: Common;
-    let uiHelper: UIhelper;
-    let page: Page;
+test.describe
+  .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
+  let common: Common;
+  let uiHelper: UIhelper;
+  let page: Page;
 
-    test.beforeAll(async ({ browser }, testInfo) => {
-      page = (await setupBrowser(browser, testInfo)).page;
+  test.beforeAll(async ({ browser }, testInfo) => {
+    page = (await setupBrowser(browser, testInfo)).page;
 
-      uiHelper = new UIhelper(page);
-      common = new Common(page);
-      await common.loginAsGithubUser();
-      await uiHelper.openSidebarButton("Administration");
-      await uiHelper.openSidebar("RBAC");
-      await uiHelper.verifyHeading("RBAC");
-    });
+    uiHelper = new UIhelper(page);
+    common = new Common(page);
+    await common.loginAsGithubUser();
+    await page.goto("/rbac");
+  });
 
-    test.beforeEach(
-      async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
+  test("Check if permission policies defined in files are loaded and effective", async () => {
+    const testRole: string = "role:default/test2-role";
+
+    await uiHelper.verifyHeading(/All roles \(\d+\)/);
+    await uiHelper.verifyLink(testRole);
+    await uiHelper.clickLink(testRole);
+
+    await uiHelper.verifyHeading(testRole);
+    await uiHelper.clickTab("Overview");
+
+    await uiHelper.verifyText("About");
+    await uiHelper.verifyText("csv permission policy file");
+
+    await uiHelper.verifyHeading("Users and groups (1 group");
+    await uiHelper.verifyHeading("Permission policies (2)");
+    const permissionPoliciesColumnsText =
+      Roles.getPermissionPoliciesListColumnsText();
+    await uiHelper.verifyColumnHeading(permissionPoliciesColumnsText);
+    const permissionPoliciesCellsIdentifier =
+      Roles.getPermissionPoliciesListCellsIdentifier();
+    await uiHelper.verifyCellsInTable(permissionPoliciesCellsIdentifier);
+
+    await expect(page.getByRole("article")).toContainText("catalog-entity");
+    await expect(page.getByRole("article")).toContainText("Read, Update");
+    await expect(page.getByRole("article")).toContainText("Delete");
+
+    await page.getByTestId("update-members").getByLabel("Update").click();
+    await expect(page.locator("tbody")).toContainText("rhdh-qe-2-team");
+    await uiHelper.clickButton("Next");
+    await page.getByLabel("configure-access").first().click();
+    await expect(page.getByPlaceholder("string, string")).toHaveValue(
+      "group:janus-qe/rhdh-qe-2-team,$currentUser",
     );
+    await page.getByTestId("cancel-conditions").click();
+    await page.getByLabel("configure-access").nth(1).click();
+    await expect(page.getByPlaceholder("string, string")).toHaveValue(
+      "$currentUser",
+    );
+    await page.getByTestId("cancel-conditions").click();
+    await uiHelper.clickButton("Next");
+    await uiHelper.clickButton("Cancel");
+  });
 
-    test("Check if permission policies defined in files are loaded and effective", async () => {
-      const testRole: string = "role:default/test2-role";
-
-      await uiHelper.verifyHeading(/All roles \(\d+\)/);
-      await uiHelper.verifyLink(testRole);
-      await uiHelper.clickLink(testRole);
-
-      await uiHelper.verifyHeading(testRole);
-      await uiHelper.clickTab("Overview");
-
-      await uiHelper.verifyText("About");
-      await uiHelper.verifyText("csv permission policy file");
-
-      await uiHelper.verifyHeading("Users and groups (1 group");
-      await uiHelper.verifyHeading("Permission policies (2)");
-      const permissionPoliciesColumnsText =
-        Roles.getPermissionPoliciesListColumnsText();
-      await uiHelper.verifyColumnHeading(permissionPoliciesColumnsText);
-      const permissionPoliciesCellsIdentifier =
-        Roles.getPermissionPoliciesListCellsIdentifier();
-      await uiHelper.verifyCellsInTable(permissionPoliciesCellsIdentifier);
-
-      await expect(page.getByRole("article")).toContainText("catalog-entity");
-      await expect(page.getByRole("article")).toContainText("Read, Update");
-      await expect(page.getByRole("article")).toContainText("Delete");
-
-      await page.getByTestId("update-members").getByLabel("Update").click();
-      await expect(page.locator("tbody")).toContainText("rhdh-qe-2-team");
-      await uiHelper.clickButton("Next");
-      await page.getByLabel("configure-access").first().click();
-      await expect(page.getByPlaceholder("string, string")).toHaveValue(
-        "group:janus-qe/rhdh-qe-2-team,$currentUser",
-      );
-      await page.getByTestId("cancel-conditions").click();
-      await page.getByLabel("configure-access").nth(1).click();
-      await expect(page.getByPlaceholder("string, string")).toHaveValue(
-        "$currentUser",
-      );
-      await page.getByTestId("cancel-conditions").click();
-      await uiHelper.clickButton("Next");
-      await uiHelper.clickButton("Cancel");
-    });
-
-    test.afterAll(async () => {
-      await page.close();
-    });
-  },
-);
+  test.afterAll(async () => {
+    await page.close();
+  });
+});
 
 test.describe
   .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {

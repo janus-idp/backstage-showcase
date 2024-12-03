@@ -6,7 +6,7 @@ import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
 
 // TODO: reenable tests
-test.describe.skip("Test RBAC plugin REST API", () => {
+test.describe.serial("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -23,7 +23,6 @@ test.describe.skip("Test RBAC plugin REST API", () => {
     common = new Common(page);
 
     await common.loginAsGithubUser();
-    await uiHelper.openSidebar("Home");
     const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
     responseHelper = new Response(apiToken);
   });
