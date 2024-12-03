@@ -39,6 +39,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
+    "@backstage/backend-plugin-api": "1.0.1",
     "@immobiliarelabs/backstage-plugin-gitlab-backend": "6.7.0"
   },
   "devDependencies": {
