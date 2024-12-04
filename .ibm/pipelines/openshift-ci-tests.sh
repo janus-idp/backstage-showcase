@@ -209,7 +209,7 @@ apply_yaml_files() {
   oc apply -f "$dir/resources/cluster_role_binding/cluster-role-binding-ocm.yaml" --namespace="${project}"
 
   if [[ "$JOB_NAME" != *aks* ]]; then # Skip for AKS, because of strange `sed: -e expression #1, char 136: unterminated `s' command`
-    sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${ENCODED_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
+    sed -i "s/K8S_CLUSTER_API_SERVER_URL:.*/K8S_CLUSTER_API_SERVER_URL: ${K8S_CLUSTER_API_SERVER_URL}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
   fi
   sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
@@ -443,9 +443,6 @@ main() {
   fi
 
   echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
-
-  ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
-  ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
   if [[ "$JOB_NAME" == *aks* ]]; then
     initiate_aks_deployment

@@ -57,6 +57,7 @@ GITLAB_TOKEN=$(cat /tmp/secrets/GITLAB_TOKEN)
 
 RHDH_PR_OS_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
 RHDH_PR_OS_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
+ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 K8S_CLUSTER_API_SERVER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
 K8S_SERVICE_ACCOUNT_TOKEN=$K8S_CLUSTER_TOKEN_ENCODED
 OCM_CLUSTER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
