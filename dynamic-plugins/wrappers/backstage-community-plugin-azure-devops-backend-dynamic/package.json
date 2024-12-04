@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.6",
     "pluginId": "azure-devops",
     "pluginPackage": "backstage-community-plugin-azure-devops-backend",
     "pluginPackages": [
