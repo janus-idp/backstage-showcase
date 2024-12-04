@@ -420,7 +420,7 @@ force_delete_namespace() {
 
 main() {
   echo "Log file: ${LOGFILE}"
-  set_cluster_info
+  # set_cluster_info
   source "${DIR}/env_variables.sh"
 
   install_oc
