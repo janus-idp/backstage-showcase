@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { Common, setupBrowser } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
 import { Clusters } from "../../support/pages/clusters";
@@ -32,6 +32,17 @@ test.describe.serial("Test OCM plugin", () => {
   });
   test("Navigate to Clusters and Verify OCM Clusters", async () => {
     await uiHelper.openSidebar("Clusters");
+    const expectedPath = "/ocm";
+
+    // Wait for the expected path in the URL
+    await page.waitForURL(`**${expectedPath}`, {
+      waitUntil: "domcontentloaded", // Wait until the DOM is loaded
+      timeout: 10000, // Set timeout to 10 seconds
+    });
+
+    expect(page.url()).toContain(expectedPath);
+
+    await uiHelper.verifyHeading("Your Managed Clusters");
     await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
       clusterDetails.status,
       clusterDetails.platform,

@@ -169,12 +169,17 @@ export class Common {
   }
 
   async clickOnGHloginPopup() {
-    await this.uiHelper.clickButton("Log in");
-    await this.checkAndReauthorizeGithubApp();
-    await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
-      state: "hidden",
-      timeout: 100000,
-    });
+    const isLoginRequiredVisible =
+      await this.uiHelper.isTextVisible("Login Required");
+    if (isLoginRequiredVisible) {
+      await this.uiHelper.clickButton("Log in");
+      await this.checkAndReauthorizeGithubApp();
+      await this.uiHelper.waitForLoginBtnDisappear();
+    } else {
+      console.log(
+        '"Log in" button is not visible. Skipping login popup actions.',
+      );
+    }
   }
 
   getGitHub2FAOTP(userid: string): string {

@@ -72,38 +72,41 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.verifyRowInTableByUniqueText("Owner", [
       `group:${reactAppDetails.owner}`,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText("Name", [
-      reactAppDetails.componentName,
-    ]);
+    await uiHelper.verifyRowInTableByUniqueText(
+      "Name",
+      [reactAppDetails.componentName],
+    );
     await uiHelper.verifyRowInTableByUniqueText("Description", [
       reactAppDetails.description,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText("Repository Location", [
-      `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
-    ]);
+    await uiHelper.verifyRowInTableByUniqueText(
+      "Repository Location",
+      [
+        `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
+      ],
+    );
 
     await uiHelper.clickButton("Create");
     await uiHelper.clickLink("Open in catalog");
   });
 
-  test.fixme(
-    "Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ",
-    async () => {
-      await common.clickOnGHloginPopup();
-      await uiHelper.clickTab("Dependencies");
-      await uiHelper.verifyText(
-        `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
-      );
-      await catalogImport.inspectEntityAndVerifyYaml(
-        `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
-      );
-    },
-  );
+  //FIXME
+  test.skip("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
+    await common.clickOnGHloginPopup();
+    await uiHelper.clickTab("Dependencies");
+    await uiHelper.verifyText(
+      `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
+    );
+    await catalogImport.inspectEntityAndVerifyYaml(
+      `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
+    );
+  });
 
   test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
-    await uiHelper.searchInputPlaceholder("Create React App Template");
+
+    await uiHelper.searchInputPlaceholder("Create React App Template\n");
     await uiHelper.verifyRowInTableByUniqueText("Create React App Template", [
       "website",
     ]);

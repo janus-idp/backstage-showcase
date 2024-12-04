@@ -18,7 +18,7 @@ test.describe.serial("GitHub integration with Org data fetching", () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Group");
 
-    await uiHelper.searchInputPlaceholder("m");
+    await uiHelper.searchInputPlaceholder("maintainers");
     await uiHelper.verifyRowsInTable(["maintainers"]);
 
     await uiHelper.searchInputPlaceholder("r");
