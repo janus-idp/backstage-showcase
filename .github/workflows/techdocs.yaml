@@ -43,27 +43,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Setup local Turbo cache
         uses: dtinth/setup-github-actions-caching-for-turbo@v1
 
-      - name: Install Dependencies
-        run: |
-          yarn install
-          if [[ $(git diff --name-only . | grep yarn.lock || true) ]]; then
-            echo "After 'yarn install', workspace is dirty! The following files have changed:"
-            echo
-            git diff --name-only . || true
-            exit 42
-          fi
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@25145dd4117d50e1da9330e9ed2893bc6b75373e # v0.6.15
+        with:
+          cache-prefix: ${{ runner.os }}-v20
 
       - name: Lint
         run: |

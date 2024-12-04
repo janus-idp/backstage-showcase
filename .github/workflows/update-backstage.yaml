@@ -33,10 +33,6 @@ on:
           Specify a glob pattern to select packages for upgrade (e.g., `@{backstage,backstage-community}/*`).
           To update all Backstage-related packages, use `@{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*`.
         required: false
-      skip-export-dynamic:
-        description: 'Skip updating dynamic plugins'
-        required: false
-        type: boolean
   schedule:
     - cron: "15 3 * * WED" # Every Wednesday at 3:15 AM
 
@@ -65,14 +61,15 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: yarn install
+        uses: backstage/actions/yarn-install@25145dd4117d50e1da9330e9ed2893bc6b75373e # v0.6.15
+        with:
+          cache-prefix: ${{ runner.os }}-v20
 
       - name: Run versons:bump script
         run: |
           yarn versions:bump \
             ${{ inputs.release && format('--release {0}', inputs.release) }} \
-            ${{ inputs.pattern && format('--pattern {0}', inputs.pattern) }} \
-            ${{ inputs.skip-export-dynamic && '--skip-export-dynamic' }}
+            ${{ inputs.pattern && format('--pattern {0}', inputs.pattern) }}
 
       - name: Determine PR details
         id: pr-details
