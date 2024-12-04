@@ -56,7 +56,7 @@ backend:
   reading:
     allow:
       - host: 'github.com'
-      - host: 'test-backstage-customization-provider-showcase-ci.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud'
+      - host: ${DH_TARGET_URL}
   auth:
     keys:
       - secret: temp
@@ -106,7 +106,7 @@ auth:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
 techRadar:
-  url: http://test-backstage-customization-provider-showcase-ci.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud/tech-radar
+  url: "http://${DH_TARGET_URL}/tech-radar"
 proxy:
   skipInvalidProxies: true
   # endpoints: {}
