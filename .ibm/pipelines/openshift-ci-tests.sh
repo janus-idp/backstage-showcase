@@ -219,7 +219,7 @@ apply_yaml_files() {
     GITHUB_APP_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_SECRET)
   fi
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN`; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -390,11 +390,11 @@ deploy_rhdh_operator() {
   if [[ "${namespace}" == "showcase-op-rbac-nightly" ]]; then
     oc apply -f "${dir}/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${namespace}"
     oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start-rbac.yaml" -n "${namespace}"
-    oc apply -f "${dir}/resources/rhdh-operator/patch/rhdh-patch-rbac.yaml" -n "${namespace}"
+    # oc apply -f "${dir}/resources/rhdh-operator/patch/rhdh-patch-rbac.yaml" -n "${namespace}"
   else 
     oc apply -f "${dir}/resources/rhdh-operator/deployment/dynamic-plugins-root.yaml" -n "${namespace}"
     oc apply -f "${dir}/resources/rhdh-operator/deployment/rhdh-start.yaml" -n "${namespace}"
-    oc apply -f "${dir}/resources/rhdh-operator/patch/rhdh-patch.yaml" -n "${namespace}"
+    # oc apply -f "${dir}/resources/rhdh-operator/patch/rhdh-patch.yaml" -n "${namespace}"
   fi
 }
 
