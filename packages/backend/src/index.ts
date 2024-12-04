@@ -45,11 +45,7 @@ backend.add(
     logger: config => {
       const auditLogConfig = config?.getOptionalConfig('auditLog');
       return {
-        transports: [
-          ...transports.log,
-          ...transports.auditLog(auditLogConfig),
-          ...transports.auditLogFile(auditLogConfig),
-        ],
+        transports: [...transports.log, ...transports.auditLog(auditLogConfig)],
       };
     },
   }),
