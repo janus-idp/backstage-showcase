@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import User from "./user";
 import Group from "./group";
 import { expect, Page } from "@playwright/test";
-import { UIhelper } from "../UIhelper";
+import { UIhelper } from "../ui-helper";
 import { CatalogUsersPO } from "../../support/pageObjects/catalog/catalog-users-obj";
 
 interface AuthResponse {

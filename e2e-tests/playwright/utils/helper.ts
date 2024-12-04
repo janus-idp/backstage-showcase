@@ -1,15 +1,16 @@
-import { logger } from "./Logger";
+import { LOGGER } from "./logger";
 import { spawn } from "child_process";
 import * as constants from "./authenticationProviders/constants";
 import { expect } from "@playwright/test";
-import { kubeCLient } from "./k8sHelper";
+import { KubeClient } from "./kube-client";
 import { V1ConfigMap, V1Secret } from "@kubernetes/client-node";
-
-export const k8sClient = new kubeCLient();
+import { GroupEntity } from "@backstage/catalog-model";
+import fs from "fs";
+import { APIHelper } from "./api-helper";
 
 export async function runShellCmd(command: string) {
   return new Promise<string>((resolve) => {
-    logger.info(`Executing command ${command}`);
+    //logger.info(`Executing command ${command}`);
     const process = spawn("/bin/sh", ["-c", command]);
     let result: string;
     process.stdout.on("data", (data) => {
@@ -19,10 +20,11 @@ export async function runShellCmd(command: string) {
       result = data;
     });
     process.on("exit", (code) => {
-      logger.info(`Process ended with exit code ${code}: `);
       if (code == 0) {
         resolve(result);
+        return;
       } else {
+        LOGGER.info(`Process failed with code ${code}: ${result}`);
         throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
@@ -30,38 +32,41 @@ export async function runShellCmd(command: string) {
 }
 
 export async function upgradeHelmChartWithWait(
-  RELEASE: string,
-  CHART: string,
-  NAMESPACE: string,
-  VALUES: string,
-  CHART_VERSION: string,
-  QUAY_REPO: string,
-  TAG_NAME: string,
-  FLAGS: Array<string>,
+  release: string,
+  chart: string,
+  namespace: string,
+  value: string,
+  chartVersion: string,
+  quayRepo: string,
+  tag: string,
+  flags: Array<string>,
 ) {
-  logger.info(`Deleting any exisitng helm release ${RELEASE}`);
-  await deleteHelmReleaseWithWait(RELEASE, NAMESPACE);
+  LOGGER.info(`Deleting any exisitng helm release ${release}`);
+  await deleteHelmReleaseWithWait(release, namespace);
 
-  logger.info(`Upgrading helm release ${RELEASE}`);
-  const upgradeOutput = await runShellCmd(`helm upgrade \
-    -i ${RELEASE} ${CHART}  \
-    --wait --timeout 300s -n ${NAMESPACE} \
-    --values ${VALUES} \
-    --version "${CHART_VERSION}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}" \
+  LOGGER.info(`Upgrading helm release ${release}`);
+  const upgradeCMD = `helm upgrade \
+    -i ${release} ${chart}  \
+    --wait --timeout 300s -n ${namespace} \
+    --values ${value} \
+    --version "${chartVersion}" --set upstream.backstage.image.repository="${quayRepo}" --set upstream.backstage.image.tag="${tag}" \
     --set global.clusterRouterBase=${process.env.K8S_CLUSTER_ROUTER_BASE}  \
-    ${FLAGS.join(" ")}`);
+    ${flags.join(" ")}`;
+  LOGGER.info(`Running upgrade with command ${upgradeCMD}`);
 
-  logger.log({
+  const upgradeOutput = await runShellCmd(upgradeCMD);
+
+  LOGGER.log({
     level: "info",
     message: `Release upgrade returned: `,
-    dump: upgradeOutput,
+    dump: upgradeOutput.toString(),
   });
 
-  const configmap = await k8sClient.getCongifmap(
-    `${RELEASE}-backstage-app-config`,
-    NAMESPACE,
+  const configmap = await new KubeClient().getConfigMap(
+    `${release}-backstage-app-config`,
+    namespace,
   );
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Applied confguration for release upgrade: `,
     dump: configmap.body.data,
@@ -71,19 +76,19 @@ export async function upgradeHelmChartWithWait(
 }
 
 export async function deleteHelmReleaseWithWait(
-  RELEASE: string,
-  NAMESPACE: string,
+  release: string,
+  namespace: string,
 ) {
-  logger.info(`Deleting release ${RELEASE} in namespace ${NAMESPACE}`);
+  LOGGER.info(`Deleting release ${release} in namespace ${namespace}`);
   const result = await runShellCmd(
-    `helm uninstall ${RELEASE} --wait --timeout 300s -n ${NAMESPACE} --ignore-not-found`,
+    `helm uninstall ${release} --wait --timeout 300s -n ${namespace} || true`,
   );
-  logger.log({
+  LOGGER.log({
     level: "info",
     message: `Release delete returned: `,
-    dump: result,
+    dump: result.toString(),
   });
-  return result;
+  return result.toString();
 }
 
 export async function getLastSyncTimeFromLogs(
@@ -100,35 +105,42 @@ export async function getLastSyncTimeFromLogs(
 
   try {
     // TBD: change this to use kube api
-    const podName = await runShellCmd(
-      `oc get pods -n ${constants.AUTH_PROVIDERS_NAMESPACE} | awk '{print $1}' | grep '^${constants.AUTH_PROVIDERS_POD_STRING}'`,
+    const p = await new KubeClient().coreV1Api.listNamespacedPod(
+      constants.AUTH_PROVIDERS_NAMESPACE,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "app.kubernetes.io/component=backstage",
     );
+    const pods = p.body.items.map((pod) => pod.metadata.name);
+
     const log = await runShellCmd(
-      `oc logs ${podName.trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
+      `oc logs ${pods[0].trim()} -n ${constants.AUTH_PROVIDERS_NAMESPACE} -c backstage-backend | grep "${searchString}" | tail -n1`,
     );
     const syncObj = Date.parse(JSON.parse(log).timestamp);
     return syncObj;
   } catch (e) {
-    logger.error(JSON.stringify(e));
+    LOGGER.error(JSON.stringify(e));
     return null;
   }
 }
 
-export async function WaitForNextSync(SYNC__TIME: number, provider: string) {
+export async function waitForNextSync(provider: string, synTimeOut: number) {
   let syncTime: number | null = null;
   await expect(async () => {
-    const _syncTime = await getLastSyncTimeFromLogs(provider);
+    const nextSyncTime = await getLastSyncTimeFromLogs(provider);
     if (syncTime == null) {
-      syncTime = _syncTime;
+      syncTime = nextSyncTime;
     }
-    logger.info(
-      `Last registered sync time was: ${new Date(syncTime).toUTCString()}; last detected in logs:${new Date(_syncTime).toUTCString()}`,
+    LOGGER.info(
+      `Last registered sync time was: ${new Date(syncTime).toUTCString()}(${syncTime}); last detected in logs:${new Date(nextSyncTime).toUTCString()}(${nextSyncTime})`,
     );
-    expect(_syncTime).not.toBeNull();
-    expect(_syncTime).toBeGreaterThan(syncTime);
+    expect(nextSyncTime).not.toBeNull();
+    expect(nextSyncTime).toBeGreaterThan(syncTime);
   }).toPass({
     intervals: [1_000, 2_000, 10_000],
-    timeout: SYNC__TIME * 2 * 1000,
+    timeout: synTimeOut * 2 * 1000,
   });
 }
 
@@ -138,12 +150,12 @@ export async function replaceInRBACPolicyFileConfigMap(
   match: RegExp | string,
   value: string,
 ) {
-  logger.info(
+  LOGGER.info(
     `Replacing ${match} with ${value} in existing configmap ${configMap} in namespace ${namespace}`,
   );
   const cm = await ensureNewPolicyConfigMapExists(configMap, namespace);
   const patched = cm.body.data["rbac-policy.csv"].replace(match, value);
-  logger.info(`Patch ${patched}`);
+  LOGGER.info(`Patch ${patched}`);
   const patch = [
     {
       op: "replace",
@@ -153,18 +165,19 @@ export async function replaceInRBACPolicyFileConfigMap(
       },
     },
   ];
-  await k8sClient.updateCongifmap(configMap, namespace, patch);
+  await new KubeClient().updateConfigMap(configMap, namespace, patch);
 }
 
 export async function ensureNewPolicyConfigMapExists(
   configMap: string,
   namespace: string,
 ) {
+  const kubeCLient = new KubeClient();
   try {
-    logger.info(
+    LOGGER.info(
       `Ensuring configmap ${configMap} exisists in namespace ${namespace}`,
     );
-    await k8sClient.getCongifmap(configMap, namespace);
+    await kubeCLient.getConfigMap(configMap, namespace);
     const patch = [
       {
         op: "replace",
@@ -174,12 +187,12 @@ export async function ensureNewPolicyConfigMapExists(
         },
       },
     ];
-    await k8sClient.updateCongifmap(configMap, namespace, patch);
-    return await k8sClient.getCongifmap(configMap, namespace);
+    await kubeCLient.updateConfigMap(configMap, namespace, patch);
+    return await kubeCLient.getConfigMap(configMap, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
-      logger.info(
-        `Configmap ${configMap} did not exsist in namespace ${namespace}. Creating it..`,
+      LOGGER.info(
+        `Configmap ${configMap} did not exist in namespace ${namespace}. Creating it..`,
       );
       const cmBody: V1ConfigMap = {
         metadata: {
@@ -190,7 +203,7 @@ export async function ensureNewPolicyConfigMapExists(
           "rbac-policy.csv": constants.RBAC_POLICY_ROLES,
         },
       };
-      return await k8sClient.createCongifmap(namespace, cmBody);
+      return await kubeCLient.createCongifmap(namespace, cmBody);
     } else {
       throw e;
     }
@@ -201,7 +214,8 @@ export async function ensureEnvSecretExists(
   secretName: string,
   namespace: string,
 ) {
-  logger.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
+  const kubeCLient = new KubeClient();
+  LOGGER.info(`Ensuring secret ${secretName} exists in namespace ${namespace}`);
   const secretData = {
     BASE_URL: Buffer.from(process.env.BASE_URL).toString("base64"),
     AUTH_PROVIDERS_AZURE_CLIENT_SECRET: Buffer.from(
@@ -244,6 +258,28 @@ export async function ensureEnvSecretExists(
     RHSSO76_CLIENT_SECRET: Buffer.from(
       constants.RHSSO76_CLIENT_SECRET,
     ).toString("base64"),
+
+    RHBK_DEFAULT_PASSWORD: Buffer.from(
+      constants.RHSSO76_DEFAULT_PASSWORD,
+    ).toString("base64"),
+    RHBK_METADATA_URL: Buffer.from(
+      `${constants.RHBK_URL}/realms/authProviders`,
+    ).toString("base64"),
+    RHBK_CLIENT_ID: Buffer.from(constants.RHBK_CLIENTID).toString("base64"),
+    RHBK_ADMIN_USERNAME: Buffer.from(constants.RHBK_ADMIN_USERNAME).toString(
+      "base64",
+    ),
+    RHBK_ADMIN_PASSWORD: Buffer.from(constants.RHBK_ADMIN_PASSWORD).toString(
+      "base64",
+    ),
+    RHBK_CALLBACK_URL: Buffer.from(
+      `${process.env.BASE_URL}/api/auth/oidc/handler/frame`,
+    ).toString("base64"),
+    RHBK_CLIENT_SECRET: Buffer.from(constants.RHBK_CLIENT_SECRET).toString(
+      "base64",
+    ),
+    RHBK_URL: Buffer.from(constants.RHBK_URL).toString("base64"),
+
     AUTH_ORG_APP_ID: Buffer.from(constants.AUTH_ORG_APP_ID).toString("base64"),
     AUTH_ORG_CLIENT_ID: Buffer.from(constants.AUTH_ORG_CLIENT_ID).toString(
       "base64",
@@ -260,6 +296,15 @@ export async function ensureEnvSecretExists(
     AUTH_PROVIDERS_GH_ORG_NAME: Buffer.from(
       constants.AUTH_PROVIDERS_GH_ORG_NAME,
     ).toString("base64"),
+    GH_USER_PASSWORD: Buffer.from(constants.GH_USER_PASSWORD).toString(
+      "base64",
+    ),
+    AUTH_PROVIDERS_GH_USER_2FA: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_USER_2FA,
+    ).toString("base64"),
+    AUTH_PROVIDERS_GH_ADMIN_2FA: Buffer.from(
+      constants.AUTH_PROVIDERS_GH_ADMIN_2FA,
+    ).toString("base64"),
   };
   const secret: V1Secret = {
     metadata: {
@@ -268,20 +313,125 @@ export async function ensureEnvSecretExists(
     data: secretData,
   };
   try {
-    await k8sClient.getSecret(secretName, namespace);
+    await kubeCLient.getSecret(secretName, namespace);
     const patch = {
       data: secretData,
     };
-    await k8sClient.updateSecret(secretName, namespace, patch);
-    return await k8sClient.getSecret(secretName, namespace);
+    await kubeCLient.updateSecret(secretName, namespace, patch);
+    return await kubeCLient.getSecret(secretName, namespace);
   } catch (e) {
     if (e.response.statusCode == 404) {
-      logger.info(
+      LOGGER.info(
         `Secret ${secretName} did not exist yet in namespace ${namespace}. Creating it..`,
       );
-      await k8sClient.createSecret(secret, namespace);
+      await kubeCLient.createSecret(secret, namespace);
     } else {
       throw e;
     }
   }
+}
+
+export function parseGroupMemberFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "hasMember") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export function parseGroupChildrenFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "parentOf") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export function parseGroupParentFromEntity(group: GroupEntity) {
+  if (!group.relations) {
+    return [];
+  }
+  return group.relations
+    .filter((r) => {
+      if (r.type == "childOf") {
+        return true;
+      }
+    })
+    .map((r) => r.targetRef.split("/")[1]);
+}
+
+export async function dumpAllPodsLogs(filePrefix?: string, folder?: string) {
+  const prefix = filePrefix ? filePrefix : "";
+  const folderString = folder ? folder : "/tmp";
+  const p = await new KubeClient().coreV1Api.listNamespacedPod(
+    constants.AUTH_PROVIDERS_NAMESPACE,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    "app.kubernetes.io/component=backstage",
+  );
+  const pods = p.body.items;
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  for (const pod of pods) {
+    const backstageBackendLogs =
+      await new KubeClient().coreV1Api.readNamespacedPodLog(
+        pod.metadata.name,
+        pod.metadata.namespace,
+        "backstage-backend",
+      );
+    const dynamicPluginsLogs =
+      await new KubeClient().coreV1Api.readNamespacedPodLog(
+        pod.metadata.name,
+        pod.metadata.namespace,
+        "install-dynamic-plugins",
+      );
+    fs.writeFileSync(
+      `${folderString}/${prefix}-backend.txt`,
+      backstageBackendLogs.body,
+      { flag: "w" },
+    );
+    fs.writeFileSync(
+      `${folderString}/${prefix}-init.txt`,
+      dynamicPluginsLogs.body,
+      { flag: "w" },
+    );
+  }
+}
+
+export async function dumpRHDHUsersAndGroups(
+  filePrefix?: string,
+  folder?: string,
+) {
+  const prefix = filePrefix ? filePrefix : "";
+  const folderString = folder ? folder : "/tmp";
+  const api = new APIHelper();
+  api.UseStaticToken(constants.STATIC_API_TOKEN);
+  const users = await api.getAllCatalogUsersFromAPI();
+  const groups = await api.getAllCatalogGroupsFromAPI();
+  const locations = await api.getAllCatalogLocationsFromAPI();
+
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+
+  fs.writeFileSync(
+    `${folderString}/${prefix}-catalog.txt`,
+    JSON.stringify({ users, groups, locations }),
+    { flag: "w" },
+  );
 }

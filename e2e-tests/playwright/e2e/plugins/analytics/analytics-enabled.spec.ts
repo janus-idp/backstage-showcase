@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { Analytics } from "../../../utils/analytics/analytics";
-import { APIHelper } from "../../../utils/APIHelper";
+import { APIHelper } from "../../../utils/api-helper";
 
 test('Check "analytics-provider-segment" plugin is enabled', async () => {
   const analytics = new Analytics();

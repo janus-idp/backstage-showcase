@@ -1,9 +1,9 @@
 import { test as base } from "@playwright/test";
-import { Catalog } from "../support/pages/Catalog";
 import GithubApi from "../support/api/github";
 import { CATALOG_FILE, JANUS_QE_ORG } from "../utils/constants";
-import { Common } from "../utils/Common";
+import { Common } from "../utils/common";
 import { assert } from "console";
+import { Catalog } from "../support/pages/catalog";
 
 type GithubDiscoveryFixture = {
   catalogPage: Catalog;
@@ -23,10 +23,6 @@ const test = base.extend<GithubDiscoveryFixture>({
 });
 
 test.describe("Github Discovery Catalog", () => {
-  test.beforeEach(
-    async ({ page }) => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
-
   test(`Discover Organization's Catalog`, async ({
     catalogPage,
     githubApi,

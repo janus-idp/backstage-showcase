@@ -1,6 +1,6 @@
 import { test } from "@playwright/test";
-import { UIhelper } from "../../utils/UIhelper";
-import { Common, setupBrowser } from "../../utils/Common";
+import { UIhelper } from "../../utils/ui-helper";
+import { Common, setupBrowser } from "../../utils/common";
 
 let page;
 test.describe("Test ACR plugin", () => {

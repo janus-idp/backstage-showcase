@@ -43,7 +43,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
 
       - name: Setup local Turbo cache
         uses: dtinth/setup-github-actions-caching-for-turbo@cc723b4600e40a6b8815b65701d8614b91e2669e # v1
@@ -52,11 +51,12 @@ jobs:
         run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
       - name: Install dependencies
-        run: |
-          yarn install
+        uses: backstage/actions/yarn-install@25145dd4117d50e1da9330e9ed2893bc6b75373e # v0.6.15
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Build packages
-        run: yarn run build --concurrency=75% --affected
+        run: yarn run build --continue --affected
 
   test:
     name: Test with Node.js ${{ matrix.node-version }}
@@ -75,7 +75,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
 
       - name: Setup local Turbo cache
         uses: dtinth/setup-github-actions-caching-for-turbo@cc723b4600e40a6b8815b65701d8614b91e2669e # v1
@@ -84,14 +83,18 @@ jobs:
         run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
       - name: Install dependencies
-        run: |
-          yarn install
+        uses: backstage/actions/yarn-install@25145dd4117d50e1da9330e9ed2893bc6b75373e # v0.6.15
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Run prettier
-        run: yarn prettier:check --concurrency=75% --affected
+        run: yarn prettier:check --continue --affected
 
       - name: Run lint
-        run: yarn run lint:check --concurrency=75% --affected
+        run: yarn run lint:check --continue --affected
+
+      - name: Run monorepo tools
+        run: yarn run monorepo:check
 
       - name: Regenerate dockerfiles
         run: |
@@ -100,7 +103,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: yarn run test --concurrency=75% --affected
+        run: yarn run test --continue --affected
 
       - name: Verify wrappers
         run: yarn workspace dynamic-plugins-utils run test:wrappers

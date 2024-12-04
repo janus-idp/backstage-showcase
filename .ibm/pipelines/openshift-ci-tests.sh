@@ -34,10 +34,10 @@ set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
 
-  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
+  if [[ "$JOB_NAME" == *ocp-v4-16 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
-  elif [[ "$JOB_NAME" == *ocp-v4-13 ]]; then
+  elif [[ "$JOB_NAME" == *ocp-v4-15 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_2_CLUSTER_TOKEN)
   elif [[ "$JOB_NAME" == *aks* ]]; then
@@ -250,6 +250,7 @@ apply_yaml_files() {
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
   #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
+  # Renable when namespace termination issue is solved
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
@@ -257,11 +258,10 @@ apply_yaml_files() {
 run_tests() {
   local release_name=$1
   local project=$2
-
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
-  yarn playwright install
+  yarn playwright install chromium
 
   Xvfb :99 &
   export DISPLAY=:99
@@ -282,7 +282,11 @@ run_tests() {
   cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
   if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
-      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+    cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+  fi
+
+  if [ -d "/tmp/backstage-showcase/e2e-tests/auth-providers-logs" ]; then
+    cp -a /tmp/backstage-showcase/e2e-tests/auth-providers-logs/* "${ARTIFACT_DIR}/${project}/"
   fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
@@ -473,7 +477,6 @@ main() {
   ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
   ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
 
-
   if [[ "$JOB_NAME" == *aks* ]]; then
     initiate_aks_deployment
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}"
@@ -488,14 +491,24 @@ main() {
     initiate_rbac_gke_deployment
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
     delete_namespace "${NAME_SPACE_RBAC_K8S}"
+  elif [[ "$JOB_NAME" == *auth-providers* ]]; then
+    run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
-    # Only test TLS config with RDS in nightly jobs
+    # Only test TLS config with RDS and Change configuration at runtime in nightly jobs
     if [[ "$JOB_NAME" == *periodic* ]]; then
       initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
       check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+
+      # Deploy `showcase-runtime` to run tests that require configuration changes at runtime
+      configure_namespace "${NAME_SPACE_RUNTIME}"
+      uninstall_helmchart "${NAME_SPACE_RUNTIME}" "${RELEASE_NAME}"
+      oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE_RUNTIME}"
+      apply_yaml_files "${DIR}" "${NAME_SPACE_RUNTIME}"
+      helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE_RUNTIME}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+      check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RUNTIME}"
     fi
   fi
 
