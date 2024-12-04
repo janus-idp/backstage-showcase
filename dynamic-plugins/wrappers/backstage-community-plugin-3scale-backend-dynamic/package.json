@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.6",
     "pluginId": "backstage-community-plugin-3scale-backend",
     "pluginPackages": [
       "backstage-community-plugin-3scale-backend"
