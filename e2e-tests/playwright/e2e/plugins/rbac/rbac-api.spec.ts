@@ -47,16 +47,14 @@ test.describe.serial.only("Test RBAC plugin REST API", () => {
     );
 
     if (!rolesResponse.ok()) {
-      const rolesBody = await rolesResponse.json();
       throw Error(
-        `RBAC rolesResponse API call failed with status code ${rolesResponse.status()} and body: ${rolesBody}`,
+        `RBAC rolesResponse API call failed with status code ${rolesResponse.status()}`,
       );
     }
 
     if (!policiesResponse.ok()) {
-      const policiesBody = await rolesResponse.json();
       throw Error(
-        `RBAC rolesResponse API call failed with status code ${policiesResponse.status()} and body: ${policiesBody}`,
+        `RBAC rolesResponse API call failed with status code ${policiesResponse.status()}`,
       );
     }
 
