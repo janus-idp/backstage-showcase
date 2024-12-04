@@ -8,7 +8,6 @@ export class KubeClient {
   kc: k8s.KubeConfig;
 
   constructor() {
-    LOGGER.info(`Initializing Kubernetes API client`);
     try {
       this.kc = new k8s.KubeConfig();
       this.kc.loadFromOptions({

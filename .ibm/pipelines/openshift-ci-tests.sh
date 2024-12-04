@@ -38,8 +38,7 @@ set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
 
-  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
-    # Use cluster credentials for OpenShift version 4.14.
+  if [[ "$JOB_NAME" == *ocp-v4-16 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
   elif [[ "$JOB_NAME" == *ocp-v4-15 ]]; then
@@ -311,10 +310,13 @@ run_tests() {
 
   # Copy screenshots if they exist.
   if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
-      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+    cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
   fi
 
-  # Convert ANSI logs to HTML.
+  if [ -d "/tmp/backstage-showcase/e2e-tests/auth-providers-logs" ]; then
+    cp -a /tmp/backstage-showcase/e2e-tests/auth-providers-logs/* "${ARTIFACT_DIR}/${project}/"
+  fi
+
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
   # Copy the Playwright report.
@@ -522,6 +524,8 @@ main() {
     initiate_rbac_gke_deployment
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
     delete_namespace "${NAME_SPACE_RBAC_K8S}"
+  elif [[ "$JOB_NAME" == *auth-providers* ]]; then
+    run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
   else
     # Initiate deployments on OpenShift.
     initiate_deployments
