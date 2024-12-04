@@ -89,18 +89,29 @@ integrations:
       token: ${GITLAB_TOKEN}
 auth:
   environment: development
+  session:
+    secret: superSecretSecret 
   providers:
     guest:
       dangerouslyAllowOutsideDevelopment: true
     # Plugin: GitHub
-    github:
-      development:
-        clientId: ${GITHUB_APP_CLIENT_ID}
-        clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+    # github:
+    #   development:
+    #     clientId: ${GITHUB_APP_CLIENT_ID}
+    #     clientSecret: ${GITHUB_APP_CLIENT_SECRET}
     google:
       development:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
+    oidc:
+      development:
+        metadataUrl: ${KEYCLOAK_AUTH_BASE_URL}/auth/realms/${KEYCLOAK_AUTH_REALM}
+        clientId: ${KEYCLOAK_AUTH_CLIENTID}
+        clientSecret: ${KEYCLOAK_AUTH_CLIENT_SECRET}
+        prompt: auto
+        callbackUrl: ${OCM_CLUSTER_URL}/api/auth/oidc/handler/frame
+
+signInPage: oidc
 proxy:
   skipInvalidProxies: true
   # endpoints: {}
@@ -149,12 +160,22 @@ catalog:
       rules:
         - allow: [User, Group]
   providers:
-    github:
-      providerId:
-        organization: '${GITHUB_ORG}'
+    keycloakOrg:
+      default:
+        baseUrl: ${KEYCLOAK_AUTH_BASE_URL}/auth
+        loginRealm: ${KEYCLOAK_AUTH_LOGIN_REALM}
+        realm: ${KEYCLOAK_AUTH_REALM}
+        clientId: ${KEYCLOAK_AUTH_CLIENTID}
+        clientSecret: ${KEYCLOAK_AUTH_CLIENT_SECRET}
         schedule:
-          frequency: { minutes: 30}
-          timeout: { minutes: 30}
+          frequency: { minutes: 1 }
+          timeout: { minutes: 1 }
+    # github:
+    #   providerId:
+    #     organization: '${GITHUB_ORG}'
+    #     schedule:
+    #       frequency: { minutes: 30}
+    #       timeout: { minutes: 30}
     githubOrg:
       id: production
       githubUrl: "${GITHUB_URL}"

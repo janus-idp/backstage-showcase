@@ -7,7 +7,6 @@ import { LOGGER } from "./logger";
 import { SETTINGS_PAGE_COMPONENTS } from "../support/pageObjects/page-obj";
 import { WAIT_OBJECTS } from "../support/pageObjects/global-obj";
 import path from "path";
-import fs from "fs";
 
 export class Common {
   page: Page;
@@ -84,32 +83,27 @@ export class Common {
     });
   }
 
-  async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
-    const sessionFileName = `authState_${userid}.json`;
+  async loginAsKeycloakUser(userid: string, password: string) {
+    await new Promise<void>((resolve) => {
+      this.page.once("popup", async (popup) => {
+        await popup.waitForLoadState();
+        await popup.locator("#username").fill(userid);
+        await popup.locator("#password").fill(password);
+        await popup.locator("#kc-login").click();
+        resolve();
+      });
+    });
+  }
 
-    // Check if a session file for this specific user already exists
-    if (fs.existsSync(sessionFileName)) {
-      // Load and reuse existing authentication state
-      const cookies = JSON.parse(
-        fs.readFileSync(sessionFileName, "utf-8"),
-      ).cookies;
-      await this.page.context().addCookies(cookies);
-      console.log(`Reusing existing authentication state for user: ${userid}`);
-      await this.page.goto("/");
-      await this.waitForLoad(12000);
-      await this.uiHelper.clickButton("Sign In");
-      await this.checkAndReauthorizeGithubApp();
-    } else {
-      // Perform login if no session file exists, then save the state
-      await this.logintoGithub(userid);
-      await this.page.goto("/");
-      await this.waitForLoad(240000);
-      await this.uiHelper.clickButton("Sign In");
-      await this.checkAndReauthorizeGithubApp();
-      await this.uiHelper.waitForSideBarVisible();
-      await this.page.context().storageState({ path: sessionFileName });
-      console.log(`Authentication state saved for user: ${userid}`);
-    }
+  async loginAsGithubUser(
+    userid: string = process.env.GH_USER_ID,
+    password: string = process.env.GH_USER_PASS,
+  ) {
+    await this.page.goto("/");
+    await this.waitForLoad(240000);
+    await this.uiHelper.clickButton("Sign In");
+    await this.loginAsKeycloakUser(userid, password);
+    await this.uiHelper.waitForSideBarVisible();
   }
 
   async checkAndReauthorizeGithubApp() {
@@ -159,13 +153,8 @@ export class Common {
   }
 
   async checkAndClickOnGHloginPopup(force = false) {
-    const frameLocator = this.page.getByLabel("Login Required");
-    try {
-      await frameLocator.waitFor({ state: "visible", timeout: 2000 });
-      await this.clickOnGHloginPopup();
-    } catch (error) {
-      if (force) throw error;
-    }
+    console.log(force);
+    return;
   }
 
   async clickOnGHloginPopup() {

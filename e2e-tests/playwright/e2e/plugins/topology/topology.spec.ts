@@ -23,11 +23,9 @@ test.describe("Test Topology Plugin", () => {
     await page.getByRole("button", { name: "Fit to Screen" }).click();
     await uiHelper.verifyText("rhdh");
     await uiHelper.verifyText("rhdh-rbac");
-    await uiHelper.verifyButtonURL(
-      "Open URL",
-      "https://rhdh-backstage-showcase",
+    await page.click(
+      '[aria-label="Open URL"][href*="https://rhdh-backstage-showcase"]',
     );
-    await page.locator("image").first().click();
     await page.getByLabel("Pod").click();
     await page.getByLabel("Pod").getByText("1", { exact: true }).click();
     await uiHelper.clickTab("Details");

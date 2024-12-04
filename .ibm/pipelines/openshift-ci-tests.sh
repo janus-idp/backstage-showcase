@@ -12,11 +12,11 @@ cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
-    # Cleanup namespaces after main branch PR e2e tests execution.
-    delete_namespace "${NAME_SPACE}"
-    delete_namespace "${NAME_SPACE_POSTGRES_DB}"
-    delete_namespace "${NAME_SPACE_RBAC}"
+  # elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
+  #   # Cleanup namespaces after main branch PR e2e tests execution.
+  #   delete_namespace "${NAME_SPACE}"
+  #   delete_namespace "${NAME_SPACE_POSTGRES_DB}"
+  #   delete_namespace "${NAME_SPACE_RBAC}"
   fi
   rm -rf ~/tmpbin
 }
@@ -31,8 +31,8 @@ elif [[ "$JOB_NAME" == *gke* ]]; then
 fi
 
 set_cluster_info() {
-  export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
-  export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
+  export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OSD_GCP_CLUSTER_URL)
+  export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OSD_GCP_CLUSTER_TOKEN)
 
   if [[ "$JOB_NAME" == *ocp-v4-16 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
@@ -53,25 +53,6 @@ set_namespace() {
     NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
     NAME_SPACE_K8S="showcase-k8s-ci-nightly"
     NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
-  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
-    # Enable parallel PR testing for main branch by utilizing a pool of namespaces
-    local namespaces_pool=("pr-1" "pr-2" "pr-3")
-    local namespace_found=false
-    # Iterate through namespace pool to find an available set
-    for ns in "${namespaces_pool[@]}"; do
-      if ! oc get namespace "showcase-$ns" >/dev/null 2>&1; then
-        echo "Namespace "showcase-$ns" does not exist, Using NS: showcase-$ns, showcase-rbac-$ns, postgress-external-db-$ns"
-        NAME_SPACE="showcase-$ns"
-        NAME_SPACE_RBAC="showcase-rbac-$ns"
-        NAME_SPACE_POSTGRES_DB="postgress-external-db-$ns"
-        namespace_found=true
-        break
-      fi
-    done
-    if ! $namespace_found; then
-      echo "Error: All namespaces $namespaces_pool already in Use"
-      exit 1
-    fi
   fi
 }
 
@@ -211,7 +192,7 @@ apply_yaml_files() {
     GITHUB_APP_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_SECRET)
   fi
 
-  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN KEYCLOAK_AUTH_BASE_URL KEYCLOAK_AUTH_CLIENTID KEYCLOAK_AUTH_CLIENT_SECRET KEYCLOAK_AUTH_LOGIN_REALM KEYCLOAK_AUTH_REALM; do
     sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
@@ -249,10 +230,9 @@ apply_yaml_files() {
   oc create configmap rbac-policy --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" --namespace="${project}" --dry-run=client -o yaml | oc apply -f -
   oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
-  #sleep 20 # wait for Pipeline Operator/Tekton pipelines to be ready
-  # Renable when namespace termination issue is solved
-  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
-  # oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  # Create Pipeline run for tekton test case.
+  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
+  oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 }
 
 run_tests() {
@@ -327,6 +307,7 @@ check_backstage_running() {
       return 0
     else
       echo "Attempt ${i} of ${max_attempts}: Backstage not yet available (HTTP Status: ${http_status})"
+      oc get pods -n "${namespace}"
       sleep "${wait_seconds}"
     fi
   done
@@ -347,21 +328,10 @@ install_tekton_pipelines() {
   fi
 }
 
-install_pipelines_operator() {
-  local dir=$1
-  DISPLAY_NAME="Red Hat OpenShift Pipelines"
-
-  if oc get csv -n "openshift-operators" | grep -q "${DISPLAY_NAME}"; then
-    echo "Red Hat OpenShift Pipelines operator is already installed."
-  else
-    echo "Red Hat OpenShift Pipelines operator is not installed. Installing..."
-    oc apply -f "${dir}/resources/pipeline-run/pipelines-operator.yaml"
-  fi
-}
-
 initiate_deployments() {
 
-  #install_pipelines_operator
+  install_pipelines_operator
+  install_acm_operator
   install_crunchy_postgres_operator
   install_helm
   add_helm_repos
@@ -444,7 +414,7 @@ force_delete_namespace() {
 
 main() {
   echo "Log file: ${LOGFILE}"
-  set_cluster_info
+  # set_cluster_info
   source "${DIR}/env_variables.sh"
 
   install_oc

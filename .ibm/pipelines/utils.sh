@@ -272,6 +272,22 @@ install_crunchy_postgres_operator(){
   install_subscription crunchy-postgres-operator openshift-operators crunchy-postgres-operator v5 certified-operators
 }
 
+# installs the advanced-cluster-management Operator
+install_acm_operator(){
+  oc apply -f "${DIR}/cluster/operators/acm/operator-group.yaml"
+  oc apply -f "${DIR}/cluster/operators/acm/subscription-acm.yaml"
+  wait_for_deployment "open-cluster-management" "multiclusterhub-operator"
+  oc apply -f "${DIR}/cluster/operators/acm/multiclusterhub.yaml"
+  # wait until multiclusterhub is Running.
+  timeout 600 bash -c 'while true; do 
+    CURRENT_PHASE=$(oc get multiclusterhub multiclusterhub -n open-cluster-management -o jsonpath="{.status.phase}")
+    echo "MulticlusterHub Current Status: $CURRENT_PHASE"
+    [[ "$CURRENT_PHASE" == "Running" ]] && echo "MulticlusterHub is now in Running phase." && break
+    sleep 10
+  done' || echo "Timed out after 10 minutes"
+
+}
+
 # Installs the Red Hat OpenShift Pipelines operator if not already installed
 install_pipelines_operator() {
   DISPLAY_NAME="Red Hat OpenShift Pipelines"
@@ -283,5 +299,12 @@ install_pipelines_operator() {
     # Install the operator and wait for deployment
     install_subscription openshift-pipelines-operator openshift-operators openshift-pipelines-operator-rh latest redhat-operators
     wait_for_deployment "openshift-operators" "pipelines"
+    timeout 300 bash -c '
+    while ! oc get svc tekton-pipelines-webhook -n openshift-pipelines &> /dev/null; do
+        echo "Waiting for tekton-pipelines-webhook service to be created..."
+        sleep 5
+    done
+    echo "Service tekton-pipelines-webhook is created."
+    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook service creation."
   fi
 }

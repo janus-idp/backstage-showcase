@@ -277,14 +277,6 @@ export class UIhelper {
     return `${UI_HELPER_ELEMENTS.MuiButtonLabel}:has-text("${label}")`;
   }
 
-  async verifyButtonURL(label: string | RegExp, url: string | RegExp) {
-    const buttonUrl = await this.page
-      .getByRole("button", { name: label })
-      .first()
-      .getAttribute("href");
-    expect(buttonUrl).toContain(url);
-  }
-
   /**
    * Verifies that a table row, identified by unique text, contains specific cell texts.
    * @param {string} uniqueRowText - The unique text present in one of the cells within the row. This is used to identify the specific row.

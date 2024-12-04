@@ -27,16 +27,26 @@ integrations:
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   environment: development
+  session:
+    secret: superSecretSecret 
   providers:
     # Plugin: GitHub
     github:
-      development:
-        clientId: ${GITHUB_APP_CLIENT_ID}
-        clientSecret: ${GITHUB_APP_CLIENT_SECRET}
+      # development:
+      #   clientId: ${GITHUB_APP_CLIENT_ID}
+      #   clientSecret: ${GITHUB_APP_CLIENT_SECRET}
     google:
       development:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
+    oidc:
+      development:
+        metadataUrl: ${KEYCLOAK_AUTH_BASE_URL}/auth/realms/${KEYCLOAK_AUTH_REALM}
+        clientId: ${KEYCLOAK_AUTH_CLIENTID}
+        clientSecret: ${KEYCLOAK_AUTH_CLIENT_SECRET}
+        prompt: auto
+        callbackUrl: ${OCM_CLUSTER_URL}/api/auth/oidc/handler/frame
+signInPage: oidc
 proxy:
   skipInvalidProxies: true
   # endpoints: {}
@@ -79,10 +89,21 @@ catalog:
       rules:
         - allow: [User, Group]
   providers:
-    githubOrg:
-      id: production
-      githubUrl: "${GITHUB_URL}"
-      orgs: ["${GITHUB_ORG}", "${GITHUB_ORG_2}"]
+    providers:
+      keycloakOrg:
+        default:
+          baseUrl: ${KEYCLOAK_AUTH_BASE_URL}/auth
+          loginRealm: ${KEYCLOAK_AUTH_LOGIN_REALM}
+          realm: ${KEYCLOAK_AUTH_REALM}
+          clientId: ${KEYCLOAK_AUTH_CLIENTID}
+          clientSecret: ${KEYCLOAK_AUTH_CLIENT_SECRET}
+          schedule:
+            frequency: { minutes: 1 }
+            timeout: { minutes: 1 }
+    # githubOrg:
+    #   id: production
+    #   githubUrl: "${GITHUB_URL}"
+    #   orgs: ["${GITHUB_ORG}", "${GITHUB_ORG_2}"]
 dynatrace:
   baseUrl: temp
 argocd:
