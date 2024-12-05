@@ -165,6 +165,7 @@ apply_yaml_files() {
   local project=$2
   local release_name=$3
   echo "Applying YAML files to namespace ${project}"
+  set +x
 
   oc config set-context --current --namespace="${project}"
 
@@ -239,6 +240,7 @@ apply_yaml_files() {
   # Create Pipeline run for tekton test case.
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
   oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
+  set -x
 }
 
 run_tests() {
@@ -423,7 +425,9 @@ main() {
   if [ "$JOB_TYPE" == "presubmit" ] && [[ "$JOB_NAME" != rehearse-* ]]; then
     set_cluster_info
   fi
+  set +x
   source "${DIR}/env_variables.sh"
+  set -x
 
   install_oc
   if [[ "$JOB_NAME" == *aks* ]]; then
