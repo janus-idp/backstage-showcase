@@ -148,6 +148,8 @@ upstream:
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
+      - configMapRef: dynamic-homepage-and-sidebar-config
+        filename: dynamic-homepage-and-sidebar-config.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
       - redis-secret
