@@ -4,9 +4,9 @@ import { Common } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
 import { TechRadar } from "../../support/pages/tech-radar";
 
-// Pre-req: Enable backstage-plugin-tech-radar and backstage-plugin-tech-radar-backend Plugin
+// Pre-req: Enable plugin-tech-radar and plugin-tech-radar-backend Plugin
 
-test.describe.skip("Test Customized Quick Access and tech-radar plugin", () => {
+test.describe("Test Customized Quick Access and tech-radar plugin", () => {
   test.beforeEach(async ({ page }) => {
     const common = new Common(page);
     await common.loginAsGuest();
