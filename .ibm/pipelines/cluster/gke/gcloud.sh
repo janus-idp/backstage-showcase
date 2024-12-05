@@ -1,3 +1,5 @@
+#!/bin/bash
+
 gcloud_auth() {
   local service_account_name=$1
   local service_account_key_location=$2

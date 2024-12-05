@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 retrieve_pod_logs() {
   local pod_name=$1; local container=$2; local namespace=$3

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 initiate_aks_deployment() {
   add_helm_repos
   delete_namespace "${NAME_SPACE_RBAC_K8S}"

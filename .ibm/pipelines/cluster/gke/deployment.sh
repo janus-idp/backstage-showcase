@@ -1,3 +1,5 @@
+#!/bin/bash
+
 initiate_gke_deployment() {
   gcloud_ssl_cert_create $GKE_CERT_NAME $GKE_INSTANCE_DOMAIN_NAME $GOOGLE_CLOUD_PROJECT
   add_helm_repos

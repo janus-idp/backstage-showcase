@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 handle_aks() {
   echo "Starting AKS deployment"

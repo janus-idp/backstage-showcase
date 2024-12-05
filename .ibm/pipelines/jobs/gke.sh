@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 handle_gke() {
   echo "Starting GKE deployment"
