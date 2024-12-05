@@ -7,6 +7,7 @@ handle_gke() {
   export K8S_CLUSTER_ROUTER_BASE=$GKE_INSTANCE_DOMAIN_NAME
   export NAME_SPACE_K8S="showcase-k8s-ci-nightly"
   export NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
+
   url="https://${K8S_CLUSTER_ROUTER_BASE}"
 
   gcloud_auth "${GKE_SERVICE_ACCOUNT_NAME}" "/tmp/secrets/GKE_SERVICE_ACCOUNT_KEY"

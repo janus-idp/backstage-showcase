@@ -44,7 +44,7 @@ main() {
       ;;
     *gke*)
       echo "Calling handle_gke"
-       handle_gke
+      handle_gke
       ;;
     *operator*)
       echo "Calling Operator"
