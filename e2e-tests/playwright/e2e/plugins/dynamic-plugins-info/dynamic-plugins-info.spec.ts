@@ -38,14 +38,14 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await uiHelper.verifyRowsInTable(["backstage-plugin-techdocs"], true);
   });
 
-  test.skip("it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
+  test("it should have a plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
     page,
   }) => {
     await page
       .getByPlaceholder("Filter")
-      .pressSequentially("backstage-plugin-tech-radar\n", { delay: 300 });
+      .pressSequentially("plugin-tech-radar\n", { delay: 300 });
     const row = await page.locator(
-      UIhelperPO.rowByText("backstage-plugin-tech-radar"),
+      UIhelperPO.rowByText("backstage-community-plugin-tech-radar"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
     expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
