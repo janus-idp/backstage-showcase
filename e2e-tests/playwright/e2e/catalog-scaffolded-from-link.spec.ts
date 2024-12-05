@@ -14,7 +14,7 @@ test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
   let catalogImport: CatalogImport;
 
   const template =
-    "https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml";
+    "https://github.com/backstage/community-plugins/blob/main/workspaces/scaffolder-backend-module-annotator/plugins/scaffolder-backend-module-annotator/examples/templates/01-scaffolder-template.yaml";
 
   const reactAppDetails = {
     owner: "janus-qe/maintainers",
