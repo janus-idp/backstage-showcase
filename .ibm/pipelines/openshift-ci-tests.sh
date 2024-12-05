@@ -420,7 +420,9 @@ force_delete_namespace() {
 
 main() {
   echo "Log file: ${LOGFILE}"
-  # set_cluster_info
+  if [ "$JOB_TYPE" == "presubmit" ] && [[ "$JOB_NAME" != rehearse-* ]]; then
+    set_cluster_info
+  fi
   source "${DIR}/env_variables.sh"
 
   install_oc
