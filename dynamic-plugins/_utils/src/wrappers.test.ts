@@ -112,11 +112,12 @@ function parseYamlFile<T>(filePath: string): T {
 function validateDynamicPluginsConfig(
   config: DynamicPluginsConfig,
   wrapperDirNames: string[],
-  externalDynamicPlugin?: DynamicPluginConfig,
+  externalDynamicPlugins?: DynamicPluginConfig[],
 ): void {
   const dynamicPluginsPackageNames = config.plugins.reduce(
     (packageNames, plugin) => {
-      if (externalDynamicPlugin?.package !== plugin.package) {
+      const isExternalPlugin = externalDynamicPlugins?.some((externalDynamicPlugin) => externalDynamicPlugin.package === plugin.package)
+      if (!isExternalPlugin) {
         // We want the third index ['.', 'dynamic-plugins', 'dist', 'backstage-plugin-scaffolder-backend-module-github-dynamic']
         packageNames.push(plugin.package.split("/")[3]);
       }
@@ -240,16 +241,20 @@ describe("Dynamic Plugin Wrappers", () => {
       IBM_VALUES_SHOWCASE_CONFIG_FILE,
     );
 
-    const externalDynamicPluginConfig: DynamicPluginConfig = {
+    const externalDynamicPluginsConfig: DynamicPluginConfig[] = [{
       package: "@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5",
       disabled: false,
-    };
+    },
+    {
+      package: "@backstage-community/plugin-todo@0.2.42"
+    }
+  ];
 
     it("should have a corresponding package", () => {
       validateDynamicPluginsConfig(
         config.global.dynamic,
         wrapperDirNames,
-        externalDynamicPluginConfig,
+        externalDynamicPluginsConfig,
       );
     });
   });
