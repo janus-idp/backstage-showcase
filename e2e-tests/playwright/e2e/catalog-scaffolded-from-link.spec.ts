@@ -8,13 +8,13 @@ import { GITHUB_API_ENDPOINTS } from "../utils/api-endpoints";
 let page: Page;
 
 // TODO: replace skip with serial
-test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
+test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   let uiHelper: UIhelper;
   let common: Common;
   let catalogImport: CatalogImport;
 
   const template =
-    "https://github.com/backstage/community-plugins/blob/main/workspaces/scaffolder-backend-module-annotator/plugins/scaffolder-backend-module-annotator/examples/templates/01-scaffolder-template.yaml";
+    "https://github.com/janus-qe/01-scaffolder-template/blob/main/01-scaffolder-template.yaml";
 
   const reactAppDetails = {
     owner: "janus-qe/maintainers",
