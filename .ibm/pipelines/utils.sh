@@ -531,7 +531,11 @@ run_tests() {
   cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
   if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
-      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+    cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+  fi
+
+  if [ -d "/tmp/backstage-showcase/e2e-tests/auth-providers-logs" ]; then
+    cp -a /tmp/backstage-showcase/e2e-tests/auth-providers-logs/* "${ARTIFACT_DIR}/${project}/"
   fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
