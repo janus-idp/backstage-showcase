@@ -12,7 +12,7 @@ test.describe.serial('Link Scaffolded Templates to Catalog Items', () => {
   let catalogImport: CatalogImport;
 
   const template =
-    'https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml';
+    'https://github.com/janus-qe/01-scaffolder-template/blob/main/01-scaffolder-template.yaml';
 
   const reactAppDetails = {
     owner: 'janus-qe/maintainers',
