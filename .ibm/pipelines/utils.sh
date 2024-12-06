@@ -608,8 +608,7 @@ initiate_deployments() {
 
   install_crunchy_postgres_operator
   add_helm_repos
-
-  uninstall_helmchart "${NAME_SPACE}" "${RELEASE_NAME}"
+  configure_namespace ${NAME_SPACE}
 
   # Deploy redis cache db.
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
