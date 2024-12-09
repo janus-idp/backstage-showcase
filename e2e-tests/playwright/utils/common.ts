@@ -55,10 +55,10 @@ export class Common {
 
     switch (userid) {
       case process.env.GH_USER_ID:
-        await this.page.fill("#password", process.env.GH_USER_PASS);
+        await this.page.fill("#password", "IAmJustAChillPassword");
         break;
       case process.env.GH_USER2_ID:
-        await this.page.fill("#password", process.env.GH_USER2_PASS);
+        await this.page.fill("#password", "IAmJustAChillPassword");
         break;
       default:
         throw new Error("Invalid User ID");
