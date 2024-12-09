@@ -1,6 +1,21 @@
 #!/bin/sh
 
+
+install_ansible(){
+  if [[ -x "$(command -v ansible)" ]]; then
+    echo "Ansible is already installed."
+  else
+    echo "Installing Ansible client"
+    apt install ansible -y
+    echo "Ansible client installed successfully."
+  fi
+}
+
 handle_ocp_4_16() {
+
+  install_ansible
+  ansible --version
+
   K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
   K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
 

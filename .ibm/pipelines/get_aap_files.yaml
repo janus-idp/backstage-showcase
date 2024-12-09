@@ -36,3 +36,27 @@
         headers:
           Authorization: "Bearer {{ access_token }}"
         dest: "{{ download_path }}"
+
+- name: Setup Ansible Backstage Plugins
+  hosts: localhost
+  vars:
+    ansible_backstage_plugins_local_dir: "~/plugins"
+    ansible_backstage_bundle: "/tmp//tmp/ansible-automation-platform-setup-bundle.tar.gz"
+
+  tasks:
+    - name: Create Plugins Directory
+      file:
+        path: "{{ ansible_backstage_plugins_local_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Set Dynamic Plugin Root Directory
+      set_fact:
+        dynamic_plugin_root_dir: "{{ ansible_backstage_plugins_local_dir }}"
+
+    - name: Extract Ansible Backstage Bundle
+      unarchive:
+        src: "{{ ansible_backstage_bundle }}"
+        dest: "{{ dynamic_plugin_root_dir }}"
+        excludes: "*code*"
+        remote_src: yes
