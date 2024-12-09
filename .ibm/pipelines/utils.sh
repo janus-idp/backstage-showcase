@@ -639,7 +639,6 @@ cluster_setup() {
   install_pipelines_operator
   install_acm_operator
   install_crunchy_postgres_operator
-  install_helm
   add_helm_repos
 }
 
