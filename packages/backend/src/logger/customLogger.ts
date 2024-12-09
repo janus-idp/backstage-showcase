@@ -3,8 +3,6 @@ import type { Config } from '@backstage/config';
 
 import * as winston from 'winston';
 
-import 'winston-daily-rotate-file';
-
 const defaultFormat = winston.format.combine(
   winston.format.timestamp({
     format: 'YYYY-MM-DD HH:mm:ss',
@@ -48,28 +46,6 @@ export const transports = {
     return [
       new winston.transports.Console({
         format: auditLogWinstonFormat,
-      }),
-    ];
-  },
-  auditLogFile: (config?: Config) => {
-    if (!config?.getOptionalBoolean('rotateFile.enabled')) {
-      return [];
-    }
-    return [
-      new winston.transports.DailyRotateFile({
-        format: auditLogWinstonFormat,
-        dirname:
-          config?.getOptionalString('rotateFile.logFileDirPath') ??
-          '/var/log/redhat-developer-hub/audit',
-        filename:
-          config?.getOptionalString('rotateFile.logFileName') ??
-          'redhat-developer-hub-audit-%DATE%.log',
-        datePattern: config?.getOptionalString('rotateFile.dateFormat'),
-        frequency: config?.getOptionalString('rotateFile.frequency'),
-        zippedArchive: config?.getOptionalBoolean('rotateFile.zippedArchive'),
-        utc: config?.getOptionalBoolean('rotateFile.utc'),
-        maxSize: config?.getOptionalString('rotateFile.maxSize'),
-        maxFiles: config?.getOptional('rotateFile.maxFilesOrDays'),
       }),
     ];
   },

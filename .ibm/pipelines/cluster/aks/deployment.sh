@@ -1,5 +1,4 @@
 initiate_aks_deployment() {
-  install_helm
   add_helm_repos
   delete_namespace "${NAME_SPACE_RBAC_K8S}"
   configure_namespace "${NAME_SPACE_K8S}"
@@ -20,7 +19,6 @@ initiate_aks_deployment() {
 }
 
 initiate_rbac_aks_deployment() {
-  install_helm
   add_helm_repos
   delete_namespace "${NAME_SPACE_K8S}"
   configure_namespace "${NAME_SPACE_RBAC_K8S}"
