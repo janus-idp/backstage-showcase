@@ -12,13 +12,11 @@ cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
-  else
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
     # Cleanup namespaces after main branch PR e2e tests execution.
     delete_namespace "${NAME_SPACE}"
     delete_namespace "${NAME_SPACE_POSTGRES_DB}"
     delete_namespace "${NAME_SPACE_RBAC}"
-    delete_namespace "${NAME_SPACE_RDS}"
-    delete_namespace "${NAME_SPACE_RUNTIME}"
   fi
   rm -rf ~/tmpbin
 }
@@ -36,7 +34,7 @@ set_cluster_info() {
   export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_URL)
   export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_PR_OS_CLUSTER_TOKEN)
 
-  if [[ "$JOB_NAME" == *ocp-v4-14 ]]; then
+  if [[ "$JOB_NAME" == *ocp-v4-16 ]]; then
     K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_URL)
     K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OS_1_CLUSTER_TOKEN)
   elif [[ "$JOB_NAME" == *ocp-v4-15 ]]; then
@@ -50,14 +48,14 @@ set_cluster_info() {
 
 set_namespace() {
   if [[ "$JOB_NAME" == *periodic-* ]]; then
-    NAME_SPACE="showcase-ci-nightly-1-4"
-    NAME_SPACE_RBAC="showcase-rbac-nightly-1-4"
-    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly-1-4"
+    NAME_SPACE="showcase-ci-nightly"
+    NAME_SPACE_RBAC="showcase-rbac-nightly"
+    NAME_SPACE_POSTGRES_DB="postgress-external-db-nightly"
     NAME_SPACE_K8S="showcase-k8s-ci-nightly"
     NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
-  elif [[ "$JOB_NAME" == *pull-*-release-1.4-e2e-tests* ]]; then
+  elif [[ "$JOB_NAME" == *pull-*-main-e2e-tests* ]]; then
     # Enable parallel PR testing for main branch by utilizing a pool of namespaces
-    local namespaces_pool=("pr-1-4-1" "pr-1-4-2" "pr-1-4-3")
+    local namespaces_pool=("pr-1" "pr-2" "pr-3")
     local namespace_found=false
     # Iterate through namespace pool to find an available set
     for ns in "${namespaces_pool[@]}"; do
@@ -215,7 +213,8 @@ apply_yaml_files() {
 
   DH_TARGET_URL=$(echo -n "test-backstage-customization-provider-${project}.${K8S_CLUSTER_ROUTER_BASE}" | base64 -w 0)
 
- for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN DH_TARGET_URL; do
+  for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN DH_TARGET_URL; do
+    sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
   done
 
   oc apply -f "$dir/resources/service_account/service-account-rhdh.yaml" --namespace="${project}"
@@ -261,7 +260,6 @@ apply_yaml_files() {
 run_tests() {
   local release_name=$1
   local project=$2
-
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
   yarn install
@@ -286,7 +284,11 @@ run_tests() {
   cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
   if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
-      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+    cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+  fi
+
+  if [ -d "/tmp/backstage-showcase/e2e-tests/auth-providers-logs" ]; then
+    cp -a /tmp/backstage-showcase/e2e-tests/auth-providers-logs/* "${ARTIFACT_DIR}/${project}/"
   fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
@@ -491,6 +493,8 @@ main() {
     initiate_rbac_gke_deployment
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}"
     delete_namespace "${NAME_SPACE_RBAC_K8S}"
+  elif [[ "$JOB_NAME" == *auth-providers* ]]; then
+    run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
   else
     initiate_deployments
     check_and_test "${RELEASE_NAME}" "${NAME_SPACE}"
