@@ -327,7 +327,7 @@ delete_namespace() {
     echo "Namespace ${project} exists. Attempting to delete..."
 
     # Remove blocking finalizers
-    remove_finalizers_from_resources "$project"
+    # remove_finalizers_from_resources "$project"
 
     # Attempt to delete the namespace
     oc delete namespace "$project" --grace-period=0 --force || true
