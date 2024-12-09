@@ -431,9 +431,11 @@ apply_yaml_files() {
 
     sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
+    set +x
     token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
     sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
-
+    set -x
+    
     # Select the configuration file based on the namespace or job
     config_file=$(select_config_map_file)
     # Apply the ConfigMap with the correct file
