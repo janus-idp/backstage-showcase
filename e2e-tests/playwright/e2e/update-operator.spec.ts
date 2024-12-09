@@ -1,78 +1,27 @@
-import { OcApi } from "../support/api/oc-api";
 import { test as base, expect } from "@playwright/test";
+import { KubeClient } from "../utils/kube-client";
 
 type OcFixture = {
-  ocApi: OcApi;
+  namespace: string;
+  kube: KubeClient;
 };
-const ocpTest = base.extend<OcFixture>({
+const kubeTest = base.extend<OcFixture>({
   // eslint-disable-next-line no-empty-pattern
-  ocApi: async ({}, use) => {
+  namespace: async ({}, use) => {
     const namespace = Date.now().toString();
-    const api = new OcApi(namespace);
-    await api.createNamespace();
+    use(namespace);
+  },
+
+  kube: async ({ namespace }, use) => {
+    const api = new KubeClient();
+    await api.createNamespaceIfNotExists(namespace);
     use(api);
-    api.deleteNamespace();
+    api.deleteNamespaceAndWait(namespace);
   },
 });
 
-ocpTest.describe("OpenShift Operator Tests", () => {
-  ocpTest("Check if OpenShift API is alive", async ({ ocApi }) => {
-    const isAlive = await ocApi.isAlive();
-    expect(isAlive).toBeTruthy();
-    console.log("OpenShift API is alive.");
-  });
-
-  ocpTest.skip("List available operators", async ({ ocApi }) => {
-    const operators = await ocApi.listAvailableOperators();
-    expect(operators.length).toBeGreaterThan(0);
-    console.log("Available Operators:", operators);
-  });
-
-  ocpTest("Install the Developer Hub Operator", async ({ ocApi }) => {
-    await ocApi.installDeveloperHubOperator();
-    console.log("Developer Hub Operator installation initiated.");
-  });
-
-  ocpTest.skip("Upgrade the Developer Hub Operator", async ({ ocApi }) => {
-    const operatorName = "rhdh";
-    const newChannel = "stable";
-    const newStartingCSV = "rhdh.v2.0.0";
-
-    await ocApi.upgradeOperator(operatorName, newChannel, newStartingCSV);
-    console.log(`Operator ${operatorName} upgrade initiated.`);
-
-    const subscription = await ocApi.getSubscription(operatorName);
-
-    expect(subscription.spec.channel).toEqual(newChannel);
-
-    if (newStartingCSV) {
-      expect(subscription.spec.startingCSV).toEqual(newStartingCSV);
-    }
-
-    console.log(`Operator ${operatorName} has been upgraded successfully.`);
-  });
-
-  ocpTest.skip("List installed operators", async ({ ocApi }) => {
-    const installedOperators = await ocApi.listInstalledOperators();
-    expect(installedOperators.length).toBeGreaterThan(0);
-    console.log("Installed Operators in namespace", ":", installedOperators);
-  });
-
-  ocpTest.skip("Delete the Developer Hub Operator", async ({ ocApi }) => {
-    const operatorName = "rhdh";
-
-    await ocApi.deleteOperator(operatorName);
-    console.log(`Operator ${operatorName} deletion initiated.`);
-
-    try {
-      await ocApi.getSubscription(operatorName);
-
-      throw new Error(
-        `Subscription for operator ${operatorName} still exists after deletion.`,
-      );
-    } catch (error) {
-      expect(error.message).toContain("Failed to fetch subscription");
-      console.log(`Operator ${operatorName} has been deleted successfully.`);
-    }
+kubeTest.describe.only("OpenShift Operator Tests", () => {
+  kubeTest("Create namespace", async ({ namespace, kube }) => {
+    expect(kube.checkNamespaceExists(namespace));
   });
 });

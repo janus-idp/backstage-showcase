@@ -253,6 +253,12 @@ export class KubeClient {
     }
   }
 
+  async checkNamespaceExists(namespace: string) {
+    const nsList = await this.coreV1Api.listNamespace();
+    const ns = nsList.body.items.map((ns) => ns.metadata.name);
+    return ns.includes(namespace);
+  }
+
   async createSecret(secret: k8s.V1Secret, namespace: string) {
     try {
       LOGGER.info(
