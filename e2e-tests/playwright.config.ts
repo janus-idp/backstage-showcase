@@ -8,7 +8,7 @@ const useCommonDeviceAndViewportConfig = {
 };
 
 export default defineConfig({
-  timeout: 90 * 1000,
+  timeout: 10,
   testDir: "./playwright",
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
