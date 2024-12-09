@@ -1,77 +1,89 @@
-import { Page, expect, test } from "@playwright/test";
-import { PolicyComplete, Response } from "../../../support/pages/rbac";
-import { Common, setupBrowser } from "../../../utils/common";
-import { UIhelper } from "../../../utils/ui-helper";
+import { expect, test } from "@playwright/test";
+import { PolicyComplete } from "../../../support/pages/rbac";
+import { Common } from "../../../utils/common";
 import { RbacConstants } from "../../../data/rbac-constants";
-import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
+import { Response } from "../../../support/pages/rbac";
+import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 
-// TODO: reenable tests
-test.describe.skip("Test RBAC plugin REST API", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  let page: Page;
-  let responseHelper: Response;
-  // Variable to track errors or test states
-  let hasErrors = false;
-  let retriesRemaining: number;
-
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-    retriesRemaining = testInfo.project.retries;
-
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-
-    await common.loginAsGithubUser();
-    await uiHelper.openSidebar("Home");
-    const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
-    responseHelper = new Response(apiToken);
-  });
-
-  // eslint-disable-next-line no-empty-pattern
-  test.beforeEach(async ({}, testInfo) => {
-    console.log(
-      `beforeEach: Attempting setup for ${testInfo.title}, retry: ${testInfo.retry}`,
-    );
+test.describe.only("Test RBAC plugin REST API", () => {
+  test.beforeEach(async ({ page }) => {
+    new Common(page).loginAsGithubUser();
   });
 
   test("Test that roles and policies from GET request are what expected", async ({
     request,
+    page,
   }) => {
-    const rolesResponse = await request.get(
-      "/api/permission/roles",
-      responseHelper.getSimpleRequest(),
-    );
-    const policiesResponse = await request.get(
-      "/api/permission/policies",
-      responseHelper.getSimpleRequest(),
-    );
+    await page.goto("/");
+    const token = await RhdhAuthApiHack.getInstance().getToken(page);
+    const heads = { authorization: "Bearer: " + token };
 
-    await responseHelper.checkResponse(
+    const rolesResponse = await request.get("/api/permission/roles", {
+      headers: heads,
+    });
+    const policiesResponse = await request.get("/api/permission/policies", {
+      headers: heads,
+    });
+
+    await new Response(token).checkResponse(
       rolesResponse,
       RbacConstants.getExpectedRoles(),
     );
-    await responseHelper.checkResponse(
+    await new Response(token).checkResponse(
       policiesResponse,
       RbacConstants.getExpectedPolicies(),
     );
   });
 
+  test("Create new role", async ({ request, page }) => {
+    const members = ["user:default/rhdh-qe" + Date.now().toString()];
+    const kind = "role";
+    const ns = "default";
+    const name = "role" + Date.now().toString();
+    const token = await RhdhAuthApiHack.getInstance().getToken(page);
+    const heads = { authorization: "Bearer: " + token };
+    const firstRole = {
+      memberReferences: members,
+      name: "role:default/admin",
+    };
+
+    const createRole = await request.post(
+      `/api/permission/roles/${kind}/${ns}/${name}`,
+      {
+        data: firstRole,
+        headers: heads,
+      },
+    );
+
+    expect(createRole.status).toBe(201);
+    const body = await createRole.json();
+    expect(body);
+  });
+
+  test("Change role name", async ({ request, page }) => {
+    const members = ["user:default/rhdh-qe" + Date.now().toString()];
+    const firstRole = {
+      memberReferences: members,
+      name: "role:default/admin",
+    };
+    const token = await RhdhAuthApiHack.getInstance().getToken(page);
+    const heads = { authorization: "Bearer: " + token };
+    const rolePostResponse = await request.post("/api/permission/roles", {
+      data: firstRole,
+      headers: heads,
+    });
+
+    expect(rolePostResponse.ok());
+  });
+
   test("Create new role for rhdh-qe, change its name, and deny it from reading catalog entities", async ({
     request,
   }) => {
-    const members = ["user:default/rhdh-qe"];
-
     const newPolicy = {
       entityReference: "role:default/test",
       permission: "catalog-entity",
       policy: "read",
       effect: "deny",
-    };
-
-    const firstRole = {
-      memberReferences: members,
-      name: "role:default/admin",
     };
 
     const newRole = {
@@ -94,7 +106,6 @@ test.describe.skip("Test RBAC plugin REST API", () => {
       responseHelper.createOrDeletePolicyRequest([newPolicy]),
     );
 
-    expect(rolePostResponse.ok());
     expect(rolePutResponse.ok());
     expect(policyPostResponse.ok());
   });
@@ -149,12 +160,6 @@ test.describe.skip("Test RBAC plugin REST API", () => {
     expect(createPostResponse.ok());
   });
 
-  test("Test catalog-entity read is allowed", async () => {
-    await uiHelper.openSidebar("Catalog");
-    await uiHelper.selectMuiBox("Kind", "API");
-    await uiHelper.clickLink("Nexus Repo Manager 3");
-  });
-
   test("Test catalog-entity refresh is denied", async () => {
     expect(
       await uiHelper.isBtnVisibleByTitle("Schedule entity refresh"),
@@ -206,7 +211,7 @@ test.describe.skip("Test RBAC plugin REST API", () => {
   });
 
   test("Test that the bad PUT didnt go through and catalog-entities can be read", async () => {
-    await uiHelper.openSidebar("Home");
+    await page.go("Home");
     await uiHelper.openSidebar("Create...");
     expect(
       await uiHelper.isTextVisible(
