@@ -19,7 +19,8 @@ az_aks_approuting_enable() {
   local name=$1
   local resource_group=$2
   set +xe
-  local output=$(az aks approuting enable --name $name --resource-group $resource_group 2>&1 | sed 's/^ERROR: //')
+  local output
+  output=$(az aks approuting enable --name $name --resource-group $resource_group 2>&1 | sed 's/^ERROR: //')
   set -e
   exit_status=$?
 

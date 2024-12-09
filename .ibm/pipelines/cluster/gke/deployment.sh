@@ -6,7 +6,7 @@ initiate_gke_deployment() {
   # Renable when namespace termination issue is solved
   # install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_K8S}" "${RELEASE_NAME}"
-  cd "${DIR}"
+  cd "${DIR}" || exit
   local rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_K8S}" "${rhdh_base_url}"
   oc apply -f "${DIR}/cluster/gke/frontend-config.yaml" --namespace="${project}"
@@ -30,7 +30,7 @@ initiate_rbac_gke_deployment() {
   # Renable when namespace termination issue is solved
   # install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_K8S}" "${RELEASE_NAME_RBAC}"
-  cd "${DIR}"
+  cd "${DIR}" || exit
   local rbac_rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_K8S}"  "${rbac_rhdh_base_url}"
   yq_merge_value_files "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_RBAC_GKE_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_RBAC_K8S_MERGED_VALUE_FILE_NAME}"
