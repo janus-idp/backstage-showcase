@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-showcase
+  annotations:
+    github.com/project-slug: janus-idp/backstage-showcase
+spec:
+  type: other
+  lifecycle: unknown
+  owner: user:default/its-mitesh-kumar
