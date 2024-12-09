@@ -46,7 +46,6 @@ source "${DIR}/jobs/periodic.sh"
 echo "Loaded periodic.sh"
 
 main() {
-  ansible-playbook get_aap_files.yaml
 
   echo "Log file: ${LOGFILE}"
   echo "JOB_NAME : $JOB_NAME"

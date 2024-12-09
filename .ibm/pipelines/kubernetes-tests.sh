@@ -60,6 +60,20 @@ install_helm() {
   fi
 }
 
+install_ansible(){
+  if [[ -x "$(command -v ansible)" ]]; then
+    echo "Ansible is already installed."
+  else
+    echo "Installing Ansible client"
+    apt install ansible -y
+    echo "Ansible client installed successfully."
+  fi
+}
+
+install_ansible
+ansible --version
+
+
 install_helm
 
 # check installed helm version
