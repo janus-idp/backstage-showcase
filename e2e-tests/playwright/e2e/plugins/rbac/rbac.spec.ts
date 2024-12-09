@@ -119,9 +119,7 @@ test.describe
 
     await uiHelper.openSidebar("Catalog");
     await page.getByRole("link", { name: "test-rhdh-qe-2-team-owned" }).click();
-    await expect(page.locator("header")).toContainText(
-      "janus-qe/rhdh-qe-2-team",
-    );
+    await uiHelper.isTextVisible("janus-qe/rhdh-qe-2-team");
     await page.getByTestId("menu-button").click();
     const unregisterGroupOwned = page.getByText("Unregister entity");
     await expect(unregisterGroupOwned).toBeDisabled();
