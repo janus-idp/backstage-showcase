@@ -53,6 +53,7 @@ export default defineConfig({
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
+        "**/playwright/e2e/plugins/tekton/tekton.spec.ts",
       ],
     },
     {
@@ -67,10 +68,7 @@ export default defineConfig({
     },
     {
       name: "showcase-auth-providers",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/authProviders/*.spec.ts"],
       testIgnore: [
         "**/playwright/e2e/authProviders/setup-environment.spec.ts",
@@ -79,7 +77,7 @@ export default defineConfig({
       ],
       dependencies: ["showcase-auth-providers-setup-environment"],
       teardown: "showcase-auth-providers-clear-environment",
-      retries: 2,
+      retries: 1,
     },
     {
       name: "showcase-auth-providers-setup-environment",

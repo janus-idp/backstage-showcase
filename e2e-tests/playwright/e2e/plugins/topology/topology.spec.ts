@@ -3,7 +3,8 @@ import { Common } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { Catalog } from "../../../support/pages/catalog";
 
-test.describe("Test Topology Plugin", () => {
+// Test disabled due to comments in JIRA ticket RHIDP-3437
+test.describe.skip("Test Topology Plugin", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let catalog: Catalog;

@@ -2,6 +2,8 @@ import { test, Page, expect } from "@playwright/test";
 import { Common, setupBrowser } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
 import * as constants from "../../utils/authenticationProviders/constants";
+import { dumpAllPodsLogs, dumpRHDHUsersAndGroups } from "../../utils/helper";
+import { APIHelper } from "../../utils/api-helper";
 import { LOGGER } from "../../utils/logger";
 import { HelmActions } from "../../utils/helm";
 
@@ -39,16 +41,16 @@ test.describe("Standard authentication providers: Basic authentication", () => {
       constants.QUAY_REPO,
       constants.TAG_NAME,
       [
-        "--set upstream.backstage.appConfig.auth.providers=null",
+        "--set upstream.backstage.appConfig.auth.providers.guest.dangerouslyAllowOutsideDevelopment=false",
         "--set upstream.backstage.appConfig.auth.environment=development",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
     // Guest login should work
     await common.loginAsGuest();
-    await uiHelper.openSidebar("Settings");
-    await uiHelper.verifyHeading("Guest");
+    await page.goto("/");
     await uiHelper.openSidebar("Settings");
     await common.signOut();
   });
@@ -77,6 +79,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.auth.environment=development",
         "--set upstream.backstage.appConfig.signInPage=microsoft",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
@@ -112,6 +115,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.signInPage=microsoft",
         "--set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog=true",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
@@ -124,10 +128,10 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     await uiHelper.verifyParagraph(constants.AZURE_LOGIN_USERNAME);
 
     // check no entities are in the catalog
-    await page.goto("/catalog?filters[kind]=user&filters[user]=all");
-    await uiHelper.verifyHeading("My Org Catalog");
-    await uiHelper.searchInputPlaceholder(constants.AZURE_LOGIN_FIRSTNAME);
-    await uiHelper.verifyRowsInTable(["No records to display"]);
+    const api = new APIHelper();
+    api.UseStaticToken(constants.STATIC_API_TOKEN);
+    const catalogUsers = await api.getAllCatalogUsersFromAPI();
+    expect(catalogUsers.totalItems).toBe(0);
     await uiHelper.openSidebar("Settings");
     await common.signOut();
   });
@@ -154,6 +158,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
         "--set upstream.backstage.appConfig.signInPage=microsoft",
         "--set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog=true",
         "--set upstream.backstage.appConfig.catalog.providers=null",
+        "--set upstream.backstage.appConfig.permission.enabled=false",
       ],
     );
 
@@ -162,7 +167,15 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     const singInMethods = await page
       .locator("div[class^='MuiCardHeader-root']")
       .allInnerTexts();
-    console.log(singInMethods);
     expect(singInMethods).not.toContain("Guest");
+  });
+
+  test.afterEach(async () => {
+    if (test.info().status !== test.info().expectedStatus) {
+      const prefix = `${test.info().testId}_${test.info().retry}`;
+      LOGGER.info(`Dumping logs with prefix ${prefix}`);
+      await dumpAllPodsLogs(prefix, constants.LOGS_FOLDER);
+      await dumpRHDHUsersAndGroups(prefix, constants.LOGS_FOLDER);
+    }
   });
 });

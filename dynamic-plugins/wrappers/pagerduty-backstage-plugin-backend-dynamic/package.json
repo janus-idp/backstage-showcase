@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "supported-versions": "1.32.5",
+    "supported-versions": "1.32.6",
     "pluginId": "pagerduty",
     "pluginPackages": [
       "pagerduty-backstage-plugin",
@@ -31,19 +31,20 @@
   "scripts": {
     "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend --override-interop default --clean"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @pagerduty/backstage-plugin-backend",
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@pagerduty/backstage-plugin-backend": "0.9.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.18.3"
+    "@janus-idp/cli": "1.18.5",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",
