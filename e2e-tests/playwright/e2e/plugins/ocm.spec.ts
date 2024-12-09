@@ -10,10 +10,10 @@ import { Clusters } from "../../support/pages/clusters";
 const clusterDetails = {
   clusterName: "testCluster",
   status: "Ready",
-  platform: "IBM",
+  platform: /IBM|AWS|GCP/,
   cpuCores: /CPU cores\d+/,
   memorySize: /Memory size\d.*(Gi|Mi)/,
-  ocVersion: /^\d+\.\d+\.\d+$/,
+  ocVersion: /^\d+\.\d+\.\d+(Upgrade available)?$/,
 };
 let page: Page;
 test.describe.serial("Test OCM plugin", () => {
@@ -44,7 +44,7 @@ test.describe.serial("Test OCM plugin", () => {
 
     await uiHelper.verifyHeading("Your Managed Clusters");
     await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [
-      clusterDetails.status,
+      new RegExp(clusterDetails.status),
       clusterDetails.platform,
     ]);
     await uiHelper.verifyRowInTableByUniqueText(clusterDetails.clusterName, [

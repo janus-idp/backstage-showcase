@@ -41,7 +41,10 @@ test.describe.serial("Bulk Import plugin", () => {
       newRepoDetails.owner,
       newRepoDetails.repoName,
     );
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await common.loginAsGithubUser(
+      process.env.GH_USER2_ID,
+      process.env.GH_USER2_PASS,
+    );
   });
 
   test.beforeEach(
@@ -252,7 +255,10 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await common.loginAsGithubUser(
+      process.env.GH_USER2_ID,
+      process.env.GH_USER2_PASS,
+    );
   });
 
   test.beforeEach(
