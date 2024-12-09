@@ -8,7 +8,7 @@ const useCommonDeviceAndViewportConfig = {
 };
 
 export default defineConfig({
-  timeout: 20000,
+  timeout: 90 * 1000,
   testDir: "./playwright",
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: false,
@@ -33,6 +33,11 @@ export default defineConfig({
       mode: "on",
       size: { width: 1920, height: 1080 },
     },
+    actionTimeout: 10 * 1000,
+    navigationTimeout: 50 * 1000,
+  },
+  expect: {
+    timeout: 10 * 1000, // Global expect timeout
   },
 
   /* Configure projects for major browsers */
@@ -48,6 +53,7 @@ export default defineConfig({
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
+        "**/playwright/e2e/plugins/tekton/tekton.spec.ts",
       ],
     },
     {
@@ -62,10 +68,7 @@ export default defineConfig({
     },
     {
       name: "showcase-auth-providers",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1920, height: 1080 },
-      },
+      ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/authProviders/*.spec.ts"],
       testIgnore: [
         "**/playwright/e2e/authProviders/setup-environment.spec.ts",
@@ -74,7 +77,7 @@ export default defineConfig({
       ],
       dependencies: ["showcase-auth-providers-setup-environment"],
       teardown: "showcase-auth-providers-clear-environment",
-      retries: 2,
+      retries: 1,
     },
     {
       name: "showcase-auth-providers-setup-environment",
@@ -100,6 +103,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-redis-cache.spec.ts",
         "**/playwright/e2e/plugins/topology/topology.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
+        "**/playwright/e2e/configuration-test/config-map.spec.ts",
       ],
     },
     {

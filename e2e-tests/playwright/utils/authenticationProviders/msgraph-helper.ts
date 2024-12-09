@@ -448,3 +448,7 @@ export async function setupMicrosoftEntraIDEnvironment(): Promise<{
     groupsCreated,
   };
 }
+
+export function formatUPNToEntity(user: string) {
+  return user.replace("@", "_");
+}

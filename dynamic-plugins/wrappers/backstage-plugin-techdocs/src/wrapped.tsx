@@ -2,7 +2,6 @@ import {
   EntityTechdocsContent as EntityTechdocsContentBase,
   TechDocsReaderPage as TechDocsReaderPageBase,
 } from "@backstage/plugin-techdocs";
-import { ReportIssue } from "@backstage/plugin-techdocs-module-addons-contrib";
 import { TechDocsAddons } from "@backstage/plugin-techdocs-react";
 
 import { SearchFilter, useSearch } from "@backstage/plugin-search-react";
@@ -13,6 +12,8 @@ import {
 } from "@backstage/plugin-catalog-react";
 
 import { useApi } from "@backstage/core-plugin-api";
+
+import { ReportIssue } from "./addons";
 
 export const TechDocsReaderPage = {
   element: TechDocsReaderPageBase,
