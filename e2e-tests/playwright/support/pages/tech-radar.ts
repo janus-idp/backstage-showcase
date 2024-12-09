@@ -15,5 +15,4 @@ export class TechRadar {
     await sectionLocator.scrollIntoViewIfNeeded();
     await expect(sectionLocator).toBeVisible();
   }
-
 }

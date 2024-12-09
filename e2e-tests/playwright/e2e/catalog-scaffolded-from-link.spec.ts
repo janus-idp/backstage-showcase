@@ -72,19 +72,15 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.verifyRowInTableByUniqueText("Owner", [
       `group:${reactAppDetails.owner}`,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText(
-      "Name",
-      [reactAppDetails.componentName],
-    );
+    await uiHelper.verifyRowInTableByUniqueText("Name", [
+      reactAppDetails.componentName,
+    ]);
     await uiHelper.verifyRowInTableByUniqueText("Description", [
       reactAppDetails.description,
     ]);
-    await uiHelper.verifyRowInTableByUniqueText(
-      "Repository Location",
-      [
-        `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
-      ],
-    );
+    await uiHelper.verifyRowInTableByUniqueText("Repository Location", [
+      `github.com?owner=${reactAppDetails.repoOwner}&repo=${reactAppDetails.repo}`,
+    ]);
 
     await uiHelper.clickButton("Create");
     await uiHelper.clickLink("Open in catalog");
