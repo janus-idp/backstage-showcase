@@ -1,0 +1,38 @@
+# https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.4/html-single/installing_ansible_plug-ins_for_red_hat_developer_hub/index#rhdh-download-plugins_rhdh-install-ocp
+---
+- name: Headlessly Download AAP from Red Hat Customer Portal
+  hosts: localhost
+  vars:
+    offline_token: "{{ lookup('file', '/tmp/secrets/RH_OFFLINE_TOKEN') }}"
+    file_url: "https://access.cdn.redhat.com/content/origin/files/sha256/cf/cf2a2d4e6b6819676a563daae36eff34195af67caf111f1fc89b487daf165520/ansible-automation-platform-setup-bundle-2.4-8-x86_64.tar.gz"
+    download_path: "/tmp/ansible-automation-platform-setup-bundle.tar.gz"
+
+  tasks:
+    - name: Generate Access Token from Offline Token
+      no_log: true
+      uri:
+        url: "https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token"
+        method: POST
+        headers:
+          Content-Type: "application/x-www-form-urlencoded"
+        body:
+          grant_type: "refresh_token"
+          client_id: "rhsm-api"
+          refresh_token: "{{ offline_token }}"
+        body_format: form-urlencoded
+        return_content: yes
+      register: access_token_response
+
+    - name: Extract Access Token
+      no_log: true
+      set_fact:
+        access_token: "{{ access_token_response.json.access_token }}"
+
+    - name: Download File
+      no_log: true
+      uri:
+        url: "{{ file_url }}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ access_token }}"
+        dest: "{{ download_path }}"

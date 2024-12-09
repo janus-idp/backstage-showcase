@@ -136,4 +136,6 @@ AUTH_PROVIDERS_NAMESPACE="showcase-auth-providers"
 STATIC_API_TOKEN="somecicdtoken"
 AUTH_PROVIDERS_CHART="rhdh-chart/backstage"
 
+RH_OFFLINE_TOKEN=$(cat /tmp/secrets/RH_OFFLINE_TOKEN)
+
 set +a  # Stop automatically exporting variables
