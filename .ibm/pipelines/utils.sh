@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -x
+# don't run in debug mode (-x) so avoid leaking tokens and secrets in console logs!
+set +x
 
 retrieve_pod_logs() {
   local pod_name=$1; local container=$2; local namespace=$3
@@ -434,7 +435,6 @@ apply_yaml_files() {
     set +x
     token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
     sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
-    set -x
     
     # Select the configuration file based on the namespace or job
     config_file=$(select_config_map_file)
