@@ -20,4 +20,12 @@ export class RhdhRbacClient {
     });
     return new RhdhRbacClient(requestContext);
   }
+
+  public async getAllRoles() {
+    return await this.requestContext.get("permission/roles");
+  }
+
+  public async getAllPolicies() {
+    return await this.requestContext.get("permission/policies");
+  }
 }

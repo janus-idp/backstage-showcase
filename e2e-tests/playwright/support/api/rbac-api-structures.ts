@@ -1,7 +1,7 @@
 export interface Role {
   memberReferences: string[];
   name: string;
-  metadata: { description: string };
+  metadata?: { description: string };
 }
 
 export interface Permission {
