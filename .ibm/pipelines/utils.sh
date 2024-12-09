@@ -358,8 +358,10 @@ configure_external_postgres_db() {
   --from-file=tls.key=postgres-tsl-key \
   --dry-run=client -o yaml | oc apply -f - --namespace="${project}"
 
+  set +x
   POSTGRES_PASSWORD=$(oc get secret/postgress-external-db-pguser-janus-idp -n "${NAME_SPACE_POSTGRES_DB}" -o jsonpath={.data.password})
   sed -i "s|POSTGRES_PASSWORD:.*|POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
+
   POSTGRES_HOST=$(echo -n "postgress-external-db-primary.$NAME_SPACE_POSTGRES_DB.svc.cluster.local" | base64 | tr -d '\n')
   sed -i "s|POSTGRES_HOST:.*|POSTGRES_HOST: ${POSTGRES_HOST}|g" "${DIR}/resources/postgres-db/postgres-cred.yaml"
   oc apply -f "${DIR}/resources/postgres-db/postgres-cred.yaml"  --namespace="${project}"
@@ -435,6 +437,7 @@ apply_yaml_files() {
     set +x
     token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
     sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
+
     # Select the configuration file based on the namespace or job
     config_file=$(select_config_map_file)
     # Apply the ConfigMap with the correct file
