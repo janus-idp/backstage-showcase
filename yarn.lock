@@ -3858,6 +3858,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-scaffolder-backend-module-annotator@npm:2.2.2":
+  version: 2.2.2
+  resolution: "@backstage-community/plugin-scaffolder-backend-module-annotator@npm:2.2.2"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+    fs-extra: ^11.2.0
+    lodash: ^4.17.21
+    yaml: ^2.0.0
+  checksum: b963e291aa2a68cdae92d39f65483d58e90846f0d330687ffe1b82d2c985f2a79ec5aab521e81634d1f5ce8873f047587db4161264f3657e8859b9b89a6af0c7
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-scaffolder-backend-module-quay@npm:2.2.2":
   version: 2.2.2
   resolution: "@backstage-community/plugin-scaffolder-backend-module-quay@npm:2.2.2"
@@ -10901,19 +10914,6 @@ __metadata:
     "@backstage/errors": ^1.2.4
     "@backstage/plugin-permission-common": ^0.8.1
   checksum: f2de8438bf081558be39571becfaa7eae5764e8d974af73e2116bbedf21e2c4086015fcab187bc4060e45048d250ae95ca194e25fadf96a9d5564d43fb7888eb
-  languageName: node
-  linkType: hard
-
-"@janus-idp/backstage-scaffolder-backend-module-annotator@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@janus-idp/backstage-scaffolder-backend-module-annotator@npm:2.2.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/plugin-scaffolder-node": ^0.5.0
-    fs-extra: ^11.2.0
-    lodash: ^4.17.21
-    yaml: ^2.0.0
-  checksum: 9156f5856b79479bff83ba61236a46b2a3506570330113faa2c746057d90943ec615aeebf4548dc509327b98ac052aa71df2837c12f93bde518923f07866b113
   languageName: node
   linkType: hard
 
@@ -22311,6 +22311,7 @@ __metadata:
   dependencies:
     "@backstage-community/plugin-rbac-backend": 5.2.6
     "@backstage-community/plugin-rbac-node": 1.8.2
+    "@backstage-community/plugin-scaffolder-backend-module-annotator": 2.2.2
     "@backstage/backend-app-api": 1.0.1
     "@backstage/backend-defaults": 0.5.2
     "@backstage/backend-dynamic-feature-service": 0.4.4
@@ -22340,7 +22341,6 @@ __metadata:
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
     "@janus-idp/backstage-plugin-audit-log-node": 1.7.0
-    "@janus-idp/backstage-scaffolder-backend-module-annotator": 2.2.0
     "@opentelemetry/auto-instrumentations-node": 0.50.2
     "@opentelemetry/exporter-prometheus": 0.53.0
     "@opentelemetry/host-metrics": 0.35.4
