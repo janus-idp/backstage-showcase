@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   EntityConsumedApisCard,
   EntityProvidedApisCard,
@@ -14,6 +13,7 @@ import {
   Direction,
   EntityCatalogGraphCard,
 } from '@backstage/plugin-catalog-graph';
+
 import Grid from '../Grid';
 
 export const DependenciesTabContent = () => (

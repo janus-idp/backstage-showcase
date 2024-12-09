@@ -1,7 +1,7 @@
 ## Arbitrary app-config for backwards compatible UI configuration - now with dynamic plugins
 dynamicPlugins:
   frontend:
-    backstage.plugin-azure-devops:
+    backstage-community.plugin-azure-devops:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: EntityAzurePipelinesContent
@@ -19,7 +19,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isAzureDevOpsAvailable
-    backstage.plugin-dynatrace:
+    backstage-community.plugin-dynatrace:
       mountPoints:
         - mountPoint: entity.page.monitoring/cards
           importName: DynatraceTab
@@ -29,7 +29,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isDynatraceAvailable
-    backstage.plugin-github-actions:
+    backstage-community.plugin-github-actions:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: EntityGithubActionsContent
@@ -39,7 +39,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isGithubActionsAvailable
-    backstage.plugin-github-issues:
+    backstage-community.plugin-github-issues:
       mountPoints:
         - mountPoint: entity.page.issues/cards
           importName: GithubIssuesCard
@@ -49,7 +49,7 @@ dynamicPlugins:
             if:
               allOf:
                 - hasAnnotation: github.com/project-slug
-    backstage.plugin-jenkins:
+    backstage-community.plugin-jenkins:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: EntityJenkinsContent
@@ -70,7 +70,7 @@ dynamicPlugins:
               anyOf:
                 - hasAnnotation: backstage.io/kubernetes-id
                 - hasAnnotation: backstage.io/kubernetes-namespace
-    backstage.plugin-lighthouse:
+    backstage-community.plugin-lighthouse:
       appIcons:
         - name: lighthouse
           importName: LighthouseIcon
@@ -91,6 +91,17 @@ dynamicPlugins:
             if:
               allOf:
                 - isLighthouseAvailable
+    backstage.plugin-notifications:
+      dynamicRoutes:
+        - importName: NotificationsPage
+          menuItem:
+            config:
+              props:
+                titleCounterEnabled: true
+                webNotificationsEnabled: false
+            importName: NotificationsSidebarItem
+          path: /notifications
+    backstage.plugin-signals: {}
     pagerduty.backstage-plugin:
       mountPoints:
         - mountPoint: entity.page.overview/cards
@@ -103,7 +114,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isPluginApplicableToEntity
-    backstage.plugin-sonarqube:
+    backstage-community.plugin-sonarqube:
       mountPoints:
         - mountPoint: entity.page.overview/cards
           importName: EntitySonarQubeCard
@@ -153,7 +164,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isGitlabAvailable
-    janus-idp.backstage-plugin-acr:
+    backstage-community.plugin-acr:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: AcrPage
@@ -163,7 +174,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isAcrAvailable
-    janus-idp.backstage-plugin-jfrog-artifactory:
+    backstage-community.plugin-jfrog-artifactory:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: JfrogArtifactoryPage
@@ -173,7 +184,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isJfrogArtifactoryAvailable
-    janus-idp.backstage-plugin-nexus-repository-manager:
+    backstage-community.plugin-nexus-repository-manager:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: NexusRepositoryManagerPage
@@ -183,7 +194,7 @@ dynamicPlugins:
             if:
               anyOf:
               - isNexusRepositoryManagerAvailable
-    janus-idp.backstage-plugin-ocm:
+    backstage-community.plugin-ocm:
       appIcons:
         - name: ocmIcon
           importName: OcmIcon
@@ -220,7 +231,7 @@ dynamicPlugins:
               allOf:
               - isKind: resource
               - isType: kubernetes-cluster
-    janus-idp.backstage-plugin-quay:
+    backstage-community.plugin-quay:
       mountPoints:
         - mountPoint: entity.page.image-registry/cards
           importName: QuayPage
@@ -230,19 +241,52 @@ dynamicPlugins:
             if:
               anyOf:
               - isQuayAvailable
-    janus-idp.backstage-plugin-bulk-import:
+    red-hat-developer-hub.backstage-plugin-bulk-import:
       appIcons:
         - name: bulkImportIcon
-          module: BulkImportPlugin
           importName: BulkImportIcon
       dynamicRoutes:
         - path: /bulk-import/repositories
           importName: BulkImportPage
-          module: BulkImportPlugin
           menuItem:
             icon: bulkImportIcon
             text: Bulk import
-    janus-idp.backstage-plugin-tekton:
+    red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+      dynamicRoutes:
+        - path: /
+          importName: DynamicHomePage
+      mountPoints:
+        - mountPoint: home.page/cards
+          importName: SearchBar
+          config:
+            layouts:
+              xl: { w: 10, h: 1, x: 1 }
+              lg: { w: 10, h: 1, x: 1 }
+              md: { w: 10, h: 1, x: 1 }
+              sm: { w: 10, h: 1, x: 1 }
+              xs: { w: 12, h: 1 }
+              xxs: { w: 12, h: 1 }
+        - mountPoint: home.page/cards
+          importName: QuickAccessCard
+          config:
+            layouts:
+              xl: { w: 7, h: 8 }
+              lg: { w: 7, h: 8 }
+              md: { w: 7, h: 8 }
+              sm: { w: 12, h: 8 }
+              xs: { w: 12, h: 8 }
+              xxs: { w: 12, h: 8 }
+        - mountPoint: home.page/cards
+          importName: CatalogStarredEntitiesCard
+          config:
+            layouts:
+              xl: { w: 5, h: 4, x: 7 }
+              lg: { w: 5, h: 4, x: 7 }
+              md: { w: 5, h: 4, x: 7 }
+              sm: { w: 12, h: 4 }
+              xs: { w: 12, h: 4 }
+              xxs: { w: 12, h: 4 }
+    backstage-community.plugin-tekton:
       mountPoints:
         - mountPoint: entity.page.ci/cards
           importName: TektonCI
@@ -252,7 +296,7 @@ dynamicPlugins:
             if:
               allOf:
                 - isTektonCIAvailable
-    janus-idp.backstage-plugin-topology:
+    backstage-community.plugin-topology:
       mountPoints:
         - mountPoint: entity.page.topology/cards
           importName: TopologyPage
@@ -409,7 +453,7 @@ dynamicPlugins:
             props:
               name: Documentation
               icon: docs
-    backstage.plugin-tech-radar:
+    backstage-community.plugin-tech-radar:
       apiFactories:
         - importName: TechRadarApi
       appIcons:
@@ -425,6 +469,20 @@ dynamicPlugins:
             props:
               width: 1500
               height: 800
-    janus-idp.backstage-plugin-analytics-provider-segment:
+    backstage-community.plugin-analytics-provider-segment:
       apiFactories:
         - importName: SegmentAnalyticsApi
+    backstage-community.plugin-rbac:
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
+            dynamicRoutes:
+              - path: /rbac
+                importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: admin
+                icon: rbacIcon

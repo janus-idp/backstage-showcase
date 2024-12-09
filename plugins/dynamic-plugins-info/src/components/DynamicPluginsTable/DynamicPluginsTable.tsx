@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import {
   ResponseErrorPanel,
@@ -11,8 +11,8 @@ import { Query, QueryResult } from '@material-table/core';
 
 import { DynamicPluginInfo, dynamicPluginsInfoApiRef } from '../../api/types';
 import {
-  InternalPluginsMap,
   getNotEnabledInternalPlugins,
+  InternalPluginsMap,
 } from '../InternalPluginsMap';
 
 export const DynamicPluginsTable = () => {
@@ -72,7 +72,7 @@ export const DynamicPluginsTable = () => {
               enabled: true,
             };
           }
-          return { ...plugin, internal: false, enabled: true };
+          return plugin;
         },
       );
       const notEnabledInternalPlugins = getNotEnabledInternalPlugins(

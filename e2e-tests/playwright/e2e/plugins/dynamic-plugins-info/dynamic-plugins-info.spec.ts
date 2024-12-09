@@ -1,9 +1,9 @@
-import { expect, test } from '@playwright/test';
-import { UIhelper } from '../../../utils/UIhelper';
-import { Common } from '../../../utils/Common';
-import { UIhelperPO } from '../../../support/pageObjects/global-obj';
+import { expect, test } from "@playwright/test";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Common } from "../../../utils/common";
+import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 
-test.describe('dynamic-plugins-info UI tests', () => {
+test.describe("dynamic-plugins-info UI tests", () => {
   let uiHelper: UIhelper;
   let common: Common;
 
@@ -11,22 +11,21 @@ test.describe('dynamic-plugins-info UI tests', () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
-    await uiHelper.openSidebar('Administration');
-    await uiHelper.verifyHeading('Administration');
-    await uiHelper.verifyLink('Plugins');
-    await uiHelper.clickTab('Plugins');
+    await uiHelper.openSidebarButton("Administration");
+    await uiHelper.openSidebar("Plugins");
+    await uiHelper.verifyHeading("Plugins");
   });
 
-  test('it should show a table, and the table should contain techdocs plugins', async ({
+  test("it should show a table, and the table should contain techdocs plugins", async ({
     page,
   }) => {
     // what shows up in the list depends on how the instance is configured so
     // let's check for the main basic elements of the component to verify the
     // mount point is working as expected
     await uiHelper.verifyText(/Plugins \(\d+\)/);
-    await uiHelper.verifyText('5 rows', false);
+    await uiHelper.verifyText("5 rows", false);
     await uiHelper.verifyColumnHeading(
-      ['Name', 'Version', 'Enabled', 'Preinstalled', 'Role'],
+      ["Name", "Version", "Enabled", "Preinstalled", "Role"],
       true,
     );
 
@@ -34,52 +33,52 @@ test.describe('dynamic-plugins-info UI tests', () => {
     // dynamic-plugins-info plugin, which is required for this test to run
     // properly anyways
     await page
-      .getByPlaceholder('Filter')
-      .pressSequentially('techdocs\n', { delay: 300 });
-    await uiHelper.verifyRowsInTable(['backstage-plugin-techdocs'], true);
+      .getByPlaceholder("Filter")
+      .pressSequentially("techdocs\n", { delay: 300 });
+    await uiHelper.verifyRowsInTable(["backstage-plugin-techdocs"], true);
   });
 
-  test('it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled', async ({
+  test("it should have a plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
     page,
   }) => {
     await page
-      .getByPlaceholder('Filter')
-      .pressSequentially('backstage-plugin-tech-radar\n', { delay: 300 });
+      .getByPlaceholder("Filter")
+      .pressSequentially("plugin-tech-radar\n", { delay: 300 });
     const row = await page.locator(
-      UIhelperPO.rowByText('backstage-plugin-tech-radar'),
+      UI_HELPER_ELEMENTS.rowByText("backstage-community-plugin-tech-radar"),
     );
-    expect(await row.locator('td').nth(2).innerText()).toBe('Yes'); // enabled
-    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
+    expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
+    expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
   });
 
-  test('it should have a backstage-plugin-3scale-backend-dynamic plugin which is not Enabled but Preinstalled', async ({
+  test("it should have a plugin-3scale-backend plugin which is not Enabled but Preinstalled", async ({
     page,
   }) => {
     await page
-      .getByPlaceholder('Filter')
-      .pressSequentially('backstage-plugin-3scale-backend-dynamic\n', {
+      .getByPlaceholder("Filter")
+      .pressSequentially("plugin-3scale-backend-dynamic\n", {
         delay: 300,
       });
     const row = await page.locator(
-      UIhelperPO.rowByText(
-        '@janus-idp/backstage-plugin-3scale-backend-dynamic',
+      UI_HELPER_ELEMENTS.rowByText(
+        "backstage-community-plugin-3scale-backend-dynamic",
       ),
     );
-    expect(await row.locator('td').nth(2).innerText()).toBe('No'); // not enabled
-    expect(await row.locator('td').nth(3).innerText()).toBe('Yes'); // preinstalled
+    expect(await row.locator("td").nth(2).innerText()).toBe("No"); // not enabled
+    expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
   });
 
   // TODO: Add plugin-todo-list plugin in ci process to enable this test
-  test.skip('it should have a plugin-todo-list plugin which is Enabled but not Preinstalled', async ({
+  test.skip("it should have a plugin-todo-list plugin which is Enabled but not Preinstalled", async ({
     page,
   }) => {
     await page
-      .getByPlaceholder('Filter')
-      .pressSequentially('plugin-todo-list\n', { delay: 300 });
+      .getByPlaceholder("Filter")
+      .pressSequentially("plugin-todo-list\n", { delay: 300 });
     const row = await page.locator(
-      UIhelperPO.rowByText('@internal/plugin-todo-list'),
+      UI_HELPER_ELEMENTS.rowByText("@internal/plugin-todo-list"),
     );
-    expect(await row.locator('td').nth(2).innerText()).toBe('Yes'); // enabled
-    expect(await row.locator('td').nth(3).innerText()).toBe('No'); // not preinstalled
+    expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
+    expect(await row.locator("td").nth(3).innerText()).toBe("No"); // not preinstalled
   });
 });

@@ -1,11 +1,15 @@
-import { test, Page, TestInfo, expect } from '@playwright/test';
-import { Common, setupBrowser } from '../utils/Common';
-import { ThemeVerifier } from '../utils/custom-theme/theme-verifier';
-import { customIcon } from '../support/testData/custom-theme';
+import { test, Page, TestInfo, expect } from "@playwright/test";
+import { Common, setupBrowser } from "../utils/common";
+import { ThemeVerifier } from "../utils/custom-theme/theme-verifier";
+import {
+  CUSTOM_TAB_ICON,
+  CUSTOM_BRAND_ICON,
+} from "../support/testData/custom-theme";
+import { ThemeConstants } from "../data/theme-constants";
 
 let page: Page;
 
-test.describe('CustomTheme should be applied', () => {
+test.describe("CustomTheme should be applied", () => {
   let common: Common;
   let themeVerifier: ThemeVerifier;
 
@@ -18,37 +22,37 @@ test.describe('CustomTheme should be applied', () => {
   });
 
   // eslint-disable-next-line no-empty-pattern
-  test('Verify that theme light colors are applied and make screenshots', async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme('Light');
-    await themeVerifier.verifyHeaderGradient(
-      'none, linear-gradient(90deg, rgb(248, 248, 248), rgb(248, 248, 248))',
-    );
-    await themeVerifier.verifyBorderLeftColor('rgb(255, 95, 21)');
-    await themeVerifier.takeScreenshotAndAttach(
-      'screenshots/custom-theme-light-inspection.png',
-      testInfo,
-      'custom-theme-light-inspection',
-    );
-    //await themeVerifier.verifyPrimaryColors('rgb(255, 95, 21)') //TODO: comment out when the primary color issue is fixed (RHIDP-3107)
+  test("Verify theme colors are applied and make screenshots", async ({}, testInfo: TestInfo) => {
+    const themes = ThemeConstants.getThemes();
+
+    for (const theme of themes) {
+      await themeVerifier.setTheme(theme.name);
+      await themeVerifier.verifyHeaderGradient(
+        `none, linear-gradient(90deg, ${theme.headerColor1}, ${theme.headerColor2})`,
+      );
+      await themeVerifier.verifyBorderLeftColor(theme.navigationIndicatorColor);
+      await themeVerifier.takeScreenshotAndAttach(
+        `screenshots/custom-theme-${theme.name}-inspection.png`,
+        testInfo,
+        `custom-theme-${theme.name}-inspection`,
+      );
+      await themeVerifier.verifyPrimaryColors(theme.primaryColor);
+    }
   });
 
-  // eslint-disable-next-line no-empty-pattern
-  test('Verify that theme dark colors are applied and make screenshots', async ({}, testInfo: TestInfo) => {
-    await themeVerifier.setTheme('Dark');
-    await themeVerifier.verifyHeaderGradient(
-      'none, linear-gradient(90deg, rgb(0, 0, 208), rgb(255, 246, 140))',
+  test("Verify that tab icon for Backstage can be customized", async () => {
+    expect(await page.locator("#dynamic-favicon").getAttribute("href")).toEqual(
+      CUSTOM_TAB_ICON,
     );
-    await themeVerifier.verifyBorderLeftColor('rgb(244, 238, 169)');
-    await themeVerifier.takeScreenshotAndAttach(
-      'screenshots/custom-theme-dark-inspection.png',
-      testInfo,
-      'custom-theme-dark-inspection',
-    );
-    // await themeVerifier.verifyPrimaryColors('#ab75cf') //TODO: comment out when the primary color issue is fixed (RHIDP-3107)
   });
 
-  test('Verify that tab icon for Backstage can be customized', async () => {
-    const tabIcon = await page.locator('#dynamic-favicon').getAttribute('href');
-    expect(tabIcon).toEqual(customIcon);
+  test("Verify that brand icon for Backstage can be customized", async () => {
+    expect(await page.getByTestId("home-logo").getAttribute("src")).toEqual(
+      CUSTOM_BRAND_ICON,
+    );
+  });
+
+  test("Verify that title for Backstage can be customized", async () => {
+    await expect(page).toHaveTitle(/Red Hat Developer Hub/);
   });
 });

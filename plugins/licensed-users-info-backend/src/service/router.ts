@@ -1,28 +1,31 @@
+import { DatabaseManager } from '@backstage/backend-defaults/database';
 import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
-import {
+import type {
   AuthService,
   BackstageCredentials,
   DiscoveryService,
   HttpAuthService,
+  LifecycleService,
   LoggerService,
   PermissionsService,
   RootConfigService,
 } from '@backstage/backend-plugin-api';
+import { CatalogClient } from '@backstage/catalog-client';
+import { NotAllowedError } from '@backstage/errors';
+import { AuthorizeResult } from '@backstage/plugin-permission-common';
+
+import { policyEntityReadPermission } from '@backstage-community/plugin-rbac-common';
 import express from 'express';
 import Router from 'express-promise-router';
-import { DatabaseManager } from '@backstage/backend-defaults/database';
+import { json2csv } from 'json-2-csv';
+import { DateTime } from 'luxon';
+
 import {
   DatabaseUserInfoStore,
   UserInfoRow,
 } from '../database/databaseUserInfoStore';
 import { CatalogEntityStore } from './catalogStore';
 import { readBackstageTokenExpiration } from './readBackstageTokenExpiration';
-import { json2csv } from 'json-2-csv';
-import { CatalogClient } from '@backstage/catalog-client';
-import { NotAllowedError } from '@backstage/errors';
-import { AuthorizeResult } from '@backstage/plugin-permission-common';
-import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
-import { DateTime } from 'luxon';
 
 export interface RouterOptions {
   logger: LoggerService;
@@ -31,6 +34,7 @@ export interface RouterOptions {
   discovery: DiscoveryService;
   permissions: PermissionsService;
   httpAuth: HttpAuthService;
+  lifecycle: LifecycleService;
 }
 
 export type UserInfoResponse = {
@@ -44,12 +48,13 @@ export type UserInfoResponse = {
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, config, auth, discovery, permissions, httpAuth } = options;
+  const { logger, config, auth, discovery, permissions, httpAuth, lifecycle } =
+    options;
 
   const tokenExpiration = readBackstageTokenExpiration(config);
 
   const authDB = await DatabaseManager.fromConfig(options.config)
-    .forPlugin('auth')
+    .forPlugin('auth', { logger, lifecycle })
     .getClient();
 
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
@@ -98,7 +103,7 @@ export async function createRouter(
 
     if (request.headers['content-type']?.includes('text/csv')) {
       try {
-        const csv = await json2csv(users, {
+        const csv = json2csv(users, {
           keys: ['userEntityRef', 'displayName', 'email', 'lastAuthTime'],
         });
         response.header('Content-Type', 'text/csv');

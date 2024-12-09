@@ -1,0 +1,109 @@
+# Copyright 2023-2024 The Janus IDP Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: PR
+
+on:
+  pull_request:
+
+env:
+  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
+  TURBO_SCM_HEAD: ${{ github.sha }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build with Node.js ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup local Turbo cache
+        uses: dtinth/setup-github-actions-caching-for-turbo@cc723b4600e40a6b8815b65701d8614b91e2669e # v1
+
+      - name: Use app-config.example.yaml
+        run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
+
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@25145dd4117d50e1da9330e9ed2893bc6b75373e # v0.6.15
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+
+      - name: Build packages
+        run: yarn run build --continue --affected
+
+  test:
+    name: Test with Node.js ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup local Turbo cache
+        uses: dtinth/setup-github-actions-caching-for-turbo@cc723b4600e40a6b8815b65701d8614b91e2669e # v1
+
+      - name: Use app-config.example.yaml
+        run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
+
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@25145dd4117d50e1da9330e9ed2893bc6b75373e # v0.6.15
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+
+      - name: Run prettier
+        run: yarn prettier:check --continue --affected
+
+      - name: Run lint
+        run: yarn run lint:check --continue --affected
+
+      - name: Run monorepo tools
+        run: yarn run monorepo:check
+
+      - name: Regenerate dockerfiles
+        run: |
+          yarn run build:dockerfile; if [[ $(git diff --name-only | grep Dockerfile || true) != "" ]]; then \
+            echo "ERROR: Workspace is dirty! Must run 'yarn build:dockerfile' and commit changes!"; exit 1; \
+          fi
+
+      - name: Run tests
+        run: yarn run test --continue --affected
+
+      - name: Verify wrappers
+        run: yarn workspace dynamic-plugins-utils run test:wrappers

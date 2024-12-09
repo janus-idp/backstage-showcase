@@ -1,5 +1,5 @@
-import { Page } from '@playwright/test';
-import { UIhelperPO } from '../../support/pageObjects/global-obj';
+import { Page } from "@playwright/test";
+import { UI_HELPER_ELEMENTS } from "../../support/pageObjects/global-obj";
 
 export class ImageRegistry {
   static getAllCellsIdentifier() {
@@ -11,7 +11,7 @@ export class ImageRegistry {
     );
     const size = /(GB|MB)/;
     const expires =
-      '^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{1,2}:\\d{2}:\\d{2} [\\+\\-]\\d{4}$';
+      "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4} \\d{1,2}:\\d{2}:\\d{2} [\\+\\-]\\d{4}$";
     const expiresRegex = new RegExp(expires);
     const manifest = /sha256/;
 
@@ -27,29 +27,29 @@ export class ImageRegistry {
 
   static getAllGridColumnsText() {
     return [
-      'Tag',
-      'Last Modified',
-      'Security Scan',
-      'Size',
-      'Expires',
-      'Manifest',
+      "Tag",
+      "Last Modified",
+      "Security Scan",
+      "Size",
+      "Expires",
+      "Manifest",
     ];
   }
 
   static securityScanRegex() {
-    const securityScan = ['Critical', 'High', 'Medium', 'Low', 'Unknown'].map(
-      i => `(${i}:\\s\\d+[^\\w]*)`,
+    const securityScan = ["Critical", "High", "Medium", "Low", "Unknown"].map(
+      (i) => `(${i}:\\s\\d+[^\\w]*)`,
     );
-    return new RegExp(`^(Passed|unsupported|(?:${securityScan.join('|')})+)$`);
+    return new RegExp(`^(Passed|unsupported|(?:${securityScan.join("|")})+)$`);
   }
 
   static getAllScanColumnsText() {
     return [
-      'Advisory',
-      'Severity',
-      'Package Name',
-      'Current Version',
-      'Fixed By',
+      "Advisory",
+      "Severity",
+      "Package Name",
+      "Current Version",
+      "Fixed By",
     ];
   }
 
@@ -63,7 +63,7 @@ export class ImageRegistry {
 
   static async getScanCell(page: Page) {
     const locator = page
-      .locator(UIhelperPO.MuiTableCell)
+      .locator(UI_HELPER_ELEMENTS.MuiTableCell)
       .filter({ hasText: this.securityScanRegex() });
     await locator.first().waitFor();
     return locator.first();

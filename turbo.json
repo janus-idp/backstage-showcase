@@ -1,9 +1,16 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "globalDependencies": [
+    "app-config.dynamic-plugins.yaml",
+    "dynamic-plugins.default.yaml"
+  ],
+  "tasks": {
     "export-dynamic": {
-      "outputs": ["dist-dynamic/**"],
-      "dependsOn": ["//#tsc"]
+      "dependsOn": ["tsc"]
+    },
+    "export-dynamic:clean": {
+      "cache": false,
+      "dependsOn": ["tsc"]
     },
     "start": {
       "cache": false,
@@ -11,11 +18,7 @@
     },
     "build": {
       "outputs": ["dist/**"],
-      "dependsOn": ["//#tsc", "^build"]
-    },
-    "app#build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "tsc", "export-dynamic"]
     },
     "clean": {
       "cache": false
@@ -23,19 +26,17 @@
     "test": {
       "outputs": ["coverage/**"]
     },
-    "lint": {},
-    "//#tsc": {
-      "outputs": ["dist-types/**"],
-      "dependsOn": ["^tsc"]
-    },
-    "//#prettier:fix": {
+    "lint:check": {},
+    "lint:fix": {
       "cache": false
+    },
+    "prettier:check": {},
+    "prettier:fix": {
+      "cache": false
+    },
+    "tsc": {
+      "outputs": ["../../dist-types/**"],
+      "dependsOn": ["^tsc"]
     }
-  },
-  "globalDependencies": [
-    ".prettierrc.js",
-    ".eslintrc.js",
-    "tsconfig.json",
-    "yarn.lock"
-  ]
+  }
 }

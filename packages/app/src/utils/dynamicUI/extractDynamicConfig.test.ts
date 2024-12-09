@@ -1,9 +1,10 @@
+import { Entity } from '@backstage/catalog-model';
+
 import extractDynamicConfig, {
-  DynamicPluginConfig,
   conditionsArrayMapper,
   configIfToCallable,
+  DynamicPluginConfig,
 } from './extractDynamicConfig';
-import { Entity } from '@backstage/catalog-model';
 
 describe('conditionsArrayMapper', () => {
   it.each([
@@ -150,11 +151,13 @@ describe('extractDynamicConfig', () => {
       routeBindings: [],
       dynamicRoutes: [],
       entityTabs: [],
+      menuItems: [],
       mountPoints: [],
       appIcons: [],
       routeBindingTargets: [],
       apiFactories: [],
       scaffolderFieldExtensions: [],
+      themes: [],
     });
   });
 
@@ -236,6 +239,15 @@ describe('extractDynamicConfig', () => {
             path: '/foo',
             scope: 'janus-idp.plugin-foo',
             menuItem: { icon: 'foo', text: 'Foo' },
+          },
+        ],
+        menuItems: [
+          {
+            children: [],
+            icon: 'foo',
+            name: 'foo',
+            title: 'Foo',
+            to: '/foo',
           },
         ],
       },
@@ -498,10 +510,12 @@ describe('extractDynamicConfig', () => {
       routeBindingTargets: [],
       dynamicRoutes: [],
       entityTabs: [],
+      menuItems: [],
       mountPoints: [],
       appIcons: [],
       apiFactories: [],
       scaffolderFieldExtensions: [],
+      themes: [],
       ...output,
     });
   });

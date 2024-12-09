@@ -1,6 +1,13 @@
 import { AppsConfig, processManifest } from '@scalprum/core';
 import { ScalprumState } from '@scalprum/react-core';
+
 import { RemotePlugins } from '../../components/DynamicRoot/DynamicRootContext';
+
+// See packages/app/src/App.tsx
+const ignoreStaticPlugins = [
+  'default.main-menu-items',
+  'internal.plugin-dynamic-plugins-info',
+];
 
 const initializeRemotePlugins = async (
   pluginStore: ScalprumState['pluginStore'],
@@ -14,15 +21,15 @@ const initializeRemotePlugins = async (
   );
   let remotePlugins = await Promise.all(
     requiredModules
-      .filter(({ scope }) => !scope.startsWith('@internal'))
+      .filter(({ scope }) => !ignoreStaticPlugins.includes(scope))
       .map(({ scope, module }) =>
         pluginStore
           .getExposedModule<{
             [importName: string]: React.ComponentType<{}>;
           }>(scope, module)
-          .catch(() => {
+          .catch(error => {
             // eslint-disable-next-line no-console
-            console.error(`Failed to load plugin ${scope}`);
+            console.error(`Failed to load plugin ${scope}`, error);
             return undefined;
           })
           .then(remoteModule => ({

@@ -1,3 +1,5 @@
+import React, { PropsWithChildren, useContext, useState } from 'react';
+
 import {
   Sidebar,
   SidebarDivider,
@@ -7,23 +9,29 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
-import { IconComponent, useApp } from '@backstage/core-plugin-api';
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
+import { usePermission } from '@backstage/plugin-permission-react';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
+
+import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import CreateComponentIcon from '@mui/icons-material/AddCircleOutline';
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
-import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import MuiMenuIcon from '@mui/icons-material/Menu';
-import GroupIcon from '@mui/icons-material/People';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import SearchIcon from '@mui/icons-material/Search';
-import React, { PropsWithChildren, useContext } from 'react';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import { makeStyles } from 'tss-react/mui';
-import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
+
+import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+
+import DynamicRootContext, {
+  ResolvedMenuItem,
+} from '../DynamicRoot/DynamicRootContext';
+import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
 
 const useStyles = makeStyles()({
@@ -47,15 +55,198 @@ const SideBarItemWrapper = (props: SidebarItemProps) => {
   );
 };
 
-export const MenuIcon = ({ icon }: { icon: string }) => {
-  const app = useApp();
+const renderIcon = (iconName: string) => () => <MenuIcon icon={iconName} />;
 
-  const Icon = app.getSystemIcon(icon) || (() => null);
-  return <Icon />;
+const renderExpandIcon = (expand: boolean, isSecondLevelMenuItem = false) => {
+  return expand ? (
+    <ExpandMore
+      fontSize="small"
+      style={{
+        display: 'flex',
+        marginLeft: isSecondLevelMenuItem ? '' : '0.5rem',
+      }}
+    />
+  ) : (
+    <ChevronRightIcon
+      fontSize="small"
+      style={{
+        display: 'flex',
+        marginLeft: isSecondLevelMenuItem ? '' : '0.5rem',
+      }}
+    />
+  );
+};
+
+const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
+  const menuItemStyle = {
+    paddingLeft: isNestedMenuItem ? '2rem' : '',
+  };
+  return menuItem.name === 'default.my-group' ? (
+    <Box key={menuItem.name} sx={{ '& a': menuItemStyle }}>
+      <MyGroupsSidebarItem
+        key={menuItem.name}
+        icon={renderIcon(menuItem.icon ?? '')}
+        singularTitle={menuItem.title}
+        pluralTitle={`${menuItem.title}s`}
+      />
+    </Box>
+  ) : (
+    <SideBarItemWrapper
+      key={menuItem.name}
+      icon={renderIcon(menuItem.icon ?? '')}
+      to={menuItem.to ?? ''}
+      text={menuItem.title}
+      style={menuItemStyle}
+    />
+  );
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const { dynamicRoutes, mountPoints } = useContext(DynamicRootContext);
+  const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
+  const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
+
+  const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
+    usePermission({
+      permission: policyEntityReadPermission,
+      resourceRef: policyEntityReadPermission.resourceType,
+    });
+
+  const handleClick = (itemName: string) => {
+    setOpenItems(prevOpenItems => ({
+      ...prevOpenItems,
+      [itemName]: !prevOpenItems[itemName],
+    }));
+  };
+
+  const renderExpandableNestedMenuItems = (
+    menuItem: ResolvedMenuItem,
+    isSubMenuOpen: boolean,
+  ) => {
+    return (
+      <>
+        {menuItem.children &&
+          menuItem.children.length > 0 &&
+          menuItem.children?.map(child => (
+            <Collapse
+              key={child.name}
+              in={isSubMenuOpen}
+              timeout="auto"
+              unmountOnExit
+            >
+              <List
+                disablePadding
+                sx={{
+                  paddingLeft: '4rem',
+                  fontSize: 12,
+                  '& span.MuiTypography-subtitle2': { fontSize: 12 },
+                  '& div': { width: '36px', boxShadow: '-1px 0 0 0 #3c3f42' },
+                }}
+              >
+                <SideBarItemWrapper
+                  icon={() => null}
+                  text={child.title}
+                  to={child.to ?? ''}
+                />
+              </List>
+            </Collapse>
+          ))}
+      </>
+    );
+  };
+  const renderExpandableMenuItems = (
+    menuItem: ResolvedMenuItem,
+    isOpen: boolean,
+  ) => {
+    return (
+      <>
+        {menuItem.children &&
+          menuItem.children.length > 0 &&
+          menuItem.children?.map(child => {
+            const isNestedMenuOpen = openItems[child.name] || false;
+            return (
+              <Collapse
+                key={child.name}
+                in={isOpen}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List disablePadding>
+                  {child.children && child.children.length === 0 && (
+                    <ListItem disableGutters disablePadding>
+                      {getMenuItem(child, true)}
+                    </ListItem>
+                  )}
+                  {child.children && child.children.length > 0 && (
+                    <ListItem
+                      disableGutters
+                      disablePadding
+                      sx={{
+                        display: 'block',
+                        '& .MuiButton-label': { paddingLeft: '2rem' },
+                      }}
+                    >
+                      <SideBarItemWrapper
+                        key={child.name}
+                        icon={renderIcon(child.icon ?? '')}
+                        text={child.title}
+                        onClick={() => handleClick(child.name)}
+                      >
+                        {child.children.length > 0 &&
+                          renderExpandIcon(isNestedMenuOpen, true)}
+                      </SideBarItemWrapper>
+                      {renderExpandableNestedMenuItems(child, isNestedMenuOpen)}
+                    </ListItem>
+                  )}
+                </List>
+              </Collapse>
+            );
+          })}
+      </>
+    );
+  };
+
+  const renderMenuItems = (
+    isDefaultMenuSection: boolean,
+    isBottomMenuSection: boolean,
+  ) => {
+    let menuItemArray = isDefaultMenuSection
+      ? menuItems.filter(mi => mi.name.startsWith('default.'))
+      : menuItems.filter(mi => !mi.name.startsWith('default.'));
+
+    menuItemArray = isBottomMenuSection
+      ? menuItemArray.filter(mi => mi.name === 'admin')
+      : menuItemArray.filter(mi => mi.name !== 'admin');
+
+    if (isBottomMenuSection && !canDisplayRBACMenuItem && !loadingPermission) {
+      menuItemArray[0].children = menuItemArray[0].children?.filter(
+        mi => mi.name !== 'rbac',
+      );
+    }
+    return (
+      <>
+        {menuItemArray.map(menuItem => {
+          const isOpen = openItems[menuItem.name] || false;
+          return (
+            <React.Fragment key={menuItem.name}>
+              {menuItem.children!.length === 0 && getMenuItem(menuItem)}
+              {menuItem.children!.length > 0 && (
+                <SideBarItemWrapper
+                  key={menuItem.name}
+                  icon={renderIcon(menuItem.icon ?? '')}
+                  text={menuItem.title}
+                  onClick={() => handleClick(menuItem.name)}
+                >
+                  {menuItem.children!.length > 0 && renderExpandIcon(isOpen)}
+                </SideBarItemWrapper>
+              )}
+              {menuItem.children!.length > 0 &&
+                renderExpandableMenuItems(menuItem, isOpen)}
+            </React.Fragment>
+          );
+        })}
+      </>
+    );
+  };
   return (
     <SidebarPage>
       <Sidebar>
@@ -66,56 +257,18 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
-          <SideBarItemWrapper
-            icon={HomeOutlinedIcon as any}
-            to="/"
-            text="Home"
-          />
-          <MyGroupsSidebarItem
-            icon={GroupIcon as any}
-            singularTitle="My Group"
-            pluralTitle="My Groups"
-          />
-          <SideBarItemWrapper
-            icon={CategoryOutlinedIcon as IconComponent}
-            to="catalog"
-            text="Catalog"
-          />
-          <SideBarItemWrapper
-            icon={ExtensionOutlinedIcon as IconComponent}
-            to="api-docs"
-            text="APIs"
-          />
-          <SideBarItemWrapper
-            icon={SchoolOutlinedIcon as IconComponent}
-            to="learning-paths"
-            text="Learning Paths"
-          />
-          <SideBarItemWrapper
-            icon={CreateComponentIcon as IconComponent}
-            to="create"
-            text="Create..."
-          />
+          {renderMenuItems(true, false)}
           {/* End global nav */}
           <SidebarDivider />
           <SidebarScrollWrapper>
+            {renderMenuItems(false, false)}
             {dynamicRoutes.map(({ scope, menuItem, path }) => {
-              if (menuItem) {
-                if ('Component' in menuItem) {
-                  return (
-                    <menuItem.Component
-                      {...(menuItem.config?.props || [])}
-                      key={`${scope}/${path}`}
-                      to={path}
-                    />
-                  );
-                }
+              if (menuItem && 'Component' in menuItem) {
                 return (
-                  <SideBarItemWrapper
+                  <menuItem.Component
+                    {...(menuItem.config?.props || {})}
                     key={`${scope}/${path}`}
-                    icon={() => <MenuIcon icon={menuItem.icon} />}
                     to={path}
-                    text={menuItem.text}
                   />
                 );
               }
@@ -125,19 +278,16 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
-        {Object.keys(mountPoints).some(scope =>
-          scope.startsWith('admin.page'),
-        ) ? (
-          <SideBarItemWrapper
-            icon={AdminPanelSettingsOutlinedIcon as IconComponent}
-            to="/admin"
-            text="Administration"
-          />
-        ) : (
-          <></>
-        )}
-        <SidebarGroup label="Settings" to="/settings">
-          <SidebarSettings icon={AccountCircleOutlinedIcon as IconComponent} />
+        <SidebarGroup label="Administration" icon={<AdminIcon />}>
+          {renderMenuItems(false, true)}
+        </SidebarGroup>
+        <SidebarDivider />
+        <SidebarGroup
+          label="Settings"
+          to="/settings"
+          icon={<AccountCircleOutlinedIcon />}
+        >
+          <SidebarSettings icon={AccountCircleOutlinedIcon} />
         </SidebarGroup>
       </Sidebar>
       {children}

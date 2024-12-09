@@ -1,7 +1,12 @@
 import React, { createContext } from 'react';
 
 import { Entity } from '@backstage/catalog-model';
-import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
+import {
+  AnyApiFactory,
+  AppTheme,
+  BackstagePlugin,
+} from '@backstage/core-plugin-api';
+
 import { ScalprumComponentProps } from '@scalprum/react-core';
 
 export type RouteBinding = {
@@ -11,7 +16,7 @@ export type RouteBinding = {
   };
 };
 
-export type ResolvedMenuItem =
+export type ResolvedDynamicRouteMenuItem =
   | {
       text: string;
       icon: string;
@@ -23,6 +28,15 @@ export type ResolvedMenuItem =
       };
     };
 
+export type ResolvedMenuItem = {
+  name: string;
+  title: string;
+  icon?: string;
+  children?: ResolvedMenuItem[];
+  to?: string;
+  priority?: number;
+};
+
 export type DynamicModuleEntry = Pick<
   ScalprumComponentProps,
   'scope' | 'module'
@@ -30,7 +44,7 @@ export type DynamicModuleEntry = Pick<
 
 export type ResolvedDynamicRoute = DynamicModuleEntry & {
   path: string;
-  menuItem?: ResolvedMenuItem;
+  menuItem?: ResolvedDynamicRouteMenuItem;
   Component: React.ComponentType<any>;
   staticJSXContent?: React.ReactNode;
   config: {
@@ -89,6 +103,8 @@ export type EntityTabOverrides = Record<
 
 export type MountPoints = Record<string, ScalprumMountPoint[]>;
 
+export type AppThemeProvider = Partial<AppTheme> & Omit<AppTheme, 'theme'>;
+
 export type ScaffolderFieldExtension = {
   scope: string;
   module: string;
@@ -100,6 +116,7 @@ export type DynamicRootConfig = {
   dynamicRoutes: ResolvedDynamicRoute[];
   entityTabOverrides: EntityTabOverrides;
   mountPoints: MountPoints;
+  menuItems: ResolvedMenuItem[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
 };
 
@@ -114,6 +131,7 @@ const DynamicRootContext = createContext<ComponentRegistry>({
   dynamicRoutes: [],
   entityTabOverrides: {},
   mountPoints: {},
+  menuItems: [],
   scaffolderFieldExtensions: [],
 });
 

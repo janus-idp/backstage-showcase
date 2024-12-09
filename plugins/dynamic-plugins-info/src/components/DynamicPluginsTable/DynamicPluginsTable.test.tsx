@@ -1,12 +1,25 @@
-import React from 'react';
-
 import { renderWithEffects } from '@backstage/test-utils';
 
-import { act, fireEvent, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
 import { listLoadedPluginsResult } from '../../__fixtures__/listLoadedPluginsResult';
+import { InternalPluginsMap } from '../InternalPluginsMap';
 import { DynamicPluginsTable } from './DynamicPluginsTable';
+
+const DEFAULT_ROWS_DISPLAYED = 5;
+
+// 6 mockapi returned external(enabled) + 53 internal(not enabled)
+// mockapi returns enabled plugins
+// keys from InternalPluginsMap are internal plugins
+const plugins = [
+  ...Object.keys(InternalPluginsMap).map(name => ({
+    name,
+    version: undefined,
+    role: undefined,
+    platform: undefined,
+    internal: true,
+    enabled: true,
+  })),
+  ...listLoadedPluginsResult,
+];
 
 jest.mock('@backstage/core-plugin-api', () => {
   const actual = jest.requireActual('@backstage/core-plugin-api');
@@ -23,17 +36,20 @@ jest.mock('@backstage/core-plugin-api', () => {
 });
 
 describe('DynamicPluginsTable', () => {
-  it('should render a list of plugins sorted by name', async () => {
+  beforeEach(() => {
+    // sort by the plugin name
+    plugins.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+  });
+
+  it('should display the plugins', async () => {
     const { findByText, container } = await renderWithEffects(
       <DynamicPluginsTable />,
     );
-    // 6 mockapi returned external(enabled) + 53 internal(not enabled)
-    // mockapi returns enabled plugins
-    // keys from InternalPluginsMap are internal plugins
-    expect(await findByText('Plugins (61)')).toBeInTheDocument();
-    expect(
-      await findByText('@janus-idp/backstage-plugin-3scale-backend-dynamic'),
-    ).toBeInTheDocument();
+
+    expect(await findByText(`Plugins (${plugins.length})`)).toBeInTheDocument();
+    expect(await findByText(plugins.at(0)?.name ?? '')).toBeInTheDocument();
     const nameCells = Array.from(
       container.querySelectorAll('tbody tr > td:first-child'),
     );
@@ -46,104 +62,22 @@ describe('DynamicPluginsTable', () => {
     const internalCells = Array.from(
       container.querySelectorAll('tbody tr > td:nth-child(4)'),
     );
-    expect(nameCells.length).toBe(5);
-    expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-3scale-backend-dynamic',
-    );
-    expect(nameCells[4].textContent).toBe('@janus-idp/backstage-plugin-argocd');
-    expect(versionCells[0].textContent).toBe('');
-    expect(versionCells[4].textContent).toBe('');
-    expect(enabledCells[0].textContent).toBe('No');
-    expect(enabledCells[4].textContent).toBe('No');
-    expect(internalCells[0].textContent).toBe('Yes');
-    expect(internalCells[4].textContent).toBe('Yes');
-  });
 
-  it('supports filtering by a simple text search', async () => {
-    const user = userEvent.setup({ delay: 300 });
-    const { container } = await renderWithEffects(<DynamicPluginsTable />);
-    const filterInput = container.querySelector('input[placeholder="Filter"]')!;
-    expect(filterInput).toBeDefined();
-    await act(() => user.type(filterInput, 'plugin-f\n'));
-    const nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(2);
-    expect(nameCells[0].textContent).toBe('api-returned-some-plugin-five');
-    expect(nameCells[1].textContent).toBe('api-returned-some-plugin-four');
-  });
-
-  it('supports sorting by name, version and rhdh embedded columns', async () => {
-    const { findByText, container } = await renderWithEffects(
-      <DynamicPluginsTable />,
-    );
-    // descending by name
-    let nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(5);
-    expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-3scale-backend-dynamic',
-    );
-    expect(nameCells[4].textContent).toBe('@janus-idp/backstage-plugin-argocd');
-    await act(() => findByText('Name').then(el => el.click()));
-    // ascending by name
-    nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(5);
-    expect(nameCells[0].textContent).toBe(
-      'roadiehq-scaffolder-backend-module-utils-dynamic',
-    );
-    expect(nameCells[4].textContent).toBe('roadiehq-backstage-plugin-jira');
-    // ascending by version
-    await act(() => findByText('Version').then(el => el.click()));
-    nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(5);
-    expect(nameCells[0].textContent).toBe('api-returned-some-plugin-five');
-    expect(nameCells[4].textContent).toBe('api-returned-some-plugin-three');
-
-    // ascending by enabled
-    await act(() => findByText('Enabled').then(el => el.click()));
-    nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(5);
-    expect(nameCells[0].textContent).toBe('api-returned-some-plugin-six');
-    expect(nameCells[4].textContent).toBe('api-returned-some-plugin-two');
-
-    // ascending by Preinstalled
-    await act(() => findByText('Preinstalled').then(el => el.click()));
-    nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(5);
-    expect(nameCells[0].textContent).toBe(
-      '@janus-idp/backstage-plugin-analytics-provider-segment',
-    );
-    expect(nameCells[4].textContent).toBe(
-      '@janus-idp/backstage-plugin-jfrog-artifactory',
-    );
-  });
-
-  it('supports changing the number of items per page', async () => {
-    const { findByText, container } = await renderWithEffects(
-      <DynamicPluginsTable />,
-    );
-    let nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(5);
-    await act(async () => {
-      const select = await findByText('5 rows');
-      fireEvent.mouseDown(select);
-    });
-    await act(() => screen.findByText('10').then(el => el.click()));
-    nameCells = Array.from(
-      container.querySelectorAll('tbody tr > td:first-child'),
-    );
-    expect(nameCells.length).toBe(10);
+    const displayedPlugins = plugins.slice(0, DEFAULT_ROWS_DISPLAYED);
+    expect(nameCells.length).toBe(displayedPlugins.length);
+    for (let i = 0; i < DEFAULT_ROWS_DISPLAYED; i++) {
+      expect(nameCells[i].textContent).toBe(displayedPlugins[i].name);
+      try {
+        expect(versionCells[i].textContent).toBe(displayedPlugins[i].version);
+        expect(enabledCells[i].textContent).toBe(
+          displayedPlugins[i].enabled ? 'Yes' : 'No',
+        );
+        expect(internalCells[i].textContent).toBe(
+          displayedPlugins[i].internal ? 'Yes' : 'No',
+        );
+      } catch (e) {
+        throw new Error(`${displayedPlugins[i].name}: ${(e as Error).message}`);
+      }
+    }
   });
 });

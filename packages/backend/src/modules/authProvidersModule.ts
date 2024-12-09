@@ -1,28 +1,29 @@
 import {
-  providers,
-  defaultAuthProviderFactories,
-  ProviderFactories,
-} from '@backstage/plugin-auth-backend';
-import {
-  stringifyEntityRef,
-  DEFAULT_NAMESPACE,
-} from '@backstage/catalog-model';
-import {
-  AuthProviderFactory,
-  AuthResolverCatalogUserQuery,
-  AuthResolverContext,
-  authProvidersExtensionPoint,
-  createOAuthProviderFactory,
-} from '@backstage/plugin-auth-node';
-import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
 import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
+import { ConfigSources } from '@backstage/config-loader';
+import {
+  defaultAuthProviderFactories,
+  ProviderFactories,
+  providers,
+} from '@backstage/plugin-auth-backend';
+import {
   oidcAuthenticator,
   oidcSignInResolvers,
-} from '@internal/plugin-auth-backend-module-oidc-provider';
-import { ConfigSources } from '@backstage/config-loader';
+} from '@backstage/plugin-auth-backend-module-oidc-provider';
+import {
+  AuthProviderFactory,
+  authProvidersExtensionPoint,
+  AuthResolverCatalogUserQuery,
+  AuthResolverContext,
+  createOAuthProviderFactory,
+} from '@backstage/plugin-auth-node';
+
 /**
  * Function is responsible for signing in a user with the catalog user and
  * creating an entity reference based on the provided name parameter.
@@ -31,13 +32,11 @@ import { ConfigSources } from '@backstage/config-loader';
  *
  * @param name
  * @param ctx
- * @param enableDangerouslyAllowSignInWithoutUserInCatalog
  * @returns
  */
 async function signInWithCatalogUserOptional(
   name: string | AuthResolverCatalogUserQuery,
   ctx: AuthResolverContext,
-  enableDangerouslyAllowSignInWithoutUserInCatalog?: boolean,
 ) {
   try {
     const query: AuthResolverCatalogUserQuery =
@@ -55,14 +54,13 @@ async function signInWithCatalogUserOptional(
     );
     const dangerouslyAllowSignInWithoutUserInCatalog =
       config.getOptionalBoolean('dangerouslyAllowSignInWithoutUserInCatalog') ||
-      enableDangerouslyAllowSignInWithoutUserInCatalog ||
       false;
     if (!dangerouslyAllowSignInWithoutUserInCatalog) {
       throw new Error(
-        `Sign in failed: users/groups have not been ingested into the catalog. Please refer to the authentication provider docs for more information on how to ingest users/groups to the catalog with the appropriate entity provider.`,
+        `Sign in failed: User not found in the RHDH software catalog. Verify that users/groups are synchronized to the software catalog. For non-production environments, manually provision the user or disable the user provisioning requirement. Refer to the RHDH Authentication documentation for further details.`,
       );
     }
-    let entityRef: string = name === 'string' ? name : '';
+    let entityRef: string = typeof name === 'string' ? name : '';
     if (typeof name !== 'string' && 'annotations' in name)
       entityRef = Object.values(name.annotations)[0];
     const userEntityRef = stringifyEntityRef({
@@ -160,8 +158,7 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `GitHub user profile does not contain a username`,
               );
             }
-            // enable dangerouslyAllowSignInWithoutUserInCatalog option temporarily for GitHub
-            return await signInWithCatalogUserOptional(userId, ctx, true);
+            return await signInWithCatalogUserOptional(userId, ctx);
           },
         },
       });
@@ -169,9 +166,11 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
       return providers.gitlab.create({
         signIn: {
           async resolver({ result: { fullProfile } }, ctx) {
-            const userId = fullProfile.id;
+            const userId = fullProfile.username;
             if (!userId) {
-              throw new Error(`GitLab user profile does not contain an id`);
+              throw new Error(
+                `GitLab user profile does not contain an username`,
+              );
             }
             return await signInWithCatalogUserOptional(userId, ctx);
           },

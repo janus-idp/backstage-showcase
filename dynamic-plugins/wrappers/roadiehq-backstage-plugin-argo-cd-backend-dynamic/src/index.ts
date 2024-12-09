@@ -1,1 +1,1 @@
-export { argocdPlugin as default } from './plugin';
+export { default } from "@roadiehq/backstage-plugin-argo-cd-backend/alpha";

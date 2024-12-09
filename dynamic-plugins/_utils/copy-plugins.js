@@ -13,7 +13,6 @@ const destination = process.argv[2];
 fs.mkdirSync(destination, { recursive: true });
 
 const wrappersDir = path.join('.', 'wrappers');
-const importsDir = path.join('.', 'imports');
 
 const wrappers = fs
   .readdirSync(wrappersDir, {
@@ -22,14 +21,7 @@ const wrappers = fs
   .filter(dirent => dirent.isDirectory())
   .map(dirent => path.join(wrappersDir, dirent.name));
 
-const imports = fs
-  .readdirSync(importsDir, {
-    withFileTypes: true,
-  })
-  .filter(dirent => dirent.isDirectory())
-  .map(dirent => path.join(importsDir, dirent.name));
-
-for (const directory of [...imports, ...wrappers]) {
+for (const directory of wrappers) {
   const distDynamicDir = path.join(directory, 'dist-dynamic');
 
   const packageToCopy = fs.existsSync(distDynamicDir)

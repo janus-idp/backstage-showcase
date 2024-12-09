@@ -1,10 +1,10 @@
-import { CatalogUsersPO } from '../../../support/pageObjects/catalog/catalog-users-obj';
-import Keycloak from '../../../utils/keycloak/keycloak';
-import { UIhelper } from '../../../utils/UIhelper';
-import { Common } from '../../../utils/Common';
-import { test, expect } from '@playwright/test';
+import { CatalogUsersPO } from "../../../support/pageObjects/catalog/catalog-users-obj";
+import Keycloak from "../../../utils/keycloak/keycloak";
+import { UIhelper } from "../../../utils/ui-helper";
+import { Common } from "../../../utils/common";
+import { test, expect } from "@playwright/test";
 
-test.describe('Test Keycloak plugin', () => {
+test.describe("Test Keycloak plugin", () => {
   let uiHelper: UIhelper;
   let keycloak: Keycloak;
   let common: Common;
@@ -22,7 +22,7 @@ test.describe('Test Keycloak plugin', () => {
     await CatalogUsersPO.visitBaseURL(page);
   });
 
-  test('Users on keycloak should match users on backstage', async ({
+  test("Users on keycloak should match users on backstage", async ({
     page,
   }) => {
     const keycloakUsers = await keycloak.getUsers(token);
@@ -35,7 +35,7 @@ test.describe('Test Keycloak plugin', () => {
       const backStageUser = backStageUsersLocator.nth(i);
       const backStageUserText = await backStageUser.textContent();
       const userFound = keycloakUsers.find(
-        user => user.username === backStageUserText,
+        (user) => user.username === backStageUserText,
       );
       expect(userFound).not.toBeNull();
 

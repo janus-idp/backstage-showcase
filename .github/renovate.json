@@ -5,144 +5,237 @@
     ":rebaseStalePrs",
     "group:allNonMajor",
     "default:pinDigestsDisabled",
-    "default:automergeBranchPush"
+    ":automergeBranch"
   ],
-  "python": {
-    "groupName": "python  ",
-    "additionalBranchPrefix": "python ",
-    "dependencyDashboardApproval": true,
-    "description": "require dashboard approval for all python dependencies due to potential conflicts"
-  },
-  "labels": ["kind/dependency upgrade"],
+  "labels": [
+    "kind/dependency upgrade"
+  ],
   "npm": {
     "minimumReleaseAge": "1 day"
   },
   "pip_requirements": {
-    "fileMatch": ["requirements.*\\.in"]
-  },
-  "docker": {
-    "digest": {
-      "enabled": false
-    }
+    "fileMatch": [
+      "requirements.*\\.in"
+    ]
   },
   "major": {
     "dependencyDashboardApproval": true
   },
+  "recreateWhen": "never",
   "packageRules": [
     {
-      "matchDatasources": ["docker"],
-      "groupName": ["Docker base images"]
+      "matchCategories": [
+        "python"
+      ],
+      "groupName": "python  ",
+      "additionalBranchPrefix": "python ",
+      "dependencyDashboardApproval": true,
+      "description": "require dashboard approval for all python dependencies due to potential conflicts"
     },
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "matchCategories": [
+        "docker"
+      ],
+      "digest": {
+        "enabled": false
+      }
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "groupName": "Docker base images"
+    },
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "matchCurrentVersion": "!/^0/",
-      "groupName": ["DevDependencies (non-major)"],
+      "groupName": "DevDependencies (non-major)",
       "automerge": true
     },
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["major"],
-      "groupName": ["DevDependencies "]
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "DevDependencies "
     },
     {
-      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "matchDepTypes": [
+        "dependencies",
+        "peerDependencies"
+      ],
       "groupName": "Dependencies (non-major)",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     },
     {
-      "matchDepTypes": ["dependencies", "peerDependencies"],
+      "matchDepTypes": [
+        "dependencies",
+        "peerDependencies"
+      ],
       "groupName": "Dependencies",
-      "matchUpdateTypes": ["major"]
+      "matchUpdateTypes": [
+        "major"
+      ]
     },
     {
-      "extends": ["packages:test"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "extends": [
+        "packages:test"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "matchCurrentVersion": "!/^0/",
       "groupName": "Test packages (non-major)",
       "automerge": true
     },
     {
-      "extends": ["packages:test"],
-      "matchUpdateTypes": ["major"],
+      "extends": [
+        "packages:test"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "Test packages "
     },
     {
-      "extends": ["packages:linters"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "extends": [
+        "packages:linters"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "matchCurrentVersion": "!/^0/",
       "groupName": "linters  (non-major)",
       "automerge": true
     },
     {
-      "extends": ["packages:linters"],
-      "matchUpdateTypes": ["major"],
+      "extends": [
+        "packages:linters"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "linters"
     },
     {
-      "extends": "monorepo:material-ui",
-      "matchUpdateTypes": ["patch", "minor"],
+      "extends": [
+        "monorepo:material-ui"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "groupName": "material-ui (non-major)",
       "automerge": true
     },
     {
-      "extends": "monorepo:material-ui",
-      "matchUpdateTypes": ["major"],
+      "extends": [
+        "monorepo:material-ui"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "material-ui"
     },
     {
-      "extends": "monorepo:react",
-      "matchUpdateTypes": ["patch", "minor"],
+      "extends": [
+        "monorepo:react"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "groupName": "react (non-major)",
       "automerge": true
     },
     {
-      "extends": "monorepo:react",
-      "matchUpdateTypes": ["major"],
+      "extends": [
+        "monorepo:react"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "react"
     },
     {
-      "extends": "monorepo:emotion",
-      "matchUpdateTypes": ["patch", "minor"],
+      "extends": [
+        "monorepo:emotion"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "groupName": "emotion (non-major)",
       "automerge": true
     },
     {
-      "extends": "monorepo:emotion",
-      "matchUpdateTypes": ["major"],
+      "extends": [
+        "monorepo:emotion"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "emotion"
     },
     {
-      "matchPackagePrefixes": ["@types/"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "groupName": "types (non-major)"
-    },
-    {
-      "matchPackagePrefixes": ["@types/"],
-      "matchUpdateTypes": ["major"],
-      "groupName": "types "
-    },
-    {
-      "matchPackagePatterns": [
-        "^@backstage/",
-        "^@backstage-community/",
-        "^@janus-idp/",
-        "^@immobiliarelabs/",
-        "^@roadiehq/",
-        "^@pagerduty/",
-        "^@internal/"
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
       ],
+      "groupName": "types (non-major)",
+      "matchPackageNames": [
+        "@types/{/,}**"
+      ]
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "groupName": "types ",
+      "matchPackageNames": [
+        "@types/{/,}**"
+      ]
+    },
+    {
       "description": "ignore updates to all backstage updates and 3rd party plugins",
-      "groupName": ["Backstage packages"],
+      "groupName": "Backstage packages",
       "dependencyDashboardApproval": true,
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": [
+        "/^@backstage//",
+        "/^@backstage-community//",
+        "/^@janus-idp//",
+        "/^@immobiliarelabs//",
+        "/^@roadiehq//",
+        "/^@pagerduty//",
+        "/^@internal//"
+      ]
     }
   ],
-  "ignorePaths": ["**/dist-dynamic/**"],
-  "ignoreDeps": ["@roadiehq/backstage-plugin-argo-cd"],
+  "ignorePaths": [
+    "**/dist-dynamic/**"
+  ],
+  "ignoreDeps": [
+    "@roadiehq/backstage-plugin-argo-cd"
+  ],
   "vulnerabilityAlerts": {
     "enabled": true,
-    "addLabels": ["kind/security"]
+    "addLabels": [
+      "kind/security"
+    ]
   },
   "osvVulnerabilityAlerts": true
 }

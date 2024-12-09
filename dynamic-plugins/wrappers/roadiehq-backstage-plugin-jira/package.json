@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-backstage-plugin-jira",
-  "version": "2.5.8",
+  "version": "2.8.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.27.7",
+    "supported-versions": "1.32.6",
     "pluginId": "roadiehq-jira",
     "pluginPackages": [
       "roadiehq-backstage-plugin-jira"
@@ -19,18 +19,21 @@
   },
   "sideEffects": false,
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-jira": "2.5.8"
+    "@roadiehq/backstage-plugin-jira": "2.8.0"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.13.1"
+    "@backstage/cli": "0.28.2",
+    "@janus-idp/cli": "1.18.5",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",

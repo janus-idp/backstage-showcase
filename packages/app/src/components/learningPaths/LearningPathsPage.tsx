@@ -1,17 +1,15 @@
 import { Content, Header, InfoCard, Page } from '@backstage/core-components';
 import { SearchContextProvider } from '@backstage/plugin-search-react';
+
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import React from 'react';
 import { makeStyles } from 'tss-react/mui';
+
 import { ErrorReport } from '../../common';
-import { LearningPathLinks } from '../../types/types';
-import {
-  learningPathPage,
-  useCustomizationData,
-} from '../../hooks/useCustomizationData';
+import { useLearningPathData } from '../../hooks/useLearningPathData';
+import { LearningPathLink } from '../../types/types';
 
 const useStyles = makeStyles()({
   infoCard: {
@@ -27,7 +25,7 @@ const useStyles = makeStyles()({
   },
 });
 
-const learningPathLengthInfo = (path: LearningPathLinks) => {
+const learningPathLengthInfo = (path: LearningPathLink) => {
   const hoursText = path.hours === 1 ? 'hour' : 'hours';
   const minutesText = path.minutes === 1 ? 'minute' : 'minutes';
 
@@ -40,11 +38,7 @@ const learningPathLengthInfo = (path: LearningPathLinks) => {
 const LearningPathCards = () => {
   const { classes } = useStyles();
 
-  const { data, error, isLoading } = useCustomizationData(learningPathPage) as {
-    data: LearningPathLinks[] | undefined;
-    error: Error | undefined;
-    isLoading: boolean;
-  };
+  const { data, error, isLoading } = useLearningPathData();
 
   if (isLoading) {
     return <CircularProgress />;

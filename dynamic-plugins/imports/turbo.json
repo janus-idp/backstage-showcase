@@ -1,8 +1,0 @@
-{
-  "extends": ["//"],
-  "pipeline": {
-    "export-dynamic": {
-      "cache": false
-    }
-  }
-}

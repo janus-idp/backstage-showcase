@@ -1,39 +1,47 @@
 {
   "name": "backstage-plugin-catalog-backend-module-ldap",
-  "version": "0.7.0",
+  "version": "0.9.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.29.2"
+    "supported-versions": "1.32.6",
+    "pluginId": "catalog",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ]
+    }
+  },
   "scripts": {
+    "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "tsc": "tsc",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-ldap --override-interop default --no-embed-as-dependencies"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-ldap",
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-catalog-backend-module-ldap": "0.7.0"
+    "@backstage/plugin-catalog-backend-module-ldap": "0.9.1"
   },
   "devDependencies": {
-    "@backstage/cli": "0.26.11",
-    "@janus-idp/cli": "1.13.1",
-    "typescript": "5.5.3"
+    "@backstage/cli": "0.28.2",
+    "@janus-idp/cli": "1.18.5",
+    "typescript": "5.6.3"
   },
   "files": [
     "dist",

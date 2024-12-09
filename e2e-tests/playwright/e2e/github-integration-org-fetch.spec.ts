@@ -1,9 +1,9 @@
-import { test, Page } from '@playwright/test';
-import { UIhelper } from '../utils/UIhelper';
-import { Common, setupBrowser } from '../utils/Common';
+import { test, Page } from "@playwright/test";
+import { UIhelper } from "../utils/ui-helper";
+import { Common, setupBrowser } from "../utils/common";
 
 let page: Page;
-test.describe.serial('GitHub integration with Org data fetching', () => {
+test.describe.serial("GitHub integration with Org data fetching", () => {
   let common: Common;
   let uiHelper: UIhelper;
 
@@ -14,30 +14,30 @@ test.describe.serial('GitHub integration with Org data fetching', () => {
     await common.loginAsGithubUser();
   });
 
-  test('Verify that fetching the groups of the first org works', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.selectMuiBox('Kind', 'Group');
+  test("Verify that fetching the groups of the first org works", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.selectMuiBox("Kind", "Group");
 
-    await uiHelper.searchInputPlaceholder('m');
-    await uiHelper.verifyRowsInTable(['maintainers']);
+    await uiHelper.searchInputPlaceholder("m");
+    await uiHelper.verifyRowsInTable(["maintainers"]);
 
-    await uiHelper.searchInputPlaceholder('r');
-    await uiHelper.verifyRowsInTable(['rhdh-qes']);
+    await uiHelper.searchInputPlaceholder("r");
+    await uiHelper.verifyRowsInTable(["rhdh-qes"]);
   });
 
-  test('Verify that fetching the groups of the second org works', async () => {
-    await uiHelper.searchInputPlaceholder('c');
-    await uiHelper.verifyRowsInTable(['catalog-group']);
+  test("Verify that fetching the groups of the second org works", async () => {
+    await uiHelper.searchInputPlaceholder("c");
+    await uiHelper.verifyRowsInTable(["catalog-group"]);
 
-    await uiHelper.searchInputPlaceholder('j');
-    await uiHelper.verifyRowsInTable(['janus-test']);
+    await uiHelper.searchInputPlaceholder("j");
+    await uiHelper.verifyRowsInTable(["janus-test"]);
   });
 
-  test('Verify that fetching the users of the orgs works', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.selectMuiBox('Kind', 'User');
+  test("Verify that fetching the users of the orgs works", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.selectMuiBox("Kind", "User");
 
-    await uiHelper.searchInputPlaceholder('r');
-    await uiHelper.verifyRowsInTable(['rhdh-qe']);
+    await uiHelper.searchInputPlaceholder("r");
+    await uiHelper.verifyRowsInTable(["rhdh-qe"]);
   });
 });

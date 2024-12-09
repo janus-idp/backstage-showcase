@@ -4,6 +4,7 @@ import {
   configApiRef,
   createApiFactory,
   discoveryApiRef,
+  identityApiRef,
   oauthRequestApiRef,
 } from '@backstage/core-plugin-api';
 import {
@@ -11,15 +12,16 @@ import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
 } from '@backstage/integration-react';
+
 import {
   auth0AuthApiRef,
   oidcAuthApiRef,
   samlAuthApiRef,
 } from './api/AuthApiRefs';
 import {
-  CustomDataApiClient,
-  customDataApiRef,
-} from './api/CustomDataApiClient';
+  LearningPathApiClient,
+  learningPathApiRef,
+} from './api/LearningPathApiClient';
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -29,13 +31,14 @@ export const apis: AnyApiFactory[] = [
   }),
   ScmAuth.createDefaultApiFactory(),
   createApiFactory({
-    api: customDataApiRef,
+    api: learningPathApiRef,
     deps: {
       discoveryApi: discoveryApiRef,
       configApi: configApiRef,
+      identityApi: identityApiRef,
     },
-    factory: ({ discoveryApi, configApi }) =>
-      new CustomDataApiClient({ discoveryApi, configApi }),
+    factory: ({ discoveryApi, configApi, identityApi }) =>
+      new LearningPathApiClient({ discoveryApi, configApi, identityApi }),
   }),
   // OIDC
   createApiFactory({
@@ -49,7 +52,8 @@ export const apis: AnyApiFactory[] = [
       OAuth2.create({
         configApi,
         discoveryApi,
-        oauthRequestApi,
+        // TODO: Check if 1.32 fixes this type error
+        oauthRequestApi: oauthRequestApi as any,
         provider: {
           id: 'oidc',
           title: 'OIDC',
@@ -69,7 +73,8 @@ export const apis: AnyApiFactory[] = [
     factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
       OAuth2.create({
         discoveryApi,
-        oauthRequestApi,
+        // TODO: Check if 1.32 fixes this type error
+        oauthRequestApi: oauthRequestApi as any,
         provider: {
           id: 'auth0',
           title: 'Auth0',
@@ -90,7 +95,8 @@ export const apis: AnyApiFactory[] = [
     factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
       OAuth2.create({
         discoveryApi,
-        oauthRequestApi,
+        // TODO: Check if 1.32 fixes this type error
+        oauthRequestApi: oauthRequestApi as any,
         provider: {
           id: 'saml',
           title: 'SAML',

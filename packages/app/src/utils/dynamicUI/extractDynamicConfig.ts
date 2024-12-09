@@ -1,5 +1,7 @@
 import { Entity } from '@backstage/catalog-model';
+import { ApiHolder } from '@backstage/core-plugin-api';
 import { isKind } from '@backstage/plugin-catalog';
+
 import { hasAnnotation, isType } from '../../components/catalog/utils';
 import {
   DynamicModuleEntry,
@@ -7,12 +9,14 @@ import {
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
-import { ApiHolder } from '@backstage/core-plugin-api';
+import { extractMenuItems } from './extractDynamicConfigFrontend';
 
-export type MenuItem =
+export type DynamicRouteMenuItem =
   | {
       text: string;
       icon: string;
+      parent?: string;
+      priority?: number;
     }
   | {
       module?: string;
@@ -22,12 +26,29 @@ export type MenuItem =
       };
     };
 
+export type MenuItemConfig = {
+  icon?: string;
+  title?: string;
+  priority?: number;
+  parent?: string;
+};
+
+export type MenuItem = {
+  name: string;
+  title: string;
+  icon: string;
+  children: MenuItem[];
+  priority?: number;
+  to?: string;
+  parent?: string;
+};
+
 export type DynamicRoute = {
   scope: string;
   module: string;
   importName: string;
   path: string;
-  menuItem?: MenuItem;
+  menuItem?: DynamicRouteMenuItem;
   config?: {
     props?: Record<string, any>;
   };
@@ -85,13 +106,25 @@ type EntityTabEntry = {
   title: string;
 };
 
+type ThemeEntry = {
+  scope: string;
+  module: string;
+  id: string;
+  title: string;
+  variant: 'light' | 'dark';
+  icon: string;
+  importName: string;
+};
+
 type CustomProperties = {
   pluginModule?: string;
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
     module?: string;
     path: string;
+    menuItem?: DynamicRouteMenuItem;
   })[];
+  menuItems?: { [key: string]: MenuItemConfig };
   routeBindings?: {
     targets: BindingTarget[];
     bindings: RouteBinding[];
@@ -101,9 +134,10 @@ type CustomProperties = {
   appIcons?: AppIcon[];
   apiFactories?: ApiFactory[];
   scaffolderFieldExtensions?: ScaffolderFieldExtension[];
+  themes?: ThemeEntry[];
 };
 
-type FrontendConfig = {
+export type FrontendConfig = {
   [key: string]: CustomProperties;
 };
 
@@ -116,11 +150,13 @@ type DynamicConfig = {
   apiFactories: ApiFactory[];
   appIcons: AppIcon[];
   dynamicRoutes: DynamicRoute[];
+  menuItems: MenuItem[];
   entityTabs: EntityTabEntry[];
   mountPoints: MountPoint[];
   routeBindings: RouteBinding[];
   routeBindingTargets: BindingTarget[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
+  themes: ThemeEntry[];
 };
 
 /**
@@ -136,11 +172,13 @@ function extractDynamicConfig(
     apiFactories: [],
     appIcons: [],
     dynamicRoutes: [],
+    menuItems: [],
     entityTabs: [],
     mountPoints: [],
     routeBindings: [],
     routeBindingTargets: [],
     scaffolderFieldExtensions: [],
+    themes: [],
   };
   config.pluginModules = Object.entries(frontend).reduce<PluginModule[]>(
     (pluginSet, [scope, customProperties]) => {
@@ -166,6 +204,7 @@ function extractDynamicConfig(
     },
     [],
   );
+  config.menuItems = extractMenuItems(frontend);
   config.routeBindings = Object.entries(frontend).reduce<RouteBinding[]>(
     (pluginSet, [_, customProperties]) => {
       pluginSet.push(...(customProperties.routeBindings?.bindings ?? []));
@@ -249,6 +288,19 @@ function extractDynamicConfig(
         })),
       );
       return accEntityTabs;
+    },
+    [],
+  );
+  config.themes = Object.entries(frontend).reduce<ThemeEntry[]>(
+    (accThemeEntries, [scope, { themes }]) => {
+      accThemeEntries.push(
+        ...(themes ?? []).map(theme => ({
+          ...theme,
+          module: theme.module ?? 'PluginRoot',
+          scope,
+        })),
+      );
+      return accThemeEntries;
     },
     [],
   );

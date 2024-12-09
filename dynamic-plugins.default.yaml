@@ -28,12 +28,12 @@ plugins:
               timeout:
                 minutes: 15
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-github-actions
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-github-actions:
+          backstage-community.plugin-github-actions:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: EntityGithubActionsContent
@@ -43,12 +43,12 @@ plugins:
                   if:
                     allOf:
                       - isGithubActionsAvailable
-  - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
+  - package:  ./dynamic-plugins/dist/backstage-community-plugin-github-issues
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-github-issues:
+          backstage-community.plugin-github-issues:
             mountPoints:
               - mountPoint: entity.page.issues/cards
                 importName: GithubIssuesCard
@@ -192,19 +192,6 @@ plugins:
     disabled: true
     pluginConfig:
       kubernetes:
-        customResources:
-          - group: 'tekton.dev'
-            apiVersion: 'v1beta1'
-            plural: 'pipelines'
-          - group: 'tekton.dev'
-            apiVersion: 'v1beta1'
-            plural: 'pipelineruns'
-          - group: 'tekton.dev'
-            apiVersion: 'v1beta1'
-            plural: 'taskruns'
-          - group: 'route.openshift.io'
-            apiVersion: 'v1'
-            plural: 'routes'
         serviceLocatorMethod:
           type: 'multiTenant'
         clusterLocatorMethods:
@@ -231,12 +218,12 @@ plugins:
                     anyOf:
                       - hasAnnotation: backstage.io/kubernetes-id
                       - hasAnnotation: backstage.io/kubernetes-namespace
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-topology
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-topology
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-topology:
+          backstage-community.plugin-topology:
             mountPoints:
               - mountPoint: entity.page.topology/cards
                 importName: TopologyPage
@@ -335,19 +322,19 @@ plugins:
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-azure-dynamic
     # TODO RHIDP-3187 - graduate this plugin to GA so it can be enabled by default
     disabled: true
-  - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-azure-devops-backend-dynamic
     disabled: true
     pluginConfig:
       azureDevOps:
         host: dev.azure.com
         token: ${AZURE_TOKEN}
         organization: ${AZURE_ORG}
-  - package: ./dynamic-plugins/dist/backstage-plugin-azure-devops
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-azure-devops
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-azure-devops:
+          backstage-community.plugin-azure-devops:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: EntityAzurePipelinesContent
@@ -365,11 +352,11 @@ plugins:
                   if:
                     allOf:
                       - isAzureDevOpsAvailable
-  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories
+  - package: ./dynamic-plugins/dist/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic
     disabled: true
 
   # Group: Jenkins
-  - package: ./dynamic-plugins/dist/backstage-plugin-jenkins-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jenkins-backend-dynamic
     disabled: true
     pluginConfig:
       jenkins:
@@ -378,12 +365,12 @@ plugins:
             baseUrl: ${JENKINS_URL}
             username: ${JENKINS_USERNAME}
             apiKey: ${JENKINS_TOKEN}
-  - package: ./dynamic-plugins/dist/backstage-plugin-jenkins
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jenkins
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-jenkins:
+          backstage-community.plugin-jenkins:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: EntityJenkinsContent
@@ -394,19 +381,61 @@ plugins:
                     allOf:
                       - isJenkinsAvailable
 
+  # Group: Notifications
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-notifications:
+            dynamicRoutes:
+              - importName: NotificationsPage
+                menuItem:
+                  config:
+                    props:
+                      titleCounterEnabled: true
+                      webNotificationsEnabled: false
+                  importName: NotificationsSidebarItem
+                path: /notifications
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic
+    disabled: true
+    pluginConfig:
+      notifications:
+        processors:
+          email:
+            transportConfig:
+              transport: smtp
+              hostname: ${EMAIL_HOSTNAME}
+              port: 587
+              username: ${EMAIL_USERNAME}
+              password: ${EMAIL_PASSWORD}
+            sender: ${EMAIL_SENDER}
+            broadcastConfig:
+              receiver: 'users'
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/backstage-plugin-signals
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-signals: {}
+
   # Group: SonarQube
-  - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-sonarqube-backend-dynamic
     disabled: true
     pluginConfig:
       sonarqube:
         baseUrl: ${SONARQUBE_URL}
         apiKey: ${SONARQUBE_TOKEN}
-  - package: ./dynamic-plugins/dist/backstage-plugin-sonarqube
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-sonarqube
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-sonarqube:
+          backstage-community.plugin-sonarqube:
             mountPoints:
               - mountPoint: entity.page.overview/cards
                 importName: EntitySonarQubeCard
@@ -421,7 +450,7 @@ plugins:
                       - isSonarQubeAvailable
 
   # Group: OCM
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -430,14 +459,14 @@ plugins:
             default:
               name: "${OCM_HUB_NAME}"
               url: "${OCM_HUB_URL}"
-              serviceAccountToken: "${moc_infra_token}"
+              serviceAccountToken: "${OCM_SA_TOKEN}"
               owner: janus-authors
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-ocm:
+          backstage-community.plugin-ocm:
             appIcons:
               - name: ocmIcon
                 importName: OcmIcon
@@ -476,25 +505,65 @@ plugins:
                     - isType: kubernetes-cluster
 
   # Group: Bulk import
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
     disabled: true
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-bulk-import:
+          red-hat-developer-hub.backstage-plugin-bulk-import:
             appIcons:
               - name: bulkImportIcon
-                module: BulkImportPlugin
                 importName: BulkImportIcon
             dynamicRoutes:
               - path: /bulk-import/repositories
                 importName: BulkImportPage
-                module: BulkImportPlugin
                 menuItem:
                   icon: bulkImportIcon
                   text: Bulk import
+
+  # Homepage
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+            dynamicRoutes:
+              - path: /
+                importName: DynamicHomePage
+            mountPoints:
+              - mountPoint: home.page/cards
+                importName: SearchBar
+                config:
+                  layouts:
+                    xl: { w: 10, h: 1, x: 1 }
+                    lg: { w: 10, h: 1, x: 1 }
+                    md: { w: 10, h: 1, x: 1 }
+                    sm: { w: 10, h: 1, x: 1 }
+                    xs: { w: 12, h: 1 }
+                    xxs: { w: 12, h: 1 }
+              - mountPoint: home.page/cards
+                importName: QuickAccessCard
+                config:
+                  layouts:
+                    xl: { w: 7, h: 8 }
+                    lg: { w: 7, h: 8 }
+                    md: { w: 7, h: 8 }
+                    sm: { w: 12, h: 8 }
+                    xs: { w: 12, h: 8 }
+                    xxs: { w: 12, h: 8 }
+              - mountPoint: home.page/cards
+                importName: CatalogStarredEntitiesCard
+                config:
+                  layouts:
+                    xl: { w: 5, h: 4, x: 7 }
+                    lg: { w: 5, h: 4, x: 7 }
+                    md: { w: 5, h: 4, x: 7 }
+                    sm: { w: 12, h: 4 }
+                    xs: { w: 12, h: 4 }
+                    xxs: { w: 12, h: 4 }
 
   # Techdocs
   - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic
@@ -593,34 +662,33 @@ plugins:
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
     disabled: true
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-quay-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
     disabled: false
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-regex-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-regex-dynamic
     disabled: false
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-rbac:
-            mountPoints:
-              - mountPoint: admin.page.rbac/cards
-                module: RbacPlugin
-                importName: RbacPage
-                config:
-                  layout:
-                    gridColumn: "1 / -1"
-                    width: 100vw
-                  props:
-                    useHeader: false
+          backstage-community.plugin-rbac:
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
             dynamicRoutes:
-              - path: /admin/rbac
-                module: RbacPlugin
+              - path: /rbac
                 importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: admin
+                icon: rbacIcon
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-servicenow-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic
     disabled: true
     pluginConfig:
       servicenow:
@@ -631,7 +699,7 @@ plugins:
         # The password to use for authentication.
         password: ${SERVICENOW_PASSWORD}
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-scaffolder-backend-module-sonarqube-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic
     disabled: true
 
   - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
@@ -654,7 +722,7 @@ plugins:
               baseUrl: '${THREESCALE_BASE_URL}'
               accessToken: '${THREESCALE_ACCESS_TOKEN}'
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
     disabled: true
     pluginConfig:
       catalog:
@@ -712,12 +780,12 @@ plugins:
                 timeout:
                   minutes: 3
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-dynatrace
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-dynatrace
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-dynatrace:
+          backstage-community.plugin-dynatrace:
             mountPoints:
               - mountPoint: entity.page.monitoring/cards
                 importName: DynatraceTab
@@ -760,12 +828,12 @@ plugins:
                     allOf:
                       - isDatadogAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-tekton:
+          backstage-community.plugin-tekton:
             mountPoints:
               - mountPoint: entity.page.ci/cards
                 importName: TektonCI
@@ -776,12 +844,12 @@ plugins:
                     allOf:
                       - isTektonCIAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-quay:
+          backstage-community.plugin-quay:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: QuayPage
@@ -792,12 +860,12 @@ plugins:
                     anyOf:
                     - isQuayAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-nexus-repository-manager
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-nexus-repository-manager
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-nexus-repository-manager:
+          backstage-community.plugin-nexus-repository-manager:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: NexusRepositoryManagerPage
@@ -808,12 +876,12 @@ plugins:
                     anyOf:
                     - isNexusRepositoryManagerAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-acr:
+          backstage-community.plugin-acr:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: AcrPage
@@ -824,12 +892,12 @@ plugins:
                     anyOf:
                     - isAcrAvailable
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-jfrog-artifactory
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-jfrog-artifactory
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-jfrog-artifactory:
+          backstage-community.plugin-jfrog-artifactory:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
                 importName: JfrogArtifactoryPage
@@ -840,12 +908,12 @@ plugins:
                     anyOf:
                     - isJfrogArtifactoryAvailable
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-lighthouse
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-lighthouse
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-lighthouse:
+          backstage-community.plugin-lighthouse:
             appIcons:
               - name: lighthouse
                 importName: LighthouseIcon
@@ -867,12 +935,12 @@ plugins:
                     allOf:
                       - isLighthouseAvailable
 
-  - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
     disabled: true
     pluginConfig:
       dynamicPlugins:
         frontend:
-          backstage.plugin-tech-radar:
+          backstage-community.plugin-tech-radar:
             apiFactories:
               - importName: TechRadarApi
             appIcons:
@@ -888,13 +956,19 @@ plugins:
                   props:
                     width: 1500
                     height: 800
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
+    disabled: true
+    pluginConfig:
+      techRadar:
+        url: ${TECH_RADAR_DATA_URL}
 
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment
+
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
     disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
-          janus-idp.backstage-plugin-analytics-provider-segment:
+          backstage-community.plugin-analytics-provider-segment:
             apiFactories:
               - importName: SegmentAnalyticsApi
       backend:
@@ -919,9 +993,6 @@ plugins:
       catalog:
         providers:
           microsoftGraphOrg: {}
-
-  - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-logs-dynamic
-    disabled: true
 
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-ldap-dynamic
     disabled: true

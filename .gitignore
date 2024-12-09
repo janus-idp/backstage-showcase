@@ -16,13 +16,13 @@ coverage
 node_modules/
 
 # Yarn 3 files
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+**/.pnp.*
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/sdks
+!**/.yarn/versions
 
 # dotenv environment variables file
 .env
@@ -32,6 +32,7 @@ node_modules/
 dist
 dist-types
 dist-scalprum
+dist-dynamic
 
 # Temporary change files created by Vim
 *.swp
@@ -54,11 +55,11 @@ site
 # Dynamic plugins root content
 dynamic-plugins-root/*
 !dynamic-plugins-root/.gitkeep
-dynamic-plugins/wrappers/*/dist-dynamic/src
-dynamic-plugins/imports/*/
-dynamic-plugins/*/dist-dynamic/src
 
 #dev caches
 .webpack-cache
 .idea/
 .idea/
+
+# Private Keys
+*.pem

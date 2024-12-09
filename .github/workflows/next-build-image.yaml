@@ -1,0 +1,65 @@
+# Copyright 2023 The Janus IDP Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Next
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: quay.io
+
+jobs:
+  build-image:
+    name: Build Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get the last commit short SHA
+        run: |
+          SHORT_SHA=$(git rev-parse --short=8 HEAD)
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+          if [[ -f packages/app/src/build-metadata.json ]]; then
+            repo="${{ github.repository }}"
+            now="$(date -u +%FT%TZ)"
+            sed -i packages/app/src/build-metadata.json -r \
+              -e 's|("Last Commit:.+)|"Last Commit: '$repo' @ '$SHORT_SHA'"|'
+          fi
+
+      - name: Build and Push with Buildx
+        uses: ./.github/actions/docker-build
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ vars.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
+          imageName: ${{ github.repository }}
+          imageTags: |
+            type=raw,value=next
+            type=sha,prefix=next-
+          imageLabels: quay.expires-after=14d
+          push: true

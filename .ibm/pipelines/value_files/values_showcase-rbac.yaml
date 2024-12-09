@@ -12,117 +12,101 @@ global:
     # an optional `pluginConfig` with plugin-specific backstage configuration, and an optional `disabled` flag to disable/enable a plugin
     # listed in `includes` files. It also includes an `integrity` field that is used to verify the plugin package [integrity](https://w3c.github.io/webappsec-subresource-integrity/#integrity-metadata-description).
     plugins:
-        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
-          disabled: false
-          pluginConfig:
-            catalog:
-              providers:
-                github:
-                  my-test-org:
-                    organization: janus-qe
-                    catalogPath: '/catalog-info.yaml'
-                    schedule:
-                      frequency:
-                        minutes: 1
-                      timeout:
-                        minutes: 1
-                      initialDelay:
-                        seconds: 15
-        - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
-          disabled: false
-        - package:  ./dynamic-plugins/dist/backstage-plugin-github-issues
-          disabled: false
-        - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
-          disabled: false
-        - package: ./dynamic-plugins/dist/backstage-plugin-github-actions
-          disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-quay
-          disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-keycloak-backend-dynamic
-          disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-tekton
-          disabled: false
-        - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
-          disabled: false
-        - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
-          disabled: false
-          pluginConfig:
-            kubernetes:
-              clusterLocatorMethods:
-                - clusters:
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-dynamic
+        disabled: false
+        pluginConfig:
+          catalog:
+            providers:
+              github:
+                my-test-org:
+                  organization: janus-qe
+                  catalogPath: '/catalog-info.yaml'
+                  schedule:
+                    frequency:
+                      minutes: 1
+                    timeout:
+                      minutes: 1
+                    initialDelay:
+                      seconds: 15
+      - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-github-org-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-github-issues
+        disabled: false
+      - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-github-pull-requests
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-github-actions
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-quay
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tekton
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
+        disabled: false
+        pluginConfig:
+          kubernetes:
+            clusterLocatorMethods:
+              - clusters:
                   - authProvider: serviceAccount
                     name: 'my-cluster'
                     serviceAccountToken: ${K8S_SERVICE_ACCOUNT_TOKEN}
                     url: ${K8S_CLUSTER_API_SERVER_URL}
-                  type: config
-              customResources:
-                # Add for tekton
-                - apiVersion: 'v1beta1'
-                  group: 'tekton.dev'
-                  plural: 'pipelines'
-                - apiVersion: v1beta1
-                  group: tekton.dev
-                  plural: pipelineruns
-                - apiVersion: v1beta1
-                  group: tekton.dev
-                  plural: taskruns
-                # Add for topology plugin
-                - apiVersion: 'v1'
-                  group: 'route.openshift.io'
-                  plural: 'routes'
-                # Add to view topology code decorators
-                - group: 'org.eclipse.che'
-                  apiVersion: 'v2'
-                  plural: 'checlusters'
-              serviceLocatorMethod:
-                type: multiTenant
-        # Enable OCM plugins.
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm-backend-dynamic
-          disabled: false
-          pluginConfig:
-            catalog:
-              providers:
-                ocm:
-                  default:
-                    name: testCluster # Can be any arbitrary name supported by kubernetes
-                    url: ${OCM_CLUSTER_URL}
-                    serviceAccountToken: ${OCM_CLUSTER_TOKEN}
-                    skipTLSVerify: true
-                    owner: janus-authors
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-ocm
-          disabled: false
-        # Enable Bulk import plugins.
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import-backend-dynamic
-          disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-bulk-import
-          disabled: false
-        # Enable tech-radar plugin.
-        - package: ./dynamic-plugins/dist/backstage-plugin-tech-radar
-          disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-acr
-          disabled: false
-        - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
-          disabled: false
-        - package: './dynamic-plugins/dist/janus-idp-backstage-plugin-analytics-provider-segment'
-          disabled: true
-
-
-  # this value will be overriden by 'helm install .... --set global.clusterRouterBase=value'
-  # -- Shorthand for users who do not want to specify a custom HOSTNAME. Used ONLY with the DEFAULT upstream.backstage.appConfig value and with OCP Route enabled.
-  clusterRouterBase: apps.example.com
-  # -- Custom hostname shorthand, overrides `global.clusterRouterBase`, `upstream.ingress.host`, `route.host`, and url values in `upstream.backstage.appConfig`
-  host: ''
-  # -- Enable service authentication within Backstage instance
-  auth:
-    # -- Backend service to service authentication
-    # <br /> Ref: https://backstage.io/docs/auth/service-to-service-auth/
-    backend:
-      # -- Enable backend service to service authentication, unless configured otherwise it generates a secret value
-      enabled: true
-      # -- Instead of generating a secret value, refer to existing secret
-      existingSecret: ''
-      # -- Instead of generating a secret value, use fo;lowing value
-      value: ''
+                type: config
+            customResources:
+              # Add for tekton
+              - apiVersion: 'v1beta1'
+                group: 'tekton.dev'
+                plural: 'pipelines'
+              - apiVersion: v1beta1
+                group: tekton.dev
+                plural: pipelineruns
+              - apiVersion: v1beta1
+                group: tekton.dev
+                plural: taskruns
+              # Add for topology plugin
+              - apiVersion: 'v1'
+                group: 'route.openshift.io'
+                plural: 'routes'
+              # Add to view topology code decorators
+              - group: 'org.eclipse.che'
+                apiVersion: 'v2'
+                plural: 'checlusters'
+            serviceLocatorMethod:
+              type: multiTenant
+      # Enable OCM plugins.
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm-backend-dynamic
+        disabled: false
+        pluginConfig:
+          catalog:
+            providers:
+              ocm:
+                default:
+                  name: testCluster # Can be any arbitrary name supported by kubernetes
+                  url: ${OCM_CLUSTER_URL}
+                  serviceAccountToken: ${OCM_CLUSTER_TOKEN}
+                  skipTLSVerify: true
+                  owner: janus-authors
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-ocm
+        disabled: false
+      # Enable Bulk import plugins.
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
+        disabled: false
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
+        disabled: true
+      # Enable tech-radar plugin.
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
+        disabled: true
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
+        disabled: true
 
 # -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)
 # @default -- Use Openshift compatible settings
@@ -133,20 +117,10 @@ upstream:
   backstage:
     image:
       pullPolicy: Always
-      pullSecrets:
-        - rhdh-pull-secret
       # using test image from https://quay.io/repository/janus-idp/backstage-showcase
       registry: quay.io
       repository: janus-idp/backstage-showcase
       tag: next
-    command: []
-    # FIXME (tumido): USE POSTGRES_PASSWORD and POSTGRES_USER instead of POSTGRES_ADMIN_PASSWORD
-    # This is a hack. In {fedora,rhel}/postgresql images, regular user is forbidden
-    # from creating DBs in runtime. A single DB can be created ahead of time via
-    # POSTGRESQL_DATABASE env variable (in this case via
-    # upstream.postgresql.primary.extraEnvVars value), but this doesn't allow us to
-    # create multiple DBs. Since Backstage requires by default 5 different DBs, we
-    # can't accommodate that properly.
     appConfig:
       app:
         # Please update to match host in case you don't want to configure hostname via `global.clusterRouterBase` or `global.host`.
@@ -156,7 +130,7 @@ upstream:
         cors:
           origin: 'https://{{- include "janus-idp.hostname" . }}'
         database:
-          connection:  # configure Backstage DB connection parameters
+          connection: # configure Backstage DB connection parameters
             host: ${POSTGRES_HOST}
             port: ${POSTGRES_PORT}
             user: ${POSTGRES_USER}
@@ -172,26 +146,6 @@ upstream:
         auth:
           keys:
             - secret: ${BACKEND_SECRET}
-    readinessProbe:
-      failureThreshold: 3
-      httpGet:
-        path: /healthcheck
-        port: 7007
-        scheme: HTTP
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      successThreshold: 2
-      timeoutSeconds: 2
-    livenessProbe:
-      failureThreshold: 3
-      httpGet:
-        path: /healthcheck
-        port: 7007
-        scheme: HTTP
-      initialDelaySeconds: 60
-      periodSeconds: 10
-      successThreshold: 1
-      timeoutSeconds: 2
     extraEnvVars:
       - name: BACKEND_SECRET
         valueFrom:
@@ -201,16 +155,14 @@ upstream:
       # disable telemetry in CI
       - name: SEGMENT_TEST_MODE
         value: 'true'
-    args:
-      # This additional `app-config`` file is generated by the initContainer below, and contains the merged configuration of installed dynamic plugins.
-      - '--config'
-      - dynamic-plugins-root/app-config.dynamic-plugins.yaml
     extraVolumeMounts:
       # The initContainer below will install dynamic plugins in this volume mount.
       - name: dynamic-plugins-root
         mountPath: /opt/app-root/src/dynamic-plugins-root
       - name: rbac-policy
         mountPath: /opt/app-root/src/rbac
+      - name: rbac-conditions
+        mountPath: /opt/app-root/src/rbac-conditions
       - mountPath: /opt/app-root/src/postgres-crt.pem
         name: postgress-external-db-cluster-cert
         subPath: tls.crt
@@ -226,11 +178,6 @@ upstream:
       # could be changed to a [generic ephemeral volume](https://docs.openshift.com/container-platform/4.13/storage/generic-ephemeral-vols.html#generic-ephemeral-vols-procedure_generic-ephemeral-volumes).
       - name: dynamic-plugins-root
         emptyDir: {}
-      - name: rbac-policy
-        configMap:
-          defaultMode: 420
-          name: rbac-policy
-
       # Volume that will expose the `dynamic-plugins.yaml` file from the `dynamic-plugins` config map.
       # The `dynamic-plugins` config map is created by the helm chart from the content of the `global.dynamic` field.
       - name: dynamic-plugins
@@ -248,6 +195,12 @@ upstream:
       - name: postgress-external-db-cluster-cert
         secret:
           secretName: postgress-external-db-cluster-cert
+      - name: rbac-policy
+        configMap:
+          defaultMode: 420
+          name: rbac-policy
+      - name: rbac-conditions
+        emptyDir: {}
     initContainers:
       - name: install-dynamic-plugins
         # -- Image used by the initContainer to install dynamic plugins into the `dynamic-plugins-root` volume mount.
@@ -255,9 +208,41 @@ upstream:
         # @default -- `quay.io/janus-idp/backstage-showcase:latest`
         image: '{{ include "backstage.image" . }}'
         command:
-          - python
-          - install-dynamic-plugins.py
-          - /dynamic-plugins-root
+          - sh
+          - '-c'
+          - |
+            cat > /rbac-conditions/conditional-policies.yaml <<EOF
+            ---
+            result: CONDITIONAL
+            roleEntityRef: 'role:default/test2-role'
+            pluginId: catalog
+            resourceType: catalog-entity
+            permissionMapping:
+              - read
+              - update
+            conditions:
+              rule: IS_ENTITY_OWNER
+              resourceType: catalog-entity
+              params:
+                claims:
+                  - 'group:janus-qe/rhdh-qe-2-team'
+                  - \$currentUser
+            ---
+            result: CONDITIONAL
+            roleEntityRef: 'role:default/test2-role'
+            pluginId: catalog
+            resourceType: catalog-entity
+            permissionMapping:
+              - delete
+            conditions:
+              rule: IS_ENTITY_OWNER
+              resourceType: catalog-entity
+              params:
+                claims:
+                  - \$currentUser
+            EOF
+
+            python install-dynamic-plugins.py /dynamic-plugins-root
         env:
           - name: NPM_CONFIG_USERCONFIG
             value: /opt/app-root/src/.npmrc.dynamic-plugins
@@ -273,12 +258,12 @@ upstream:
             name: dynamic-plugins-npmrc
             readOnly: true
             subPath: .npmrc
+          - mountPath: /rbac
+            name: rbac-policy
+          - mountPath: /rbac-conditions
+            name: rbac-conditions
         workingDir: /opt/app-root/src
     installDir: /opt/app-root/src
-    podAnnotations:
-      checksum/dynamic-plugins: >-
-        {{- include "common.tplvalues.render" ( dict "value"
-        .Values.global.dynamic "context" $) | sha256sum }}
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
@@ -289,5 +274,3 @@ upstream:
     enabled: false
     auth:
       existingSecret: postgres-cred
-  ingress:
-    host: '{{ .Values.global.host }}'

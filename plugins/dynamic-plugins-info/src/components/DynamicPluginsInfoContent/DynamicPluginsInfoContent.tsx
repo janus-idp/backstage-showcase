@@ -1,4 +1,3 @@
-import React from 'react';
-import { DynamicPluginsTable } from '../DynamicPluginsTable/DynamicPluginsTable';
+import { DynamicPluginsInfoPage } from '../DynamicPluginsInfoPage';
 
-export const DynamicPluginsInfoContent = () => <DynamicPluginsTable />;
+export const DynamicPluginsInfoContent = () => <DynamicPluginsInfoPage />;

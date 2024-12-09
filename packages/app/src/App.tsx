@@ -1,6 +1,7 @@
-import React from 'react';
 import { apis } from './apis';
-import DynamicRoot from './components/DynamicRoot';
+import { StaticPlugins } from './components/DynamicRoot/DynamicRoot';
+import ScalprumRoot from './components/DynamicRoot/ScalprumRoot';
+import { DefaultMainMenuItems } from './consts';
 
 // Statically integrated frontend plugins
 const { dynamicPluginsInfoPlugin, ...dynamicPluginsInfoPluginModule } =
@@ -13,22 +14,31 @@ const baseFrontendConfig = {
   data: {
     dynamicPlugins: {
       frontend: {
-        '@internal/plugin-dynamic-plugins-info': {
-          dynamicRoutes: [
-            { path: '/admin/plugins', importName: 'DynamicPluginsInfo' },
+        'default.main-menu-items': DefaultMainMenuItems,
+        // please keep this in sync with plugins/dynamic-plugins-info/app-config.janus-idp.yaml
+        'internal.plugin-dynamic-plugins-info': {
+          appIcons: [
+            { name: 'pluginsInfoIcon', importName: 'PluginsInfoIcon' },
+            { name: 'adminIcon', importName: 'AdminIcon' },
           ],
-          mountPoints: [
+          dynamicRoutes: [
             {
-              mountPoint: 'admin.page.plugins/cards',
+              path: '/plugins',
               importName: 'DynamicPluginsInfo',
-              config: {
-                layout: {
-                  gridColumn: '1 / -1',
-                  width: '100vw',
-                },
-              },
+              menuItem: { text: 'Plugins', icon: 'pluginsInfoIcon' },
             },
           ],
+          menuItems: {
+            admin: {
+              title: 'Administration',
+              icon: 'adminIcon',
+            },
+            plugins: {
+              parent: 'admin',
+              title: 'Plugins',
+              icon: 'pluginsInfoIcon',
+            },
+          },
         },
       },
     },
@@ -36,19 +46,19 @@ const baseFrontendConfig = {
 };
 
 // The map of static plugins by package name
-const staticPluginMap = {
-  '@internal/plugin-dynamic-plugins-info': {
+const staticPlugins: StaticPlugins = {
+  'internal.plugin-dynamic-plugins-info': {
     plugin: dynamicPluginsInfoPlugin,
     module: dynamicPluginsInfoPluginModule,
   },
 };
 
 const AppRoot = () => (
-  <DynamicRoot
+  <ScalprumRoot
     apis={apis}
     afterInit={() => import('./components/AppBase')}
     baseFrontendConfig={baseFrontendConfig}
-    plugins={staticPluginMap}
+    plugins={staticPlugins}
   />
 );
 
