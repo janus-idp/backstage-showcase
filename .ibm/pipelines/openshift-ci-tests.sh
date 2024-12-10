@@ -49,6 +49,9 @@ done
 main() {
   echo "Log file: ${LOGFILE}"
   echo "JOB_NAME : $JOB_NAME"
+  echo "Cluster INFO: "
+  echo "Cluster Claimed Console URL : $(oc whoami --show-console), will be auto deleted after 4hours of claimed"
+  echo "hosted-mgmt Namespace: $(oc get route console -n openshift-console -o=jsonpath={.spec.host} | sed -E 's/.*apps\.([^.]+)\..*/\1/')"
 
   case "$JOB_NAME" in
     *aks*)
