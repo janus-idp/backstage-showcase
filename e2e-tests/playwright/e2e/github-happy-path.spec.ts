@@ -12,6 +12,7 @@ let page: Page;
 
 // TODO: replace skip with serial
 test.describe.skip("GitHub Happy path", () => {
+  //TODO: skipping due to RHIDP-4992
   let common: Common;
   let uiHelper: UIhelper;
   let catalogImport: CatalogImport;
@@ -89,6 +90,16 @@ test.describe.skip("GitHub Happy path", () => {
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.clickByDataTestId("user-picker-all");
     await uiHelper.clickLink("Backstage Showcase");
+
+    const expectedPath = "/catalog/default/component/backstage-showcase";
+    // Wait for the expected path in the URL
+    await page.waitForURL(`**${expectedPath}`, {
+      waitUntil: "domcontentloaded", // Wait until the DOM is loaded
+      timeout: 10000,
+    });
+    // Optionally, verify that the current URL contains the expected path
+    await expect(page.url()).toContain(expectedPath);
+
     await common.clickOnGHloginPopup();
     await uiHelper.verifyLink("Janus Website", { exact: false });
     await backstageShowcase.verifyPRStatisticsRendered();

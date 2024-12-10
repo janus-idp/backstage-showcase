@@ -29,7 +29,7 @@ test.describe("Testing scaffolder-backend-module-http-request to invoke an exter
 
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
-    await uiHelper.searchInputPlaceholder("Test");
+    await uiHelper.searchInputPlaceholder("Test HTTP Request");
     await uiHelper.clickLink("Test HTTP Request");
     await uiHelper.verifyHeading("Test HTTP Request");
     await uiHelper.clickLink("Launch Template");

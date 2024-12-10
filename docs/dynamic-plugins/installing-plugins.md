@@ -3,7 +3,7 @@
 To install a dynamic plugin, you need to add the plugin definition to the `dynamic-plugin-config.yaml` file.
 
 The placement of `dynamic-plugin-config.yaml` depends on the deployment method.
-For more information, see [Installing Dynamic Plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about) or [Installing Dynamic Plugins Using the Helm Chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
+For more information, see [Installing Dynamic Plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/index#proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about) or [Installing Dynamic Plugins Using the Helm Chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/index#con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
 
 Plugins are defined in the `plugins` array in the `dynamic-plugin-config.yaml` file. Each plugin is defined as an object with the following properties:
 

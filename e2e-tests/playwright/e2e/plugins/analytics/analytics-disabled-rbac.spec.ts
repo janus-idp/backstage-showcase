@@ -11,7 +11,7 @@ test.describe.skip('Check RBAC "analytics-provider-segment" plugin', () => {
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.loginAsKeycloakUser();
     await uiHelper.openSidebarButton("Administration");
     await uiHelper.openSidebar("Plugins");
     await uiHelper.verifyHeading("Plugins");
