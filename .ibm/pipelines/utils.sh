@@ -375,19 +375,6 @@ set_github_app_3_credentials() {
   echo "GitHub App 3 credentials set for current job."
 }
 
-set_github_app_4_credentials() {
-  GITHUB_APP_APP_ID=$(cat /tmp/secrets/GITHUB_APP_4_APP_ID)
-  GITHUB_APP_CLIENT_ID=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_ID)
-  GITHUB_APP_PRIVATE_KEY=$(cat /tmp/secrets/GITHUB_APP_4_PRIVATE_KEY)
-  GITHUB_APP_CLIENT_SECRET=$(cat /tmp/secrets/GITHUB_APP_4_CLIENT_SECRET)
-
-  export GITHUB_APP_APP_ID
-  export GITHUB_APP_CLIENT_ID
-  export GITHUB_APP_PRIVATE_KEY
-  export GITHUB_APP_CLIENT_SECRET
-  echo "GitHub App 4 credentials set for current job."
-}
-
 apply_yaml_files() {
   local dir=$1
   local project=$2
@@ -643,8 +630,6 @@ cluster_setup() {
 }
 
 initiate_deployments() {
-
-  cluster_setup
   configure_namespace ${NAME_SPACE}
 
   # Deploy redis cache db.

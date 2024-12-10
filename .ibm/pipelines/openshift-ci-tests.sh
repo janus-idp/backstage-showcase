@@ -49,9 +49,9 @@ done
 main() {
   echo "Log file: ${LOGFILE}"
   echo "JOB_NAME : $JOB_NAME"
-  echo "Cluster INFO: "
-  echo "Cluster Claimed Console URL : $(oc whoami --show-console), will be auto deleted after 4hours of claimed"
-  echo "hosted-mgmt Namespace: $(oc get route console -n openshift-console -o=jsonpath={.spec.host} | sed -E 's/.*apps\.([^.]+)\..*/\1/')"
+  echo "Cluster Console URL: $(oc whoami --show-console)"
+  echo "Note: This cluster will be automatically deleted 4 hours after being claimed."
+  echo "To debug issues or log in to the cluster manually, use the script: .ibm/pipelines/ocp-cluster-claim-login.sh"
 
   case "$JOB_NAME" in
     *aks*)
@@ -62,25 +62,17 @@ main() {
       echo "Calling handle_gke"
        handle_gke
       ;;
+    *operator*)
+      echo "Calling Operator"
+      handle_operator
+      ;;
     *periodic*)
       echo "Calling handle_periodic"
       handle_nightly
       ;;
-    *pull-*-main-e2e-tests*)
+    *pull*)
       echo "Calling handle_main"
       handle_main
-      ;;
-    *ocp-v4-16*)
-      echo "Calling handle_ocp_v4_16"
-      handle_ocp_v4_16
-      ;;
-    *ocp-v4-15*)
-      echo "Calling handle_ocp_v4_15"
-      handle_ocp_v4_15
-      ;;
-    *operator*)
-      echo "Calling Operator"
-      handle_operator
       ;;
   esac
 
