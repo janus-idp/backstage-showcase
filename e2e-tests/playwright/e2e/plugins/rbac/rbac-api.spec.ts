@@ -6,13 +6,12 @@ import { Role } from "../../../support/api/rbac-api-structures";
 
 test.describe.only("Test RBAC plugin REST API", () => {
   test.beforeEach(async ({ page }) => {
-    new Common(page).loginAsGithubUser();
+    await new Common(page).loginAsGithubUser();
   });
 
   test("Test that roles and policies from GET request can be parsed", async ({
     page,
   }) => {
-    await page.goto("/");
     const token = await RhdhAuthApiHack.getInstance().getToken(page);
 
     const rbacApi = await RhdhRbacClient.build(token);

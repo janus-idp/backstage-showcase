@@ -125,5 +125,10 @@ export default defineConfig({
       ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/configuration-test/config-map.spec.ts"],
     },
+    {
+      name: "rbac-smoke-test",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: ["**/playwright/e2e/plugins/rbac/rbac-smoke.spec.ts"],
+    },
   ],
 });
