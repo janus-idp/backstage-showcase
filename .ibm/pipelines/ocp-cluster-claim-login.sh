@@ -1,10 +1,20 @@
 #!/bin/bash
 
-# Prompt the user for the namespace
-read -p "Enter the namespace (should start with 'rhdh-4-17-us-east-2'): " namespace
+# Prompt the user for the prow log url
+read -p "Enter the prow log url: " input_url
+
+id=$(echo "$input_url" | awk -F'/' '{print $NF}')
+job=$(echo "$input_url" | awk -F'/' '{print $(NF-1)}')
+
+build_log_url="https://prow.ci.openshift.org/log?container=test&id=${id}&job=${job}"
+namespace=$(curl -s $build_log_url | grep "The claimed cluster"  | sed -E 's/.*The claimed cluster ([^.]+)\ is ready after.*/\1/')
+
+# Output the constructed URL
+echo "Prow build log URL: $build_log_url"
+echo "hosted-mgmt Namespace: $namespace"
 
 if [[ -z "$namespace" ]]; then
-    echo "Namespace cannot be empty. Please provide a valid namespace."
+    echo "Cluster claim not found. Please provide a valid prow url that uses cluster claim."
     exit 1
 elif [[ ! "$namespace" =~ ^rhdh-4-17-us-east-2 ]]; then
     echo "Namespace must start with 'rhdh-4-17-us-east-2'."
@@ -14,8 +24,23 @@ fi
 # Log in to the cluster
 oc login --web https://api.hosted-mgmt.ci.devcluster.openshift.com:6443
 
+if ! oc get namespace "$namespace" >/dev/null 2>&1; then
+    echo "Namespace ${namespace} is expired or deleted, exiting..."
+    exit 1
+fi
+
+# Try to retrieve secrets from the namespace
+namespace_secrets=$(oc get secrets -n "$namespace" 2>&1)
+if echo "$namespace_secrets" | grep -q "Forbidden"; then
+    echo "Error: You do not have access to the namespace '$namespace'."
+    echo "check if you are member of 'rhdh-pool-admins' group at: https://rover.redhat.com/groups/search?q=rhdh-pool-admins"
+    echo "Please reach out to the rhdh-qe team for assistance."
+    exit 1
+fi
+
+cluster_secret=$(echo $namespace_secrets | grep admin-password | awk '{print $1}')
 # Retrieve the kubeadmin password from the specified namespace
-password=$(oc get secret $(oc get secrets -n "$namespace" | grep admin-password | awk '{print $1}') -n "$namespace" -o jsonpath='{.data.password}' | base64 -d)
+password=$(oc get secret $cluster_secret -n "$namespace" -o jsonpath='{.data.password}' | base64 -d)
 
 # Log out from the current session
 oc logout
