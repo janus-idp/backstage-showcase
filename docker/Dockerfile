@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7-labs
+# syntax=docker/dockerfile:1.12-labs
 
 # THIS IS USED BY Konflux builds >= 1.4
 # TODO verify this works with Cachi2 once we enable that, or switch to use ../.rhdh/docker/Dockerfile as input
@@ -199,7 +199,7 @@ RUN "$YARN" workspaces focus --all --production && \
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1730525319 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1733824671 AS runner
 USER 0
 
 # Upstream only
