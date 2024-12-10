@@ -3,8 +3,7 @@ initiate_gke_deployment() {
   add_helm_repos
   delete_namespace "${NAME_SPACE_RBAC_K8S}"
   configure_namespace "${NAME_SPACE_K8S}"
-  # Renable when namespace termination issue is solved
-  # install_tekton_pipelines
+  install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_K8S}" "${RELEASE_NAME}"
   cd "${DIR}" || exit
   local rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
@@ -27,8 +26,7 @@ initiate_rbac_gke_deployment() {
   add_helm_repos
   delete_namespace "${NAME_SPACE_K8S}"
   configure_namespace "${NAME_SPACE_RBAC_K8S}"
-  # Renable when namespace termination issue is solved
-  # install_tekton_pipelines
+  install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_K8S}" "${RELEASE_NAME_RBAC}"
   cd "${DIR}" || exit
   local rbac_rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
