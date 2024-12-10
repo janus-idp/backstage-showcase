@@ -38,7 +38,7 @@ if echo "$namespace_secrets" | grep -q "Forbidden"; then
     exit 1
 fi
 
-cluster_secret=$(echo $namespace_secrets | grep admin-password | awk '{print $1}')
+cluster_secret=$(oc get secrets -n "$namespace" | grep admin-password | awk '{print $1}')
 # Retrieve the kubeadmin password from the specified namespace
 password=$(oc get secret $cluster_secret -n "$namespace" -o jsonpath='{.data.password}' | base64 -d)
 
@@ -46,7 +46,7 @@ password=$(oc get secret $cluster_secret -n "$namespace" -o jsonpath='{.data.pas
 oc logout
 
 # Log in to the namespace-specific cluster
-oc login https://api."$namespace".rhdh-qe.devcluster.openshift.com:6443 --username kubeadmin --password "$password"
+oc login https://api."$namespace".rhdh-qe.devcluster.openshift.com:6443 --username kubeadmin --password "$password" --insecure-skip-tls-verify=true
 oc project showcase
 
 # Prompt the user to open the web console
@@ -54,7 +54,7 @@ read -p "Do you want to open the OpenShift web console? (y/n): " open_console
 
 if [[ "$open_console" == "y" || "$open_console" == "Y" ]]; then
     
-    console_url="https://console-openshift-console.apps.${namespace}.rhdh-qe.devcluster.openshift.com"
+    console_url="https://console-openshift-console.apps.${namespace}.rhdh-qe.devcluster.openshift.com/dashboards"
 
     echo "Opening web console at $console_url..."
     echo "Use bellow user and password to login into web console:"
