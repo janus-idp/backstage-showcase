@@ -34,8 +34,6 @@ SCRIPTS=(
     "jobs/aks.sh"
     "jobs/gke.sh"
     "jobs/main.sh"
-    "jobs/ocp-v4-15.sh"
-    "jobs/ocp-v4-16.sh"
     "jobs/operator.sh"
     "jobs/periodic.sh"
 )
