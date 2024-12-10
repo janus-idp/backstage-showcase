@@ -41,15 +41,11 @@ test.describe.serial("Bulk Import plugin", () => {
       newRepoDetails.owner,
       newRepoDetails.repoName,
     );
-    await common.loginAsGithubUser(
+    await common.loginAsKeycloakUser(
       process.env.GH_USER2_ID,
       process.env.GH_USER2_PASS,
     );
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   // Select two repos: one with an existing catalog.yaml file and another without it
   test("Add a Repository from the Repository Tab and Confirm its Preview", async () => {
@@ -255,15 +251,11 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await common.loginAsGithubUser(
+    await common.loginAsKeycloakUser(
       process.env.GH_USER2_ID,
       process.env.GH_USER2_PASS,
     );
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
     await uiHelper.openSidebar("Bulk import");
@@ -307,10 +299,6 @@ test.describe
     common = new Common(page);
     await common.loginAsGuest();
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
     await uiHelper.openSidebar("Bulk import");

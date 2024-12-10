@@ -97,6 +97,8 @@ auth:
   session:
     secret: superSecretSecret 
   providers:
+    guest:
+      dangerouslyAllowOutsideDevelopment: true
     google:
       development:
         clientId: ${GOOGLE_CLIENT_ID}

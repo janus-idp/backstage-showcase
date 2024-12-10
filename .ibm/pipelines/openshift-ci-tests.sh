@@ -23,8 +23,10 @@ cleanup() {
 
 trap cleanup EXIT INT ERR
 
-export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OSD_GCP_CLUSTER_URL)
-export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OSD_GCP_CLUSTER_TOKEN)
+if [ "$JOB_TYPE" == "presubmit" ] && [[ "$JOB_NAME" != rehearse-* ]]; then
+  export K8S_CLUSTER_URL=$(cat /tmp/secrets/RHDH_OSD_GCP_CLUSTER_URL)
+  export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/RHDH_OSD_GCP_CLUSTER_TOKEN)
+fi
 
 SCRIPTS=(
     "env_variables.sh"
