@@ -10,7 +10,9 @@ import { TEMPLATES } from "../support/testData/templates";
 
 let page: Page;
 
-test.describe.serial("GitHub Happy path", () => {
+// TODO: replace skip with serial
+test.describe.skip("GitHub Happy path", () => {
+  //TODO: skipping due to RHIDP-4992
   let common: Common;
   let uiHelper: UIhelper;
   let catalogImport: CatalogImport;

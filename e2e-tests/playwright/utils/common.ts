@@ -84,6 +84,29 @@ export class Common {
     });
   }
 
+  async logintoKeycloak(userid: string, password: string) {
+    await new Promise<void>((resolve) => {
+      this.page.once("popup", async (popup) => {
+        await popup.waitForLoadState();
+        await popup.locator("#username").fill(userid);
+        await popup.locator("#password").fill(password);
+        await popup.locator("#kc-login").click();
+        resolve();
+      });
+    });
+  }
+
+  async loginAsKeycloakUser(
+    userid: string = process.env.GH_USER_ID,
+    password: string = process.env.GH_USER_PASS,
+  ) {
+    await this.page.goto("/");
+    await this.waitForLoad(240000);
+    await this.uiHelper.clickButton("Sign In");
+    await this.logintoKeycloak(userid, password);
+    await this.uiHelper.waitForSideBarVisible();
+  }
+
   async loginAsGithubUser(userid: string = process.env.GH_USER_ID) {
     const sessionFileName = `authState_${userid}.json`;
 
