@@ -66,8 +66,8 @@ proxy:
 catalog:
   import:
     entityFilename: catalog-info.yaml
-    pullRequestBranchName: rhdh-integration
-    # pullRequestBranchName: backstage-integration
+    # pullRequestBranchName: rhdh-integration
+    pullRequestBranchName: backstage-integration
   rules:
     - allow: [API, Component, Group, Location, Resource, System, Template]
   locations:
