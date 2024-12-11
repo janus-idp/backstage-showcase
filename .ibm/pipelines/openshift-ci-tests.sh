@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -xe
+set -e
 export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 
 LOGFILE="test-log"
@@ -61,7 +61,7 @@ main() {
       ;;
   esac
 
-echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
+# echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
 echo "Main script completed with result: ${OVERALL_RESULT}"
 exit "${OVERALL_RESULT}"
 
