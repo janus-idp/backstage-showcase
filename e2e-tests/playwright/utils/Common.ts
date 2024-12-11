@@ -166,9 +166,10 @@ export class Common {
   }
 
   async clickOnGHloginPopup() {
-    await this.uiHelper.clickButton("Log in");
+    const loginButton = await getByRole('button', { name: 'Log in' })
+    await loginButton.clickButton("Log in");
     await this.checkAndReauthorizeGithubApp();
-    await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
+    await this.page.waitForSelector(loginButton, {
       state: "hidden",
       timeout: 100000,
     });
