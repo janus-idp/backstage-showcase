@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -x
-
 handle_main() {
   echo "Configuring namespace: ${NAME_SPACE}"
   oc_login
