@@ -11,7 +11,7 @@ retrieve_pod_logs() {
 save_all_pod_logs(){
   set +e
   local namespace=$1
-  namespace=${namespace%-pr-*} # remove -pr- suffix if any.
+  namespace=${namespace}
   mkdir -p pod_logs
 
   # Get all pod names in the namespace
@@ -519,7 +519,7 @@ create_app_config_map_k8s() {
 run_tests() {
   local release_name=$1
   local project=$2
-  project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
+  project=${project}
   cd "${DIR}/../../e2e-tests"
   yarn install
   yarn playwright install chromium
@@ -530,7 +530,7 @@ run_tests() {
   (
     set -e
     echo "Using PR container image: ${TAG_NAME}"
-    yarn "$project"
+    yarn "$project" --quiet   
   ) 2>&1 | tee "/tmp/${LOGFILE}"
 
   local RESULT=${PIPESTATUS[0]}
