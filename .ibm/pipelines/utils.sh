@@ -267,9 +267,31 @@ spec:
 EOD
 }
 
+# Monitors the status of an operator in an OpenShift namespace. 
+# It checks the ClusterServiceVersion (CSV) for a specific operator to verify if its phase matches an expected value. 
+check_operator_status() {
+  local timeout=${1:-300} # Timeout in seconds (default 300)
+  local namespace=$2 # Namespace to check
+  local operator_name=$3 # Operator name
+  local expected_status=${4:-"Succeeded"} # Expected status phase (default Succeeded)
+
+  echo "Checking the status of operator '${operator_name}' in namespace '${namespace}' with a timeout of ${timeout} seconds."
+  echo "Expected status: ${expected_status}"
+
+  timeout "${timeout}" bash -c "
+    while true; do 
+      CURRENT_PHASE=\$(oc get csv -n '${namespace}' -o jsonpath='{.items[?(@.spec.displayName==\"${operator_name}\")].status.phase}')
+      echo \"Operator '${operator_name}' current phase: \${CURRENT_PHASE}\"
+      [[ \"\${CURRENT_PHASE}\" == \"${expected_status}\" ]] && echo \"Operator '${operator_name}' is now in '${expected_status}' phase.\" && break
+      sleep 10
+    done
+  " || echo "Timed out after ${timeout} seconds. Operator '${operator_name}' did not reach '${expected_status}' phase."
+}
+
 # Installs the Crunchy Postgres Operator using predefined parameters
 install_crunchy_postgres_operator(){
   install_subscription crunchy-postgres-operator openshift-operators crunchy-postgres-operator v5 certified-operators
+  check_operator_status 300 "openshift-operators" "Crunchy Postgres for Kubernetes" "Succeeded"
 }
 
 add_helm_repos() {
@@ -417,10 +439,8 @@ apply_yaml_files() {
 
     sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-    set +x
     token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
     sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
-    set -x
 
     # Select the configuration file based on the namespace or job
     config_file=$(select_config_map_file)
@@ -501,7 +521,7 @@ run_tests() {
   local project=$2
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
-  yarn install
+  yarn install --frozen-lockfile
   yarn playwright install chromium
 
   Xvfb :99 &
