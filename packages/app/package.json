@@ -38,13 +38,13 @@
     "@backstage/plugin-search-react": "1.8.1",
     "@backstage/plugin-user-settings": "0.8.14",
     "@backstage/theme": "0.6.0",
-    "@emotion/react": "11.13.3",
-    "@emotion/styled": "11.13.0",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.0",
     "@internal/plugin-dynamic-plugins-info": "*",
     "@janus-idp/backstage-plugin-rbac-common": "1.12.0",
-    "@mui/icons-material": "5.16.7",
-    "@mui/material": "5.16.7",
-    "@mui/styled-engine": "5.16.6",
+    "@mui/icons-material": "5.16.9",
+    "@mui/material": "5.16.9",
+    "@mui/styled-engine": "5.16.8",
     "@redhat-developer/red-hat-developer-hub-theme": "0.4.0",
     "@scalprum/core": "0.8.1",
     "@scalprum/react-core": "0.9.3",
@@ -68,7 +68,7 @@
     "@types/node": "20.17.9",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "prettier": "3.4.1"
+    "prettier": "3.4.2"
   },
   "browserslist": {
     "production": [

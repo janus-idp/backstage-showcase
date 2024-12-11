@@ -14,7 +14,7 @@ test.describe("Change app-config at e2e test runtime", () => {
 
     const kubeUtils = new KubeClient();
     const dynamicTitle = generateDynamicTitle();
-
+    const uiHelper = new UIhelper(page);
     try {
       LOGGER.info(`Updating ConfigMap '${configMapName}' with new title.`);
       await kubeUtils.updateConfigMapTitle(
@@ -31,6 +31,9 @@ test.describe("Change app-config at e2e test runtime", () => {
       const common = new Common(page);
       await common.loginAsGuest();
       await new UIhelper(page).openSidebar("Home");
+      await uiHelper.verifyHeading("Welcome back!");
+      await uiHelper.verifyText("Quick Access");
+      await expect(page.locator("#search-bar-text-field")).toBeVisible();
       LOGGER.info("Verifying new title in the UI...");
       expect(await page.title()).toContain(dynamicTitle);
       LOGGER.info("Title successfully verified in the UI.");

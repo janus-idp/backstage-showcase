@@ -97,7 +97,7 @@ global:
       - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
       - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
-        disabled: true
+        disabled: false
       # Enable tech-radar plugin.
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
         disabled: false

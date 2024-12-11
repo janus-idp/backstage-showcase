@@ -83,60 +83,66 @@ test.describe.skip(
   },
 );
 
-test.describe
-  .serial("Test RBAC plugin: Aliases used in conditional access policies", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  let page: Page;
+//TODO: skipping due to RHIDP-4993
+test.describe.skip(
+  "Test RBAC plugin: Aliases used in conditional access policies",
+  () => {
+    let common: Common;
+    let uiHelper: UIhelper;
+    let page: Page;
 
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
+    test.beforeAll(async ({ browser }, testInfo) => {
+      page = (await setupBrowser(browser, testInfo)).page;
 
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
-  });
+      uiHelper = new UIhelper(page);
+      common = new Common(page);
+      await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    });
 
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
-
-  test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async () => {
-    await uiHelper.openSidebar("Catalog");
-    await uiHelper.selectMuiBox("Kind", "Component");
-
-    await uiHelper.searchInputPlaceholder("test-rhdh-qe-2");
-    await page
-      .getByRole("link", { name: "test-rhdh-qe-2", exact: true })
-      .click();
-
-    await expect(page.locator("header")).toContainText("user:rhdh-qe-2");
-    await page.getByTestId("menu-button").click();
-    const unregisterUserOwned = page.getByText("Unregister entity");
-    await expect(unregisterUserOwned).toBeEnabled();
-
-    await page.getByText("Unregister entity").click();
-    await expect(page.getByRole("heading")).toContainText(
-      "Are you sure you want to unregister this entity?",
+    test.beforeEach(
+      async () => await new Common(page).checkAndClickOnGHloginPopup(),
     );
-    await page.getByRole("button", { name: "Cancel" }).click();
 
-    await uiHelper.openSidebar("Catalog");
-    await page.getByRole("link", { name: "test-rhdh-qe-2-team-owned" }).click();
-    await expect(page.locator("header")).toContainText(
-      "janus-qe/rhdh-qe-2-team",
-    );
-    await page.getByTestId("menu-button").click();
-    const unregisterGroupOwned = page.getByText("Unregister entity");
-    await expect(unregisterGroupOwned).toBeDisabled();
-  });
+    test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async () => {
+      await uiHelper.openSidebar("Catalog");
+      await uiHelper.selectMuiBox("Kind", "Component");
 
-  test.afterAll(async () => {
-    await page.close();
-  });
-});
+      await uiHelper.searchInputPlaceholder("test-rhdh-qe-2");
+      await page
+        .getByRole("link", { name: "test-rhdh-qe-2", exact: true })
+        .click();
 
-test.describe.serial("Test RBAC plugin as an admin user", () => {
+      await expect(page.locator("header")).toContainText("user:rhdh-qe-2");
+      await page.getByTestId("menu-button").click();
+      const unregisterUserOwned = page.getByText("Unregister entity");
+      await expect(unregisterUserOwned).toBeEnabled();
+
+      await page.getByText("Unregister entity").click();
+      await expect(page.getByRole("heading")).toContainText(
+        "Are you sure you want to unregister this entity?",
+      );
+      await page.getByRole("button", { name: "Cancel" }).click();
+
+      await uiHelper.openSidebar("Catalog");
+      await page
+        .getByRole("link", { name: "test-rhdh-qe-2-team-owned" })
+        .click();
+      await expect(page.locator("header")).toContainText(
+        "janus-qe/rhdh-qe-2-team",
+      );
+      await page.getByTestId("menu-button").click();
+      const unregisterGroupOwned = page.getByText("Unregister entity");
+      await expect(unregisterGroupOwned).toBeDisabled();
+    });
+
+    test.afterAll(async () => {
+      await page.close();
+    });
+  },
+);
+
+//TODO: skipping due to RHIDP-4993
+test.describe.skip("Test RBAC plugin as an admin user", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
