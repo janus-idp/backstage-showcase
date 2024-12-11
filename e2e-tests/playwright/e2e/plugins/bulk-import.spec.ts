@@ -10,7 +10,8 @@ import {
 } from "../../support/testData/bulk-import";
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
-test.describe.serial("Bulk Import plugin", () => {
+test.describe.skip("Bulk Import plugin", () => {
+  // Skipping due to RHIDP-5258
   let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
