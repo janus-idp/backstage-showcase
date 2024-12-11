@@ -167,7 +167,7 @@ export class Common {
   }
 
   async clickOnGHloginPopup() {
-    const loginButton = await getByRole('button', { name: 'Log in' })
+    const loginButton = await this.page.getByRole('dialog', {name: "Login Required"}).getByRole("button", {name: "Log in"})
     await loginButton.clickButton("Log in");
     await this.checkAndReauthorizeGithubApp();
     await this.page.waitForSelector(loginButton, {
