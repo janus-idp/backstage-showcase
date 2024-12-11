@@ -161,6 +161,7 @@ export class Common {
       await frameLocator.waitFor({ state: "visible", timeout: 2000 });
       await this.clickOnGHloginPopup();
     } catch (error) {
+      console.log(JSON.stringify(error))
       if (force) throw error;
     }
   }
