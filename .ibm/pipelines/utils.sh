@@ -521,7 +521,7 @@ run_tests() {
   local project=$2
   project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
   cd "${DIR}/../../e2e-tests"
-  yarn install
+  yarn install --frozen-lockfile
   yarn playwright install chromium
 
   Xvfb :99 &
