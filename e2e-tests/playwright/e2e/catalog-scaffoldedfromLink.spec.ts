@@ -37,6 +37,10 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await common.loginAsGithubUser();
   });
 
+  test.beforeEach(
+    async () => await new Common(page).checkAndClickOnGHloginPopup(),
+  );
+
   test("Register an Template", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
