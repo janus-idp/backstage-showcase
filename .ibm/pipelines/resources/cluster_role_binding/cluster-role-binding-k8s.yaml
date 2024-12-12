@@ -10,4 +10,3 @@ subjects:
 - kind: ServiceAccount
   name: rhdh-k8s-plugin
   namespace: showcase
-
