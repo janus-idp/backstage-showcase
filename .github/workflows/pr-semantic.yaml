@@ -33,6 +33,7 @@ jobs:
             test
             revert
           requireScope: false
+          headerPattern: '^(?:\[release-\d+.\d+\] )?(\w*)(?:\(([\w$.\-* ]*)\))?: (.*)$'
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"
