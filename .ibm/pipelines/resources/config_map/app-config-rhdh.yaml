@@ -14,44 +14,6 @@ app:
         headerColor1: 'rgb(190, 122, 45)'
         headerColor2: 'rgb(45, 190, 50)'
         navigationIndicatorColor: 'rgb(45, 113, 190)'
-dynamicPlugins:
-  rootDirectory: dynamic-plugins-root
-  frontend:
-    default.main-menu-items:
-      menuItems:
-        default.list:
-          title: References
-          icon: bookmarks
-        default.apis:
-          parent: default.list
-        default.learning-path:
-          parent: default.list
-    backstage.plugin-techdocs:
-      menuItems:
-        favorites:
-          title: Favorites
-          icon: star
-          priority: 10
-        docs:
-          parent: favorites
-          priority: 1
-    pataknight.backstage-plugin-rhdh-qe-theme:
-      appIcons:
-      - importName: LightIcon
-        name: lightIcon
-      - importName: DarkIcon
-        name: darkIcon
-      themes:
-      - icon: lightIcon
-        id: light-dynamic
-        importName: lightThemeProvider
-        title: Light Dynamic
-        variant: light
-      - icon: darkIcon
-        id: dark-dynamic
-        importName: darkThemeProvider
-        title: Dark Dynamic
-        variant: dark
 backend:
   reading:
     allow:
