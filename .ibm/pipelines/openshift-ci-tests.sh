@@ -5,7 +5,6 @@ export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 
 LOGFILE="test-log"
 export DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
 
 cleanup() {
@@ -61,7 +60,6 @@ main() {
       ;;
   esac
 
-# echo "K8S_CLUSTER_ROUTER_BASE : $K8S_CLUSTER_ROUTER_BASE"
 echo "Main script completed with result: ${OVERALL_RESULT}"
 exit "${OVERALL_RESULT}"
 
