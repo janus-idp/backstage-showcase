@@ -515,7 +515,7 @@ run_tests() {
   (
     set -e
     echo "Using PR container image: ${TAG_NAME}"
-    yarn "$project" --quiet
+    yarn "$project"
   ) 2>&1 | tee "/tmp/${LOGFILE}"
 
   local RESULT=${PIPESTATUS[0]}

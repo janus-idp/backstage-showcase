@@ -10,3 +10,6 @@ subjects:
 - kind: ServiceAccount
   name: rhdh-k8s-plugin
   namespace: showcase
+- kind: ServiceAccount
+  name: rhdh-k8s-plugin
+  namespace: showcase-ci-nightly

@@ -61,6 +61,7 @@ main() {
   esac
 
 echo "Main script completed with result: ${OVERALL_RESULT}"
+sleep 1200
 exit "${OVERALL_RESULT}"
 
 }
