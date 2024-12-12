@@ -10,8 +10,6 @@
   "scripts": {
     "showcase": "playwright test --project=showcase",
     "showcase-rbac": "playwright test --project=showcase-rbac",
-    "showcase-1-2-x": "playwright test --project=showcase",
-    "showcase-rbac-1-2-x": "playwright test --project=showcase-rbac",
     "showcase-ci-nightly": "playwright test --project=showcase",
     "showcase-rbac-nightly": "playwright test --project=showcase-rbac",
     "showcase-k8s-ci-nightly": "playwright test --project=showcase-k8s",

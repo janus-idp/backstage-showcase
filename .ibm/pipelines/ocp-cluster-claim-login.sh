@@ -60,6 +60,8 @@ if [[ "$open_console" == "y" || "$open_console" == "Y" ]]; then
     echo "Use bellow user and password to login into web console:"
     echo "Username: kubeadmin"
     echo "Password: $password"
+    echo "Password copied to clipboard"
+    echo $password | pbcopy
     sleep 3
     
     # Attempt to open the web console in the default browser
