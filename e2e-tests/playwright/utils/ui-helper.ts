@@ -298,13 +298,27 @@ export class UIhelper {
     });
   }
 
-  async verifyButtonURL(label: string | RegExp, url: string | RegExp) {
-    const buttonUrl = await this.page
-      .getByRole("button", { name: label })
-      .first()
-      .getAttribute("href");
+  async verifyButtonURL(
+    label: string | RegExp,
+    url: string | RegExp,
+    options: { locator?: string } = {
+      locator: "",
+    },
+  ) {
+    const buttonUrl =
+      options.locator == ""
+        ? await this.page
+            .getByRole("button", { name: label })
+            .first()
+            .getAttribute("href")
+        : await this.page
+            .locator(options.locator)
+            .getByRole("button", { name: label })
+            .first()
+            .getAttribute("href");
     expect(buttonUrl).toContain(url);
   }
+  // locator('[data-test-id="topology-test"]').getByRole('button', { name: 'Open URL' })
 
   /**
    * Verifies that a table row, identified by unique text, contains specific cell texts.
@@ -538,5 +552,17 @@ export class UIhelper {
 
     await expect(enabledColumn).toHaveText(expectedEnabled);
     await expect(preinstalledColumn).toHaveText(expectedPreinstalled);
+  }
+
+  async hoverOnPodStatusIndicator() {
+    await this.page
+      .locator('[data-test-id="topology-test"]')
+      .getByText("Pod")
+      .hover({});
+  }
+
+  async verifyTextInTooltip(text: string | RegExp) {
+    const tooltip = await this.page.getByRole("tooltip").getByText(text);
+    expect(tooltip).toBeVisible();
   }
 }
