@@ -8,7 +8,7 @@ import LogoIcon from './LogoIcon';
 
 const useStyles = makeStyles()({
   sidebarLogo: {
-    margin: '24px 0px 6px 24px',
+    margin: '24px 0px 24px 24px',
   },
 });
 

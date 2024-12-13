@@ -253,10 +253,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
       <GlobalHeader />
       <Sidebar>
         <SidebarLogo />
-        <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
-          <SidebarSearchModal />
-        </SidebarGroup>
-        <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
           {/* Global nav, not org-specific */}
           {renderMenuItems(true, false)}
