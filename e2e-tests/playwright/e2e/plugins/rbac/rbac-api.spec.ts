@@ -22,7 +22,7 @@ test.describe.serial("Test RBAC plugin REST API", () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
 
-    await common.loginAsGithubUser();
+    await common.loginAsKeycloakUser();
     const apiToken = await RhdhAuthApiHack.getToken(page);
     responseHelper = new Response(apiToken);
   });

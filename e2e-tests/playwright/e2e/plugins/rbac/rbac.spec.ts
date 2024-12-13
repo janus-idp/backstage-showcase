@@ -23,7 +23,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGithubUser();
+    await common.loginAsKeycloakUser();
     await page.goto("/rbac");
   });
 
