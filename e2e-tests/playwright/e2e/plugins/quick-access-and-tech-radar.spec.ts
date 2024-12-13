@@ -19,8 +19,7 @@ test.describe("Test Customized Quick Access and tech-radar plugin", () => {
     await homePage.verifyQuickAccess("SECURITY TOOLS", "Keycloak", true);
   });
 
-  // TODO: Investigate why Tech Radar is showing "Process" instead of "Storage".
-  test.skip("Verify tech-radar", async ({ page }) => {
+  test("Verify tech-radar", async ({ page }) => {
     const uiHelper = new UIhelper(page);
     const techRadar = new TechRadar(page);
 
