@@ -84,10 +84,8 @@ export class UIhelper {
     await element.click();
   }
 
-  async verifyDivHasText(divText: string) {
-    await expect(
-      this.page.locator(`div`).filter({ hasText: divText }),
-    ).toBeVisible();
+  async verifyDivHasText(divText: string | RegExp) {
+    await expect(this.page.locator(`div`).getByText(divText)).toBeVisible();
   }
 
   async clickLink(linkText: string) {

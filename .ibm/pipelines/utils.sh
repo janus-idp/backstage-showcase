@@ -11,8 +11,7 @@ retrieve_pod_logs() {
 save_all_pod_logs(){
   set +e
   local namespace=$1
-  namespace=${namespace%-pr-*} # remove -pr- suffix if any.
-  mkdir -p pod_logs
+  rm -rf pod_logs && mkdir -p pod_logs
 
   # Get all pod names in the namespace
   pod_names=$(kubectl get pods -n $namespace -o jsonpath='{.items[*].metadata.name}')
@@ -384,23 +383,10 @@ configure_external_postgres_db() {
   oc apply -f "${DIR}/resources/postgres-db/postgres-cred.yaml"  --namespace="${project}"
 }
 
-set_github_app_3_credentials() {
-  GITHUB_APP_APP_ID=$GITHUB_APP_3_APP_ID
-  GITHUB_APP_CLIENT_ID=$GITHUB_APP_3_CLIENT_ID
-  GITHUB_APP_PRIVATE_KEY=$GITHUB_APP_3_PRIVATE_KEY
-  GITHUB_APP_CLIENT_SECRET=$GITHUB_APP_3_CLIENT_SECRET
-
-  export GITHUB_APP_APP_ID
-  export GITHUB_APP_CLIENT_ID
-  export GITHUB_APP_PRIVATE_KEY
-  export GITHUB_APP_CLIENT_SECRET
-  echo "GitHub App 3 credentials set for current job."
-}
-
 apply_yaml_files() {
   local dir=$1
   local project=$2
-  local release_name=$3
+  local rhdh_base_url=$3
   echo "Applying YAML files to namespace ${project}"
 
   oc config set-context --current --namespace="${project}"
@@ -418,10 +404,8 @@ apply_yaml_files() {
     done
 
     DH_TARGET_URL=$(echo -n "test-backstage-customization-provider-${project}.${K8S_CLUSTER_ROUTER_BASE}" | base64 -w 0)
-    local RHDH_BASE_URL=$(echo -n "https://${release_name}-backstage-${project}.${K8S_CLUSTER_ROUTER_BASE}" | base64 | tr -d '\n')
-    if [[ "$JOB_NAME" == *aks* || "$JOB_NAME" == *gke*  ]]; then
-      RHDH_BASE_URL=$(echo -n "https://${K8S_CLUSTER_ROUTER_BASE}" | base64 | tr -d '\n')
-    fi
+    local RHDH_BASE_URL=$(echo -n "$rhdh_base_url" | base64 | tr -d '\n')
+
     for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN KEYCLOAK_AUTH_BASE_URL KEYCLOAK_AUTH_CLIENTID KEYCLOAK_AUTH_CLIENT_SECRET KEYCLOAK_AUTH_LOGIN_REALM KEYCLOAK_AUTH_REALM RHDH_BASE_URL; do
       sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
     done
@@ -439,7 +423,7 @@ apply_yaml_files() {
 
     sed -i "s/K8S_CLUSTER_NAME:.*/K8S_CLUSTER_NAME: ${ENCODED_CLUSTER_NAME}/g" "$dir/auth/secrets-rhdh-secrets.yaml"
 
-    token=$(oc get secret "${secret_name}" -n "${project}" -o=jsonpath='{.data.token}')
+    token=$(oc get secret rhdh-k8s-plugin-secret -n "${project}" -o=jsonpath='{.data.token}')
     sed -i "s/OCM_CLUSTER_TOKEN: .*/OCM_CLUSTER_TOKEN: ${token}/" "$dir/auth/secrets-rhdh-secrets.yaml"
 
     # Select the configuration file based on the namespace or job
@@ -449,6 +433,10 @@ apply_yaml_files() {
       create_app_config_map_k8s "$config_file" "$project"
     else
       create_app_config_map "$config_file" "$project"
+      oc create configmap dynamic-homepage-and-sidebar-config \
+      --from-file="dynamic-homepage-and-sidebar-config.yaml"="$dir/resources/config_map/dynamic-homepage-and-sidebar-config.yaml" \
+      --namespace="${project}" \
+      --dry-run=client -o yaml | oc apply -f -
     fi
     oc create configmap rbac-policy \
       --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
@@ -519,7 +507,7 @@ create_app_config_map_k8s() {
 run_tests() {
   local release_name=$1
   local project=$2
-  project=${project%-pr-*} # Remove -pr- suffix if any set for main branchs pr's.
+  project=${project}
   cd "${DIR}/../../e2e-tests"
   yarn install
   yarn playwright install chromium
@@ -656,7 +644,8 @@ initiate_deployments() {
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
 
   cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${RELEASE_NAME}" "${RELEASE_NAME}"
+  local rhdh_base_url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${rhdh_base_url}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
   helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 
@@ -665,7 +654,8 @@ initiate_deployments() {
   configure_external_postgres_db "${NAME_SPACE_RBAC}"
 
   # Initiate rbac instace deployment.
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${RELEASE_NAME_RBAC}"
+  local rbac_rhdh_base_url="https://${RELEASE_NAME_RBAC}-backstage-${NAME_SPACE_RBAC}.${K8S_CLUSTER_ROUTER_BASE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${rbac_rhdh_base_url}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
   helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
 }
