@@ -449,6 +449,9 @@ apply_yaml_files() {
     oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
     oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 
+    # Create Deployment and Pipeline for Topology test.
+    oc apply -f "$dir/resources/topology_test/topology-test.yaml"
+
 }
 
 deploy_test_backstage_provider() {
