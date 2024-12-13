@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { UIhelper } from "../utils/ui-helper";
 import { Common } from "../utils/common";
 
@@ -13,7 +13,12 @@ test.describe("Verify TLS configuration with external Postgres DB", () => {
     await uiHelper.verifyText("Quick Access");
     await page.getByLabel("Catalog").click();
     await uiHelper.selectMuiBox("Kind", "Component");
-    await uiHelper.clickByDataTestId("user-picker-all");
-    await uiHelper.verifyRowsInTable(["test-rhdh-qe-2-team-owned"]);
+    await expect(async () => {
+      await uiHelper.clickByDataTestId("user-picker-all");
+      await uiHelper.verifyRowsInTable(["test-rhdh-qe-2-team-owned"]);
+    }).toPass({
+      intervals: [1_000, 2_000],
+      timeout: 15_000,
+    });
   });
 });
