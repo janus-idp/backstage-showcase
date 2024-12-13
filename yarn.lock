@@ -3825,9 +3825,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-redhat-argocd@npm:1.10.4":
-  version: 1.10.4
-  resolution: "@backstage-community/plugin-redhat-argocd@npm:1.10.4"
+"@backstage-community/plugin-redhat-argocd@npm:1.11.0":
+  version: 1.11.0
+  resolution: "@backstage-community/plugin-redhat-argocd@npm:1.11.0"
   dependencies:
     "@backstage-community/plugin-redhat-argocd-common": ^1.0.7
     "@backstage/catalog-model": ^1.7.0
@@ -3843,18 +3843,16 @@ __metadata:
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.61
     "@mui/icons-material": ^6.0.0
-    "@patternfly/patternfly": ^5.1.0
-    "@patternfly/react-charts": ^7.1.1
-    "@patternfly/react-core": ^5.1.2
-    "@patternfly/react-icons": ^5.1.1
-    "@patternfly/react-tokens": ^5.1.2
+    "@patternfly/patternfly": ^6.0.0
+    "@patternfly/react-core": ^6.0.0
+    "@patternfly/react-icons": ^6.0.0
     moment: ^2.30.1
     pluralize: ^8.0.0
     react-use: 17.5.1
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.3.0
-  checksum: 27d4543c180873b05f4577ff93b24a1f273199dae50f8d4534c031ce60cdbdb05199638ed8cb3a6f1c94f15a298636fbd68cf14584a91a5ea79a934df0d4761c
+  checksum: 2bfb5335976f38d00fcf0e66fd6843a260d2d5f6bb5b806ce8e9f47ed5b0b246b85b47e43d97bb68f5adda82615bc47e119286cd855cf0068156de09e37c5b14
   languageName: node
   linkType: hard
 
@@ -15126,6 +15124,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@patternfly/patternfly@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@patternfly/patternfly@npm:6.0.0"
+  checksum: 035ce47e43ed408fed1116721b0217855d4d522305fd0ad9a162798bdccecb980558a730f11b9a9c180a1b8f885a322752aa987a94a43562197a2fcae1a0464b
+  languageName: node
+  linkType: hard
+
 "@patternfly/react-charts@npm:^7.1.1":
   version: 7.3.0
   resolution: "@patternfly/react-charts@npm:7.3.0"
@@ -15176,6 +15181,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@patternfly/react-core@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@patternfly/react-core@npm:6.0.0"
+  dependencies:
+    "@patternfly/react-icons": ^6.0.0
+    "@patternfly/react-styles": ^6.0.0
+    "@patternfly/react-tokens": ^6.0.0
+    focus-trap: 7.6.0
+    react-dropzone: ^14.2.3
+    tslib: ^2.7.0
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 196ca777d06df73945cfa0c8c11d3d54d303012bf5b15e67fabb6b996c217a5326b58a7be6c9eaf2a7055391b71065c27ab34ddc4b88fd6cc69760b237444864
+  languageName: node
+  linkType: hard
+
 "@patternfly/react-icons@npm:^5.1.1, @patternfly/react-icons@npm:^5.4.2":
   version: 5.4.2
   resolution: "@patternfly/react-icons@npm:5.4.2"
@@ -15186,10 +15208,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@patternfly/react-icons@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@patternfly/react-icons@npm:6.0.0"
+  peerDependencies:
+    react: ^17 || ^18
+    react-dom: ^17 || ^18
+  checksum: 39ddcda5a0f0a3840cc8b499a9b68f0ea133ea369a6412dfaabb38af0095ed9eef5df3171de3d0990dc0130720d4fbe3e6b28d70fdb6668c1507cd1cbdc6750d
+  languageName: node
+  linkType: hard
+
 "@patternfly/react-styles@npm:^5.1.1, @patternfly/react-styles@npm:^5.3.0, @patternfly/react-styles@npm:^5.4.1":
   version: 5.4.1
   resolution: "@patternfly/react-styles@npm:5.4.1"
   checksum: 6fb1ec38a017acd1cf1262b39c69f70a650ed7f205d5433c83087957395e6e487914ed1992a67de37718ea536145fc974d7d9dbc6460ae38d668035f4c6d0c1b
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-styles@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@patternfly/react-styles@npm:6.0.0"
+  checksum: 40f6e169eea6b412e8bea3c220c4e29923106fa65363c5e07068db37eaa55f6088411ed0bd36c9befaa3486f108ca8d097ee39bd55276855a4387e6713d484c8
   languageName: node
   linkType: hard
 
@@ -15214,6 +15253,13 @@ __metadata:
   version: 5.4.1
   resolution: "@patternfly/react-tokens@npm:5.4.1"
   checksum: d6f51cbd31db797ed42b148f58ecb28bcc93bdcdf39d0f20b8db5ac40ac2998002ddfad764af38c2f00bc366ac57b1c12fdd42a55e7a30fe3b01e26739e770cf
+  languageName: node
+  linkType: hard
+
+"@patternfly/react-tokens@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@patternfly/react-tokens@npm:6.0.0"
+  checksum: 3390651a7ea0d2664adb1f760cb54e40200ac63b54269ba3f28002c01cd108c57a7bf142c894cfc510f400c950c239f93fb9ca47c00515dda44ec386b6aec972
   languageName: node
   linkType: hard
 
@@ -22649,7 +22695,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-redhat-argocd@workspace:dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd"
   dependencies:
-    "@backstage-community/plugin-redhat-argocd": 1.10.4
+    "@backstage-community/plugin-redhat-argocd": 1.11.0
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
     "@mui/material": 5.16.9
