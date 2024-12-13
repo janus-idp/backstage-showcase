@@ -14,44 +14,6 @@ app:
         headerColor1: 'rgb(190, 122, 45)'
         headerColor2: 'rgb(45, 190, 50)'
         navigationIndicatorColor: 'rgb(45, 113, 190)'
-dynamicPlugins:
-  rootDirectory: dynamic-plugins-root
-  frontend:
-    default.main-menu-items:
-      menuItems:
-        default.list:
-          title: References
-          icon: bookmarks
-        default.apis:
-          parent: default.list
-        default.learning-path:
-          parent: default.list
-    backstage.plugin-techdocs:
-      menuItems:
-        favorites:
-          title: Favorites
-          icon: star
-          priority: 10
-        docs:
-          parent: favorites
-          priority: 1
-    pataknight.backstage-plugin-rhdh-qe-theme:
-      appIcons:
-      - importName: LightIcon
-        name: lightIcon
-      - importName: DarkIcon
-        name: darkIcon
-      themes:
-      - icon: lightIcon
-        id: light-dynamic
-        importName: lightThemeProvider
-        title: Light Dynamic
-        variant: light
-      - icon: darkIcon
-        id: dark-dynamic
-        importName: darkThemeProvider
-        title: Dark Dynamic
-        variant: dark
 backend:
   reading:
     allow:
@@ -92,19 +54,25 @@ integrations:
     - host: gitlab.com
       token: ${GITLAB_TOKEN}
 auth:
+  # see https://backstage.io/docs/auth/ to learn about auth providers
   environment: development
+  session:
+    secret: superSecretSecret 
   providers:
     guest:
       dangerouslyAllowOutsideDevelopment: true
-    # Plugin: GitHub
-    github:
-      development:
-        clientId: ${GITHUB_APP_CLIENT_ID}
-        clientSecret: ${GITHUB_APP_CLIENT_SECRET}
     google:
       development:
         clientId: ${GOOGLE_CLIENT_ID}
         clientSecret: ${GOOGLE_CLIENT_SECRET}
+    oidc:
+      development:
+        metadataUrl: ${KEYCLOAK_AUTH_BASE_URL}/auth/realms/${KEYCLOAK_AUTH_REALM}
+        clientId: ${KEYCLOAK_AUTH_CLIENTID}
+        clientSecret: ${KEYCLOAK_AUTH_CLIENT_SECRET}
+        prompt: auto
+        callbackUrl: ${RHDH_BASE_URL}/api/auth/oidc/handler/frame
+signInPage: oidc
 techRadar:
   url: "http://${DH_TARGET_URL}/tech-radar"
 proxy:
@@ -149,6 +117,16 @@ catalog:
       rules:
         - allow: [User, Group]
   providers:
+    keycloakOrg:
+      default:
+        baseUrl: ${KEYCLOAK_AUTH_BASE_URL}/auth
+        loginRealm: ${KEYCLOAK_AUTH_LOGIN_REALM}
+        realm: ${KEYCLOAK_AUTH_REALM}
+        clientId: ${KEYCLOAK_AUTH_CLIENTID}
+        clientSecret: ${KEYCLOAK_AUTH_CLIENT_SECRET}
+        schedule:
+          frequency: { minutes: 1 }
+          timeout: { minutes: 1 }
     github:
       providerId:
         organization: '${GITHUB_ORG}'
