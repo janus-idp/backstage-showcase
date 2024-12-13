@@ -8,7 +8,7 @@ p, role:xyz/team_a, catalog.entity.create, create, allow
 p, role:xyz/team_a, catalog.location.create, create, allow
 p, role:xyz/team_a, catalog.location.read, read, allow
 
-g, user:default/rhdh-qe-user, role:default/qe_rbac_admin
+g, user:default/rhdh-qe, role:default/qe_rbac_admin
 p, role:default/qe_rbac_admin, kubernetes.proxy, use, allow
 p, role:default/qe_rbac_admin, catalog.entity.create, create, allow
 p, role:default/qe_rbac_admin, catalog.location.create, create, allow
