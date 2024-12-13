@@ -33,6 +33,7 @@ import DynamicRootContext, {
 } from '../DynamicRoot/DynamicRootContext';
 import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
+import { GlobalHeader } from './GlobalHeader';
 
 const useStyles = makeStyles()({
   sidebarItem: {
@@ -249,6 +250,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
   return (
     <SidebarPage>
+      <GlobalHeader />
       <Sidebar>
         <SidebarLogo />
         <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
