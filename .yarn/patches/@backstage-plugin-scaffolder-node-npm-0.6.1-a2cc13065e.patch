@@ -1,0 +1,21 @@
+diff --git a/dist/alpha.d.ts b/dist/alpha.d.ts
+index 7b6f3aa434c1cfcec9fc0b65cccace1f30b6542c..ee31d169c695a96328a6520417bbb135854c4e74 100644
+--- a/dist/alpha.d.ts
++++ b/dist/alpha.d.ts
+@@ -1,4 +1,3 @@
+-/// <reference types="node" />
+ import * as _backstage_backend_plugin_api from '@backstage/backend-plugin-api';
+ import { TemplateAction, TaskBroker, TemplateFilter, TemplateGlobal } from '@backstage/plugin-scaffolder-node';
+ 
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 148a205bfe7747f916aebcb21c3c9cee45cdc07b..4a3126f375daa9e961743d210e3cecb390b2ec2b 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -89,6 +89,7 @@ type TaskBrokerDispatchOptions = {
+  * @public
+  */
+ interface TaskContext {
++    taskId: string;
+     cancelSignal: AbortSignal;
+     spec: TaskSpec;
+     secrets?: TaskSecrets;
