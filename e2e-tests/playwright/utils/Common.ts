@@ -161,16 +161,22 @@ export class Common {
       await frameLocator.waitFor({ state: "visible", timeout: 2000 });
       await this.clickOnGHloginPopup();
     } catch (error) {
+      console.log(JSON.stringify(error));
       if (force) throw error;
     }
   }
 
   async clickOnGHloginPopup() {
-    await this.uiHelper.clickButton("Log in");
+    const loginButton = this.page
+      .getByRole("dialog", { name: "Login Required" })
+      .getByRole("button", { name: "Log in" });
+    await loginButton.click();
     await this.checkAndReauthorizeGithubApp();
-    await this.page.waitForSelector(this.uiHelper.getButtonSelector("Log in"), {
-      state: "hidden",
-      timeout: 100000,
+    await expect(async () => {
+      await expect(loginButton).toBeVisible();
+    }).toPass({
+      intervals: [1_000],
+      timeout: 10_000,
     });
   }
 
