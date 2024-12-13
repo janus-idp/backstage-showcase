@@ -62,7 +62,7 @@ test.describe
     await uiHelper.clickButton("Next");
     await page.getByLabel("configure-access").first().click();
     await expect(page.getByPlaceholder("string, string")).toHaveValue(
-      "group:janus-qe/rhdh-qe-2-team,$currentUser",
+      "group:default/rhdh-qe-2-team,$currentUser",
     );
     await page.getByTestId("cancel-conditions").click();
     await page.getByLabel("configure-access").nth(1).click();

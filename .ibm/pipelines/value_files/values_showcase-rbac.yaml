@@ -226,7 +226,7 @@ upstream:
               resourceType: catalog-entity
               params:
                 claims:
-                  - 'group:janus-qe/rhdh-qe-2-team'
+                  - 'group:default/rhdh-qe-2-team'
                   - \$currentUser
             ---
             result: CONDITIONAL
