@@ -18,7 +18,7 @@ test.describe("Verify TLS configuration with external Postgres DB", () => {
       await uiHelper.verifyRowsInTable(["test-rhdh-qe-2-team-owned"]);
     }).toPass({
       intervals: [1_000, 2_000],
-      timeout: 15_000
+      timeout: 15_000,
     });
   });
 });
