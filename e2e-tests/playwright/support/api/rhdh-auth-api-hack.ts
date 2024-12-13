@@ -9,7 +9,7 @@ export class RhdhAuthApiHack {
   static async getToken(page: Page) {
     try {
       const response = await page.request.get(
-        "/api/auth/github/refresh?optional=&scope=&env=development",
+        "/api/auth/oidc/refresh?optional=&scope=&env=development",
         {
           headers: {
             "x-requested-with": "XMLHttpRequest",
