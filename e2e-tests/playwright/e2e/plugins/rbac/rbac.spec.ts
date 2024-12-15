@@ -12,26 +12,17 @@ import fs from "fs/promises";
 import { RbacPo } from "../../../support/pageObjects/rbac-po";
 
 // TODO: reenable tests, replace skip with serial
-test.describe.serial
-  .only("Test RBAC plugin: load permission policies and conditions from files", () => {
-  let common: Common;
-  let uiHelper: UIhelper;
-  let page: Page;
-
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsKeycloakUser();
+test.describe("Test RBAC plugin: load permission policies and conditions from files", () => {
+  test.beforeEach(async ({ page }) => {
+    await new Common(page).loginAsKeycloakUser();
     await page.goto("/rbac");
   });
 
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
+  test("Check if permission policies defined in files are loaded", async ({
+    page,
+  }) => {
+    const uiHelper = new UIhelper(page);
 
-  test("Check if permission policies defined in files are loaded and effective", async () => {
     const testRole: string = "role:default/test2-role";
 
     await uiHelper.verifyHeading(/All roles \(\d+\)/);
@@ -57,25 +48,11 @@ test.describe.serial
     await expect(page.getByRole("article")).toContainText("Read, Update");
     await expect(page.getByRole("article")).toContainText("Delete");
 
-    await page.getByTestId("update-members").getByLabel("Update").click();
-    await expect(page.locator("tbody")).toContainText("rhdh-qe-2-team");
-    await uiHelper.clickButton("Next");
-    await page.getByLabel("configure-access").first().click();
-    await expect(page.getByPlaceholder("string, string")).toHaveValue(
-      "group:default/rhdh-qe-2-team,$currentUser",
-    );
-    await page.getByTestId("cancel-conditions").click();
-    await page.getByLabel("configure-access").nth(1).click();
-    await expect(page.getByPlaceholder("string, string")).toHaveValue(
-      "$currentUser",
-    );
-    await page.getByTestId("cancel-conditions").click();
-    await uiHelper.clickButton("Next");
-    await uiHelper.clickButton("Cancel");
-  });
-
-  test.afterAll(async () => {
-    await page.close();
+    /*
+    Note that:
+    The policies generated from a policy.csv or ConfigMap file cannot be edited or deleted using the Developer Hub Web UI. 
+    https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.2/html/authorization/proc-rbac-ui-manage-roles_title-authorization#proc-rbac-ui-edit-role_title-authorization
+    */
   });
 });
 
