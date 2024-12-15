@@ -15,12 +15,12 @@ export class RbacConstants {
           "name": "role:default/test2-role"
         },
         {
-          "memberReferences": ["user:default/rhdh-qe"],
-          "name": "role:default/qe_rbac_admin"
-        },
-        {
           "memberReferences": ["group:default/rhdh-qe-2-team"],
           "name": "role:default/bulk_import"
+        },
+        {
+          "memberReferences": ["user:default/rhdh-qe"],
+          "name": "role:default/qe_rbac_admin"
         }
       ]
     `;

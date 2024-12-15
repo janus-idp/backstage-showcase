@@ -12,8 +12,8 @@ import fs from "fs/promises";
 import { RbacPo } from "../../../support/pageObjects/rbac-po";
 
 // TODO: reenable tests, replace skip with serial
-test.describe
-  .serial("Test RBAC plugin: load permission policies and conditions from files", () => {
+test.describe.serial
+  .only("Test RBAC plugin: load permission policies and conditions from files", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
