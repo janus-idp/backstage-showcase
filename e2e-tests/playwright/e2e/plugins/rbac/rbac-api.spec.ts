@@ -6,7 +6,7 @@ import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 
 // TODO: reenable tests
-test.describe.serial.only("Test RBAC plugin REST API", () => {
+test.describe.serial("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
