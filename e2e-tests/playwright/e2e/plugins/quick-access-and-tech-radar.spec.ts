@@ -30,6 +30,6 @@ test.describe("Test Customized Quick Access and tech-radar plugin", () => {
     await techRadar.verifyRadarDetails("Languages", "JavaScript");
     await techRadar.verifyRadarDetails("Storage", "AWS S3");
     await techRadar.verifyRadarDetails("Frameworks", "React");
-    await techRadar.verifyRadarDetails("Infrastructure", "ArgoCD");
+    await techRadar.verifyRadarDetails("Infrastructure", "GitHub Actions");
   });
 });

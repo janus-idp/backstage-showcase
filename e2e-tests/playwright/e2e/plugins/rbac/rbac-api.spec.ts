@@ -3,10 +3,10 @@ import { PolicyComplete, Response } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
-import { RhdhAuthHack } from "../../../support/api/rhdh-auth-hack";
+import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 
 // TODO: reenable tests
-test.describe.skip("Test RBAC plugin REST API", () => {
+test.describe.serial("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
   let page: Page;
@@ -22,9 +22,8 @@ test.describe.skip("Test RBAC plugin REST API", () => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
 
-    await common.loginAsGithubUser();
-    await uiHelper.openSidebar("Home");
-    const apiToken = await RhdhAuthHack.getInstance().getApiToken(page);
+    await common.loginAsKeycloakUser();
+    const apiToken = await RhdhAuthApiHack.getToken(page);
     responseHelper = new Response(apiToken);
   });
 
@@ -46,6 +45,18 @@ test.describe.skip("Test RBAC plugin REST API", () => {
       "/api/permission/policies",
       responseHelper.getSimpleRequest(),
     );
+
+    if (!rolesResponse.ok()) {
+      throw Error(
+        `RBAC rolesResponse API call failed with status code ${rolesResponse.status()}`,
+      );
+    }
+
+    if (!policiesResponse.ok()) {
+      throw Error(
+        `RBAC policiesResponse API call failed with status code ${policiesResponse.status()}`,
+      );
+    }
 
     await responseHelper.checkResponse(
       rolesResponse,

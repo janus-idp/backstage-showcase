@@ -1,8 +1,6 @@
 # Setting up Metrics Monitoring and Logging for Backstage Showcase
 
-The Backstage Showcase provides a `/metrics` endpoint on port `9464` (for application metrics) and `9463` (for host metrics) that provides OpenTelemetry metrics about your backstage application. This endpoint can be used to monitor your backstage instance using OpenTelemetry and Grafana.
-
-**Note**: Due to a limitation, the host and application metrics are exposed on separate ports. This is to be improved by making all metrics accessible on the same port (9464) in a future release. This guide will ONLY work with the application metrics from NodeJs and Backstage.
+The Backstage Showcase provides a `/metrics` endpoint on port `9464` that provides OpenTelemetry metrics about your backstage application. This endpoint can be used to monitor your backstage instance using OpenTelemetry and Grafana.
 
 When deploying Backstage Showcase onto a kubernetes cluster with the [RHDH Helm chart](https://github.com/redhat-developer/rhdh-chart) or the [RHDH Operator](https://github.com/janus-idp/operator), monitoring and logging for your RHDH instance can be configured using the following steps.
 

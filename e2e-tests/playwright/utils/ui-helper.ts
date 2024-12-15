@@ -22,8 +22,22 @@ export class UIhelper {
     await this.page.getByLabel(label).fill(text);
   }
 
+  /**
+   * Fills the search input with the provided text and waits for at least one
+   * search result containing the text to become visible.
+   *
+   * @param searchText - The text to be entered into the search input field.
+   */
   async searchInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Search"]', searchText);
+    // Wait for the search input to be visible
+    const searchInput = this.page.locator('input[placeholder="Search"]');
+    await expect(searchInput).toBeVisible();
+
+    await searchInput.fill(searchText);
+
+    // Wait for at least one search result to become visible
+    const resultLocator = this.page.locator(`text=${searchText}`);
+    await expect(resultLocator.first()).toBeVisible();
   }
 
   async filterInputPlaceholder(searchText: string) {
@@ -70,10 +84,8 @@ export class UIhelper {
     await element.click();
   }
 
-  async verifyDivHasText(divText: string) {
-    await expect(
-      this.page.locator(`div`).filter({ hasText: divText }),
-    ).toBeVisible();
+  async verifyDivHasText(divText: string | RegExp) {
+    await expect(this.page.locator(`div`).getByText(divText)).toBeVisible();
   }
 
   async clickLink(linkText: string) {
@@ -98,7 +110,6 @@ export class UIhelper {
     if (options?.notVisible) {
       await expect(linkLocator).not.toBeVisible();
     } else {
-      await linkLocator.scrollIntoViewIfNeeded();
       await expect(linkLocator).toBeVisible();
     }
   }
@@ -275,6 +286,16 @@ export class UIhelper {
 
   getButtonSelector(label: string): string {
     return `${UI_HELPER_ELEMENTS.MuiButtonLabel}:has-text("${label}")`;
+  }
+
+  getLoginBtnSelector(): string {
+    return 'MuiListItem-root li.MuiListItem-root button.MuiButton-root:has(span.MuiButton-label:text("Log in"))';
+  }
+
+  async waitForLoginBtnDisappear() {
+    await this.page.waitForSelector(await this.getLoginBtnSelector(), {
+      state: "detached",
+    });
   }
 
   async verifyButtonURL(label: string | RegExp, url: string | RegExp) {
@@ -491,5 +512,29 @@ export class UIhelper {
     await deleteButton.waitFor({ state: "visible" });
     await deleteButton.waitFor({ state: "attached" });
     await deleteButton.click();
+  }
+
+  /**
+   * Verifies the values of the Enabled and Preinstalled columns for a specific row.
+   *
+   * @param text - Text to locate the specific row (based on the Name column).
+   * @param expectedEnabled - Expected value for the Enabled column ("Yes" or "No").
+   * @param expectedPreinstalled - Expected value for the Preinstalled column ("Yes" or "No").
+   */
+  async verifyPluginRow(
+    text: string,
+    expectedEnabled: string,
+    expectedPreinstalled: string,
+  ) {
+    // Locate the row based on the text in the Name column
+    const rowSelector = `tr:has(td:text-is("${text}"))`;
+    const row = this.page.locator(rowSelector);
+
+    // Locate the "Enabled" (3rd column) and "Preinstalled" (4th column) cells by their index
+    const enabledColumn = row.locator("td").nth(2); // Index 2 for "Enabled"
+    const preinstalledColumn = row.locator("td").nth(3); // Index 3 for "Preinstalled"
+
+    await expect(enabledColumn).toHaveText(expectedEnabled);
+    await expect(preinstalledColumn).toHaveText(expectedPreinstalled);
   }
 }
