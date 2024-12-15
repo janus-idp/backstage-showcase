@@ -55,7 +55,7 @@ export class Roles {
   }
 
   async deleteRole(name: string) {
-    await this.uiHelper.openSidebar("RBAC");
+    await this.page.goto("/rbac");
     await this.uiHelper.filterInputPlaceholder(name);
     const button = this.page.locator(ROLES_PAGE_COMPONENTS.deleteRole(name));
     await button.waitFor({ state: "visible" });

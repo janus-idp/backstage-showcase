@@ -64,15 +64,14 @@ test.describe("Test RBAC plugin: Aliases used in conditional access policies", (
     page,
   }) => {
     const uiHelper = new UIhelper(page);
+    const testUser = "test-rhdh-qe-2";
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
 
-    await uiHelper.searchInputPlaceholder("test-rhdh-qe-2");
-    await page
-      .getByRole("link", { name: "test-rhdh-qe-2", exact: true })
-      .click();
+    await uiHelper.searchInputPlaceholder(testUser);
+    await page.getByRole("link", { name: testUser, exact: true }).click();
 
-    await expect(page.locator("header")).toContainText("user:rhdh-qe-2");
+    await expect(page.locator("header")).toContainText(testUser);
     await page.getByTestId("menu-button").click();
     const unregisterUserOwned = page.getByText("Unregister entity");
     await expect(unregisterUserOwned).toBeEnabled();
