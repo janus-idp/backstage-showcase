@@ -103,7 +103,6 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
         disabled: true
-      # - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-rbac
       - package: ./dynamic-plugins/dist/backstage-community-plugin-rbac
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
@@ -219,25 +218,24 @@ upstream:
             pluginId: catalog
             resourceType: catalog-entity
             permissionMapping:
-              - read
-              - update
+              - delete
             conditions:
               rule: IS_ENTITY_OWNER
               resourceType: catalog-entity
               params:
                 claims:
-                  - 'group:janus-qe/rhdh-qe-2-team'
+                  - 'group:default/rhdh-qe-2-team'
                   - \$currentUser
             ---
             result: CONDITIONAL
             roleEntityRef: 'role:default/test2-role'
             pluginId: catalog
-            resourceType: catalog-entity
+            resourceType: scaffolder-action 
             permissionMapping:
-              - delete
+              - use
             conditions:
               rule: IS_ENTITY_OWNER
-              resourceType: catalog-entity
+              resourceType: scaffolder-action 
               params:
                 claims:
                   - \$currentUser

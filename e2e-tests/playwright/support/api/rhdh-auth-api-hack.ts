@@ -1,15 +1,13 @@
 import { Page } from "@playwright/test";
 
-//here, we spy on the request to get the Backstage token to use APIs
-// for context see https://redhat-internal.slack.com/archives/C04CUSD4JSG/p1733209200187279
-// NOTE THAT AT THIS POINT IN TIME, THIS IS ONLY WORKING FOR GITHUB
+// here, we spy on the request to get the Backstage token to use APIs
 export class RhdhAuthApiHack {
   static token: string;
 
-  static async getToken(page: Page) {
+  static async getToken(page: Page, provider: "oidc" = "oidc") {
     try {
       const response = await page.request.get(
-        "/api/auth/oidc/refresh?optional=&scope=&env=development",
+        `/api/auth/${provider}/refresh?optional=&scope=&env=development`,
         {
           headers: {
             "x-requested-with": "XMLHttpRequest",

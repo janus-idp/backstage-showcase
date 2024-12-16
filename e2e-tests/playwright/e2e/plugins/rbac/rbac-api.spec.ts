@@ -54,7 +54,7 @@ test.describe.serial("Test RBAC plugin REST API", () => {
 
     if (!policiesResponse.ok()) {
       throw Error(
-        `RBAC rolesResponse API call failed with status code ${policiesResponse.status()}`,
+        `RBAC policiesResponse API call failed with status code ${policiesResponse.status()}`,
       );
     }
 
