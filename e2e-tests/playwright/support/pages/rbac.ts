@@ -177,17 +177,8 @@ export class Response {
   }
 
   async checkResponse(response: APIResponse, expected: string) {
-    //TODO: delete console logs
-    console.log("checkResponse: parameterResponse");
-    console.log(response);
-    console.log("checkResponse: parameterexpected");
-    console.log(expected);
     const cleanResponse = await this.removeMetadataFromResponse(response);
-    console.log("checkResponse: response after removeMetadataFromResponse");
-    console.log(cleanResponse);
     const expectedJson = JSON.parse(expected);
-    console.log("checkResponse: expectedJson after json parse");
-    console.log(expectedJson);
     expect(cleanResponse).toEqual(expectedJson);
   }
 }
