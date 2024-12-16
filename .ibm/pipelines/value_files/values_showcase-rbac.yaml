@@ -218,6 +218,8 @@ upstream:
             pluginId: catalog
             resourceType: catalog-entity
             permissionMapping:
+              - read
+              - update
               - delete
             conditions:
               rule: IS_ENTITY_OWNER
@@ -225,19 +227,6 @@ upstream:
               params:
                 claims:
                   - 'group:default/rhdh-qe-2-team'
-                  - \$currentUser
-            ---
-            result: CONDITIONAL
-            roleEntityRef: 'role:default/test2-role'
-            pluginId: catalog
-            resourceType: scaffolder-action 
-            permissionMapping:
-              - use
-            conditions:
-              rule: IS_ENTITY_OWNER
-              resourceType: scaffolder-action 
-              params:
-                claims:
                   - \$currentUser
             EOF
 
