@@ -116,6 +116,35 @@ export default defineConfig({
       ],
     },
     {
+      name: "showcase-operator",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+      },
+      testIgnore: [
+        "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
+        "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
+        "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
+        "**/playwright/e2e/authProviders/**/*.spec.ts",
+        "**/playwright/e2e/plugins/bulk-import.spec.ts",
+        "**/playwright/e2e/plugins/tekton/tekton.spec.ts",
+        "**/playwright/e2e/catalog-scaffoldedfromLink.spec.ts",
+        "**/playwright/e2e/audit-log/**/*.spec.ts",
+        "**/playwright/e2e/plugins/topology/topology.spec.ts",
+        "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
+        "**/playwright/e2e/configuration-test/config-map.spec.ts",
+      ],
+    },
+    {
+      name: "showcase-operator-rbac",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: [
+        "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
+        "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
+        "**/playwright/e2e/plugins/bulk-import.spec.ts",
+      ],
+    },
+    {
       name: "postgres-health-check",
       ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/verify-tls-config-health-check.spec.ts"],

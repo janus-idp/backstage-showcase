@@ -56,5 +56,19 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     apt-get install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Set working directory
+# Install skopeo
+RUN apt-get update -y && \
+    apt-get install -y skopeo
+
+# Install umoci
+RUN curl -LO "https://github.com/opencontainers/umoci/releases/download/v0.4.7/umoci.amd64" && \ 
+    chmod +x umoci.amd64 && \
+    mv umoci.amd64 /usr/local/bin/umoci
+
+# Install opm
+RUN curl -LO "https://github.com/operator-framework/operator-registry/releases/download/v1.23.0/linux-amd64-opm" && \ 
+    chmod +x linux-amd64-opm && \
+    mv linux-amd64-opm /usr/local/bin/opm
+
+# Set working directory    
 WORKDIR /tmp/
