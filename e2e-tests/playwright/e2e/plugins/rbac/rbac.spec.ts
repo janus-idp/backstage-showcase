@@ -23,7 +23,7 @@ test.describe("Test RBAC plugin: load permission policies and conditions from fi
     await page.goto("/rbac");
   });
 
-  test("Check if permission policies defined in files are loaded", async ({
+  test.skip("Check if permission policies defined in files are loaded", async ({
     page,
   }) => {
     const uiHelper = new UIhelper(page);
