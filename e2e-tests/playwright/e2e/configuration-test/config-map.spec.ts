@@ -31,7 +31,7 @@ test.describe("Change app-config at e2e test runtime", () => {
       const common = new Common(page);
       await page.context().clearCookies();
       await page.context().clearPermissions();
-      await page.reload({ waitUntil: "domcontentloaded" })
+      await page.reload({ waitUntil: "domcontentloaded" });
       await common.loginAsGuest();
       await new UIhelper(page).openSidebar("Home");
       await uiHelper.verifyHeading("Welcome back!");
