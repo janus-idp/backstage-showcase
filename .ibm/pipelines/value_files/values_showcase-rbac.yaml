@@ -220,6 +220,19 @@ upstream:
             permissionMapping:
               - read
               - update
+            conditions:
+              rule: IS_ENTITY_OWNER
+              resourceType: catalog-entity
+              params:
+                claims:
+                  - 'group:janus-qe/rhdh-qe-2-team'
+                  - \$currentUser
+            ---
+            result: CONDITIONAL
+            roleEntityRef: 'role:default/test2-role'
+            pluginId: catalog
+            resourceType: catalog-entity
+            permissionMapping:
               - delete
             conditions:
               rule: IS_ENTITY_OWNER
@@ -229,18 +242,22 @@ upstream:
                   - \$currentUser
             ---
             result: CONDITIONAL
-            roleEntityRef: 'role:default/test2-role'
+            roleEntityRef: 'role:default/qe_rbac_admin'
             pluginId: catalog
             resourceType: catalog-entity
             permissionMapping:
               - read
               - update
+              - delete
+              - create
             conditions:
               rule: IS_ENTITY_OWNER
               resourceType: catalog-entity
               params:
                 claims:
+                  - \$currentUser
                   - 'group:default/rhdh-qe-2-team'
+                  - 'user:default/rhdh-qe'
             EOF
 
             python install-dynamic-plugins.py /dynamic-plugins-root
