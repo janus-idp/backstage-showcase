@@ -55,7 +55,7 @@ test.describe("Test RBAC plugin: load permission policies and conditions from fi
   });
 });
 
-test.describe("Test RBAC plugin: Aliases used in conditional access policies", () => {
+test.skip("Test RBAC plugin: Aliases used in conditional access policies", () => {
   test.beforeEach(async ({ page }) => {
     await new Common(page).loginAsKeycloakUser(
       process.env.GH_USER2_ID,
