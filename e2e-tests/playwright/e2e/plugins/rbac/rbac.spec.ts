@@ -23,7 +23,7 @@ test.describe("Test RBAC plugin: load permission policies and conditions from fi
     await page.goto("/rbac");
   });
 
-  test.skip("Check if permission policies defined in files are loaded", async ({
+  test("Check if permission policies defined in files are loaded", async ({
     page,
   }) => {
     const uiHelper = new UIhelper(page);
@@ -41,9 +41,7 @@ test.describe("Test RBAC plugin: load permission policies and conditions from fi
     await uiHelper.verifyText("csv permission policy file");
 
     await uiHelper.verifyHeading("Users and groups (1 group");
-    //TODO: to fix when conditional policies run:
-    //await uiHelper.verifyHeading("Permission policies (1)");
-    await uiHelper.verifyHeading("Permission policies");
+    await uiHelper.verifyHeading("Permission policies (2)");
     const permissionPoliciesColumnsText =
       Roles.getPermissionPoliciesListColumnsText();
     await uiHelper.verifyColumnHeading(permissionPoliciesColumnsText);
@@ -57,7 +55,7 @@ test.describe("Test RBAC plugin: load permission policies and conditions from fi
   });
 });
 
-test.skip("Test RBAC plugin: Aliases used in conditional access policies", () => {
+test.describe("Test RBAC plugin: Aliases used in conditional access policies", () => {
   test.beforeEach(async ({ page }) => {
     await new Common(page).loginAsKeycloakUser(
       process.env.GH_USER2_ID,
