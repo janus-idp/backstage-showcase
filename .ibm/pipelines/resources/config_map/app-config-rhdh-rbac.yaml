@@ -1,6 +1,10 @@
 app:
+  baseUrl: ${RHDH_BASE_URL}
   title: Red Hat Developer Hub
 backend:
+  baseUrl: ${RHDH_BASE_URL}
+  cors:
+    origin: ${RHDH_BASE_URL}
   auth:
     keys:
       - secret: temp

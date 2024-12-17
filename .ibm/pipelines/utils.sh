@@ -406,7 +406,7 @@ apply_yaml_files() {
     DH_TARGET_URL=$(echo -n "test-backstage-customization-provider-${project}.${K8S_CLUSTER_ROUTER_BASE}" | base64 -w 0)
     local RHDH_BASE_URL=$(echo -n "$rhdh_base_url" | base64 | tr -d '\n')
 
-    for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN KEYCLOAK_AUTH_BASE_URL KEYCLOAK_AUTH_CLIENTID KEYCLOAK_AUTH_CLIENT_SECRET KEYCLOAK_AUTH_LOGIN_REALM KEYCLOAK_AUTH_REALM RHDH_BASE_URL; do
+    for key in GITHUB_APP_APP_ID GITHUB_APP_CLIENT_ID GITHUB_APP_PRIVATE_KEY GITHUB_APP_CLIENT_SECRET GITHUB_APP_JANUS_TEST_APP_ID GITHUB_APP_JANUS_TEST_CLIENT_ID GITHUB_APP_JANUS_TEST_CLIENT_SECRET GITHUB_APP_JANUS_TEST_PRIVATE_KEY GITHUB_APP_WEBHOOK_URL GITHUB_APP_WEBHOOK_SECRET KEYCLOAK_CLIENT_SECRET ACR_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET K8S_CLUSTER_TOKEN_ENCODED OCM_CLUSTER_URL GITLAB_TOKEN KEYCLOAK_AUTH_BASE_URL KEYCLOAK_AUTH_CLIENTID KEYCLOAK_AUTH_CLIENT_SECRET KEYCLOAK_AUTH_LOGIN_REALM KEYCLOAK_AUTH_REALM RHDH_BASE_URL DH_TARGET_URL; do
       sed -i "s|${key}:.*|${key}: ${!key}|g" "$dir/auth/secrets-rhdh-secrets.yaml"
     done
 
@@ -462,14 +462,9 @@ deploy_test_backstage_provider() {
   else
     echo "BuildConfig for test-backstage-customization-provider already exists in ${project}. Skipping new-app creation."
   fi
-
-  # Ensure the service exists
-  if ! oc get service test-backstage-customization-provider -n "${project}" >/dev/null 2>&1; then
-    echo "Exposing service for test-backstage-customization-provider"
-    oc expose svc/test-backstage-customization-provider --namespace="${project}"
-  else
-    echo "Service test-backstage-customization-provider is already exposed in ${project}."
-  fi
+  
+  echo "Exposing service for test-backstage-customization-provider"
+  oc expose svc/test-backstage-customization-provider --namespace="${project}"
 }
 
 create_app_config_map() {
@@ -488,6 +483,18 @@ select_config_map_file() {
   else
     echo "$dir/resources/config_map/app-config-rhdh.yaml"
   fi
+}
+
+create_dynamic_plugins_config() {
+  local base_file=$1
+  local final_file=$2
+  echo "kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins
+data:
+  dynamic-plugins.yaml: |" >> ${final_file}
+  yq '.global.dynamic' ${base_file} | sed -e 's/^/    /' >> ${final_file}
 }
 
 create_app_config_map_k8s() {
@@ -721,4 +728,3 @@ oc_login() {
   echo "OCP version: $(oc version)"
   export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
 }
-
