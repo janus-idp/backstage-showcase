@@ -30,7 +30,7 @@ test.describe("Change app-config at e2e test runtime", () => {
       const common = new Common(page);
       await page.context().clearCookies();
       await page.context().clearPermissions();
-      await page.reload({ waitUntil: "domcontentloaded" })
+      await page.reload({ waitUntil: "domcontentloaded" });
       await common.loginAsGuest();
       await new UIhelper(page).openSidebar("Home");
       await uiHelper.verifyHeading("Welcome back!");
@@ -41,7 +41,7 @@ test.describe("Change app-config at e2e test runtime", () => {
       const title = await page.evaluate(() => document.title);
       console.log(title);
       console.log(page.title());
-      const title2 = await page.locator('title').textContent();
+      const title2 = await page.locator("title").textContent();
       console.log(title2);
 
       expect(title2).toContain(dynamicTitle);
