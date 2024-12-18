@@ -591,17 +591,6 @@ check_backstage_running() {
   return 1
 }
 
-install_tekton_pipelines() {
-  local dir=$1
-
-  if oc get pods -n "tekton-pipelines" | grep -q "tekton-pipelines"; then
-    echo "Tekton Pipelines are already installed."
-  else
-    echo "Tekton Pipelines is not installed. Installing..."
-    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
-  fi
-}
-
 # installs the advanced-cluster-management Operator
 install_acm_operator(){
   oc apply -f "${DIR}/cluster/operators/acm/operator-group.yaml"
@@ -631,6 +620,25 @@ install_pipelines_operator() {
     wait_for_deployment "openshift-operators" "pipelines"
     timeout 300 bash -c '
     while ! oc get svc tekton-pipelines-webhook -n openshift-pipelines &> /dev/null; do
+        echo "Waiting for tekton-pipelines-webhook service to be created..."
+        sleep 5
+    done
+    echo "Service tekton-pipelines-webhook is created."
+    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook service creation."
+  fi
+}
+
+# Installs the Tekton Pipelines if not already installed (alternative of OpenShift Pipelines for Kubernetes clusters)
+install_tekton_pipelines() {
+  DISPLAY_NAME="tekton-pipelines-webhook"
+  if oc get csv -n "tekton-pipelines" | grep -q "${DISPLAY_NAME}"; then
+    echo "Tekton Pipelines are already installed."
+  else
+    echo "Tekton Pipelines is not installed. Installing..."
+    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+    wait_for_deployment "tekton-pipelines" "${DISPLAY_NAME}"
+    timeout 300 bash -c '
+    while ! oc get svc tekton-pipelines-webhook -n tekton-pipelines &> /dev/null; do
         echo "Waiting for tekton-pipelines-webhook service to be created..."
         sleep 5
     done
