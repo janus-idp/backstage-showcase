@@ -631,7 +631,7 @@ install_pipelines_operator() {
 # Installs the Tekton Pipelines if not already installed (alternative of OpenShift Pipelines for Kubernetes clusters)
 install_tekton_pipelines() {
   DISPLAY_NAME="tekton-pipelines-webhook"
-  if oc get csv -n "tekton-pipelines" | grep -q "${DISPLAY_NAME}"; then
+  if oc get pods -n "tekton-pipelines" | grep -q "${DISPLAY_NAME}"; then
     echo "Tekton Pipelines are already installed."
   else
     echo "Tekton Pipelines is not installed. Installing..."
