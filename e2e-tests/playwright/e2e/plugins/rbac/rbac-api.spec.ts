@@ -5,7 +5,12 @@ import { UIhelper } from "../../../utils/ui-helper";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 
-// TODO: reenable tests
+/*
+    Note that:
+    The policies generated from a policy.csv or ConfigMap file cannot be edited or deleted using the Developer Hub Web UI. 
+    https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.2/html/authorization/proc-rbac-ui-manage-roles_title-authorization#proc-rbac-ui-edit-role_title-authorization
+*/
+
 test.describe.serial("Test RBAC plugin REST API", () => {
   let common: Common;
   let uiHelper: UIhelper;
@@ -58,11 +63,6 @@ test.describe.serial("Test RBAC plugin REST API", () => {
       );
     }
 
-    console.log("rolesResponse");
-    console.log(rolesResponse);
-    console.log("policiesResponse");
-    console.log(policiesResponse);
-    test.fail();
     await responseHelper.checkResponse(
       rolesResponse,
       RbacConstants.getExpectedRoles(),
