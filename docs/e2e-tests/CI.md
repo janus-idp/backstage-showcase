@@ -44,6 +44,7 @@ If the initial automatically triggered tests fail, OpenShift-CI will add a comme
 - **Environment:** Runs on an ephemeral OpenShift cluster on IBM Cloud.
 - **Configurations:**
   - Tests are executed on both **RBAC** (Role-Based Access Control) and **non-RBAC** namespaces. Different sets of tests are executed for both the **non-RBAC RHDH instance** and the **RBAC RHDH instance**, each deployed in separate namespaces.
+- **Access:** In order to access the environment, you can run the bash at `.ibm/pipelines/ocp-cluster-claim-login.sh`. You will be prompted the prow url (the url from the openshift agent, which looks like https://prow.ci.openshift.org/...). Once you test calimed a cluster, this script will forward the cluster web console url along with the credentials.
 - **Steps:**
 
   1. **Detection:** OpenShift-CI detects the PR event.

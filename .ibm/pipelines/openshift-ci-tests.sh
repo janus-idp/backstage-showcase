@@ -15,7 +15,7 @@ cleanup() {
     # If the job is for Azure Kubernetes Service (AKS), stop the AKS cluster.
     az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
   fi
-  rm -rf ~/tmpbin  # Remove temporary binaries directory.
+  rm -rf ~/tmpbin
 }
 
 trap cleanup EXIT INT ERR
@@ -68,4 +68,4 @@ exit "${OVERALL_RESULT}"
 
 }
 
-main  # Start the script execution by calling the main function.
+main
