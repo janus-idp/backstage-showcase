@@ -433,11 +433,11 @@ apply_yaml_files() {
       create_app_config_map_k8s "$config_file" "$project"
     else
       create_app_config_map "$config_file" "$project"
-      oc create configmap dynamic-homepage-and-sidebar-config \
+    fi
+    oc create configmap dynamic-homepage-and-sidebar-config \
       --from-file="dynamic-homepage-and-sidebar-config.yaml"="$dir/resources/config_map/dynamic-homepage-and-sidebar-config.yaml" \
       --namespace="${project}" \
       --dry-run=client -o yaml | oc apply -f -
-    fi
     oc create configmap rbac-policy \
       --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
       --namespace="$project" \
