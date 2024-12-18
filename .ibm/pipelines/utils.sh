@@ -501,7 +501,7 @@ create_app_config_map_k8s() {
     local config_file=$1
     local project=$2
 
-    echo "Creating app-config ConfigMap for AKS/GKE in namespace ${project}"
+    echo "Creating k8s-specific app-config ConfigMap in namespace ${project}"
 
     yq 'del(.backend.cache)' "$config_file" \
     | oc create configmap app-config-rhdh \
