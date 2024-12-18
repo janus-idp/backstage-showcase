@@ -13,3 +13,9 @@ subjects:
   - kind: ServiceAccount
     name: rhdh-k8s-plugin
     namespace: showcase-ci-nightly
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-operator-nightly
+  - kind: ServiceAccount
+    name: rhdh-k8s-plugin
+    namespace: showcase-op-rbac-nightly

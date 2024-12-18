@@ -218,24 +218,25 @@ upstream:
             pluginId: catalog
             resourceType: catalog-entity
             permissionMapping:
-              - delete
+              - read
+              - update
             conditions:
               rule: IS_ENTITY_OWNER
               resourceType: catalog-entity
               params:
                 claims:
-                  - 'group:default/rhdh-qe-2-team'
+                  - 'group:janus-qe/rhdh-qe-2-team'
                   - \$currentUser
             ---
             result: CONDITIONAL
             roleEntityRef: 'role:default/test2-role'
             pluginId: catalog
-            resourceType: scaffolder-action 
+            resourceType: catalog-entity
             permissionMapping:
-              - use
+              - delete
             conditions:
               rule: IS_ENTITY_OWNER
-              resourceType: scaffolder-action 
+              resourceType: catalog-entity
               params:
                 claims:
                   - \$currentUser

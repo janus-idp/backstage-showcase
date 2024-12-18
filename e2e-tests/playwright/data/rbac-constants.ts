@@ -16,11 +16,11 @@ export class RbacConstants {
         },
         {
           "memberReferences": ["user:default/rhdh-qe"],
-          "name": "role:default/bulk_import"
+          "name": "role:default/qe_rbac_admin"
         },
         {
           "memberReferences": ["group:default/rhdh-qe-2-team"],
-          "name": "role:default/qe_rbac_admin"
+          "name": "role:default/bulk_import"
         }
       ]
     `;
