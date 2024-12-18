@@ -223,7 +223,7 @@ wait_for_deployment() {
             local is_ready=$(oc get pod "$pod_name" -n "$namespace" -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}')
             # Verify pod is both Ready and Running
             if [[ "$is_ready" == "True" ]] && \
-               oc get pod "$pod_name" -n "$namespace" | grep -q "Running"; then
+                oc get pod "$pod_name" -n "$namespace" | grep -q "Running"; then
                 echo "Pod '$pod_name' is running and ready"
                 return 0
             else
@@ -334,7 +334,7 @@ configure_namespace() {
       echo "Error: Failed to create namespace ${project}" >&2
       exit 1
   fi
-   if ! oc config set-context --current --namespace="${project}"; then
+  if ! oc config set-context --current --namespace="${project}"; then
       echo "Error: Failed to set context for namespace ${project}" >&2
       exit 1
   fi
@@ -462,7 +462,7 @@ deploy_test_backstage_provider() {
   else
     echo "BuildConfig for test-backstage-customization-provider already exists in ${project}. Skipping new-app creation."
   fi
-  
+
   echo "Exposing service for test-backstage-customization-provider"
   oc expose svc/test-backstage-customization-provider --namespace="${project}"
 }
