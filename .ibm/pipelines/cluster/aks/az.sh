@@ -8,7 +8,16 @@ az_login() {
 az_aks_start() {
   local name=$1
   local resource_group=$2
-  az aks start --name $name --resource-group $resource_group
+
+  local power_state
+  power_state=$(az aks show --name=$name --resource-group $resource_group --query 'powerState.code' -o tsv)
+
+  if [ "$power_state" == "Running" ]; then
+    echo "AKS cluster is running."
+  else
+    echo "AKS cluster is not running (Current state: $power_state). Starting the cluster."
+    az aks start --name $name --resource-group $resource_group
+  fi
 }
 
 az_aks_stop() {
