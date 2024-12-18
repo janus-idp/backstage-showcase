@@ -16,13 +16,9 @@ test.describe.serial("Test RBAC plugin REST API", () => {
   let uiHelper: UIhelper;
   let page: Page;
   let responseHelper: Response;
-  // Variable to track errors or test states
-  let hasErrors = false;
-  let retriesRemaining: number;
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
-    retriesRemaining = testInfo.project.retries;
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
@@ -62,6 +58,12 @@ test.describe.serial("Test RBAC plugin REST API", () => {
         `RBAC policiesResponse API call failed with status code ${policiesResponse.status()}`,
       );
     }
+
+    console.log("rolesResponse");
+    console.log(rolesResponse.json());
+
+    console.log("policiesResponse");
+    console.log(policiesResponse.json());
 
     await responseHelper.checkResponse(
       rolesResponse,
@@ -110,12 +112,22 @@ test.describe.serial("Test RBAC plugin REST API", () => {
       responseHelper.createOrDeletePolicyRequest([newPolicy]),
     );
 
+    console.log("rolePostResponse");
+    console.log(rolePostResponse);
+
+    console.log("rolePutResponse");
+    console.log(rolePutResponse);
+
+    console.log("policyPostResponse");
+    console.log(policyPostResponse);
+
     expect(rolePostResponse.ok());
     expect(rolePutResponse.ok());
     expect(policyPostResponse.ok());
   });
 
-  test("Test catalog-entity read is denied", async () => {
+  test("Test catalog-entity read is denied", async ({ page }) => {
+    await page.reload();
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
     await uiHelper.verifyTableIsEmpty();
@@ -269,30 +281,7 @@ test.describe.serial("Test RBAC plugin REST API", () => {
     expect(await uiHelper.isBtnVisible("Schedule entity refresh")).toBeFalsy();
   });
 
-  // eslint-disable-next-line no-empty-pattern
-  test.afterEach(async ({}, testInfo) => {
-    if (testInfo.status === "failed") {
-      console.log(`Test failed: ${testInfo.title}`);
-      hasErrors = true;
-
-      // Calculate the remaining retries by subtracting the current retry count from the total retries and adjusting for zero-based indexing.
-      retriesRemaining = testInfo.project.retries - testInfo.retry - 1;
-      console.log(`Retries remaining: ${retriesRemaining}`);
-    }
-  });
-
   test.afterAll(async ({ request }) => {
-    if (hasErrors && retriesRemaining > 0) {
-      console.log(
-        `Skipping cleanup due to errors. Retries remaining: ${retriesRemaining}`,
-      );
-      return;
-    }
-
-    console.log(
-      `afterAll: Proceeding with cleanup. Retries remaining: ${retriesRemaining}`,
-    );
-
     try {
       const remainingPoliciesResponse = await request.get(
         "/api/permission/policies/role/default/test",
