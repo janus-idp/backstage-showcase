@@ -97,7 +97,7 @@ export class Response {
     this.authToken = authToken;
     this.simpleRequest = {
       headers: {
-        authorization: "Bearer " + authToken,
+        authorization: authToken,
       },
     };
   }
