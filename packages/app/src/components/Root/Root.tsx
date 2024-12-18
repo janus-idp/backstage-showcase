@@ -280,13 +280,14 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           {renderMenuItems(false, true)}
         </SidebarGroup>
         <SidebarDivider />
+        {/* Hide Settings from sidebar when ProfileDropdown is displayed in header 
         <SidebarGroup
           label="Settings"
           to="/settings"
           icon={<AccountCircleOutlinedIcon />}
         >
           <SidebarSettings icon={AccountCircleOutlinedIcon} />
-        </SidebarGroup>
+        </SidebarGroup> */}
       </Sidebar>
       {children}
     </SidebarPage>

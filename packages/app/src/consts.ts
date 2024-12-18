@@ -29,11 +29,12 @@ export const DefaultMainMenuItems = {
       to: 'learning-paths',
       priority: 60,
     },
-    'default.create': {
-      title: 'Create...',
-      icon: 'add',
-      to: 'create',
-      priority: 50,
-    },
+    // Hide Create item when Create button is displayed in header
+    // 'default.create': {
+    //   title: 'Create...',
+    //   icon: 'add',
+    //   to: 'create',
+    //   priority: 50,
+    // },
   },
 };
