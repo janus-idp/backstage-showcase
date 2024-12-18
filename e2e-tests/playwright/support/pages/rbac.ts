@@ -71,85 +71,10 @@ export class Roles {
   }
 }
 
-export interface PolicyComplete {
-  entityReference: string;
-  permission: string;
-  policy: string;
-  effect: string;
-}
-
-interface Policy {
-  permission: string;
-  policy: string;
-  effect: string;
-}
-
-interface Role {
-  memberReferences: string[];
-  name: string;
-}
-
 export class Response {
-  private authToken: string;
-  private simpleRequest: { headers: { authorization: string } };
-
-  constructor(authToken: string) {
-    this.authToken = authToken;
-    this.simpleRequest = {
-      headers: {
-        authorization: authToken,
-      },
-    };
-  }
-
-  getSimpleRequest() {
-    return this.simpleRequest;
-  }
-
-  editPolicyRequest(oldPolicy: Policy[], newPolicy: Policy[]) {
-    return {
-      data: {
-        oldPolicy,
-        newPolicy,
-      },
-      headers: {
-        authorization: this.authToken,
-      },
-    };
-  }
-
-  createOrDeletePolicyRequest(additions: PolicyComplete[]) {
-    return {
-      data: additions,
-      headers: {
-        authorization: this.authToken,
-      },
-    };
-  }
-
-  editRoleRequest(oldRole: Role, newRole: Role) {
-    return {
-      data: {
-        oldRole,
-        newRole,
-      },
-      headers: {
-        authorization: this.authToken,
-      },
-    };
-  }
-
-  createRoleRequest(role: Role) {
-    return {
-      data: role,
-      headers: {
-        authorization: this.authToken,
-        "Content-Type": "application/json",
-      },
-    };
-  }
-
-  async removeMetadataFromResponse(response: APIResponse): Promise<unknown[]> {
+  static async removeMetadataFromResponse(
+    response: APIResponse,
+  ): Promise<unknown[]> {
     try {
       const responseJson = await response.json();
 
@@ -176,7 +101,7 @@ export class Response {
     }
   }
 
-  async checkResponse(response: APIResponse, expected: string) {
+  static async checkResponse(response: APIResponse, expected: string) {
     const cleanResponse = await this.removeMetadataFromResponse(response);
     const expectedJson = JSON.parse(expected);
     expect(cleanResponse).toEqual(expectedJson);
