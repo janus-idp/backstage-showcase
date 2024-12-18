@@ -58,11 +58,6 @@ test.describe.serial("Test RBAC plugin REST API", () => {
       );
     }
 
-    console.log("rolesResponse");
-    console.log(rolesResponse);
-    console.log("policiesResponse");
-    console.log(policiesResponse);
-    test.fail();
     await responseHelper.checkResponse(
       rolesResponse,
       RbacConstants.getExpectedRoles(),
