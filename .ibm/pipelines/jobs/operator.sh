@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 install_rhdh_operator() {
   local dir=$1
