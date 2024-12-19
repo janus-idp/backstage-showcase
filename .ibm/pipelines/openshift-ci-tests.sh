@@ -7,6 +7,15 @@ LOGFILE="test-log"
 export DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OVERALL_RESULT=0
 
+echo "${OPENSHIFT_CI}"
+if [[ "${OPENSHIFT_CI}" == "true" ]]; then
+  echo "It is TRUE"
+fi
+
+if [[ "${OPENSHIFT_CI}" != "true" ]]; then echo "It is FALSE"; fi
+
+exit
+
 # shellcheck disable=SC2317
 cleanup() {
   echo "Cleaning up before exiting"
