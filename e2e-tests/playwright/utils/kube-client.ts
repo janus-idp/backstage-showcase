@@ -350,6 +350,41 @@ export class KubeClient {
     }
   }
 
+  async restartDeploymentWithAnnotation(deploymentName: string, namespace: string) {
+    try {
+      console.log(`Adding annotation to deployment '${deploymentName}' for redeploy.`);
+
+      const patch = [
+        {
+          op: "add",
+          path: "/spec/template/metadata/annotations/restartTime",
+          value: new Date().toISOString(),
+        },
+      ];
+
+      const options = {
+        headers: { "Content-Type": k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
+      };
+
+      await this.appsApi.patchNamespacedDeployment(
+        deploymentName,
+        namespace,
+        patch,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        options,
+      );
+
+      console.log(`Annotation added to deployment '${deploymentName}'.`);
+    } catch (error) {
+      console.error(`Error adding annotation to deployment '${deploymentName}':`, error);
+      throw error;
+    }
+  }
+
   async logPodConditions(namespace: string, labelSelector?: string) {
     const selector =
       labelSelector ||
