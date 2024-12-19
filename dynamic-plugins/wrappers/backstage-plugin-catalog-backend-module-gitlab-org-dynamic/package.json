@@ -31,9 +31,10 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-gitlab-org --override-interop default --no-embed-as-dependencies"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-catalog-backend-module-gitlab-org --embed-package @backstage/plugin-catalog-backend-module-gitlab --override-interop default --no-embed-as-dependencies"
   },
   "dependencies": {
+    "@backstage/plugin-catalog-backend-module-gitlab": "0.3.21",
     "@backstage/plugin-catalog-backend-module-gitlab-org": "0.0.5"
   },
   "devDependencies": {
