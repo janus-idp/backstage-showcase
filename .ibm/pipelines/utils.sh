@@ -96,7 +96,7 @@ droute_send() {
     --results '/tmp/droute/${JUNIT_RESULTS}' \
     --verbose"
 
-  echo "droute send completed"
+  echo "exiting droute_send with exit code: $?"
   set -e
 
 }
