@@ -41,6 +41,10 @@ droute_send() {
     return 0
   fi
 
+  if [ -n "${PULL_NUMBER:-}" ]; then
+    set +e
+  fi
+
   local droute_version="1.2"
   local release_name=$1
   local project=$2
@@ -91,5 +95,8 @@ droute_send() {
     --password '${DATA_ROUTER_PASSWORD}' \
     --results '/tmp/droute/${JUNIT_RESULTS}' \
     --verbose"
+
+  echo "droute send completed"
+  set -e
 
 }
