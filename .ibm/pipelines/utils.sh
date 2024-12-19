@@ -488,6 +488,18 @@ select_config_map_file() {
   fi
 }
 
+create_dynamic_plugins_config() {
+  local base_file=$1
+  local final_file=$2
+  echo "kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dynamic-plugins
+data:
+  dynamic-plugins.yaml: |" >> ${final_file}
+  yq '.global.dynamic' ${base_file} | sed -e 's/^/    /' >> ${final_file}
+}
+
 create_app_config_map_k8s() {
     local config_file=$1
     local project=$2
@@ -719,4 +731,3 @@ oc_login() {
   echo "OCP version: $(oc version)"
   export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
 }
-
