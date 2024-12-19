@@ -57,6 +57,10 @@ test.describe("Change app-config at e2e test runtime", () => {
 
       expect(title2).toContain(dynamicTitle);
 
+      await expect(page.locator("title")).toHaveText(new RegExp(dynamicTitle), {
+        timeout: 60000,
+      });
+
       console.log("Title successfully verified in the UI.");
     } catch (error) {
       console.error(
