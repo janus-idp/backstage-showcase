@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 retrieve_pod_logs() {
   local pod_name=$1; local container=$2; local namespace=$3
@@ -36,6 +36,7 @@ save_all_pod_logs(){
 }
 
 droute_send() {
+  if [[ "${OPENSHIFT_CI}" != "true" ]]; then return 0; fi
   temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
   ( # Open subshell
     if [ -n "${PULL_NUMBER:-}" ]; then
@@ -223,7 +224,7 @@ wait_for_deployment() {
             local is_ready=$(oc get pod "$pod_name" -n "$namespace" -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}')
             # Verify pod is both Ready and Running
             if [[ "$is_ready" == "True" ]] && \
-               oc get pod "$pod_name" -n "$namespace" | grep -q "Running"; then
+                oc get pod "$pod_name" -n "$namespace" | grep -q "Running"; then
                 echo "Pod '$pod_name' is running and ready"
                 return 0
             else
@@ -334,7 +335,7 @@ configure_namespace() {
       echo "Error: Failed to create namespace ${project}" >&2
       exit 1
   fi
-   if ! oc config set-context --current --namespace="${project}"; then
+  if ! oc config set-context --current --namespace="${project}"; then
       echo "Error: Failed to set context for namespace ${project}" >&2
       exit 1
   fi
@@ -433,11 +434,11 @@ apply_yaml_files() {
       create_app_config_map_k8s "$config_file" "$project"
     else
       create_app_config_map "$config_file" "$project"
-      oc create configmap dynamic-homepage-and-sidebar-config \
+    fi
+    oc create configmap dynamic-homepage-and-sidebar-config \
       --from-file="dynamic-homepage-and-sidebar-config.yaml"="$dir/resources/config_map/dynamic-homepage-and-sidebar-config.yaml" \
       --namespace="${project}" \
       --dry-run=client -o yaml | oc apply -f -
-    fi
     oc create configmap rbac-policy \
       --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
       --namespace="$project" \
@@ -462,7 +463,7 @@ deploy_test_backstage_provider() {
   else
     echo "BuildConfig for test-backstage-customization-provider already exists in ${project}. Skipping new-app creation."
   fi
-  
+
   echo "Exposing service for test-backstage-customization-provider"
   oc expose svc/test-backstage-customization-provider --namespace="${project}"
 }
@@ -501,7 +502,7 @@ create_app_config_map_k8s() {
     local config_file=$1
     local project=$2
 
-    echo "Creating app-config ConfigMap for AKS/GKE in namespace ${project}"
+    echo "Creating k8s-specific app-config ConfigMap in namespace ${project}"
 
     yq 'del(.backend.cache)' "$config_file" \
     | oc create configmap app-config-rhdh \
@@ -549,8 +550,6 @@ run_tests() {
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
 
-  droute_send "${release_name}" "${project}"
-
   echo "${project} RESULT: ${RESULT}"
   if [ "${RESULT}" -ne 0 ]; then
     OVERALL_RESULT=1
@@ -589,17 +588,6 @@ check_backstage_running() {
   return 1
 }
 
-install_tekton_pipelines() {
-  local dir=$1
-
-  if oc get pods -n "tekton-pipelines" | grep -q "tekton-pipelines"; then
-    echo "Tekton Pipelines are already installed."
-  else
-    echo "Tekton Pipelines is not installed. Installing..."
-    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
-  fi
-}
-
 # installs the advanced-cluster-management Operator
 install_acm_operator(){
   oc apply -f "${DIR}/cluster/operators/acm/operator-group.yaml"
@@ -629,6 +617,25 @@ install_pipelines_operator() {
     wait_for_deployment "openshift-operators" "pipelines"
     timeout 300 bash -c '
     while ! oc get svc tekton-pipelines-webhook -n openshift-pipelines &> /dev/null; do
+        echo "Waiting for tekton-pipelines-webhook service to be created..."
+        sleep 5
+    done
+    echo "Service tekton-pipelines-webhook is created."
+    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook service creation."
+  fi
+}
+
+# Installs the Tekton Pipelines if not already installed (alternative of OpenShift Pipelines for Kubernetes clusters)
+install_tekton_pipelines() {
+  DISPLAY_NAME="tekton-pipelines-webhook"
+  if oc get pods -n "tekton-pipelines" | grep -q "${DISPLAY_NAME}"; then
+    echo "Tekton Pipelines are already installed."
+  else
+    echo "Tekton Pipelines is not installed. Installing..."
+    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+    wait_for_deployment "tekton-pipelines" "${DISPLAY_NAME}"
+    timeout 300 bash -c '
+    while ! oc get svc tekton-pipelines-webhook -n tekton-pipelines &> /dev/null; do
         echo "Waiting for tekton-pipelines-webhook service to be created..."
         sleep 5
     done
