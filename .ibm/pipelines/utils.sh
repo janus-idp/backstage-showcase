@@ -36,6 +36,7 @@ save_all_pod_logs(){
 }
 
 droute_send() {
+  if [[ "${OPENSHIFT_CI}" != "true" ]]; then return 0; fi
   temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
   ( # Open subshell
     if [ -n "${PULL_NUMBER:-}" ]; then
@@ -548,10 +549,6 @@ run_tests() {
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
   cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
-
-  if [[ "${OPENSHIFT_CI}" == "true" ]]; then
-    droute_send "${release_name}" "${project}"
-  fi
 
   echo "${project} RESULT: ${RESULT}"
   if [ "${RESULT}" -ne 0 ]; then
