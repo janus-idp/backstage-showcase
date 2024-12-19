@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { KubeClient } from "../../utils/kube-client";
 import { Common } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
+import * as yaml from "js-yaml";
 
 test.describe("Change app-config at e2e test runtime", () => {
   test("Verify title change after ConfigMap modification", async ({ page }) => {
@@ -26,6 +27,16 @@ test.describe("Change app-config at e2e test runtime", () => {
         `Restarting deployment '${deploymentName}' to apply ConfigMap changes.`,
       );
       await kubeUtils.restartDeployment(deploymentName, namespace);
+
+      console.log(`Verifying ConfigMap '${configMapName}' contains the new title.`);
+      const updatedConfigMap = await kubeUtils.getConfigMap(configMapName, namespace);
+      const appConfigYaml = updatedConfigMap.body.data[`${configMapName}.yaml`];
+
+      const appConfig = yaml.load(appConfigYaml) as any;
+      const updatedTitle = appConfig?.app?.title;
+
+      console.log(`Updated title in ConfigMap: ${updatedTitle}`);
+      expect(updatedTitle).toBe(dynamicTitle);
 
       const common = new Common(page);
       await page.context().clearCookies();
