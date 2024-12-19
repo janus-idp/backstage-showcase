@@ -26,7 +26,8 @@ test.describe("Change app-config at e2e test runtime", () => {
       console.log(
         `Restarting deployment '${deploymentName}' to apply ConfigMap changes.`,
       );
-      await kubeUtils.restartDeployment(deploymentName, namespace);
+      // await kubeUtils.restartDeployment(deploymentName, namespace);
+      await kubeUtils.restartDeploymentWithAnnotation(deploymentName, namespace);
 
       console.log(`Verifying ConfigMap '${configMapName}' contains the new title.`);
       const updatedConfigMap = await kubeUtils.getConfigMap(configMapName, namespace);
