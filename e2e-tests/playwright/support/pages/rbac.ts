@@ -107,6 +107,6 @@ export class Response {
     expected: Role[] | Policy[],
   ) {
     const cleanResponse = await this.removeMetadataFromResponse(response);
-    expect(cleanResponse).toContainEqual(expected);
+    expect(cleanResponse).toEqual(expected);
   }
 }

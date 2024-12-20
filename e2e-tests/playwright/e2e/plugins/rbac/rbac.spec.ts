@@ -29,9 +29,10 @@ test.describe.serial("Test RBAC", () => {
       await page.goto("/rbac");
     });
 
-    test("Check if Administration side nav is present with RBAC plugin", async ({
+    test("Check UI navigation by nav bar when RBAC is enabled", async ({
       page,
     }) => {
+      await page.goto("/");
       const uiHelper = new UIhelper(page);
       await uiHelper.openSidebarButton("Administration");
       const dropdownMenuLocator = page.locator(`text="RBAC"`);
