@@ -53,8 +53,6 @@
     "typescript": "5.6.3"
   },
   "resolutions": {
-    "@types/react": "18.3.18",
-    "@types/react-dom": "18.3.5",
     "@backstage/backend-dynamic-feature-service@0.4.4": "patch:@backstage/backend-dynamic-feature-service@npm%3A0.4.4#./.yarn/patches/@backstage-backend-dynamic-feature-service-npm-0.4.4.patch",
     "@backstage/plugin-auth-backend-module-oidc-provider@0.3.1": "patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1.patch",
     "@backstage/plugin-auth-backend-module-oidc-provider@^0.3.1": "patch:@backstage/plugin-auth-backend-module-oidc-provider@npm%3A0.3.1#./.yarn/patches/@backstage-plugin-auth-backend-module-oidc-provider-npm-0.3.1.patch",
@@ -68,7 +66,16 @@
     "@backstage/plugin-scaffolder-node@^0.2.9": "patch:@backstage/plugin-scaffolder-node@npm%3A0.6.1#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.1-a2cc13065e.patch",
     "@backstage/plugin-scaffolder-node@^0.4.8": "patch:@backstage/plugin-scaffolder-node@npm%3A0.6.1#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.1-a2cc13065e.patch",
     "@backstage/plugin-scaffolder-node@^0.6.0": "patch:@backstage/plugin-scaffolder-node@npm%3A0.6.1#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.1-a2cc13065e.patch",
-    "@backstage/plugin-scaffolder-node@^0.5.1": "patch:@backstage/plugin-scaffolder-node@npm%3A0.6.1#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.1-a2cc13065e.patch"
+    "@backstage/plugin-scaffolder-node@^0.5.1": "patch:@backstage/plugin-scaffolder-node@npm%3A0.6.1#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.1-a2cc13065e.patch",
+    "@mui/icons-material": "^5",
+    "@mui/material": "^5",
+    "@mui/private-theming": "^5",
+    "@mui/styled-engine": "^5",
+    "@mui/styles": "^5",
+    "@mui/system": "^5",
+    "@mui/utils": "^5",
+    "@types/react-dom": "18.3.5",
+    "@types/react": "18.3.18"
   },
   "jest": {
     "testTimeout": 20000
