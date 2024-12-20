@@ -1,4 +1,4 @@
-import { PolicyComplete, Role } from "../support/api/rbac-api-structures";
+import { Policy, Role } from "../support/api/rbac-api-structures";
 
 export class RbacConstants {
   static getExpectedRoles(): Role[] {
@@ -26,7 +26,7 @@ export class RbacConstants {
     ];
   }
 
-  static getExpectedPolicies(): PolicyComplete[] {
+  static getExpectedPolicies(): Policy[] {
     return [
       {
         entityReference: "role:default/rbac_admin",

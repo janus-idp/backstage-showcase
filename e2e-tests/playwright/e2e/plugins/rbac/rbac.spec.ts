@@ -14,7 +14,7 @@ import { RbacPo } from "../../../support/pageObjects/rbac-po";
 import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 import RhdhRbacApi from "../../../support/api/rbac-api";
 import { RbacConstants } from "../../../data/rbac-constants";
-import { PolicyComplete } from "../../../support/api/rbac-api-structures";
+import { Policy } from "../../../support/api/rbac-api-structures";
 
 /*
     Note that:
@@ -506,7 +506,7 @@ test.describe.serial("Test RBAC", () => {
 
         const deleteRemainingPolicies = await rbacApi.deletePolicy(
           "default/test",
-          remainingPolicies as PolicyComplete[],
+          remainingPolicies as Policy[],
         );
 
         const deleteRole = await rbacApi.deleteRole("default/test");

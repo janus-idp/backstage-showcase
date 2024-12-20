@@ -1,11 +1,5 @@
-export interface PolicyComplete {
-  entityReference: string;
-  permission: string;
-  policy: string;
-  effect: string;
-}
-
 export interface Policy {
+  entityReference?: string;
   permission: string;
   policy: string;
   effect: string;

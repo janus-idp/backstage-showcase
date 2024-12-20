@@ -5,7 +5,7 @@ import {
   HOME_PAGE_COMPONENTS,
   ROLES_PAGE_COMPONENTS,
 } from "../pageObjects/page-obj";
-import { PolicyComplete, Role } from "../api/rbac-api-structures";
+import { Policy, Role } from "../api/rbac-api-structures";
 
 export class Roles {
   private page: Page;
@@ -104,7 +104,7 @@ export class Response {
 
   static async checkResponse(
     response: APIResponse,
-    expected: Role[] | PolicyComplete[],
+    expected: Role[] | Policy[],
   ) {
     const cleanResponse = await this.removeMetadataFromResponse(response);
     expect(cleanResponse).toEqual(expected);

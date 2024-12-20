@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse, request } from "@playwright/test";
 import playwrightConfig from "../../../playwright.config";
-import { Policy, PolicyComplete, Role } from "./rbac-api-structures";
+import { Policy, Role } from "./rbac-api-structures";
 
 export default class RhdhRbacApi {
   private readonly apiUrl = playwrightConfig.use.baseURL + "/api/permission/";
@@ -78,7 +78,7 @@ export default class RhdhRbacApi {
       data: { oldPolicy, newPolicy },
     });
   }
-  public async deletePolicy(policy: string, policies: PolicyComplete[]) {
+  public async deletePolicy(policy: string, policies: Policy[]) {
     this.checkRoleFormat(policy);
     return await this.myContext.delete(`/policies/role/${policy}`, {
       data: policies,
