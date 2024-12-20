@@ -56,15 +56,11 @@ initiate_operator_deployments() {
 handle_operator() {
   oc_login
 
-  API_SERVER_URL=$(oc whoami --show-server)
-  ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
-  ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
-
   export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
   local url="https://backstage-${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
   local rbac_url="https://backstage-${RELEASE_NAME_RBAC}-${NAME_SPACE_RBAC}.${K8S_CLUSTER_ROUTER_BASE}"
 
-  cluster_setup
+  cluster_setup_operator
   initiate_operator_deployments
   check_and_test "${RELEASE_NAME}" "${NAME_SPACE}" "${url}"
   check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}" "${rbac_url}"

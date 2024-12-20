@@ -679,6 +679,12 @@ cluster_setup() {
   add_helm_repos
 }
 
+cluster_setup_operator() {
+  install_pipelines_operator
+  install_acm_operator
+  install_crunchy_postgres_operator
+}
+
 initiate_deployments() {
   configure_namespace ${NAME_SPACE}
 
