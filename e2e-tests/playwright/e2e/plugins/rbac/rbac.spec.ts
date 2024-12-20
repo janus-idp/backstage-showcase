@@ -29,6 +29,18 @@ test.describe.serial("Test RBAC", () => {
       await page.goto("/rbac");
     });
 
+    test("Check if Administration side nav is present with RBAC plugin", async ({
+      page,
+    }) => {
+      const uiHelper = new UIhelper(page);
+      await uiHelper.openSidebarButton("Administration");
+      const dropdownMenuLocator = page.locator(`text="RBAC"`);
+      await expect(dropdownMenuLocator).toBeVisible();
+      await dropdownMenuLocator.click();
+      await uiHelper.verifyHeading("RBAC");
+      expect(await page.title()).toContain("RBAC");
+    });
+
     test("Check if permission policies defined in files are loaded", async ({
       page,
     }) => {
