@@ -1,12 +1,11 @@
 import { Page, expect, test } from "@playwright/test";
-import { Response } from "../../../support/pages/rbac";
+import { Response, Roles } from "../../../support/pages/rbac";
 import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 import {
   HOME_PAGE_COMPONENTS,
   ROLE_OVERVIEW_COMPONENTS,
   ROLES_PAGE_COMPONENTS,
 } from "../../../support/pageObjects/page-obj";
-import { Roles } from "../../../support/pages/rbac";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import fs from "fs/promises";
@@ -413,10 +412,6 @@ test.describe.serial("Test RBAC", () => {
       );
 
       const policyPostResponse = await rbacApi.createPolicies([newPolicy]);
-
-      console.log(await rolePostResponse.text());
-      console.log(await rolePutResponse.text());
-      console.log(await policyPostResponse.text());
 
       expect(rolePostResponse.ok()).toBeTruthy();
       expect(rolePutResponse.ok()).toBeTruthy();

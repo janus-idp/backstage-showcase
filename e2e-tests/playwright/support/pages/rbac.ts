@@ -8,8 +8,8 @@ import {
 import { Policy, Role } from "../api/rbac-api-structures";
 
 export class Roles {
-  private page: Page;
-  private uiHelper: UIhelper;
+  private readonly page: Page;
+  private readonly uiHelper: UIhelper;
 
   constructor(page: Page) {
     this.page = page;

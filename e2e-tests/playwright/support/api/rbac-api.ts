@@ -4,14 +4,14 @@ import { Policy, Role } from "./rbac-api-structures";
 
 export default class RhdhRbacApi {
   private readonly apiUrl = playwrightConfig.use.baseURL + "/api/permission/";
-  private authHeader: {
+  private readonly authHeader: {
     Accept: "application/json";
     Authorization: string;
   };
   private myContext: APIRequestContext;
   private readonly roleRegex = /^[a-zA-Z]+\/[a-zA-Z]+$/;
 
-  private constructor(private token: string) {
+  private constructor(private readonly token: string) {
     this.authHeader = {
       Accept: "application/json",
       Authorization: `Bearer ${this.token}`,
@@ -87,6 +87,8 @@ export default class RhdhRbacApi {
 
   private checkRoleFormat(role: string) {
     if (!this.roleRegex.test(role))
-      throw "roles passed to the Rbac api must have format like: default/admin";
+      throw Error(
+        "roles passed to the Rbac api must have format like: default/admin",
+      );
   }
 }
