@@ -94,11 +94,11 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
-      # Enable tech-radar plugin.
+      # Enable tech-radar plugins.
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
-        disabled: true
+        disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
         disabled: false
       - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
@@ -114,6 +114,9 @@ global:
       - package: '@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5'
         disabled: false
         integrity: sha512-srTnFDYn3Ett6z33bX4nL2NQY8wqux8TkpgBQNsE8S73nMfsor/wAdmVgHL+xW7pxQ09DT4YTdaG3GkH+cyyNQ==
+      - package: '@backstage-community/plugin-todo@0.2.42'
+        disabled: false
+        integrity: sha512-agmfwxHkZPy0zaXzjMKY9Us9l7J2og+z7p2lDWQBmlJ1KZRo6OBQdnlG1mTEryfEEl/bx5Ko+f1PhFj2/BmiIQ==
 
 # -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)
 upstream:
@@ -145,6 +148,8 @@ upstream:
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
+      - configMapRef: dynamic-homepage-and-sidebar-config
+        filename: dynamic-homepage-and-sidebar-config.yaml
     extraEnvVarsSecrets:
       - rhdh-secrets
       - redis-secret

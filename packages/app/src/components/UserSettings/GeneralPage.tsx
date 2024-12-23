@@ -6,9 +6,9 @@ import {
 
 import Grid from '@mui/material/Grid';
 
-import { infoCard } from './InfoCard';
+import { InfoCard } from './InfoCard';
 
-export const generalPage = (
+export const GeneralPage = () => (
   <Grid container direction="row" spacing={3}>
     <Grid item xs={12} md={6}>
       <UserSettingsProfileCard />
@@ -20,7 +20,7 @@ export const generalPage = (
       <UserSettingsIdentityCard />
     </Grid>
     <Grid item xs={12} md={6}>
-      {infoCard}
+      <InfoCard />
     </Grid>
   </Grid>
 );

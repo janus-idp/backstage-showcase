@@ -1,0 +1,71 @@
+#!/bin/bash
+
+install_rhdh_operator() {
+  local dir=$1
+  local namespace=$2
+
+  configure_namespace $namespace
+
+  # Make sure script is up to date
+  rm -f /tmp/install-rhdh-catalog-source.sh
+  curl -L https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/main/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
+  chmod +x /tmp/install-rhdh-catalog-source.sh
+  bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
+  
+  # Wait for Operator to finish unpacking
+  sleep 30
+}
+
+deploy_rhdh_operator() {
+  local dir=$1
+  local namespace=$2
+
+  if ! oc get crd/backstages.rhdh.redhat.com -n "${namespace}" >/dev/null 2>&1; then
+    echo "Backstage CRD is still not ready, waiting 30 secs..."
+    sleep 30
+  fi
+  
+  if [[ "${namespace}" == "showcase-op-rbac-nightly" ]]; then
+    oc apply -f "${dir}/resources/rhdh-operator/rhdh-start-rbac.yaml" -n "${namespace}"
+  else 
+    oc apply -f "${dir}/resources/rhdh-operator/rhdh-start.yaml" -n "${namespace}"
+  fi
+}
+
+initiate_operator_deployments() {
+  configure_namespace "${OPERATOR_MANAGER}"
+  install_rhdh_operator "${DIR}" "${OPERATOR_MANAGER}"
+
+  configure_namespace "${NAME_SPACE}"
+  deploy_test_backstage_provider "${NAME_SPACE}"
+  local rhdh_base_url="https://backstage-${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE}" "${rhdh_base_url}"
+  create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins.yaml"
+  oc apply -f /tmp/configmap-dynamic-plugins.yaml -n "${NAME_SPACE}"
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE}"
+  deploy_rhdh_operator "${DIR}" "${NAME_SPACE}"
+
+  configure_namespace "${NAME_SPACE_RBAC}"
+  local rbac_rhdh_base_url="https://backstage-${RELEASE_NAME_RBAC}-${NAME_SPACE_RBAC}.${K8S_CLUSTER_ROUTER_BASE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${rbac_rhdh_base_url}"
+  create_dynamic_plugins_config "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "/tmp/configmap-dynamic-plugins-rbac.yaml"
+  oc apply -f /tmp/configmap-dynamic-plugins-rbac.yaml -n "${NAME_SPACE_RBAC}"
+  deploy_rhdh_operator "${DIR}" "${NAME_SPACE_RBAC}"
+}
+
+handle_operator() {
+  oc_login
+
+  API_SERVER_URL=$(oc whoami --show-server)
+  ENCODED_API_SERVER_URL=$(echo "${API_SERVER_URL}" | base64)
+  ENCODED_CLUSTER_NAME=$(echo "my-cluster" | base64)
+
+  export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
+  local url="https://backstage-${RELEASE_NAME}-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
+  local rbac_url="https://backstage-${RELEASE_NAME_RBAC}-${NAME_SPACE_RBAC}.${K8S_CLUSTER_ROUTER_BASE}"
+
+  cluster_setup
+  initiate_operator_deployments
+  check_and_test "${RELEASE_NAME}" "${NAME_SPACE}" "${url}"
+  check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}" "${rbac_url}"
+}

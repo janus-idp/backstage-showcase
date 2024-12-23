@@ -38,14 +38,14 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await uiHelper.verifyRowsInTable(["backstage-plugin-techdocs"], true);
   });
 
-  test.skip("it should have a backstage-plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
+  test("it should have a plugin-tech-radar plugin which is Enabled and Preinstalled", async ({
     page,
   }) => {
     await page
       .getByPlaceholder("Filter")
-      .pressSequentially("backstage-plugin-tech-radar\n", { delay: 300 });
+      .pressSequentially("plugin-tech-radar\n", { delay: 300 });
     const row = await page.locator(
-      UI_HELPER_ELEMENTS.rowByText("backstage-plugin-tech-radar"),
+      UI_HELPER_ELEMENTS.rowByText("backstage-community-plugin-tech-radar"),
     );
     expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
     expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
@@ -68,17 +68,20 @@ test.describe("dynamic-plugins-info UI tests", () => {
     expect(await row.locator("td").nth(3).innerText()).toBe("Yes"); // preinstalled
   });
 
-  // TODO: Add plugin-todo-list plugin in ci process to enable this test
+  // TODO: Enable this test once the behavior for loading this plugin is fixed.
+  // TODO: In RHDH 1.5, this plugin incorrectly appears as disabled despite being properly imported and explicitly enabled.
   test.skip("it should have a plugin-todo-list plugin which is Enabled but not Preinstalled", async ({
     page,
   }) => {
     await page
       .getByPlaceholder("Filter")
-      .pressSequentially("plugin-todo-list\n", { delay: 300 });
-    const row = await page.locator(
-      UI_HELPER_ELEMENTS.rowByText("@internal/plugin-todo-list"),
+      .pressSequentially("plugin-todo\n", { delay: 300 });
+
+    // Verify the Enabled and Preinstalled column values for the specific row
+    await uiHelper.verifyPluginRow(
+      "@backstage-community/plugin-todo", // Text to locate the row (Name column)
+      "Yes", // Expected value in the Enabled column
+      "No", // Expected value in the Preinstalled column
     );
-    expect(await row.locator("td").nth(2).innerText()).toBe("Yes"); // enabled
-    expect(await row.locator("td").nth(3).innerText()).toBe("No"); // not preinstalled
   });
 });
