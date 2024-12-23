@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@backstage-community/plugin-jfrog-artifactory": "1.10.2",
-    "@mui/material": "5.16.11"
+    "@mui/material": "5.16.12"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
