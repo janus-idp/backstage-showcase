@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@backstage-community/plugin-topology": "1.29.7",
-    "@mui/material": "5.16.7"
+    "@mui/material": "5.16.12"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
@@ -63,7 +63,7 @@
     "directory": "dynamic-plugins/wrappers/backstage-community-plugin-topology"
   },
   "keywords": [
-    "support:tech-preview",
+    "support:production",
     "lifecycle:active"
   ],
   "homepage": "https://red.ht/rhdh",

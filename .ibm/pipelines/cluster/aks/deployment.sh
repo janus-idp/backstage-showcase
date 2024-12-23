@@ -1,12 +1,14 @@
+#!/bin/bash
+
 initiate_aks_deployment() {
   add_helm_repos
   delete_namespace "${NAME_SPACE_RBAC_K8S}"
   configure_namespace "${NAME_SPACE_K8S}"
-  # Renable when namespace termination issue is solved
-  # install_tekton_pipelines
+  install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_K8S}" "${RELEASE_NAME}"
-  cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_K8S}"
+  cd "${DIR}" || exit
+  local rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_K8S}" "${rhdh_base_url}"
   yq_merge_value_files "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_K8S_MERGED_VALUE_FILE_NAME}"
   mkdir -p "${ARTIFACT_DIR}/${NAME_SPACE_K8S}"
   cp -a "/tmp/${HELM_CHART_K8S_MERGED_VALUE_FILE_NAME}" "${ARTIFACT_DIR}/${NAME_SPACE_K8S}/" # Save the final value-file into the artifacts directory.
@@ -22,11 +24,11 @@ initiate_rbac_aks_deployment() {
   add_helm_repos
   delete_namespace "${NAME_SPACE_K8S}"
   configure_namespace "${NAME_SPACE_RBAC_K8S}"
-  # Renable when namespace termination issue is solved
-  # install_tekton_pipelines
+  install_tekton_pipelines
   uninstall_helmchart "${NAME_SPACE_RBAC_K8S}" "${RELEASE_NAME_RBAC}"
-  cd "${DIR}"
-  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_K8S}"
+  cd "${DIR}" || exit
+  local rbac_rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC_K8S}" "${rbac_rhdh_base_url}"
   yq_merge_value_files "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_RBAC_AKS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_RBAC_K8S_MERGED_VALUE_FILE_NAME}"
   mkdir -p "${ARTIFACT_DIR}/${NAME_SPACE_RBAC_K8S}"
   cp -a "/tmp/${HELM_CHART_RBAC_K8S_MERGED_VALUE_FILE_NAME}" "${ARTIFACT_DIR}/${NAME_SPACE_RBAC_K8S}/" # Save the final value-file into the artifacts directory.

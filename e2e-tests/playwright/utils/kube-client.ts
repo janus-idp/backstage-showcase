@@ -52,7 +52,7 @@ export class KubeClient {
         namespace,
       );
     } catch (e) {
-      LOGGER.error(e.body.message);
+      LOGGER.error(e.body?.message);
       throw e;
     }
   }
@@ -99,6 +99,9 @@ export class KubeClient {
     patch: object,
   ) {
     try {
+      console.log("updateConfigMap called");
+      console.log("Namespace: ", namespace);
+      console.log("ConfigMap: ", configmapName);
       const options = {
         headers: { "Content-type": k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
       };
@@ -327,6 +330,7 @@ export class KubeClient {
   async restartDeployment(deploymentName: string, namespace: string) {
     try {
       console.log(`Scaling down deployment ${deploymentName} to 0 replicas.`);
+      console.log(`Deployment: ${deploymentName}, Namespace: ${namespace}`);
       await this.logPodConditions(namespace);
       await this.scaleDeployment(deploymentName, namespace, 0);
 

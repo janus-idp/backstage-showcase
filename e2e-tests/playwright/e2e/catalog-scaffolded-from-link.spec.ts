@@ -34,12 +34,8 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
 
-    await common.loginAsGithubUser();
+    await common.loginAsKeycloakUser();
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Register an Template", async () => {
     await uiHelper.openSidebar("Catalog");
@@ -86,24 +82,23 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.clickLink("Open in catalog");
   });
 
-  test.fixme(
-    "Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ",
-    async () => {
-      await common.clickOnGHloginPopup();
-      await uiHelper.clickTab("Dependencies");
-      await uiHelper.verifyText(
-        `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
-      );
-      await catalogImport.inspectEntityAndVerifyYaml(
-        `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
-      );
-    },
-  );
+  //FIXME
+  test.skip("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
+    await common.clickOnGHloginPopup();
+    await uiHelper.clickTab("Dependencies");
+    await uiHelper.verifyText(
+      `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
+    );
+    await catalogImport.inspectEntityAndVerifyYaml(
+      `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
+    );
+  });
 
   test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
-    await uiHelper.searchInputPlaceholder("Create React App Template");
+
+    await uiHelper.searchInputPlaceholder("Create React App Template\n");
     await uiHelper.verifyRowInTableByUniqueText("Create React App Template", [
       "website",
     ]);
