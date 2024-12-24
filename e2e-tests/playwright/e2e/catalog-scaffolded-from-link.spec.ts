@@ -86,7 +86,7 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickByDataTestId("user-picker-all");
     await uiHelper.searchInputPlaceholder("scaffoldedfromlink-\n");
-    await clickOnScaffoldedFromLink();
+    await catalogImport.clickOnScaffoldedFromLink();
 
     await uiHelper.clickTab("Dependencies");
 
@@ -95,17 +95,18 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     const nodeSelector = 'g[data-testid="node"]'; // Selector for nodes
 
     // Verify text inside the 'label' selector
-    await uiHelper.verifyTextInSelector(labelSelector, "ownerOf");
-    await uiHelper.verifyTextInSelector(labelSelector, "/ ownedBy");
-    await uiHelper.verifyTextInSelector(labelSelector, "scaffoldedFrom");
+    await catalogImport.verifyTextInSelector(labelSelector, "ownerOf");
+    await catalogImport.verifyTextInSelector(labelSelector, "/ ownedBy");
+    await catalogImport.verifyTextInSelector(labelSelector, "scaffoldedFrom");
 
     // Verify text inside the 'node' selector
-    await uiHelper.verifyPartialTextInSelector(
+    await catalogImport.verifyTextInSelector(
       nodeSelector,
       reactAppDetails.componentPartialName,
+      false
     );
 
-    await uiHelper.verifyTextInSelector(
+    await catalogImport.verifyTextInSelector(
       nodeSelector,
       "Create React App Template",
     );
@@ -145,12 +146,4 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await page.close();
   });
 
-  async function clickOnScaffoldedFromLink() {
-    const selector =
-      'a[href*="/catalog/default/component/test-scaffoldedfromlink-"]';
-    await page.locator(selector).first().waitFor({ state: "visible" });
-    const link = await page.locator(selector).first();
-    await expect(link).toBeVisible();
-    await link.click();
-  }
 });
