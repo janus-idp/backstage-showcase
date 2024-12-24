@@ -63,7 +63,11 @@ export class CatalogImport {
     const count = await elements.count();
 
     for (let i = 0; i < count; i++) {
-      const textContent = await elements.nth(i).textContent();
+      const element = elements.nth(i);
+
+      await element.waitFor({ state: 'visible', timeout: 10000 });
+
+      const textContent = await element.textContent();
 
       if (textContent) {
         const isMatch = exactMatch
@@ -80,6 +84,7 @@ export class CatalogImport {
       }
     }
 
+    // If no matching element was found, it throws an error directly
     const allTextContent = await elements.allTextContents();
     console.error(
       `Verification failed for text: Expected "${expectedText}". Selector content: ${allTextContent.join(", ")}`,
@@ -90,7 +95,6 @@ export class CatalogImport {
         : `Expected partial text "${expectedText}" not found in selector "${selector}".`,
     );
   }
-
 
 }
 
