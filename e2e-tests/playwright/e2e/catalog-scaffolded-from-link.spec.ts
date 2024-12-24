@@ -94,6 +94,8 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     const labelSelector = 'g[data-testid="label"]'; // Selector for labels
     const nodeSelector = 'g[data-testid="node"]'; // Selector for nodes
 
+    await page.waitForSelector(labelSelector);
+    await page.waitForSelector(nodeSelector);
     // Verify text inside the 'label' selector
     await catalogImport.verifyTextInSelector(labelSelector, "ownerOf");
     await catalogImport.verifyTextInSelector(labelSelector, "/ ownedBy");
