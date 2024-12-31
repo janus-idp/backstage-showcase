@@ -68,21 +68,21 @@ Additionally, include the workflow: `generic-claim` for setup and cleanup.
 
 ## Debugging
 
-If you are a member of the rhdh-pool-admins group, you can use the .ibm/pipelines/ocp-cluster-claim-login.sh script to log in and retrieve ephemeral environment credentials.
+If you are a member of the ```rhdh-pool-admins``` group, you can use the [.ibm/pipelines/ocp-cluster-claim-login.sh](ocp-cluster-claim-login.sh) script to log in and retrieve ephemeral environment credentials.
 
 ### Steps:
 
-
-
-
-1. Run the script: ```.ibm/pipelines/ocp-cluster-claim-login.sh```
+1. Run the script: 
+    ```bash
+    .ibm/pipelines/ocp-cluster-claim-login.sh
+    ```
 2. Provide the Prow log URL when prompted, for example: ```https://prow.ci.openshift.org/view/gs/test-platform-results/pr-logs/pull/janus-idp_backstage-showcase/2089/pull-ci-janus-idp-backstage-showcase-main-e2e-tests/1866766753132974080 ```
 3. The script will:
     - Log in to the hosted-mgmt cluster, which manages ephemeral cluster creation.
     - Retrieve admin credentials and log in to the ephemeral cluster.
 4. Note:
     - The ephemeral cluster is deleted as soon as the CI job terminates.
-    - To retain the cluster for a longer duration, add a sleep command in the ```.ibm/pipelines/openshift-ci-tests.sh``` script, e.g.:
+    - To retain the cluster for a longer duration, add a sleep command in the [openshift-ci-tests.sh](openshift-ci-tests.sh) script, e.g.:
         ```bash
         ...
         echo "Main script completed with result: ${OVERALL_RESULT}"
