@@ -10,8 +10,7 @@ import {
 } from "../../support/testData/bulk-import";
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
-test.describe.serial("Bulk Import plugin", () => {
-  // Skipping due to RHIDP-5258
+test.describe.skip("Bulk Import plugin", () => {
   let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
@@ -213,7 +212,6 @@ test.describe.serial("Bulk Import plugin", () => {
       notVisible: true,
     });
   });
-  // Skipping due to RHIDP-5258
   test("Verify Deleted Bulk Import Repositories Does not Appear in the Catalog", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
@@ -231,7 +229,6 @@ test.describe.serial("Bulk Import plugin", () => {
   });
 });
 
-// Skipping due to RHIDP-5258
 test.describe
   .serial("Bulk Import - Verify existing repo are displayed in bulk import Added repositories", () => {
   let page: Page;
@@ -289,7 +286,6 @@ test.describe
   });
 });
 
-// Skipping due to RHIDP-5258
 test.describe
   .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
   let page: Page;
