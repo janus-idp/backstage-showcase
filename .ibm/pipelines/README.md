@@ -1,4 +1,4 @@
-# OCP Ephemeral Environment Documentation
+# OCP Ephemeral Environment
 
 ## Overview
 
