@@ -296,7 +296,7 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGuest();
+    await common.loginAsKeycloakUser();
   });
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
