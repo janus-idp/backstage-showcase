@@ -41,7 +41,7 @@ export class OperatorScript {
   }
 
   getDeploymentYamlPath(): string {
-    return `${process.cwd()}/e2e-tests/playwright/data/backstage-operator.yaml`;
+    return `${process.cwd()}/playwright/data/backstage-operator.yaml`;
   }
 
   // https://github.com/redhat-developer/rhdh-operator/blob/main/.rhdh/scripts/install-rhdh-catalog-source.sh
@@ -60,7 +60,7 @@ export class OperatorScript {
 
     try {
       const result = await runShellCmd(
-        `kubectl apply -f ${this.getDeploymentYamlPath()}`,
+        `oc apply -f ${this.getDeploymentYamlPath()}`,
       );
       const message = result + "";
       LOGGER.info(message);
