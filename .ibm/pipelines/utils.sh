@@ -53,6 +53,7 @@ droute_send() {
     oc whoami --show-server
     local droute_pod_name=$(oc get pods -n droute --no-headers -o custom-columns=":metadata.name" | grep ubi9-cert-rsync)
     local temp_droute=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "mktemp -d")
+    echo "Data Router temporary directory created: $temp_droute"
 
     JOB_BASE_URL="https://prow.ci.openshift.org/view/gs/test-platform-results"
     if [ -n "${PULL_NUMBER:-}" ]; then
@@ -173,7 +174,7 @@ droute_send() {
       done
       set -e
     fi
-    oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
+    #oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
     if [ -n "${PULL_NUMBER:-}" ]; then
       set -e
     fi
