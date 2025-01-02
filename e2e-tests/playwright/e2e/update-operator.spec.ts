@@ -1,27 +1,39 @@
 import { test as base, expect } from "@playwright/test";
 import { KubeClient } from "../utils/kube-client";
+import { OperatorScript } from "../support/api/operator-script";
 
 type OcFixture = {
   namespace: string;
   kube: KubeClient;
 };
+
 const kubeTest = base.extend<OcFixture>({
   // eslint-disable-next-line no-empty-pattern
   namespace: async ({}, use) => {
-    const namespace = Date.now().toString();
+    const namespace = "deleteme" + Date.now().toString();
     use(namespace);
   },
 
   kube: async ({ namespace }, use) => {
     const api = new KubeClient();
     await api.createNamespaceIfNotExists(namespace);
-    use(api);
-    api.deleteNamespaceAndWait(namespace);
+    await use(api);
+    await api.deleteNamespaceAndWait(namespace);
   },
 });
 
 kubeTest.describe.only("OpenShift Operator Tests", () => {
+  kubeTest.slow();
   kubeTest("Create namespace", async ({ namespace, kube }) => {
     expect(kube.checkNamespaceExists(namespace));
   });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  kubeTest("Build OperatorScript", async ({ namespace, kube }) => {
+    const operator = await OperatorScript.build("rhdh-operator");
+    await operator.run(["-v 1.3", "--install-operator developer-hub"]);
+
+    // await kube.createDeployment(namespace);
+  });
 });
+
+// https://backstage-developer-hub-rhdh-operator.apps.alxdq5slv4a572c9df.eastus.aroapp.io

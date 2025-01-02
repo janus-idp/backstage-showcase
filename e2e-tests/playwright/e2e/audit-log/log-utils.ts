@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 import { execFile } from "child_process";
 import { Log } from "./logs";
+import { LOGGER } from "../../utils/logger";
 
 export class LogUtils {
   /**
@@ -52,7 +53,7 @@ export class LogUtils {
     return new Promise((resolve, reject) => {
       execFile(command, args, { encoding: "utf8" }, (error, stdout, stderr) => {
         if (error) {
-          console.error("Error executing command:", error);
+          LOGGER.error("Error executing command:", error);
           reject(`Error: ${error.message}`);
           return;
         }
@@ -104,7 +105,7 @@ export class LogUtils {
 
       return firstMatch;
     } catch (error) {
-      console.error("Error fetching logs:", error);
+      LOGGER.error("Error fetching logs:", error);
       throw new Error(`Failed to fetch logs: ${error}`);
     }
   }
@@ -131,7 +132,7 @@ export class LogUtils {
       await LogUtils.executeCommand(command, args);
       console.log("Login successful.");
     } catch (error) {
-      console.error("Error during login:", error);
+      LOGGER.error("Error during login:", error);
       throw new Error(`Failed to login to OpenShift: ${error}`);
     }
   }
