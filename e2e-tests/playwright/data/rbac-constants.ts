@@ -20,7 +20,7 @@ export class RbacConstants {
         name: "role:default/qe_rbac_admin",
       },
       {
-        memberReferences: ["group:default/rhdh-qe-2-team"],
+        memberReferences: ["user:default/rhdh-qe-2"],
         name: "role:default/bulk_import",
       },
     ];
