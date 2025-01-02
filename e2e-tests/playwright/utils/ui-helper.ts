@@ -23,8 +23,7 @@ export class UIhelper {
   }
 
   /**
-   * Fills the search input with the provided text and waits for at least one
-   * search result containing the text to become visible.
+   * Fills the search input with the provided text.
    *
    * @param searchText - The text to be entered into the search input field.
    */
