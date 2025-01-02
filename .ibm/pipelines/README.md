@@ -80,6 +80,7 @@ If you are a member of the ```rhdh-pool-admins``` group, you can use the [.ibm/p
 3. The script will:
     - Log in to the hosted-mgmt cluster, which manages ephemeral cluster creation.
     - Retrieve admin credentials and log in to the ephemeral cluster.
+    - Prompt to open the OCP web console directly in the browser.
 4. Note:
     - The ephemeral cluster is deleted as soon as the CI job terminates.
     - To retain the cluster for a longer duration, add a sleep command in the [openshift-ci-tests.sh](openshift-ci-tests.sh) script, e.g.:
