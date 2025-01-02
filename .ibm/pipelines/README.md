@@ -100,7 +100,12 @@ If you are a member of the ```rhdh-pool-admins``` group, you can use the [.ibm/p
 - Keycloak is deployed on the pr-os cluster.
 ### Keycloak Instance Details:
 - URL: [Keycloak Admin Console](https://keycloak-rhsso.rhdh-pr-os-a9805650830b22c3aee243e51d79565d-0000.us-east.containers.appdomain.cloud/auth/admin/master/console/#/realms/rhdh-login-test)
-- Credentials: Can be found in the RHDH-QE Vault.
+- Credentials: These can be found in the RHDH-QE Vault under the following keys:
+    - ```KEYCLOAK_AUTH_BASE_URL```
+    - ```KEYCLOAK_AUTH_CLIENTID```
+    - ```KEYCLOAK_AUTH_CLIENT_SECRET```
+    - ```KEYCLOAK_AUTH_LOGIN_REALM```
+    - ```KEYCLOAK_AUTH_REALM```
 
 # Installation Instructions for Tests
 
