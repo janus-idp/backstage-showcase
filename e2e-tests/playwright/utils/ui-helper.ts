@@ -424,9 +424,11 @@ export class UIhelper {
   }
 
   async clickBtnInCard(cardText: string, btnText: string, exact = true) {
-    const card = this.page.locator(UIhelperPO.MuiCardRoot(cardText)).first();
+    const card = this.page
+      .locator(UI_HELPER_ELEMENTS.MuiCardRoot(cardText))
+      .first();
     await card
-      .getByRole('button', { name: btnText, exact: exact })
+      .getByRole("button", { name: btnText, exact: exact })
       .first()
       .click();
   }

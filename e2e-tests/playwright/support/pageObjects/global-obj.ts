@@ -16,8 +16,8 @@ export const UI_HELPER_ELEMENTS = {
   MuiButtonTextPrimary: ".MuiButton-textPrimary",
   MuiCard: (cardHeading) =>
     `//div[contains(@class,'MuiCardHeader-root') and descendant::*[text()='${cardHeading}']]/..`,
-  MuiCardRoot: (cardText) =>
-    `//div[contains(@class,'MuiCard-root') and descendant::*[text()='${cardText}']]/..`,
+  MuiCardRoot: (cardText: string) =>
+    `//div[contains(@class,'MuiCard-root')][descendant::text()[contains(., '${cardText}')]]`,
   MuiTable: "table.MuiTable-root",
   MuiCardHeader: 'div[class*="MuiCardHeader-root"]',
   MuiInputBase: 'div[class*="MuiInputBase-root"]',
