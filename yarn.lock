@@ -57,18 +57,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:^11.1.0":
-  version: 11.7.2
-  resolution: "@apidevtools/json-schema-ref-parser@npm:11.7.2"
+"@apidevtools/json-schema-ref-parser@npm:^11.1.0, @apidevtools/json-schema-ref-parser@npm:^11.7.0":
+  version: 11.7.3
+  resolution: "@apidevtools/json-schema-ref-parser@npm:11.7.3"
   dependencies:
     "@jsdevtools/ono": ^7.1.3
     "@types/json-schema": ^7.0.15
     js-yaml: ^4.1.0
-  checksum: 44096e5cd5a03b17ee5eb0a3b9e9a4db85d87da8ae2abda264eae615f2a43e3e6ba5ca208e1161d4d946755b121c10a9550e88792a725951f2c4cff6df0d8a19
+  checksum: 3496edfb2c3d2f9a5a7a49795b4d560f1e4957015aef473775f4b5f2db55a4ddfb3778783401ddd24e7db2930a67a370fb8c68840d8bae0a2a581e0e57fc2f58
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:^9.0.6, @apidevtools/json-schema-ref-parser@npm:^9.1.2":
+"@apidevtools/json-schema-ref-parser@npm:^9.0.6":
   version: 9.1.2
   resolution: "@apidevtools/json-schema-ref-parser@npm:9.1.2"
   dependencies:
@@ -8356,6 +8356,23 @@ __metadata:
     ws: ^8.18.0
     yn: ^4.0.0
   checksum: f9dbbe67485bb7160781cb5e4c4365ab85b268e1516c394c86e8d0ecffbe6f601d502e49315f8a2b56272908459aee3b21c5deaf58f79e6349850c06e3d3679d
+  languageName: node
+  linkType: hard
+
+"@backstage/plugin-signals-node@npm:0.1.13":
+  version: 0.1.13
+  resolution: "@backstage/plugin-signals-node@npm:0.1.13"
+  dependencies:
+    "@backstage/backend-common": ^0.25.0
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/config": ^1.2.0
+    "@backstage/plugin-auth-node": ^0.5.3
+    "@backstage/plugin-events-node": ^0.4.2
+    "@backstage/types": ^1.1.1
+    express: ^4.17.1
+    uuid: ^9.0.0
+    ws: ^8.18.0
+  checksum: 62a0c5364d55fbbe2ab21d64e298266e23d23d28e2388ef18915a42b6da3a5e112a29879c3abd5ba0c0d58ac1f59e186fd55d7e06d761da61d94ad151d0c0680
   languageName: node
   linkType: hard
 
@@ -20013,12 +20030,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/multer@npm:^1.4.7":
-  version: 1.4.11
-  resolution: "@types/multer@npm:1.4.11"
+"@types/multer@npm:^1.4.12":
+  version: 1.4.12
+  resolution: "@types/multer@npm:1.4.12"
   dependencies:
     "@types/express": "*"
-  checksum: 3d80b2acdfbc9f3e9027d4467e948925810b67e5622a3017f42f58a3598d34b25376890801e55d0c03973ccc34573abf5218af334e8292ec455832f4ade3e5f5
+  checksum: 719cacf88ec83ed77e250e45bee830fd7a505323825efa2a2c1144f5f3d7d36e67408ec988e571bcbaa571e0c214b5ede42d57ebb0f9b453a5eb8faba8ff12d0
   languageName: node
   linkType: hard
 
@@ -21385,7 +21402,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.0, ajv@npm:^8.1.0, ajv@npm:^8.10.0, ajv@npm:^8.11.0, ajv@npm:^8.11.2, ajv@npm:^8.12.0, ajv@npm:^8.16.0, ajv@npm:^8.6.0, ajv@npm:^8.6.2, ajv@npm:^8.6.3, ajv@npm:^8.9.0":
+"ajv@npm:^8.0.0, ajv@npm:^8.1.0, ajv@npm:^8.10.0, ajv@npm:^8.11.0, ajv@npm:^8.12.0, ajv@npm:^8.16.0, ajv@npm:^8.17.1, ajv@npm:^8.6.0, ajv@npm:^8.6.2, ajv@npm:^8.6.3, ajv@npm:^8.9.0":
   version: 8.17.1
   resolution: "ajv@npm:8.17.1"
   dependencies:
@@ -22769,6 +22786,7 @@ __metadata:
   resolution: "backstage-plugin-catalog-backend-module-gitlab-org@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-org-dynamic"
   dependencies:
     "@backstage/cli": 0.28.2
+    "@backstage/plugin-catalog-backend-module-gitlab": 0.4.4
     "@backstage/plugin-catalog-backend-module-gitlab-org": 0.2.2
     "@janus-idp/cli": 1.18.5
     typescript: 5.6.3
@@ -22848,6 +22866,7 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@backstage/plugin-notifications-backend": 0.4.2
+    "@backstage/plugin-signals-node": 0.1.13
     "@janus-idp/cli": 1.18.5
     typescript: 5.6.3
   languageName: unknown
@@ -28156,12 +28175,12 @@ __metadata:
   linkType: hard
 
 "express-openapi-validator@npm:^5.0.4":
-  version: 5.1.6
-  resolution: "express-openapi-validator@npm:5.1.6"
+  version: 5.3.9
+  resolution: "express-openapi-validator@npm:5.3.9"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": ^9.1.2
-    "@types/multer": ^1.4.7
-    ajv: ^8.11.2
+    "@apidevtools/json-schema-ref-parser": ^11.7.0
+    "@types/multer": ^1.4.12
+    ajv: ^8.17.1
     ajv-draft-04: ^1.0.0
     ajv-formats: ^2.1.1
     content-type: ^1.0.5
@@ -28171,8 +28190,10 @@ __metadata:
     media-typer: ^1.1.0
     multer: ^1.4.5-lts.1
     ono: ^7.1.3
-    path-to-regexp: ^6.2.0
-  checksum: 46be5236101e51593d1365505879d380a40d0307be8173cdaa3b643def518fcca25944f2e0eb5b2c48a7a09eacb192e5287b3a995b1903275dbca0e59fa669e3
+    path-to-regexp: ^8.1.0
+  peerDependencies:
+    express: "*"
+  checksum: 0469b383b769f070dfad9c9148b18857c5aaa9aa14c596e1ada155dac63e1c355e455d42f3c81af62c4aefd3db4ad8b892d34a432e170e4eb7af73d7dbd2f644
   languageName: node
   linkType: hard
 
@@ -37578,7 +37599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:^8.0.0":
+"path-to-regexp@npm:^8.0.0, path-to-regexp@npm:^8.1.0":
   version: 8.2.0
   resolution: "path-to-regexp@npm:8.2.0"
   checksum: 56e13e45962e776e9e7cd72e87a441cfe41f33fd539d097237ceb16adc922281136ca12f5a742962e33d8dda9569f630ba594de56d8b7b6e49adf31803c5e771
