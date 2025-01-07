@@ -98,6 +98,7 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
     await uiHelper.verifyTextInSelector(labelSelector, "ownerOf");
     await uiHelper.verifyTextInSelector(labelSelector, "/ ownedBy");
     await uiHelper.verifyTextInSelector(labelSelector, "scaffoldedFrom");
+    await uiHelper.verifyTextInSelector(labelSelector, "PLEASE FAIL");
 
     // Verify text inside the 'node' selector
     await uiHelper.verifyPartialTextInSelector(
