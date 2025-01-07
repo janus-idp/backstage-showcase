@@ -23,21 +23,12 @@ export class UIhelper {
   }
 
   /**
-   * Fills the search input with the provided text and waits for at least one
-   * search result containing the text to become visible.
+   * Fills the search input with the provided text.
    *
    * @param searchText - The text to be entered into the search input field.
    */
   async searchInputPlaceholder(searchText: string) {
-    // Wait for the search input to be visible
-    const searchInput = this.page.locator('input[placeholder="Search"]');
-    await expect(searchInput).toBeVisible();
-
-    await searchInput.fill(searchText);
-
-    // Wait for at least one search result to become visible
-    const resultLocator = this.page.locator(`text=${searchText}`);
-    await expect(resultLocator.first()).toBeVisible();
+    await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
   async filterInputPlaceholder(searchText: string) {

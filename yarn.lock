@@ -3879,6 +3879,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-scaffolder-backend-module-kubernetes@npm:2.2.2":
+  version: 2.2.2
+  resolution: "@backstage-community/plugin-scaffolder-backend-module-kubernetes@npm:2.2.2"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-client": ^1.7.1
+    "@backstage/plugin-scaffolder-node": ^0.5.0
+    "@kubernetes/client-node": ^0.22.1
+  checksum: 37f209550576e487b1720f66dbe584146245ce5dd0067623e8bcdd6f48cdd0ad3a5418fbe7bbe334c9aac29bcb366f3468b734c0118a896cfb25208eb98c5664
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-scaffolder-backend-module-quay@npm:2.2.2":
   version: 2.2.2
   resolution: "@backstage-community/plugin-scaffolder-backend-module-quay@npm:2.2.2"
@@ -20307,12 +20319,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.10":
-  version: 20.17.10
-  resolution: "@types/node@npm:20.17.10"
+"@types/node@npm:20.17.11":
+  version: 20.17.11
+  resolution: "@types/node@npm:20.17.11"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 44cfa7cd9a4ebb8f74efa4b89cf963ca0e522121a7d24d8121d40872bbcfd607eaccdc203c4fe92c8b587125be9ca7b071fe4f9b356f263434b8a8512dbebef0
+  checksum: 8841a85ce5cbc402d87492527721d32b2c3ab9159a362a6ba05e957807e1991a056df61ce5e58166489d07d90f1ad61516121d6fd4c9e62c5429ce67f4b82d98
   languageName: node
   linkType: hard
 
@@ -21815,7 +21827,7 @@ __metadata:
     "@testing-library/react": 14.3.1
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 14.5.2
-    "@types/node": 20.17.10
+    "@types/node": 20.17.11
     "@types/react": 18.3.18
     "@types/react-dom": 18.3.5
     lodash: 4.17.21
@@ -22868,6 +22880,17 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
     "@mui/material": 5.16.13
+    typescript: 5.6.3
+  languageName: unknown
+  linkType: soft
+
+"backstage-community-plugin-scaffolder-backend-module-kubernetes@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic":
+  version: 0.0.0-use.local
+  resolution: "backstage-community-plugin-scaffolder-backend-module-kubernetes@workspace:dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic"
+  dependencies:
+    "@backstage-community/plugin-scaffolder-backend-module-kubernetes": 2.2.2
+    "@backstage/cli": 0.28.2
+    "@janus-idp/cli": 1.18.5
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -26900,7 +26923,7 @@ __metadata:
     "@kubernetes/client-node": 0.21.0
     "@microsoft/microsoft-graph-client": 3.0.7
     "@playwright/test": 1.48.0
-    "@types/node": 20.17.10
+    "@types/node": 20.17.11
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
     eslint: 8.57.1
