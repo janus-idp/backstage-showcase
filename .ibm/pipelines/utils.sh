@@ -47,7 +47,7 @@ droute_send() {
     local release_name=$1
     local project=$2
     local droute_project="droute"
-    METEDATA_OUTPUT="data_router_metadata_output.json"
+    local metadata_output="data_router_metadata_output.json"
 
     oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
     oc whoami --show-server
@@ -93,9 +93,9 @@ droute_send() {
           {"key": $key4, "value": $value4}
         ] |
       .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
-      ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
+      ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${metadata_output}"
 
-    oc rsync --include="${METEDATA_OUTPUT}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
+    oc rsync --progress=true --include="${metadata_output}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
 
     # "Install" Data Router
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
@@ -104,14 +104,40 @@ droute_send() {
       && /tmp/droute-linux-amd64 version"
 
     # Send test results through DataRouter and save the request ID.
-    DATA_ROUTER_REQUEST_ID=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
-      --url '${DATA_ROUTER_URL}' \
-      --username '${DATA_ROUTER_USERNAME}' \
-      --password '${DATA_ROUTER_PASSWORD}' \
-      --results '${temp_droute}/${JUNIT_RESULTS}' \
-      --verbose" | grep "request:" | awk '{print $2}')
+    local max_attempts=5
+    local wait_seconds=1
+    for ((i = 1; i <= max_attempts; i++)); do
+      if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+        /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
+        --url '${DATA_ROUTER_URL}' \
+        --username '${DATA_ROUTER_USERNAME}' \
+        --password '${DATA_ROUTER_PASSWORD}' \
+        --results '${temp_droute}/${JUNIT_RESULTS}' \
+        --verbose" 2>&1) &&
+        DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
+        [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
 
+        echo "Test results successfully sent through Data Router."
+        echo "Request ID: $DATA_ROUTER_REQUEST_ID"
+        return 0
+      fi
+
+      if ((i <= max_attempts)); then
+        echo "Attempt ${i} of ${max_attempts}: Error sending test results through Data Router."
+        echo "Error details: $output"
+        sleep "${wait_seconds}"
+      else
+        echo "Failed to send test results after ${max_attempts} attempts."
+        echo "Last error: $output"
+        echo "Troubleshooting steps:"
+        echo "1. Restart $droute_pod_name in $droute_project project/namespace"
+        echo "2. Check the Data Router documentation: https://spaces.redhat.com/pages/viewpage.action?pageId=115488042"
+        echo "3. Ask for help at Slack: #forum-dno-datarouter"
+        return 1
+      fi
+    done
+
+    # shellcheck disable=SC2317
     if [[ "$JOB_NAME" == *periodic-* ]]; then
       local max_attempts=30
       local wait_seconds=2
