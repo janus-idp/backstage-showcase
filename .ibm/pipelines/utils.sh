@@ -39,9 +39,9 @@ droute_send() {
   if [[ "${OPENSHIFT_CI}" != "true" ]]; then return 0; fi
   temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
   ( # Open subshell
-    # if [ -n "${PULL_NUMBER:-}" ]; then
-    #   set +e
-    # fi
+    if [ -n "${PULL_NUMBER:-}" ]; then
+      set +e
+    fi
     export KUBECONFIG="$temp_kubeconfig"
     local droute_version="1.2.2"
     local release_name=$1
