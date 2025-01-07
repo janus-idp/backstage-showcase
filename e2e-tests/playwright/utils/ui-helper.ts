@@ -300,7 +300,7 @@ export class UIhelper {
 
   async waitForTitle(text: string, level: number = 1) {
     await this.page.waitForSelector(`h${level}:has-text("${text}")`, {
-      timeout: 99999,
+      timeout: 10000,
     });
   }
 
