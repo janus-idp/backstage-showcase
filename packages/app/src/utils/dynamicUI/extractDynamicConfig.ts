@@ -1,5 +1,5 @@
 import { Entity } from '@backstage/catalog-model';
-import { ApiHolder } from '@backstage/core-plugin-api';
+import { ApiHolder, AppComponents } from '@backstage/core-plugin-api';
 import { isKind } from '@backstage/plugin-catalog';
 
 import { hasAnnotation, isType } from '../../components/catalog/utils';
@@ -116,8 +116,23 @@ type ThemeEntry = {
   importName: string;
 };
 
+type ComponentEntry = {
+  scope: string;
+  module: string;
+  id: string;
+  importName: string;
+  name: keyof AppComponents;
+};
+
+type ProviderSetting = {
+  title: string;
+  description: string;
+  provider: string;
+};
+
 type CustomProperties = {
   pluginModule?: string;
+  components: ComponentEntry[];
   dynamicRoutes?: (DynamicModuleEntry & {
     importName?: string;
     module?: string;
@@ -133,6 +148,7 @@ type CustomProperties = {
   mountPoints?: MountPoint[];
   appIcons?: AppIcon[];
   apiFactories?: ApiFactory[];
+  providerSettings?: ProviderSetting[];
   scaffolderFieldExtensions?: ScaffolderFieldExtension[];
   themes?: ThemeEntry[];
 };
@@ -149,10 +165,12 @@ type DynamicConfig = {
   pluginModules: PluginModule[];
   apiFactories: ApiFactory[];
   appIcons: AppIcon[];
+  components: ComponentEntry[];
   dynamicRoutes: DynamicRoute[];
   menuItems: MenuItem[];
   entityTabs: EntityTabEntry[];
   mountPoints: MountPoint[];
+  providerSettings: ProviderSetting[];
   routeBindings: RouteBinding[];
   routeBindingTargets: BindingTarget[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
@@ -171,12 +189,14 @@ function extractDynamicConfig(
     pluginModules: [],
     apiFactories: [],
     appIcons: [],
+    components: [],
     dynamicRoutes: [],
     menuItems: [],
     entityTabs: [],
     mountPoints: [],
     routeBindings: [],
     routeBindingTargets: [],
+    providerSettings: [],
     scaffolderFieldExtensions: [],
     themes: [],
   };
@@ -186,6 +206,20 @@ function extractDynamicConfig(
         scope,
         module: customProperties.pluginModule ?? 'PluginRoot',
       });
+      return pluginSet;
+    },
+    [],
+  );
+  config.components = Object.entries(frontend).reduce<ComponentEntry[]>(
+    (pluginSet, [scope, customProperties]) => {
+      pluginSet.push(
+        ...(customProperties.components ?? []).map(component => ({
+          ...component,
+          module: component.module ?? 'PluginRoot',
+          importName: component.importName ?? 'default',
+          scope,
+        })),
+      );
       return pluginSet;
     },
     [],
@@ -301,6 +335,12 @@ function extractDynamicConfig(
         })),
       );
       return accThemeEntries;
+    },
+    [],
+  );
+  config.providerSettings = Object.entries(frontend).reduce<ProviderSetting[]>(
+    (accProviderSettings, [_, { providerSettings = [] }]) => {
+      return [...accProviderSettings, ...providerSettings];
     },
     [],
   );
