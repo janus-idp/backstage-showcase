@@ -3,7 +3,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { createApp } from '@backstage/app-defaults';
 import { BackstageApp } from '@backstage/core-app-api';
-import { AnyApiFactory, BackstagePlugin } from '@backstage/core-plugin-api';
+import {
+  AnyApiFactory,
+  ApiRef,
+  AppComponents,
+  BackstagePlugin,
+  ProfileInfoApi,
+  SessionApi,
+} from '@backstage/core-plugin-api';
 
 import { useThemes } from '@redhat-developer/red-hat-developer-hub-theme';
 import { AppsConfig } from '@scalprum/core';
@@ -24,6 +31,7 @@ import DynamicRootContext, {
   ComponentRegistry,
   EntityTabOverrides,
   MountPoints,
+  ProviderSetting,
   RemotePlugins,
   ResolvedDynamicRoute,
   ResolvedDynamicRouteMenuItem,
@@ -61,7 +69,9 @@ export const DynamicRoot = ({
     React.ComponentType | undefined
   >(undefined);
   // registry of remote components loaded at bootstrap
-  const [components, setComponents] = useState<ComponentRegistry | undefined>();
+  const [componentRegistry, setComponentRegistry] = useState<
+    ComponentRegistry | undefined
+  >();
   const { initialized, pluginStore, api: scalprumApi } = useScalprum();
 
   const themes = useThemes();
@@ -72,10 +82,12 @@ export const DynamicRoot = ({
       pluginModules,
       apiFactories,
       appIcons,
+      components,
       dynamicRoutes,
       menuItems,
       entityTabs,
       mountPoints,
+      providerSettings: providerSettingsConfig,
       routeBindings,
       routeBindingTargets,
       scaffolderFieldExtensions,
@@ -83,6 +95,10 @@ export const DynamicRoot = ({
     } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
       ...pluginModules.map(({ scope, module }) => ({
+        scope,
+        module,
+      })),
+      ...components.map(({ scope, module }) => ({
         scope,
         module,
       })),
@@ -170,6 +186,23 @@ export const DynamicRoot = ({
         },
         [],
       ),
+    );
+
+    const appComponents = components.reduce<Partial<AppComponents>>(
+      (componentMap, { scope, module, importName, name }) => {
+        if (typeof allPlugins[scope]?.[module]?.[importName] !== 'undefined') {
+          componentMap[name] = allPlugins[scope]?.[module]?.[
+            importName
+          ] as React.ComponentType<any>;
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `Plugin ${scope} is not configured properly: ${module}.${importName} not found, ignoring AppComponent: ${name}`,
+          );
+        }
+        return componentMap;
+      },
+      {},
     );
 
     let icons = Object.fromEntries(
@@ -386,6 +419,31 @@ export const DynamicRoot = ({
       },
       [],
     );
+    const filteredStaticApis = staticApis.filter(
+      api => !remoteApis.some(remoteApi => remoteApi.api.id === api.api.id),
+    );
+    const apis = [...filteredStaticApis, ...remoteApis];
+    const providerSettings: ProviderSetting[] = providerSettingsConfig
+      .map(({ title, description, provider }) => {
+        try {
+          return {
+            title,
+            description,
+            apiRef: apis
+              .filter(api => api.api.id === `core.auth.${provider}`)
+              .pop()!.api as ApiRef<ProfileInfoApi & SessionApi>,
+          };
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            'Could not find auth provider ',
+            provider,
+            ' this auth provider user settings will be unavailable',
+          );
+          return undefined;
+        }
+      })
+      .filter(item => item !== undefined);
 
     if (!app.current) {
       const filteredStaticThemes = themes.filter(
@@ -394,11 +452,8 @@ export const DynamicRoot = ({
             dynamicTheme => dynamicTheme.id === theme.id,
           ),
       );
-      const filteredStaticApis = staticApis.filter(
-        api => !remoteApis.some(remoteApi => remoteApi.api.id === api.api.id),
-      );
       app.current = createApp({
-        apis: [...filteredStaticApis, ...remoteApis],
+        apis,
         bindRoutes({ bind }) {
           bindAppRoutes(bind, resolvedRouteBindingTargets, routeBindings);
         },
@@ -408,7 +463,10 @@ export const DynamicRoot = ({
           ...remoteBackstagePlugins,
         ],
         themes: [...filteredStaticThemes, ...dynamicThemeProviders],
-        components: defaultAppComponents,
+        components: {
+          ...defaultAppComponents,
+          ...appComponents,
+        } as Partial<AppComponents>,
       });
     }
 
@@ -424,16 +482,16 @@ export const DynamicRoot = ({
       scaffolderFieldExtensionComponents;
 
     // make the dynamic UI configuration available to DynamicRootContext consumers
-    setComponents({
+    setComponentRegistry({
       AppProvider: app.current.getProvider(),
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
       menuItems: dynamicRoutesMenuItems,
       entityTabOverrides,
       mountPoints: mountPointComponents,
+      providerSettings,
       scaffolderFieldExtensions: scaffolderFieldExtensionComponents,
     });
-
     afterInit().then(({ default: Component }) => {
       setChildComponent(() => Component);
     });
@@ -449,17 +507,17 @@ export const DynamicRoot = ({
   ]);
 
   useEffect(() => {
-    if (initialized && !components) {
+    if (initialized && !componentRegistry) {
       initializeRemoteModules();
     }
-  }, [initialized, components, initializeRemoteModules]);
+  }, [initialized, componentRegistry, initializeRemoteModules]);
 
-  if (!initialized || !components) {
+  if (!initialized || !componentRegistry) {
     return <Loader />;
   }
 
   return (
-    <DynamicRootContext.Provider value={components}>
+    <DynamicRootContext.Provider value={componentRegistry}>
       {ChildComponent ? <ChildComponent /> : <Loader />}
     </DynamicRootContext.Provider>
   );
