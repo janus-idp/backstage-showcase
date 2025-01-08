@@ -55,9 +55,9 @@ jobs:
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
+          username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
+          imageName: rhdh-community/rhdh
           imageTags: |
             type=raw,value=next
             type=sha,prefix=next-
