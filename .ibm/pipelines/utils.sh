@@ -123,7 +123,7 @@ droute_send() {
         fi
       fi
 
-      if ((i = max_attempts)); then
+      if ((i == max_attempts)); then
         echo "Failed to send test results after ${max_attempts} attempts."
         echo "Last Data Router error details:"
         echo "${output}"
