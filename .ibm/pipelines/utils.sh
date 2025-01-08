@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 retrieve_pod_logs() {
   local pod_name=$1; local container=$2; local namespace=$3
@@ -120,15 +120,11 @@ droute_send() {
           [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
           echo "Test results successfully sent through Data Router."
           echo "Request ID: $DATA_ROUTER_REQUEST_ID"
-          return 0
+          break
         fi
       fi
 
-      if ((i <= max_attempts)); then
-        echo "Data Router error details:"
-        echo "${output}"
-        sleep "${wait_seconds}"
-      else
+      if ((i == max_attempts)); then
         echo "Failed to send test results after ${max_attempts} attempts."
         echo "Last Data Router error details:"
         echo "${output}"
@@ -136,7 +132,6 @@ droute_send() {
         echo "1. Restart $droute_pod_name in $droute_project project/namespace"
         echo "2. Check the Data Router documentation: https://spaces.redhat.com/pages/viewpage.action?pageId=115488042"
         echo "3. Ask for help at Slack: #forum-dno-datarouter"
-        return 1
       fi
     done
 
