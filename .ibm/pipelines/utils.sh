@@ -107,6 +107,7 @@ droute_send() {
     local max_attempts=5
     local wait_seconds=1
     for ((i = 1; i <= max_attempts; i++)); do
+      echo "Attempt ${i} of ${max_attempts} to send test results through Data Router."
       if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
         /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
         --url '${DATA_ROUTER_URL}' \
@@ -123,12 +124,13 @@ droute_send() {
       fi
 
       if ((i <= max_attempts)); then
-        echo "Attempt ${i} of ${max_attempts}: Error sending test results through Data Router."
-        echo "Error details: $output"
+        echo "Data Router error details:"
+        echo "${output}"
         sleep "${wait_seconds}"
       else
         echo "Failed to send test results after ${max_attempts} attempts."
-        echo "Last error: $output"
+        echo "Last Data Router error details:"
+        echo "${output}"
         echo "Troubleshooting steps:"
         echo "1. Restart $droute_pod_name in $droute_project project/namespace"
         echo "2. Check the Data Router documentation: https://spaces.redhat.com/pages/viewpage.action?pageId=115488042"
