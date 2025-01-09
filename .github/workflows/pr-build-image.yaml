@@ -1,4 +1,4 @@
-# Copyright 2023 The Janus IDP Authors
+# Copyright Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ jobs:
 
       - name: Get the latest commits from base branch
         run: |
-          git remote add base-origin https://github.com/janus-idp/backstage-showcase || true
+          git remote add base-origin https://github.com/${{ github.repository }} || true
           git config user.name "${{ github.event.pull_request.user.login }}"
           git config user.email "${{ github.event.pull_request.user.email }}"
           echo "Updating PR with latest commits from ${{ github.event.pull_request.base.ref }} ..."
