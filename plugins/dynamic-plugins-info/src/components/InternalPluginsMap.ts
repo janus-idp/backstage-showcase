@@ -66,7 +66,7 @@ export const InternalPluginsMap: Record<string, string> = {
   'red-hat-developer-hub-backstage-plugin-dynamic-home-page':
     './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page',
   'red-hat-developer-hub-backstage-plugin-marketplace':
-    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin--marketplace',
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace',
   'red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic':
     './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic',
   'red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic':
