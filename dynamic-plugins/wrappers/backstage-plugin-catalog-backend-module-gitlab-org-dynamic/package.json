@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@backstage/plugin-catalog-backend-module-gitlab": "0.4.4",
-    "@backstage/plugin-catalog-backend-module-gitlab-org": "0.2.2"
+    "@backstage/plugin-catalog-backend-module-gitlab-org": "0.2.4"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

@@ -29,7 +29,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-signals": "0.0.11"
+    "@backstage/plugin-signals": "0.0.14"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

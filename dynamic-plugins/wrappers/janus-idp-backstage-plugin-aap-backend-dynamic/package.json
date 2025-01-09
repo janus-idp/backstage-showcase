@@ -38,7 +38,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@janus-idp/backstage-plugin-aap-backend": "2.2.0"
+    "@janus-idp/backstage-plugin-aap-backend": "2.2.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

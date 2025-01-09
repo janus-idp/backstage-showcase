@@ -29,7 +29,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-jenkins": "0.12.0"
+    "@backstage-community/plugin-jenkins": "0.12.2"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

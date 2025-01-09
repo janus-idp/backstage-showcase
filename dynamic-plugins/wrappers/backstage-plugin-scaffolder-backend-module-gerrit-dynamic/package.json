@@ -36,7 +36,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-scaffolder-backend-module-gerrit": "0.2.2"
+    "@backstage/plugin-scaffolder-backend-module-gerrit": "0.2.4"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

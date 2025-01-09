@@ -36,7 +36,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-catalog-backend-module-msgraph": "0.6.3"
+    "@backstage/plugin-catalog-backend-module-msgraph": "0.6.5"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

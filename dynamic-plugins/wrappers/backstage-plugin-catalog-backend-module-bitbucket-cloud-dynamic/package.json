@@ -36,7 +36,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-catalog-backend-module-bitbucket-cloud": "0.4.1"
+    "@backstage/plugin-catalog-backend-module-bitbucket-cloud": "0.4.3"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

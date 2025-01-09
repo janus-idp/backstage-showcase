@@ -40,7 +40,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-notifications-backend": "0.4.2",
+    "@backstage/plugin-notifications-backend": "0.4.3",
     "@backstage/plugin-signals-node": "0.1.13"
   },
   "devDependencies": {

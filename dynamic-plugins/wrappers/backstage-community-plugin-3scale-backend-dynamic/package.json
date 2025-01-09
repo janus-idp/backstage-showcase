@@ -38,7 +38,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-3scale-backend": "3.0.3"
+    "@backstage-community/plugin-3scale-backend": "3.0.4"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

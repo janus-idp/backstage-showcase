@@ -35,7 +35,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-notifications-backend-module-email": "0.3.2"
+    "@backstage/plugin-notifications-backend-module-email": "0.3.4"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

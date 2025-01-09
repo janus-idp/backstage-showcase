@@ -39,7 +39,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-sonarqube-backend": "0.3.0"
+    "@backstage-community/plugin-sonarqube-backend": "0.3.1"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",

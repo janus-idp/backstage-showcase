@@ -38,7 +38,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-signals-backend": "0.2.2"
+    "@backstage/plugin-signals-backend": "0.2.4"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
