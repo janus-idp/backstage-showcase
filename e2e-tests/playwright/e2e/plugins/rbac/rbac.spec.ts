@@ -271,9 +271,14 @@ test.describe.serial("Test RBAC", () => {
         state: "visible",
       });
       let nextButton2: Locator;
+      let matchNextButton2: Locator[];
+      let attempts = 0;
       do {
-        nextButton2 = page.getByTestId("nextButton-2");
-      } while (nextButton2.all.length > 1);
+        page.waitForTimeout(500);
+        nextButton2 = page.locator('[data-testid="nextButton-2"]');
+        matchNextButton2 = await nextButton2.all();
+        attempts++;
+      } while (matchNextButton2.length > 1 && attempts < 5);
       nextButton2.click();
       await uiHelper.clickButton("Save");
       await uiHelper.verifyText(
