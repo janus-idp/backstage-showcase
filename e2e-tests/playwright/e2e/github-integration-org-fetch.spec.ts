@@ -14,8 +14,10 @@ test.describe.serial("GitHub integration with Org data fetching", () => {
     await common.loginAsKeycloakUser();
   });
 
-  test("Verify that fetching the groups of the first org works", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Verify that fetching the groups of the first org works", async ({
+    page,
+  }) => {
+    await page.goto("/catalog");
     await uiHelper.selectMuiBox("Kind", "Group");
 
     await uiHelper.searchInputPlaceholder("maintainers");
@@ -33,8 +35,9 @@ test.describe.serial("GitHub integration with Org data fetching", () => {
     await uiHelper.verifyRowsInTable(["janus-test"]);
   });
 
-  test("Verify that fetching the users of the orgs works", async () => {
-    await uiHelper.openSidebar("Catalog");
+  test("Verify that fetching the users of the orgs works", async ({ page }) => {
+    await page.goto("/catalog");
+
     await uiHelper.selectMuiBox("Kind", "User");
 
     await uiHelper.searchInputPlaceholder("r");
