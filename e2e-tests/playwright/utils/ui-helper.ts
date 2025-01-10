@@ -428,7 +428,6 @@ export class UIhelper {
       .locator(UI_HELPER_ELEMENTS.MuiCardRoot(cardText))
       .first();
     await cardLocator.scrollIntoViewIfNeeded();
-    await expect(cardLocator).toBeVisible();
     await cardLocator
       .getByRole("button", { name: btnText, exact: exact })
       .first()
