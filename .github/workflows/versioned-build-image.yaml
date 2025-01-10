@@ -1,4 +1,4 @@
-# Copyright 2023 The Janus IDP Authors
+# Copyright 2023-2025 The RHDH Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# on push of a tag, trigger a container build for that tag and push to http://quay.io/janus-idp/backstage-showcase
+# on push of a tag, trigger a container build for that tag and push to http://quay.io/rhdh-community/rhdh
 name: Versioned
 
 on:
@@ -57,9 +57,9 @@ jobs:
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
+          username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
+          imageName: rhdh-community/rhdh
           imageTags: |
             type=raw,value=latest,enable=${{ env.is_latest }}
             type=semver,pattern={{version}}
