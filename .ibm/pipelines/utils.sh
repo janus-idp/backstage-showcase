@@ -107,33 +107,30 @@ droute_send() {
     local max_attempts=5
     local wait_seconds=1
     for ((i = 1; i <= max_attempts; i++)); do
+      echo "Attempt ${i} of ${max_attempts} to send test results through Data Router."
       if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
         /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
         --url '${DATA_ROUTER_URL}' \
         --username '${DATA_ROUTER_USERNAME}' \
         --password '${DATA_ROUTER_PASSWORD}' \
         --results '${temp_droute}/${JUNIT_RESULTS}' \
-        --verbose" 2>&1) &&
-        DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
-        [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
-
-        echo "Test results successfully sent through Data Router."
-        echo "Request ID: $DATA_ROUTER_REQUEST_ID"
-        return 0
+        --verbose" 2>&1); then
+        if DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
+          [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
+          echo "Test results successfully sent through Data Router."
+          echo "Request ID: $DATA_ROUTER_REQUEST_ID"
+          break
+        fi
       fi
 
-      if ((i <= max_attempts)); then
-        echo "Attempt ${i} of ${max_attempts}: Error sending test results through Data Router."
-        echo "Error details: $output"
-        sleep "${wait_seconds}"
-      else
+      if ((i == max_attempts)); then
         echo "Failed to send test results after ${max_attempts} attempts."
-        echo "Last error: $output"
+        echo "Last Data Router error details:"
+        echo "${output}"
         echo "Troubleshooting steps:"
         echo "1. Restart $droute_pod_name in $droute_project project/namespace"
         echo "2. Check the Data Router documentation: https://spaces.redhat.com/pages/viewpage.action?pageId=115488042"
         echo "3. Ask for help at Slack: #forum-dno-datarouter"
-        return 1
       fi
     done
 
@@ -677,6 +674,12 @@ cluster_setup() {
   install_acm_operator
   install_crunchy_postgres_operator
   add_helm_repos
+}
+
+cluster_setup_operator() {
+  install_pipelines_operator
+  install_acm_operator
+  install_crunchy_postgres_operator
 }
 
 initiate_deployments() {
