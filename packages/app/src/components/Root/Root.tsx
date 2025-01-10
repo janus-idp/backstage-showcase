@@ -29,6 +29,7 @@ import { makeStyles } from 'tss-react/mui';
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
 import DynamicRootContext, {
+  MountPoints,
   ResolvedMenuItem,
 } from '../DynamicRoot/DynamicRootContext';
 import { MenuIcon } from './MenuIcon';
@@ -101,9 +102,17 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   );
 };
 
+const GlobalHeader = ({ mountPoints }: { mountPoints: MountPoints}) => mountPoints['application/header']?.map(
+  ({ Component, config }) => (
+    <Component key='global-header' {...config?.props} />
+  ),
+);
+
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
+  const { dynamicRoutes, menuItems, mountPoints } = useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
+
+  const { position: globalHeaderPosition } = mountPoints['application/header']?.[0]?.config?.layout ?? {};
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
     usePermission({
@@ -248,49 +257,53 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     );
   };
   return (
-    <SidebarPage>
-      <Sidebar>
-        <SidebarLogo />
-        <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
-          <SidebarSearchModal />
-        </SidebarGroup>
-        <SidebarDivider />
-        <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
-          {/* Global nav, not org-specific */}
-          {renderMenuItems(true, false)}
-          {/* End global nav */}
+    <>
+      {globalHeaderPosition === 'above-sidebar' && <GlobalHeader mountPoints={mountPoints} />}
+      <SidebarPage>
+        {globalHeaderPosition === 'above-main-content' && <GlobalHeader mountPoints={mountPoints} />}
+        <Sidebar>
+          <SidebarLogo />
+          <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
+            <SidebarSearchModal />
+          </SidebarGroup>
           <SidebarDivider />
-          <SidebarScrollWrapper>
-            {renderMenuItems(false, false)}
-            {dynamicRoutes.map(({ scope, menuItem, path }) => {
-              if (menuItem && 'Component' in menuItem) {
-                return (
-                  <menuItem.Component
-                    {...(menuItem.config?.props || {})}
-                    key={`${scope}/${path}`}
-                    to={path}
-                  />
-                );
-              }
-              return null;
-            })}
-          </SidebarScrollWrapper>
-        </SidebarGroup>
-        <SidebarSpace />
-        <SidebarDivider />
-        <SidebarGroup label="Administration" icon={<AdminIcon />}>
-          {renderMenuItems(false, true)}
-        </SidebarGroup>
-        <SidebarDivider />
-        <SidebarGroup
-          label="Settings"
-          to="/settings"
-          icon={<AccountCircleOutlinedIcon />}
-        >
-          <SidebarSettings icon={AccountCircleOutlinedIcon} />
-        </SidebarGroup>
-      </Sidebar>
-      {children}
-    </SidebarPage>
+          <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
+            {/* Global nav, not org-specific */}
+            {renderMenuItems(true, false)}
+            {/* End global nav */}
+            <SidebarDivider />
+            <SidebarScrollWrapper>
+              {renderMenuItems(false, false)}
+              {dynamicRoutes.map(({ scope, menuItem, path }) => {
+                if (menuItem && 'Component' in menuItem) {
+                  return (
+                    <menuItem.Component
+                      {...(menuItem.config?.props || {})}
+                      key={`${scope}/${path}`}
+                      to={path}
+                    />
+                  );
+                }
+                return null;
+              })}
+            </SidebarScrollWrapper>
+          </SidebarGroup>
+          <SidebarSpace />
+          <SidebarDivider />
+          <SidebarGroup label="Administration" icon={<AdminIcon />}>
+            {renderMenuItems(false, true)}
+          </SidebarGroup>
+          <SidebarDivider />
+          <SidebarGroup
+            label="Settings"
+            to="/settings"
+            icon={<AccountCircleOutlinedIcon />}
+          >
+            <SidebarSettings icon={AccountCircleOutlinedIcon} />
+          </SidebarGroup>
+        </Sidebar>
+        {children}
+      </SidebarPage>
+    </>
   );
 };
