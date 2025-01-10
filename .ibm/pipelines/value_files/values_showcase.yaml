@@ -103,13 +103,6 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic
         disabled: false
-        pluginConfig:
-          catalog:
-            locations:
-              - type: url
-                target: https://github.com/backstage/community-plugins/blob/main/workspaces/scaffolder-backend-module-kubernetes/plugins/kubernetes-actions/examples/templates/01-kubernetes-template.yaml
-                rules:
-                  - allow: [Template]
       - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
