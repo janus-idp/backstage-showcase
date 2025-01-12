@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@backstage/plugin-signals": "0.0.11",
-    "@mui/material": "5.16.13"
+    "@mui/material": "5.16.14"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
