@@ -1,4 +1,4 @@
-# Copyright 2023 The Janus IDP Authors
+# Copyright Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -55,9 +55,9 @@ jobs:
         uses: ./.github/actions/docker-build
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ vars.QUAY_USERNAME }}
+          username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-          imageName: ${{ github.repository }}
+          imageName: rhdh-community/rhdh
           imageTags: |
             type=raw,value=next
             type=sha,prefix=next-
