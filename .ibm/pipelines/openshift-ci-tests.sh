@@ -197,6 +197,8 @@ run_tests() {
   local release_name=$1
   local project=$2
   cd "${DIR}/../../e2e-tests"
+  local e2e_tests_dir
+  e2e_tests_dir=$(pwd)
   yarn install
   yarn playwright install
 
@@ -215,16 +217,16 @@ run_tests() {
 
   mkdir -p "${ARTIFACT_DIR}/${project}/test-results"
   mkdir -p "${ARTIFACT_DIR}/${project}/attachments/screenshots"
-  cp -a /tmp/backstage-showcase/e2e-tests/test-results/* "${ARTIFACT_DIR}/${project}/test-results"
-  cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+  cp -a "${e2e_tests_dir}/test-results/"* "${ARTIFACT_DIR}/${project}/test-results"
+  cp -a "${e2e_tests_dir}/${JUNIT_RESULTS}" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
-  if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
-      cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+  if [ -d "${e2e_tests_dir}/screenshots" ]; then
+      cp -a "${e2e_tests_dir}/screenshots/"* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
   fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
-  cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
+  cp -a "${e2e_tests_dir}/playwright-report/"* "${ARTIFACT_DIR}/${project}"
 
   droute_send "${release_name}" "${project}"
 
