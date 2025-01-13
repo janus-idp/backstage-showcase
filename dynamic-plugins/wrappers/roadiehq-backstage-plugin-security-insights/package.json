@@ -1,6 +1,6 @@
 {
   "name": "roadiehq-backstage-plugin-security-insights",
-  "version": "2.3.19",
+  "version": "2.3.22",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -26,7 +26,7 @@
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place"
   },
   "dependencies": {
-    "@roadiehq/backstage-plugin-security-insights": "2.3.19"
+    "@roadiehq/backstage-plugin-security-insights": "2.3.22"
   },
   "devDependencies": {
     "@backstage/cli": "0.26.11",
