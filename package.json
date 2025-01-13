@@ -43,7 +43,6 @@
     "@backstage/cli": "0.29.5",
     "@ianvs/prettier-plugin-sort-imports": "4.4.1",
     "@manypkg/cli": "0.23.0",
-    "@spotify/prettier-config": "15.0.0",
     "glob": "11.0.1",
     "husky": "8.0.3",
     "lint-staged": "15.4.1",
