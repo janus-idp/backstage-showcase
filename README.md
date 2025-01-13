@@ -1,8 +1,9 @@
 # Red Hat Developer Hub (RHDH)
 
-[0]: https://quay.io/repository/janus-idp/backstage-showcase
+[0]: https://quay.io/repository/rhdh-community/rhdh
+[0]: https://quay.io/repository/rhdh/rhdh-hub-rhel9
 
-[![Quay.io registry](https://img.shields.io/badge/Quay.io-janus--idp/backstage--showcase:latest-white?logoColor=white&labelColor=grey&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSIzOS43IiB2aWV3Qm94PSIwIDAgMzkuNyAzOS43Ij48ZyB0cmFuc2Zvcm09Im1hdHJpeCguMzk0NTggMCAwIC4zOTQ1OCAxLjA4MiAuMTA1KSI+PGNpcmNsZSBjeD0iNTUuMDY5IiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjRDcxRTAwIi8+PHBhdGggZmlsbD0iI0MyMUEwMCIgZD0iTTkwLjQyOSAxNC42NDFjMTkuNTI5IDE5LjUyOSAxOS41MjkgNTEuMTkgMCA3MC43MTgtMTkuNTI5IDE5LjUzLTUxLjE5MiAxOS41My03MC43MiAwbDcwLjcyLTcwLjcxOHoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJtNTkuNjA4IDQ5Ljk5IDE1LjA2IDMxLjg2OWgtMTIuODNMNDYuNzg5IDQ5Ljk5bDE1LjA0OS0zMS44NWgxMi44M3oiLz48cGF0aCBmaWxsPSIjQjdCN0I3IiBkPSJtNzQuNjY4IDgxLjg1OSAxNS4wNS0zMS44NjktMTUuMDUtMzEuODUtNi40MSAxMy41NiA4LjY0IDE4LjI5LTguNjQgMTguMzAxeiIvPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Im0zMy4yMzkgNDkuOTkgMTUuMDYgMzEuODY5aC0xMi44M0wyMC40MTkgNDkuOTlsMTUuMDUtMzEuODVoMTIuODN6Ii8+PHBhdGggZmlsbD0iI0I3QjdCNyIgZD0ibTQ4LjY1OSA0Ni4wNCA2LjQxLTEzLjU3LTYuNzctMTQuMzMtNi40MiAxMy41N3pNNDEuODc5IDY4LjI5MWw2LjQyIDEzLjU2OCA2Ljc3LTE0LjMzLTYuNDEtMTMuNTY4eiIvPjwvZz48L3N2Zz4K)][0]
+[![Quay.io registry](https://img.shields.io/badge/Quay.io-rhdh--community/rhdh:next-white?logoColor=white&labelColor=grey&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSIzOS43IiB2aWV3Qm94PSIwIDAgMzkuNyAzOS43Ij48ZyB0cmFuc2Zvcm09Im1hdHJpeCguMzk0NTggMCAwIC4zOTQ1OCAxLjA4MiAuMTA1KSI+PGNpcmNsZSBjeD0iNTUuMDY5IiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjRDcxRTAwIi8+PHBhdGggZmlsbD0iI0MyMUEwMCIgZD0iTTkwLjQyOSAxNC42NDFjMTkuNTI5IDE5LjUyOSAxOS41MjkgNTEuMTkgMCA3MC43MTgtMTkuNTI5IDE5LjUzLTUxLjE5MiAxOS41My03MC43MiAwbDcwLjcyLTcwLjcxOHoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJtNTkuNjA4IDQ5Ljk5IDE1LjA2IDMxLjg2OWgtMTIuODNMNDYuNzg5IDQ5Ljk5bDE1LjA0OS0zMS44NWgxMi44M3oiLz48cGF0aCBmaWxsPSIjQjdCN0I3IiBkPSJtNzQuNjY4IDgxLjg1OSAxNS4wNS0zMS44NjktMTUuMDUtMzEuODUtNi40MSAxMy41NiA4LjY0IDE4LjI5LTguNjQgMTguMzAxeiIvPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Im0zMy4yMzkgNDkuOTkgMTUuMDYgMzEuODY5aC0xMi44M0wyMC40MTkgNDkuOTlsMTUuMDUtMzEuODVoMTIuODN6Ii8+PHBhdGggZmlsbD0iI0I3QjdCNyIgZD0ibTQ4LjY1OSA0Ni4wNCA2LjQxLTEzLjU3LTYuNzctMTQuMzMtNi40MiAxMy41N3pNNDEuODc5IDY4LjI5MWw2LjQyIDEzLjU2OCA2Ljc3LTE0LjMzLTYuNDEtMTMuNTY4eiIvPjwvZz48L3N2Zz4K)][0]
 
 ## Purpose
 
@@ -50,8 +51,8 @@ Our current list of plugins include:
 
 Dependencies:
 
-- [Node.js](https://nodejs.org/en/) 18
-- [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable)
+- [Node.js](https://nodejs.org/en/) - [required version](.nvmrc)
+- [yarn](https://classic.yarnpkg.com/en/docs/install#debian-stable) - [required version](.yarnrc.yml)
 
 Information on running RHDH can be found in our [Getting Started](https://github.com/redhat-developer/rhdh/blob/main/docs/index.md) documentation. In the documentation is how to set up and run an instance locally. We plan to expand upon the documentation at a later point if there is enough interest in other methods for getting the app up and running.
 
