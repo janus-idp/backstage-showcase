@@ -6994,31 +6994,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-catalog-backend-module-github@npm:0.7.6":
-  version: 0.7.6
-  resolution: "@backstage/plugin-catalog-backend-module-github@npm:0.7.6"
-  dependencies:
-    "@backstage/backend-common": ^0.25.0
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/config": ^1.2.0
-    "@backstage/integration": ^1.15.1
-    "@backstage/plugin-catalog-backend": ^1.27.1
-    "@backstage/plugin-catalog-common": ^1.1.0
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/plugin-events-node": ^0.4.2
-    "@octokit/graphql": ^5.0.0
-    "@octokit/rest": ^19.0.3
-    git-url-parse: ^15.0.0
-    lodash: ^4.17.21
-    minimatch: ^9.0.0
-    node-fetch: ^2.7.0
-    uuid: ^9.0.0
-  checksum: 47a565d3de4156b6c7ca28d87f645d3b685945992489b991f220284608bc728636bd6f87f942fbfcff4503a4655f1a80d54a16b956a3c1268c30b30765961a09
-  languageName: node
-  linkType: hard
-
 "@backstage/plugin-catalog-backend-module-github@npm:0.7.8, @backstage/plugin-catalog-backend-module-github@npm:^0.7.8":
   version: 0.7.8
   resolution: "@backstage/plugin-catalog-backend-module-github@npm:0.7.8"
@@ -23900,7 +23875,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-plugin-catalog-backend-module-github-org@workspace:dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-org-dynamic"
   dependencies:
-    "@backstage/plugin-catalog-backend-module-github": 0.7.6
+    "@backstage/plugin-catalog-backend-module-github": 0.7.8
     "@backstage/plugin-catalog-backend-module-github-org": 0.3.5
     "@janus-idp/cli": 1.18.5
     typescript: 5.6.3
