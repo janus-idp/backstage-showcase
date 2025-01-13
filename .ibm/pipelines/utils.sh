@@ -539,8 +539,10 @@ run_tests() {
   local release_name=$1
   local project=$2
   project=${project}
-  local e2e_tests_dir="${DIR}/../../e2e-tests"
-  cd "${e2e_tests_dir}"
+  cd "${DIR}/../../e2e-tests"
+  local e2e_tests_dir
+  e2e_tests_dir=$(pwd)
+  
   yarn install
   yarn playwright install chromium
 
