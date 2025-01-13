@@ -2,6 +2,7 @@ import { test } from "@playwright/test";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { KubeClient } from "../../../utils/kube-client";
+import { CatalogImport } from "../../../support/pages/catalog-import";
 
 test.describe("Test Kubernetes Actions plugin", () => {
   let common: Common;
@@ -14,8 +15,15 @@ test.describe("Test Kubernetes Actions plugin", () => {
     common = new Common(page);
     uiHelper = new UIhelper(page);
     kubeClient = new KubeClient();
+    const catalogImport = new CatalogImport(page);
+    const template =
+      "https://github.com/backstage/community-plugins/blob/main/workspaces/scaffolder-backend-module-kubernetes/plugins/kubernetes-actions/examples/templates/01-kubernetes-template.yaml";
 
     await common.loginAsGuest();
+    await uiHelper.openSidebar("Create...");
+
+    await uiHelper.clickButton("Register Existing Component");
+    await catalogImport.registerExistingComponent(template, false);
     await uiHelper.openSidebar("Create...");
   });
 
