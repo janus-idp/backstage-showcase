@@ -1,17 +1,17 @@
 # Version Compatibility Matrix
 
-## RHDH 1.4 (pre-release, versions can change for final release)
+## RHDH 1.4
 
 <!-- source
-https://github.com/janus-idp/backstage-showcase/blob/main/backstage.json
+https://github.com/janus-idp/backstage-showcase/blob/release-1.4/backstage.json
 -->
 
-Based on [Backstage 1.31.3](https://backstage.io/docs/releases/v1.31.0)
+Based on [Backstage 1.32.6](https://backstage.io/docs/releases/v1.32.0)
 
 To bootstrap Backstage app that is compatible with RHDH 1.4, you can use:
 
 ```bash
-npx @backstage/create-app@0.5.17
+npx @backstage/create-app@0.5.21
 ```
 
 ### Frontend packages
@@ -20,10 +20,10 @@ npx @backstage/create-app@0.5.17
 | ------------------------------ | ----------- |
 | `@backstage/catalog-model`     | `1.7.0`     |
 | `@backstage/config`            | `1.2.0`     |
-| `@backstage/core-app-api`      | `1.15.0`    |
-| `@backstage/core-components`   | `0.15.0`    |
-| `@backstage/core-plugin-api`   | `1.9.4`     |
-| `@backstage/integration-react` | `1.1.32`    |
+| `@backstage/core-app-api`      | `1.15.1`    |
+| `@backstage/core-components`   | `0.15.1`    |
+| `@backstage/core-plugin-api`   | `1.10.0`     |
+| `@backstage/integration-react` | `1.2.0`    |
 
 If you want to check versions of other packages, you can check the [`package.json`](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/package.json) in the [`app`](https://github.com/janus-idp/backstage-showcase/tree/main/packages/app) package in the `main` branch of the [RHDH repository](https://github.com/janus-idp/backstage-showcase/tree/main).
 
@@ -31,12 +31,12 @@ If you want to check versions of other packages, you can check the [`package.jso
 
 | **Package**                                  | **Version** |
 | -------------------------------------------- | ----------- |
-| `@backstage/backend-app-api`                 | `1.0.0`     |
-| `@backstage/backend-defaults`                | `0.5.0`     |
-| `@backstage/backend-dynamic-feature-service` | `0.4.1`     |
-| `@backstage/backend-plugin-api`              | `1.0.0`     |
+| `@backstage/backend-app-api`                 | `1.0.1`     |
+| `@backstage/backend-defaults`                | `0.5.2`     |
+| `@backstage/backend-dynamic-feature-service` | `0.4.4`     |
+| `@backstage/backend-plugin-api`              | `1.0.1`     |
 | `@backstage/catalog-model`                   | `1.7.0`     |
-| `@backstage/cli-node`                        | `0.2.8`     |
+| `@backstage/cli-node`                        | `0.2.9`     |
 | `@backstage/config`                          | `1.2.0`     |
 | `@backstage/config-loader`                   | `1.9.1`     |
 
