@@ -4,7 +4,7 @@ This document provides a comprehensive overview of our Continuous Integration (C
 
 ## GitHub Pull Requests
 
-When a new Pull Request (PR) is opened at [backstage-showcase](https://github.com/janus-idp/backstage-showcase), tests are triggered based on the nature of the changes and the contributor's role.
+When a new Pull Request (PR) is opened at [backstage-showcase](https://github.com/redhat-developer/rhdh), tests are triggered based on the nature of the changes and the contributor's role.
 
 ### Automatic Triggering of Tests
 
@@ -131,13 +131,13 @@ The nightly job for the `main` branch also runs against three OpenShift Containe
 
 The `openshift-ci-tests.sh` script (located at [`.ibm/pipelines/openshift-ci-tests.sh`](../../.ibm/pipelines/openshift-ci-tests.sh)) orchestrates the deployment and testing workflow for both PR and nightly jobs. The configuration for the Red Hat Developer Hub instance is managed using `yaml` config files for the application itself and the plugins in use. Those files are located in `.ibm/pipelines/resources`. These files define essential setup details and configurations specific to each test instance, ultimately determining the precise environment for the RHDH deployment.
 
-Additionally, a **test runner** based on a custom Docker image (defined in [this Dockerfile](https://github.com/janus-idp/backstage-showcase/blob/main/.ibm/images/Dockerfile)) is set up as part of the environment. This runner helps standardize the testing environment and provides the necessary dependencies for test execution.
+Additionally, a **test runner** based on a custom Docker image (defined in [this Dockerfile](https://github.com/redhat-developer/rhdh/blob/main/.ibm/images/Dockerfile)) is set up as part of the environment. This runner helps standardize the testing environment and provides the necessary dependencies for test execution.
 
 The OpenShift CI definitions for PR checks and nightly runs, as well as execution of `openshift-ci-tests.sh`, are managed here:
 
-- [PR checks and nightly job definitions](https://github.com/openshift/release/tree/master/ci-operator/jobs/janus-idp/backstage-showcase)
-- [Configuration definitions](https://github.com/openshift/release/tree/master/ci-operator/config/janus-idp/backstage-showcase)
-- [Step registry for job execution](https://github.com/openshift/release/tree/master/ci-operator/step-registry/janus-idp/backstage-showcase)
+- [PR checks and nightly job definitions](https://github.com/openshift/release/tree/master/ci-operator/jobs/redhat-developer/rhdh)
+- [Configuration definitions](https://github.com/openshift/release/tree/master/ci-operator/config/redhat-developer/rhdh)
+- [Step registry for job execution](https://github.com/openshift/release/tree/master/ci-operator/step-registry/redhat-developer/rhdh)
 
 - **Environment Preparation:** Sets up clusters and namespaces based on job requirements.
 - **Deployment:** Deploys RHDH instances using Helm charts.
