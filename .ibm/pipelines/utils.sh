@@ -120,12 +120,15 @@ droute_send() {
           echo "Test results successfully sent through Data Router."
           echo "Request ID: $DATA_ROUTER_REQUEST_ID"
           break
-        else
-          ARTIFACT_DIR=${ARTIFACT_DIR:-/tmp/artifacts}
-          mkdir -p "${ARTIFACT_DIR}/datarouter-errors"
-          log_file="${ARTIFACT_DIR}/datarouter-errors/attempt_${i}.log"
-          echo "${output}" > "${log_file}"
         fi
+
+        # Log output to artifact directory
+        ARTIFACT_DIR=${ARTIFACT_DIR:-/tmp/artifacts}
+        echo "ARTIFACT_DIR = ${ARTIFACT_DIR}"
+        mkdir -p "${ARTIFACT_DIR}/datarouter-errors"
+        log_file="${ARTIFACT_DIR}/datarouter-errors/attempt_${i}.log"
+        echo "${output}" > "${log_file}"
+        echo "droute send logs written to ${log_file}"
       fi
 
       if ((i == max_attempts)); then
