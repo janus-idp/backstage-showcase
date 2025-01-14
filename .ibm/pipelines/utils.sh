@@ -120,6 +120,11 @@ droute_send() {
           echo "Test results successfully sent through Data Router."
           echo "Request ID: $DATA_ROUTER_REQUEST_ID"
           break
+        else
+          ARTIFACT_DIR=${ARTIFACT_DIR:-/tmp/artifacts}
+          mkdir -p "${ARTIFACT_DIR}/datarouter-errors"
+          log_file="${ARTIFACT_DIR}/datarouter-errors/attempt_${i}.log"
+          echo "${output}" > "${log_file}"
         fi
       fi
 
