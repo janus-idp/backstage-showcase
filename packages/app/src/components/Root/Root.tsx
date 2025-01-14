@@ -102,9 +102,12 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   );
 };
 
-const GlobalHeader = ({ mountPoints }: { mountPoints: MountPoints }) =>
+const ApplicationHeader = ({ mountPoints }: { mountPoints: MountPoints }) =>
   mountPoints['application/header']?.map(({ Component, config }) => (
-    <Component key="global-header" {...config?.props} />
+    <Component
+      key={`app-header-${config?.layout?.position}`}
+      {...config?.props}
+    />
   ));
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
@@ -112,8 +115,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
-  const { position: globalHeaderPosition } =
-    mountPoints['application/header']?.[0]?.config?.layout ?? {};
+  const headerPositions = mountPoints['application/header']?.map(
+    ({ config }) => {
+      return config?.layout?.position;
+    },
+  );
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
     usePermission({
@@ -259,12 +265,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
   return (
     <>
-      {globalHeaderPosition === 'above-sidebar' && (
-        <GlobalHeader mountPoints={mountPoints} />
+      {headerPositions.includes('above-sidebar') && (
+        <ApplicationHeader mountPoints={mountPoints} />
       )}
       <SidebarPage>
-        {globalHeaderPosition === 'above-main-content' && (
-          <GlobalHeader mountPoints={mountPoints} />
+        {headerPositions.includes('above-main-content') && (
+          <ApplicationHeader mountPoints={mountPoints} />
         )}
         <Sidebar>
           <SidebarLogo />
