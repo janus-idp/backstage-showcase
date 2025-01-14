@@ -104,14 +104,14 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
 };
 
 const ApplicationHeader = ({
-  headerMountPoints,
-  headerMountPosition,
+  mountPoints,
+  position,
 }: {
-  headerMountPoints: ScalprumMountPoint[];
-  headerMountPosition: string;
+  mountPoints: ScalprumMountPoint[];
+  position: string;
 }) =>
-  headerMountPoints
-    ?.filter(({ config }) => config?.layout?.position === headerMountPosition)
+  mountPoints
+    ?.filter(({ config }) => config?.layout?.position === position)
     .map(({ Component, config }, index) => (
       <ErrorBoundary
         // eslint-disable-next-line react/no-array-index-key
@@ -126,10 +126,6 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
   const appHeaderMountPoints = mountPoints['application/header'] ?? [];
-
-  const appHeaderPositions = appHeaderMountPoints.map(({ config }) => {
-    return config?.layout?.position;
-  });
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
     usePermission({
@@ -275,19 +271,15 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
   return (
     <>
-      {appHeaderPositions.includes('above-sidebar') && (
-        <ApplicationHeader
-          headerMountPoints={appHeaderMountPoints}
-          headerMountPosition="above-sidebar"
-        />
-      )}
+      <ApplicationHeader
+        mountPoints={appHeaderMountPoints}
+        position="above-sidebar"
+      />
       <SidebarPage>
-        {appHeaderPositions.includes('above-main-content') && (
-          <ApplicationHeader
-            headerMountPoints={appHeaderMountPoints}
-            headerMountPosition="above-main-content"
-          />
-        )}
+        <ApplicationHeader
+          mountPoints={appHeaderMountPoints}
+          position="above-main-content"
+        />
         <Sidebar>
           <SidebarLogo />
           <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
