@@ -25,7 +25,7 @@ concurrency:
 
 env:
   REGISTRY: quay.io
-  REGISTRY_IMAGE: ${{ github.repository }}
+  REGISTRY_IMAGE: rhdh-community/rhdh
 
 jobs:
   build-image:
@@ -64,11 +64,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_TOKEN }}
-<<<<<<< HEAD
-          imageName: rhdh-community/rhdh
-=======
           imageName: ${{ env.REGISTRY_IMAGE }}
->>>>>>> fbed803d (chore(ci): build multiplatform next container image)
           imageTags: |
             type=raw,value=next-${{ env.PLATFORM_ARCH }}
             type=sha,prefix=next-,suffix=-${{ env.PLATFORM_ARCH }}
