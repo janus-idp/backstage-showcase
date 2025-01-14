@@ -3739,36 +3739,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-backend@npm:5.2.6":
-  version: 5.2.6
-  resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.6"
-  dependencies:
-    "@backstage-community/plugin-rbac-common": ^1.12.2
-    "@backstage-community/plugin-rbac-node": ^1.8.2
-    "@backstage/backend-defaults": ^0.5.2
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-client": ^1.7.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-auth-node": ^0.5.3
-    "@backstage/plugin-permission-backend": ^0.5.50
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.4
-    "@dagrejs/graphlib": ^2.1.13
-    "@janus-idp/backstage-plugin-audit-log-node": ^1.7.1
-    casbin: ^5.27.1
-    chokidar: ^3.6.0
-    csv-parse: ^5.5.5
-    express: ^4.18.2
-    js-yaml: ^4.1.0
-    knex: ^3.0.0
-    lodash: ^4.17.21
-    typeorm-adapter: ^1.6.1
-  checksum: 9fb8adb2bd9cac6abfaba832f173b35ab933099cdc70375a37138f3a991f40324f97b070497daceed9d13c0e9c40ec550e7c5bdf3b81cfb8ef365c8111c45e43
-  languageName: node
-  linkType: hard
-
-"@backstage-community/plugin-rbac-common@npm:1.12.3, @backstage-community/plugin-rbac-common@npm:^1.12.2, @backstage-community/plugin-rbac-common@npm:^1.12.3":
+"@backstage-community/plugin-rbac-common@npm:1.12.3, @backstage-community/plugin-rbac-common@npm:^1.12.3":
   version: 1.12.3
   resolution: "@backstage-community/plugin-rbac-common@npm:1.12.3"
   peerDependencies:
@@ -3778,12 +3749,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-node@npm:1.8.2, @backstage-community/plugin-rbac-node@npm:^1.8.2":
+"@backstage-community/plugin-rbac-node@npm:1.8.2":
   version: 1.8.2
   resolution: "@backstage-community/plugin-rbac-node@npm:1.8.2"
   dependencies:
     "@backstage/backend-plugin-api": ^1.0.1
   checksum: 32544869b139c8d255406a701f545bf673159255261b8d1f7fcef2f6cf47d93f5cfd30cdd513682322ba87422028a21037cb7ed666c86bae87ce9e21727e5812
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-node@npm:^1.8.4":
+  version: 1.8.4
+  resolution: "@backstage-community/plugin-rbac-node@npm:1.8.4"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+  checksum: d064d4a5866a9c2d323f081ab20dc8e8bda999a35bc9d41cae0b0293606b078adde7852fa84b477e8c4ab575856e7599ee5f5ba3dc52bc4cb9efcd831c530eac
   languageName: node
   linkType: hard
 
@@ -13027,6 +13007,35 @@ __metadata:
   dependencies:
     semver: ^7.3.5
   checksum: d960cab4b93adcb31ce223bfb75c5714edbd55747342efb67dcc2f25e023d930a7af6ece3e75f2f459b6f38fc14d031c766f116cd124fdc937fd33112579e820
+  languageName: node
+  linkType: hard
+
+"@oandriie/plugin-rbac-backend@npm:6.1.0":
+  version: 6.1.0
+  resolution: "@oandriie/plugin-rbac-backend@npm:6.1.0"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": ^1.12.3
+    "@backstage-community/plugin-rbac-node": ^1.8.4
+    "@backstage/backend-defaults": ^0.5.2
+    "@backstage/backend-plugin-api": ^1.0.1
+    "@backstage/catalog-client": ^1.7.1
+    "@backstage/catalog-model": ^1.7.0
+    "@backstage/errors": ^1.2.4
+    "@backstage/plugin-auth-node": ^0.5.3
+    "@backstage/plugin-permission-backend": ^0.5.50
+    "@backstage/plugin-permission-common": ^0.8.1
+    "@backstage/plugin-permission-node": ^0.8.4
+    "@dagrejs/graphlib": ^2.1.13
+    "@janus-idp/backstage-plugin-audit-log-node": ^1.7.1
+    casbin: ^5.27.1
+    chokidar: ^3.6.0
+    csv-parse: ^5.5.5
+    express: ^4.18.2
+    js-yaml: ^4.1.0
+    knex: ^3.0.0
+    lodash: ^4.17.21
+    typeorm-adapter: ^1.6.1
+  checksum: e1d729d212b6af6eebf5c23bb9e31a012ad7c207fc2acb84e81ea86c3ba7bd14d5629754c040588f576cc5c8f5741a547caf23d3c911596b60a76e9e869711bc
   languageName: node
   linkType: hard
 
@@ -22708,7 +22717,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend@workspace:packages/backend"
   dependencies:
-    "@backstage-community/plugin-rbac-backend": 5.2.6
     "@backstage-community/plugin-rbac-node": 1.8.2
     "@backstage-community/plugin-scaffolder-backend-module-annotator": 2.2.2
     "@backstage/backend-app-api": 1.1.1
@@ -22740,6 +22748,7 @@ __metadata:
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
     "@janus-idp/backstage-plugin-audit-log-node": 1.7.2
+    "@oandriie/plugin-rbac-backend": 6.1.0
     "@opentelemetry/api": 1.9.0
     "@opentelemetry/auto-instrumentations-node": 0.55.3
     "@opentelemetry/exporter-prometheus": 0.57.1
