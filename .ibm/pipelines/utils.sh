@@ -47,7 +47,7 @@ droute_send() {
     local release_name=$1
     local project=$2
     local droute_project="droute"
-    METEDATA_OUTPUT="data_router_metadata_output.json"
+    local metadata_output="data_router_metadata_output.json"
 
     oc login --token="${RHDH_PR_OS_CLUSTER_TOKEN}" --server="${RHDH_PR_OS_CLUSTER_URL}"
     oc whoami --show-server
@@ -60,7 +60,7 @@ droute_send() {
       ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/pr-logs/pull/${REPO_OWNER}_${REPO_NAME}/${PULL_NUMBER}/${JOB_NAME}/${BUILD_ID}/artifacts/e2e-tests/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
     else
       JOB_URL="${JOB_BASE_URL}/logs/${JOB_NAME}/${BUILD_ID}"
-      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/${JOB_NAME}/${BUILD_ID}/artifacts/${JOB_NAME##periodic-ci-janus-idp-backstage-showcase-main-}/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
+      ARTIFACTS_URL="https://gcsweb-ci.apps.ci.l2s4.p1.openshiftapps.com/gcs/test-platform-results/logs/${JOB_NAME}/${BUILD_ID}/artifacts/${JOB_NAME##periodic-ci-redhat-developer-rhdh-main-}/${REPO_OWNER}-${REPO_NAME}/artifacts/${project}"
     fi
 
     # Remove properties (only used for skipped test and invalidates the file if empty)
@@ -93,9 +93,9 @@ droute_send() {
           {"key": $key4, "value": $value4}
         ] |
       .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
-      ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${METEDATA_OUTPUT}"
+      ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${metadata_output}"
 
-    oc rsync --include="${METEDATA_OUTPUT}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
+    oc rsync --progress=true --include="${metadata_output}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
 
     # "Install" Data Router
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
@@ -104,14 +104,37 @@ droute_send() {
       && /tmp/droute-linux-amd64 version"
 
     # Send test results through DataRouter and save the request ID.
-    DATA_ROUTER_REQUEST_ID=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-      /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
-      --url '${DATA_ROUTER_URL}' \
-      --username '${DATA_ROUTER_USERNAME}' \
-      --password '${DATA_ROUTER_PASSWORD}' \
-      --results '${temp_droute}/${JUNIT_RESULTS}' \
-      --verbose" | grep "request:" | awk '{print $2}')
+    local max_attempts=5
+    local wait_seconds=1
+    for ((i = 1; i <= max_attempts; i++)); do
+      echo "Attempt ${i} of ${max_attempts} to send test results through Data Router."
+      if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+        /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
+        --url '${DATA_ROUTER_URL}' \
+        --username '${DATA_ROUTER_USERNAME}' \
+        --password '${DATA_ROUTER_PASSWORD}' \
+        --results '${temp_droute}/${JUNIT_RESULTS}' \
+        --verbose" 2>&1); then
+        if DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
+          [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
+          echo "Test results successfully sent through Data Router."
+          echo "Request ID: $DATA_ROUTER_REQUEST_ID"
+          break
+        fi
+      fi
 
+      if ((i == max_attempts)); then
+        echo "Failed to send test results after ${max_attempts} attempts."
+        echo "Last Data Router error details:"
+        echo "${output}"
+        echo "Troubleshooting steps:"
+        echo "1. Restart $droute_pod_name in $droute_project project/namespace"
+        echo "2. Check the Data Router documentation: https://spaces.redhat.com/pages/viewpage.action?pageId=115488042"
+        echo "3. Ask for help at Slack: #forum-dno-datarouter"
+      fi
+    done
+
+    # shellcheck disable=SC2317
     if [[ "$JOB_NAME" == *periodic-* ]]; then
       local max_attempts=30
       local wait_seconds=2
@@ -517,6 +540,9 @@ run_tests() {
   local project=$2
   project=${project}
   cd "${DIR}/../../e2e-tests"
+  local e2e_tests_dir
+  e2e_tests_dir=$(pwd)
+  
   yarn install
   yarn playwright install chromium
 
@@ -535,20 +561,20 @@ run_tests() {
 
   mkdir -p "${ARTIFACT_DIR}/${project}/test-results"
   mkdir -p "${ARTIFACT_DIR}/${project}/attachments/screenshots"
-  cp -a /tmp/backstage-showcase/e2e-tests/test-results/* "${ARTIFACT_DIR}/${project}/test-results"
-  cp -a /tmp/backstage-showcase/e2e-tests/${JUNIT_RESULTS} "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
+  cp -a "${e2e_tests_dir}/test-results/"* "${ARTIFACT_DIR}/${project}/test-results"
+  cp -a "${e2e_tests_dir}/${JUNIT_RESULTS}" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
-  if [ -d "/tmp/backstage-showcase/e2e-tests/screenshots" ]; then
-    cp -a /tmp/backstage-showcase/e2e-tests/screenshots/* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
+  if [ -d "${e2e_tests_dir}/screenshots" ]; then
+    cp -a "${e2e_tests_dir}/screenshots/"* "${ARTIFACT_DIR}/${project}/attachments/screenshots/"
   fi
 
-  if [ -d "/tmp/backstage-showcase/e2e-tests/auth-providers-logs" ]; then
-    cp -a /tmp/backstage-showcase/e2e-tests/auth-providers-logs/* "${ARTIFACT_DIR}/${project}/"
+  if [ -d "${e2e_tests_dir}/auth-providers-logs" ]; then
+    cp -a "${e2e_tests_dir}/auth-providers-logs/"* "${ARTIFACT_DIR}/${project}/"
   fi
 
   ansi2html <"/tmp/${LOGFILE}" >"/tmp/${LOGFILE}.html"
   cp -a "/tmp/${LOGFILE}.html" "${ARTIFACT_DIR}/${project}"
-  cp -a /tmp/backstage-showcase/e2e-tests/playwright-report/* "${ARTIFACT_DIR}/${project}"
+  cp -a "${e2e_tests_dir}/playwright-report/"* "${ARTIFACT_DIR}/${project}"
 
   droute_send "${release_name}" "${project}"
 
@@ -651,6 +677,12 @@ cluster_setup() {
   install_acm_operator
   install_crunchy_postgres_operator
   add_helm_repos
+}
+
+cluster_setup_operator() {
+  install_pipelines_operator
+  install_acm_operator
+  install_crunchy_postgres_operator
 }
 
 initiate_deployments() {
