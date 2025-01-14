@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useContext, useState } from 'react';
 
 import {
+  ErrorBoundary,
   Sidebar,
   SidebarDivider,
   SidebarGroup,
@@ -29,8 +30,8 @@ import { makeStyles } from 'tss-react/mui';
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
 import DynamicRootContext, {
-  MountPoints,
   ResolvedMenuItem,
+  ScalprumMountPoint,
 } from '../DynamicRoot/DynamicRootContext';
 import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
@@ -102,24 +103,31 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   );
 };
 
-const ApplicationHeader = ({ mountPoints }: { mountPoints: MountPoints }) =>
-  mountPoints['application/header']?.map(({ Component, config }) => (
-    <Component
-      key={`app-header-${config?.layout?.position}`}
-      {...config?.props}
-    />
+const ApplicationHeader = ({
+  headerMountPoints,
+}: {
+  headerMountPoints: ScalprumMountPoint[];
+}) =>
+  headerMountPoints?.map(({ Component, config }) => (
+    <ErrorBoundary
+      key={`app-header-error-boundary-${config?.layout?.position}`}
+    >
+      <Component
+        key={`app-header-${config?.layout?.position}`}
+        {...config?.props}
+      />
+    </ErrorBoundary>
   ));
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const { dynamicRoutes, menuItems, mountPoints } =
     useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
+  const headerMountPoints = mountPoints['application/header'] ?? [];
 
-  const headerPositions = mountPoints['application/header']?.map(
-    ({ config }) => {
-      return config?.layout?.position;
-    },
-  );
+  const headerPositions = headerMountPoints.map(({ config }) => {
+    return config?.layout?.position;
+  });
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
     usePermission({
@@ -266,11 +274,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   return (
     <>
       {headerPositions.includes('above-sidebar') && (
-        <ApplicationHeader mountPoints={mountPoints} />
+        <ApplicationHeader headerMountPoints={headerMountPoints} />
       )}
       <SidebarPage>
         {headerPositions.includes('above-main-content') && (
-          <ApplicationHeader mountPoints={mountPoints} />
+          <ApplicationHeader headerMountPoints={headerMountPoints} />
         )}
         <Sidebar>
           <SidebarLogo />
