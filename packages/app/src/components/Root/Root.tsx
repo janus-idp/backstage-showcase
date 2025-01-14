@@ -105,27 +105,29 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
 
 const ApplicationHeader = ({
   headerMountPoints,
+  headerMountPosition,
 }: {
   headerMountPoints: ScalprumMountPoint[];
+  headerMountPosition: string;
 }) =>
-  headerMountPoints?.map(({ Component, config }) => (
-    <ErrorBoundary
-      key={`app-header-error-boundary-${config?.layout?.position}`}
-    >
-      <Component
-        key={`app-header-${config?.layout?.position}`}
-        {...config?.props}
-      />
-    </ErrorBoundary>
-  ));
+  headerMountPoints
+    ?.filter(({ config }) => config?.layout?.position === headerMountPosition)
+    .map(({ Component, config }, index) => (
+      <ErrorBoundary
+        // eslint-disable-next-line react/no-array-index-key
+        key={index}
+      >
+        <Component {...config?.props} />
+      </ErrorBoundary>
+    ));
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const { dynamicRoutes, menuItems, mountPoints } =
     useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
-  const headerMountPoints = mountPoints['application/header'] ?? [];
+  const appHeaderMountPoints = mountPoints['application/header'] ?? [];
 
-  const headerPositions = headerMountPoints.map(({ config }) => {
+  const appHeaderPositions = appHeaderMountPoints.map(({ config }) => {
     return config?.layout?.position;
   });
 
@@ -273,12 +275,18 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
   return (
     <>
-      {headerPositions.includes('above-sidebar') && (
-        <ApplicationHeader headerMountPoints={headerMountPoints} />
+      {appHeaderPositions.includes('above-sidebar') && (
+        <ApplicationHeader
+          headerMountPoints={appHeaderMountPoints}
+          headerMountPosition="above-sidebar"
+        />
       )}
       <SidebarPage>
-        {headerPositions.includes('above-main-content') && (
-          <ApplicationHeader headerMountPoints={headerMountPoints} />
+        {appHeaderPositions.includes('above-main-content') && (
+          <ApplicationHeader
+            headerMountPoints={appHeaderMountPoints}
+            headerMountPosition="above-main-content"
+          />
         )}
         <Sidebar>
           <SidebarLogo />
