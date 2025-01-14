@@ -5,7 +5,7 @@ const getRepoUrl = (owner: string, repo: string) =>
   `${BASE_API_URL}/repos/${owner}/${repo}`;
 const getOrgUrl = (owner: string) => `${BASE_API_URL}/orgs/${owner}`;
 
-const backstageShowcaseAPI = getRepoUrl("janus-idp", "backstage-showcase");
+const backstageShowcaseAPI = getRepoUrl("redhat-developer", "rhdh");
 
 export const githubAPIEndpoints = {
   pull: (owner: string, repo: string, state: "open" | "closed" | "all") =>
