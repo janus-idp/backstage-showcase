@@ -64,11 +64,12 @@ jobs:
           echo "$CHANGED_FILES"
 
           if echo "$CHANGED_FILES" | grep -qv '^e2e-tests/'; then
-            echo "Changes detected outside the e2e folder. Proceeding with the build."
+            echo "Changes detected outside the e2e-tests folder. Proceeding with the build."
             echo "proceed_with_build=true" >> $GITHUB_ENV
           else
-            echo "No changes outside the e2e folder. Skipping the build."
+            echo "No changes outside the e2e-tests folder. Skipping the build."
             echo "proceed_with_build=false" >> $GITHUB_ENV
+          fi
 
       - name: Get the last commit short SHA of the PR
         if: env.proceed_with_build == 'true'
