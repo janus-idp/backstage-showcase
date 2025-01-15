@@ -4,8 +4,8 @@
   "description": "Showcase E2E test",
   "main": "index.js",
   "type": "module",
-  "repository": "https://github.com/janus-idp/showcase-e2e",
-  "author": "janus-idp",
+  "repository": "https://github.com/redhat-developer/rhdh",
+  "author": "redhat-developer",
   "license": "Apache-2.0",
   "scripts": {
     "showcase": "playwright test --project=showcase",
