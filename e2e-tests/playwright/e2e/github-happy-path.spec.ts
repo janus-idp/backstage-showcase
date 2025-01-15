@@ -16,7 +16,7 @@ test.describe.serial('GitHub Happy path', () => {
   let backstageShowcase: BackstageShowcase;
 
   const component =
-    'https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml';
+    'https://github.com/redhat-developer/rhdh/blob/main/catalog-entities/all.yaml';
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
@@ -84,6 +84,16 @@ test.describe.serial('GitHub Happy path', () => {
     await uiHelper.selectMuiBox('Kind', 'Component');
     await uiHelper.clickByDataTestId('user-picker-all');
     await uiHelper.clickLink('Backstage Showcase');
+
+    const expectedPath = '/catalog/default/component/backstage-showcase';
+    // Wait for the expected path in the URL
+    await page.waitForURL(`**${expectedPath}`, {
+      waitUntil: 'domcontentloaded', // Wait until the DOM is loaded
+      timeout: 10000,
+    });
+    // Optionally, verify that the current URL contains the expected path
+    await expect(page.url()).toContain(expectedPath);
+
     await common.clickOnGHloginPopup();
     await uiHelper.verifyLink('Janus Website', { exact: false });
     await backstageShowcase.verifyPRStatisticsRendered();
@@ -139,18 +149,20 @@ test.describe.serial('GitHub Happy path', () => {
     await backstageShowcase.verifyPRRows(allPRs, lastPagePRs - 5, lastPagePRs);
   });
 
-  //FIXME
-  test.skip('Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.clickLink('Backstage Showcase');
-    await common.clickOnGHloginPopup();
-    await uiHelper.clickTab('Pull/Merge Requests');
-    await uiHelper.clickButton('ALL', { force: false });
-    const allPRs = await BackstageShowcase.getShowcasePRs('all');
-    await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
-    await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
-    await backstageShowcase.verifyPRRowsPerPage(20, allPRs);
-  });
+  test.fixme(
+    'Verify that the 5, 10, 20 items per page option properly displays the correct number of PRs',
+    async () => {
+      await uiHelper.openSidebar('Catalog');
+      await uiHelper.clickLink('test-entity');
+      await common.clickOnGHloginPopup();
+      await uiHelper.clickTab('Pull/Merge Requests');
+      await uiHelper.clickButton('ALL', { force: false });
+      const allPRs = await BackstageShowcase.getShowcasePRs('all');
+      await backstageShowcase.verifyPRRowsPerPage(5, allPRs);
+      await backstageShowcase.verifyPRRowsPerPage(10, allPRs);
+      await backstageShowcase.verifyPRRowsPerPage(20, allPRs);
+    },
+  );
 
   test('Verify that the CI tab renders 5 most recent github actions and verify the table properly displays the actions when page sizes are changed and filters are applied', async () => {
     await uiHelper.clickTab('CI');
