@@ -39,6 +39,13 @@ export class UIhelper {
     await this.page.keyboard.press("Tab");
   }
 
+  async checkCheckbox(text: string) {
+    const locator = this.page.getByRole("checkbox", {
+      name: text,
+    });
+    await locator.check();
+  }
+
   async clickButton(
     label: string | RegExp,
     options: { exact?: boolean; force?: boolean } = {

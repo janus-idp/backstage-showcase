@@ -36,6 +36,7 @@ test.describe("Test Kubernetes Actions plugin", () => {
     await uiHelper.fillTextInputByLabel("Namespace name", namespace);
     await uiHelper.fillTextInputByLabel("Url", process.env.K8S_CLUSTER_URL);
     await uiHelper.fillTextInputByLabel("Token", process.env.K8S_CLUSTER_TOKEN);
+    await uiHelper.checkCheckbox("Skip TLS verification");
     await uiHelper.clickButton("Review");
     await uiHelper.clickButton("Create");
     await kubeClient.getNamespaceByName(namespace);
