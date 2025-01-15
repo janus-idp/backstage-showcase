@@ -254,7 +254,7 @@ upstream:
       - name: install-dynamic-plugins
         # -- Image used by the initContainer to install dynamic plugins into the `dynamic-plugins-root` volume mount.
         # It could be replaced by a custom image based on this one.
-        # @default -- `quay.io/rhdh-community/rhdh:latest`
+        # @default -- `quay.io/rhdh-community/rhdh:next`
         image: '{{ include "backstage.image" . }}'
         command:
           - sh
