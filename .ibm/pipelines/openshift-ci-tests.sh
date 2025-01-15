@@ -8,6 +8,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 secret_name="rhdh-k8s-plugin-secret"
 OVERALL_RESULT=0
 
+JOB_NAME=periodic-aks
+
 cleanup() {
   echo "Cleaning up before exiting"
   if [[ "$JOB_NAME" == *aks* ]]; then
@@ -23,7 +25,7 @@ cleanup() {
   rm -rf ~/tmpbin
 }
 
-trap cleanup EXIT INT ERR
+#trap cleanup EXIT INT ERR
 
 source "${DIR}/utils.sh"
 if [[ "$JOB_NAME" == *aks* ]]; then
