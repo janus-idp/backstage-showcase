@@ -28,7 +28,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@mui/material": "5.16.11",
+    "@mui/material": "5.16.14",
     "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": "1.0.1"
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/janus-idp/backstage-showcase",
+    "url": "https://github.com/redhat-developer/rhdh",
     "directory": "dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page"
   },
   "maintainers": [

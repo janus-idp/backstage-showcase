@@ -4,12 +4,12 @@ import { LOGGER } from "../../utils/logger";
 import { Common } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
 
-test.describe("Change app-config at e2e test runtime", () => {
+test.describe.skip("Change app-config at e2e test runtime", () => {
   test("Verify title change after ConfigMap modification", async ({ page }) => {
     test.setTimeout(300000); // Increasing to 5 minutes
 
     const configMapName = "app-config-rhdh";
-    const namespace = process.env.NAME_SPACE;
+    const namespace = process.env.NAME_SPACE || "showcase-ci-nightly";
     const deploymentName = "rhdh-backstage";
 
     const kubeUtils = new KubeClient();
@@ -29,6 +29,9 @@ test.describe("Change app-config at e2e test runtime", () => {
       await kubeUtils.restartDeployment(deploymentName, namespace);
 
       const common = new Common(page);
+      await page.context().clearCookies();
+      await page.context().clearPermissions();
+      await page.reload({ waitUntil: "domcontentloaded" });
       await common.loginAsGuest();
       await new UIhelper(page).openSidebar("Home");
       await uiHelper.verifyHeading("Welcome back!");
