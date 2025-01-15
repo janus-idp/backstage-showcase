@@ -18,7 +18,7 @@ test.describe.skip("GitHub Happy path", () => {
   let backstageShowcase: BackstageShowcase;
 
   const component =
-    "https://github.com/janus-idp/backstage-showcase/blob/main/catalog-entities/all.yaml";
+    "https://github.com/redhat-developer/rhdh/blob/main/catalog-entities/all.yaml";
 
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
