@@ -79,13 +79,23 @@ test.describe.serial('GitHub Happy path', () => {
     }
   });
 
-  test('Click login on the login popup and verify that Overview tab renders', async () => {
-    await uiHelper.openSidebar('Catalog');
-    await uiHelper.selectMuiBox('Kind', 'Component');
-    await uiHelper.clickByDataTestId('user-picker-all');
-    await uiHelper.clickLink('test-entity');
+  test("Click login on the login popup and verify that Overview tab renders", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.selectMuiBox("Kind", "Component");
+    await uiHelper.clickByDataTestId("user-picker-all");
+    await uiHelper.clickLink("Backstage Showcase");
+
+    const expectedPath = "/catalog/default/component/backstage-showcase";
+    // Wait for the expected path in the URL
+    await page.waitForURL(`**${expectedPath}`, {
+      waitUntil: "domcontentloaded", // Wait until the DOM is loaded
+      timeout: 10000,
+    });
+    // Optionally, verify that the current URL contains the expected path
+    await expect(page.url()).toContain(expectedPath);
+
     await common.clickOnGHloginPopup();
-    await uiHelper.verifyLink('Janus Website', { exact: false });
+    await uiHelper.verifyLink("Janus Website", { exact: false });
     await backstageShowcase.verifyPRStatisticsRendered();
     await backstageShowcase.verifyAboutCardIsDisplayed();
   });
