@@ -10772,7 +10772,7 @@ __metadata:
     "@backstage/config": 1.2.0
     "@types/express": 4.17.21
     "@types/supertest": 6.0.2
-    express: 4.21.0
+    express: 4.21.2
     msw: 1.3.4
     node-fetch: 2.7.0
     prettier: 3.4.2
@@ -10793,8 +10793,8 @@ __metadata:
     "@backstage/test-utils": 1.7.0
     "@backstage/theme": 0.6.0
     "@material-table/core": 3.2.5
-    "@mui/icons-material": 5.16.13
-    "@mui/material": 5.16.13
+    "@mui/icons-material": 5.16.14
+    "@mui/material": 5.16.14
     "@testing-library/jest-dom": 6.6.3
     "@testing-library/react": 14.3.1
     "@testing-library/user-event": 14.5.2
@@ -10829,7 +10829,7 @@ __metadata:
     "@backstage/types": 1.1.1
     "@types/express": 4.17.21
     "@types/supertest": 6.0.2
-    express: 4.21.0
+    express: 4.21.2
     express-promise-router: 4.1.1
     json-2-csv: 5.5.6
     knex: 3.1.0
@@ -10854,7 +10854,7 @@ __metadata:
     "@types/express": 4.17.21
     "@types/mock-fs": 4.13.4
     "@types/supertest": 6.0.2
-    express: 4.21.0
+    express: 4.21.2
     mock-fs: 5.4.1
     msw: 1.3.4
     node-fetch: 2.7.0
@@ -10926,12 +10926,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0":
-  version: 1.7.0
-  resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.0"
+"@janus-idp/backstage-plugin-audit-log-node@npm:1.7.2":
+  version: 1.7.2
+  resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.2"
   dependencies:
     lodash: ^4.17.21
-  checksum: 22557f15cffc7a22bca592d9b0efaf917ac3cb8a2693957407ccad1f160060d349dc81fbc5f823c1b9e26cf2357d7566a005ac00d5b31b94b9ef952b13b301d0
+  checksum: 8b896df97a4079da2081740eb4b9ecdddcff416ead28a397184b9f7c9bb9321dde4a0bb12a054a3ae430cdc4e1d8693c7411201251279ca094b15ca5bbb6b199
   languageName: node
   linkType: hard
 
@@ -12467,10 +12467,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/core-downloads-tracker@npm:^5.16.13":
-  version: 5.16.13
-  resolution: "@mui/core-downloads-tracker@npm:5.16.13"
-  checksum: d9c6837dabd873e05b0bf81389c3dfb60fbc577cceff7f98f94c60f688f02d33a9200082e1a6756a0de4bd1985aa27932c677376ba7e6b1ad206a8b6887bda07
+"@mui/core-downloads-tracker@npm:^5.16.14":
+  version: 5.16.14
+  resolution: "@mui/core-downloads-tracker@npm:5.16.14"
+  checksum: a25658362a69a89f35cdc12ded01b998b7f02df43648029f2523813fc7f259cc85f62bd1877059359d462e7c163e82308bd4cc74fa2d35651d302c5d8bbbc7f4
   languageName: node
   linkType: hard
 
@@ -12497,9 +12497,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/icons-material@npm:5.16.13":
-  version: 5.16.13
-  resolution: "@mui/icons-material@npm:5.16.13"
+"@mui/icons-material@npm:5.16.14":
+  version: 5.16.14
+  resolution: "@mui/icons-material@npm:5.16.14"
   dependencies:
     "@babel/runtime": ^7.23.9
   peerDependencies:
@@ -12509,7 +12509,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 913f4581a105924aaf6b462761814819d78372c66fbdbe86dc49a11d992297913551a73e421a9f411c0606cc72893f8a9cf2f00458b555d32f2e43f55b5a8a7a
+  checksum: 14c01298e47972099ce71a8f142e2bb93dfc61a3ac0239030c55b3e5c6719f692e9c2fac131247c52f4922e74b08291ecb1f3398117222cc7baa82ec6f38e073
   languageName: node
   linkType: hard
 
@@ -12590,15 +12590,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material@npm:5.16.13":
-  version: 5.16.13
-  resolution: "@mui/material@npm:5.16.13"
+"@mui/material@npm:5.16.14":
+  version: 5.16.14
+  resolution: "@mui/material@npm:5.16.14"
   dependencies:
     "@babel/runtime": ^7.23.9
-    "@mui/core-downloads-tracker": ^5.16.13
-    "@mui/system": ^5.16.13
+    "@mui/core-downloads-tracker": ^5.16.14
+    "@mui/system": ^5.16.14
     "@mui/types": ^7.2.15
-    "@mui/utils": ^5.16.13
+    "@mui/utils": ^5.16.14
     "@popperjs/core": ^2.11.8
     "@types/react-transition-group": ^4.4.10
     clsx: ^2.1.0
@@ -12619,7 +12619,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 40a85c43e3556a01a80930a3742a04690a092a3e291527b9d94ec24a8c267c27a5da91fc9f6cd671d20eeb3a1eeeff7f97034ba8d44a08ed89ae1028719262e9
+  checksum: 0c09353099580ca4f4e214ef1251a5fb1328a5ec19b5195ec4dd628c0ae0b3fae47a8fcae39a807aac1ac8a26bf0109da07eb7eca183975f8cae583d7306de0f
   languageName: node
   linkType: hard
 
@@ -12689,12 +12689,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/private-theming@npm:^5.16.13":
-  version: 5.16.13
-  resolution: "@mui/private-theming@npm:5.16.13"
+"@mui/private-theming@npm:^5.16.14":
+  version: 5.16.14
+  resolution: "@mui/private-theming@npm:5.16.14"
   dependencies:
     "@babel/runtime": ^7.23.9
-    "@mui/utils": ^5.16.13
+    "@mui/utils": ^5.16.14
     prop-types: ^15.8.1
   peerDependencies:
     "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -12702,7 +12702,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 6cdc65d803abb36c80dbb7a7cb9d3e7cb3e947da16179c1d16c2367cd172c4c2b989be96ac0f72b8f037bedca1a7430fa9e6374c94c3f536d9bc0a8b8a3e4e93
+  checksum: da762a6ccf5d12e2bfad4de29cdfbcfaf7d8229706e1063ecf41a0e724e0cd0317a847a83b0edc553f07e63566dbbb4e6aa15f6b295993224977f969769318be
   languageName: node
   linkType: hard
 
@@ -12740,9 +12740,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/styled-engine@npm:5.16.13, @mui/styled-engine@npm:^5.16.13":
-  version: 5.16.13
-  resolution: "@mui/styled-engine@npm:5.16.13"
+"@mui/styled-engine@npm:5.16.14, @mui/styled-engine@npm:^5.16.14":
+  version: 5.16.14
+  resolution: "@mui/styled-engine@npm:5.16.14"
   dependencies:
     "@babel/runtime": ^7.23.9
     "@emotion/cache": ^11.13.5
@@ -12757,7 +12757,7 @@ __metadata:
       optional: true
     "@emotion/styled":
       optional: true
-  checksum: d9459ef4baac056d1a65e351e084b2fe1eb30516907fc48166f570c60e3db3cb30de2d0af2bf22a8caa004bf2c37a1b831ccad1069b1d03cfae202c247967e44
+  checksum: 5868683e6dd4004b34a0ce9de8842c180f7b7618c0b8cff904771659ef2da3aae574ea10b0c5ad6ffe59db396f699773ebb99f3f9d831d8b5adc398ecc618195
   languageName: node
   linkType: hard
 
@@ -12844,15 +12844,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.16.13":
-  version: 5.16.13
-  resolution: "@mui/system@npm:5.16.13"
+"@mui/system@npm:^5.16.14":
+  version: 5.16.14
+  resolution: "@mui/system@npm:5.16.14"
   dependencies:
     "@babel/runtime": ^7.23.9
-    "@mui/private-theming": ^5.16.13
-    "@mui/styled-engine": ^5.16.13
+    "@mui/private-theming": ^5.16.14
+    "@mui/styled-engine": ^5.16.14
     "@mui/types": ^7.2.15
-    "@mui/utils": ^5.16.13
+    "@mui/utils": ^5.16.14
     clsx: ^2.1.0
     csstype: ^3.1.3
     prop-types: ^15.8.1
@@ -12868,7 +12868,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 95957ce47dedd41b3262eaf6b214284f407df985cca7d26fd26790a9f4609f11e6260a5918df9e3e11eee0830d3afa8958fcc366242f031dda54279d2aa92fb0
+  checksum: 20b5d7c1cd1f163c6e28fb267ffb9705e61faf24b62bae5dde08904f2b42a2173ee714d72ae1b5f84a7d50356ad5fa7525a625f9e360d9a886c52b1a1bf6698e
   languageName: node
   linkType: hard
 
@@ -12932,9 +12932,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.16.13":
-  version: 5.16.13
-  resolution: "@mui/utils@npm:5.16.13"
+"@mui/utils@npm:^5.16.14":
+  version: 5.16.14
+  resolution: "@mui/utils@npm:5.16.14"
   dependencies:
     "@babel/runtime": ^7.23.9
     "@mui/types": ^7.2.15
@@ -12948,7 +12948,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 89cc2805afec56b96445e3ffacbd91024ada12c233456a3d00d9e2173c6b18168c62f131271af2bcde86586af719f9898727cd41782f2f49b96d49fcd6286994
+  checksum: 311ca0c2c2aa315cdcb351805fc5be2c474492afb0b07ae88d99e7ad7d5ab5bbc477cc3d5f6cbde32e16b65588d52dcc53fbe70c026534134a5e3b942dcc444c
   languageName: node
   linkType: hard
 
@@ -14317,15 +14317,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/host-metrics@npm:0.35.4":
-  version: 0.35.4
-  resolution: "@opentelemetry/host-metrics@npm:0.35.4"
+"@opentelemetry/host-metrics@npm:0.35.5":
+  version: 0.35.5
+  resolution: "@opentelemetry/host-metrics@npm:0.35.5"
   dependencies:
-    "@opentelemetry/sdk-metrics": ^1.8.0
-    systeminformation: 5.22.9
+    systeminformation: 5.23.8
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
-  checksum: d0be6116f5ffb81937820f887721da6a1ae841816d3c98159b94adc6146cf1ad1558527b9ed033b58db5439049bfde076842ac0b8ed57e819664f5a03f9e6c73
+  checksum: ab538a5dc6836b87e1156fc446d5e7e8bb1b742c1f01a0716ba126a4f8a5ecbb4e01988068729a41e1d5f63d5d63ea971bdf3fcd55eed46ce47ae62da8937acf
   languageName: node
   linkType: hard
 
@@ -15073,7 +15072,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/sdk-metrics@npm:1.27.0, @opentelemetry/sdk-metrics@npm:^1.8.0, @opentelemetry/sdk-metrics@npm:^1.9.1":
+"@opentelemetry/sdk-metrics@npm:1.27.0, @opentelemetry/sdk-metrics@npm:^1.9.1":
   version: 1.27.0
   resolution: "@opentelemetry/sdk-metrics@npm:1.27.0"
   dependencies:
@@ -20386,12 +20385,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.11":
-  version: 20.17.11
-  resolution: "@types/node@npm:20.17.11"
+"@types/node@npm:20.17.12":
+  version: 20.17.12
+  resolution: "@types/node@npm:20.17.12"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 8841a85ce5cbc402d87492527721d32b2c3ab9159a362a6ba05e957807e1991a056df61ce5e58166489d07d90f1ad61516121d6fd4c9e62c5429ce67f4b82d98
+  checksum: 0c0dbeb4e1480a23071ec38e97bb3d776e0ae9828174bf45f9edcf277caa955945cb10d31d84f7a73c66aaf92ae2e022be6331bd00a4bed1f2ad9639a411d17e
   languageName: node
   linkType: hard
 
@@ -21882,9 +21881,9 @@ __metadata:
     "@internal/plugin-dynamic-plugins-info": "*"
     "@janus-idp/backstage-plugin-rbac-common": 1.12.0
     "@janus-idp/cli": 1.18.5
-    "@mui/icons-material": 5.16.13
-    "@mui/material": 5.16.13
-    "@mui/styled-engine": 5.16.13
+    "@mui/icons-material": 5.16.14
+    "@mui/material": 5.16.14
+    "@mui/styled-engine": 5.16.14
     "@redhat-developer/red-hat-developer-hub-theme": 0.4.0
     "@scalprum/core": 0.8.1
     "@scalprum/react-core": 0.9.3
@@ -21894,7 +21893,7 @@ __metadata:
     "@testing-library/react": 14.3.1
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 14.5.2
-    "@types/node": 20.17.11
+    "@types/node": 20.17.12
     "@types/react": 18.3.18
     "@types/react-dom": 18.3.5
     lodash: 4.17.21
@@ -22683,11 +22682,11 @@ __metadata:
     "@internal/plugin-dynamic-plugins-info-backend": "*"
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
-    "@janus-idp/backstage-plugin-audit-log-node": 1.7.0
+    "@janus-idp/backstage-plugin-audit-log-node": 1.7.2
     "@opentelemetry/api": 1.9.0
     "@opentelemetry/auto-instrumentations-node": 0.50.2
     "@opentelemetry/exporter-prometheus": 0.53.0
-    "@opentelemetry/host-metrics": 0.35.4
+    "@opentelemetry/host-metrics": 0.35.5
     "@opentelemetry/instrumentation-runtime-node": 0.9.0
     "@opentelemetry/sdk-metrics": 1.27.0
     "@opentelemetry/sdk-node": 0.53.0
@@ -22736,8 +22735,8 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.18.5
-    "@mui/icons-material": 5.16.13
-    "@mui/material": 5.16.13
+    "@mui/icons-material": 5.16.14
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22870,7 +22869,7 @@ __metadata:
     "@backstage-community/plugin-jfrog-artifactory": 1.10.2
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22882,7 +22881,7 @@ __metadata:
     "@backstage-community/plugin-lighthouse": 0.4.24
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/icons-material": 5.16.13
+    "@mui/icons-material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22894,7 +22893,7 @@ __metadata:
     "@backstage-community/plugin-nexus-repository-manager": 1.10.6
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22917,7 +22916,7 @@ __metadata:
     "@backstage-community/plugin-ocm": 5.2.4
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22929,7 +22928,7 @@ __metadata:
     "@backstage-community/plugin-quay": 1.14.4
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22941,7 +22940,7 @@ __metadata:
     "@backstage-community/plugin-rbac": 1.33.4
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -22953,7 +22952,7 @@ __metadata:
     "@backstage-community/plugin-redhat-argocd": 1.11.0
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -23055,7 +23054,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/core-plugin-api": 1.10.0
     "@janus-idp/cli": 1.18.5
-    "@mui/icons-material": 5.16.13
+    "@mui/icons-material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -23067,7 +23066,7 @@ __metadata:
     "@backstage-community/plugin-tekton": 3.17.0
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -23079,7 +23078,7 @@ __metadata:
     "@backstage-community/plugin-topology": 1.29.7
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -23226,7 +23225,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/plugin-notifications": 0.3.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -23315,7 +23314,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/plugin-signals": 0.0.11
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -26997,7 +26996,7 @@ __metadata:
     "@kubernetes/client-node": 0.21.0
     "@microsoft/microsoft-graph-client": 3.0.7
     "@playwright/test": 1.48.0
-    "@types/node": 20.17.11
+    "@types/node": 20.17.12
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
     eslint: 8.57.1
@@ -28581,48 +28580,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:4.21.0":
-  version: 4.21.0
-  resolution: "express@npm:4.21.0"
-  dependencies:
-    accepts: ~1.3.8
-    array-flatten: 1.1.1
-    body-parser: 1.20.3
-    content-disposition: 0.5.4
-    content-type: ~1.0.4
-    cookie: 0.6.0
-    cookie-signature: 1.0.6
-    debug: 2.6.9
-    depd: 2.0.0
-    encodeurl: ~2.0.0
-    escape-html: ~1.0.3
-    etag: ~1.8.1
-    finalhandler: 1.3.1
-    fresh: 0.5.2
-    http-errors: 2.0.0
-    merge-descriptors: 1.0.3
-    methods: ~1.1.2
-    on-finished: 2.4.1
-    parseurl: ~1.3.3
-    path-to-regexp: 0.1.10
-    proxy-addr: ~2.0.7
-    qs: 6.13.0
-    range-parser: ~1.2.1
-    safe-buffer: 5.2.1
-    send: 0.19.0
-    serve-static: 1.16.2
-    setprototypeof: 1.2.0
-    statuses: 2.0.1
-    type-is: ~1.6.18
-    utils-merge: 1.0.1
-    vary: ~1.1.2
-  checksum: 1c5212993f665809c249bf00ab550b989d1365a5b9171cdfaa26d93ee2ef10cd8add520861ec8d5da74b3194d8374e1d9d53e85ef69b89fd9c4196b87045a5d4
-  languageName: node
-  linkType: hard
-
-"express@npm:^4.14.0, express@npm:^4.17.1, express@npm:^4.17.3, express@npm:^4.18.1, express@npm:^4.18.2, express@npm:^4.19.2":
-  version: 4.21.1
-  resolution: "express@npm:4.21.1"
+"express@npm:4.21.2, express@npm:^4.14.0, express@npm:^4.17.1, express@npm:^4.17.3, express@npm:^4.18.1, express@npm:^4.18.2, express@npm:^4.19.2":
+  version: 4.21.2
+  resolution: "express@npm:4.21.2"
   dependencies:
     accepts: ~1.3.8
     array-flatten: 1.1.1
@@ -28643,7 +28603,7 @@ __metadata:
     methods: ~1.1.2
     on-finished: 2.4.1
     parseurl: ~1.3.3
-    path-to-regexp: 0.1.10
+    path-to-regexp: 0.1.12
     proxy-addr: ~2.0.7
     qs: 6.13.0
     range-parser: ~1.2.1
@@ -28655,7 +28615,7 @@ __metadata:
     type-is: ~1.6.18
     utils-merge: 1.0.1
     vary: ~1.1.2
-  checksum: 5ac2b26d8aeddda5564fc0907227d29c100f90c0ead2ead9d474dc5108e8fb306c2de2083c4e3ba326e0906466f2b73417dbac16961f4075ff9f03785fd940fe
+  checksum: 3aef1d355622732e20b8f3a7c112d4391d44e2131f4f449e1f273a309752a41abfad714e881f177645517cbe29b3ccdc10b35e7e25c13506114244a5b72f549d
   languageName: node
   linkType: hard
 
@@ -37955,10 +37915,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:0.1.10":
-  version: 0.1.10
-  resolution: "path-to-regexp@npm:0.1.10"
-  checksum: ab7a3b7a0b914476d44030340b0a65d69851af2a0f33427df1476100ccb87d409c39e2182837a96b98fb38c4ef2ba6b87bdad62bb70a2c153876b8061760583c
+"path-to-regexp@npm:0.1.12":
+  version: 0.1.12
+  resolution: "path-to-regexp@npm:0.1.12"
+  checksum: ab237858bee7b25ecd885189f175ab5b5161e7b712b360d44f5c4516b8d271da3e4bf7bf0a7b9153ecb04c7d90ce8ff5158614e1208819cf62bac2b08452722e
   languageName: node
   linkType: hard
 
@@ -40253,7 +40213,7 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     "@red-hat-developer-hub/backstage-plugin-bulk-import": 1.10.3
     typescript: 5.6.3
   languageName: unknown
@@ -40265,7 +40225,7 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.28.2
     "@janus-idp/cli": 1.18.5
-    "@mui/material": 5.16.13
+    "@mui/material": 5.16.14
     "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": 1.0.1
     typescript: 5.6.3
   languageName: unknown
@@ -43136,12 +43096,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:5.22.9":
-  version: 5.22.9
-  resolution: "systeminformation@npm:5.22.9"
+"systeminformation@npm:5.23.8":
+  version: 5.23.8
+  resolution: "systeminformation@npm:5.23.8"
   bin:
     systeminformation: lib/cli.js
-  checksum: c605e568395041e57483722b38802928bc6122e347f9e1c6a9588b30297e28c19ffb425be0306fcd6e4f14cd443fa0bbbb407e69ef15d891f6776946718b26bb
+  checksum: 8fe1187467e0037900e900c00089d34b1ea6d9868ab1f8f0c949ef6f75c9dca4e1888e23df42356f700b291a4d93929db21c6dfcf08f437674d9fe8b10fb347c
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
