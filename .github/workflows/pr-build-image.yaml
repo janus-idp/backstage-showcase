@@ -63,16 +63,25 @@ jobs:
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
-          if echo "$CHANGED_FILES" | grep -qv '^e2e-tests/'; then
-            echo "Changes detected outside the e2e-tests folder. Proceeding with the build."
+          if echo "$CHANGED_FILES" | grep -qvE '^(e2e-tests/|\.ibm/)'; then
+            echo "Changes detected outside the e2e-tests or .ibm folders. Proceeding with the build."
             echo "proceed_with_build=true" >> $GITHUB_ENV
           else
-            echo "No changes outside the e2e-tests folder. Skipping the build."
+            echo "No changes outside the e2e-tests or .ibm folders. Skipping the build."
             echo "proceed_with_build=false" >> $GITHUB_ENV
           fi
 
       - name: Get the last commit short SHA of the PR
-        uses: ./.github/actions/get-sha
+        if: env.proceed_with_build == 'true'
+        run: |
+          SHORT_SHA=$(git rev-parse --short=8 ${{ github.event.pull_request.head.sha }})
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+          if [[ -f packages/app/src/build-metadata.json ]]; then
+            repoPR="${{ github.repository }}/pull/${{ github.event.number }}"
+            now="$(date -u +%FT%TZ)"
+            sed -i packages/app/src/build-metadata.json -r \
+              -e 's|("Last Commit:.+)|"Last Commit: '$repoPR' @ '$SHORT_SHA'"|'
+          fi
 
       - name: Check if Image Already Exists
         if: env.proceed_with_build == 'true'
@@ -103,7 +112,6 @@ jobs:
             type=ref,prefix=pr-,suffix=-${{ env.SHORT_SHA }},event=pr
           imageLabels: quay.expires-after=14d
           push: true
-          platform: linux/amd64
 
       - name: Comment the image pull link
         if: env.proceed_with_build == 'true' && env.image_exists == 'false'
