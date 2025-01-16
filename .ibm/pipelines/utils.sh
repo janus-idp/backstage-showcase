@@ -103,24 +103,31 @@ droute_send() {
       && chmod +x /tmp/droute-linux-amd64 \
       && /tmp/droute-linux-amd64 version"
 
+    # Initialize Data Router logging
+    ARTIFACT_DIR=${ARTIFACT_DIR:-/tmp/artifacts}
+    echo "ARTIFACT_DIR = ${ARTIFACT_DIR}"
+    mkdir -p "${ARTIFACT_DIR}/datarouter-errors"
     # Send test results through DataRouter and save the request ID.
     local max_attempts=5
-    local wait_seconds=1
     for ((i = 1; i <= max_attempts; i++)); do
       echo "Attempt ${i} of ${max_attempts} to send test results through Data Router."
-      if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
+      output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
         /tmp/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
         --url '${DATA_ROUTER_URL}' \
         --username '${DATA_ROUTER_USERNAME}' \
         --password '${DATA_ROUTER_PASSWORD}' \
         --results '${temp_droute}/${JUNIT_RESULTS}' \
-        --verbose" 2>&1); then
-        if DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
-          [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
-          echo "Test results successfully sent through Data Router."
-          echo "Request ID: $DATA_ROUTER_REQUEST_ID"
-          break
-        fi
+        --verbose" 2>&1)
+      # Log output to artifact directory
+      log_file="${ARTIFACT_DIR}/datarouter-errors/attempt_${i}.log"
+      echo "${output}" > "${log_file}"
+      echo "droute send logs written to ${log_file}"
+
+      if DATA_ROUTER_REQUEST_ID=$(echo "$output" | grep "request:" | awk '{print $2}') &&
+        [ -n "$DATA_ROUTER_REQUEST_ID" ]; then
+        echo "Test results successfully sent through Data Router."
+        echo "Request ID: $DATA_ROUTER_REQUEST_ID"
+        break
       fi
 
       if ((i == max_attempts)); then
@@ -131,6 +138,7 @@ droute_send() {
         echo "1. Restart $droute_pod_name in $droute_project project/namespace"
         echo "2. Check the Data Router documentation: https://spaces.redhat.com/pages/viewpage.action?pageId=115488042"
         echo "3. Ask for help at Slack: #forum-dno-datarouter"
+        break
       fi
     done
 
