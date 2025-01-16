@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@backstage-community/plugin-rbac": "1.33.4",
-    "@mui/material": "5.16.13"
+    "@mui/material": "5.16.14"
   },
   "devDependencies": {
     "@backstage/cli": "0.28.2",
@@ -48,7 +48,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/janus-idp/backstage-showcase",
+    "url": "https://github.com/redhat-developer/rhdh",
     "directory": "dynamic-plugins/wrappers/backstage-community-plugin-rbac"
   },
   "maintainers": [
