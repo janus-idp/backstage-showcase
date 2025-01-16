@@ -12490,7 +12490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/icons-material@npm:5.16.14, @mui/icons-material@npm:^5.15.19, @mui/icons-material@npm:^5.16.4, @mui/icons-material@npm:^5.16.7":
+"@mui/icons-material@npm:5.16.14, @mui/icons-material@npm:^5.15.17, @mui/icons-material@npm:^5.15.19, @mui/icons-material@npm:^5.16.4, @mui/icons-material@npm:^5.16.7":
   version: 5.16.14
   resolution: "@mui/icons-material@npm:5.16.14"
   dependencies:
@@ -12666,7 +12666,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/private-theming@npm:^5.16.14, @mui/private-theming@npm:^5.16.6":
+"@mui/private-theming@npm:^5.16.13, @mui/private-theming@npm:^5.16.14, @mui/private-theming@npm:^5.16.6":
   version: 5.16.14
   resolution: "@mui/private-theming@npm:5.16.14"
   dependencies:
@@ -12742,7 +12742,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/styles@npm:5.16.7, @mui/styles@npm:^5.16.7":
+"@mui/styles@npm:5.16.13, @mui/styles@npm:^5.16.7":
+  version: 5.16.13
+  resolution: "@mui/styles@npm:5.16.13"
+  dependencies:
+    "@babel/runtime": ^7.23.9
+    "@emotion/hash": ^0.9.1
+    "@mui/private-theming": ^5.16.13
+    "@mui/types": ^7.2.15
+    "@mui/utils": ^5.16.13
+    clsx: ^2.1.0
+    csstype: ^3.1.3
+    hoist-non-react-statics: ^3.3.2
+    jss: ^10.10.0
+    jss-plugin-camel-case: ^10.10.0
+    jss-plugin-default-unit: ^10.10.0
+    jss-plugin-global: ^10.10.0
+    jss-plugin-nested: ^10.10.0
+    jss-plugin-props-sort: ^10.10.0
+    jss-plugin-rule-value-function: ^10.10.0
+    jss-plugin-vendor-prefixer: ^10.10.0
+    prop-types: ^15.8.1
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 2464d3567264c152a7e8f030554a423c6ab509c85d33d193c298935b439cc62c7fa82b80cd99a477fbcdd463aa8de6e57b99b67445081d56137b5d5c094df192
+  languageName: node
+  linkType: hard
+
+"@mui/styles@npm:5.16.7":
   version: 5.16.7
   resolution: "@mui/styles@npm:5.16.7"
   dependencies:
@@ -16345,6 +16376,26 @@ __metadata:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
     react-router-dom: 6.26.2
   checksum: 8eb2827e03f20fa075217f9af243102fcddc8922c8d10a727589b1f45556d4643bc1f5f53326161691fc9718804d8fbc18c060b5b6d9ed4a2ada7949ee1e6e43
+  languageName: node
+  linkType: hard
+
+"@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:0.0.6":
+  version: 0.0.6
+  resolution: "@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:0.0.6"
+  dependencies:
+    "@backstage/core-components": ^0.16.3
+    "@backstage/core-plugin-api": ^1.10.3
+    "@backstage/theme": ^0.6.3
+    "@mui/icons-material": ^5.15.17
+    "@mui/material": ^5.15.17
+    "@mui/styles": 5.16.13
+    "@scalprum/react-core": 0.9.3
+    classnames: ^2.5.1
+    react-use: ^17.2.4
+  peerDependencies:
+    react: 16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 2c9f0046497b5f2f67f557078408bea951a897d0914aeb9a55b199c9a55dee094c0796438d23c4d092feb6b00ddf92dbd6494e5ff1b8a5285e7c31b928e40944
   languageName: node
   linkType: hard
 
@@ -20399,7 +20450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.16":
+"@types/node@npm:20.17.16, @types/node@npm:^20.1.1":
   version: 20.17.16
   resolution: "@types/node@npm:20.17.16"
   dependencies:
@@ -20428,15 +20479,6 @@ __metadata:
   dependencies:
     undici-types: ~5.26.4
   checksum: 8e45a05aa91437d3d11a346775ac16589353070c504f91a62cd91945a384231ccbbe92009a8e1ae653f954f9de5bf8ff106cc8e26721ecab98914dc019217aef
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^20.1.1":
-  version: 20.17.14
-  resolution: "@types/node@npm:20.17.14"
-  dependencies:
-    undici-types: ~6.19.2
-  checksum: a5a775f57271e5a73c9e1afc4f6ea0d24cb9b4856e3d7d1788ff9ba0cc3e3a90e7883383f183f193a36eed0c758809df626a9ad653458a06d4fc82644d89b6e0
   languageName: node
   linkType: hard
 
@@ -40406,6 +40448,18 @@ __metadata:
     "@janus-idp/cli": 3.0.0
     "@mui/material": 5.16.14
     "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": 1.0.1
+    typescript: 5.7.3
+  languageName: unknown
+  linkType: soft
+
+"red-hat-developer-hub-backstage-plugin-global-floating-action-button@workspace:dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button":
+  version: 0.0.0-use.local
+  resolution: "red-hat-developer-hub-backstage-plugin-global-floating-action-button@workspace:dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button"
+  dependencies:
+    "@backstage/cli": 0.29.5
+    "@janus-idp/cli": 3.0.0
+    "@mui/material": 5.16.14
+    "@red-hat-developer-hub/backstage-plugin-global-floating-action-button": 0.0.6
     typescript: 5.7.3
   languageName: unknown
   linkType: soft

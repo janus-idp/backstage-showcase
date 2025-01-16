@@ -400,6 +400,42 @@ Each global header entry requires the following attributes:
 
 Users can configure multiple global headers at different positions by adding entries to the `mountPoints` field.
 
+### Adding application listeners
+
+The users can add application listeners using the `application/listener` mount point. Below is an example that uses the aforesaid mount point:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:  # plugin_package_name same as `scalprum.name` key in plugin's `package.json`
+      mountPoints:
+        - mountPoint: application/listener
+          importName: <exported listener component>
+```
+
+Users can configure multiple application listeners by adding entries to the `mountPoints` field.
+
+### Adding application providers
+
+The users can add application providers using the `application/provider` mount point. Below is an example that uses the aforesaid mount point to configure a context provider:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:  # plugin_package_name same as `scalprum.name` key in plugin's `package.json`
+      dynamicRoutes:
+        - path: /<route>
+          importName: Component # Component you want to load on the route
+      mountPoints:
+        - mountPoint: application/provider
+          importName: <exported provider component>
+```
+
+Users can configure multiple application providers by adding entries to the `mountPoints` field.
+
+
 ## Customizing and Adding Entity tabs
 
 Out of the box the frontend system provides an opinionated set of tabs for catalog entity views. This set of tabs can be further customized and extended as needed via the `entityTabs` configuration:

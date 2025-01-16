@@ -536,6 +536,24 @@ plugins:
                   layout:
                     position: above-main-content
 
+  # Group: Global floating action button
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-floating-action-button
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-global-floating-action-button:
+            mountPoints:
+              - mountPoint: application/listener
+                importName: DynamicGlobalFloatingActionButton
+              - mountPoint: global.floatingactionbutton/component
+                importName: NullComponent
+                config:
+                  icon: github
+                  label: 'Git'
+                  toolTip: 'Github'
+                  to: https://github.com/redhat-developer/rhdh
+
   # Homepage
   - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
     disabled: false
