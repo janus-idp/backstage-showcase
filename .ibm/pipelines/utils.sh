@@ -106,7 +106,7 @@ droute_send() {
     # Initialize Data Router logging
     ARTIFACT_DIR=${ARTIFACT_DIR:-/tmp/artifacts}
     echo "ARTIFACT_DIR = ${ARTIFACT_DIR}"
-    mkdir -p "${ARTIFACT_DIR}/datarouter-errors"
+    mkdir -p "${ARTIFACT_DIR}/${project}/datarouter-errors"
     # Send test results through DataRouter and save the request ID.
     local max_attempts=5
     for ((i = 1; i <= max_attempts; i++)); do
@@ -119,7 +119,7 @@ droute_send() {
         --results '${temp_droute}/${JUNIT_RESULTS}' \
         --verbose" 2>&1)
       # Log output to artifact directory
-      log_file="${ARTIFACT_DIR}/datarouter-errors/attempt_${i}.log"
+      log_file="${ARTIFACT_DIR}/${project}/datarouter-errors/attempt_${i}.log"
       echo "${output}" > "${log_file}"
       echo "droute send logs written to ${log_file}"
 
