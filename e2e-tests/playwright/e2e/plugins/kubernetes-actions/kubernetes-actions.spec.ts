@@ -1,17 +1,19 @@
-import { test } from "@playwright/test";
+import { Page, test } from "@playwright/test";
 import { Common, setupBrowser } from "../../../utils/common";
 import { UIhelper } from "../../../utils/ui-helper";
 import { KubeClient } from "../../../utils/kube-client";
 import { CatalogImport } from "../../../support/pages/catalog-import";
+import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 
 test.describe("Test Kubernetes Actions plugin", () => {
   let common: Common;
   let uiHelper: UIhelper;
+  let page: Page;
   let kubeClient: KubeClient;
   let namespace: string;
 
   test.beforeAll(async ({ browser }, testInfo) => {
-    const page = (await setupBrowser(browser, testInfo)).page;
+    page = (await setupBrowser(browser, testInfo)).page;
     common = new Common(page);
     uiHelper = new UIhelper(page);
     kubeClient = new KubeClient();
@@ -39,6 +41,9 @@ test.describe("Test Kubernetes Actions plugin", () => {
     await uiHelper.checkCheckbox("Skip TLS verification");
     await uiHelper.clickButton("Review");
     await uiHelper.clickButton("Create");
+    await page.waitForSelector(
+      `${UI_HELPER_ELEMENTS.MuiTypography}:has-text("second")`,
+    );
     await kubeClient.getNamespaceByName(namespace);
   });
 
