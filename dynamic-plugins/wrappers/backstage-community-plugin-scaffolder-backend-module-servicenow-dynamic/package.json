@@ -61,6 +61,6 @@
   "devDependencies": {
     "@backstage/cli": "0.28.2",
     "@janus-idp/cli": "1.18.5",
-    "typescript": "5.6.3"
+    "typescript": "5.7.3"
   }
 }
