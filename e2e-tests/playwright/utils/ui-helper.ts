@@ -39,6 +39,13 @@ export class UIhelper {
     await this.page.keyboard.press("Tab");
   }
 
+  async checkCheckbox(text: string) {
+    const locator = this.page.getByRole("checkbox", {
+      name: text,
+    });
+    await locator.check();
+  }
+
   async clickButton(
     label: string | RegExp,
     options: { exact?: boolean; force?: boolean } = {
@@ -298,8 +305,8 @@ export class UIhelper {
     await expect(headingLocator).toBeVisible();
   }
 
-  async waitForH4Title(text: string) {
-    await this.page.waitForSelector(`h4:has-text("${text}")`, {
+  async waitForTitle(text: string, level: number = 1) {
+    await this.page.waitForSelector(`h${level}:has-text("${text}")`, {
       timeout: 10000,
     });
   }
@@ -435,6 +442,17 @@ export class UIhelper {
       .first();
     await link.scrollIntoViewIfNeeded();
     await expect(link).toBeVisible();
+  }
+
+  async clickBtnInCard(cardText: string, btnText: string, exact = true) {
+    const cardLocator = this.page
+      .locator(UI_HELPER_ELEMENTS.MuiCardRoot(cardText))
+      .first();
+    await cardLocator.scrollIntoViewIfNeeded();
+    await cardLocator
+      .getByRole("button", { name: btnText, exact: exact })
+      .first()
+      .click();
   }
 
   async verifyTextinCard(
