@@ -7,7 +7,6 @@ export PS4='[$(date "+%Y-%m-%d %H:%M:%S")] ' # logs timestamp for every cmd.
 LOGFILE="test-log"
 export DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OVERALL_RESULT=0
-JOB_NAME=periodic-ci-redhat-developer-rhdh-main-e2e-tests-nightly
 
 # Define a cleanup function to be executed upon script exit.
 # shellcheck disable=SC2317
