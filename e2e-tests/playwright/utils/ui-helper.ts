@@ -371,7 +371,6 @@ export class UIhelper {
             .getAttribute("href");
     expect(buttonUrl).toContain(url);
   }
-  // locator('[data-test-id="topology-test"]').getByRole('button', { name: 'Open URL' })
 
   /**
    * Verifies that a table row, identified by unique text, contains specific cell texts.
