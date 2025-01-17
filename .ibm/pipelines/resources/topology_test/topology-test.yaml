@@ -10,9 +10,13 @@ metadata:
 spec:
   tasks:
     - name: deploy
-      taskRef:
-        kind: ClusterTask
-        name: openshift-client
+      taskSpec:
+        steps:
+          - name: oc
+            image: 'quay.io/openshift/origin-cli:latest'
+            script: |
+              #!/bin/sh
+              oc "$@"
 ---
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
