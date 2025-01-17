@@ -561,7 +561,7 @@ run_tests() {
 
   mkdir -p "${ARTIFACT_DIR}/${project}/test-results"
   mkdir -p "${ARTIFACT_DIR}/${project}/attachments/screenshots"
-    cp -a "${e2e_tests_dir}/test-results/"* "${ARTIFACT_DIR}/${project}/test-results"
+  cp -a "${e2e_tests_dir}/test-results/"* "${ARTIFACT_DIR}/${project}/test-results"
   cp -a "${e2e_tests_dir}/${JUNIT_RESULTS}" "${ARTIFACT_DIR}/${project}/${JUNIT_RESULTS}"
 
   if [ -d "${e2e_tests_dir}/screenshots" ]; then
