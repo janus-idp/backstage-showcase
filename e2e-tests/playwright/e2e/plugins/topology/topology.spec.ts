@@ -70,9 +70,8 @@ test.describe("Test Topology Plugin", () => {
     await uiHelper.verifyHeading("PipelineRuns");
     await uiHelper.verifyText("PL");
     await uiHelper.verifyText("PLR");
-    await page.locator('[data-test-id="topology-test"] circle').first().click();
-    // await page.getByTestId("icon-only-Succeeded").click();
+    await page.getByTestId("status-ok").first().click();
     await uiHelper.verifyDivHasText("Pipeline SucceededTask");
-    await uiHelper.verifyText("1 Succeeded");
+    await uiHelper.verifyText("2 Succeeded");
   });
 });
