@@ -35,7 +35,7 @@
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-techdocs-backend --embed-package @backstage/plugin-search-backend-module-techdocs --suppress-native-package cpu-features",
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage/plugin-techdocs-backend --embed-package @backstage/plugin-search-backend-module-techdocs --suppress-native-package cpu-features --ignore-version-check @backstage/backend-plugin-api",
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
