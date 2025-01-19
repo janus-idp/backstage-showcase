@@ -617,14 +617,6 @@ export class UIhelper {
     await expect(preinstalledColumn).toHaveText(expectedPreinstalled);
   }
 
-  async hoverOnPodStatusIndicator() {
-    await this.page
-      .locator('[data-test-id="topology-test"]')
-      .getByText("Pod")
-      .first()
-      .hover({});
-  }
-
   async verifyTextInTooltip(text: string | RegExp) {
     const tooltip = await this.page.getByRole("tooltip").getByText(text);
     expect(tooltip).toBeVisible();
