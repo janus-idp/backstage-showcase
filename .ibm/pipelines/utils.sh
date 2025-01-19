@@ -473,6 +473,9 @@ apply_yaml_files() {
     oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline.yaml"
     oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 
+    # Create Deployment and Pipeline for Topology test.
+    oc apply -f "$dir/resources/topology_test/topology-test.yaml"
+
 }
 
 deploy_test_backstage_provider() {
@@ -542,7 +545,7 @@ run_tests() {
   cd "${DIR}/../../e2e-tests"
   local e2e_tests_dir
   e2e_tests_dir=$(pwd)
-  
+
   yarn install
   yarn playwright install chromium
 
