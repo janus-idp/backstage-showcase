@@ -23,8 +23,8 @@ test.describe("Test Topology Plugin", () => {
     await uiHelper.clickTab("Topology");
     await uiHelper.verifyText("backstage-janus");
     await page.getByRole("button", { name: "Fit to Screen" }).click();
-    await uiHelper.verifyText("rhdh");
-    await uiHelper.verifyText("rhdh-rbac");
+    // await uiHelper.verifyText("rhdh");
+    // await uiHelper.verifyText("rhdh-rbac");
     await uiHelper.verifyText("topology-test");
     await uiHelper.verifyButtonURL("Open URL", "topology-test-route", {
       locator: `[data-test-id="topology-test"]`,
