@@ -1,5 +1,4 @@
-import { expect, Page } from "@playwright/test";
-import { GITHUB_URL } from "../../utils/constants";
+import { Page } from "@playwright/test";
 
 export class Topology {
   private page: Page;
