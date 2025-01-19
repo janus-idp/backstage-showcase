@@ -20418,12 +20418,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.12":
-  version: 20.17.12
-  resolution: "@types/node@npm:20.17.12"
+"@types/node@npm:20.17.14":
+  version: 20.17.14
+  resolution: "@types/node@npm:20.17.14"
   dependencies:
     undici-types: ~6.19.2
-  checksum: 0c0dbeb4e1480a23071ec38e97bb3d776e0ae9828174bf45f9edcf277caa955945cb10d31d84f7a73c66aaf92ae2e022be6331bd00a4bed1f2ad9639a411d17e
+  checksum: a5a775f57271e5a73c9e1afc4f6ea0d24cb9b4856e3d7d1788ff9ba0cc3e3a90e7883383f183f193a36eed0c758809df626a9ad653458a06d4fc82644d89b6e0
   languageName: node
   linkType: hard
 
@@ -21926,7 +21926,7 @@ __metadata:
     "@testing-library/react": 14.3.1
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 14.6.0
-    "@types/node": 20.17.12
+    "@types/node": 20.17.14
     "@types/react": 18.3.18
     "@types/react-dom": 18.3.5
     lodash: 4.17.21
@@ -27041,7 +27041,7 @@ __metadata:
     "@kubernetes/client-node": 0.21.0
     "@microsoft/microsoft-graph-client": 3.0.7
     "@playwright/test": 1.49.1
-    "@types/node": 20.17.12
+    "@types/node": 20.17.14
     "@typescript-eslint/eslint-plugin": 6.21.0
     "@typescript-eslint/parser": 6.21.0
     eslint: 8.57.1
