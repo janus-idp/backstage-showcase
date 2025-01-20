@@ -71,6 +71,8 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic
         disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic
+        disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-regex-dynamic
