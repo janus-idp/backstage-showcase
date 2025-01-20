@@ -14,7 +14,7 @@ import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 import RhdhRbacApi from "../../../support/api/rbac-api";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { Policy } from "../../../support/api/rbac-api-structures";
-import {CatalogImport} from "../../../support/pages/catalog-import";
+import { CatalogImport } from "../../../support/pages/catalog-import";
 
 /*
     Note that:
@@ -457,7 +457,7 @@ test.describe.serial("Test RBAC", () => {
       expect(await uiHelper.isLinkVisible("Register Existing Component"));
       const catalogImport = new CatalogImport(page);
       await catalogImport.registerExistingComponent(
-        'https://github.com/RoadieHQ/sample-service/blob/main/demo_template.yaml',
+        "https://github.com/RoadieHQ/sample-service/blob/main/demo_template.yaml",
         true,
       );
     });
