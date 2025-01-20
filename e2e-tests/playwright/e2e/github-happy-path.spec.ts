@@ -80,7 +80,7 @@ test.describe.skip("GitHub Happy path", () => {
     await uiHelper.verifyHeading("Templates");
 
     for (const template of TEMPLATES) {
-      await uiHelper.waitForH4Title(template);
+      await uiHelper.waitForTitle(template, 4);
       await uiHelper.verifyHeading(template);
     }
   });
