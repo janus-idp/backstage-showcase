@@ -274,12 +274,14 @@ test.describe.serial("Test RBAC", () => {
       let matchNextButton2: Locator[];
       let attempts = 0;
       do {
-        page.waitForTimeout(500);
+        await page.waitForTimeout(500);
         nextButton2 = page.locator('[data-testid="nextButton-2"]');
         matchNextButton2 = await nextButton2.all();
         attempts++;
       } while (matchNextButton2.length > 1 && attempts < 5);
-      nextButton2.click();
+      await nextButton2.click({
+        force: true,
+      });
       await uiHelper.clickButton("Save");
       await uiHelper.verifyText(
         "Role role:default/test-role1 updated successfully",
