@@ -14,6 +14,7 @@ import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 import RhdhRbacApi from "../../../support/api/rbac-api";
 import { RbacConstants } from "../../../data/rbac-constants";
 import { Policy } from "../../../support/api/rbac-api-structures";
+import { LOGGER } from "../../../utils/logger";
 
 /*
     Note that:
@@ -167,7 +168,7 @@ test.describe.serial("Test RBAC", () => {
         const fileContent = await fs.readFile(filePath, "utf-8");
         return fileContent;
       } else {
-        console.error("Download failed or path is not available");
+        LOGGER.error("Download failed or path is not available");
         return undefined;
       }
     }
@@ -348,7 +349,7 @@ test.describe.serial("Test RBAC", () => {
 
     // eslint-disable-next-line no-empty-pattern
     test.beforeEach(async ({}, testInfo) => {
-      console.log(
+      LOGGER.warning(
         `beforeEach: Attempting setup for ${testInfo.title}, retry: ${testInfo.retry}`,
       );
     });
@@ -522,7 +523,7 @@ test.describe.serial("Test RBAC", () => {
         expect(deleteRemainingPolicies.ok()).toBeTruthy();
         expect(deleteRole.ok()).toBeTruthy();
       } catch (error) {
-        console.error("Error during cleanup in afterAll:", error);
+        LOGGER.error("Error during cleanup in afterAll:", error);
       }
     });
   });

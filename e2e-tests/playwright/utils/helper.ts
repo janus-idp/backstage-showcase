@@ -9,8 +9,7 @@ import fs from "fs";
 import { APIHelper } from "./api-helper";
 
 export async function runShellCmd(command: string) {
-  return new Promise<string>((resolve) => {
-    //logger.info(`Executing command ${command}`);
+  return new Promise<string>((resolve, reject) => {
     const process = spawn("/bin/sh", ["-c", command]);
     let result: string;
     process.stdout.on("data", (data) => {
@@ -20,12 +19,15 @@ export async function runShellCmd(command: string) {
       result = data;
     });
     process.on("exit", (code) => {
+      // converting buffer into string:
+      result += "";
       if (code == 0) {
         resolve(result);
         return;
       } else {
         LOGGER.info(`Process failed with code ${code}: ${result}`);
-        throw Error(`Error executing shell command; exit code ${code}`);
+        reject(`Process failed with code ${code}: ${result}`);
+        //throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
   });
