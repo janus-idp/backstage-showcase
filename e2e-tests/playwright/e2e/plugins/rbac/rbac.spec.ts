@@ -13,7 +13,6 @@ import { RbacPo } from "../../../support/pageObjects/rbac-po";
 import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
 import RhdhRbacApi from "../../../support/api/rbac-api";
 import { RbacConstants } from "../../../data/rbac-constants";
-import { Policy } from "../../../support/api/rbac-api-structures";
 
 /*
     Note that:
@@ -346,13 +345,6 @@ test.describe.serial("Test RBAC", () => {
       apiToken = await RhdhAuthApiHack.getToken(page);
     });
 
-    // eslint-disable-next-line no-empty-pattern
-    test.beforeEach(async ({}, testInfo) => {
-      console.log(
-        `beforeEach: Attempting setup for ${testInfo.title}, retry: ${testInfo.retry}`,
-      );
-    });
-
     test("Test that roles and policies from GET request are what expected", async () => {
       const rbacApi = await RhdhRbacApi.build(apiToken);
 
@@ -499,31 +491,6 @@ test.describe.serial("Test RBAC", () => {
       );
 
       expect(deleteResponse.ok());
-    });
-
-    test.afterAll(async () => {
-      const rbacApi = await RhdhRbacApi.build(apiToken);
-
-      try {
-        const remainingPoliciesResponse =
-          await rbacApi.getPolicy("default/test");
-
-        const remainingPolicies = await Response.removeMetadataFromResponse(
-          remainingPoliciesResponse,
-        );
-
-        const deleteRemainingPolicies = await rbacApi.deletePolicy(
-          "default/test",
-          remainingPolicies as Policy[],
-        );
-
-        const deleteRole = await rbacApi.deleteRole("default/test");
-
-        expect(deleteRemainingPolicies.ok()).toBeTruthy();
-        expect(deleteRole.ok()).toBeTruthy();
-      } catch (error) {
-        console.error("Error during cleanup in afterAll:", error);
-      }
     });
   });
 });
