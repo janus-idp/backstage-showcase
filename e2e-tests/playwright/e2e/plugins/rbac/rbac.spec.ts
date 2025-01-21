@@ -83,6 +83,17 @@ test.describe.serial("Test RBAC", () => {
       );
     });
 
+    test("Test catalog-entity create is allowed", async ({page}) => {
+      const uiHelper = new UIhelper(page);
+      await uiHelper.openSidebar("Create...");
+      expect(await uiHelper.isLinkVisible("Register Existing Component"));
+      const catalogImport = new CatalogImport(page);
+      await catalogImport.registerExistingComponent(
+        "https://github.com/RoadieHQ/sample-service/blob/main/demo_template.yaml",
+        true,
+      );
+    });
+
     test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
       page,
     }) => {
@@ -450,16 +461,6 @@ test.describe.serial("Test RBAC", () => {
       expect(
         await uiHelper.isBtnVisibleByTitle("Schedule entity refresh"),
       ).toBeFalsy();
-    });
-
-    test("Test catalog-entity create is allowed", async () => {
-      await uiHelper.openSidebar("Create...");
-      expect(await uiHelper.isLinkVisible("Register Existing Component"));
-      const catalogImport = new CatalogImport(page);
-      await catalogImport.registerExistingComponent(
-        "https://github.com/RoadieHQ/sample-service/blob/main/demo_template.yaml",
-        true,
-      );
     });
 
     test("Test bad PUT and PUT catalog-entity update policy", async () => {
