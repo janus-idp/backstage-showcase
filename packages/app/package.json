@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "0.29.5",
-    "@backstage/test-utils": "1.7.3",
+    "@backstage/test-utils": "1.7.4",
     "@janus-idp/cli": "3.0.0",
     "@scalprum/react-test-utils": "0.2.4",
     "@testing-library/dom": "9.3.4",
