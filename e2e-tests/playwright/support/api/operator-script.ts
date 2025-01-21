@@ -58,6 +58,7 @@ export class OperatorScript {
       throw Error(e);
     }
 
+    await new Promise((resolve) => setTimeout(resolve, 60_000));
     try {
       const result = await runShellCmd(
         `oc apply -f ${this.getDeploymentYamlPath()}`,
