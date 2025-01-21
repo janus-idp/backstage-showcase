@@ -83,7 +83,7 @@ test.describe.serial("Test RBAC", () => {
       );
     });
 
-    test("Test catalog-entity create is allowed", async ({page}) => {
+    test("Test catalog-entity create is allowed", async ({ page }) => {
       const uiHelper = new UIhelper(page);
       await uiHelper.openSidebar("Create...");
       expect(await uiHelper.isLinkVisible("Register Existing Component"));
