@@ -44,6 +44,58 @@ export class CatalogImport {
     await expect(this.page.getByTestId("code-snippet")).toContainText(text);
     await this.uiHelper.clickButton("Close");
   }
+
+  async clickOnScaffoldedFromLink() {
+    const selector =
+      'a[href*="/catalog/default/component/test-scaffoldedfromlink-"]';
+    await this.page.locator(selector).first().waitFor({ state: "visible" });
+    const link = this.page.locator(selector).first();
+    await expect(link).toBeVisible();
+    await link.click();
+  }
+
+  async verifyTextInSelector(
+    selector: string,
+    expectedText: string,
+    exactMatch: boolean = true,
+  ) {
+    const elements = this.page.locator(selector);
+    const count = await elements.count();
+
+    for (let i = 0; i < count; i++) {
+      const element = elements.nth(i);
+
+      await element.waitFor({ state: 'visible', timeout: 10000 });
+
+      const textContent = await element.textContent();
+
+      if (textContent) {
+        const isMatch = exactMatch
+          ? textContent.trim() === expectedText.trim()
+          : textContent.includes(expectedText);
+
+        if (isMatch) {
+          expect(textContent).toContain(expectedText); // Playwright assertion
+          console.log(
+            `Text "${expectedText}" verified successfully in selector: ${selector}`,
+          );
+          return;
+        }
+      }
+    }
+
+    // If no matching element was found, it throws an error directly
+    const allTextContent = await elements.allTextContents();
+    console.error(
+      `Verification failed for text: Expected "${expectedText}". Selector content: ${allTextContent.join(", ")}`,
+    );
+    throw new Error(
+      exactMatch
+        ? `Expected exact text "${expectedText}" not found in selector "${selector}".`
+        : `Expected partial text "${expectedText}" not found in selector "${selector}".`,
+    );
+  }
+
 }
 
 export class BackstageShowcase {
@@ -145,4 +197,5 @@ export class BackstageShowcase {
       await this.uiHelper.verifyRowsInTable([allPRs[i].title], false);
     }
   }
+
 }
