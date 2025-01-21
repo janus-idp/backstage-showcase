@@ -236,15 +236,6 @@
       ]
     },
     {
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "groupName": "types ",
-      "matchPackageNames": [
-        "@types/{/,}**"
-      ]
-    },
-    {
       "extends": [
         "monorepo:opentelemetry-js"
       ],
