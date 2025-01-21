@@ -17,7 +17,7 @@ test.describe.serial("GitHub integration with Org data fetching", () => {
   test("Verify that fetching the groups of the first org works", async ({
     page,
   }) => {
-    await page.goto("/catalog");
+    await page.goto("catalog");
     await uiHelper.selectMuiBox("Kind", "Group");
 
     await uiHelper.searchInputPlaceholder("maintainers");
