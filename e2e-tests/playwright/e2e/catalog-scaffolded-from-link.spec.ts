@@ -112,7 +112,36 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
 
     // Verify the scaffoldedFrom relation in the YAML view of the entity
     await catalogImport.inspectEntityAndVerifyYaml(
-      `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
+      `apiVersion: backstage.io/v1alpha1
+    kind: Component
+    metadata:
+      namespace: default
+      annotations:
+        backstage.io/managed-by-location: url:https://github.com/janus-qe/test-scaffolded-1726666652674/tree/master/catalog-info.yaml
+        backstage.io/managed-by-origin-location: url:https://github.com/janus-qe/test-scaffolded-1726666652674/blob/master/catalog-info.yaml
+        backstage.io/view-url: https://github.com/janus-qe/test-scaffolded-1726666652674/tree/master/catalog-info.yaml
+        backstage.io/edit-url: https://github.com/janus-qe/test-scaffolded-1726666652674/edit/master/catalog-info.yaml
+        backstage.io/source-location: url:https://github.com/janus-qe/test-scaffolded-1726666652674/tree/master/
+        github.com/project-slug: janus-qe/test-scaffolded-1726666652674
+        backstage.io/techdocs-ref: dir:.
+        backstage.io/createdAt: 9/18/2024, 1:36:48 PM
+        custom.io/other: value
+      name: test-scaffoldedfromlink-1726666652674
+      description: react app using template
+      labels:
+        other: test-label
+      uid: d30fb92c-0157-404c-a1fe-ac0921113b1e
+      etag: 935267d1fb9158f902f8b8d5264d1621acb24271
+    relations:
+      - type: ownedBy
+        targetRef: group:janus-qe/maintainers
+      - type: scaffoldedFrom
+        targetRef: template:default/create-react-app-template-with-timestamp-entityref
+    spec:
+      type: website
+      lifecycle: experimental
+      owner: group:janus-qe/maintainers
+      scaffoldedFrom: template:default/create-react-app-template-with-timestamp-entityref`,
     );
   });
 
