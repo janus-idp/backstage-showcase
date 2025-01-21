@@ -83,6 +83,7 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   });
 
   test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
+    await page.goto("/catalog");
     await uiHelper.clickByDataTestId("user-picker-all");
     await uiHelper.searchInputPlaceholder("scaffoldedfromlink-\n");
     await clickOnScaffoldedFromLink();
