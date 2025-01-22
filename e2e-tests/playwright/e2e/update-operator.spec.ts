@@ -34,6 +34,7 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   kubeTest("Build OperatorScript", async ({ namespace, kube }) => {
     const operator = await OperatorScript.build("rhdh-operator");
+    await operator.installBackstageCRD("rhdh-operator");
     await operator.run(["-v 1.3", "--install-operator developer-hub"]);
 
     // await kube.createDeployment(namespace);

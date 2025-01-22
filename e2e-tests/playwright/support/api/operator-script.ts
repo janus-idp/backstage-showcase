@@ -44,6 +44,18 @@ export class OperatorScript {
     return `${process.cwd()}/playwright/data/backstage-operator.yaml`;
   }
 
+  async installBackstageCRD(namespace = "default") {
+    await runShellCmd(`
+      timeout 300 bash -c '
+      while ! oc get crd/backstages.rhdh.redhat.com -n "${namespace}" >/dev/null 2>&1; do
+          echo "Waiting for Backstage CRD to be created..."
+          sleep 20
+      done
+      echo "Backstage CRD is created."
+      ' || echo "Error: Timed out waiting for Backstage CRD creation."
+    `);
+  }
+
   // https://github.com/redhat-developer/rhdh-operator/blob/main/.rhdh/scripts/install-rhdh-catalog-source.sh
   async run(options: string[]) {
     try {
