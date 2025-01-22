@@ -39,18 +39,20 @@ test.describe("Test Topology Plugin", () => {
     await uiHelper.verifyHeading("Pods");
     await uiHelper.verifyHeading("Services");
     await uiHelper.verifyHeading("Routes");
-    await page
-      .getByTestId("routes-list")
-      .getByRole("link", { name: "http://topology-test-route/" })
-      .click();
+    await expect(
+      page
+        .getByTestId("routes-list")
+        .getByRole("link", { name: "http://topology-test-route/" }),
+    ).toBeVisible();
     await uiHelper.verifyText("Location:");
     if (await page.getByText("Ingresses").isVisible()) {
       await uiHelper.verifyHeading("Ingresses");
       await uiHelper.verifyText("I");
-      await page
-        .getByTestId("ingress-list")
-        .getByRole("link", { name: "http://topology-test-route/" })
-        .click();
+      await expect(
+        page
+          .getByTestId("ingress-list")
+          .getByRole("link", { name: "http://topology-test-route/" }),
+      ).toBeVisible();
       await expect(page.locator("pre")).toBeVisible();
     }
     await expect(page.getByTitle("Deployment")).toBeVisible();
