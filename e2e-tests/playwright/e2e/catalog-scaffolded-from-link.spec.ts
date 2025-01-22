@@ -112,7 +112,7 @@ test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
 
     // Verify the scaffoldedFrom relation in the YAML view of the entity
     await catalogImport.inspectEntityAndVerifyYaml(
-        `relations:
+      `relations:
           - type: ownedBy
             targetRef: group:janus-qe/maintainers
           - type: scaffoldedFrom
