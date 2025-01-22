@@ -6,9 +6,10 @@ const test = base.extend<{
   common: Common;
   uiHelper: UIhelper;
 }>({
-  common: async ({ page }) => {
+  common: async ({ page }, use) => {
     const common = new Common(page);
     await common.loginAsKeycloakUser();
+    await use(common);
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   uiHelper: async ({ page, common }, use) => {

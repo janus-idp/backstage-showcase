@@ -286,20 +286,12 @@ test.describe
   });
 });
 
-test.describe
-  .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
-  let page: Page;
-  let uiHelper: UIhelper;
-  let common: Common;
-  test.beforeAll(async ({ browser }, testInfo) => {
-    page = (await setupBrowser(browser, testInfo)).page;
-
-    uiHelper = new UIhelper(page);
-    common = new Common(page);
-    await common.loginAsKeycloakUser();
-  });
-
-  test("Bulk Import - Verify users without permission cannot access", async () => {
+test.describe("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
+  test("Bulk Import - Verify users without permission cannot access", async ({
+    page,
+  }) => {
+    await new Common(page).loginAsKeycloakUser();
+    const uiHelper = new UIhelper(page);
     await uiHelper.openSidebar("Bulk import");
     await uiHelper.verifyText("Permission required");
     expect(await uiHelper.isBtnVisible("Add")).toBeFalsy();
