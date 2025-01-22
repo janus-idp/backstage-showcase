@@ -267,6 +267,20 @@ wait_for_deployment() {
     return 1
 }
 
+wait_for_svc(){
+  local svc_name=$1
+  local namespace=$2
+  local timeout=${3:-300}
+  
+  timeout $timeout bash -c "
+    while ! oc get svc $svc_name -n $namespace &> /dev/null; do
+        echo "Waiting for $svc_name service to be created..."
+        sleep 5
+    done
+    echo "Service $svc_name is created."
+    " || echo "Error: Timed out waiting for $svc_name service creation."
+}
+
 # Creates an OpenShift Operator subscription
 install_subscription(){
   name=$1  # Name of the subscription
@@ -625,6 +639,7 @@ install_acm_operator(){
   oc apply -f "${DIR}/cluster/operators/acm/operator-group.yaml"
   oc apply -f "${DIR}/cluster/operators/acm/subscription-acm.yaml"
   wait_for_deployment "open-cluster-management" "multiclusterhub-operator"
+  wait_for_svc multiclusterhub-operator-webhook open-cluster-management
   oc apply -f "${DIR}/cluster/operators/acm/multiclusterhub.yaml"
   # wait until multiclusterhub is Running.
   timeout 900 bash -c 'while true; do 
