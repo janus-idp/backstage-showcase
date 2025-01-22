@@ -46,16 +46,18 @@ export class OperatorScript {
 
   async installBackstageCRD(namespace = "default") {
     const command = `
-      while ! oc get crd/backstages.rhdh.redhat.com -n "${namespace}" >/dev/null 2>&1; do
+      echo "Verifying creation of crd/backstages.rhdh.redhat.com in namespace: ${namespace}"
+      while ! oc get crd/backstages.rhdh.redhat.com -n "${namespace}"; do
         echo "Waiting for Backstage CRD to be created..."
         sleep 20
       done
       echo "Backstage CRD is created."
     `;
     try {
-      await runShellCmd(command, 300_000);
+      await runShellCmd(command, 600_000);
       console.log("Backstage CRD installation confirmed.");
     } catch (error) {
+      console.log(error);
       throw new Error(`Error during Backstage CRD installation: ${error}`);
     }
   }
