@@ -455,6 +455,7 @@ test.describe.serial("Test RBAC", () => {
     test("Test catalog-entity create is allowed", async () => {
       await uiHelper.openSidebar("Create...");
       expect(await uiHelper.isLinkVisible("Register Existing Component"));
+      await uiHelper.clickButton("Register Existing Component");
       const catalogImport = new CatalogImport(page);
       const component =
         "https://github.com/janus-qe/custom-catalog-entities/blob/main/timestamp-catalog-info.yaml";
