@@ -1,7 +1,6 @@
 import React, { PropsWithChildren, useContext, useState } from 'react';
 
 import {
-  ErrorBoundary,
   Sidebar,
   SidebarDivider,
   SidebarGroup,
@@ -30,9 +29,9 @@ import { makeStyles } from 'tss-react/mui';
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
 import DynamicRootContext, {
-  MountPoints,
   ResolvedMenuItem,
 } from '../DynamicRoot/DynamicRootContext';
+import { ApplicationHeaders } from './ApplicationHeaders';
 import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
 
@@ -101,19 +100,6 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
       style={menuItemStyle}
     />
   );
-};
-
-const ApplicationHeaders = ({ position }: { position: string }) => {
-  const { mountPoints } = useContext(DynamicRootContext);
-  const appHeaderMountPoints = mountPoints['application/header'] ?? [];
-  return appHeaderMountPoints
-    ?.filter(({ config }) => config?.layout?.position === position)
-    .map(({ Component, config }, index) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <ErrorBoundary key={index}>
-        <Component {...config?.props} />
-      </ErrorBoundary>
-    ));
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
