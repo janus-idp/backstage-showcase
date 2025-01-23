@@ -475,7 +475,7 @@ apply_yaml_files() {
 
     # Create Deployment and Pipeline for Topology test.
     oc apply -f "$dir/resources/topology_test/topology-test.yaml"
-    if [[ "${project}" == *showcase-k8s* ]]; then
+    if [[ "${project}" == *k8s* ]]; then
       oc apply -f "$dir/resources/topology_test/topology-test-ingress.yaml"
     else
       oc apply -f "$dir/resources/topology_test/topology-test-route.yaml"
