@@ -29,10 +29,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
-import DynamicRootContext, {
-  ResolvedMenuItem,
-  ScalprumMountPoint,
-} from '../DynamicRoot/DynamicRootContext';
+import DynamicRootContext, { MountPoints, ResolvedMenuItem } from '../DynamicRoot/DynamicRootContext';
 import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
 
@@ -103,29 +100,30 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   );
 };
 
-const ApplicationHeader = ({
+const ApplicationHeaders = ({
   mountPoints,
   position,
 }: {
-  mountPoints: ScalprumMountPoint[];
+  mountPoints: MountPoints;
   position: string;
-}) =>
-  mountPoints
-    ?.filter(({ config }) => config?.layout?.position === position)
-    .map(({ Component, config }, index) => (
-      <ErrorBoundary
+}) => {
+  const appHeaderMountPoints = mountPoints['application/header'] ?? [];
+  return (
+    appHeaderMountPoints
+      ?.filter(({ config }) => config?.layout?.position === position)
+      .map(({ Component, config }, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        key={index}
-      >
-        <Component {...config?.props} />
-      </ErrorBoundary>
-    ));
+        <ErrorBoundary key={index}>
+          <Component {...config?.props} />
+        </ErrorBoundary>
+      ))
+  );
+};
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const { dynamicRoutes, menuItems, mountPoints } =
     useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
-  const appHeaderMountPoints = mountPoints['application/header'] ?? [];
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
     usePermission({
@@ -271,15 +269,9 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
   return (
     <>
-      <ApplicationHeader
-        mountPoints={appHeaderMountPoints}
-        position="above-sidebar"
-      />
+      <ApplicationHeaders mountPoints={mountPoints} position="above-sidebar" />
       <SidebarPage>
-        <ApplicationHeader
-          mountPoints={appHeaderMountPoints}
-          position="above-main-content"
-        />
+        <ApplicationHeaders mountPoints={mountPoints} position="above-main-content" />
         <Sidebar>
           <SidebarLogo />
           <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">

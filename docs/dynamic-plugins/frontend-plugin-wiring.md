@@ -425,6 +425,38 @@ Here are the default catalog entity routes in the default order:
 
 The visibility of a tab is derived from the kind of entity that is being displayed along with the visibility guidance mentioned in "[Using mount points](#using-mount-points)".
 
+## Adding global header
+The frontend system also allows users to configure a custom global header and its components.
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    red-hat-developer-hub.backstage-plugin-global-header: # preinstalled plugin
+      mountPoints:
+        - mountPoint: application/header
+          importName: GlobalHeader
+          config:
+            layout:
+              position: above-main-content  # use `above-sidebar` value to position the global header to above the sidebar
+        - mountPoint: application/header/component
+          importName: SearchBar
+          config:
+            slot: start
+            priority: 100 # in `start` slot, the higher priority the left placed in the header
+        - mountPoint: application/header/component
+          importName: CreateDropdown
+          config:
+            slot: start
+            priority: 90
+        - mountPoint: application/header/component
+          importName: ProfileDropdown
+          config:
+            slot: end
+            priority: 100 # in `end` slot, the higher priority the right placed in the header
+        # more optional global header components
+```
+
 ### Provide additional Utility APIs
 
 Backstage offers a Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
