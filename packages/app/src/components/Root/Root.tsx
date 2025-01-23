@@ -103,13 +103,8 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   );
 };
 
-const ApplicationHeaders = ({
-  mountPoints,
-  position,
-}: {
-  mountPoints: MountPoints;
-  position: string;
-}) => {
+const ApplicationHeaders = ({ position }: { position: string }) => {
+  const { mountPoints } = useContext(DynamicRootContext);
   const appHeaderMountPoints = mountPoints['application/header'] ?? [];
   return appHeaderMountPoints
     ?.filter(({ config }) => config?.layout?.position === position)
@@ -122,8 +117,7 @@ const ApplicationHeaders = ({
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const { dynamicRoutes, menuItems, mountPoints } =
-    useContext(DynamicRootContext);
+  const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
@@ -270,12 +264,9 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
   return (
     <>
-      <ApplicationHeaders mountPoints={mountPoints} position="above-sidebar" />
+      <ApplicationHeaders position="above-sidebar" />
       <SidebarPage>
-        <ApplicationHeaders
-          mountPoints={mountPoints}
-          position="above-main-content"
-        />
+        <ApplicationHeaders position="above-main-content" />
         <Sidebar>
           <SidebarLogo />
           <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">

@@ -440,22 +440,6 @@ dynamicPlugins:
           config:
             layout:
               position: above-main-content # use `above-sidebar` value to position the global header to above the sidebar
-        - mountPoint: application/header/component
-          importName: SearchBar
-          config:
-            slot: start
-            priority: 100 # in `start` slot, the higher priority the left placed in the header
-        - mountPoint: application/header/component
-          importName: CreateDropdown
-          config:
-            slot: start
-            priority: 90
-        - mountPoint: application/header/component
-          importName: ProfileDropdown
-          config:
-            slot: end
-            priority: 100 # in `end` slot, the higher priority the right placed in the header
-        # more optional global header components
 ```
 
 ### Provide additional Utility APIs
