@@ -29,7 +29,10 @@ import { makeStyles } from 'tss-react/mui';
 
 import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
-import DynamicRootContext, { MountPoints, ResolvedMenuItem } from '../DynamicRoot/DynamicRootContext';
+import DynamicRootContext, {
+  MountPoints,
+  ResolvedMenuItem,
+} from '../DynamicRoot/DynamicRootContext';
 import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
 
@@ -108,16 +111,14 @@ const ApplicationHeaders = ({
   position: string;
 }) => {
   const appHeaderMountPoints = mountPoints['application/header'] ?? [];
-  return (
-    appHeaderMountPoints
-      ?.filter(({ config }) => config?.layout?.position === position)
-      .map(({ Component, config }, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <ErrorBoundary key={index}>
-          <Component {...config?.props} />
-        </ErrorBoundary>
-      ))
-  );
+  return appHeaderMountPoints
+    ?.filter(({ config }) => config?.layout?.position === position)
+    .map(({ Component, config }, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <ErrorBoundary key={index}>
+        <Component {...config?.props} />
+      </ErrorBoundary>
+    ));
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
@@ -271,7 +272,10 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     <>
       <ApplicationHeaders mountPoints={mountPoints} position="above-sidebar" />
       <SidebarPage>
-        <ApplicationHeaders mountPoints={mountPoints} position="above-main-content" />
+        <ApplicationHeaders
+          mountPoints={mountPoints}
+          position="above-main-content"
+        />
         <Sidebar>
           <SidebarLogo />
           <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">

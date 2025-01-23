@@ -426,6 +426,7 @@ Here are the default catalog entity routes in the default order:
 The visibility of a tab is derived from the kind of entity that is being displayed along with the visibility guidance mentioned in "[Using mount points](#using-mount-points)".
 
 ## Adding global header
+
 The frontend system also allows users to configure a custom global header and its components.
 
 ```yaml
@@ -438,7 +439,7 @@ dynamicPlugins:
           importName: GlobalHeader
           config:
             layout:
-              position: above-main-content  # use `above-sidebar` value to position the global header to above the sidebar
+              position: above-main-content # use `above-sidebar` value to position the global header to above the sidebar
         - mountPoint: application/header/component
           importName: SearchBar
           config:
