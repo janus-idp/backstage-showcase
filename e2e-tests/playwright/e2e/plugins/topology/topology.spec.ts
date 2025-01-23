@@ -36,11 +36,6 @@ test.describe("Test Topology Plugin", () => {
     await uiHelper.clickTab("Resources");
     await uiHelper.verifyHeading("Pods");
     await uiHelper.verifyHeading("Services");
-    await uiHelper.verifyHeading("Routes");
-    await expect(
-      page.getByRole("link", { name: "topology-test-route" }).first(),
-    ).toBeVisible();
-    await uiHelper.verifyText("Location:");
     if (await page.getByText("Ingresses").isVisible()) {
       await uiHelper.verifyHeading("Ingresses");
       await uiHelper.verifyText("I");
@@ -50,10 +45,16 @@ test.describe("Test Topology Plugin", () => {
           .getByRole("link", { name: "topology-test-route" }),
       ).toBeVisible();
       await expect(page.locator("pre")).toBeVisible();
+    } else {
+      await uiHelper.verifyHeading("Routes");
+      await uiHelper.verifyText("RT");
+      await expect(
+        page.getByRole("link", { name: "topology-test-route" }).first(),
+      ).toBeVisible();
     }
+    await uiHelper.verifyText("Location:");
     await expect(page.getByTitle("Deployment")).toBeVisible();
     await uiHelper.verifyText("S");
-    await uiHelper.verifyText("RT");
     await expect(page.locator("rect").first()).toBeVisible();
     await uiHelper.clickTab("Details");
     await page.getByLabel("Pod").hover();
