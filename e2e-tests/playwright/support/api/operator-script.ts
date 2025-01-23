@@ -54,7 +54,13 @@ export class OperatorScript {
       echo "Backstage CRD is created."
     `;
     try {
-      await runShellCmd(command, 600_000);
+      await runShellCmd(command, 30_000)
+        .then((e) => {
+          console.log(e);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
       console.log("Backstage CRD installation confirmed.");
     } catch (error) {
       console.log(error);
