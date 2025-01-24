@@ -52,6 +52,23 @@ jobs:
           git fetch base-origin ${{ github.event.pull_request.base.ref }}
           git merge --no-edit base-origin/${{ github.event.pull_request.base.ref }}
 
+      - name: Check if Image Already Exists
+        id: image-check
+        run: |
+          IMAGE_TAG="pr-${{ github.event.number }}"
+          IMAGE_NAME="${{ env.REGISTRY }}/rhdh-community/rhdh:${IMAGE_TAG}"
+
+          # Check if any image tag exists for the PR
+          IMAGE_TAGS=$(curl -s "https://quay.io/api/v1/repository/rhdh-community/rhdh/tag/" | jq -r --arg tag "$IMAGE_TAG" '.tags[] | select(.name | startswith($tag)) | .name')
+
+          if [ -n "$IMAGE_TAGS" ]; then
+            echo "Image $IMAGE_NAME already exists."
+            echo "image_exists=true" >> $GITHUB_ENV
+          else
+            echo "Image $IMAGE_NAME does not exist."
+            echo "image_exists=false" >> $GITHUB_ENV
+          fi
+
       - name: Determine Changed Files
         id: changes
         run: |
@@ -63,12 +80,13 @@ jobs:
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
+          # Check if changes are only in .ibm/ or e2e-tests/
           if echo "$CHANGED_FILES" | grep -qvE '^(e2e-tests/|\.ibm/)'; then
-            echo "Changes detected outside the e2e-tests or .ibm folders. Proceeding with the build."
-            echo "proceed_with_build=true" >> $GITHUB_ENV
+            echo "Changes detected outside the e2e-tests or .ibm folders. Build required."
+            echo "relevant_changes=true" >> $GITHUB_ENV
           else
-            echo "No significant changes detected. Skipping the build."
-            echo "proceed_with_build=false" >> $GITHUB_ENV
+            echo "No relevant changes detected."
+            echo "relevant_changes=false" >> $GITHUB_ENV
           fi
 
       - name: Get the last commit short SHA of the PR
