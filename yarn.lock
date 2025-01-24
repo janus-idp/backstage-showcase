@@ -12605,6 +12605,79 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@janus-idp/cli@npm:1.18.6":
+  version: 1.18.6
+  resolution: "@janus-idp/cli@npm:1.18.6"
+  dependencies:
+    "@backstage/cli-common": ^0.1.14
+    "@backstage/cli-node": ^0.2.9
+    "@backstage/config": ^1.2.0
+    "@backstage/config-loader": ^1.9.1
+    "@backstage/errors": ^1.2.4
+    "@backstage/eslint-plugin": ^0.1.10
+    "@backstage/types": ^1.1.1
+    "@manypkg/get-packages": ^1.1.3
+    "@openshift/dynamic-plugin-sdk-webpack": ^3.0.0
+    "@pmmmwh/react-refresh-webpack-plugin": ^0.5.7
+    "@rollup/plugin-commonjs": ^25.0.4
+    "@rollup/plugin-json": ^6.0.0
+    "@rollup/plugin-node-resolve": ^15.2.1
+    "@rollup/plugin-yaml": ^4.0.0
+    "@svgr/rollup": ^8.1.0
+    "@svgr/webpack": ^6.5.1
+    "@yarnpkg/lockfile": ^1.1.0
+    "@yarnpkg/parsers": ^3.0.0-rc.4
+    bfj: ^8.0.0
+    chalk: ^4.0.0
+    chokidar: ^3.3.1
+    codeowners: ^5.1.1
+    commander: ^9.1.0
+    css-loader: ^6.5.1
+    esbuild: ^0.23.0
+    esbuild-loader: ^2.18.0
+    eslint: ^8.49.0
+    eslint-config-prettier: ^8.10.0
+    eslint-webpack-plugin: ^3.2.0
+    fork-ts-checker-webpack-plugin: ^7.0.0-alpha.8
+    fs-extra: ^10.1.0
+    gitconfiglocal: 2.1.0
+    handlebars: ^4.7.7
+    html-webpack-plugin: ^5.3.1
+    is-native-module: ^1.1.3
+    lodash: ^4.17.21
+    mini-css-extract-plugin: ^2.4.2
+    node-libs-browser: ^2.2.1
+    npm-packlist: ^5.0.0
+    ora: ^5.3.0
+    postcss: ^8.2.13
+    react-dev-utils: ^12.0.0-next.60
+    react-refresh: ^0.14.0
+    recursive-readdir: ^2.2.2
+    rollup: ^2.78.0
+    rollup-plugin-dts: ^4.0.1
+    rollup-plugin-esbuild: ^4.7.2
+    rollup-plugin-postcss: ^4.0.0
+    rollup-pluginutils: ^2.8.2
+    semver: ^7.5.4
+    style-loader: ^3.3.1
+    swc-loader: ^0.2.3
+    typescript-json-schema: ^0.64.0
+    webpack: ^5.89.0
+    webpack-dev-server: ^4.15.1
+    yaml: ^2.5.1
+    yml-loader: ^2.1.0
+    yn: ^4.0.0
+  peerDependencies:
+    "@microsoft/api-extractor": ^7.21.2
+  peerDependenciesMeta:
+    "@microsoft/api-extractor":
+      optional: true
+  bin:
+    janus-cli: bin/janus-cli
+  checksum: 0f1e8c7cc0717daf99306782f14088cc962e7bb4815d89ed4a0f078aeb792c41542e5f3d2ca9ccc925e86a3064f3fccafed75752bb4c1150dcd0ff4e56115a9d
+  languageName: node
+  linkType: hard
+
 "@janus-idp/shared-react@npm:^2.13.0, @janus-idp/shared-react@npm:^2.13.1":
   version: 2.13.1
   resolution: "@janus-idp/shared-react@npm:2.13.1"
@@ -24699,7 +24772,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/plugin-catalog-backend-module-gitlab": 0.4.4
     "@backstage/plugin-catalog-backend-module-gitlab-org": 0.2.5
-    "@janus-idp/cli": 1.18.5
+    "@janus-idp/cli": 1.18.6
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -24890,7 +24963,7 @@ __metadata:
     "@backstage/cli": 0.28.2
     "@backstage/plugin-search-backend-module-techdocs": 0.3.1
     "@backstage/plugin-techdocs-backend": 1.11.5
-    "@janus-idp/cli": 1.18.5
+    "@janus-idp/cli": 1.18.6
     typescript: 5.6.3
   languageName: unknown
   linkType: soft
@@ -42585,7 +42658,7 @@ __metadata:
   resolution: "roadiehq-scaffolder-backend-argocd@workspace:dynamic-plugins/wrappers/roadiehq-scaffolder-backend-argocd-dynamic"
   dependencies:
     "@backstage/cli": 0.28.2
-    "@janus-idp/cli": 1.18.5
+    "@janus-idp/cli": 1.18.6
     "@roadiehq/scaffolder-backend-argocd": 1.2.1
     typescript: 5.6.3
   languageName: unknown
