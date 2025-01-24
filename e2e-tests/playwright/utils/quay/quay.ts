@@ -3,7 +3,7 @@ import { UI_HELPER_ELEMENTS } from "../../support/pageObjects/global-obj";
 
 export class ImageRegistry {
   static getAllCellsIdentifier() {
-    const tagText = /^pr-\d+(-[a-zA-Z0-9]+)?$/i; // Example: pr-123 or pr-123-abc
+    const tagText = /^(pr|next)-.*$/i; // Example: pr-123 or pr-123-abc
     const lastModifiedDate =
       /^[A-Za-z]{3} \d{1,2}, \d{4}, \d{1,2}:\d{2} (AM|PM)$/; // Example: Jan 21, 2025, 7:54 PM
     const size = /^\d+(\.\d+)?\s?(GB|MB)$/; // Example: 1.16 GB or 512 MB
