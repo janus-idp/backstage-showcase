@@ -62,11 +62,11 @@ jobs:
           IMAGE_TAGS=$(curl -s "https://quay.io/api/v1/repository/rhdh-community/rhdh/tag/" | jq -r --arg tag "$IMAGE_TAG" '.tags[] | select(.name | startswith($tag)) | .name')
 
           if [ -n "$IMAGE_TAGS" ]; then
-          echo "Image $IMAGE_NAME already exists."
-          echo "image_exists=true" >> $GITHUB_ENV
+            echo "Image $IMAGE_NAME already exists."
+            echo "image_exists=true" >> $GITHUB_ENV
           else
-          echo "Image $IMAGE_NAME does not exist."
-          echo "image_exists=false" >> $GITHUB_ENV
+            echo "Image $IMAGE_NAME does not exist."
+            echo "image_exists=false" >> $GITHUB_ENV
           fi
 
       - name: Determine Changed Files
