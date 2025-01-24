@@ -36,11 +36,11 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-catalog-backend-module-github": "0.7.8",
+    "@backstage/plugin-catalog-backend-module-github": "0.7.9",
     "@backstage/plugin-catalog-backend-module-github-org": "0.3.6"
   },
   "devDependencies": {
-    "@janus-idp/cli": "1.18.5",
+    "@janus-idp/cli": "1.18.6",
     "typescript": "5.6.3"
   },
   "files": [
