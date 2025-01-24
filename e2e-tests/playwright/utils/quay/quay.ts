@@ -5,7 +5,7 @@ export class ImageRegistry {
   static getAllCellsIdentifier() {
     //create a regex to verify if the string contains pr on it
 
-    const tagText = /pr/i;
+    const tagText = /pr|next/i;
     const lastModifiedDate = new RegExp(
       /^[A-Za-z]{3} \d{1,2}, \d{4}, \d{1,2}:\d{2} (AM|PM)$/,
     );
