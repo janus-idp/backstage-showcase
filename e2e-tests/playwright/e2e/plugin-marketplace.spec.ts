@@ -14,5 +14,6 @@ test.describe("Plugin Marketplace", () => {
   });
   test("The navBar includes the marketplace", async ({ uiHelper }) => {
     await uiHelper.openSidebar("Marketplace");
+    await uiHelper.waitForTitle("Plugins");
   });
 });
