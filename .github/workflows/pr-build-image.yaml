@@ -67,7 +67,7 @@ jobs:
             echo "Changes detected outside the e2e-tests or .ibm folders. Proceeding with the build."
             echo "proceed_with_build=true" >> $GITHUB_ENV
           else
-            echo "No changes outside the e2e-tests or .ibm folders. Skipping the build."
+            echo "No significant changes detected. Skipping the build."
             echo "proceed_with_build=false" >> $GITHUB_ENV
           fi
 
@@ -80,10 +80,11 @@ jobs:
           IMAGE_TAG="pr-${{ github.event.number }}"
           IMAGE_NAME="${{ env.REGISTRY }}/rhdh-community/rhdh:${IMAGE_TAG}"
 
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://quay.io/rhdh-community/rhdh/manifests/${IMAGE_TAG}")
+          # Check if any image tag exists for the PR
+          IMAGE_TAGS=$(curl -s "https://quay.io/api/v1/repository/rhdh-community/rhdh/tag/" | jq -r --arg tag "$IMAGE_TAG" '.tags[] | select(.name | startswith($tag)) | .name')
 
-          if [ "$HTTP_CODE" -eq 200 ]; then
-            echo "Image $IMAGE_NAME already exists. Skipping the build."
+          if [ -n "$IMAGE_TAGS" ]; then
+            echo "Image $IMAGE_NAME or its variants already exist. Skipping the build."
             echo "image_exists=true" >> $GITHUB_ENV
           else
             echo "Image $IMAGE_NAME does not exist. Proceeding with the build."
