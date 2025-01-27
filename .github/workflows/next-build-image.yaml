@@ -102,6 +102,14 @@ jobs:
       needs:
         - build-image
       steps:
+        - name: Prepare
+          run: |
+            ref_name=${{ github.ref_name }}
+            if [ "$ref_name" == "main" ]; then
+              ref_name="next"
+            fi
+            echo "REF_NAME=$ref_name" >> $GITHUB_ENV
+
         - name: Checkout
           uses: actions/checkout@v4
           with:
