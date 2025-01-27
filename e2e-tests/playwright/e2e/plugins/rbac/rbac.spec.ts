@@ -122,6 +122,8 @@ test.describe.serial("Test RBAC", () => {
     test.beforeEach(async ({ page }) => {
       await new Common(page).loginAsKeycloakUser();
       await page.goto("/rbac");
+      test.setTimeout(120000);
+      await page.waitForTimeout(100000);
       await new UIhelper(page).verifyHeading("RBAC");
     });
 

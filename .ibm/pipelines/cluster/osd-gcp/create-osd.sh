@@ -37,7 +37,7 @@ SERVICE_ACCOUNT_FILE=$WORKSPACE/gcp_service_account_json.json
 echo "creating OSD_VERSION : $OSD_VERSION"
 
 
-ocm create cluster --ccs --provider gcp --region us-east1 --service-account-file  $SERVICE_ACCOUNT_FILE --subscription-type marketplace-gcp --marketplace-gcp-terms  --version "$OSD_VERSION" "$CLUSTER_NAME"
+ocm create cluster --ccs --provider gcp --compute-machine-type n2-standard-4 --compute-nodes 2 --region us-east1 --service-account-file  $SERVICE_ACCOUNT_FILE --subscription-type marketplace-gcp --marketplace-gcp-terms  --version "$OSD_VERSION" "$CLUSTER_NAME"
 CLUSTER_ID=$(ocm list clusters --columns "id,name" | grep $CLUSTER_NAME| cut -d " " -f1)
 
 echo "CLUSTER_ID : $CLUSTER_ID"
