@@ -20,6 +20,7 @@ import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 
+import getDynamicRootConfig from '../../utils/dynamicUI/getDynamicRootConfig';
 import { entityPage } from '../catalog/EntityPage';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
@@ -37,7 +38,6 @@ const AppBase = () => {
     dynamicRoutes,
     entityTabOverrides,
     scaffolderFieldExtensions,
-    techdocsAddons,
   } = useContext(DynamicRootContext);
 
   const myCustomColumnsFunc: CatalogTableColumnsFunc = entityListContext => [
@@ -136,22 +136,7 @@ const AppBase = () => {
                       element={<Component {...props} />}
                     >
                       {typeof staticJSXContent === 'function'
-                        ? staticJSXContent(
-                            techdocsAddons.map(
-                              ({
-                                scope,
-                                module,
-                                importName: techdocsImportName,
-                                Component: TechdocsComponent,
-                                config,
-                              }) => (
-                                <TechdocsComponent
-                                  key={`${scope}-${module}-${techdocsImportName}`}
-                                  {...config.props}
-                                />
-                              ),
-                            ),
-                          )
+                        ? staticJSXContent(getDynamicRootConfig())
                         : staticJSXContent}
                     </Route>
                   );
