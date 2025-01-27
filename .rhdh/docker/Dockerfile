@@ -278,27 +278,11 @@ WORKDIR $CONTAINER_SOURCE/
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
 # hadolint ignore=DL3013,DL3041,SC2086
 RUN microdnf update --setopt=install_weak_deps=0 -y && \
-  microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++ skopeo; \
-  ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
-  ln -s /usr/bin/pip3.11 /usr/bin/pip; \
-  # ls -la $REMOTE_SOURCES_DIR/ $REMOTE_SOURCES_DIR/upstream2/ $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
-  # cat $REMOTE_SOURCES_DIR/upstream2/cachito.env && \
-  # cachito.env contains path to cert:
-  # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
-  source "$REMOTE_SOURCES_DIR"/upstream2/cachito.env && \
-  # fix ownership for pip install folder
-  mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
-  # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
-  pushd "$REMOTE_SOURCES_DIR"/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
-  set -xe; \
-  python3.11 -V; pip3.11 -V; \
-  pip3.11 install --no-cache-dir --upgrade pip setuptools pyyaml; \
-  pip3.11 install --no-cache-dir -r requirements.txt -r requirements-build.txt; mkdocs --version; \
-  popd >/dev/null; \
-  microdnf clean all; rm -fr "$REMOTE_SOURCES_DIR"/upstream2
-
-# Downstream only - Make python3.11 the default python
-RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+  microdnf install -y python3.11 python3.11-pip skopeo && \
+  alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+  alternatives --install /usr/bin/pip pip /usr/bin/pip3.11 1 && \
+  pip install mkdocs-techdocs-core~=1.3.3 && \
+  microdnf clean all
 
 # Downstream only - copy from build, not cleanup stage
 COPY --from=build --chown=1001:1001 "$REMOTE_SOURCES_DIR"/ ./
