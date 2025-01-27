@@ -32,7 +32,7 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
     expect(kube.checkNamespaceExists(namespace));
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  kubeTest("Build OperatorScript", async ({ namespace, kube }) => {
+  kubeTest("Build OperatorScript", async ({ namespace, kube, page }) => {
     LOGGER.info(`const operator = await OperatorScript.build(namespace);`);
     console.log(`const operator = await OperatorScript.build(namespace);`);
     const operator = await OperatorScript.build(namespace);
@@ -42,10 +42,12 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
     LOGGER.info(
       `await operator.run(["-v 1.3", "--install-operator developer-hub"]);`,
     );
-    console.log(
-      `await operator.run(["-v 1.3", "--install-operator developer-hub"]);`,
+    console.log();
+
+    await page.goto(
+      process.env.K8S_CLUSTER_URL +
+        "/catalog/ns/rhdh-operator?catalogType=OperatorBackedService",
     );
-    await operator.run(["-v 1.3", "--install-operator developer-hub"]);
 
     // await kube.createDeployment(namespace);
   });
