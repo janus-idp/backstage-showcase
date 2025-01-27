@@ -67,10 +67,6 @@ echo "    api_url: $(ocm describe cluster $CLUSTER_ID --json | jq -rc '.api.url'
 echo "    $KUBEADMIN_USER: $KUBEADMIN_PASSWORD" >> $CLUSTER_CONFIG
 echo "    cli: oc login $(ocm describe cluster $CLUSTER_ID --json | jq -rc '.api.url') --username $KUBEADMIN_USER --password $KUBEADMIN_PASSWORD" >> $CLUSTER_CONFIG
 
-echo
-cat $CLUSTER_CONFIG
-echo
-
 export KUBECONFIG=$WORKSPACE/kubeconfig
 rm -rvf $KUBECONFIG
 CLUSTER_API_URL=$(ocm describe cluster $CLUSTER_ID --json | jq -rc '.api.url')
