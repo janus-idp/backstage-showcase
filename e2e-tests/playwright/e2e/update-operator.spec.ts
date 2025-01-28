@@ -26,28 +26,21 @@ const kubeTest = base.extend<OcFixture>({
 });
 
 kubeTest.describe.only("OpenShift Operator Tests", () => {
-  LOGGER.info("starting OpenShift Operator Tests");
   kubeTest.slow();
   kubeTest("Create namespace", async ({ namespace, kube }) => {
     expect(kube.checkNamespaceExists(namespace));
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   kubeTest("Build OperatorScript", async ({ namespace, kube, page }) => {
-    LOGGER.info(`const operator = await OperatorScript.build(namespace);`);
-    console.log(`const operator = await OperatorScript.build(namespace);`);
     const operator = await OperatorScript.build(namespace);
-    LOGGER.info(`await operator.installBackstageCRD(namespace);`);
-    console.log(`await operator.installBackstageCRD(namespace);`);
     await operator.installBackstageCRD(namespace);
-    LOGGER.info(
-      `await operator.run(["-v 1.3", "--install-operator developer-hub"]);`,
-    );
     console.log();
 
     await page.goto(
       process.env.K8S_CLUSTER_URL +
         "/catalog/ns/rhdh-operator?catalogType=OperatorBackedService",
     );
+    kubeTest.fail();
 
     // await kube.createDeployment(namespace);
   });
