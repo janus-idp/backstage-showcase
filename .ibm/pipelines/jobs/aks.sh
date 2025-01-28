@@ -4,7 +4,7 @@ handle_aks() {
   echo "Starting AKS deployment"
   for file in ${DIR}/cluster/aks/*.sh; do source $file; done
 
-  export K8S_CLUSTER_ROUTER_BASE=$AKS_INSTANCE_DOMAIN_NAME
+  export K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   export NAME_SPACE_K8S="showcase-k8s-ci-nightly"
   export NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
 
