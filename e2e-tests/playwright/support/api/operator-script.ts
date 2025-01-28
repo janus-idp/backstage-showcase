@@ -7,6 +7,7 @@ export class OperatorScript {
   readonly scriptPath = `${this.operatorProjectPath}/.rhdh/scripts/install-rhdh-catalog-source.sh`;
   readonly operatorRepo =
     "https://github.com/redhat-developer/rhdh-operator.git";
+  rhdhUrl: string;
 
   private constructor() {}
   public static async build(
@@ -79,6 +80,17 @@ export class OperatorScript {
       const message = result + "";
       LOGGER.info(message);
       console.log(message);
+
+      const regex =
+        /https:\/\/backstage-developer-hub-rhdh-operator\.[a-zA-Z0-9-]+\.devcluster\.openshift\.com/;
+
+      const match = message.match(regex);
+      if (match) {
+        console.log("Extracted URL:", match[0]);
+        this.rhdhUrl = match[0];
+      } else {
+        console.log("URL not found");
+      }
     } catch (e) {
       LOGGER.error(e);
       throw Error(e);
