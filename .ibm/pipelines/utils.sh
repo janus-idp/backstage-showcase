@@ -785,7 +785,7 @@ initiate_deployments() {
     --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
-initiate_rds_deployment() {
+initiate_runtime_deployment() {
   local release_name=$1
   local namespace=$2
   configure_namespace "${namespace}"
