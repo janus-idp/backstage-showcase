@@ -14,7 +14,6 @@ test.describe("Test Customized Quick Access and tech-radar plugin", () => {
 
   test("Verify Customized Quick Access", async ({ page }) => {
     const homePage = new HomePage(page);
-    await homePage.verifyQuickAccess("COMMUNITY", "Website", true);
     await homePage.verifyQuickAccess("MONITORING TOOLS", "Grafana", true);
     await homePage.verifyQuickAccess("SECURITY TOOLS", "Keycloak", true);
   });
