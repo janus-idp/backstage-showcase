@@ -1,7 +1,7 @@
 developerHub:
   flavor: rhdh
 app:
-  title: Janus IDP Backstage Showcase
+  title: RHDH
   baseUrl: http://localhost:3000
   branding:
     fullLogo: ${BASE64_EMBEDDED_FULL_LOGO}
