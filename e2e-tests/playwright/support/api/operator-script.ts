@@ -46,20 +46,15 @@ export class OperatorScript {
 
   async installBackstageCRD(namespace = "default") {
     const command = `oc get crd/backstages.rhdh.redhat.com -n "${namespace}"; oc get crd/backstages.rhdh.redhat.com -n rhdh-operator`;
-    try {
-      await runShellCmd(command)
-        .then(async (e) => {
-          console.log(e);
-          await new Promise((resolve) => setTimeout(resolve, 30_000));
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      console.log("Backstage CRD installation confirmed.");
-    } catch (error) {
-      console.log(error);
-      throw new Error(`Error during Backstage CRD installation: ${error}`);
-    }
+
+    await runShellCmd(command)
+      .then(async (e) => {
+        console.log(e);
+        await new Promise((resolve) => setTimeout(resolve, 30_000));
+      })
+      .catch((e) => {
+        throw new Error(`Error during Backstage CRD installation: ${e}`);
+      });
   }
 
   // https://github.com/redhat-developer/rhdh-operator/blob/main/.rhdh/scripts/install-rhdh-catalog-source.sh
