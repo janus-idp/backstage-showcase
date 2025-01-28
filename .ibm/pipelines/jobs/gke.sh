@@ -18,10 +18,6 @@ handle_gke() {
   gcloud_auth "${GKE_SERVICE_ACCOUNT_NAME}" "/tmp/secrets/GKE_SERVICE_ACCOUNT_KEY"
   gcloud_gke_get_credentials "${GKE_CLUSTER_NAME}" "${GKE_CLUSTER_REGION}" "${GOOGLE_CLOUD_PROJECT}"
 
-  export K8S_CLUSTER_URL=$(oc whoami --show-server)
-  export K8S_CLUSTER_API_SERVER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
-  export OCM_CLUSTER_URL=$(printf "%s" "$K8S_CLUSTER_URL" | base64 | tr -d '\n')
-
   initiate_gke_deployment
   check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}" "${url}" 50 30
   delete_namespace "${NAME_SPACE_K8S}"
