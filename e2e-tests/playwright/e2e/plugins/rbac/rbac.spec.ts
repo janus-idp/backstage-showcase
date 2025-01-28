@@ -125,6 +125,7 @@ test.describe.serial("Test RBAC", () => {
       await common.loginAsKeycloakUser();
       await page.goto("/rbac");
       await common.waitForLoad();
+      await new UIhelper(page).verifyHeading("RBAC", 30_000);
     });
 
     test("Check if Administration side nav is present with RBAC plugin", async ({

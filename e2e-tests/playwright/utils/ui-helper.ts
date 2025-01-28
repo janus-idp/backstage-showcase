@@ -286,13 +286,13 @@ export class UIhelper {
     }
   }
 
-  async verifyHeading(heading: string | RegExp) {
+  async verifyHeading(heading: string | RegExp, timeout: number = 20000) {
     const headingLocator = this.page
       .locator("h1, h2, h3, h4, h5, h6")
       .filter({ hasText: heading })
       .first();
 
-    await headingLocator.waitFor({ state: "visible", timeout: 20000 });
+    await headingLocator.waitFor({ state: "visible", timeout: timeout });
     await expect(headingLocator).toBeVisible();
   }
 
