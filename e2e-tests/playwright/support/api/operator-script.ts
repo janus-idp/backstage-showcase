@@ -81,13 +81,12 @@ export class OperatorScript {
       LOGGER.info(message);
       console.log(message);
 
-      const regex =
-        /https:\/\/backstage-developer-hub-rhdh-operator\.[a-zA-Z0-9-]+\.devcluster\.openshift\.com/;
+      const lines = message.trim().split("\n");
+      const url = lines[lines.length - 1];
 
-      const match = message.match(regex);
-      if (match) {
-        console.log("Extracted URL:", match[0]);
-        this.rhdhUrl = match[0];
+      if (url.includes("https")) {
+        console.log("Extracted URL:", url);
+        this.rhdhUrl = url;
       } else {
         console.log("URL not found");
       }
