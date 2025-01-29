@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useContext, useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 
 import {
   Sidebar,
@@ -27,9 +27,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import { makeStyles } from 'tss-react/mui';
 
-import DynamicRootContext, {
-  ResolvedMenuItem,
-} from '../DynamicRoot/DynamicRootContext';
+import { useDisplayedSidebarItems } from '../../utils/dynamicUI/useDisplayedSidebarItems';
+import { ResolvedMenuItem } from '../DynamicRoot/DynamicRootContext';
 import { ApplicationHeaders } from './ApplicationHeaders';
 import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
@@ -102,7 +101,11 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
+  const {
+    showSearchBar,
+    displayedDynamicRoutes: dynamicRoutes,
+    displayedMenuItems: menuItems,
+  } = useDisplayedSidebarItems();
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
@@ -254,9 +257,11 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <ApplicationHeaders position="above-main-content" />
         <Sidebar>
           <SidebarLogo />
-          <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
-            <SidebarSearchModal />
-          </SidebarGroup>
+          {showSearchBar && (
+            <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
+              <SidebarSearchModal />
+            </SidebarGroup>
+          )}
           <SidebarDivider />
           <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
             {/* Global nav, not org-specific */}
