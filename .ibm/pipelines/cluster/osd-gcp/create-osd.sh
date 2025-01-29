@@ -1,16 +1,13 @@
 #!/bin/bash
 set -e
 
-export OC_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
-export OI_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz
-
 WORKSPACE=$(pwd)/osdcluster
 mkdir -p $WORKSPACE
 export PATH=$WORKSPACE:$PATH
 
-CLIENT_ID=$(cat /tmp/osdsecrets/OSD_CLIENT_ID)
-CLIENT_SECRET=$(cat /tmp/osdsecrets/OSD_CLIENT_SECRET)
-SERVICE_ACCOUNT_FILE=$(cat /tmp/osdsecrets/SERVICE_ACCOUNT_FILE)
+CLIENT_ID="${CLIENT_ID:-$(cat /tmp/osdsecrets/OSD_CLIENT_ID)}"
+CLIENT_SECRET="${CLIENT_SECRET:-$(cat /tmp/osdsecrets/OSD_CLIENT_SECRET)}"
+SERVICE_ACCOUNT_FILE="${SERVICE_ACCOUNT_FILE:-$(cat /tmp/osdsecrets/SERVICE_ACCOUNT_FILE)}"
 OSD_VERSION="${OSD_VERSION:-4.17.10}"
 
 if [ -n "$CLUSTER_NAME" ]; then
