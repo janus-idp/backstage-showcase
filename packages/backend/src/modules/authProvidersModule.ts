@@ -3,11 +3,6 @@ import {
   createBackendModule,
 } from '@backstage/backend-plugin-api';
 import {
-  DEFAULT_NAMESPACE,
-  stringifyEntityRef,
-} from '@backstage/catalog-model';
-import { ConfigSources } from '@backstage/config-loader';
-import {
   defaultAuthProviderFactories,
   ProviderFactories,
   providers,
@@ -19,64 +14,8 @@ import {
 import {
   AuthProviderFactory,
   authProvidersExtensionPoint,
-  AuthResolverCatalogUserQuery,
-  AuthResolverContext,
   createOAuthProviderFactory,
 } from '@backstage/plugin-auth-node';
-
-/**
- * Function is responsible for signing in a user with the catalog user and
- * creating an entity reference based on the provided name parameter.
- * If the user exist in the catalog , it returns the signed-in user.
- * If an error occurs, it issues a token with the user entity reference.
- *
- * @param name
- * @param ctx
- * @returns
- */
-async function signInWithCatalogUserOptional(
-  name: string | AuthResolverCatalogUserQuery,
-  ctx: AuthResolverContext,
-) {
-  try {
-    const query: AuthResolverCatalogUserQuery =
-      typeof name === 'string'
-        ? {
-            entityRef: { name },
-          }
-        : name;
-    const signedInUser = await ctx.signInWithCatalogUser(query);
-
-    return Promise.resolve(signedInUser);
-  } catch (e) {
-    const config = await ConfigSources.toConfig(
-      await ConfigSources.default({}),
-    );
-    const dangerouslyAllowSignInWithoutUserInCatalog =
-      config.getOptionalBoolean('dangerouslyAllowSignInWithoutUserInCatalog') ||
-      false;
-    if (!dangerouslyAllowSignInWithoutUserInCatalog) {
-      throw new Error(
-        `Sign in failed: User not found in the RHDH software catalog. Verify that users/groups are synchronized to the software catalog. For non-production environments, manually provision the user or disable the user provisioning requirement. Refer to the RHDH Authentication documentation for further details.`,
-      );
-    }
-    let entityRef: string = typeof name === 'string' ? name : '';
-    if (typeof name !== 'string' && 'annotations' in name)
-      entityRef = Object.values(name.annotations)[0];
-    const userEntityRef = stringifyEntityRef({
-      kind: 'User',
-      name: entityRef,
-      namespace: DEFAULT_NAMESPACE,
-    });
-
-    return ctx.issueToken({
-      claims: {
-        sub: userEntityRef,
-        ent: [userEntityRef],
-      },
-    });
-  }
-}
 
 function getAuthProviderFactory(providerId: string): AuthProviderFactory {
   switch (providerId) {
@@ -90,7 +29,9 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 'Atlassian user profile does not contain a username',
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await ctx.signInWithCatalogUser({
+              entityRef: { name: userId },
+            });
           },
         },
       });
@@ -102,7 +43,9 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             if (!userId) {
               throw new Error(`Auth0 user profile does not contain an id`);
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await ctx.signInWithCatalogUser({
+              entityRef: { name: userId },
+            });
           },
         },
       });
@@ -158,7 +101,9 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `GitHub user profile does not contain a username`,
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await ctx.signInWithCatalogUser({
+              entityRef: { name: userId },
+            });
           },
         },
       });
@@ -172,7 +117,9 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `GitLab user profile does not contain an username`,
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await ctx.signInWithCatalogUser({
+              entityRef: { name: userId },
+            });
           },
         },
       });
@@ -196,7 +143,9 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 'Google IAP user profile does not contain an email',
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await ctx.signInWithCatalogUser({
+              entityRef: { name: userId },
+            });
           },
         },
       });
@@ -211,7 +160,7 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             if (!name) {
               throw new Error('Request did not contain a user');
             }
-            return await signInWithCatalogUserOptional(name, ctx);
+            return await ctx.signInWithCatalogUser({ entityRef: { name } });
           },
         },
       });
@@ -241,7 +190,9 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
                 `OneLogin user profile does not contain a user id`,
               );
             }
-            return await signInWithCatalogUserOptional(userId, ctx);
+            return await ctx.signInWithCatalogUser({
+              entityRef: { name: userId },
+            });
           },
         },
       });
@@ -253,14 +204,11 @@ function getAuthProviderFactory(providerId: string): AuthProviderFactory {
             if (!userId) {
               throw new Error(`Microsoft user profile does not contain an id`);
             }
-            return await signInWithCatalogUserOptional(
-              {
-                annotations: {
-                  'graph.microsoft.com/user-id': userId,
-                },
+            return await ctx.signInWithCatalogUser({
+              annotations: {
+                'graph.microsoft.com/user-id': userId,
               },
-              ctx,
-            );
+            });
           },
         },
       });
