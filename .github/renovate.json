@@ -296,6 +296,7 @@
         "/^@backstage-community//",
         "/^@janus-idp//",
         "/^@immobiliarelabs//",
+        "/^@red-hat-developer-hub//",
         "/^@roadiehq//",
         "/^@pagerduty//",
         "/^@internal//"
