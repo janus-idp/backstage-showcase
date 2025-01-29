@@ -120,7 +120,7 @@ test.describe.serial("Test RBAC", () => {
 
   test.describe("Test RBAC plugin as an admin user", () => {
     test.beforeEach(async ({ page }, testInfo) => {
-      testInfo.setTimeout(testInfo.timeout + 30_000);
+      testInfo.setTimeout(testInfo.timeout + 30_000); // Additional time due to repeated timeout failure in OSD env.
       const common = new Common(page);
       await common.loginAsKeycloakUser();
       await page.goto("/rbac");
