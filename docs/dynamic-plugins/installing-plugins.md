@@ -119,3 +119,7 @@ When using RHDH Helm Chart you can just name the Secret using following pattern 
 When using the Operator ....
 
 //TODO
+
+### Storage of Dynamic Plugins
+
+The directory where dynamic plugins are located is mounted as a volume to the _install-dynamic-plugins_ init container and the _backstage-backend_ container. The _install-dynamic-plugins_ init container is responsible for downloading and extracting the plugins into this directory. Depending on the deployment method, the directory is mounted as an ephemeral or persistent volume. In the latter case, the volume can be shared between several Pods, and the plugins installation script is also responsible for downloading and extracting the plugins only once, avoiding conflicts.
