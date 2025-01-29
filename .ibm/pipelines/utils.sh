@@ -693,12 +693,12 @@ install_tekton_pipelines() {
     kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
     wait_for_deployment "tekton-pipelines" "${DISPLAY_NAME}"
     timeout 300 bash -c '
-    while ! oc get svc tekton-pipelines-webhook -n tekton-pipelines &> /dev/null; do
-        echo "Waiting for tekton-pipelines-webhook service to be created..."
+    while ! kubectl get endpoints tekton-pipelines-webhook -n tekton-pipelines &> /dev/null; do
+        echo "Waiting for tekton-pipelines-webhook endpoints to be ready..."
         sleep 5
     done
-    echo "Service tekton-pipelines-webhook is created."
-    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook service creation."
+    echo "Endpoints for tekton-pipelines-webhook are ready."
+    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook endpoints."
   fi
 }
 
