@@ -12,6 +12,7 @@ handle_aks() {
 
   if oc whoami --show-server > /dev/null 2>&1; then
     echo "Using an ephemeral AKS cluster."
+    export EPHEMERAL="true"
   else
     echo "Falling back to a long-running AKS cluster."
     export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/AKS_CLUSTER_TOKEN)
@@ -39,5 +40,7 @@ handle_aks() {
 }
 
 cleanup_aks() {
-  az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  if [ "$EPHEMERAL" != "true" ]; then
+    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  fi
 }
