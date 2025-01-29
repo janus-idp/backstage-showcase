@@ -143,9 +143,6 @@ upstream:
                 $file: /opt/app-root/src/postgres-key.key
               cert:
                 $file: /opt/app-root/src/postgres-crt.pem
-        auth:
-          keys:
-            - secret: ${BACKEND_SECRET}
     extraEnvVars:
       - name: BACKEND_SECRET
         valueFrom:
