@@ -61,6 +61,7 @@ export class OperatorScript {
 
   // https://github.com/redhat-developer/rhdh-operator/blob/main/.rhdh/scripts/install-rhdh-catalog-source.sh
   async run(options: string[], namespace = "rhdh-operator") {
+    console.log(namespace);
     try {
       const result = await runShellCmd(
         `${this.scriptPath} ${options.join(" ")}`,
@@ -86,10 +87,11 @@ export class OperatorScript {
       throw Error(e);
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 60_000));
+    await new Promise((resolve) => setTimeout(resolve, 30_000));
+
     try {
       const result = await runShellCmd(
-        `oc apply -f ${this.getDeploymentYamlPath().replace("namespace: rhdh-operator", `namespace: ${namespace}`)}`,
+        `oc apply -f ${this.getDeploymentYamlPath()}`,
       );
       const message = result + "";
       LOGGER.info(message);

@@ -38,6 +38,11 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
       "admin",
       "sha256~SoAiuJFZE7Lj1npgSpI18PB9hXKGCFnvnMCbj_g16Uw",
     );
+
+    await new Promise((resolve) => setTimeout(resolve, 10_000));
+    await operator.installBackstageCRD(namespace);
+    await new Promise((resolve) => setTimeout(resolve, 10_000));
+
     await operator.run([
       "-v 1.4",
       "--install-operator rhdh",
