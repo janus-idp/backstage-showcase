@@ -8,6 +8,7 @@ export class OperatorScript {
   readonly operatorRepo =
     "https://github.com/redhat-developer/rhdh-operator.git";
   rhdhUrl: string;
+  catalogUrl: string;
 
   private constructor() {}
   public static async build(
@@ -59,7 +60,7 @@ export class OperatorScript {
   }
 
   // https://github.com/redhat-developer/rhdh-operator/blob/main/.rhdh/scripts/install-rhdh-catalog-source.sh
-  async run(options: string[]) {
+  async run(options: string[], namespace = "rhdh-operator") {
     try {
       const result = await runShellCmd(
         `${this.scriptPath} ${options.join(" ")}`,
@@ -67,6 +68,19 @@ export class OperatorScript {
       const message = result + "";
       LOGGER.info(message);
       console.log(message);
+      const lines = message.trim().split("\n");
+      const url = lines[lines.length - 1];
+
+      this.catalogUrl = lines.find((e) =>
+        e.includes("catalog/ns/rhdh-operator"),
+      );
+
+      if (url.includes("https")) {
+        console.log("Extracted URL:", url);
+        this.rhdhUrl = url;
+      } else {
+        console.log("URL not found");
+      }
     } catch (e) {
       LOGGER.error(e);
       throw Error(e);
@@ -75,21 +89,11 @@ export class OperatorScript {
     await new Promise((resolve) => setTimeout(resolve, 60_000));
     try {
       const result = await runShellCmd(
-        `oc apply -f ${this.getDeploymentYamlPath()}`,
+        `oc apply -f ${this.getDeploymentYamlPath().replace("namespace: rhdh-operator", `namespace: ${namespace}`)}`,
       );
       const message = result + "";
       LOGGER.info(message);
       console.log(message);
-
-      const lines = message.trim().split("\n");
-      const url = lines[lines.length - 1];
-
-      if (url.includes("https")) {
-        console.log("Extracted URL:", url);
-        this.rhdhUrl = url;
-      } else {
-        console.log("URL not found");
-      }
     } catch (e) {
       LOGGER.error(e);
       throw Error(e);

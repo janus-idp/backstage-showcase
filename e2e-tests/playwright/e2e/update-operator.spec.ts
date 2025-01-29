@@ -32,18 +32,20 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   kubeTest("Build OperatorScript", async ({ namespace, kube, page }) => {
-    const operator = await OperatorScript.build(namespace);
-    await operator.run(["-v 1.4", "--install-operator rhdh"]);
-    await operator.installBackstageCRD(namespace);
-    await page.goto(operator.rhdhUrl);
+    const operator = await OperatorScript.build(
+      namespace,
+      "https://api.cluster-phwc2.phwc2.sandbox609.opentlc.com:6443",
+      "admin",
+      "sha256~SoAiuJFZE7Lj1npgSpI18PB9hXKGCFnvnMCbj_g16Uw",
+    );
+    await operator.run([
+      "-v 1.4",
+      "--install-operator rhdh",
+      //"--install-plan-approval Automatic",
+    ]);
 
-    //await page.goto(
-    //  process.env.K8S_CLUSTER_URL +
-    //    "/catalog/ns/rhdh-operator?catalogType=OperatorBackedService",
-    //);
-    kubeTest.fail();
-    // await kube.createDeployment(namespace);
+    await page.goto(operator.rhdhUrl);
+    const title = await page.title();
+    expect(title).toContain("Red Hat Developer Hub");
   });
 });
-
-// https://backstage-developer-hub-rhdh-operator.apps.alxdq5slv4a572c9df.eastus.aroapp.io
