@@ -3739,12 +3739,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-backend@npm:5.2.6":
-  version: 5.2.6
-  resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.6"
+"@backstage-community/plugin-rbac-backend@npm:5.2.10":
+  version: 5.2.10
+  resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.10"
   dependencies:
-    "@backstage-community/plugin-rbac-common": ^1.12.2
-    "@backstage-community/plugin-rbac-node": ^1.8.2
+    "@backstage-community/plugin-rbac-common": ^1.12.3
+    "@backstage-community/plugin-rbac-node": ^1.8.4
     "@backstage/backend-defaults": ^0.5.2
     "@backstage/backend-plugin-api": ^1.0.1
     "@backstage/catalog-client": ^1.7.1
@@ -3764,11 +3764,11 @@ __metadata:
     knex: ^3.0.0
     lodash: ^4.17.21
     typeorm-adapter: ^1.6.1
-  checksum: 9fb8adb2bd9cac6abfaba832f173b35ab933099cdc70375a37138f3a991f40324f97b070497daceed9d13c0e9c40ec550e7c5bdf3b81cfb8ef365c8111c45e43
+  checksum: 1e77a7ada4a490b2a9a00eda29fac5b3bf9f007faaa4028aabc483d408362f99555af9af3daef2c4785ee75d8fb784f9bf175b29c86f8591678b1589ed1f0355
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-common@npm:1.12.3, @backstage-community/plugin-rbac-common@npm:^1.12.2, @backstage-community/plugin-rbac-common@npm:^1.12.3":
+"@backstage-community/plugin-rbac-common@npm:1.12.3, @backstage-community/plugin-rbac-common@npm:^1.12.3":
   version: 1.12.3
   resolution: "@backstage-community/plugin-rbac-common@npm:1.12.3"
   peerDependencies:
@@ -3778,12 +3778,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-node@npm:1.8.2, @backstage-community/plugin-rbac-node@npm:^1.8.2":
+"@backstage-community/plugin-rbac-node@npm:1.8.2":
   version: 1.8.2
   resolution: "@backstage-community/plugin-rbac-node@npm:1.8.2"
   dependencies:
     "@backstage/backend-plugin-api": ^1.0.1
   checksum: 32544869b139c8d255406a701f545bf673159255261b8d1f7fcef2f6cf47d93f5cfd30cdd513682322ba87422028a21037cb7ed666c86bae87ce9e21727e5812
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-node@npm:^1.8.4":
+  version: 1.8.4
+  resolution: "@backstage-community/plugin-rbac-node@npm:1.8.4"
+  dependencies:
+    "@backstage/backend-plugin-api": ^1.0.1
+  checksum: d064d4a5866a9c2d323f081ab20dc8e8bda999a35bc9d41cae0b0293606b078adde7852fa84b477e8c4ab575856e7599ee5f5ba3dc52bc4cb9efcd831c530eac
   languageName: node
   linkType: hard
 
@@ -10710,7 +10719,7 @@ __metadata:
     "@types/supertest": 6.0.2
     express: 4.21.2
     express-promise-router: 4.1.1
-    json-2-csv: 5.5.6
+    json-2-csv: 5.5.8
     knex: 3.1.0
     luxon: 3.5.0
     msw: 1.3.5
@@ -11329,14 +11338,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keycloak/keycloak-admin-client@npm:25.0.2":
-  version: 25.0.2
-  resolution: "@keycloak/keycloak-admin-client@npm:25.0.2"
+"@keycloak/keycloak-admin-client@npm:25.0.6":
+  version: 25.0.6
+  resolution: "@keycloak/keycloak-admin-client@npm:25.0.6"
   dependencies:
     camelize-ts: ^3.0.0
     url-join: ^5.0.0
     url-template: ^3.1.1
-  checksum: 5e5369e5efebd5464ea80f6d75a72bcfc01ad987e43d1551ee0047a68f0c9dd8606c1f57725cceeae8b541a9d3bacceb1c8df5e22212bedd8c498e4d2c97d0d0
+  checksum: bd7d29674ba29463f8fbc33594491221ad9b5afb7b76f4c6d41209090c727bf2d4f17cb9abcaafecb7117a74e194b197af341e11f31ea695e103de0a362b9b32
   languageName: node
   linkType: hard
 
@@ -21977,7 +21986,7 @@ __metadata:
     react-dom: 18.3.1
     react-router-dom: 6.26.2
     react-use: 17.5.1
-    tss-react: 4.9.13
+    tss-react: 4.9.15
   languageName: unknown
   linkType: soft
 
@@ -22708,7 +22717,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend@workspace:packages/backend"
   dependencies:
-    "@backstage-community/plugin-rbac-backend": 5.2.6
+    "@backstage-community/plugin-rbac-backend": 5.2.10
     "@backstage-community/plugin-rbac-node": 1.8.2
     "@backstage-community/plugin-scaffolder-backend-module-annotator": 2.2.2
     "@backstage/backend-app-api": 1.1.1
@@ -27044,7 +27053,7 @@ __metadata:
   resolution: "e2e-tests@workspace:e2e-tests"
   dependencies:
     "@azure/identity": 4.4.1
-    "@keycloak/keycloak-admin-client": 25.0.2
+    "@keycloak/keycloak-admin-client": 25.0.6
     "@kubernetes/client-node": 0.21.0
     "@microsoft/microsoft-graph-client": 3.0.7
     "@playwright/test": 1.49.1
@@ -32955,13 +32964,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-2-csv@npm:5.5.6":
-  version: 5.5.6
-  resolution: "json-2-csv@npm:5.5.6"
+"json-2-csv@npm:5.5.8":
+  version: 5.5.8
+  resolution: "json-2-csv@npm:5.5.8"
   dependencies:
     deeks: 3.1.0
     doc-path: 4.1.1
-  checksum: 0be4068b68decc708742ff88c8154deba2e7e03dc84d9c9986a595d5e261ebf8a4b653a07516327f120153a4cfd0902f2cce4e5c84ca57e996a4df27da71bdde
+  checksum: 0c8b247c7351c20ff79c775e0fdea923874f029c1b6b45f86d8719db3f34e60c72b753c682fcbdd77ae51a48c83bfce84ce11e739b442dcf2edaae47c404fe9b
   languageName: node
   linkType: hard
 
@@ -44107,6 +44116,28 @@ __metadata:
     "@mui/material":
       optional: true
   checksum: 9327cef392007237020df5d388b4aeabbf7cc06f6d5ac32e2781367244c2de34688922a345878408f45a38890324d67d9a0f7b48cf6b1c968d66d52b3e14e28f
+  languageName: node
+  linkType: hard
+
+"tss-react@npm:4.9.15":
+  version: 4.9.15
+  resolution: "tss-react@npm:4.9.15"
+  dependencies:
+    "@emotion/cache": "*"
+    "@emotion/serialize": "*"
+    "@emotion/utils": "*"
+  peerDependencies:
+    "@emotion/react": ^11.4.1
+    "@emotion/server": ^11.4.0
+    "@mui/material": ^5.0.0 || ^6.0.0
+    "@types/react": ^16.8.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@emotion/server":
+      optional: true
+    "@mui/material":
+      optional: true
+  checksum: 325641502c22cbac0a461e73cf693e64627e9ec81fc1961d02c754322217b7e1bb46d07e9a5d9255eba93dd3cf9497f486152e76512cc63c9674b9d875e8ce66
   languageName: node
   linkType: hard
 
