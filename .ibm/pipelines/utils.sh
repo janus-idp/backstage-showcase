@@ -462,10 +462,19 @@ apply_yaml_files() {
       --from-file="dynamic-homepage-and-sidebar-config.yaml"="$dir/resources/config_map/dynamic-homepage-and-sidebar-config.yaml" \
       --namespace="${project}" \
       --dry-run=client -o yaml | oc apply -f -
-    oc create configmap rbac-policy \
-      --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
-      --namespace="$project" \
-      --dry-run=client -o yaml | oc apply -f -
+
+    if [[ "${project}" == *showcase-op* ]]; then
+      oc create configmap rbac-policy \
+        --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
+        --from-file="conditional-policies.yaml"="/tmp/conditional-policies.yaml" \
+        --namespace="$project" \
+        --dry-run=client -o yaml | oc apply -f -
+    else
+      oc create configmap rbac-policy \
+        --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
+        --namespace="$project" \
+        --dry-run=client -o yaml | oc apply -f -
+    fi
 
     oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
@@ -516,6 +525,8 @@ select_config_map_file() {
   fi
 }
 
+
+
 create_dynamic_plugins_config() {
   local base_file=$1
   local final_file=$2
@@ -526,6 +537,17 @@ metadata:
 data:
   dynamic-plugins.yaml: |" >> ${final_file}
   yq '.global.dynamic' ${base_file} | sed -e 's/^/    /' >> ${final_file}
+}
+
+create_conditional_policies_operator() {
+  local destination_file=$1
+  yq '.upstream.backstage.initContainers[0].command[2]' "${DIR}/value_files/values_showcase-rbac.yaml" | head -n -4 | tail -n +2 > $destination_file
+  sed -i 's/\\\$/\$/g' $destination_file
+}
+
+prepare_operator_app_config() {
+  local config_file=$1
+  yq e -i '.permission.rbac.conditionalPoliciesFile = "./rbac/conditional-policies.yaml"' ${config_file}
 }
 
 create_app_config_map_k8s() {
