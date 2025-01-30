@@ -37,6 +37,7 @@ SCRIPTS=(
     "jobs/main.sh"
     "jobs/operator.sh"
     "jobs/periodic.sh"
+    "jobs/auth-providers.sh"
 )
 
 # Source each script dynamically
@@ -65,6 +66,10 @@ main() {
     *periodic*)
       echo "Calling handle_periodic"
       handle_nightly
+      ;;
+    *auth-providers*)
+      echo "Calling handle_auth_providers"
+      handle_auth_providers
       ;;
     *pull*)
       echo "Calling handle_main"
