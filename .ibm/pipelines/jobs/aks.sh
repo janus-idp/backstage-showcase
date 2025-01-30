@@ -4,14 +4,15 @@ handle_aks() {
   echo "Starting AKS deployment"
   for file in ${DIR}/cluster/aks/*.sh; do source $file; done
 
-  export K8S_CLUSTER_ROUTER_BASE=$AKS_INSTANCE_DOMAIN_NAME
+  export K8S_CLUSTER_ROUTER_BASE=$(kubectl get svc nginx --namespace app-routing-system -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   export NAME_SPACE_K8S="showcase-k8s-ci-nightly"
   export NAME_SPACE_RBAC_K8S="showcase-rbac-k8s-ci-nightly"
 
   url="https://${K8S_CLUSTER_ROUTER_BASE}"
 
-  if kubectl auth whoami > /dev/null 2>&1; then
+  if oc whoami --show-server > /dev/null 2>&1; then
     echo "Using an ephemeral AKS cluster."
+    export EPHEMERAL="true"
   else
     echo "Falling back to a long-running AKS cluster."
     export K8S_CLUSTER_TOKEN=$(cat /tmp/secrets/AKS_CLUSTER_TOKEN)
@@ -30,10 +31,16 @@ handle_aks() {
   fi
 
   initiate_aks_deployment
-  check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}" "${url}"
+  check_and_test "${RELEASE_NAME}" "${NAME_SPACE_K8S}" "${url}" 50 30
   delete_namespace "${NAME_SPACE_K8S}"
   initiate_rbac_aks_deployment
   local rbac_rhdh_base_url="https://${K8S_CLUSTER_ROUTER_BASE}"
   check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC_K8S}" "${rbac_rhdh_base_url}"
   delete_namespace "${NAME_SPACE_RBAC_K8S}"
+}
+
+cleanup_aks() {
+  if [ "$EPHEMERAL" != "true" ]; then
+    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  fi
 }
