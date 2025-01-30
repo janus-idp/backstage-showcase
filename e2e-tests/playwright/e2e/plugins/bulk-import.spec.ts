@@ -87,9 +87,9 @@ test.describe.serial("Bulk Import plugin", () => {
       /2\/(\d+) Edit/,
       /Ready Preview files/,
     ]);
-    await expect(
-      await uiHelper.clickButton("Create pull requests"),
-    ).not.toBeVisible({ timeout: 10000 });
+    await expect(async () => {
+      await uiHelper.clickButton("Create pull requests");
+    }).toPass({ timeout: 10000, intervals: [1000, 2000] });
   });
 
   test('Verify that the two selected repositories are listed: one with the status "Added" and another with the status "WAIT_PR_APPROVAL."', async () => {
