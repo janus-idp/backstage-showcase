@@ -476,10 +476,19 @@ apply_yaml_files() {
       --from-file="dynamic-homepage-and-sidebar-config.yaml"="$dir/resources/config_map/dynamic-homepage-and-sidebar-config.yaml" \
       --namespace="${project}" \
       --dry-run=client -o yaml | oc apply -f -
-    oc create configmap rbac-policy \
-      --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
-      --namespace="$project" \
-      --dry-run=client -o yaml | oc apply -f -
+
+    if [[ "${project}" == *showcase-op* ]]; then
+      oc create configmap rbac-policy \
+        --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
+        --from-file="conditional-policies.yaml"="/tmp/conditional-policies.yaml" \
+        --namespace="$project" \
+        --dry-run=client -o yaml | oc apply -f -
+    else
+      oc create configmap rbac-policy \
+        --from-file="rbac-policy.csv"="$dir/resources/config_map/rbac-policy.csv" \
+        --namespace="$project" \
+        --dry-run=client -o yaml | oc apply -f -
+    fi
 
     oc apply -f "$dir/auth/secrets-rhdh-secrets.yaml" --namespace="${project}"
 
@@ -488,8 +497,11 @@ apply_yaml_files() {
     oc apply -f "$dir/resources/pipeline-run/hello-world-pipeline-run.yaml"
 
     # Create Deployment and Pipeline for Topology test.
-    if [[ "${project}" != *k8s* ]]; then # Specific to OCP deployments (uses Route which is not supported by K8S)
-      oc apply -f "$dir/resources/topology_test/topology-test.yaml"
+    oc apply -f "$dir/resources/topology_test/topology-test.yaml"
+    if [[ "${project}" == *k8s* ]]; then
+      oc apply -f "$dir/resources/topology_test/topology-test-ingress.yaml"
+    else
+      oc apply -f "$dir/resources/topology_test/topology-test-route.yaml"
     fi
 }
 
@@ -527,6 +539,8 @@ select_config_map_file() {
   fi
 }
 
+
+
 create_dynamic_plugins_config() {
   local base_file=$1
   local final_file=$2
@@ -537,6 +551,17 @@ metadata:
 data:
   dynamic-plugins.yaml: |" >> ${final_file}
   yq '.global.dynamic' ${base_file} | sed -e 's/^/    /' >> ${final_file}
+}
+
+create_conditional_policies_operator() {
+  local destination_file=$1
+  yq '.upstream.backstage.initContainers[0].command[2]' "${DIR}/value_files/values_showcase-rbac.yaml" | head -n -4 | tail -n +2 > $destination_file
+  sed -i 's/\\\$/\$/g' $destination_file
+}
+
+prepare_operator_app_config() {
+  local config_file=$1
+  yq e -i '.permission.rbac.conditionalPoliciesFile = "./rbac/conditional-policies.yaml"' ${config_file}
 }
 
 create_app_config_map_k8s() {
@@ -606,11 +631,12 @@ check_backstage_running() {
   local release_name=$1
   local namespace=$2
   local url=$3
-
-  local max_attempts=30
-  local wait_seconds=30
+  local max_attempts=$4
+  local wait_seconds=$5
 
   echo "Checking if Backstage is up and running at ${url}"
+
+  trap cleanup EXIT INT ERR # reapply trap
 
   for ((i = 1; i <= max_attempts; i++)); do
     local http_status
@@ -679,16 +705,37 @@ install_tekton_pipelines() {
     echo "Tekton Pipelines are already installed."
   else
     echo "Tekton Pipelines is not installed. Installing..."
-    oc apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+    kubectl apply -f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
     wait_for_deployment "tekton-pipelines" "${DISPLAY_NAME}"
     timeout 300 bash -c '
-    while ! oc get svc tekton-pipelines-webhook -n tekton-pipelines &> /dev/null; do
-        echo "Waiting for tekton-pipelines-webhook service to be created..."
+    while ! kubectl get endpoints tekton-pipelines-webhook -n tekton-pipelines &> /dev/null; do
+        echo "Waiting for tekton-pipelines-webhook endpoints to be ready..."
         sleep 5
     done
-    echo "Service tekton-pipelines-webhook is created."
-    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook service creation."
+    echo "Endpoints for tekton-pipelines-webhook are ready."
+    ' || echo "Error: Timed out waiting for tekton-pipelines-webhook endpoints."
   fi
+}
+
+delete_tekton_pipelines() {
+    echo "Checking for Tekton Pipelines installation..."
+    # Check if tekton-pipelines namespace exists
+    if kubectl get namespace tekton-pipelines &> /dev/null; then
+        echo "Found Tekton Pipelines installation. Attempting to delete..."
+        # Delete the resources and ignore errors
+        kubectl delete -f https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml --ignore-not-found=true 2>/dev/null || true
+        # Wait for namespace deletion (with timeout)
+        echo "Waiting for Tekton Pipelines namespace to be deleted..."
+        timeout 30 bash -c '
+        while kubectl get namespace tekton-pipelines &> /dev/null; do
+            echo "Waiting for tekton-pipelines namespace deletion..."
+            sleep 5
+        done
+        echo "Tekton Pipelines deleted successfully."
+        ' || echo "Warning: Timed out waiting for namespace deletion, continuing..."
+    else
+        echo "Tekton Pipelines is not installed. Nothing to delete."
+    fi
 }
 
 cluster_setup() {
@@ -714,7 +761,12 @@ initiate_deployments() {
   local rhdh_base_url="https://${RELEASE_NAME}-backstage-${NAME_SPACE}.${K8S_CLUSTER_ROUTER_BASE}"
   apply_yaml_files "${DIR}" "${NAME_SPACE}" "${rhdh_base_url}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${NAME_SPACE}"
-  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  helm upgrade -i "${RELEASE_NAME}" -n "${NAME_SPACE}" \
+    "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
+    -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
 
   configure_namespace "${NAME_SPACE_POSTGRES_DB}"
   configure_namespace "${NAME_SPACE_RBAC}"
@@ -724,7 +776,12 @@ initiate_deployments() {
   local rbac_rhdh_base_url="https://${RELEASE_NAME_RBAC}-backstage-${NAME_SPACE_RBAC}.${K8S_CLUSTER_ROUTER_BASE}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_RBAC}" "${rbac_rhdh_base_url}"
   echo "Deploying image from repository: ${QUAY_REPO}, TAG_NAME: ${TAG_NAME}, in NAME_SPACE: ${RELEASE_NAME_RBAC}"
-  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  helm upgrade -i "${RELEASE_NAME_RBAC}" -n "${NAME_SPACE_RBAC}" \
+    "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
+    -f "${DIR}/value_files/${HELM_CHART_RBAC_VALUE_FILE_NAME}" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 initiate_rds_deployment() {
@@ -738,14 +795,21 @@ initiate_rds_deployment() {
   oc apply -f "$DIR/resources/postgres-db/postgres-crt-rds.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/postgres-cred.yaml" -n "${namespace}"
   oc apply -f "$DIR/resources/postgres-db/dynamic-plugins-root-PVC.yaml" -n "${namespace}"
-  helm upgrade -i "${release_name}" -n "${namespace}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" --set upstream.backstage.image.repository="${QUAY_REPO}" --set upstream.backstage.image.tag="${TAG_NAME}"
+  helm upgrade -i "${release_name}" -n "${namespace}" \
+    "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" --version "${CHART_VERSION}" \
+    -f "$DIR/resources/postgres-db/values-showcase-postgres.yaml" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
   local release_name=$1
   local namespace=$2
   local url=$3
-  if check_backstage_running "${release_name}" "${namespace}" "${url}"; then
+  local max_attempts=${4:-30}    # Default to 30 if not set
+  local wait_seconds=${5:-30}    # Default to 30 if not set
+  if check_backstage_running "${release_name}" "${namespace}" "${url}" "${max_attempts}" "${wait_seconds}"; then
     echo "Display pods for verification..."
     oc get pods -n "${namespace}"
     run_tests "${release_name}" "${namespace}"
