@@ -47,7 +47,8 @@ export class OperatorScript {
   }
 
   async installBackstageCRD(namespace = "default") {
-    const command = `oc get crd/backstages.rhdh.redhat.com -n "${namespace}"; oc get crd/backstages.rhdh.redhat.com -n rhdh-operator`;
+    const command = `oc get crd/backstages.rhdh.redhat.com -n rhdh-operator`;
+    console.log(namespace);
 
     await runShellCmd(command)
       .then(async (e) => {
