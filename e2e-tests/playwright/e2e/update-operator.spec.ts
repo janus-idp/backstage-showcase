@@ -32,12 +32,7 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   kubeTest("Build OperatorScript", async ({ namespace, kube, page }) => {
-    const operator = await OperatorScript.build(
-      namespace,
-      "https://api.cluster-phwc2.phwc2.sandbox609.opentlc.com:6443",
-      "admin",
-      "sha256~SoAiuJFZE7Lj1npgSpI18PB9hXKGCFnvnMCbj_g16Uw",
-    );
+    const operator = await OperatorScript.build(namespace);
 
     await new Promise((resolve) => setTimeout(resolve, 10_000));
     await operator.installBackstageCRD(namespace);
@@ -46,7 +41,7 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
     await operator.run([
       "-v 1.4",
       "--install-operator rhdh",
-      //"--install-plan-approval Automatic",
+      "--install-plan-approval Manual",
     ]);
 
     await page.goto(operator.rhdhUrl);
