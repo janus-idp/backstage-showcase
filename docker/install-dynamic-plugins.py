@@ -27,6 +27,7 @@ import base64
 import binascii
 import atexit
 import time
+import signal
 
 # This script is used to install dynamic plugins in the Backstage application,
 # and is available in the container image to be called at container initialization,
@@ -214,6 +215,7 @@ def main():
 
     lock_file_path = os.path.join(dynamicPluginsRoot, 'install-dynamic-plugins.lock')
     atexit.register(remove_lock, lock_file_path)
+    signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit(0))
     create_lock(lock_file_path)
 
     maxEntrySize = int(os.environ.get('MAX_ENTRY_SIZE', 20000000))
