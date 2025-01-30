@@ -75,19 +75,46 @@ export class APIHelper {
     );
   }
 
-  static async initCommit(owner: string, repo: string, branch = "main") {
+  static async initCommit(
+    owner: string,
+    repo: string,
+    branch = "main",
+    retries = 3,
+    delay = 2000,
+  ) {
     const content = Buffer.from(
       "This is the initial commit for the repository.",
     ).toString("base64");
-    await APIHelper.githubRequest(
-      "PUT",
-      `${GITHUB_API_ENDPOINTS.contents(owner, repo)}/initial-commit.md`,
-      {
-        message: "Initial commit",
-        content: content,
-        branch: branch,
-      },
-    );
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const response: APIResponse = await APIHelper.githubRequest(
+          "PUT",
+          `${GITHUB_API_ENDPOINTS.contents(owner, repo)}/initial-commit.md`,
+          {
+            message: "Initial commit",
+            content: content,
+            branch: branch,
+          },
+        );
+
+        if (response.ok()) {
+          console.log(`Initial commit successful on attempt ${attempt}`);
+          return;
+        } else {
+          console.error(`Attempt ${attempt} failed: ${response.statusText()}`);
+        }
+      } catch (error) {
+        console.error(`Attempt ${attempt} encountered an error: ${error}`);
+      }
+
+      if (attempt < retries) {
+        console.log(`Retrying in ${delay} ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    throw new Error(`Failed to make initial commit after ${retries} attempts`);
   }
 
   static async deleteGitHubRepo(owner: string, repoName: string) {
