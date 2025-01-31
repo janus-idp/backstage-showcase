@@ -1,7 +1,7 @@
 import { test as base, expect } from "@playwright/test";
-import { KubeClient } from "../utils/kube-client";
-import { OperatorScript } from "../support/api/operator-script";
-import { LOGGER } from "../utils/logger";
+import { KubeClient } from "../../utils/kube-client";
+import { OperatorScript } from "../../support/api/operator-script";
+import { LOGGER } from "../../utils/logger";
 
 type OcFixture = {
   namespace: string;
@@ -34,18 +34,21 @@ kubeTest.describe.only("OpenShift Operator Tests", () => {
   kubeTest("Build OperatorScript", async ({ namespace, kube, page }) => {
     const operator = await OperatorScript.build(namespace);
 
-    await new Promise((resolve) => setTimeout(resolve, 10_000));
-    await operator.installBackstageCRD(namespace);
-    await new Promise((resolve) => setTimeout(resolve, 10_000));
-
-    await operator.run([
-      "-v 1.4",
-      "--install-operator rhdh",
-      "--install-plan-approval Manual",
-    ]);
+    await operator.run(
+      ["-v 1.4", "--install-operator rhdh", "--install-plan-approval Manual"],
+      namespace,
+    );
 
     await page.goto(operator.rhdhUrl);
     const title = await page.title();
+    expect(title).toContain("Red Hat Developer Hub");
+
+    await operator.run(
+      ["--latest", "--install-operator rhdh", "--install-plan-approval Manual"],
+      namespace,
+    );
+
+    await page.goto(operator.rhdhUrl);
     expect(title).toContain("Red Hat Developer Hub");
   });
 });
