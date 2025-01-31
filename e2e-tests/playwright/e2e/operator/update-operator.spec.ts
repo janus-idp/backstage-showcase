@@ -25,11 +25,9 @@ const kubeTest = base.extend<OcFixture>({
   },
 });
 
-kubeTest.describe.only("OpenShift Operator Tests", () => {
+kubeTest.describe.serial("OpenShift Operator Tests", () => {
   kubeTest.slow();
-  kubeTest("Create namespace", async ({ namespace, kube }) => {
-    expect(kube.checkNamespaceExists(namespace));
-  });
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   kubeTest("Build OperatorScript", async ({ namespace, kube, page }) => {
     const operator = await OperatorScript.build(namespace);
