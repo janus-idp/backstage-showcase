@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# These functions were used to interact with Azure CLI in the context of an AKS cluster.
+# Since we switched to an ephemeral AKS cluster, these functions are no longer used.
+# They are kept here for reference and may be reused for ARO cluster.
+# Make sure to set the required environment variables before using these functions.
+
 az_login() {
   az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
   az account set --subscription $ARM_SUBSCRIPTION_ID
