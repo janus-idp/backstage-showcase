@@ -55,6 +55,10 @@ main() {
       echo "Calling handle_aks"
       handle_aks
       ;;
+    *e2e-tests-nightly-auth-providers)
+      echo "Calling handle_auth_providers"
+      handle_auth_providers
+      ;;
     *gke*)
       echo "Calling handle_gke"
       handle_gke
@@ -66,10 +70,6 @@ main() {
     *periodic*)
       echo "Calling handle_periodic"
       handle_nightly
-      ;;
-    *auth-providers*)
-      echo "Calling handle_auth_providers"
-      handle_auth_providers
       ;;
     *pull*)
       echo "Calling handle_main"
