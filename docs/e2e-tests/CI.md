@@ -34,10 +34,10 @@ For scenarios where tests are not automatically triggered, or when you need to m
           Trigger command: `/test periodic-e2e-tests-operator`
      - **Azure Kubernetes Service (AKS) Test:**  
           Runs PR tests on AKS.  
-          Trigger command: `/test periodic-e2e-tests-aks`
+          Trigger command: `/test periodic-e2e-tests-aks-helm-nightly`
      - **Google Kubernetes Engine (GKE) Test:**  
           Runs PR tests on GKE.  
-          Trigger command:  `/test periodic-e2e-tests-gke`
+          Trigger command:  `/test periodic-e2e-tests-gke-helm-nightly`
      - **Standard Nightly Test on OpenShift v4.17:**  
           Runs PR tests on OCP version 4.17.  
           Trigger command:  `/test periodic-e2e-tests`
