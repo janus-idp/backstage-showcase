@@ -27,7 +27,9 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import { makeStyles } from 'tss-react/mui';
 
-import { useDisplayedSidebarItems } from '../../utils/dynamicUI/useDisplayedSidebarItems';
+import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
+
+import { useDynamicSidebarConfiguration } from '../../utils/dynamicUI/useDynamicSidebarConfiguration';
 import { ResolvedMenuItem } from '../DynamicRoot/DynamicRootContext';
 import { ApplicationHeaders } from './ApplicationHeaders';
 import { MenuIcon } from './MenuIcon';
@@ -101,11 +103,8 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const {
-    showSearchBar,
-    displayedDynamicRoutes: dynamicRoutes,
-    displayedMenuItems: menuItems,
-  } = useDisplayedSidebarItems();
+  const { showSearchBar, showSettingsButton, dynamicRoutes, menuItems } =
+    useDynamicSidebarConfiguration();
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
@@ -290,13 +289,15 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
             {renderMenuItems(false, true)}
           </SidebarGroup>
           <SidebarDivider />
-          <SidebarGroup
-            label="Settings"
-            to="/settings"
-            icon={<AccountCircleOutlinedIcon />}
-          >
-            <SidebarSettings icon={AccountCircleOutlinedIcon} />
-          </SidebarGroup>
+          {showSettingsButton && (
+            <SidebarGroup
+              label="Settings"
+              to="/settings"
+              icon={<AccountCircleOutlinedIcon />}
+            >
+              <SidebarSettings icon={AccountCircleOutlinedIcon} />
+            </SidebarGroup>
+          )}
         </Sidebar>
         {children}
       </SidebarPage>
