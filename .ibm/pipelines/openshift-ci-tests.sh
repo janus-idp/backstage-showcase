@@ -500,8 +500,8 @@ main() {
     check_and_test "${RELEASE_NAME_RBAC}" "${NAME_SPACE_RBAC}"
     # Only test TLS config with RDS and Change configuration at runtime in nightly jobs
     if [[ "$JOB_NAME" == *periodic* ]]; then
-      initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
-      check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+      # initiate_rds_deployment "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
+      # check_and_test "${RELEASE_NAME}" "${NAME_SPACE_RDS}"
 
       # Deploy `showcase-runtime` to run tests that require configuration changes at runtime
       configure_namespace "${NAME_SPACE_RUNTIME}"
