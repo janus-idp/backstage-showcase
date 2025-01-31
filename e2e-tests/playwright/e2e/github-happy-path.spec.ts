@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { UIhelper } from "../utils/ui-helper";
+import { UiHelper } from "../utils/ui-helper";
 import { Common, setupBrowser } from "../utils/common";
 import { RESOURCES } from "../support/testData/resources";
 import {
@@ -15,7 +15,7 @@ let page: Page;
 test.describe.skip("GitHub Happy path", () => {
   //TODO: skipping due to RHIDP-4992
   let common: Common;
-  let uiHelper: UIhelper;
+  let uiHelper: UiHelper;
   let catalogImport: CatalogImport;
   let backstageShowcase: BackstageShowcase;
 
@@ -25,7 +25,7 @@ test.describe.skip("GitHub Happy path", () => {
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
-    uiHelper = new UIhelper(page);
+    uiHelper = new UiHelper(page);
     common = new Common(page);
     catalogImport = new CatalogImport(page);
     backstageShowcase = new BackstageShowcase(page);

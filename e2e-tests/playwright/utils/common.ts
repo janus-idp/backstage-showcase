@@ -1,4 +1,4 @@
-import { UIhelper } from "./ui-helper";
+import { UiHelper } from "./ui-helper";
 import { authenticator } from "otplib";
 import { test, Browser, expect, Page, TestInfo } from "@playwright/test";
 import { APIHelper } from "./api-helper";
@@ -11,12 +11,12 @@ import fs from "fs";
 
 export class Common {
   page: Page;
-  uiHelper: UIhelper;
+  uiHelper: UiHelper;
   private readonly authStateFileName = "authState.json";
 
   constructor(page: Page) {
     this.page = page;
-    this.uiHelper = new UIhelper(page);
+    this.uiHelper = new UiHelper(page);
   }
 
   async loginAsGuest() {

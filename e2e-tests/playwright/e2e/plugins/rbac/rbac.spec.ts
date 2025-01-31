@@ -7,7 +7,7 @@ import {
   ROLES_PAGE_COMPONENTS,
 } from "../../../support/pageObjects/page-obj";
 import { Common, setupBrowser } from "../../../utils/common";
-import { UIhelper } from "../../../utils/ui-helper";
+import { UiHelper } from "../../../utils/ui-helper";
 import fs from "fs/promises";
 import { RbacPo } from "../../../support/pageObjects/rbac-po";
 import { RhdhAuthApiHack } from "../../../support/api/rhdh-auth-api-hack";
@@ -34,7 +34,7 @@ test.describe.skip("Test RBAC", () => {
       page,
     }) => {
       await page.goto("/");
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       await uiHelper.openSidebarButton("Administration");
       const dropdownMenuLocator = page.locator(`text="RBAC"`);
       await expect(dropdownMenuLocator).toBeVisible();
@@ -46,7 +46,7 @@ test.describe.skip("Test RBAC", () => {
     test("Check if permission policies defined in files are loaded", async ({
       page,
     }) => {
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
 
       const testRole: string = "role:default/test2-role";
 
@@ -87,7 +87,7 @@ test.describe.skip("Test RBAC", () => {
     test("Check if aliases used in conditions: the user is allowed to unregister only components they own, not those owned by the group.", async ({
       page,
     }) => {
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       const testUser = "test-rhdh-qe-2";
       await page.goto("/catalog");
       await uiHelper.selectMuiBox("Kind", "Component");
@@ -128,7 +128,7 @@ test.describe.skip("Test RBAC", () => {
     test("Check if Administration side nav is present with RBAC plugin", async ({
       page,
     }) => {
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       await uiHelper.verifyHeading(/All roles \(\d+\)/);
       const allGridColumnsText = Roles.getRolesListColumnsText();
       await uiHelper.verifyColumnHeading(allGridColumnsText);
@@ -175,7 +175,7 @@ test.describe.skip("Test RBAC", () => {
     }
 
     test("View details of a role", async ({ page }) => {
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       await uiHelper.clickLink("role:default/rbac_admin");
 
       await uiHelper.verifyHeading("role:default/rbac_admin");
@@ -206,7 +206,7 @@ test.describe.skip("Test RBAC", () => {
       page,
     }) => {
       const rolesHelper = new Roles(page);
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
 
       const rbacPo = new RbacPo(page);
       const testUser = "Jonathon Page";
@@ -248,7 +248,7 @@ test.describe.skip("Test RBAC", () => {
       page,
     }) => {
       const rolesHelper = new Roles(page);
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       const rbacPo = new RbacPo(page);
       await rbacPo.createRole("test-role1", [
         RbacPo.rbacTestUsers.guest,
@@ -313,7 +313,7 @@ test.describe.skip("Test RBAC", () => {
       page,
     }) => {
       const rolesHelper = new Roles(page);
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       await new RbacPo(page).createRole(
         "test-role",
         ["Guest User", "rhdh-qe", "Backstage"],
@@ -338,7 +338,7 @@ test.describe.skip("Test RBAC", () => {
     test("Check if Administration side nav is present with no RBAC plugin", async ({
       page,
     }) => {
-      const uiHelper = new UIhelper(page);
+      const uiHelper = new UiHelper(page);
       await uiHelper.openSidebarButton("Administration");
       const dropdownMenuLocator = page.locator(`text="RBAC"`);
       await expect(dropdownMenuLocator).not.toBeVisible();
@@ -348,14 +348,14 @@ test.describe.skip("Test RBAC", () => {
   test.describe.serial("Test RBAC API", () => {
     test.describe.configure({ retries: 0 });
     let common: Common;
-    let uiHelper: UIhelper;
+    let uiHelper: UiHelper;
     let page: Page;
     let apiToken: string;
 
     test.beforeAll(async ({ browser }, testInfo) => {
       page = (await setupBrowser(browser, testInfo)).page;
 
-      uiHelper = new UIhelper(page);
+      uiHelper = new UiHelper(page);
       common = new Common(page);
 
       await common.loginAsKeycloakUser();

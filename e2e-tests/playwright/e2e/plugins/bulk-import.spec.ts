@@ -1,5 +1,5 @@
 import { expect, Page, test } from "@playwright/test";
-import { UIhelper } from "../../utils/ui-helper";
+import { UiHelper } from "../../utils/ui-helper";
 import { Common, setupBrowser } from "../../utils/common";
 import { APIHelper } from "../../utils/api-helper";
 import { BulkImport } from "../../support/pages/bulk-import";
@@ -12,7 +12,7 @@ import {
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial("Bulk Import plugin", () => {
   let page: Page;
-  let uiHelper: UIhelper;
+  let uiHelper: UiHelper;
   let common: Common;
   let bulkimport: BulkImport;
 
@@ -33,7 +33,7 @@ test.describe.serial("Bulk Import plugin", () => {
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
-    uiHelper = new UIhelper(page);
+    uiHelper = new UiHelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
 
@@ -236,7 +236,7 @@ test.describe.serial("Bulk Import plugin", () => {
 test.describe
   .serial("Bulk Import - Verify existing repo are displayed in bulk import Added repositories", () => {
   let page: Page;
-  let uiHelper: UIhelper;
+  let uiHelper: UiHelper;
   let common: Common;
   let bulkimport: BulkImport;
   let catalogImport: CatalogImport;
@@ -250,7 +250,7 @@ test.describe
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
-    uiHelper = new UIhelper(page);
+    uiHelper = new UiHelper(page);
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
@@ -293,12 +293,12 @@ test.describe
 test.describe
   .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
   let page: Page;
-  let uiHelper: UIhelper;
+  let uiHelper: UiHelper;
   let common: Common;
   test.beforeAll(async ({ browser }, testInfo) => {
     page = (await setupBrowser(browser, testInfo)).page;
 
-    uiHelper = new UIhelper(page);
+    uiHelper = new UiHelper(page);
     common = new Common(page);
     await common.loginAsKeycloakUser();
   });
