@@ -81,7 +81,7 @@ export const DynamicRoot = ({
       routeBindings,
       routeBindingTargets,
       scaffolderFieldExtensions,
-      techdocsAddons: techdocsAddons,
+      techdocsAddons,
       themes: pluginThemes,
     } = extractDynamicConfig(dynamicPlugins);
     const requiredModules = [
