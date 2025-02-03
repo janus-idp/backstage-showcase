@@ -89,15 +89,6 @@ global:
             password: 'temp'
       - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic
         disabled: false
-      - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
-        disabled: false
-        pluginConfig:
-          catalog:
-            providers:
-              aap:
-                prod:
-                  baseUrl: 'temp'
-                  authorization: "temp"
       - package: ./dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic
