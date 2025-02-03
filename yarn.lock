@@ -7702,7 +7702,7 @@ __metadata:
 
 "@backstage/plugin-scaffolder-backend@patch:@backstage/plugin-scaffolder-backend@npm%3A1.29.0#./.yarn/patches/@backstage-plugin-scaffolder-backend-npm-1.29.0-af0f4d9efe.patch::locator=root%40workspace%3A.":
   version: 1.29.0
-  resolution: "@backstage/plugin-scaffolder-backend@patch:@backstage/plugin-scaffolder-backend@npm%3A1.29.0#./.yarn/patches/@backstage-plugin-scaffolder-backend-npm-1.29.0-af0f4d9efe.patch::version=1.29.0&hash=ed8666&locator=root%40workspace%3A."
+  resolution: "@backstage/plugin-scaffolder-backend@patch:@backstage/plugin-scaffolder-backend@npm%3A1.29.0#./.yarn/patches/@backstage-plugin-scaffolder-backend-npm-1.29.0-af0f4d9efe.patch::version=1.29.0&hash=c7d163&locator=root%40workspace%3A."
   dependencies:
     "@backstage/backend-common": ^0.25.0
     "@backstage/backend-defaults": ^0.7.0
@@ -7757,7 +7757,7 @@ __metadata:
     yaml: ^2.0.0
     zen-observable: ^0.10.0
     zod: ^3.22.4
-  checksum: 1fa7b6f2cd5a6fa649079e55510a364664bcfb2c80c9a3e999ef0f0d1dde7f5882088f0e84fc812415437429069d389226cfdccc76913fd5455f24d70cb5019b
+  checksum: 08b633de35c29b4246f91f100d3d9911befa950b06b1e241154be71b5c4c6c572920dfc22216b85dd67b1d24a2f9f912ce018bc9c3dfc91633814cb0b26f33b6
   languageName: node
   linkType: hard
 
@@ -7799,7 +7799,7 @@ __metadata:
 
 "@backstage/plugin-scaffolder-node@patch:@backstage/plugin-scaffolder-node@npm%3A0.6.3#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.3-1423303d33.patch::locator=root%40workspace%3A.":
   version: 0.6.3
-  resolution: "@backstage/plugin-scaffolder-node@patch:@backstage/plugin-scaffolder-node@npm%3A0.6.3#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.3-1423303d33.patch::version=0.6.3&hash=f2b637&locator=root%40workspace%3A."
+  resolution: "@backstage/plugin-scaffolder-node@patch:@backstage/plugin-scaffolder-node@npm%3A0.6.3#./.yarn/patches/@backstage-plugin-scaffolder-node-npm-0.6.3-1423303d33.patch::version=0.6.3&hash=f9d3c4&locator=root%40workspace%3A."
   dependencies:
     "@backstage/backend-common": ^0.25.0
     "@backstage/backend-plugin-api": ^1.1.1
@@ -7818,7 +7818,7 @@ __metadata:
     winston: ^3.2.1
     zod: ^3.22.4
     zod-to-json-schema: ^3.20.4
-  checksum: dfc5510850b3f61bf6025c6a188ff0d397d77746bf5830bafdb3ccd2cac7410f952e8ceaf5761af8ed12e23be2c50ea80deb556017a73da6f58e799d9672825e
+  checksum: 9065e1e2919714c33e2e15a4fd58493f573cc0f7dbc5ccf6a1ad87a0d6e85ed6e4b49e15d507deb5e913dafe93cd9c851ace14be843e12ca208983a34e5a417e
   languageName: node
   linkType: hard
 
