@@ -95,8 +95,6 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
   'backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic':
     '/dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic',
-  'janus-idp-backstage-plugin-aap-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic',
   'backstage-community-plugin-3scale-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
   'backstage-community-plugin-catalog-backend-module-keycloak-dynamic':

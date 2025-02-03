@@ -10818,18 +10818,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-aap-backend@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@janus-idp/backstage-plugin-aap-backend@npm:2.2.0"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-node": ^1.13.1
-  checksum: 40359b8caa03008bcbe565d7c6e04f23e6f569a1d0cb2790806ebf82ff1822dee5d5b29afcdc0957d42a31d9af1319c29d7c285f03b8fefda43ac64a084e6efe
-  languageName: node
-  linkType: hard
-
 "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.2, @janus-idp/backstage-plugin-audit-log-node@npm:^1.7.1":
   version: 1.7.2
   resolution: "@janus-idp/backstage-plugin-audit-log-node@npm:1.7.2"
@@ -32241,17 +32229,6 @@ __metadata:
   checksum: 210030029edfa1658328799ad88c3d0fc057c4cb8a069fc4137cc8d2cc4b65c9721c6e749e890f9ca77a954bb54f200f715b8896e50d330e5f3e902e72b40974
   languageName: node
   linkType: hard
-
-"janus-idp-backstage-plugin-aap-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic":
-  version: 0.0.0-use.local
-  resolution: "janus-idp-backstage-plugin-aap-backend@workspace:dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic"
-  dependencies:
-    "@backstage/cli": 0.29.5
-    "@janus-idp/backstage-plugin-aap-backend": 2.2.0
-    "@janus-idp/cli": 3.0.0
-    typescript: 5.7.3
-  languageName: unknown
-  linkType: soft
 
 "javascript-natural-sort@npm:^0.7.1":
   version: 0.7.1

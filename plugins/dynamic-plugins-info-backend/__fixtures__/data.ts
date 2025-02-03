@@ -1,15 +1,6 @@
 // BEGIN-NOSCAN
 export const plugins = [
   {
-    name: 'backstage-plugin-aap-backend-wrapped-dynamic',
-    version: '1.2.2-dynamic.0',
-    platform: 'node',
-    role: 'backend-plugin-module',
-    installer: {
-      kind: 'legacy',
-    },
-  },
-  {
     name: 'backstage-plugin-argo-cd-backend-wrapped-dynamic',
     version: '2.11.3-dynamic.0',
     platform: 'node',
