@@ -17,7 +17,7 @@ handle_auth_providers() {
   export AUTH_PROVIDERS_RELEASE="rhdh-auth-providers"
   export AUTH_PROVIDERS_NAMESPACE="showcase-auth-providers"
   export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
-
+  export BASE_URL="https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${K8S_CLUSTER_ROUTER_BASE}"
   add_helm_repos
   run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
 
