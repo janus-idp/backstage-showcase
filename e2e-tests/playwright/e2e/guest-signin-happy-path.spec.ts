@@ -23,7 +23,7 @@ test.describe("Guest Signing Happy path", () => {
 
   test("Verify Profile is Guest in the Settings page", async () => {
     await uiHelper.openSidebar("Settings");
-    await uiHelper.verifyHeading("Guest");
+    await uiHelper.verifyHeading("Guest FAIL HERE");
     await uiHelper.verifyHeading("User Entity: guest");
   });
 
