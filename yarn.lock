@@ -44521,11 +44521,11 @@ __metadata:
 
 "typescript@patch:typescript@5.7.3#~builtin<compat/typescript>":
   version: 5.7.3
-  resolution: "typescript@patch:typescript@npm%3A5.7.3#~builtin<compat/typescript>::version=5.7.3&hash=cef18b"
+  resolution: "typescript@patch:typescript@npm%3A5.7.3#~builtin<compat/typescript>::version=5.7.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 633cd749d6cd7bc842c6b6245847173bba99742a60776fae3c0fbcc0d1733cd51a733995e5f4dadd8afb0e64e57d3c7dbbeae953a072ee303940eca69e22f311
+  checksum: 081eb086b0247a54cd8d61e34c10c3325037b0fdf00e135738d923e4e79f492e128be31ed03980039874ef1aa2e6fded8067f7be0cd92790efd2576e1d70e723
   languageName: node
   linkType: hard
 
