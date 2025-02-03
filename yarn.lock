@@ -10650,7 +10650,7 @@ __metadata:
     node-fetch: 2.7.0
     prettier: 3.4.2
     supertest: 6.3.4
-    winston: 3.14.2
+    winston: 3.17.0
   languageName: unknown
   linkType: soft
 
@@ -10679,7 +10679,7 @@ __metadata:
     react-use: 17.6.0
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
-    react-router-dom: 6.28.2
+    react-router-dom: 6.29.0
   languageName: unknown
   linkType: soft
 
@@ -10733,7 +10733,7 @@ __metadata:
     node-fetch: 2.7.0
     prettier: 3.4.2
     supertest: 6.3.4
-    winston: 3.14.2
+    winston: 3.17.0
   languageName: unknown
   linkType: soft
 
@@ -16408,6 +16408,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/router@npm:1.22.0":
+  version: 1.22.0
+  resolution: "@remix-run/router@npm:1.22.0"
+  checksum: 09c6b29ce940d350fd33b22925c2131a828cbb0573cb12470e5abf96fdaa44714032d0a9caba89e96aeb61cc2544dabc51c227863aa51291cb763dba5dd2e316
+  languageName: node
+  linkType: hard
+
 "@repeaterjs/repeater@npm:^3.0.4":
   version: 3.0.5
   resolution: "@repeaterjs/repeater@npm:3.0.5"
@@ -21905,7 +21912,7 @@ __metadata:
     prettier: 3.4.2
     react: 18.3.1
     react-dom: 18.3.1
-    react-router-dom: 6.28.2
+    react-router-dom: 6.29.0
     react-use: 17.6.0
     tss-react: 4.9.15
   languageName: unknown
@@ -22683,7 +22690,7 @@ __metadata:
     global-agent: 3.0.0
     prettier: 3.4.2
     undici: 6.21.1
-    winston: 3.14.2
+    winston: 3.17.0
   languageName: unknown
   linkType: soft
 
@@ -26991,7 +26998,7 @@ __metadata:
     otplib: 12.0.1
     prettier: 3.4.2
     typescript: 5.7.3
-    winston: 3.14.2
+    winston: 3.17.0
   languageName: unknown
   linkType: soft
 
@@ -34059,6 +34066,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"logform@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "logform@npm:2.7.0"
+  dependencies:
+    "@colors/colors": 1.6.0
+    "@types/triple-beam": ^1.3.2
+    fecha: ^4.2.0
+    ms: ^2.1.1
+    safe-stable-stringify: ^2.3.1
+    triple-beam: ^1.3.0
+  checksum: a202d10897254735ead75a640f889998f9b91a0c36be9cac3f5471fa740d36bc2fbbcf9d113dcdadec4ddf09e257393ff800e6aab80019bdc7456363d6ea21f6
+  languageName: node
+  linkType: hard
+
 "long-timeout@npm:0.1.1":
   version: 0.1.1
   resolution: "long-timeout@npm:0.1.1"
@@ -39967,6 +39988,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-router-dom@npm:6.29.0":
+  version: 6.29.0
+  resolution: "react-router-dom@npm:6.29.0"
+  dependencies:
+    "@remix-run/router": 1.22.0
+    react-router: 6.29.0
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 0000208e404ba09a03937c3a543e688d59bb4f23a902a7f343ca69d8315b262849745f8e3ef1dedf322be87856103f08cab689da39b67b65153606ed788dd51e
+  languageName: node
+  linkType: hard
+
 "react-router@npm:6.28.2":
   version: 6.28.2
   resolution: "react-router@npm:6.28.2"
@@ -39975,6 +40009,17 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 3e47c475293a54ae7067cc12d26947b6d73586916fc17ccd32215524c6ae7aa52b64d8d748a75152fa2bc72193ca709181c8aa24bfcd60efe08243357afed6e0
+  languageName: node
+  linkType: hard
+
+"react-router@npm:6.29.0":
+  version: 6.29.0
+  resolution: "react-router@npm:6.29.0"
+  dependencies:
+    "@remix-run/router": 1.22.0
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 5fefc27c294b5db5f0da2d0872c8e186e770e6b6e5c954aef3040df240d325b1e57dd6a5ed2ed870a3ceae2483c772524725872155de6de491f664d766556630
   languageName: node
   linkType: hard
 
@@ -46194,22 +46239,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"winston@npm:3.14.2":
-  version: 3.14.2
-  resolution: "winston@npm:3.14.2"
+"winston-transport@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "winston-transport@npm:4.9.0"
+  dependencies:
+    logform: ^2.7.0
+    readable-stream: ^3.6.2
+    triple-beam: ^1.3.0
+  checksum: f5fd06a27def7597229925ba2b8b9ffa61b5b8748f994c8325064744e4e36dfea19868a16c16b3806f9b98bb7da67c25f08ae6fba3bdc6db4a9555673474a972
+  languageName: node
+  linkType: hard
+
+"winston@npm:3.17.0":
+  version: 3.17.0
+  resolution: "winston@npm:3.17.0"
   dependencies:
     "@colors/colors": ^1.6.0
     "@dabh/diagnostics": ^2.0.2
     async: ^3.2.3
     is-stream: ^2.0.0
-    logform: ^2.6.0
+    logform: ^2.7.0
     one-time: ^1.0.0
     readable-stream: ^3.4.0
     safe-stable-stringify: ^2.3.1
     stack-trace: 0.0.x
     triple-beam: ^1.3.0
-    winston-transport: ^4.7.0
-  checksum: 9021637d3ab1d1e639d64e7217ed5ae63fb0e5325defdbce439f708e9b4e26c7a31eb4a731106790aa8ac6f80a3a89242de18d1991ab3838f9d84e55101f4607
+    winston-transport: ^4.9.0
+  checksum: ba772c25937007cea6cdeddc931de18a1ea336ae7b3aff2c15de762de5c559b2d310ca2e7a911c209711d325e47d653485e33271ddfb27cd73179e35c7d52267
   languageName: node
   linkType: hard
 
