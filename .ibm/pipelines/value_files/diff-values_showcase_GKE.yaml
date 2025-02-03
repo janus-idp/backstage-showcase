@@ -16,7 +16,7 @@ upstream:
     podSecurityContext:
       fsGroup: 2000
     startupProbe:
-      failureThreshold: 9 # Override the default to account for longer startup time on Kubernetes.
+      failureThreshold: 10 # Override the default to account for longer startup time on Kubernetes.
   postgresql:
     primary:
       podSecurityContext:
