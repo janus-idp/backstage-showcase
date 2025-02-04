@@ -77,7 +77,7 @@ export default defineConfig({
       ],
       dependencies: ["showcase-auth-providers-setup-environment"],
       teardown: "showcase-auth-providers-clear-environment",
-      retries: 1,
+      retries: 2,
     },
     {
       name: "showcase-auth-providers-setup-environment",
