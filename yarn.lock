@@ -3275,15 +3275,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-acr@npm:1.8.5":
-  version: 1.8.5
-  resolution: "@backstage-community/plugin-acr@npm:1.8.5"
+"@backstage-community/plugin-acr@npm:1.10.0":
+  version: 1.10.0
+  resolution: "@backstage-community/plugin-acr@npm:1.10.0"
   dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/theme": ^0.6.0
+    "@backstage/catalog-model": ^1.7.3
+    "@backstage/core-components": ^0.16.3
+    "@backstage/core-plugin-api": ^1.10.3
+    "@backstage/frontend-plugin-api": ^0.9.4
+    "@backstage/plugin-catalog-react": ^1.15.1
+    "@backstage/theme": ^0.6.3
     "@janus-idp/shared-react": ^2.13.0
     "@material-ui/core": ^4.9.13
     "@material-ui/icons": ^4.11.3
@@ -3291,7 +3292,7 @@ __metadata:
     react-use: ^17.4.0
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
-  checksum: ede9aa573ab6b2d81641a72e3f08e8c9e1e2efbad3b28697a92a8525519c9ef86257b5c6606a9fa5f3b9155b704ce3e21d31f48a27ad0b56bc74f4d2f8c0eff1
+  checksum: da563505fa7b58b9b39ad3826b73384f0c3c42ead68c4c0139000c7cf6c7998cf14a68e58f07139b00c6e1a4fca53c7abf5f9b70b12f255c84bfdfcfc48859e4
   languageName: node
   linkType: hard
 
@@ -22725,7 +22726,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-acr@workspace:dynamic-plugins/wrappers/backstage-community-plugin-acr"
   dependencies:
-    "@backstage-community/plugin-acr": 1.8.5
+    "@backstage-community/plugin-acr": 1.10.0
     "@backstage/cli": 0.29.6
     "@backstage/core-plugin-api": 1.10.3
     "@janus-idp/cli": 3.0.0
