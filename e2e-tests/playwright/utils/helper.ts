@@ -25,6 +25,7 @@ export async function runShellCmd(command: string) {
         return;
       } else {
         LOGGER.info(`Process failed with code ${code}: ${result}`);
+        console.log(`Process failed with code ${code}: ${result}`);
         throw Error(`Error executing shell command; exit code ${code}`);
       }
     });
