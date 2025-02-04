@@ -12311,7 +12311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/icons-material@npm:5.16.14, @mui/icons-material@npm:^5.15.19, @mui/icons-material@npm:^5.16.4, @mui/icons-material@npm:^5.16.7":
+"@mui/icons-material@npm:5.16.14, @mui/icons-material@npm:^5.15.17, @mui/icons-material@npm:^5.15.19, @mui/icons-material@npm:^5.16.4, @mui/icons-material@npm:^5.16.7":
   version: 5.16.14
   resolution: "@mui/icons-material@npm:5.16.14"
   dependencies:
@@ -16139,6 +16139,26 @@ __metadata:
     react: 16.13.1 || ^17.0.0 || ^18.2.0
     react-router-dom: 6.28.2
   checksum: 179f5949051e4e5d599a25998248e7c931041ff99185ca5fad92c1c92547d661f82072bacabfc4261d3888bc3783d40025e4888b5d40998cdf44a20686ce53e3
+  languageName: node
+  linkType: hard
+
+"@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:0.0.6":
+  version: 0.0.6
+  resolution: "@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:0.0.6"
+  dependencies:
+    "@backstage/core-components": ^0.16.3
+    "@backstage/core-plugin-api": ^1.10.3
+    "@backstage/theme": ^0.6.3
+    "@mui/icons-material": ^5.15.17
+    "@mui/material": ^5.15.17
+    "@mui/styles": 5.16.13
+    "@scalprum/react-core": 0.9.3
+    classnames: ^2.5.1
+    react-use: ^17.2.4
+  peerDependencies:
+    react: 16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 2c9f0046497b5f2f67f557078408bea951a897d0914aeb9a55b199c9a55dee094c0796438d23c4d092feb6b00ddf92dbd6494e5ff1b8a5285e7c31b928e40944
   languageName: node
   linkType: hard
 
@@ -40153,6 +40173,18 @@ __metadata:
     "@janus-idp/cli": 3.0.0
     "@mui/material": 5.16.14
     "@red-hat-developer-hub/backstage-plugin-dynamic-home-page": ^1.1.0
+    typescript: 5.7.3
+  languageName: unknown
+  linkType: soft
+
+"red-hat-developer-hub-backstage-plugin-global-floating-action-button@workspace:dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button":
+  version: 0.0.0-use.local
+  resolution: "red-hat-developer-hub-backstage-plugin-global-floating-action-button@workspace:dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button"
+  dependencies:
+    "@backstage/cli": 0.29.6
+    "@janus-idp/cli": 3.0.0
+    "@mui/material": 5.16.14
+    "@red-hat-developer-hub/backstage-plugin-global-floating-action-button": 0.0.6
     typescript: 5.7.3
   languageName: unknown
   linkType: soft
