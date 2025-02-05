@@ -2,29 +2,30 @@ import { expect, test } from "@playwright/test";
 import { UIhelper } from "../utils/ui-helper";
 import { Common } from "../utils/common";
 import Redis from "ioredis";
-import { spawn } from "child_process";
+import { ChildProcessWithoutNullStreams, spawn } from "child_process";
 
 test.describe("Verify Redis Cache DB", () => {
   let common: Common;
   let uiHelper: UIhelper;
+  let portForward: ChildProcessWithoutNullStreams;
   test.beforeEach(async ({ page }) => {
     uiHelper = new UIhelper(page);
     common = new Common(page);
     await common.loginAsGuest();
-  });
 
-  test("Open techdoc and verify the cache generated in redis db", async () => {
-    await uiHelper.openSidebarButton("Favorites");
-    await uiHelper.openSidebar("Docs");
-    await uiHelper.clickLink("Backstage Showcase");
-
-    const portForward = spawn("/bin/sh", [
+    portForward = spawn("/bin/sh", [
       "-c",
       `
       oc login --token="${process.env.K8S_CLUSTER_TOKEN}" --server="${process.env.K8S_CLUSTER_URL}" &&
       kubectl port-forward service/redis 6379:6379 -n ${process.env.NAME_SPACE}
     `,
     ]);
+  });
+
+  test("Open techdoc and verify the cache generated in redis db", async () => {
+    await uiHelper.openSidebarButton("Favorites");
+    await uiHelper.openSidebar("Docs");
+    await uiHelper.clickLink("Backstage Showcase");
 
     // Wait for port-forward to be ready
     await new Promise<void>((resolve, reject) => {
@@ -42,8 +43,16 @@ test.describe("Verify Redis Cache DB", () => {
     const redis = new Redis(
       `redis://${process.env.REDIS_TEMP_USER}:${process.env.REDIS_TEMP_PASS}@localhost:6379`,
     );
-    const keys = await redis.keys("*");
-    expect(keys).toContainEqual(expect.stringContaining("techdocs"));
-    redis.disconnect();
+    await expect(async () => {
+      const keys = await redis.keys("*");
+      expect(keys).toContainEqual(expect.stringContaining("techdocs"));
+    }).toPass({
+      intervals: [3_000],
+      timeout: 30_000,
+    });
+  });
+
+  test.afterAll(() => {
+    portForward.kill();
   });
 });
