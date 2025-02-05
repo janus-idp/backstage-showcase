@@ -11,7 +11,7 @@ export default defineConfig({
   timeout: 90 * 1000,
   testDir: "./playwright",
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: false,
+  forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
@@ -60,7 +60,12 @@ export default defineConfig({
     {
       name: "showcase-rbac",
       ...useCommonDeviceAndViewportConfig,
-      testMatch: ["**/playwright/e2e/plugins/bulk-import.spec.ts"],
+      testMatch: [
+        "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
+        "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
+        "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
+        "**/playwright/e2e/plugins/bulk-import.spec.ts",
+      ],
     },
     {
       name: "showcase-auth-providers",
