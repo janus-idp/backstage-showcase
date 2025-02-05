@@ -120,9 +120,13 @@ test.describe.skip("Test RBAC", () => {
   });
 
   test.describe("Test RBAC plugin as an admin user", () => {
-    test.beforeEach(async ({ page }) => {
-      await new Common(page).loginAsKeycloakUser();
+    test.beforeEach(async ({ page }, testInfo) => {
+      testInfo.setTimeout(testInfo.timeout + 30_000); // Additional time due to repeated timeout failure in OSD env.
+      const common = new Common(page);
+      await common.loginAsKeycloakUser();
       await page.goto("/rbac");
+      await common.waitForLoad();
+      await new UiHelper(page).verifyHeading("RBAC", 30_000);
     });
 
     test("Check if Administration side nav is present with RBAC plugin", async ({

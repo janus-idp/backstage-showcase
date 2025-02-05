@@ -75,6 +75,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-header/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-header/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import/package.json
@@ -82,7 +83,6 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-back
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic/package.json ./dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin/package.json ./dynamic-plugins/wrappers/pagerduty-backstage-plugin/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic/package.json ./dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json
@@ -204,7 +204,7 @@ RUN "$YARN" workspaces focus --all --production && \
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1737531030 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1738671167 AS runner
 USER 0
 
 # Upstream only

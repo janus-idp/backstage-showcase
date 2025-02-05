@@ -45,7 +45,6 @@ Our current list of plugins include:
 - [Gitlab Scaffolder actions](https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-gitlab)
 - [Utils Scaffolder actions](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-utils)
 - [Nexus Repository Manager plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/nexus-repository-manager/plugins/nexus-repository-manager)
-- [AAP Backend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/aap-backend)
 
 ## Getting Started
 

@@ -20,7 +20,9 @@ export class CatalogImport {
     clickViewComponent: boolean = true,
   ) {
     await this.page.fill(CATALOG_IMPORT_COMPONENTS.componentURL, url);
-    await this.uiHelper.clickButton("Analyze");
+    await expect(await this.uiHelper.clickButton("Analyze")).not.toBeVisible({
+      timeout: 25_000,
+    });
 
     // Wait for the visibility of either 'Refresh' or 'Import' button
     if (await this.uiHelper.isBtnVisible("Import")) {

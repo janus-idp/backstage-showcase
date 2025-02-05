@@ -258,6 +258,17 @@ dynamicPlugins:
           config:
             layout:
               position: above-main-content
+    red-hat-developer-hub.backstage-plugin-global-floating-action-button:
+      mountPoints:
+        - mountPoint: application/listener
+          importName: DynamicGlobalFloatingActionButton
+        - mountPoint: global.floatingactionbutton/component
+          importName: NullComponent
+          config:
+            icon: github
+            label: Git
+            toolTip: Github
+            to: https://github.com/redhat-developer/rhdh
     red-hat-developer-hub.backstage-plugin-dynamic-home-page:
       dynamicRoutes:
         - path: /
