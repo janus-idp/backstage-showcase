@@ -3384,20 +3384,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.2.2":
-  version: 3.2.2
-  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.2.2"
+"@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.4.0":
+  version: 3.4.0
+  resolution: "@backstage-community/plugin-catalog-backend-module-keycloak@npm:3.4.0"
   dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@keycloak/keycloak-admin-client": 24.0.5
+    "@backstage/backend-plugin-api": ^1.1.0
+    "@backstage/catalog-model": ^1.7.2
+    "@backstage/errors": ^1.2.6
+    "@backstage/plugin-catalog-node": ^1.15.0
+    "@keycloak/keycloak-admin-client": 26.1.0
     inclusion: ^1.0.1
     lodash: ^4.17.21
     pg-format: ^1.0.4
     uuid: ^9.0.1
-  checksum: 87034553a8db3785ae43b26beff6c027b047009a7d31e18088091093f2c1a236478566c7dff7f9e57e83a7a8f91033d87c5ac5c4a3c288551577cfed58356f99
+  checksum: ad770236f6e68ecd24e3886200069e334dc9f36cf5e7a12425866c888eacd476c053f6a4c4d94a7ca725e6dc495bda7a2cf7ee47b8cb893cdb7c585c073e41d4
   languageName: node
   linkType: hard
 
@@ -11190,17 +11190,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keycloak/keycloak-admin-client@npm:24.0.5":
-  version: 24.0.5
-  resolution: "@keycloak/keycloak-admin-client@npm:24.0.5"
-  dependencies:
-    camelize-ts: ^3.0.0
-    url-join: ^5.0.0
-    url-template: ^3.1.1
-  checksum: bafbf888c2974ef09fcf2a97dd3d06aa3f8cba663befe35a1379962336a229ac55b6152b9e784ea591d765e23611858f87e786e5d3e75d6e33b69215ff343291
-  languageName: node
-  linkType: hard
-
 "@keycloak/keycloak-admin-client@npm:25.0.6":
   version: 25.0.6
   resolution: "@keycloak/keycloak-admin-client@npm:25.0.6"
@@ -11209,6 +11198,17 @@ __metadata:
     url-join: ^5.0.0
     url-template: ^3.1.1
   checksum: bd7d29674ba29463f8fbc33594491221ad9b5afb7b76f4c6d41209090c727bf2d4f17cb9abcaafecb7117a74e194b197af341e11f31ea695e103de0a362b9b32
+  languageName: node
+  linkType: hard
+
+"@keycloak/keycloak-admin-client@npm:26.1.0":
+  version: 26.1.0
+  resolution: "@keycloak/keycloak-admin-client@npm:26.1.0"
+  dependencies:
+    camelize-ts: ^3.0.0
+    url-join: ^5.0.0
+    url-template: ^3.1.1
+  checksum: 04a573b48e24f31d2f409aee17894e70389e7eb3df0ef8fd7b169d8a8966feba6db287b3e88e403507455f20f9f6d3d1c60e80ac99d99e7e718bc8f8ec7ba2cf
   languageName: node
   linkType: hard
 
@@ -22623,7 +22623,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-catalog-backend-module-keycloak@workspace:dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic"
   dependencies:
-    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.2.2
+    "@backstage-community/plugin-catalog-backend-module-keycloak": 3.4.0
     "@backstage/cli": 0.29.6
     "@janus-idp/cli": 3.0.0
     typescript: 5.7.3
