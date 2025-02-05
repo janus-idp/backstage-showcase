@@ -19,7 +19,9 @@ handle_auth_providers() {
   export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
   export BASE_URL="https://${AUTH_PROVIDERS_RELEASE}-backstage-${AUTH_PROVIDERS_NAMESPACE}.${K8S_CLUSTER_ROUTER_BASE}"
   export LOGS_FOLDER="$(pwd)/auth-providers-logs"
+  echo "Creating log folder ${LOGS_FOLDER}" 
   mkdir -p $LOGS_FOLDER
+  ls $LOGS_FOLDER
   add_helm_repos
   run_tests "${AUTH_PROVIDERS_RELEASE}" "${AUTH_PROVIDERS_NAMESPACE}"
 
