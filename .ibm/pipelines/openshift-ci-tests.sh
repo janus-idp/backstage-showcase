@@ -58,7 +58,7 @@ main() {
       echo "Calling Operator"
       handle_operator
       ;;
-    *periodic*)
+    *nightly*)
       echo "Calling handle_periodic"
       handle_nightly
       ;;
