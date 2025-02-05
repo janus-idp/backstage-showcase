@@ -43,6 +43,13 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "smoke-test",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: "**/playwright/e2e/smoke-test.spec.ts",
+      retries: 10,
+      repeatEach: 3,
+    },
+    {
       name: "showcase",
       ...useCommonDeviceAndViewportConfig,
       testIgnore: [
@@ -90,6 +97,7 @@ export default defineConfig({
     {
       name: "showcase-k8s",
       ...useCommonDeviceAndViewportConfig,
+      dependencies: ["smoke-test"],
       testIgnore: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
@@ -108,6 +116,7 @@ export default defineConfig({
     {
       name: "showcase-rbac-k8s",
       ...useCommonDeviceAndViewportConfig,
+      dependencies: ["smoke-test"],
       testMatch: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
