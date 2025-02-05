@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { UI_HELPER_ELEMENTS } from "../support/pageObjects/global-obj";
+import { SidebarTabs } from "./navbar";
 
 export class UIhelper {
   private page: Page;
@@ -22,6 +23,11 @@ export class UIhelper {
     await this.page.getByLabel(label).fill(text);
   }
 
+  /**
+   * Fills the search input with the provided text.
+   *
+   * @param searchText - The text to be entered into the search input field.
+   */
   async searchInputPlaceholder(searchText: string) {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
@@ -32,6 +38,13 @@ export class UIhelper {
 
   async pressTab() {
     await this.page.keyboard.press("Tab");
+  }
+
+  async checkCheckbox(text: string) {
+    const locator = this.page.getByRole("checkbox", {
+      name: text,
+    });
+    await locator.check();
   }
 
   async clickButton(
@@ -70,10 +83,8 @@ export class UIhelper {
     await element.click();
   }
 
-  async verifyDivHasText(divText: string) {
-    await expect(
-      this.page.locator(`div`).filter({ hasText: divText }),
-    ).toBeVisible();
+  async verifyDivHasText(divText: string | RegExp) {
+    await expect(this.page.locator(`div`).getByText(divText)).toBeVisible();
   }
 
   async clickLink(linkText: string) {
@@ -98,7 +109,6 @@ export class UIhelper {
     if (options?.notVisible) {
       await expect(linkLocator).not.toBeVisible();
     } else {
-      await linkLocator.scrollIntoViewIfNeeded();
       await expect(linkLocator).toBeVisible();
     }
   }
@@ -142,10 +152,10 @@ export class UIhelper {
   }
 
   async waitForSideBarVisible() {
-    await this.page.waitForSelector("nav a", { timeout: 10 * 1000 });
+    await this.page.waitForSelector("nav a", { timeout: 10_000 });
   }
 
-  async openSidebar(navBarText: string) {
+  async openSidebar(navBarText: SidebarTabs) {
     const navLink = this.page
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
@@ -207,6 +217,61 @@ export class UIhelper {
     await expect(elementLocator).toBeVisible();
   }
 
+  async verifyTextInSelector(selector: string, expectedText: string) {
+    const elementLocator = this.page
+      .locator(selector)
+      .getByText(expectedText, { exact: true });
+
+    try {
+      await elementLocator.waitFor({ state: "visible", timeout: 10000 });
+      const actualText = (await elementLocator.textContent()) || "No content";
+
+      if (actualText.trim() !== expectedText.trim()) {
+        console.error(
+          `Verification failed for text: Expected "${expectedText}", but got "${actualText}"`,
+        );
+        throw new Error(
+          `Expected text "${expectedText}" not found. Actual content: "${actualText}".`,
+        );
+      }
+      console.log(
+        `Text "${expectedText}" verified successfully in selector: ${selector}`,
+      );
+    } catch (error) {
+      const allTextContent = await this.page
+        .locator(selector)
+        .allTextContents();
+      console.error(
+        `Verification failed for text: Expected "${expectedText}". Selector content: ${allTextContent.join(", ")}`,
+      );
+      throw error;
+    }
+  }
+
+  async verifyPartialTextInSelector(selector: string, partialText: string) {
+    try {
+      const elements = await this.page.locator(selector);
+      const count = await elements.count();
+
+      for (let i = 0; i < count; i++) {
+        const textContent = await elements.nth(i).textContent();
+        if (textContent && textContent.includes(partialText)) {
+          console.log(
+            `Found partial text: ${partialText} in element: ${textContent}`,
+          );
+          return;
+        }
+      }
+
+      throw new Error(
+        `Verification failed: Partial text "${partialText}" not found in any elements matching selector "${selector}".`,
+      );
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
+  }
+
   async verifyColumnHeading(
     rowTexts: string[] | RegExp[],
     exact: boolean = true,
@@ -222,13 +287,13 @@ export class UIhelper {
     }
   }
 
-  async verifyHeading(heading: string | RegExp) {
+  async verifyHeading(heading: string | RegExp, timeout: number = 20000) {
     const headingLocator = this.page
       .locator("h1, h2, h3, h4, h5, h6")
       .filter({ hasText: heading })
       .first();
 
-    await headingLocator.waitFor({ state: "visible", timeout: 20000 });
+    await headingLocator.waitFor({ state: "visible", timeout: timeout });
     await expect(headingLocator).toBeVisible();
   }
 
@@ -241,8 +306,8 @@ export class UIhelper {
     await expect(headingLocator).toBeVisible();
   }
 
-  async waitForH4Title(text: string) {
-    await this.page.waitForSelector(`h4:has-text("${text}")`, {
+  async waitForTitle(text: string, level: number = 1) {
+    await this.page.waitForSelector(`h${level}:has-text("${text}")`, {
       timeout: 10000,
     });
   }
@@ -275,6 +340,37 @@ export class UIhelper {
 
   getButtonSelector(label: string): string {
     return `${UI_HELPER_ELEMENTS.MuiButtonLabel}:has-text("${label}")`;
+  }
+
+  getLoginBtnSelector(): string {
+    return 'MuiListItem-root li.MuiListItem-root button.MuiButton-root:has(span.MuiButton-label:text("Log in"))';
+  }
+
+  async waitForLoginBtnDisappear() {
+    await this.page.waitForSelector(await this.getLoginBtnSelector(), {
+      state: "detached",
+    });
+  }
+
+  async verifyButtonURL(
+    label: string | RegExp,
+    url: string | RegExp,
+    options: { locator?: string } = {
+      locator: "",
+    },
+  ) {
+    const buttonUrl =
+      options.locator == ""
+        ? await this.page
+            .getByRole("button", { name: label })
+            .first()
+            .getAttribute("href")
+        : await this.page
+            .locator(options.locator)
+            .getByRole("button", { name: label })
+            .first()
+            .getAttribute("href");
+    expect(buttonUrl).toContain(url);
   }
 
   /**
@@ -346,6 +442,17 @@ export class UIhelper {
       .first();
     await link.scrollIntoViewIfNeeded();
     await expect(link).toBeVisible();
+  }
+
+  async clickBtnInCard(cardText: string, btnText: string, exact = true) {
+    const cardLocator = this.page
+      .locator(UI_HELPER_ELEMENTS.MuiCardRoot(cardText))
+      .first();
+    await cardLocator.scrollIntoViewIfNeeded();
+    await cardLocator
+      .getByRole("button", { name: btnText, exact: exact })
+      .first()
+      .click();
   }
 
   async verifyTextinCard(
@@ -428,29 +535,39 @@ export class UIhelper {
   }
 
   async verifyLocationRefreshButtonIsEnabled(locationName: string) {
-    await this.page.goto("/");
-    await this.openSidebar("Catalog");
-    await this.selectMuiBox("Kind", "Location");
-    await this.verifyHeading("All locations");
-    await this.verifyCellsInTable([locationName]);
-    await this.clickLink(locationName);
-    await this.verifyHeading(locationName);
+    await expect(async () => {
+      await this.page.goto("/");
+      await this.openSidebar("Catalog");
+      await this.selectMuiBox("Kind", "Location");
+      await this.verifyHeading("All locations");
+      await this.verifyCellsInTable([locationName]);
+      await this.clickLink(locationName);
+      await this.verifyHeading(locationName);
+    }).toPass({
+      intervals: [1_000, 2_000, 5_000],
+      timeout: 20 * 1000,
+    });
+
+    await expect(
+      this.page.locator(`button[title="Schedule entity refresh"]`),
+    ).toHaveCount(1);
+
     await this.page.locator(`button[title="Schedule entity refresh"]`).click();
     await this.verifyAlertErrorMessage("Refresh scheduled");
 
     const moreButton = await this.page
       .locator("button[aria-label='more']")
       .first();
-    await moreButton.waitFor({ state: "visible" });
-    await moreButton.waitFor({ state: "attached" });
+    await moreButton.waitFor({ state: "visible", timeout: 4000 });
+    await moreButton.waitFor({ state: "attached", timeout: 4000 });
     await moreButton.click();
 
     const unregisterItem = await this.page
       .locator("li[role='menuitem']")
       .filter({ hasText: "Unregister entity" })
       .first();
-    await unregisterItem.waitFor({ state: "visible" });
-    await unregisterItem.waitFor({ state: "attached" });
+    await unregisterItem.waitFor({ state: "visible", timeout: 4000 });
+    await unregisterItem.waitFor({ state: "attached", timeout: 4000 });
     expect(unregisterItem).not.toBeDisabled();
   }
 
@@ -475,5 +592,34 @@ export class UIhelper {
     await deleteButton.waitFor({ state: "visible" });
     await deleteButton.waitFor({ state: "attached" });
     await deleteButton.click();
+  }
+
+  /**
+   * Verifies the values of the Enabled and Preinstalled columns for a specific row.
+   *
+   * @param text - Text to locate the specific row (based on the Name column).
+   * @param expectedEnabled - Expected value for the Enabled column ("Yes" or "No").
+   * @param expectedPreinstalled - Expected value for the Preinstalled column ("Yes" or "No").
+   */
+  async verifyPluginRow(
+    text: string,
+    expectedEnabled: string,
+    expectedPreinstalled: string,
+  ) {
+    // Locate the row based on the text in the Name column
+    const rowSelector = `tr:has(td:text-is("${text}"))`;
+    const row = this.page.locator(rowSelector);
+
+    // Locate the "Enabled" (3rd column) and "Preinstalled" (4th column) cells by their index
+    const enabledColumn = row.locator("td").nth(2); // Index 2 for "Enabled"
+    const preinstalledColumn = row.locator("td").nth(3); // Index 3 for "Preinstalled"
+
+    await expect(enabledColumn).toHaveText(expectedEnabled);
+    await expect(preinstalledColumn).toHaveText(expectedPreinstalled);
+  }
+
+  async verifyTextInTooltip(text: string | RegExp) {
+    const tooltip = await this.page.getByRole("tooltip").getByText(text);
+    expect(tooltip).toBeVisible();
   }
 }

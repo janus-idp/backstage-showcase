@@ -1,4 +1,4 @@
-# Copyright 2024 The Janus IDP Authors
+# Copyright Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,10 +33,6 @@ on:
           Specify a glob pattern to select packages for upgrade (e.g., `@{backstage,backstage-community}/*`).
           To update all Backstage-related packages, use `@{backstage,backstage-community,janus-idp,roadiehq,immobiliarelabs,pagerduty,parfuemerie-douglas}/*`.
         required: false
-      skip-export-dynamic:
-        description: 'Skip updating dynamic plugins'
-        required: false
-        type: boolean
   schedule:
     - cron: "15 3 * * WED" # Every Wednesday at 3:15 AM
 
@@ -48,10 +44,10 @@ jobs:
     steps:
       - name: Generate token
         id: generate-token
-        uses: actions/create-github-app-token@31c86eb3b33c9b601a1f60f98dcbfd1d70f379b4 # v1.10.3
+        uses: actions/create-github-app-token@67e27a7eb7db372a1c61a7f9bdab8699e9ee57f7 # v1.11.3
         with:
-          app-id: ${{ vars.JANUS_IDP_GITHUB_APP_ID }}
-          private-key: ${{ secrets.JANUS_IDP_GITHUB_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.RHDH_GITHUB_APP_ID }}
+          private-key: ${{ secrets.RHDH_GITHUB_APP_PRIVATE_KEY }}
 
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -59,20 +55,21 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
         with:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: yarn install
+        uses: backstage/actions/yarn-install@b3c1841fd69e1658ac631afafd0fb140a2309024 # v0.6.17
+        with:
+          cache-prefix: ${{ runner.os }}-v20
 
       - name: Run versons:bump script
         run: |
           yarn versions:bump \
             ${{ inputs.release && format('--release {0}', inputs.release) }} \
-            ${{ inputs.pattern && format('--pattern {0}', inputs.pattern) }} \
-            ${{ inputs.skip-export-dynamic && '--skip-export-dynamic' }}
+            ${{ inputs.pattern && format('--pattern {0}', inputs.pattern) }}
 
       - name: Determine PR details
         id: pr-details

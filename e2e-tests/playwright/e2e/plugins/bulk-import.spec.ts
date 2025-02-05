@@ -11,6 +11,7 @@ import {
 
 // Pre-req : plugin-bulk-import & plugin-bulk-import-backend-dynamic
 test.describe.serial("Bulk Import plugin", () => {
+  test.skip(() => process.env.JOB_NAME.endsWith("osd-gcp-helm-nightly")); // skipping due to RHIDP-5704 on OSD Env
   let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
@@ -41,12 +42,11 @@ test.describe.serial("Bulk Import plugin", () => {
       newRepoDetails.owner,
       newRepoDetails.repoName,
     );
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await common.loginAsKeycloakUser(
+      process.env.GH_USER2_ID,
+      process.env.GH_USER2_PASS,
+    );
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   // Select two repos: one with an existing catalog.yaml file and another without it
   test("Add a Repository from the Repository Tab and Confirm its Preview", async () => {
@@ -66,7 +66,9 @@ test.describe.serial("Bulk Import plugin", () => {
       catalogRepoDetails.name,
       "Preview file",
     );
-    await expect(await uiHelper.clickButton("Save")).not.toBeVisible();
+    await expect(await uiHelper.clickButton("Save")).not.toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("Add a Repository from the Organization Tab and Confirm its Preview", async () => {
@@ -131,7 +133,9 @@ test.describe.serial("Bulk Import plugin", () => {
       newRepoDetails.updatedComponentName,
     );
     await bulkimport.fillTextInputByNameAtt("prLabels", newRepoDetails.labels);
-    await expect(await uiHelper.clickButton("Save")).not.toBeVisible();
+    await expect(await uiHelper.clickButton("Save")).not.toBeVisible({
+      timeout: 10000,
+    });
 
     const prCatalogInfoYaml = await APIHelper.getfileContentFromPR(
       newRepoDetails.owner,
@@ -213,7 +217,6 @@ test.describe.serial("Bulk Import plugin", () => {
       notVisible: true,
     });
   });
-
   test("Verify Deleted Bulk Import Repositories Does not Appear in the Catalog", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Component");
@@ -233,6 +236,7 @@ test.describe.serial("Bulk Import plugin", () => {
 
 test.describe
   .serial("Bulk Import - Verify existing repo are displayed in bulk import Added repositories", () => {
+  test.skip(() => process.env.JOB_NAME.endsWith("osd-gcp-helm-nightly")); // skipping due to RHIDP-5704 on OSD Env
   let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
@@ -252,12 +256,11 @@ test.describe
     common = new Common(page);
     bulkimport = new BulkImport(page);
     catalogImport = new CatalogImport(page);
-    await common.loginAsGithubUser(process.env.GH_USER2_ID);
+    await common.loginAsKeycloakUser(
+      process.env.GH_USER2_ID,
+      process.env.GH_USER2_PASS,
+    );
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Verify existing repo from app-config is displayed in bulk import Added repositories", async () => {
     await uiHelper.openSidebar("Bulk import");
@@ -291,6 +294,7 @@ test.describe
 
 test.describe
   .serial("Bulk Import - Ensure users without bulk import permissions cannot access the bulk import plugin", () => {
+  test.skip(() => process.env.JOB_NAME.endsWith("osd-gcp-helm-nightly")); // skipping due to RHIDP-5704 on OSD Env
   let page: Page;
   let uiHelper: UIhelper;
   let common: Common;
@@ -299,12 +303,8 @@ test.describe
 
     uiHelper = new UIhelper(page);
     common = new Common(page);
-    await common.loginAsGuest();
+    await common.loginAsKeycloakUser();
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Bulk Import - Verify users without permission cannot access", async () => {
     await uiHelper.openSidebar("Bulk import");

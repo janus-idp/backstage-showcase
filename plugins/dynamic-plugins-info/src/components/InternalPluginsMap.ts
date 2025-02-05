@@ -63,8 +63,18 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic',
   'red-hat-developer-hub-backstage-plugin-bulk-import':
     './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import',
+  'red-hat-developer-hub-backstage-plugin-global-header':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-header',
+  'red-hat-developer-hub-backstage-plugin-global-floating-action-button':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-floating-action-button',
   'red-hat-developer-hub-backstage-plugin-dynamic-home-page':
     './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page',
+  'red-hat-developer-hub-backstage-plugin-marketplace':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace',
+  'red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic',
+  'red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic':
+    './dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic',
   'backstage-plugin-techdocs-backend-dynamic':
     './dynamic-plugins/dist/backstage-plugin-techdocs-backend-dynamic',
   'backstage-plugin-techdocs':
@@ -75,6 +85,8 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-module-utils-dynamic',
   'roadiehq-scaffolder-backend-module-http-request-dynamic':
     './dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic',
+  'backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic':
+    './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic',
   'backstage-community-plugin-scaffolder-backend-module-quay-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic',
   'backstage-community-plugin-rbac':
@@ -85,8 +97,6 @@ export const InternalPluginsMap: Record<string, string> = {
     './dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic',
   'backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic':
     '/dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic',
-  'janus-idp-backstage-plugin-aap-backend-dynamic':
-    './dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic',
   'backstage-community-plugin-3scale-backend-dynamic':
     './dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic',
   'backstage-community-plugin-catalog-backend-module-keycloak-dynamic':

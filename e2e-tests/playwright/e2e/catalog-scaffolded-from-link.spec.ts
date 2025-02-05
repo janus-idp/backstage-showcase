@@ -1,4 +1,4 @@
-import { Page, test } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 import { UIhelper } from "../utils/ui-helper";
 import { Common, setupBrowser } from "../utils/common";
 import { CatalogImport } from "../support/pages/catalog-import";
@@ -7,18 +7,18 @@ import { GITHUB_API_ENDPOINTS } from "../utils/api-endpoints";
 
 let page: Page;
 
-// TODO: replace skip with serial
-test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
+test.describe.serial("Link Scaffolded Templates to Catalog Items", () => {
   let uiHelper: UIhelper;
   let common: Common;
   let catalogImport: CatalogImport;
 
   const template =
-    "https://github.com/janus-idp/backstage-plugins/blob/main/plugins/scaffolder-annotator-action/examples/templates/01-scaffolder-template.yaml";
+    "https://github.com/janus-qe/01-scaffolder-template/blob/main/01-scaffolder-template.yaml";
 
   const reactAppDetails = {
     owner: "janus-qe/maintainers",
     componentName: `test-scaffoldedfromlink-${Date.now()}`,
+    componentPartialName: `test-scaffoldedfromlink-`,
     description: "react app using template",
     repo: `test-scaffolded-${Date.now()}`,
     repoOwner: Buffer.from(
@@ -34,12 +34,8 @@ test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
     uiHelper = new UIhelper(page);
     catalogImport = new CatalogImport(page);
 
-    await common.loginAsGithubUser();
+    await common.loginAsGuest();
   });
-
-  test.beforeEach(
-    async () => await new Common(page).checkAndClickOnGHloginPopup(),
-  );
 
   test("Register an Template", async () => {
     await uiHelper.openSidebar("Catalog");
@@ -49,6 +45,7 @@ test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
   });
 
   test("Create a React App using the newly registered Template", async () => {
+    test.setTimeout(130000);
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
     await uiHelper.searchInputPlaceholder("Create React App Template");
@@ -83,34 +80,65 @@ test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
     ]);
 
     await uiHelper.clickButton("Create");
+    await page.waitForTimeout(5000);
     await uiHelper.clickLink("Open in catalog");
   });
 
-  test.fixme(
-    "Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ",
-    async () => {
-      await common.clickOnGHloginPopup();
-      await uiHelper.clickTab("Dependencies");
-      await uiHelper.verifyText(
-        `ownerOf / ownedByscaffoldedFromcomponent:${reactAppDetails.componentName}group:${reactAppDetails.owner}Create React App Template`,
-      );
-      await catalogImport.inspectEntityAndVerifyYaml(
-        `- type: scaffoldedFrom\n    targetRef: template:default/create-react-app-template-with-timestamp-entityref\n    target:\n      kind: template\n      namespace: default\n      name: create-react-app-template-with-timestamp-entityref`,
-      );
-    },
-  );
+  test("Verify Scaffolded link in components Dependencies and scaffoldedFrom relation in entity Raw Yaml ", async () => {
+    await uiHelper.openSidebar("Catalog");
+    await uiHelper.clickByDataTestId("user-picker-all");
+    await uiHelper.searchInputPlaceholder("scaffoldedfromlink-\n");
+    await clickOnScaffoldedFromLink();
+
+    await uiHelper.clickTab("Dependencies");
+
+    // Define selectors for labels and nodes
+    const labelSelector = 'g[data-testid="label"]'; // Selector for labels
+    const nodeSelector = 'g[data-testid="node"]'; // Selector for nodes
+
+    // Verify text inside the 'label' selector
+    await uiHelper.verifyTextInSelector(labelSelector, "ownerOf");
+    await uiHelper.verifyTextInSelector(labelSelector, "/ ownedBy");
+    await uiHelper.verifyTextInSelector(labelSelector, "scaffoldedFrom");
+
+    // Verify text inside the 'node' selector
+    await uiHelper.verifyPartialTextInSelector(
+      nodeSelector,
+      reactAppDetails.componentPartialName,
+    );
+
+    await uiHelper.verifyTextInSelector(
+      nodeSelector,
+      "Create React App Template",
+    );
+
+    // Verify the scaffoldedFrom relation in the YAML view of the entity
+    await catalogImport.inspectEntityAndVerifyYaml(
+      `relations:
+      - type: ownedBy
+        targetRef: group:janus-qe/maintainers
+      - type: scaffoldedFrom
+        targetRef: template:default/create-react-app-template-with-timestamp-entityref
+    spec:
+      type: website
+      lifecycle: experimental
+      owner: group:janus-qe/maintainers
+      scaffoldedFrom: template:default/create-react-app-template-with-timestamp-entityref`,
+    );
+  });
 
   test("Verify Registered Template and scaffolderOf relation in entity Raw Yaml", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
-    await uiHelper.searchInputPlaceholder("Create React App Template");
+
+    await uiHelper.searchInputPlaceholder("Create React App Template\n");
     await uiHelper.verifyRowInTableByUniqueText("Create React App Template", [
       "website",
     ]);
     await uiHelper.clickLink("Create React App Template");
 
     await catalogImport.inspectEntityAndVerifyYaml(
-      `- type: scaffolderOf\n    targetRef: component:default/${reactAppDetails.componentName}\n    target:\n      kind: component\n      namespace: default\n      name: ${reactAppDetails.componentName}\n`,
+      `- type: scaffolderOf\n    targetRef: component:default/${reactAppDetails.componentName}\n`,
     );
 
     await uiHelper.clickLink("Launch Template");
@@ -127,4 +155,13 @@ test.describe.skip("Link Scaffolded Templates to Catalog Items", () => {
     );
     await page.close();
   });
+
+  async function clickOnScaffoldedFromLink() {
+    const selector =
+      'a[href*="/catalog/default/component/test-scaffoldedfromlink-"]';
+    await page.locator(selector).first().waitFor({ state: "visible" });
+    const link = await page.locator(selector).first();
+    await expect(link).toBeVisible();
+    await link.click();
+  }
 });

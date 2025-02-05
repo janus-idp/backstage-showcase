@@ -1,4 +1,4 @@
-# Copyright 2023-2024 The Janus IDP Authors
+# Copyright Red Hat, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,11 +39,10 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
 
       - name: Setup local Turbo cache
         uses: dtinth/setup-github-actions-caching-for-turbo@cc723b4600e40a6b8815b65701d8614b91e2669e # v1
@@ -52,11 +51,12 @@ jobs:
         run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
       - name: Install dependencies
-        run: |
-          yarn install
+        uses: backstage/actions/yarn-install@b3c1841fd69e1658ac631afafd0fb140a2309024 # v0.6.17
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Build packages
-        run: yarn run build --concurrency=75% --affected
+        run: yarn run build --continue --affected
 
   test:
     name: Test with Node.js ${{ matrix.node-version }}
@@ -71,11 +71,10 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
 
       - name: Setup local Turbo cache
         uses: dtinth/setup-github-actions-caching-for-turbo@cc723b4600e40a6b8815b65701d8614b91e2669e # v1
@@ -84,23 +83,18 @@ jobs:
         run: rm app-config.yaml && mv app-config.example.yaml app-config.yaml
 
       - name: Install dependencies
-        run: |
-          yarn install
+        uses: backstage/actions/yarn-install@b3c1841fd69e1658ac631afafd0fb140a2309024 # v0.6.17
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Run prettier
-        run: yarn prettier:check --concurrency=75% --affected
+        run: yarn prettier:check --continue --affected
 
       - name: Run lint
-        run: yarn run lint:check --concurrency=75% --affected
+        run: yarn run lint:check --continue --affected
 
       - name: Run monorepo tools
         run: yarn run monorepo:check
-
-      - name: Run prettier for e2e
-        run: cd e2e-tests && yarn prettier:check --concurrency=75% --affected
-
-      - name: Run lint for e2e
-        run: cd e2e-tests && yarn run lint:check
 
       - name: Regenerate dockerfiles
         run: |
@@ -109,7 +103,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: yarn run test --concurrency=75% --affected
+        run: yarn run test --continue --affected
 
       - name: Verify wrappers
         run: yarn workspace dynamic-plugins-utils run test:wrappers

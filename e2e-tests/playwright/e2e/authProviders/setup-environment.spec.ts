@@ -8,9 +8,8 @@ import { KubeClient } from "../../utils/kube-client";
 
 test.describe("Setup namespace and configure environment for RHDH", () => {
   test("Create namespace", async () => {
-    await new KubeClient().createNamespaceIfNotExists(
-      constants.AUTH_PROVIDERS_NAMESPACE,
-    );
+    const k = new KubeClient();
+    await k.createNamespaceIfNotExists(constants.AUTH_PROVIDERS_NAMESPACE);
   });
 
   test("Create rbac-policy configMap", async () => {

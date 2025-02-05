@@ -3,7 +3,7 @@
 To install a dynamic plugin, you need to add the plugin definition to the `dynamic-plugin-config.yaml` file.
 
 The placement of `dynamic-plugin-config.yaml` depends on the deployment method.
-For more information, see [Installing Dynamic Plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about) or [Installing Dynamic Plugins Using the Helm Chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
+For more information, see [Installing Dynamic Plugins with the Red Hat Developer Hub Operator](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/index#proc-config-dynamic-plugins-rhdh-operator_title-plugins-rhdh-about) or [Installing Dynamic Plugins Using the Helm Chart](https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.3/html/installing_and_viewing_dynamic_plugins/index#con-install-dynamic-plugin-helm_title-plugins-rhdh-about).
 
 Plugins are defined in the `plugins` array in the `dynamic-plugin-config.yaml` file. Each plugin is defined as an object with the following properties:
 
@@ -14,7 +14,7 @@ Plugins are defined in the `plugins` array in the `dynamic-plugin-config.yaml` f
 
 ## Dynamic plugins included in the Showcase container image
 
-The showcase container image is preloaded with a variety of dynamic plugins, the majority of which are initially disabled due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/janus-idp/backstage-showcase/blob/main/dynamic-plugins.default.yaml) file.
+The showcase container image is preloaded with a variety of dynamic plugins, the majority of which are initially disabled due to mandatory configuration requirements. The comprehensive list of these plugins is outlined in the [`dynamic-plugins.default.yaml`](https://github.com/redhat-developer/rhdh/blob/main/dynamic-plugins.default.yaml) file.
 
 Upon the application startup, for each plugin disabled by default, the `install-dynamic-plugins` init container within the `backstage` Pod's log will exhibit a line similar to the following:
 

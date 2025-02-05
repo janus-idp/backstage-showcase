@@ -1,6 +1,6 @@
 {
   "name": "backstage-plugin-kubernetes",
-  "version": "0.11.16",
+  "version": "0.12.3",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.35.1",
     "pluginId": "kubernetes",
     "pluginPackages": [
       "backstage-plugin-kubernetes",
@@ -22,19 +22,20 @@
   "scripts": {
     "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "export-dynamic": "janus-cli package export-dynamic-plugin --in-place",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --in-place --clean"
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/core-plugin-api": "1.10.0",
-    "@backstage/plugin-kubernetes": "0.11.16"
+    "@backstage/core-plugin-api": "1.10.3",
+    "@backstage/plugin-kubernetes": "0.12.3"
   },
   "devDependencies": {
-    "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.17.0"
+    "@backstage/cli": "0.29.6",
+    "@janus-idp/cli": "3.0.0",
+    "typescript": "5.7.3"
   },
   "files": [
     "dist",
@@ -48,7 +49,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/janus-idp/backstage-showcase",
+    "url": "https://github.com/redhat-developer/rhdh",
     "directory": "dynamic-plugins/wrappers/backstage-plugin-kubernetes"
   },
   "maintainers": [

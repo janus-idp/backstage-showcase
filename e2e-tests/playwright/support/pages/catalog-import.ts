@@ -20,7 +20,9 @@ export class CatalogImport {
     clickViewComponent: boolean = true,
   ) {
     await this.page.fill(CATALOG_IMPORT_COMPONENTS.componentURL, url);
-    await this.uiHelper.clickButton("Analyze");
+    await expect(await this.uiHelper.clickButton("Analyze")).not.toBeVisible({
+      timeout: 25_000,
+    });
 
     // Wait for the visibility of either 'Refresh' or 'Import' button
     if (await this.uiHelper.isBtnVisible("Import")) {
@@ -127,7 +129,7 @@ export class BackstageShowcase {
 
   async verifyAboutCardIsDisplayed() {
     const url =
-      "https://github.com/janus-idp/backstage-showcase/tree/main/catalog-entities/components/";
+      "https://github.com/redhat-developer/rhdh/tree/main/catalog-entities/components/";
     const isLinkVisible = await this.page
       .locator(`a[href="${url}"]`)
       .isVisible();

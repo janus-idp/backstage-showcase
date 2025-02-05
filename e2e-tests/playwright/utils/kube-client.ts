@@ -1,4 +1,5 @@
-import k8s, { V1ConfigMap } from "@kubernetes/client-node";
+import * as k8s from "@kubernetes/client-node";
+import { V1ConfigMap } from "@kubernetes/client-node";
 import { LOGGER } from "./logger";
 import * as yaml from "js-yaml";
 
@@ -8,7 +9,6 @@ export class KubeClient {
   kc: k8s.KubeConfig;
 
   constructor() {
-    LOGGER.info(`Initializing Kubernetes API client`);
     try {
       this.kc = new k8s.KubeConfig();
       this.kc.loadFromOptions({
@@ -53,7 +53,17 @@ export class KubeClient {
         namespace,
       );
     } catch (e) {
-      LOGGER.error(e.body.message);
+      LOGGER.error(e.body?.message);
+      throw e;
+    }
+  }
+
+  async getNamespaceByName(name: string): Promise<k8s.V1Namespace | null> {
+    try {
+      LOGGER.debug(`Getting namespace ${name}.`);
+      return (await this.coreV1Api.readNamespace(name)).body;
+    } catch (e) {
+      LOGGER.error(`Error getting namespace ${name}: ${e.body?.message}`);
       throw e;
     }
   }
@@ -100,6 +110,9 @@ export class KubeClient {
     patch: object,
   ) {
     try {
+      console.log("updateConfigMap called");
+      console.log("Namespace: ", namespace);
+      console.log("ConfigMap: ", configmapName);
       const options = {
         headers: { "Content-type": k8s.PatchUtils.PATCH_FORMAT_JSON_PATCH },
       };
@@ -322,6 +335,7 @@ export class KubeClient {
   async restartDeployment(deploymentName: string, namespace: string) {
     try {
       console.log(`Scaling down deployment ${deploymentName} to 0 replicas.`);
+      console.log(`Deployment: ${deploymentName}, Namespace: ${namespace}`);
       await this.logPodConditions(namespace);
       await this.scaleDeployment(deploymentName, namespace, 0);
 

@@ -3,8 +3,8 @@ global:
     # -- Array of YAML files listing dynamic plugins to include with those listed in the `plugins` field.
     # Relative paths are resolved from the working directory of the initContainer that will install the plugins (`/opt/app-root/src`).
     includes:
-      # -- List of dynamic plugins included inside the `janus-idp/backstage-showcase` container image, some of which are disabled by default.
-      # This file ONLY works with the `janus-idp/backstage-showcase` container image.
+      # -- List of dynamic plugins included inside the `rhdh-community/rhdh` container image, some of which are disabled by default.
+      # This file ONLY works with the `rhdh-community/rhdh` container image.
       - 'dynamic-plugins.default.yaml'
 
     # -- List of dynamic plugins, possibly overriding the plugins listed in `includes` files.
@@ -97,7 +97,7 @@ global:
       - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
       - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
-        disabled: true
+        disabled: false
       # Enable tech-radar plugin.
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
         disabled: false
@@ -117,9 +117,9 @@ upstream:
   backstage:
     image:
       pullPolicy: Always
-      # using test image from https://quay.io/repository/janus-idp/backstage-showcase
+      # using test image from https://quay.io/repository/rhdh-community/rhdh
       registry: quay.io
-      repository: janus-idp/backstage-showcase
+      repository: rhdh-community/rhdh
       tag: next
     appConfig:
       app:
@@ -143,9 +143,46 @@ upstream:
                 $file: /opt/app-root/src/postgres-key.key
               cert:
                 $file: /opt/app-root/src/postgres-crt.pem
-        auth:
-          keys:
-            - secret: ${BACKEND_SECRET}
+    startupProbe:
+      # This gives enough time upon container startup before the liveness and readiness probes are triggered.
+      # Giving (120s = initialDelaySeconds + failureThreshold * periodSeconds) to account for the worst case scenario.
+      httpGet:
+        path: /.backstage/health/v1/liveness
+        port: backend
+        scheme: HTTP
+      initialDelaySeconds: 30
+      timeoutSeconds: 4
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /.backstage/health/v1/readiness
+        port: backend
+        scheme: HTTP
+      # Both liveness and readiness probes won't be triggered until the startup probe is successful.
+      # The startup probe is already configured to give enough time for the application to be started.
+      # So removing the additional delay here allows the readiness probe to be checked right away after the startup probe,
+      # which helps make the application available faster to the end-user.
+      # initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 2
+      timeoutSeconds: 4
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /.backstage/health/v1/liveness
+        port: backend
+        scheme: HTTP
+      # Both liveness and readiness probes won't be triggered until the startup probe is successful.
+      # The startup probe is already configured to give enough time for the application to be started.
+      # So removing the additional delay here allows the liveness probe to be checked right away after the startup probe,
+      # which helps make the application available faster to the end-user.
+      # initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 4
     extraEnvVars:
       - name: BACKEND_SECRET
         valueFrom:
@@ -205,7 +242,7 @@ upstream:
       - name: install-dynamic-plugins
         # -- Image used by the initContainer to install dynamic plugins into the `dynamic-plugins-root` volume mount.
         # It could be replaced by a custom image based on this one.
-        # @default -- `quay.io/janus-idp/backstage-showcase:latest`
+        # @default -- `quay.io/rhdh-community/rhdh:latest`
         image: '{{ include "backstage.image" . }}'
         command:
           - sh

@@ -1,6 +1,6 @@
 import { glob } from "glob";
 import { execSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import semver from "semver";
@@ -79,23 +79,6 @@ function updateDynamicPluginVersion(pluginDir) {
         console.log(`Updating ${name} to ${depVersion}...`);
         packageJson.version = depVersion;
       }
-    }
-
-    // Update hoisted dependency version if incorrect (simplified)
-    const distDynamicPackageJsonPath = join(
-      pluginDir,
-      "dist-dynamic/package.json",
-    );
-    if (existsSync(distDynamicPackageJsonPath)) {
-      const distDynamicPackageJson = JSON.parse(
-        readFileSync(distDynamicPackageJsonPath, "utf8"),
-      );
-      packageJson.dependencies = Object.fromEntries(
-        Object.entries(dependencies).map(([depName, depVersion]) => [
-          depName,
-          distDynamicPackageJson.peerDependencies[depName] || depVersion,
-        ]),
-      );
     }
 
     writeFileSync(
@@ -201,16 +184,14 @@ function updateSupportedBackstageVersions(backstageVersion) {
 /**
  * Parses command line arguments and returns an object with flag values.
  *
- * @returns {{ hasReleaseFlag: boolean, hasPatternFlag: boolean, hasSkipExportDynamicFlag: boolean, releaseVersion: string, pattern: string }}
+ * @returns {{ hasReleaseFlag: boolean, hasPatternFlag: boolean, releaseVersion: string, pattern: string }}
  */
 function parseArguments() {
   const args = process.argv.slice(2);
   const releaseIndex = args.indexOf("--release");
   const patternIndex = args.indexOf("--pattern");
-  const skipExportDynamicIndex = args.indexOf("--skip-export-dynamic");
   const hasReleaseFlag = releaseIndex !== -1;
   const hasPatternFlag = patternIndex !== -1;
-  const hasSkipExportDynamicFlag = skipExportDynamicIndex !== -1;
 
   // Ensure that --pattern and --release are not used together
   if (hasReleaseFlag && hasPatternFlag) {
@@ -243,7 +224,6 @@ function parseArguments() {
   return {
     hasReleaseFlag,
     hasPatternFlag,
-    hasSkipExportDynamicFlag,
     releaseVersion,
     pattern,
   };
@@ -317,13 +297,8 @@ async function determineBackstageVersion(
  */
 async function main() {
   try {
-    const {
-      hasReleaseFlag,
-      hasPatternFlag,
-      hasSkipExportDynamicFlag,
-      releaseVersion,
-      pattern,
-    } = parseArguments();
+    const { hasReleaseFlag, hasPatternFlag, releaseVersion, pattern } =
+      parseArguments();
 
     const bumpCommand = constructBumpCommand(
       hasReleaseFlag,
@@ -359,17 +334,6 @@ async function main() {
     console.log("Deduping lockfile...");
     execSync("yarn dedupe", { stdio: "inherit" });
 
-    if (hasSkipExportDynamicFlag) {
-      console.log(
-        `Skipping 'Updating dynamic-plugins folder...' step because '--skip-export-dynamic' is provided.`,
-      );
-    } else {
-      console.log("Updating dynamic-plugins folder...");
-      execSync("yarn run export-dynamic:clean --affected", {
-        stdio: "inherit",
-      });
-    }
-
     console.log(`Updating backstage.json to ${backstageVersion}...`);
     updateBackstageVersionFile(backstageVersion);
 
@@ -377,7 +341,7 @@ async function main() {
     updateBuildMetadata(backstageVersion);
 
     console.log(
-      `Successfully updated the Backstage Showcase to ${backstageVersion}!`,
+      `Successfully updated Backstage to ${backstageVersion}!`,
     );
   } catch (error) {
     console.error("An error occurred during the update process:", error);

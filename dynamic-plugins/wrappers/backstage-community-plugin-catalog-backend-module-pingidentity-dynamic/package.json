@@ -10,7 +10,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "supported-versions": "1.32.4",
+    "supported-versions": "1.35.1",
     "pluginId": "catalog",
     "pluginPackage": "@backstage/plugin-catalog-backend"
   },
@@ -28,19 +28,20 @@
   "scripts": {
     "tsc": "tsc",
     "build": "backstage-cli package build",
-    "lint": "backstage-cli package lint",
+    "lint:check": "backstage-cli package lint",
     "test": "backstage-cli package test --passWithNoTests --coverage",
     "clean": "backstage-cli package clean",
     "clean-dynamic-sources": "yarn clean && rm -Rf node_modules",
-    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-pingidentity --override-interop default --no-embed-as-dependencies",
-    "export-dynamic:clean": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-pingidentity --override-interop default --no-embed-as-dependencies --clean"
+    "export-dynamic": "janus-cli package export-dynamic-plugin --embed-package @backstage-community/plugin-catalog-backend-module-pingidentity",
+    "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
     "@backstage-community/plugin-catalog-backend-module-pingidentity": "0.1.5"
   },
   "devDependencies": {
-    "@backstage/cli": "0.28.2",
-    "@janus-idp/cli": "1.17.0"
+    "@backstage/cli": "0.29.6",
+    "@janus-idp/cli": "3.0.0",
+    "typescript": "5.7.3"
   },
   "files": [
     "dist",
@@ -49,7 +50,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/janus-idp/backstage-showcase",
+    "url": "https://github.com/redhat-developer/rhdh",
     "directory": "dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic"
   },
   "maintainers": [

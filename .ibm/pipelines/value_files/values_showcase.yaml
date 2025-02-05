@@ -3,8 +3,8 @@ global:
     # -- Array of YAML files listing dynamic plugins to include with those listed in the `plugins` field.
     # Relative paths are resolved from the working directory of the initContainer that will install the plugins (`/opt/app-root/src`).
     includes:
-      # -- List of dynamic plugins included inside the `janus-idp/backstage-showcase` container image, some of which are disabled by default.
-      # This file ONLY works with the `janus-idp/backstage-showcase` container image.
+      # -- List of dynamic plugins included inside the `rhdh-community/rhdh` container image, some of which are disabled by default.
+      # This file ONLY works with the `rhdh-community/rhdh` container image.
       - 'dynamic-plugins.default.yaml'
 
     # -- List of dynamic plugins, possibly overriding the plugins listed in `includes` files.
@@ -94,12 +94,14 @@ global:
         disabled: false
       - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-bulk-import
         disabled: false
-      # Enable tech-radar plugin.
+      # Enable tech-radar plugins.
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar
         disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
-        disabled: true
+        disabled: false
       - package: ./dynamic-plugins/dist/backstage-community-plugin-acr
+        disabled: false
+      - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic
         disabled: false
       - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
         disabled: false
@@ -114,6 +116,15 @@ global:
       - package: '@pataknight/backstage-plugin-rhdh-qe-theme@0.5.5'
         disabled: false
         integrity: sha512-srTnFDYn3Ett6z33bX4nL2NQY8wqux8TkpgBQNsE8S73nMfsor/wAdmVgHL+xW7pxQ09DT4YTdaG3GkH+cyyNQ==
+      - package: '@backstage-community/plugin-todo@0.2.42'
+        disabled: false
+        integrity: sha512-agmfwxHkZPy0zaXzjMKY9Us9l7J2og+z7p2lDWQBmlJ1KZRo6OBQdnlG1mTEryfEEl/bx5Ko+f1PhFj2/BmiIQ==
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic
+        disabled: false
+      - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace
+        disabled: false
 
 # -- Upstream Backstage [chart configuration](https://github.com/backstage/charts/blob/main/charts/backstage/values.yaml)
 upstream:
@@ -124,7 +135,7 @@ upstream:
     image:
       pullPolicy: Always
       registry: quay.io
-      repository: janus-idp/backstage-showcase
+      repository: rhdh-community/rhdh
       tag: next
     extraEnvVars:
       - name: BACKEND_SECRET
@@ -142,11 +153,55 @@ upstream:
         value: 'true'
       - name: NODE_OPTIONS
         value: '--no-node-snapshot'
+      - name: NODE_TLS_REJECT_UNAUTHORIZED
+        value: '0'
       - name: ENABLE_CORE_ROOTHTTPROUTER_OVERRIDE
         value: 'true' 
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
+      - configMapRef: dynamic-homepage-and-sidebar-config
+        filename: dynamic-homepage-and-sidebar-config.yaml
+    startupProbe:
+      # This gives enough time upon container startup before the liveness and readiness probes are triggered.
+      # Giving (120s = initialDelaySeconds + failureThreshold * periodSeconds) to account for the worst case scenario.
+      httpGet:
+        path: /.backstage/health/v1/liveness
+        port: backend
+        scheme: HTTP
+      initialDelaySeconds: 30
+      timeoutSeconds: 4
+      periodSeconds: 20
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /.backstage/health/v1/readiness
+        port: backend
+        scheme: HTTP
+      # Both liveness and readiness probes won't be triggered until the startup probe is successful.
+      # The startup probe is already configured to give enough time for the application to be started.
+      # So removing the additional delay here allows the readiness probe to be checked right away after the startup probe,
+      # which helps make the application available faster to the end-user.
+      # initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 2
+      timeoutSeconds: 4
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /.backstage/health/v1/liveness
+        port: backend
+        scheme: HTTP
+      # Both liveness and readiness probes won't be triggered until the startup probe is successful.
+      # The startup probe is already configured to give enough time for the application to be started.
+      # So removing the additional delay here allows the liveness probe to be checked right away after the startup probe,
+      # which helps make the application available faster to the end-user.
+      # initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 4
     extraEnvVarsSecrets:
       - rhdh-secrets
       - redis-secret

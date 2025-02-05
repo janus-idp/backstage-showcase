@@ -3,12 +3,12 @@ import {
   UserSettingsAuthProviders,
 } from '@backstage/plugin-user-settings';
 
-import { generalPage } from './GeneralPage';
+import { GeneralPage } from './GeneralPage';
 
 export const settingsPage = (
   <SettingsLayout>
     <SettingsLayout.Route path="general" title="General">
-      {generalPage}
+      <GeneralPage />
     </SettingsLayout.Route>
     <SettingsLayout.Route
       path="auth-providers"

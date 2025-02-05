@@ -1,4 +1,4 @@
-# Auth Providers within Backstage Showcase
+# Auth Providers within RHDH
 
 Currently we incorporate many of the Authentication providers available within Backstage. The Showcase supports the following providers:
 
@@ -106,13 +106,14 @@ For more information on setting up the OAuth2 Proxy auth provider, consult the [
           #    - resolver: preferredUsernameMatchingUserEntityName
           #    - resolver: emailMatchingUserEntityProfileEmail
           #    - resolver: emailLocalPartMatchingUserEntityName
+          #    - resolver: oidcSubClaimMatchingKeycloakUserId
   ```
 
 In an example using Keycloak for authentication with the OIDC provider, there are a few steps that need to be taken to get everything working:
 
 1. Create a realm named keycloak.
 2. Create the client backstage with Client authentication checked.
-3. Set the Valid redirect URIs to `<BACKSTAGE_URL>/api/auth/oidc/handler/frame`. If running Backstage Showcase locally, it would look something like this: `http://localhost:7007/api/auth/oidc/handler/frame`.
+3. Set the Valid redirect URIs to `<BACKSTAGE_URL>/api/auth/oidc/handler/frame`. If running RHDH locally, it would look something like this: `http://localhost:7007/api/auth/oidc/handler/frame`.
 4. Set the `metadataUrl` to the URL of your Keycloak instance and realm. It should look similar to this: `<KEYCLOAK_URL>/realms/keycloak`.
 5. Set the `clientId` to `backstage`.
 6. Obtain the client secret for the client backstage within Keycloak and set `clientSecret`.
@@ -122,12 +123,13 @@ In an example using Keycloak for authentication with the OIDC provider, there ar
 The default resolver provided by the `oidc` auth provider is the `emailLocalPartMatchingUserEntityName` resolver.
 
 If you want to use a different resolver, add the resolver you want to use in the `auth.providers.oidc.[environment].signIn.resolvers` configuration as soon in the example above, and it will override the default resolver.
+* For enhanced security, consider using the `oidcSubClaimMatchingKeycloakUserId` resolver which matches the user with the immutable `sub` parameter from OIDC to the Keycloak user ID.
 
 For more information on setting up the OIDC auth provider, consult the [Backstage documentation](https://backstage.io/docs/auth/oidc#the-configuration).
 
 ### Sign In Page configuration value
 
-After selecting the authentication provider you wish to use with your Backstage Showcase instance, ensure to add the `signInPage` configuration value to ensure that the frontend displays the appropriate authentication provider.
+After selecting the authentication provider you wish to use with your RHDH instance, ensure to add the `signInPage` configuration value to ensure that the frontend displays the appropriate authentication provider.
 
 - Add the corresponding Authentication provider key as the value to `signInPage` in your `app-config`. Where `provider-id` matches the chosen provider from the table above.
 

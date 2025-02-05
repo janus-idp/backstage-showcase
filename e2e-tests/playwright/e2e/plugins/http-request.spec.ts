@@ -22,14 +22,15 @@ test.describe("Testing scaffolder-backend-module-http-request to invoke an exter
   });
 
   test("Create a software template using http-request plugin", async () => {
+    test.setTimeout(130000);
     await uiHelper.openSidebar("Create...");
     await uiHelper.verifyHeading("Templates");
     await uiHelper.clickButton("Register Existing Component");
-    await catalogImport.registerExistingComponent(template);
+    await catalogImport.registerExistingComponent(template, false);
 
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "Template");
-    await uiHelper.searchInputPlaceholder("Test");
+    await uiHelper.searchInputPlaceholder("Test HTTP Request");
     await uiHelper.clickLink("Test HTTP Request");
     await uiHelper.verifyHeading("Test HTTP Request");
     await uiHelper.clickLink("Launch Template");

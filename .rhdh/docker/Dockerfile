@@ -23,7 +23,7 @@
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
 # https://registry.access.redhat.com/ubi9/nodejs-20
-FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1731603589 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1737421648 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -62,11 +62,8 @@ COPY $EXTERNAL_SOURCE_NESTED/package.json ./package.json
 COPY $EXTERNAL_SOURCE_NESTED/e2e-tests/package.json ./e2e-tests/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/_utils/package.json ./dynamic-plugins/_utils/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-utils-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-scaffolder-backend-module-http-request-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-argocd-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-scaffolder-backend-argocd-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-scaffolder-backend-argocd-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-scaffolder-backend-argocd-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-security-insights/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-security-insights/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-jira/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-jira/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-github-pull-requests/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-github-pull-requests/package.json
@@ -74,107 +71,74 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-datadog/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-datadog/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/roadiehq-backstage-plugin-argo-cd-backend-dynamic/dist-dynamic/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-header/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-header/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-global-floating-action-button/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-dynamic-home-page/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/red-hat-developer-hub-backstage-plugin-bulk-import-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic/package.json ./dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/parfuemerie-douglas-scaffolder-backend-module-azure-repositories-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin/package.json ./dynamic-plugins/wrappers/pagerduty-backstage-plugin/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic/package.json ./dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/pagerduty-backstage-plugin-backend-dynamic/dist-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/janus-idp-backstage-plugin-aap-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gitlab-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gitlab-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gitlab-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gitlab-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-github-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-github-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-github-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-github-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gerrit-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gerrit-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gerrit-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-gerrit-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-server-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-bitbucket-cloud-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-azure-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-azure-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-azure-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-scaffolder-backend-module-azure-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-notifications/package.json ./dynamic-plugins/wrappers/backstage-plugin-notifications/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-notifications-backend-module-email-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-notifications-backend-module-email-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-notifications-backend-module-email-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-notifications-backend-module-email-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-notifications-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-notifications-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-notifications-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-notifications-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-kubernetes/package.json ./dynamic-plugins/wrappers/backstage-plugin-kubernetes/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-kubernetes-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-msgraph-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-msgraph-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-msgraph-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-msgraph-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-ldap-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-ldap-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-ldap-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-ldap-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-org-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-org-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-org-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-org-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-gitlab-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-org-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-org-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-org-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-org-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-github-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-server-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-catalog-backend-module-bitbucket-cloud-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-topology/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-topology/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-tekton/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-tekton/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-tech-radar/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-tech-radar/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-tech-radar-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-sonarqube/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-sonarqube/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-sonarqube-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-servicenow-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-regex-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-regex-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-regex-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-regex-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-quay-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-quay-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-quay-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-quay-dynamic/dist-dynamic/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-redhat-argocd/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-rbac/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-rbac/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-quay/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-quay/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-ocm-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-nexus-repository-manager/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-nexus-repository-manager/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-lighthouse/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-lighthouse/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-jfrog-artifactory/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-jfrog-artifactory/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-jenkins/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-jenkins/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-jenkins-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-jenkins-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-jenkins-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-jenkins-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-github-issues/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-github-issues/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-github-actions/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-github-actions/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-dynatrace/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-dynatrace/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-pingidentity-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-catalog-backend-module-keycloak-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-azure-devops/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-azure-devops/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-azure-devops-backend-dynamic/dist-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-analytics-provider-segment/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-analytics-provider-segment/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-acr/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-acr/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/package.json
-COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/dist-dynamic/package.json ./dynamic-plugins/wrappers/backstage-community-plugin-3scale-backend-dynamic/dist-dynamic/package.json
 # END COPY package.json files
 
 # Downstream only - debugging
@@ -301,7 +265,7 @@ RUN "$YARN" workspaces focus --all --production && \
 # Stage 5 - Build the runner image
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20-minimal:1)
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1730525319 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1738671167 AS runner
 USER 0
 
 # Downstream sources
@@ -314,27 +278,11 @@ WORKDIR $CONTAINER_SOURCE/
 COPY $REMOTE_SOURCES/upstream2 $REMOTE_SOURCES_DIR/upstream2/
 # hadolint ignore=DL3013,DL3041,SC2086
 RUN microdnf update --setopt=install_weak_deps=0 -y && \
-  microdnf install -y python3.11 python3.11-pip python3.11-devel make cmake cpp gcc gcc-c++ skopeo; \
-  ln -s /usr/bin/pip3.11 /usr/bin/pip3; \
-  ln -s /usr/bin/pip3.11 /usr/bin/pip; \
-  # ls -la $REMOTE_SOURCES_DIR/ $REMOTE_SOURCES_DIR/upstream2/ $REMOTE_SOURCES_DIR/upstream2/app/distgit/containers/rhdh-hub/docker/ || true; \
-  # cat $REMOTE_SOURCES_DIR/upstream2/cachito.env && \
-  # cachito.env contains path to cert:
-  # export PIP_CERT=/remote-source/upstream2/app/package-index-ca.pem
-  source "$REMOTE_SOURCES_DIR"/upstream2/cachito.env && \
-  # fix ownership for pip install folder
-  mkdir -p /opt/app-root/src/.cache/pip && chown -R root:root /opt/app-root && \
-  # ls -ld /opt/ /opt/app-root /opt/app-root/src/ /opt/app-root/src/.cache /opt/app-root/src/.cache/pip || true; \
-  pushd "$REMOTE_SOURCES_DIR"/upstream2/app/distgit/containers/rhdh-hub/docker/ >/dev/null && \
-  set -xe; \
-  python3.11 -V; pip3.11 -V; \
-  pip3.11 install --no-cache-dir --upgrade pip setuptools pyyaml; \
-  pip3.11 install --no-cache-dir -r requirements.txt -r requirements-build.txt; mkdocs --version; \
-  popd >/dev/null; \
-  microdnf clean all; rm -fr "$REMOTE_SOURCES_DIR"/upstream2
-
-# Downstream only - Make python3.11 the default python
-RUN alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+  microdnf install -y python3.11 python3.11-pip skopeo && \
+  alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+  alternatives --install /usr/bin/pip pip /usr/bin/pip3.11 1 && \
+  pip install mkdocs-techdocs-core~=1.3.3 && \
+  microdnf clean all
 
 # Downstream only - copy from build, not cleanup stage
 COPY --from=build --chown=1001:1001 "$REMOTE_SOURCES_DIR"/ ./
@@ -352,6 +300,11 @@ RUN chmod -R a+r ./dynamic-plugins/ ./install-dynamic-plugins.py; \
 # Downstream only - fix for https://issues.redhat.com/browse/RHIDP-728
 RUN mkdir /opt/app-root/src/.npm
 RUN chown -R 1001:1001 /opt/app-root/src/.npm
+
+# The existence of the index.html.tmpl tells Backstage to take that file and load it into memory, inject the needed appConfig (instead of writing
+# it into a random *.chunk.js file, and then serve that file from memory so that we can set the readOnlyRootFilesystem: true option for
+# the container.
+RUN ln -s /opt/app-root/src/packages/app/dist/index.html /opt/app-root/src/packages/app/dist/index.html.tmpl
 
 # The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
 # The upstream backstage image does not account for this and it causes the container to fail at runtime.

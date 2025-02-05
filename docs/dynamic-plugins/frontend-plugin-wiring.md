@@ -172,7 +172,7 @@ Up to 3 levels of nested menu items are supported.
       - For `path: /docs`, the `menu_item_name` should be `docs`.
       - For `path: /metrics/users`, the `menu_item_name` should be `metrics.users`.
 
-- `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
+- `icon` - Optional. Defines the icon for the menu item, which refers to a Backstage system icon. See [Backstage system icons](https://backstage.io/docs/getting-started/app-custom-theme/#icons) for the default list, or extend the icon set using dynamic plugins. RHDH also provides additional icons in its internal library. See [CommonIcons.tsx](https://github.com/redhat-developer/rhdh/blob/main/packages/app/src/components/DynamicRoot/CommonIcons.tsx) for reference. If the icon is already defined in the `dynamicRoutes` configuration under `menuItem.icon`, it can be omitted in the `menuItems` configuration.
 - `title` - Optional. Specifies the display title of the menu item. This can also be omitted if it has already been defined in the `dynamicRoutes` configuration under `menuItem.text`.
 - `priority` - Optional. Defines the order in which menu items appear. The default priority is `0`, which places the item at the bottom of the list. A higher priority value will position the item higher in the sidebar.
 - `parent` - Optional. Defines the parent menu item to nest the current item under. If specified, the parent menu item must be defined somewhere else in the `menuItems` configuration of any enabled plugin.
@@ -257,9 +257,11 @@ This configuration allows you to bind to existing plugins and their routes as we
 
 ## Using mount points
 
-This section aims to allow users dynamic extension of [Catalog Components](https://backstage.io/docs/plugins/composability/#catalog-components), but can be used to extend additional views in the future as well.
-
 Mount points are defined identifiers available across the application. These points specifically allow users to extend existing pages with additional content.
+
+### Customizing Entity page
+
+This section aims to allow users dynamic extension of [Catalog Components](https://backstage.io/docs/plugins/composability/#catalog-components), but can be used to extend additional views in the future as well.
 
 The following mount points are available:
 
@@ -371,6 +373,69 @@ plugins:
                     icon: dialogIcon
  ```
 
+### Adding application header
+
+The frontend system enables users to customize global headers by specifying configurations in the `app-config.yaml` file. Below is an example configuration:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # e.g., preinstalled plugin `red-hat-developer-hub.backstage-plugin-global-header`
+      mountPoints:
+        - mountPoint: application/header # mount point for a global header
+          importName: <header_component> # e.g., `GlobalHeader` for `red-hat-developer-hub.backstage-plugin-global-header`
+          config:
+            layout:
+              position: above-main-content # options: `above-main-content` or `above-sidebar`
+```
+
+Each global header entry requires the following attributes:
+
+- `mountPoint`: Defines where the header will be added. Use `application/header` to specify it as a global header.
+- `importName`: Specifies the component exported by the global header plugin (e.g., `GlobalHeader`).
+- `config.layout.position`: Determines the header's position. Supported values are:
+  - `above-main-content`: Positions the header above the main content area.
+  - `above-sidebar`: Positions the header above the sidebar.
+
+Users can configure multiple global headers at different positions by adding entries to the `mountPoints` field.
+
+### Adding application listeners
+
+The users can add application listeners using the `application/listener` mount point. Below is an example that uses the aforesaid mount point:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:  # plugin_package_name same as `scalprum.name` key in plugin's `package.json`
+      mountPoints:
+        - mountPoint: application/listener
+          importName: <exported listener component>
+```
+
+Users can configure multiple application listeners by adding entries to the `mountPoints` field.
+
+### Adding application providers
+
+The users can add application providers using the `application/provider` mount point. Below is an example that uses the aforesaid mount point to configure a context provider:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:  # plugin_package_name same as `scalprum.name` key in plugin's `package.json`
+      dynamicRoutes:
+        - path: /<route>
+          importName: Component # Component you want to load on the route
+      mountPoints:
+        - mountPoint: application/provider
+          importName: <exported provider component>
+```
+
+Users can configure multiple application providers by adding entries to the `mountPoints` field.
+
+
 ## Customizing and Adding Entity tabs
 
 Out of the box the frontend system provides an opinionated set of tabs for catalog entity views. This set of tabs can be further customized and extended as needed via the `entityTabs` configuration:
@@ -425,7 +490,7 @@ Here are the default catalog entity routes in the default order:
 
 The visibility of a tab is derived from the kind of entity that is being displayed along with the visibility guidance mentioned in "[Using mount points](#using-mount-points)".
 
-### Provide additional Utility APIs
+## Provide additional Utility APIs
 
 Backstage offers a Utility API mechanism that provide ways for plugins to communicate during their entire life cycle. Utility APIs are registered as:
 
@@ -459,7 +524,7 @@ dynamicPlugins:
 - `importName` is an optional import name that reference a `AnyApiFactory<{}>` implementation. Defaults to `default` export.
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 
-There are a set of [API factories](https://github.com/janus-idp/backstage-showcase/blob/main/packages/app/src/apis.ts) already initialized by the Developer Hub application shell. These API factories can be overridden by an API factory provided by a dynamic plugin by specifying the same API ref ID, for example a dynamic plugin could export the following `AnyApiFactory<{}>` to cater for some specific use case:
+There are a set of [API factories](https://github.com/redhat-developer/rhdh/blob/main/packages/app/src/apis.ts) already initialized by the Developer Hub application shell. These API factories can be overridden by an API factory provided by a dynamic plugin by specifying the same API ref ID, for example a dynamic plugin could export the following `AnyApiFactory<{}>` to cater for some specific use case:
 
 ```typescript
 export const customScmAuthApiFactory = createApiFactory({
@@ -487,7 +552,7 @@ dynamicPlugins:
 
 which would override the default `ScmAuth` API factory that Developer Hub defaults to.
 
-### Provide custom Scaffolder field extensions
+## Provide custom Scaffolder field extensions
 
 The Backstage scaffolder component supports specifying [custom form fields](https://backstage.io/docs/features/software-templates/writing-custom-field-extensions/#creating-a-field-extension) for the software template wizard, for example:
 
@@ -516,7 +581,7 @@ A plugin can specify multiple field extensions, in which case each field extensi
 - `importName` is an optional import name that should reference the value returned the scaffolder field extension API
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 
-### Add a custom Backstage theme or replace the provided theme
+## Add a custom Backstage theme or replace the provided theme
 
 The look and feel of a Backstage application is handled by Backstage theming. Out of the box Developer Hub provides a theme with a number of [configuration overrides](../customization.md) that allow for user customization. It's also possible to provide additional Backstage themes as well as replace the out of box Developer Hub themes from a dynamic plugin.
 

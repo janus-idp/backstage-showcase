@@ -4,9 +4,9 @@ import { Common } from "../../utils/common";
 import { UIhelper } from "../../utils/ui-helper";
 import { TechRadar } from "../../support/pages/tech-radar";
 
-// Pre-req: Enable backstage-plugin-tech-radar and backstage-plugin-tech-radar-backend Plugin
+// Pre-req: Enable plugin-tech-radar and plugin-tech-radar-backend Plugin
 
-test.describe.skip("Test Customized Quick Access and tech-radar plugin", () => {
+test.describe("Test Customized Quick Access and tech-radar plugin", () => {
   test.beforeEach(async ({ page }) => {
     const common = new Common(page);
     await common.loginAsGuest();
@@ -14,7 +14,6 @@ test.describe.skip("Test Customized Quick Access and tech-radar plugin", () => {
 
   test("Verify Customized Quick Access", async ({ page }) => {
     const homePage = new HomePage(page);
-    await homePage.verifyQuickAccess("COMMUNITY", "Website", true);
     await homePage.verifyQuickAccess("MONITORING TOOLS", "Grafana", true);
     await homePage.verifyQuickAccess("SECURITY TOOLS", "Keycloak", true);
   });
@@ -28,8 +27,9 @@ test.describe.skip("Test Customized Quick Access and tech-radar plugin", () => {
     await uiHelper.verifyHeading("Company Radar");
 
     await techRadar.verifyRadarDetails("Languages", "JavaScript");
-    await techRadar.verifyRadarDetails("Storage", "AWS S3");
+    // TODO: This is cluster-dependent and we need tests cluster-agnostic, remove if not needed
+    // await techRadar.verifyRadarDetails("Storage", "AWS S3");
     await techRadar.verifyRadarDetails("Frameworks", "React");
-    await techRadar.verifyRadarDetails("Infrastructure", "ArgoCD");
+    await techRadar.verifyRadarDetails("Infrastructure", "GitHub Actions");
   });
 });

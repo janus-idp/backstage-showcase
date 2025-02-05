@@ -522,6 +522,37 @@ plugins:
                 menuItem:
                   icon: bulkImportIcon
                   text: Bulk import
+  # Global Header
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-header
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-global-header:
+            mountPoints:
+              - mountPoint: application/header
+                importName: GlobalHeader
+                config:
+                  layout:
+                    position: above-main-content
+
+  # Group: Global floating action button
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-floating-action-button
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-global-floating-action-button:
+            mountPoints:
+              - mountPoint: application/listener
+                importName: DynamicGlobalFloatingActionButton
+              - mountPoint: global.floatingactionbutton/component
+                importName: NullComponent
+                config:
+                  icon: github
+                  label: 'Git'
+                  toolTip: 'Github'
+                  to: https://github.com/redhat-developer/rhdh
 
   # Homepage
   - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
@@ -662,6 +693,9 @@ plugins:
   - package: ./dynamic-plugins/dist/roadiehq-scaffolder-backend-module-http-request-dynamic
     disabled: true
 
+  - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-kubernetes-dynamic
+    disabled: true
+
   - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-quay-dynamic
     disabled: false
 
@@ -701,16 +735,6 @@ plugins:
 
   - package: ./dynamic-plugins/dist/backstage-community-plugin-scaffolder-backend-module-sonarqube-dynamic
     disabled: true
-
-  - package: ./dynamic-plugins/dist/janus-idp-backstage-plugin-aap-backend-dynamic
-    disabled: true
-    pluginConfig:
-      catalog:
-        providers:
-          aap:
-            prod:
-              baseUrl: '${AAP_BASE_URL}'
-              authorization: "${AAP_AUTH_TOKEN}"
 
   - package: ./dynamic-plugins/dist/backstage-community-plugin-3scale-backend-dynamic
     disabled: true
@@ -884,7 +908,7 @@ plugins:
           backstage-community.plugin-acr:
             mountPoints:
               - mountPoint: entity.page.image-registry/cards
-                importName: AcrPage
+                importName: AcrImagesEntityContent
                 config:
                   layout:
                     gridColumn: 1 / -1
@@ -1007,3 +1031,26 @@ plugins:
       catalog:
         providers:
           pingIdentityOrg: {}
+  # Group: Marketplace
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-catalog-backend-module-marketplace-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace-backend-dynamic
+    disabled: true
+  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-marketplace
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-marketplace:
+            appIcons:
+              - name: marketplace
+                importName: MarketplaceIcon
+            dynamicRoutes:
+              - path: /marketplace
+                importName: MarketplacePage
+                menuItem:
+                  icon: marketplace
+                  text: Marketplace
+            mountPoints:
+              - mountPoint: admin.page.plugins/cards
+                importName: MarketplaceCatalogContent
