@@ -473,8 +473,8 @@ apply_yaml_files() {
     else
       create_app_config_map "$config_file" "$project"
     fi
-    oc create configmap dynamic-homepage-and-sidebar-config \
-      --from-file="dynamic-homepage-and-sidebar-config.yaml"="$dir/resources/config_map/dynamic-homepage-and-sidebar-config.yaml" \
+    oc create configmap dynamic-plugins-config \
+      --from-file="dynamic-plugins-config.yaml"="$dir/resources/config_map/dynamic-plugins-config.yaml" \
       --namespace="${project}" \
       --dry-run=client -o yaml | oc apply -f -
 

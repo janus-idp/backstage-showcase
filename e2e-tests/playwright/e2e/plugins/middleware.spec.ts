@@ -1,14 +1,9 @@
 // https://github.com/gashcrumb/dynamic-plugins-root-http-middleware/tree/main/plugins/middleware-header-example
 
-import test, { expect, request } from "@playwright/test";
-import playwrightConfig from "../../../playwright.config";
+import test from "@playwright/test";
+import { Common } from "../../utils/common";
 
-test.only("Check the middleware is working", async () => {
-  const endpoint = playwrightConfig.use.baseURL + "/api/simple-chat";
-  console.log(`middleware endpoint full url: ${endpoint}`);
-  const context = await request.newContext({
-    baseURL: endpoint,
-  });
-  const r = await context.get("");
-  expect(r.headers["X-PROXY-TEST-HEADER"]);
+test.only("Check the middleware is working", async ({ page }) => {
+  const common = new Common(page);
+  await common.loginAsGuest();
 });

@@ -19,6 +19,8 @@ backend:
   baseUrl: ${RHDH_BASE_URL}
   cors:
     origin: ${RHDH_BASE_URL}
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
   reading:
     allow:
       - host: 'github.com'
@@ -30,6 +32,15 @@ backend:
     store: redis
     connection: redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:6379
     useRedisSets: true
+  listen:
+    host: ${RHDH_BASE_URL}
+    port: 7007
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+    upgrade-insecure-requests: false
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
 integrations:
   # Plugin: GitHub
   github:
@@ -98,6 +109,11 @@ proxy:
         X-Requested-With: 'XMLHttpRequest'
       changeOrigin: true
       secure: true
+    '/add-test-header': 
+      target: http://${RHDH_BASE_URL}:7007/api/simple-chat
+      credentials: forward
+      headers:
+        'x-proxy-test-header': 'hello!'
 catalog:
   import:
     entityFilename: catalog-info.yaml

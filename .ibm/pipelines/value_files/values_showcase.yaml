@@ -160,8 +160,8 @@ upstream:
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
-      - configMapRef: dynamic-homepage-and-sidebar-config
-        filename: dynamic-homepage-and-sidebar-config.yaml
+      - configMapRef: dynamic-plugins-config
+        filename: dynamic-plugins-config.yaml
     startupProbe:
       # This gives enough time upon container startup before the liveness and readiness probes are triggered.
       # Giving (120s = initialDelaySeconds + failureThreshold * periodSeconds) to account for the worst case scenario.
