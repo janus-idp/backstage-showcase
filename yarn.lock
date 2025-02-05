@@ -3725,9 +3725,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-backend@npm:5.2.10":
-  version: 5.2.10
-  resolution: "@backstage-community/plugin-rbac-backend@npm:5.2.10"
+"@backstage-community/plugin-rbac-backend@npm:5.3.1":
+  version: 5.3.1
+  resolution: "@backstage-community/plugin-rbac-backend@npm:5.3.1"
   dependencies:
     "@backstage-community/plugin-rbac-common": ^1.12.3
     "@backstage-community/plugin-rbac-node": ^1.8.4
@@ -3750,7 +3750,7 @@ __metadata:
     knex: ^3.0.0
     lodash: ^4.17.21
     typeorm-adapter: ^1.6.1
-  checksum: 1e77a7ada4a490b2a9a00eda29fac5b3bf9f007faaa4028aabc483d408362f99555af9af3daef2c4785ee75d8fb784f9bf175b29c86f8591678b1589ed1f0355
+  checksum: 7dc9f67ab49a505eb304ecbd4dd4576e393f85989c0f27180811a9b84982418315cc1ea2749703be8c404575d938262fe3630a1c5dee626c0c916cafb265e79a
   languageName: node
   linkType: hard
 
@@ -3764,16 +3764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac-node@npm:1.8.2":
-  version: 1.8.2
-  resolution: "@backstage-community/plugin-rbac-node@npm:1.8.2"
-  dependencies:
-    "@backstage/backend-plugin-api": ^1.0.1
-  checksum: 32544869b139c8d255406a701f545bf673159255261b8d1f7fcef2f6cf47d93f5cfd30cdd513682322ba87422028a21037cb7ed666c86bae87ce9e21727e5812
-  languageName: node
-  linkType: hard
-
-"@backstage-community/plugin-rbac-node@npm:^1.8.4":
+"@backstage-community/plugin-rbac-node@npm:1.8.4, @backstage-community/plugin-rbac-node@npm:^1.8.4":
   version: 1.8.4
   resolution: "@backstage-community/plugin-rbac-node@npm:1.8.4"
   dependencies:
@@ -3782,9 +3773,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-rbac@npm:1.33.4":
-  version: 1.33.4
-  resolution: "@backstage-community/plugin-rbac@npm:1.33.4"
+"@backstage-community/plugin-rbac@npm:1.34.0":
+  version: 1.34.0
+  resolution: "@backstage-community/plugin-rbac@npm:1.34.0"
   dependencies:
     "@backstage-community/plugin-rbac-common": ^1.12.3
     "@backstage/catalog-model": ^1.7.0
@@ -3810,7 +3801,7 @@ __metadata:
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
-  checksum: 049ae208b848116c40dc6f60f2f598015fea6248af4d723a35c6c4625720d6fd4404b6cb141b68b440b252987a5b262eccda3388ce9e3f3b95c82f8b1be392ce
+  checksum: 36b662fa8289deabe9d663988e76a4534aaccfa4613e7a7c3309d16fd690de1258763825aae40e7349ef2473e607855c809ed6962fa4152b2c785b9c208ca25d
   languageName: node
   linkType: hard
 
@@ -22494,8 +22485,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend@workspace:packages/backend"
   dependencies:
-    "@backstage-community/plugin-rbac-backend": 5.2.10
-    "@backstage-community/plugin-rbac-node": 1.8.2
+    "@backstage-community/plugin-rbac-backend": 5.3.1
+    "@backstage-community/plugin-rbac-node": 1.8.4
     "@backstage-community/plugin-scaffolder-backend-module-annotator": 2.2.2
     "@backstage/backend-app-api": 1.1.1
     "@backstage/backend-defaults": 0.7.0
@@ -22784,7 +22775,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backstage-community-plugin-rbac@workspace:dynamic-plugins/wrappers/backstage-community-plugin-rbac"
   dependencies:
-    "@backstage-community/plugin-rbac": 1.33.4
+    "@backstage-community/plugin-rbac": 1.34.0
     "@backstage/cli": 0.29.6
     "@janus-idp/cli": 3.2.0
     "@mui/material": 5.16.14
