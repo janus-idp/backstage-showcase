@@ -14,6 +14,7 @@ import { usePermission } from '@backstage/plugin-permission-react';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
 
+import { policyEntityReadPermission } from '@backstage-community/plugin-rbac-common';
 import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -25,8 +26,6 @@ import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import { makeStyles } from 'tss-react/mui';
-
-import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
 
 import DynamicRootContext, {
   ResolvedMenuItem,

@@ -10686,16 +10686,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@janus-idp/backstage-plugin-rbac-common@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@janus-idp/backstage-plugin-rbac-common@npm:1.12.0"
-  peerDependencies:
-    "@backstage/errors": ^1.2.4
-    "@backstage/plugin-permission-common": ^0.8.1
-  checksum: f2de8438bf081558be39571becfaa7eae5764e8d974af73e2116bbedf21e2c4086015fcab187bc4060e45048d250ae95ca194e25fadf96a9d5564d43fb7888eb
-  languageName: node
-  linkType: hard
-
 "@janus-idp/cli@npm:3.0.0":
   version: 3.0.0
   resolution: "@janus-idp/cli@npm:3.0.0"
@@ -21716,6 +21706,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:packages/app"
   dependencies:
+    "@backstage-community/plugin-rbac-common": 1.12.3
     "@backstage/app-defaults": 1.5.16
     "@backstage/catalog-model": 1.7.3
     "@backstage/cli": 0.29.6
@@ -21741,7 +21732,6 @@ __metadata:
     "@emotion/react": 11.14.0
     "@emotion/styled": 11.14.0
     "@internal/plugin-dynamic-plugins-info": "*"
-    "@janus-idp/backstage-plugin-rbac-common": 1.12.0
     "@janus-idp/cli": 3.0.0
     "@mui/icons-material": 5.16.14
     "@mui/material": 5.16.14
