@@ -168,6 +168,9 @@ export class RbacPo extends PageObject {
       await this.page.click(this.selectMember(userOrRole));
     }
 
+    // Close dropdown after selecting users and groups
+    await this.page.getByTestId("ArrowDropDownIcon").click();
+
     // Dynamically verify the heading based on users and groups added
     const numUsers = usersAndGroups.length;
     const numGroups = 1; // Update this based on your logic
