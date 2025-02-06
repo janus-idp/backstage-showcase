@@ -23,7 +23,7 @@
 # Stage 1 - Build nodejs skeleton
 #@follow_tag(registry.access.redhat.com/ubi9/nodejs-20:1)
 # https://registry.access.redhat.com/ubi9/nodejs-20
-FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1737421648 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1738744217 AS build
 # hadolint ignore=DL3002
 USER 0
 
@@ -40,7 +40,7 @@ ENV EXTERNAL_SOURCE_NESTED=$REMOTE_SOURCES/upstream1/app/distgit/containers/rhdh
 ENV CONTAINER_SOURCE=$REMOTE_SOURCES_DIR
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.7.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
