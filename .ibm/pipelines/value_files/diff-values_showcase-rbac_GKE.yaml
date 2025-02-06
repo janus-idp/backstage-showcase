@@ -79,6 +79,8 @@ upstream:
       - rhdh-secrets
     podSecurityContext:
       fsGroup: 2000
+    startupProbe:
+      failureThreshold: 10 # Override the default to account for longer startup time on Kubernetes.
   postgresql:
     enabled: true
     postgresqlDataDir: /var/lib/pgsql/data/userdata

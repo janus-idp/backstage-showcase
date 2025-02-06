@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 import { APIHelper } from "../../utils/api-helper";
 import { UI_HELPER_ELEMENTS } from "../pageObjects/global-obj";
 
@@ -21,8 +21,13 @@ export class BulkImport {
   }
 
   async newGitHubRepo(owner: string, repoName: string) {
-    await APIHelper.createGitHubRepo(owner, repoName);
-    await APIHelper.initCommit(owner, repoName);
+    await expect(async () => {
+      await APIHelper.createGitHubRepo(owner, repoName);
+      await APIHelper.initCommit(owner, repoName);
+    }).toPass({
+      intervals: [1_000, 2_000],
+      timeout: 15_000,
+    });
   }
 
   async selectRepoInTable(repoName: string) {

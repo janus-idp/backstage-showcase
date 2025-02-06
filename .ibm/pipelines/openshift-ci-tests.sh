@@ -14,10 +14,6 @@ cleanup() {
   echo "Cleaning up before exiting"
   if [[ "${OPENSHIFT_CI}" == "true" ]]; then
     case "$JOB_NAME" in
-      *aks*)
-        echo "Calling handle_aks"
-        cleanup_aks
-        ;;
       *gke*)
         echo "Calling cleanup_gke"
         cleanup_gke
@@ -67,7 +63,7 @@ main() {
       echo "Calling Operator"
       handle_operator
       ;;
-    *periodic*)
+    *nightly*)
       echo "Calling handle_periodic"
       handle_nightly
       ;;

@@ -1,12 +1,6 @@
 // BEGIN-NOSCAN
 export const expectedList = [
   {
-    name: 'backstage-plugin-aap-backend-wrapped-dynamic',
-    version: '1.2.2-dynamic.0',
-    platform: 'node',
-    role: 'backend-plugin-module',
-  },
-  {
     name: 'backstage-plugin-argo-cd-backend-wrapped-dynamic',
     version: '2.11.3-dynamic.0',
     platform: 'node',
