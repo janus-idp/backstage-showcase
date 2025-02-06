@@ -27,7 +27,7 @@ export const LOGGER = createLogger({
   ),
   transports: [
     new transports.File({
-      filename: `test-logs.log`,
+      filename: `test-logs.txt`,
       dirname: process.env.LOGS_FOLDER ? process.env.LOGS_FOLDER : "/tmp",
     }),
   ],
