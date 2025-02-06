@@ -356,8 +356,7 @@ for (const version of ["RHBK"]) {
       ).toBe(true);
     });
 
-    test(` ${version} - remove user from ${version}`, async () => {
-      test.skip();
+    test.skip(` ${version} - remove user from ${version}`, async () => {
       test.setTimeout(300 * 1000);
       LOGGER.info(`Executing testcase: ${test.info().title}`);
 

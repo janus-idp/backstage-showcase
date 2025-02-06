@@ -456,9 +456,8 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await context.clearCookies();
   });
 
-  test("Rename a user and a group", async () => {
+  test.skip("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
-    test.skip();
     await waitForNextSync("github", syncTime);
 
     // rename group from RHDH -> user can login, but policy is broken
