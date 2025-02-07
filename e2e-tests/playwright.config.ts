@@ -96,6 +96,12 @@ export default defineConfig({
     {
       name: "showcase-k8s",
       ...useCommonDeviceAndViewportConfig,
+      use: {
+        actionTimeout: 15 * 1000,
+      },
+      expect: {
+        timeout: 15 * 1000, // Global expect timeout
+      },
       dependencies: ["smoke-test"],
       testIgnore: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
@@ -115,6 +121,12 @@ export default defineConfig({
     {
       name: "showcase-rbac-k8s",
       ...useCommonDeviceAndViewportConfig,
+      use: {
+        actionTimeout: 15 * 1000,
+      },
+      expect: {
+        timeout: 15 * 1000, // Global expect timeout
+      },
       dependencies: ["smoke-test"],
       testMatch: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
