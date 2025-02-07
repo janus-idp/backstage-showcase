@@ -47,7 +47,6 @@ export default defineConfig({
       ...useCommonDeviceAndViewportConfig,
       testMatch: "**/playwright/e2e/smoke-test.spec.ts",
       retries: 10,
-      repeatEach: 3,
     },
     {
       name: "showcase",
