@@ -27,8 +27,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import { makeStyles } from 'tss-react/mui';
 
-import { policyEntityReadPermission } from '@janus-idp/backstage-plugin-rbac-common';
-
 import { useDynamicSidebarConfiguration } from '../../utils/dynamicUI/useDynamicSidebarConfiguration';
 import { ResolvedMenuItem } from '../DynamicRoot/DynamicRootContext';
 import { ApplicationHeaders } from './ApplicationHeaders';
