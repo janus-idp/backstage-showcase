@@ -153,5 +153,13 @@ export default defineConfig({
       ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/configuration-test/config-map.spec.ts"],
     },
+    {
+      name: "showcase-upgrade",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: [
+        "**/playwright/e2e/home-page-customization.spec.ts",
+        "**/playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts",
+      ],
+    },
   ],
 });
