@@ -12875,9 +12875,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/app@npm:^15.1.2":
-  version: 15.1.2
-  resolution: "@octokit/app@npm:15.1.2"
+"@octokit/app@npm:^15.1.3":
+  version: 15.1.3
+  resolution: "@octokit/app@npm:15.1.3"
   dependencies:
     "@octokit/auth-app": ^7.1.4
     "@octokit/auth-unauthenticated": ^6.1.1
@@ -12885,8 +12885,8 @@ __metadata:
     "@octokit/oauth-app": ^7.1.5
     "@octokit/plugin-paginate-rest": ^11.3.6
     "@octokit/types": ^13.6.2
-    "@octokit/webhooks": ^13.4.2
-  checksum: b06db1cb66e26d71609112abbf63c51efa209be2ceb7a6ac800db4f8538c3bb83a422640042866f509cf1f8f60fc4b5c5de0974adc3783f61d508798d0a740de
+    "@octokit/webhooks": ^13.5.1
+  checksum: 7b5b2d16d0ff3f73aec728826aa5dd04b181118e2441c8276466a3e2965c3b116323bf2eee735ebc7148ac195fb8aa755bd22d8bf6429e357fd0c4399d0aa070
   languageName: node
   linkType: hard
 
@@ -13366,10 +13366,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/openapi-webhooks-types@npm:8.5.1":
-  version: 8.5.1
-  resolution: "@octokit/openapi-webhooks-types@npm:8.5.1"
-  checksum: 810d5261b512b174fe2bccae9669223c588258e90871a31c9ba612807a416742e6a4ba3679daa561995d924081fc32b953f4a150d7cd380a19b24da60dd467f6
+"@octokit/openapi-webhooks-types@npm:9.1.0":
+  version: 9.1.0
+  resolution: "@octokit/openapi-webhooks-types@npm:9.1.0"
+  checksum: 87529d44dbf0e7b7f9894dc4c8b0aabb3c723125dfa498aa0721870fedda955bd1fb62f4c54e720b1ede2fccc7fdd7e2b7e2dfe25f3f039bdf1cc02b4aedcab5
   languageName: node
   linkType: hard
 
@@ -13708,10 +13708,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/webhooks-methods@npm:^5.0.0":
-  version: 5.1.0
-  resolution: "@octokit/webhooks-methods@npm:5.1.0"
-  checksum: 6b0185f62b30b1d267456c449732d1c381e22533bcfeea3002bb88bc9f50a6ec5e4863be092473e7c47bee8c01b863ebd93980dd378495860dfd8d762044a212
+"@octokit/webhooks-methods@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "@octokit/webhooks-methods@npm:5.1.1"
+  checksum: ce989efdd0d2c4f1b077cd661f04d2b1c53b961fdd9c777ca5d8edcfcda5f164a8203dfa19a7b1b943910f6785af3d9add6ab5a1be72ec089b3d6db98927540c
   languageName: node
   linkType: hard
 
@@ -13753,14 +13753,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/webhooks@npm:^13.4.2":
-  version: 13.4.3
-  resolution: "@octokit/webhooks@npm:13.4.3"
+"@octokit/webhooks@npm:^13.5.1":
+  version: 13.6.0
+  resolution: "@octokit/webhooks@npm:13.6.0"
   dependencies:
-    "@octokit/openapi-webhooks-types": 8.5.1
+    "@octokit/openapi-webhooks-types": 9.1.0
     "@octokit/request-error": ^6.1.6
-    "@octokit/webhooks-methods": ^5.0.0
-  checksum: 6e50bdae02137a92f606b36ae939e6f6f088a5880b27f51f2a084d529ab08c982b29ac7656876edafca7d46774362b3eb7991078c039a018252751967fb3f830
+    "@octokit/webhooks-methods": ^5.1.1
+  checksum: 843640bca83fdef5058c2deaf6d6d82e0b4b32525c498e1db01921940f78dfde736badf5783694dd5073d6a4bdc9aa20fda6c787248d6a8306d1b3dfcfb7b979
   languageName: node
   linkType: hard
 
@@ -26854,7 +26854,7 @@ __metadata:
     isomorphic-fetch: 3.0.0
     js-yaml: 4.1.0
     node-fetch: 2.7.0
-    octokit: 4.1.0
+    octokit: 4.1.1
     otplib: 12.0.1
     prettier: 3.4.2
     typescript: 5.7.3
@@ -36803,11 +36803,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"octokit@npm:4.1.0":
-  version: 4.1.0
-  resolution: "octokit@npm:4.1.0"
+"octokit@npm:4.1.1":
+  version: 4.1.1
+  resolution: "octokit@npm:4.1.1"
   dependencies:
-    "@octokit/app": ^15.1.2
+    "@octokit/app": ^15.1.3
     "@octokit/core": ^6.1.3
     "@octokit/oauth-app": ^7.1.4
     "@octokit/plugin-paginate-graphql": ^5.2.4
@@ -36817,7 +36817,7 @@ __metadata:
     "@octokit/plugin-throttling": ^9.4.0
     "@octokit/request-error": ^6.1.6
     "@octokit/types": ^13.7.0
-  checksum: 625d81c77288dc8cb3f6d9a976677734499edcee33b8e155914c2bc4a26c36e8c1bd7fe7ae0e66bea396714294b2b0bd82b17052a5c0322333a0a181e231e3ef
+  checksum: 0ae1c538cdcf86070904ad6adb3c62651c774febc9081b00d539a98fb55b3b4666fe8baf58dc13b12cf0dfcd7d419b48f3618143d305a47526748fe13a06d724
   languageName: node
   linkType: hard
 
