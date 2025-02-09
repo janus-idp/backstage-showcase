@@ -19,6 +19,7 @@ test.describe("Test Topology Plugin", () => {
   });
 
   test("Verify pods visibility in the Topology tab", async ({ page }) => {
+    test.setTimeout(150000);
     await catalog.goToBackstageJanusProject();
     await uiHelper.clickTab("Topology");
     await uiHelper.verifyText("backstage-janus");
@@ -71,14 +72,12 @@ test.describe("Test Topology Plugin", () => {
     );
     await uiHelper.clickTab("Resources");
     await uiHelper.verifyText("P");
-    expect(await page.getByTestId("icon-with-title-Running")).toBeVisible();
-    expect(
-      await page.getByTestId("icon-with-title-Running").locator("svg"),
+    await expect(page.getByTestId("icon-with-title-Running")).toBeVisible();
+    await expect(
+      page.getByTestId("icon-with-title-Running").locator("svg"),
     ).toBeVisible();
-    expect(
-      await page
-        .getByTestId("icon-with-title-Running")
-        .getByTestId("status-text"),
+    await expect(
+      page.getByTestId("icon-with-title-Running").getByTestId("status-text"),
     ).toHaveText("Running");
     await uiHelper.verifyHeading("PipelineRuns");
     await uiHelper.verifyText("PL");

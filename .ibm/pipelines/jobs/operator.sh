@@ -56,6 +56,9 @@ initiate_operator_deployments() {
 }
 
 handle_operator() {
+  NAME_SPACE="showcase-operator-nightly"
+  NAME_SPACE_RBAC="showcase-op-rbac-nightly"
+  
   oc_login
 
   export K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')

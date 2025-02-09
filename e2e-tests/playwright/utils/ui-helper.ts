@@ -619,7 +619,7 @@ export class UIhelper {
   }
 
   async verifyTextInTooltip(text: string | RegExp) {
-    const tooltip = await this.page.getByRole("tooltip").getByText(text);
-    expect(tooltip).toBeVisible();
+    const tooltip = this.page.getByRole("tooltip").getByText(text);
+    await expect(tooltip).toBeVisible();
   }
 }
