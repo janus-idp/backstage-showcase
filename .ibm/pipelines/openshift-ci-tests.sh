@@ -33,6 +33,7 @@ SCRIPTS=(
     "jobs/main.sh"
     "jobs/operator.sh"
     "jobs/periodic.sh"
+    "jobs/auth-providers.sh"
 )
 
 # Source each script dynamically
@@ -49,6 +50,10 @@ main() {
     *aks*)
       echo "Calling handle_aks"
       handle_aks
+      ;;
+    *e2e-tests-nightly-auth-providers)
+      echo "Calling handle_auth_providers"
+      handle_auth_providers
       ;;
     *gke*)
       echo "Calling handle_gke"

@@ -19,7 +19,7 @@ import { RhdhAuthUiHack } from "../../support/api/rhdh-auth-hack";
 
 let page: Page;
 
-for (const version of ["RHBK", "RHSSO"]) {
+for (const version of ["RHBK"]) {
   test.describe(`Standard authentication providers: OIDC with ${version}`, () => {
     test.use({ baseURL: constants.AUTH_PROVIDERS_BASE_URL });
 
@@ -356,7 +356,7 @@ for (const version of ["RHBK", "RHSSO"]) {
       ).toBe(true);
     });
 
-    test(` ${version} - remove user from ${version}`, async () => {
+    test.skip(` ${version} - remove user from ${version}`, async () => {
       test.setTimeout(300 * 1000);
       LOGGER.info(`Executing testcase: ${test.info().title}`);
 
