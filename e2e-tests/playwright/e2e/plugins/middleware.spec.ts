@@ -14,5 +14,6 @@ test.only("Check the middleware is working", async ({ page }) => {
   LOGGER.info(response2.headers());
   console.log(response1.headers());
   console.log(response2.headers());
-  await page.goto("/add-test-header");
+  await page.goto("/simple-chat", { waitUntil: "networkidle" });
+  test.fail();
 });
