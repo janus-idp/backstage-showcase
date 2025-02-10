@@ -656,6 +656,19 @@ plugins:
           backstage.plugin-techdocs-module-addons-contrib:
             techdocsAddons:
               - importName: ReportIssue
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-module-addon-mermaid
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-plugin-techdocs-addon-mermaid:
+            techdocsAddons:
+              - importName: Mermaid
+                config:
+                  props:
+                    config:
+                      theme: forest
+                      themeVariables: { lineColor: '#000000' }
 
   # PagerDuty
   - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin

@@ -45,6 +45,9 @@ Our current list of plugins include:
 - [Gitlab Scaffolder actions](https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-gitlab)
 - [Utils Scaffolder actions](https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-utils)
 - [Nexus Repository Manager plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/nexus-repository-manager/plugins/nexus-repository-manager)
+- [TechDocs plugin](https://github.com/backstage/backstage/tree/master/plugins/techdocs)
+- [TechDocs module addons contrib plugin](https://github.com/backstage/backstage/tree/master/plugins/techdocs-module-addons-contrib)
+- [TechDocs module addon mermaid plugin](https://github.com/johanneswuerbach/backstage-plugin-techdocs-addon-mermaid)
 
 ## Getting Started
 
