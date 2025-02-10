@@ -33,7 +33,7 @@ backend:
     connection: redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:6379
     useRedisSets: true
   listen:
-    host: ${DH_TARGET_URL}
+    host: ${RHDH_BASE_URL}
     port: 7007
   csp:
     connect-src: ["'self'", 'http:', 'https:']
