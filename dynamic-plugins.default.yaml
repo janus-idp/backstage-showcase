@@ -655,6 +655,14 @@ plugins:
                   props:
                     name: Documentation
                     icon: docs
+  - package: ./dynamic-plugins/dist/backstage-plugin-techdocs-module-addons-contrib
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-techdocs-module-addons-contrib:
+            techdocsAddons:
+              - importName: ReportIssue
 
   # PagerDuty
   - package: ./dynamic-plugins/dist/pagerduty-backstage-plugin
