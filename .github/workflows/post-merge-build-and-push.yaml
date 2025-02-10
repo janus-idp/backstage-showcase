@@ -42,4 +42,4 @@ jobs:
           context: .ibm/images/
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.REGISTRY_IMAGE }}:latest
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
