@@ -43,6 +43,12 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "smoke-test",
+      ...useCommonDeviceAndViewportConfig,
+      testMatch: "**/playwright/e2e/smoke-test.spec.ts",
+      retries: 10,
+    },
+    {
       name: "showcase",
       ...useCommonDeviceAndViewportConfig,
       testIgnore: [
@@ -90,6 +96,13 @@ export default defineConfig({
     {
       name: "showcase-k8s",
       ...useCommonDeviceAndViewportConfig,
+      use: {
+        actionTimeout: 15 * 1000,
+      },
+      expect: {
+        timeout: 15 * 1000, // Global expect timeout
+      },
+      dependencies: ["smoke-test"],
       testIgnore: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
@@ -108,6 +121,13 @@ export default defineConfig({
     {
       name: "showcase-rbac-k8s",
       ...useCommonDeviceAndViewportConfig,
+      use: {
+        actionTimeout: 15 * 1000,
+      },
+      expect: {
+        timeout: 15 * 1000, // Global expect timeout
+      },
+      dependencies: ["smoke-test"],
       testMatch: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",

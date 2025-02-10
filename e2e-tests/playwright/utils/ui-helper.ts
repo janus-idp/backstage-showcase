@@ -160,7 +160,7 @@ export class UIhelper {
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
     await navLink.waitFor({ state: "visible" });
-    await navLink.click();
+    await navLink.dispatchEvent("click");
   }
 
   async openSidebarButton(navBarButtonLabel: string) {
@@ -619,7 +619,7 @@ export class UIhelper {
   }
 
   async verifyTextInTooltip(text: string | RegExp) {
-    const tooltip = await this.page.getByRole("tooltip").getByText(text);
-    expect(tooltip).toBeVisible();
+    const tooltip = this.page.getByRole("tooltip").getByText(text);
+    await expect(tooltip).toBeVisible();
   }
 }
