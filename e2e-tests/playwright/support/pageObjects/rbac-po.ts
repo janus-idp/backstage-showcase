@@ -104,7 +104,7 @@ export class RbacPo extends PageObject {
   }
 
   private async verifyOverviewHeading(groups: number) {
-    await this.uiHelper.verifyHeading(`Users and groups (${groups} group)`);
+    await this.uiHelper.verifyHeading(`${groups} group`);
   }
 
   private async verifyPermissionPoliciesHeader(policies: number) {
@@ -168,11 +168,14 @@ export class RbacPo extends PageObject {
       await this.page.click(this.selectMember(userOrRole));
     }
 
+    // Close dropdown after selecting users and groups
+    await this.page.getByTestId("ArrowDropDownIcon").click();
+
     // Dynamically verify the heading based on users and groups added
     const numUsers = usersAndGroups.length;
     const numGroups = 1; // Update this based on your logic
     await this.uiHelper.verifyHeading(
-      `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
+      `${numGroups} group, ${numUsers - numGroups} users`,
     );
 
     await this.next();
@@ -186,7 +189,7 @@ export class RbacPo extends PageObject {
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
       await this.uiHelper.verifyText(
-        `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
+        `Users and groups (${numGroups} group, ${numUsers - numGroups} users)`,
       );
       await this.verifyPermissionPoliciesHeader(2);
       await this.create();
@@ -222,7 +225,7 @@ export class RbacPo extends PageObject {
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
       await this.uiHelper.verifyText(
-        `Users and groups (${numUsers - numGroups} users, ${numGroups} group)`,
+        `Users and groups (${numGroups} group, ${numUsers - numGroups} users)`,
       );
       await this.verifyPermissionPoliciesHeader(1);
       await this.uiHelper.verifyText("3 rules");

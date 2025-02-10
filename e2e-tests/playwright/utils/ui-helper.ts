@@ -32,10 +32,6 @@ export class UIhelper {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
-  async filterInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Filter"]', searchText);
-  }
-
   async pressTab() {
     await this.page.keyboard.press("Tab");
   }
