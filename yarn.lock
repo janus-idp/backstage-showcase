@@ -23186,7 +23186,7 @@ __metadata:
     "@backstage/cli": 0.29.6
     "@backstage/plugin-techdocs-module-addons-contrib": 1.1.20
     "@backstage/plugin-techdocs-react": 1.2.13
-    "@janus-idp/cli": 3.0.0
+    "@janus-idp/cli": 3.2.0
     "@material-ui/core": 4.12.4
     jss: 10.10.0
     react: 18.3.1
@@ -23207,8 +23207,6 @@ __metadata:
     "@backstage/plugin-techdocs": 1.12.2
     "@backstage/plugin-techdocs-react": 1.2.13
     "@janus-idp/cli": 3.2.0
-    "@material-ui/core": 4.12.4
-    jss: 10.10.0
     react: 18.3.1
     typescript: 5.7.3
   peerDependencies:
