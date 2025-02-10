@@ -19,6 +19,7 @@
     "showcase-rds-nightly": "playwright test --project=postgres-health-check",
     "showcase-runtime": "playwright test --project=showcase-runtime",
     "showcase-auth-providers": "playwright test --project=showcase-auth-providers --workers 1",
+    "showcase-upgrade-nightly": "playwright test --project=showcase-upgrade",
     "lint:check": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "postinstall": "playwright install",
