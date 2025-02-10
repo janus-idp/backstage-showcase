@@ -19,8 +19,6 @@ backend:
   baseUrl: ${RHDH_BASE_URL}
   cors:
     origin: ${RHDH_BASE_URL}
-    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-    credentials: true
   reading:
     allow:
       - host: 'github.com'
@@ -32,15 +30,6 @@ backend:
     store: redis
     connection: redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:6379
     useRedisSets: true
-  listen:
-    host: ${RHDH_BASE_URL}
-    port: 7007
-  csp:
-    connect-src: ["'self'", 'http:', 'https:']
-    upgrade-insecure-requests: false
-  database:
-    client: better-sqlite3
-    connection: ':memory:'
 integrations:
   # Plugin: GitHub
   github:
