@@ -160,7 +160,7 @@ export class UIhelper {
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
     await navLink.waitFor({ state: "visible" });
-    await navLink.click();
+    await navLink.dispatchEvent("click");
   }
 
   async openSidebarButton(navBarButtonLabel: string) {
