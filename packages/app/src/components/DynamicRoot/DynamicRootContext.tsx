@@ -3,8 +3,11 @@ import React, { createContext } from 'react';
 import { Entity } from '@backstage/catalog-model';
 import {
   AnyApiFactory,
+  ApiRef,
   AppTheme,
   BackstagePlugin,
+  ProfileInfoApi,
+  SessionApi,
 } from '@backstage/core-plugin-api';
 
 import { ScalprumComponentProps } from '@scalprum/react-core';
@@ -112,11 +115,18 @@ export type ScaffolderFieldExtension = {
   Component: React.ComponentType<{}>;
 };
 
+export type ProviderSetting = {
+  title: string;
+  description: string;
+  apiRef: ApiRef<ProfileInfoApi & SessionApi>;
+};
+
 export type DynamicRootConfig = {
   dynamicRoutes: ResolvedDynamicRoute[];
   entityTabOverrides: EntityTabOverrides;
   mountPoints: MountPoints;
   menuItems: ResolvedMenuItem[];
+  providerSettings: ProviderSetting[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
 };
 
@@ -132,6 +142,7 @@ const DynamicRootContext = createContext<ComponentRegistry>({
   entityTabOverrides: {},
   mountPoints: {},
   menuItems: [],
+  providerSettings: [],
   scaffolderFieldExtensions: [],
 });
 
