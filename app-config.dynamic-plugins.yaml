@@ -274,6 +274,8 @@ dynamicPlugins:
         - path: /
           importName: DynamicHomePage
       mountPoints:
+        - mountPoint: application/listener
+          importName: VisitListener
         - mountPoint: home.page/cards
           importName: SearchBar
           config:
