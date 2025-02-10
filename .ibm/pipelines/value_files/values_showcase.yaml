@@ -153,11 +153,13 @@ upstream:
         value: 'true'
       - name: NODE_TLS_REJECT_UNAUTHORIZED
         value: '0'
+      - name: ENABLE_CORE_ROOTHTTPROUTER_OVERRIDE
+        value: 'true' 
     extraAppConfig:
       - configMapRef: app-config-rhdh
         filename: app-config-rhdh.yaml
-      - configMapRef: dynamic-homepage-and-sidebar-config
-        filename: dynamic-homepage-and-sidebar-config.yaml
+      - configMapRef: dynamic-plugins-config
+        filename: dynamic-plugins-config.yaml
     startupProbe:
       # This gives enough time upon container startup before the liveness and readiness probes are triggered.
       # Giving (120s = initialDelaySeconds + failureThreshold * periodSeconds) to account for the worst case scenario.
