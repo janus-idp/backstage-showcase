@@ -16132,9 +16132,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:0.0.6":
-  version: 0.0.6
-  resolution: "@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:0.0.6"
+"@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@red-hat-developer-hub/backstage-plugin-global-floating-action-button@npm:1.0.0"
   dependencies:
     "@backstage/core-components": ^0.16.3
     "@backstage/core-plugin-api": ^1.10.3
@@ -16148,7 +16148,7 @@ __metadata:
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
-  checksum: 2c9f0046497b5f2f67f557078408bea951a897d0914aeb9a55b199c9a55dee094c0796438d23c4d092feb6b00ddf92dbd6494e5ff1b8a5285e7c31b928e40944
+  checksum: 59f339c5a243a9bd26beca69e15262a5f6ba7372b0d887d3fbcb937ea8d4bb508599071f537864dbcd5348cc48ed0246638f07cab21d286f924ceb6ae4cf0c53
   languageName: node
   linkType: hard
 
@@ -40218,7 +40218,7 @@ __metadata:
     "@backstage/cli": 0.29.6
     "@janus-idp/cli": 3.2.0
     "@mui/material": 5.16.14
-    "@red-hat-developer-hub/backstage-plugin-global-floating-action-button": 0.0.6
+    "@red-hat-developer-hub/backstage-plugin-global-floating-action-button": 1.0.0
     typescript: 5.7.3
   languageName: unknown
   linkType: soft
