@@ -99,7 +99,7 @@ proxy:
       changeOrigin: true
       secure: true
     '/add-test-header': 
-      target: http://${RHDH_BASE_URL}:7007/api/simple-chat
+      target: http://${RHDH_BASE_URL}/api/simple-chat
       credentials: forward
       headers:
         'x-proxy-test-header': 'hello!'
