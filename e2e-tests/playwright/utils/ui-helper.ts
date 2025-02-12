@@ -32,6 +32,15 @@ export class UIhelper {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
+  /**
+   * Fills the filter input with the provided text.
+   *
+   * @param searchText - The text to be entered into the search input field.
+   */
+  async filterInputPlaceholder(searchText: string) {
+    await this.page.fill('input[placeholder="Filter"]', searchText);
+  }
+
   async pressTab() {
     await this.page.keyboard.press("Tab");
   }
