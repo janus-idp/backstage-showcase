@@ -25,7 +25,7 @@ import {
   createOAuthProviderFactory,
 } from '@backstage/plugin-auth-node';
 
-import { TransientGroupOwnershipResolver } from '../transientGroupOwnershipResolver';
+import { TransitiveGroupOwnershipResolver } from '../transitiveGroupOwnershipResolver';
 import { rhdhSignInResolvers } from './authResolvers';
 
 /**
@@ -322,10 +322,10 @@ const authProvidersModule = createBackendModule({
         logger.info(
           `Enabled Provider Factories : ${JSON.stringify(providerFactories)}`,
         );
-        const transientGroupOwnershipResolver =
-          new TransientGroupOwnershipResolver({ discovery, config, auth });
+        const transitiveGroupOwnershipResolver =
+          new TransitiveGroupOwnershipResolver({ discovery, config, auth });
         authOwnershipResolution.setAuthOwnershipResolver(
-          transientGroupOwnershipResolver,
+          transitiveGroupOwnershipResolver,
         );
 
         Object.entries(providerFactories).forEach(([providerId, factory]) => {
