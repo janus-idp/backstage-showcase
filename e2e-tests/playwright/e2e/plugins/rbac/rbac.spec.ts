@@ -60,7 +60,7 @@ test.describe.skip("Test RBAC", () => {
       await uiHelper.verifyText("About");
       await uiHelper.verifyText("csv permission policy file");
 
-      await uiHelper.verifyHeading("Users and groups (1 group");
+      await uiHelper.verifyHeading("1 group");
       await uiHelper.verifyHeading("Permission policies (2)");
       const permissionPoliciesColumnsText =
         Roles.getPermissionPoliciesListColumnsText();
@@ -187,7 +187,7 @@ test.describe.skip("Test RBAC", () => {
 
       await uiHelper.verifyText("About");
 
-      await uiHelper.verifyHeading("Users and groups (1 user");
+      await uiHelper.verifyHeading("1 user");
       const usersAndGroupsColumnsText =
         Roles.getUsersAndGroupsListColumnsText();
       await uiHelper.verifyColumnHeading(usersAndGroupsColumnsText);
@@ -226,7 +226,7 @@ test.describe.skip("Test RBAC", () => {
       await uiHelper.clickButton("Next");
       await rbacPo.addUsersAndGroups(testUser);
       await page.click(rbacPo.selectMember(testUser));
-      await uiHelper.verifyHeading("Users and groups (3 users, 1 group)");
+      await uiHelper.verifyHeading("1 group, 3 users");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Save");
@@ -241,7 +241,7 @@ test.describe.skip("Test RBAC", () => {
       await uiHelper.verifyHeading("All roles (1)");
       const usersAndGroupsLocator = page
         .locator(UI_HELPER_ELEMENTS.MuiTableCell)
-        .filter({ hasText: "3 users, 1 group" });
+        .filter({ hasText: "1 group, 3 users" });
       await usersAndGroupsLocator.waitFor();
       await expect(usersAndGroupsLocator).toBeVisible();
 
@@ -260,7 +260,7 @@ test.describe.skip("Test RBAC", () => {
         RbacPo.rbacTestUsers.backstage,
       ]);
 
-      await uiHelper.filterInputPlaceholder("test-role1");
+      await uiHelper.searchInputPlaceholder("test-role1");
 
       await uiHelper.clickLink("role:default/test-role1");
 
@@ -271,7 +271,7 @@ test.describe.skip("Test RBAC", () => {
       await uiHelper.verifyHeading("Edit Role");
       await page.locator(HOME_PAGE_COMPONENTS.searchBar).fill("Guest User");
       await page.click('button[aria-label="Remove"]');
-      await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
+      await uiHelper.verifyHeading("1 group, 1 user");
       await uiHelper.clickByDataTestId("nextButton-1");
       await page.waitForSelector(".permission-policies-form", {
         state: "visible",
@@ -292,7 +292,7 @@ test.describe.skip("Test RBAC", () => {
       await uiHelper.verifyText(
         "Role role:default/test-role1 updated successfully",
       );
-      await uiHelper.verifyHeading("Users and groups (1 user, 1 group)");
+      await uiHelper.verifyHeading("1 group, 1 user");
 
       await page.click(ROLE_OVERVIEW_COMPONENTS.updatePolicies);
       await uiHelper.verifyHeading("Edit Role");

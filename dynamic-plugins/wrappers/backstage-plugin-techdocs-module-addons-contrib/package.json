@@ -1,6 +1,6 @@
 {
-  "name": "backstage-community-plugin-rbac",
-  "version": "1.35.0",
+  "name": "backstage-plugin-techdocs-module-addons-contrib",
+  "version": "1.1.20",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,12 +10,10 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin",
+    "role": "frontend-plugin-module",
     "supported-versions": "1.35.1",
-    "pluginId": "rbac",
-    "pluginPackages": [
-      "backstage-community-plugin-rbac"
-    ]
+    "pluginId": "techdocs",
+    "pluginPackage": "backstage-plugin-techdocs"
   },
   "sideEffects": false,
   "scripts": {
@@ -28,12 +26,18 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage-community/plugin-rbac": "1.35.0",
-    "@mui/material": "5.16.14"
+    "@backstage/plugin-techdocs-module-addons-contrib": "1.1.20",
+    "@backstage/plugin-techdocs-react": "1.2.13",
+    "@material-ui/core": "4.12.4",
+    "jss": "10.10.0"
+  },
+  "peerDependencies": {
+    "react": "16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "0.29.6",
     "@janus-idp/cli": "3.2.0",
+    "react": "18.3.1",
     "typescript": "5.7.3"
   },
   "files": [
@@ -41,7 +45,7 @@
     "dist-scalprum"
   ],
   "scalprum": {
-    "name": "backstage-community.plugin-rbac",
+    "name": "backstage.plugin-techdocs-module-addons-contrib",
     "exposedModules": {
       "PluginRoot": "./src/index.ts"
     }
@@ -49,7 +53,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/redhat-developer/rhdh",
-    "directory": "dynamic-plugins/wrappers/backstage-community-plugin-rbac"
+    "directory": "dynamic-plugins/wrappers/backstage-plugin-techdocs-module-addons-contrib"
   },
   "maintainers": [
     "@janus-idp/maintainers-showcase"

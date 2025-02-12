@@ -24,7 +24,7 @@
 
 # Stage 1 - Build nodejs skeleton
 # https://registry.access.redhat.com/ubi9/nodejs-20
-FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1738744217 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1739145679 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -86,6 +86,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs-module-addons-contrib/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs-module-addons-contrib/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/package.json
@@ -204,7 +205,7 @@ RUN "$YARN" workspaces focus --all --production && \
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1738671167 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1739146226 AS runner
 USER 0
 
 # Upstream only

@@ -32,10 +32,6 @@ export class UiHelper {
     await this.page.fill('input[placeholder="Search"]', searchText);
   }
 
-  async filterInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Filter"]', searchText);
-  }
-
   async pressTab() {
     await this.page.keyboard.press("Tab");
   }
@@ -160,7 +156,7 @@ export class UiHelper {
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
     await navLink.waitFor({ state: "visible" });
-    await navLink.click();
+    await navLink.dispatchEvent("click");
   }
 
   async openSidebarButton(navBarButtonLabel: string) {
@@ -619,7 +615,7 @@ export class UiHelper {
   }
 
   async verifyTextInTooltip(text: string | RegExp) {
-    const tooltip = await this.page.getByRole("tooltip").getByText(text);
-    expect(tooltip).toBeVisible();
+    const tooltip = this.page.getByRole("tooltip").getByText(text);
+    await expect(tooltip).toBeVisible();
   }
 }

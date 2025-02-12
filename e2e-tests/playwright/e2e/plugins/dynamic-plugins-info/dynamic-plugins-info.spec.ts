@@ -57,7 +57,7 @@ test.describe("dynamic-plugins-info UI tests", () => {
     await page
       .getByPlaceholder("Search")
       .pressSequentially("plugin-3scale-backend-dynamic\n", {
-        delay: 300,
+        delay: 100,
       });
     const row = await page.locator(
       UI_HELPER_ELEMENTS.rowByText(
