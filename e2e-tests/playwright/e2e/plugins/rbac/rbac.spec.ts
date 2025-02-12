@@ -225,7 +225,7 @@ test.describe.serial("Test RBAC", () => {
       await uiHelper.clickButton("Next");
       await rbacPo.addUsersAndGroups(testUser);
       await page.click(rbacPo.selectMember(testUser));
-      await uiHelper.verifyHeading("1 group, 3 users");
+      await uiHelper.verifyHeading(rbacPo.regexpUsersAndGroups(3, 1));
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Next");
       await uiHelper.clickButton("Save");
@@ -240,7 +240,7 @@ test.describe.serial("Test RBAC", () => {
       await uiHelper.verifyHeading("All roles (1)");
       const usersAndGroupsLocator = page
         .locator(UI_HELPER_ELEMENTS.MuiTableCell)
-        .filter({ hasText: "1 group, 3 users" });
+        .filter({ hasText: rbacPo.regexpUsersAndGroups(3, 1) });
       await usersAndGroupsLocator.waitFor();
       await expect(usersAndGroupsLocator).toBeVisible();
 
@@ -270,7 +270,7 @@ test.describe.serial("Test RBAC", () => {
       await uiHelper.verifyHeading("Edit Role");
       await page.locator(HOME_PAGE_COMPONENTS.searchBar).fill("Guest User");
       await page.click('button[aria-label="Remove"]');
-      await uiHelper.verifyHeading("1 group, 1 user");
+      await uiHelper.verifyHeading(rbacPo.regexpUsersAndGroups(1, 1));
       await uiHelper.clickByDataTestId("nextButton-1");
       await page.waitForSelector(".permission-policies-form", {
         state: "visible",
@@ -291,7 +291,7 @@ test.describe.serial("Test RBAC", () => {
       await uiHelper.verifyText(
         "Role role:default/test-role1 updated successfully",
       );
-      await uiHelper.verifyHeading("1 group, 1 user");
+      await uiHelper.verifyHeading(rbacPo.regexpUsersAndGroups(1, 1));
 
       await page.click(ROLE_OVERVIEW_COMPONENTS.updatePolicies);
       await uiHelper.verifyHeading("Edit Role");

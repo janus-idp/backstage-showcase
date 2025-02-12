@@ -33,6 +33,12 @@ export class RbacPo extends PageObject {
     rhdhqe: "rhdh-qe",
   };
 
+  regexpUsersAndGroups = (numUsers: number, numGroups: number): RegExp => {
+    return new RegExp(
+      `(${numGroups} ${numGroups === 1 ? "group" : "groups"}, ${numUsers} ${numUsers === 1 ? "user" : "users"})|(${numUsers} ${numUsers === 1 ? "user" : "users"}, ${numGroups} ${numGroups === 1 ? "group" : "groups"})`,
+    );
+  };
+
   selectMember(label: string): string {
     return `span[data-testid="${label}"]`;
   }
@@ -175,9 +181,7 @@ export class RbacPo extends PageObject {
     const numUsers = usersAndGroups.length;
     const numGroups = 1; // Update this based on your logic
     await this.uiHelper.verifyHeading(
-      new RegExp(
-        `${numGroups} group, ${numUsers - numGroups} users|${numUsers - numGroups} users, ${numGroups} group`,
-      ),
+      this.regexpUsersAndGroups(numUsers - numGroups, numGroups),
     );
 
     await this.next();
