@@ -9,6 +9,8 @@ const useCommonDeviceAndViewportConfig = {
 
 const k8sSpecificConfig = {
   use: {
+    ...devices["Desktop Chrome"],
+    viewport: { width: 1920, height: 1080 },
     actionTimeout: 15 * 1000,
   },
   expect: {
@@ -104,7 +106,6 @@ export default defineConfig({
     },
     {
       name: "showcase-k8s",
-      ...useCommonDeviceAndViewportConfig,
       ...k8sSpecificConfig,
       dependencies: ["smoke-test"],
       testIgnore: [
@@ -124,7 +125,6 @@ export default defineConfig({
     },
     {
       name: "showcase-rbac-k8s",
-      ...useCommonDeviceAndViewportConfig,
       ...k8sSpecificConfig,
       dependencies: ["smoke-test"],
       testMatch: [
