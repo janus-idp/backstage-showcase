@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { PageObject, PagesUrl } from "./page";
-import { HOME_PAGE_COMPONENTS } from "./page-obj";
+import { SEARCH_OBJECTS_COMPONENTS } from "./page-obj";
 
 type PermissionPolicyType = "none" | "anyOf" | "not";
 
@@ -219,9 +219,11 @@ export class RbacPo extends PageObject {
       await this.verifyPermissionPoliciesHeader(2);
       await this.create();
       await this.page
-        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
         .waitFor({ timeout: 10000 });
-      await this.page.locator(HOME_PAGE_COMPONENTS.searchBar).fill(name);
+      await this.page
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
+        .fill(name);
       await this.uiHelper.verifyHeading("All roles (1)");
     } else if (permissionPolicyType === "anyOf") {
       // Scenario 2: Permission policies using AnyOf

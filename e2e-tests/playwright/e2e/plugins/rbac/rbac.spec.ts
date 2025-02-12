@@ -2,7 +2,7 @@ import { Locator, Page, expect, test } from "@playwright/test";
 import { Response, Roles } from "../../../support/pages/rbac";
 import { UI_HELPER_ELEMENTS } from "../../../support/pageObjects/global-obj";
 import {
-  HOME_PAGE_COMPONENTS,
+  SEARCH_OBJECTS_COMPONENTS,
   ROLE_OVERVIEW_COMPONENTS,
   ROLES_PAGE_COMPONENTS,
 } from "../../../support/pageObjects/page-obj";
@@ -234,9 +234,11 @@ test.describe.serial("Test RBAC", () => {
       );
 
       await page
-        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
         .waitFor({ state: "visible" });
-      await page.locator(HOME_PAGE_COMPONENTS.searchBar).fill("test-role");
+      await page
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
+        .fill("test-role");
       await uiHelper.verifyHeading("All roles (1)");
       const usersAndGroupsLocator = page
         .locator(UI_HELPER_ELEMENTS.MuiTableCell)
@@ -259,7 +261,7 @@ test.describe.serial("Test RBAC", () => {
         RbacPo.rbacTestUsers.backstage,
       ]);
 
-      await uiHelper.searchInputPlaceholder("test-role1");
+      await uiHelper.searchInputAriaLabel("test-role1");
 
       await uiHelper.clickLink("role:default/test-role1");
 
@@ -268,7 +270,9 @@ test.describe.serial("Test RBAC", () => {
 
       await page.click(ROLE_OVERVIEW_COMPONENTS.updateMembers);
       await uiHelper.verifyHeading("Edit Role");
-      await page.locator(HOME_PAGE_COMPONENTS.searchBar).fill("Guest User");
+      await page
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
+        .fill("Guest User");
       await page.click('button[aria-label="Remove"]');
       await uiHelper.verifyHeading(rbacPo.regexpShortUsersAndGroups(1, 1));
       await uiHelper.clickByDataTestId("nextButton-1");
@@ -324,9 +328,11 @@ test.describe.serial("Test RBAC", () => {
       );
 
       await page
-        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
         .waitFor({ state: "visible" });
-      await page.locator(HOME_PAGE_COMPONENTS.searchBar).fill("test-role");
+      await page
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
+        .fill("test-role");
       await uiHelper.verifyHeading("All roles (1)");
       await rolesHelper.deleteRole("role:default/test-role");
     });
