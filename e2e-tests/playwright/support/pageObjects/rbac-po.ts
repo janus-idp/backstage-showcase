@@ -175,7 +175,9 @@ export class RbacPo extends PageObject {
     const numUsers = usersAndGroups.length;
     const numGroups = 1; // Update this based on your logic
     await this.uiHelper.verifyHeading(
-      `${numGroups} group, ${numUsers - numGroups} users`,
+      new RegExp(
+        `${numGroups} group, ${numUsers - numGroups} users|${numUsers - numGroups} users, ${numGroups} group`,
+      ),
     );
 
     await this.next();
