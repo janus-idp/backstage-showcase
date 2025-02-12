@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { UI_HELPER_ELEMENTS } from "../support/pageObjects/global-obj";
 import { SidebarTabs } from "./navbar";
+import { HOME_PAGE_COMPONENTS } from "../support/pageObjects/page-obj";
 
 export class UIhelper {
   private page: Page;
@@ -29,16 +30,7 @@ export class UIhelper {
    * @param searchText - The text to be entered into the search input field.
    */
   async searchInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Search"]', searchText);
-  }
-
-  /**
-   * Fills the filter input with the provided text.
-   *
-   * @param searchText - The text to be entered into the search input field.
-   */
-  async filterInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Filter"]', searchText);
+    await this.page.fill(HOME_PAGE_COMPONENTS.searchBar, searchText);
   }
 
   async pressTab() {
