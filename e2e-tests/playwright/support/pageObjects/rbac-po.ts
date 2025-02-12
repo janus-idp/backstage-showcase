@@ -33,18 +33,28 @@ export class RbacPo extends PageObject {
     rhdhqe: "rhdh-qe",
   };
 
-  regexpUsersAndGroups = (numUsers: number, numGroups: number): RegExp => {
-    return new RegExp(
-      `(${numGroups} ${numGroups === 1 ? "group" : "groups"}, ${numUsers} ${numUsers === 1 ? "user" : "users"})|(${numUsers} ${numUsers === 1 ? "user" : "users"}, ${numGroups} ${numGroups === 1 ? "group" : "groups"})`,
-    );
-  };
-
-  regexpLongUsersAndGroups = (numUsers: number, numGroups: number): RegExp => {
+  private stringForRegexUsersAndGroups = (
+    numUsers: number,
+    numGroups: number,
+  ): string => {
     const usersText = `${numUsers} ${numUsers === 1 ? "user" : "users"}`;
     const groupsText = `${numGroups} ${numGroups === 1 ? "group" : "groups"}`;
+    return `(${groupsText}, ${usersText}|${usersText}, ${groupsText})`;
+  };
 
+  public regexpShortUsersAndGroups = (
+    numUsers: number,
+    numGroups: number,
+  ): RegExp => {
+    return new RegExp(this.stringForRegexUsersAndGroups(numUsers, numGroups));
+  };
+
+  public regexpLongUsersAndGroups = (
+    numUsers: number,
+    numGroups: number,
+  ): RegExp => {
     return new RegExp(
-      `Users and groups \\((${groupsText}, ${usersText}|${usersText}, ${groupsText})\\)`,
+      `Users and groups \\(${this.stringForRegexUsersAndGroups(numUsers, numGroups)}\\)`,
     );
   };
 
@@ -190,7 +200,7 @@ export class RbacPo extends PageObject {
     const numUsers = usersAndGroups.length;
     const numGroups = 1; // Update this based on your logic
     await this.uiHelper.verifyHeading(
-      this.regexpUsersAndGroups(numUsers - numGroups, numGroups),
+      this.regexpShortUsersAndGroups(numUsers - numGroups, numGroups),
     );
 
     await this.next();
