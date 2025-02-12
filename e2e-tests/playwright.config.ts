@@ -1,16 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const useCommonDeviceAndViewportConfig = {
-  use: {
-    ...devices["Desktop Chrome"],
-    viewport: { width: 1920, height: 1080 },
-  },
-};
-
 const k8sSpecificConfig = {
   use: {
-    ...devices["Desktop Chrome"],
-    viewport: { width: 1920, height: 1080 },
     actionTimeout: 15 * 1000,
   },
   expect: {
@@ -40,6 +31,8 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
+    ...devices["Desktop Chrome"],
+    viewport: { width: 1920, height: 1080 },
     video: {
       mode: "on",
       size: { width: 1920, height: 1080 },
@@ -55,13 +48,11 @@ export default defineConfig({
   projects: [
     {
       name: "smoke-test",
-      ...useCommonDeviceAndViewportConfig,
       testMatch: "**/playwright/e2e/smoke-test.spec.ts",
       retries: 10,
     },
     {
       name: "showcase",
-      ...useCommonDeviceAndViewportConfig,
       testIgnore: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
@@ -75,7 +66,6 @@ export default defineConfig({
     },
     {
       name: "showcase-rbac",
-      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
@@ -85,7 +75,6 @@ export default defineConfig({
     },
     {
       name: "showcase-auth-providers",
-      ...useCommonDeviceAndViewportConfig,
       testMatch: ["**/playwright/e2e/authProviders/*.spec.ts"],
       testIgnore: [
         "**/playwright/e2e/authProviders/setup-environment.spec.ts",
@@ -135,7 +124,6 @@ export default defineConfig({
     },
     {
       name: "showcase-operator",
-      ...useCommonDeviceAndViewportConfig,
       testIgnore: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
@@ -152,7 +140,6 @@ export default defineConfig({
     },
     {
       name: "showcase-operator-rbac",
-      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
@@ -161,7 +148,6 @@ export default defineConfig({
     },
     {
       name: "showcase-runtime",
-      ...useCommonDeviceAndViewportConfig,
       testMatch: [
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
