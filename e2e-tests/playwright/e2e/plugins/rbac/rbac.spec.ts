@@ -259,7 +259,7 @@ test.describe.serial("Test RBAC", () => {
         RbacPo.rbacTestUsers.backstage,
       ]);
 
-      await uiHelper.searchInputPlaceholder("test-role1");
+      await uiHelper.filterInputPlaceholder("test-role1");
 
       await uiHelper.clickLink("role:default/test-role1");
 
