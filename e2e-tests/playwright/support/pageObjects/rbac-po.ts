@@ -39,6 +39,15 @@ export class RbacPo extends PageObject {
     );
   };
 
+  regexpLongUsersAndGroups = (numUsers: number, numGroups: number): RegExp => {
+    const usersText = `${numUsers} ${numUsers === 1 ? "user" : "users"}`;
+    const groupsText = `${numGroups} ${numGroups === 1 ? "group" : "groups"}`;
+
+    return new RegExp(
+      `Users and groups \\((${groupsText}, ${usersText}|${usersText}, ${groupsText})\\)`,
+    );
+  };
+
   selectMember(label: string): string {
     return `span[data-testid="${label}"]`;
   }
@@ -195,7 +204,7 @@ export class RbacPo extends PageObject {
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
       await this.uiHelper.verifyText(
-        `Users and groups (${numGroups} group, ${numUsers - numGroups} users)`,
+        this.regexpLongUsersAndGroups(numUsers - numGroups, numGroups),
       );
       await this.verifyPermissionPoliciesHeader(2);
       await this.create();
@@ -231,7 +240,7 @@ export class RbacPo extends PageObject {
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
       await this.uiHelper.verifyText(
-        `Users and groups (${numGroups} group, ${numUsers - numGroups} users)`,
+        this.regexpLongUsersAndGroups(numUsers - numGroups, numGroups),
       );
       await this.verifyPermissionPoliciesHeader(1);
       await this.uiHelper.verifyText("3 rules");
