@@ -115,7 +115,6 @@ export default defineConfig({
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
         "**/playwright/e2e/plugins/bulk-import.spec.ts",
-        "**/playwright/e2e/operator/**/*.spec.ts",
       ],
     },
     {

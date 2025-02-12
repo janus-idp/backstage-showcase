@@ -42,22 +42,32 @@ kubeTest.describe.serial("OpenShift Operator Tests", () => {
     "Build OperatorScript",
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async ({ namespace, kube, page, common, uiHelper }) => {
+      const oldVersion = "1.4";
+      const newVersion = "1.5";
       const operator = await OperatorScript.build(namespace);
 
       await operator.run(
-        ["-v 1.3", "--install-operator rhdh", "--install-plan-approval Manual"],
+        [
+          `-v ${oldVersion}`,
+          "--install-operator rhdh",
+          "--install-plan-approval Manual",
+        ],
         namespace,
       );
       await page.goto(operator.rhdhUrl);
       await common.loginAsGuest();
       await uiHelper.openSidebar("Settings");
       const version13 = await page
-        .locator(`body`, { hasText: "RHDH Version: 1.3.0" })
+        .locator(`body`, { hasText: `RHDH Version: ${oldVersion}.0` })
         .isVisible();
       expect(version13);
 
       await operator.run(
-        ["-v 1.4", "--install-operator rhdh", "--install-plan-approval Manual"],
+        [
+          `-v ${newVersion}`,
+          "--install-operator rhdh",
+          "--install-plan-approval Manual",
+        ],
         namespace,
       );
 
@@ -65,7 +75,7 @@ kubeTest.describe.serial("OpenShift Operator Tests", () => {
       common.loginAsGuest();
       uiHelper.openSidebar("Settings");
       const version14 = await page
-        .locator(`body`, { hasText: "RHDH Version: 1.4.0" })
+        .locator(`body`, { hasText: `RHDH Version: ${newVersion}.0` })
         .isVisible();
       expect(version14);
     },
