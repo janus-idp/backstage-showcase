@@ -84,7 +84,7 @@ export class UIhelper {
   async clickByDataTestId(dataTestId: string) {
     const element = this.page.getByTestId(dataTestId);
     await element.waitFor({ state: "visible" });
-    await element.click();
+    await element.dispatchEvent("click");
   }
 
   async verifyDivHasText(divText: string | RegExp) {
