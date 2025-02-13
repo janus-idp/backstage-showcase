@@ -50,7 +50,7 @@ test.describe("Test Topology Plugin", () => {
           .getByRole("link", { name: "topology-test-route" })
           .first(),
       ).toBeVisible();
-      await expect(page.locator("pre")).toBeVisible();
+      await expect(page.locator("pre").first()).toBeVisible();
     } else {
       await uiHelper.verifyHeading("Routes");
       await uiHelper.verifyText("RT");
