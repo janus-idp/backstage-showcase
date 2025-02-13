@@ -40032,7 +40032,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.29.0, react-router-dom@npm:^6.26.2":
+"react-router-dom@npm:6.29.0":
   version: 6.29.0
   resolution: "react-router-dom@npm:6.29.0"
   dependencies:
