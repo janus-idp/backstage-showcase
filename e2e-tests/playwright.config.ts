@@ -98,6 +98,7 @@ export default defineConfig({
       ...k8sSpecificConfig,
       dependencies: ["smoke-test"],
       testIgnore: [
+        "**/playwright/e2e/smoke-test.spec.ts",
         "**/playwright/e2e/plugins/rbac/**/*.spec.ts",
         "**/playwright/e2e/plugins/analytics/analytics-disabled-rbac.spec.ts",
         "**/playwright/e2e/verify-tls-config-with-external-postgres-db.spec.ts",
