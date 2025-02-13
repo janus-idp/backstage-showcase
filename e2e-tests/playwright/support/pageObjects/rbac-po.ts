@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { PageObject, PagesUrl } from "./page";
-import { HOME_PAGE_COMPONENTS } from "./page-obj";
+import { SEARCH_OBJECTS_COMPONENTS } from "./page-obj";
 
 type PermissionPolicyType = "none" | "anyOf" | "not";
 
@@ -31,6 +31,31 @@ export class RbacPo extends PageObject {
     tara: "Tara MacGovern",
     backstage: "Backstage",
     rhdhqe: "rhdh-qe",
+  };
+
+  private stringForRegexUsersAndGroups = (
+    numUsers: number,
+    numGroups: number,
+  ): string => {
+    const usersText = `${numUsers} ${numUsers === 1 ? "user" : "users"}`;
+    const groupsText = `${numGroups} ${numGroups === 1 ? "group" : "groups"}`;
+    return `(${groupsText}, ${usersText}|${usersText}, ${groupsText})`;
+  };
+
+  public regexpShortUsersAndGroups = (
+    numUsers: number,
+    numGroups: number,
+  ): RegExp => {
+    return new RegExp(this.stringForRegexUsersAndGroups(numUsers, numGroups));
+  };
+
+  public regexpLongUsersAndGroups = (
+    numUsers: number,
+    numGroups: number,
+  ): RegExp => {
+    return new RegExp(
+      `Users and groups \\(${this.stringForRegexUsersAndGroups(numUsers, numGroups)}\\)`,
+    );
   };
 
   selectMember(label: string): string {
@@ -175,7 +200,7 @@ export class RbacPo extends PageObject {
     const numUsers = usersAndGroups.length;
     const numGroups = 1; // Update this based on your logic
     await this.uiHelper.verifyHeading(
-      `${numGroups} group, ${numUsers - numGroups} users`,
+      this.regexpShortUsersAndGroups(numUsers - numGroups, numGroups),
     );
 
     await this.next();
@@ -189,14 +214,16 @@ export class RbacPo extends PageObject {
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
       await this.uiHelper.verifyText(
-        `Users and groups (${numGroups} group, ${numUsers - numGroups} users)`,
+        this.regexpLongUsersAndGroups(numUsers - numGroups, numGroups),
       );
       await this.verifyPermissionPoliciesHeader(2);
       await this.create();
       await this.page
-        .locator(HOME_PAGE_COMPONENTS.searchBar)
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
         .waitFor({ timeout: 10000 });
-      await this.page.locator(HOME_PAGE_COMPONENTS.searchBar).fill(name);
+      await this.page
+        .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
+        .fill(name);
       await this.uiHelper.verifyHeading("All roles (1)");
     } else if (permissionPolicyType === "anyOf") {
       // Scenario 2: Permission policies using AnyOf
@@ -225,7 +252,7 @@ export class RbacPo extends PageObject {
       await this.next();
       await this.uiHelper.verifyHeading("Review and create");
       await this.uiHelper.verifyText(
-        `Users and groups (${numGroups} group, ${numUsers - numGroups} users)`,
+        this.regexpLongUsersAndGroups(numUsers - numGroups, numGroups),
       );
       await this.verifyPermissionPoliciesHeader(1);
       await this.uiHelper.verifyText("3 rules");
