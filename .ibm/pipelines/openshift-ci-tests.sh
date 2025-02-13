@@ -42,9 +42,9 @@ for SCRIPT in "${SCRIPTS[@]}"; do
     echo "Loaded ${SCRIPT}"
 done
 
-export K8S_CLUSTER_URL='https://api.alxdq5slv4a572c9df.eastus.aroapp.io:6443'
-export K8S_CLUSTER_TOKEN=${K8S_CLUSTER_TOKEN_TEMPORARY}
-export JOB_NAME=pull
+#export K8S_CLUSTER_URL='https://api.alxdq5slv4a572c9df.eastus.aroapp.io:6443'
+#export K8S_CLUSTER_TOKEN=${K8S_CLUSTER_TOKEN_TEMPORARY}
+#export JOB_NAME=pull
 
 main() {
   echo "Log file: ${LOGFILE}"
