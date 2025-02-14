@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { UI_HELPER_ELEMENTS } from "../support/pageObjects/global-obj";
 import { SidebarTabs } from "./navbar";
+import { SEARCH_OBJECTS_COMPONENTS } from "../support/pageObjects/page-obj";
 
 export class UIhelper {
   private page: Page;
@@ -29,11 +30,14 @@ export class UIhelper {
    * @param searchText - The text to be entered into the search input field.
    */
   async searchInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Search"]', searchText);
+    await this.page.fill(
+      SEARCH_OBJECTS_COMPONENTS.placeholderSearch,
+      searchText,
+    );
   }
 
-  async filterInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Filter"]', searchText);
+  async searchInputAriaLabel(searchText: string) {
+    await this.page.fill(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch, searchText);
   }
 
   async pressTab() {
@@ -160,7 +164,7 @@ export class UIhelper {
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
     await navLink.waitFor({ state: "visible" });
-    await navLink.click();
+    await navLink.dispatchEvent("click");
   }
 
   async openSidebarButton(navBarButtonLabel: string) {
@@ -619,7 +623,7 @@ export class UIhelper {
   }
 
   async verifyTextInTooltip(text: string | RegExp) {
-    const tooltip = await this.page.getByRole("tooltip").getByText(text);
-    expect(tooltip).toBeVisible();
+    const tooltip = this.page.getByRole("tooltip").getByText(text);
+    await expect(tooltip).toBeVisible();
   }
 }

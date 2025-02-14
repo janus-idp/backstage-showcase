@@ -24,7 +24,7 @@
 
 # Stage 1 - Build nodejs skeleton
 # https://registry.access.redhat.com/ubi9/nodejs-20
-FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1737421648 AS skeleton
+FROM registry.access.redhat.com/ubi9/nodejs-20:9.5-1739482759 AS skeleton
 # hadolint ignore=DL3002
 USER 0
 
@@ -40,7 +40,7 @@ ENV EXTERNAL_SOURCE_NESTED=.
 ENV CONTAINER_SOURCE=/opt/app-root/src
 
 # Env vars
-ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.6.cjs
+ENV YARN=$CONTAINER_SOURCE/.yarn/releases/yarn-3.8.7.cjs
 
 WORKDIR $CONTAINER_SOURCE/
 COPY $EXTERNAL_SOURCE_NESTED/.yarn ./.yarn
@@ -86,6 +86,7 @@ COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/pagerduty-backstage-plugin
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json ./dynamic-plugins/wrappers/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs/package.json
+COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs-module-addons-contrib/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs-module-addons-contrib/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-techdocs-backend-dynamic/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals/package.json
 COPY $EXTERNAL_SOURCE_NESTED/dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/package.json ./dynamic-plugins/wrappers/backstage-plugin-signals-backend-dynamic/package.json
@@ -204,7 +205,7 @@ RUN "$YARN" workspaces focus --all --production && \
 
 # Stage 5 - Build the runner image
 # https://registry.access.redhat.com/ubi9/nodejs-20-minimal
-FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1738671167 AS runner
+FROM registry.access.redhat.com/ubi9/nodejs-20-minimal:9.5-1739448741 AS runner
 USER 0
 
 # Upstream only
@@ -280,6 +281,7 @@ COPY --chown=1001:1001 $EXTERNAL_SOURCE_NESTED/packages/backend/src/instrumentat
 # Remove write and execute permissions
 RUN chmod a=r ./instrumentation.js
 
-ENTRYPOINT ["node", "--require", "./instrumentation.js", "packages/backend", "--no-node-snapshot", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
+ENV NODE_OPTIONS="--no-node-snapshot"
+ENTRYPOINT ["node", "--require", "./instrumentation.js", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.example.yaml", "--config", "app-config.example.production.yaml"]
 
 # append Brew metadata here
