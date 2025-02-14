@@ -1,4 +1,7 @@
-import { HOME_PAGE_COMPONENTS } from "../pageObjects/page-obj";
+import {
+  HOME_PAGE_COMPONENTS,
+  SEARCH_OBJECTS_COMPONENTS,
+} from "../pageObjects/page-obj";
 import { UiHelper } from "../../utils/ui-helper";
 import { Page, expect } from "@playwright/test";
 
@@ -11,7 +14,9 @@ export class HomePage {
     this.uiHelper = new UiHelper(page);
   }
   async verifyQuickSearchBar(text: string) {
-    const searchBar = this.page.locator(HOME_PAGE_COMPONENTS.searchBar);
+    const searchBar = this.page.locator(
+      SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch,
+    );
     await searchBar.waitFor();
     await searchBar.fill("");
     await searchBar.type(text + "\n"); // '\n' simulates pressing the Enter key
