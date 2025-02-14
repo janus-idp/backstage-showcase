@@ -365,8 +365,20 @@ uninstall_helmchart() {
 }
 
 local_install_middleware_plugins(){
+  initial_dir=$(pwd)
   git clone https://github.com/gashcrumb/dynamic-plugins-root-http-middleware.git "${DIR}/middleware"
-  (cd "${DIR}/middleware" && yarn install && yarn tsc && yarn build && yarn export-local)
+  (
+    cd "${DIR}/middleware"
+    echo "Running yarn install..."
+    yarn install
+    echo "Running yarn tsc..."
+    yarn tsc
+    echo "Running yarn build..."
+    yarn build
+    echo "Running yarn export-local..."
+    yarn export-local
+  )
+  cd "$initial_dir"
 }
 
 configure_namespace() {
