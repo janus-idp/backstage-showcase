@@ -12859,9 +12859,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oandriie/plugin-rbac-backend@npm:6.2.10":
-  version: 6.2.10
-  resolution: "@oandriie/plugin-rbac-backend@npm:6.2.10"
+"@oandriie/plugin-rbac-backend@npm:6.2.11":
+  version: 6.2.11
+  resolution: "@oandriie/plugin-rbac-backend@npm:6.2.11"
   dependencies:
     "@backstage-community/plugin-rbac-common": 1.12.3
     "@backstage-community/plugin-rbac-node": 1.8.4
@@ -12884,7 +12884,7 @@ __metadata:
     knex: ^3.0.0
     lodash: ^4.17.21
     typeorm-adapter: ^1.6.1
-  checksum: 5c36678d0205d367438abe7c4f65e750663f83390ad17909dd6fd77458868585e970f923309c3a5883b17dcaf58e53a1aa5f2b0fea34cfc8b7a1831dc95d9b7d
+  checksum: 181879123fbb0f82e91de971baa4b377be533578cf153fd073a171378bdbd4d13d1acb37422be19b50dabac530b6b6b53a644b086f3542bdea5b6fc435298f4a
   languageName: node
   linkType: hard
 
@@ -22556,7 +22556,7 @@ __metadata:
     "@internal/plugin-licensed-users-info-backend": "*"
     "@internal/plugin-scalprum-backend": "*"
     "@janus-idp/backstage-plugin-audit-log-node": 1.7.2
-    "@oandriie/plugin-rbac-backend": 6.2.10
+    "@oandriie/plugin-rbac-backend": 6.2.11
     "@opentelemetry/api": 1.9.0
     "@opentelemetry/auto-instrumentations-node": 0.56.0
     "@opentelemetry/exporter-prometheus": 0.57.1
