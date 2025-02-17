@@ -220,7 +220,7 @@ export class RbacPo extends PageObject {
       await this.create();
       await this.page
         .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
-        .waitFor({ timeout: 10000 });
+        .waitFor();
       await this.page
         .locator(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch)
         .fill(name);
