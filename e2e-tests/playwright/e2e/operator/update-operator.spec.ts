@@ -54,7 +54,7 @@ kubeTest.describe.serial("OpenShift Operator Tests", () => {
         ],
         namespace,
       );
-      await page.waitForTimeout(30_000);
+      await page.waitForTimeout(60_000);
       await page.goto(operator.rhdhUrl);
       await common.loginAsGuest();
       await uiHelper.openSidebar("Settings");
@@ -71,7 +71,7 @@ kubeTest.describe.serial("OpenShift Operator Tests", () => {
         ],
         namespace,
       );
-      await page.waitForTimeout(30_000);
+      await page.waitForTimeout(60_000);
 
       await page.goto(operator.rhdhUrl);
       common.loginAsGuest();
