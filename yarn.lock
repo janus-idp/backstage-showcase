@@ -10547,7 +10547,7 @@ __metadata:
     express: 4.21.2
     msw: 1.3.5
     node-fetch: 2.7.0
-    prettier: 3.5.0
+    prettier: 3.5.1
     supertest: 6.3.4
     winston: 3.14.2
   languageName: unknown
@@ -10572,7 +10572,7 @@ __metadata:
     "@testing-library/user-event": 14.6.1
     glob: 11.0.1
     msw: 1.3.5
-    prettier: 3.5.0
+    prettier: 3.5.1
     react: 18.3.1
     react-router-dom: 6.29.0
     react-use: 17.6.0
@@ -10608,7 +10608,7 @@ __metadata:
     luxon: 3.5.0
     msw: 1.3.5
     node-fetch: 2.7.0
-    prettier: 3.5.0
+    prettier: 3.5.1
     supertest: 6.3.4
   languageName: unknown
   linkType: soft
@@ -10630,7 +10630,7 @@ __metadata:
     mock-fs: 5.5.0
     msw: 1.3.5
     node-fetch: 2.7.0
-    prettier: 3.5.0
+    prettier: 3.5.1
     supertest: 6.3.4
     winston: 3.14.2
   languageName: unknown
@@ -22035,7 +22035,7 @@ __metadata:
     "@types/react": 18.3.18
     "@types/react-dom": 18.3.5
     lodash: 4.17.21
-    prettier: 3.5.0
+    prettier: 3.5.1
     react: 18.3.1
     react-dom: 18.3.1
     react-router-dom: 6.29.0
@@ -22818,7 +22818,7 @@ __metadata:
     app: "*"
     global-agent: 3.0.0
     jose: 5.9.6
-    prettier: 3.5.0
+    prettier: 3.5.1
     undici: 6.21.1
     winston: 3.14.2
   languageName: unknown
@@ -27147,7 +27147,7 @@ __metadata:
     node-fetch: 2.7.0
     octokit: 4.1.1
     otplib: 12.0.1
-    prettier: 3.5.0
+    prettier: 3.5.1
     typescript: 5.7.3
     winston: 3.14.2
   languageName: unknown
@@ -39065,12 +39065,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.5.0":
-  version: 3.5.0
-  resolution: "prettier@npm:3.5.0"
+"prettier@npm:3.5.1":
+  version: 3.5.1
+  resolution: "prettier@npm:3.5.1"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 5b451b701a437f4561b7413d1e5c1da92b1af52bf5995a429ce67c84a8525145f90992c00fe2eefd471c307d261d6f160b4bac045e0ca38f1aa4aba5e9bfdf0f
+  checksum: a3fc77235b5a30259641547c688a067bd9db10fbf741be2ba94901480937ae8f5d26c8d7b1b688f93091882ec6afb8e48f90b86ddc3deb85a0eed28164680cb2
   languageName: node
   linkType: hard
 
@@ -41561,7 +41561,7 @@ __metadata:
     lint-staged: 15.4.3
     node-gyp: 10.3.1
     sherif: 1.3.0
-    turbo: 2.4.1
+    turbo: 2.4.2
     typescript: 5.7.3
   languageName: unknown
   linkType: soft
@@ -44299,58 +44299,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-darwin-64@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo-darwin-64@npm:2.4.1"
+"turbo-darwin-64@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-darwin-64@npm:2.4.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-darwin-arm64@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo-darwin-arm64@npm:2.4.1"
+"turbo-darwin-arm64@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-darwin-arm64@npm:2.4.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-64@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo-linux-64@npm:2.4.1"
+"turbo-linux-64@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-linux-64@npm:2.4.2"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm64@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo-linux-arm64@npm:2.4.1"
+"turbo-linux-arm64@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-linux-arm64@npm:2.4.2"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-windows-64@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo-windows-64@npm:2.4.1"
+"turbo-windows-64@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-windows-64@npm:2.4.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-windows-arm64@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo-windows-arm64@npm:2.4.1"
+"turbo-windows-arm64@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-windows-arm64@npm:2.4.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo@npm:2.4.1":
-  version: 2.4.1
-  resolution: "turbo@npm:2.4.1"
+"turbo@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo@npm:2.4.2"
   dependencies:
-    turbo-darwin-64: 2.4.1
-    turbo-darwin-arm64: 2.4.1
-    turbo-linux-64: 2.4.1
-    turbo-linux-arm64: 2.4.1
-    turbo-windows-64: 2.4.1
-    turbo-windows-arm64: 2.4.1
+    turbo-darwin-64: 2.4.2
+    turbo-darwin-arm64: 2.4.2
+    turbo-linux-64: 2.4.2
+    turbo-linux-arm64: 2.4.2
+    turbo-windows-64: 2.4.2
+    turbo-windows-arm64: 2.4.2
   dependenciesMeta:
     turbo-darwin-64:
       optional: true
@@ -44366,7 +44366,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 335c8acb860134fc5d2220131a0461a0a11a6a380cc0ffb5922c6856abe9c667ab9cdb279a4666f3d711da5518c880ee0da1e399d935a55de0400044f6c0d573
+  checksum: c9544f00a303566e53c7ee78b68bc90236c73ab50e4a8af2ec71e7852fc91aa3e182dcffe119146c457f084a19ca1544fa7b0766712e1782b3c9085ce5c18b00
   languageName: node
   linkType: hard
 
