@@ -38,7 +38,7 @@ test.describe("Link Scaffolded Templates to Catalog Items", () => {
     await common.loginAsGuest();
   });
 
-  test("Register an Template", async () => {
+  test("Register a Template", async () => {
     await uiHelper.openSidebar("Catalog");
     await uiHelper.clickButton("Create");
     await uiHelper.clickButton("Register Existing Component");
