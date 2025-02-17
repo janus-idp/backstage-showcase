@@ -9,7 +9,7 @@ import {
   ScalprumMountPointConfigRaw,
   ScalprumMountPointConfigRawIf,
 } from '../../components/DynamicRoot/DynamicRootContext';
-import { extractMenuItems, extractSearchMenuItem } from './extractDynamicConfigFrontend';
+import { extractMenuItems } from './extractDynamicConfigFrontend';
 
 export type DynamicRouteMenuItem =
   | {
