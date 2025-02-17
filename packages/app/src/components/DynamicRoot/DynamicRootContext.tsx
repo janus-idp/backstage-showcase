@@ -133,7 +133,6 @@ export type DynamicRootConfig = {
   entityTabOverrides: EntityTabOverrides;
   mountPoints: MountPoints;
   menuItems: ResolvedMenuItem[];
-  searchMenuItem: ResolvedMenuItem[];
   scaffolderFieldExtensions: ScaffolderFieldExtension[];
   techdocsAddons: TechdocsAddon[];
 };
@@ -150,7 +149,6 @@ const DynamicRootContext = createContext<ComponentRegistry>({
   entityTabOverrides: {},
   mountPoints: {},
   menuItems: [],
-  searchMenuItem: [],
   scaffolderFieldExtensions: [],
   techdocsAddons: [],
 });

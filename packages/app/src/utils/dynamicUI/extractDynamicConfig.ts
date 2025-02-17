@@ -134,7 +134,6 @@ type CustomProperties = {
     menuItem?: DynamicRouteMenuItem;
   })[];
   menuItems?: { [key: string]: MenuItemConfig };
-  searchMenuItem?: { [key: string]: MenuItemConfig };
   routeBindings?: {
     targets: BindingTarget[];
     bindings: RouteBinding[];
@@ -162,7 +161,6 @@ type DynamicConfig = {
   appIcons: AppIcon[];
   dynamicRoutes: DynamicRoute[];
   menuItems: MenuItem[];
-  searchMenuItem: MenuItem[];
   entityTabs: EntityTabEntry[];
   mountPoints: MountPoint[];
   routeBindings: RouteBinding[];
@@ -186,7 +184,6 @@ function extractDynamicConfig(
     appIcons: [],
     dynamicRoutes: [],
     menuItems: [],
-    searchMenuItem: [],
     entityTabs: [],
     mountPoints: [],
     routeBindings: [],
@@ -220,7 +217,6 @@ function extractDynamicConfig(
     [],
   );
   config.menuItems = extractMenuItems(frontend);
-  config.searchMenuItem = extractSearchMenuItem(frontend);
   config.routeBindings = Object.entries(frontend).reduce<RouteBinding[]>(
     (pluginSet, [_, customProperties]) => {
       pluginSet.push(...(customProperties.routeBindings?.bindings ?? []));
