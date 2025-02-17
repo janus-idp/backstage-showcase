@@ -9,11 +9,11 @@ import {
   SidebarScrollWrapper,
   SidebarSpace,
 } from '@backstage/core-components';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import { usePermission } from '@backstage/plugin-permission-react';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
-import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 import { policyEntityReadPermission } from '@backstage-community/plugin-rbac-common';
 import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
@@ -107,18 +107,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
 
   const configApi = useApi(configApiRef);
 
-  const showLogo = configApi.getOptionalBoolean(
-    'app.sidebar.logo',
-  ) ?? true;
-  const showSearch = configApi.getOptionalBoolean(
-    'app.sidebar.search',
-  ) ?? true;
-  const showSettings = configApi.getOptionalBoolean(
-    'app.sidebar.settings',
-  ) ?? true;
-  const showAdministration = configApi.getOptionalBoolean(
-    'app.sidebar.administration',
-  ) ?? true;
+  const showLogo = configApi.getOptionalBoolean('app.sidebar.logo') ?? true;
+  const showSearch = configApi.getOptionalBoolean('app.sidebar.search') ?? true;
+  const showSettings =
+    configApi.getOptionalBoolean('app.sidebar.settings') ?? true;
+  const showAdministration =
+    configApi.getOptionalBoolean('app.sidebar.administration') ?? true;
 
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
