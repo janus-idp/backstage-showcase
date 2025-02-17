@@ -42,8 +42,6 @@ for SCRIPT in "${SCRIPTS[@]}"; do
     echo "Loaded ${SCRIPT}"
 done
 
-export JOB_NAME="nightly"
-
 main() {
   echo "Log file: ${LOGFILE}"
   echo "JOB_NAME : $JOB_NAME"
