@@ -528,7 +528,9 @@ export class UIhelper {
   }
 
   async clickById(id: string) {
-    await this.page.click(`#${id}`);
+    const locator = this.page.locator(`#${id}`);
+    await locator.waitFor({ state: "attached" });
+    await locator.click();
   }
 
   async clickSpanByText(text: string) {
