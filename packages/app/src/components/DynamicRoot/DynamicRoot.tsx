@@ -76,7 +76,6 @@ export const DynamicRoot = ({
       appIcons,
       dynamicRoutes,
       menuItems,
-      searchMenuItem,
       entityTabs,
       mountPoints,
       routeBindings,
@@ -443,13 +442,11 @@ export const DynamicRoot = ({
     }
 
     const dynamicRoutesMenuItems = Object.values(menuItems);
-    const dynamicRoutesSearchMenuItem = Object.values(searchMenuItem);
 
     // make the dynamic UI configuration available via Scalprum if possible
     const dynamicRootConfig = scalprumApi ? scalprumApi.dynamicRootConfig : {};
     dynamicRootConfig.dynamicRoutes = dynamicRoutesComponents;
     dynamicRootConfig.menuItems = dynamicRoutesMenuItems;
-    dynamicRootConfig.searchMenuItem = dynamicRoutesSearchMenuItem;
     dynamicRootConfig.entityTabOverrides = entityTabOverrides;
     dynamicRootConfig.mountPoints = mountPointComponents;
     dynamicRootConfig.scaffolderFieldExtensions =
@@ -462,7 +459,6 @@ export const DynamicRoot = ({
       AppRouter: app.current.getRouter(),
       dynamicRoutes: dynamicRoutesComponents,
       menuItems: dynamicRoutesMenuItems,
-      searchMenuItem: dynamicRoutesSearchMenuItem,
       entityTabOverrides,
       mountPoints: mountPointComponents,
       scaffolderFieldExtensions: scaffolderFieldExtensionComponents,

@@ -13,6 +13,7 @@ import { MyGroupsSidebarItem } from '@backstage/plugin-org';
 import { usePermission } from '@backstage/plugin-permission-react';
 import { SidebarSearchModal } from '@backstage/plugin-search';
 import { Settings as SidebarSettings } from '@backstage/plugin-user-settings';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 import { policyEntityReadPermission } from '@backstage-community/plugin-rbac-common';
 import { AdminIcon } from '@internal/plugin-dynamic-plugins-info';
@@ -101,18 +102,24 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
   );
 };
 
-const getSearchMenuItem = (menuItem: ResolvedMenuItem) => {
-  return (
-    <SidebarGroup label={menuItem.title} icon={<SearchIcon />} to={menuItem.to ?? ''}>
-      <SidebarSearchModal
-        icon={renderIcon(menuItem.icon ?? '')}
-      />
-    </SidebarGroup>
-  );
-};
-
 export const Root = ({ children }: PropsWithChildren<{}>) => {
-  const { dynamicRoutes, menuItems, searchMenuItem } = useContext(DynamicRootContext);
+  const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
+
+  const configApi = useApi(configApiRef);
+
+  const showLogo = configApi.getOptionalBoolean(
+    'app.sidebar.logo',
+  ) ?? true;
+  const showSearch = configApi.getOptionalBoolean(
+    'app.sidebar.search',
+  ) ?? true;
+  const showSettings = configApi.getOptionalBoolean(
+    'app.sidebar.settings',
+  ) ?? true;
+  const showAdministration = configApi.getOptionalBoolean(
+    'app.sidebar.administration',
+  ) ?? true;
+
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
   const { loading: loadingPermission, allowed: canDisplayRBACMenuItem } =
@@ -258,30 +265,19 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
     );
   };
 
-  const renderSearchMenuItem = () => {
-    const searchMenuItemArray = searchMenuItem.filter(mi => mi.name.startsWith('default.'));
-    return (
-      <>
-        {searchMenuItemArray.map(menuItem => {
-          return (
-            <React.Fragment key={menuItem.name}>
-              {menuItem.children!.length === 0 && getSearchMenuItem(menuItem)}
-            </React.Fragment>
-          );
-        })}
-      </>
-    );
-  };
-
   return (
     <>
       <ApplicationHeaders position="above-sidebar" />
       <SidebarPage>
         <ApplicationHeaders position="above-main-content" />
         <Sidebar>
-          <SidebarLogo />
-          {renderSearchMenuItem()}
-          <SidebarDivider />
+          {showLogo && <SidebarLogo />}
+          {showSearch && (
+            <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
+              <SidebarSearchModal />
+            </SidebarGroup>
+          )}
+          {(showLogo || showSearch) && <SidebarDivider />}
           <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
             {/* Global nav, not org-specific */}
             {renderMenuItems(true, false)}
@@ -304,18 +300,26 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
             </SidebarScrollWrapper>
           </SidebarGroup>
           <SidebarSpace />
-          <SidebarDivider />
-          <SidebarGroup label="Administration" icon={<AdminIcon />}>
-            {renderMenuItems(false, true)}
-          </SidebarGroup>
-          <SidebarDivider />
-          <SidebarGroup
-            label="Settings"
-            to="/settings"
-            icon={<AccountCircleOutlinedIcon />}
-          >
-            <SidebarSettings icon={AccountCircleOutlinedIcon} />
-          </SidebarGroup>
+          {showAdministration && (
+            <>
+              <SidebarDivider />
+              <SidebarGroup label="Administration" icon={<AdminIcon />}>
+                {renderMenuItems(false, true)}
+              </SidebarGroup>
+            </>
+          )}
+          {showSettings && (
+            <>
+              <SidebarDivider />
+              <SidebarGroup
+                label="Settings"
+                to="/settings"
+                icon={<AccountCircleOutlinedIcon />}
+              >
+                <SidebarSettings icon={AccountCircleOutlinedIcon} />
+              </SidebarGroup>
+            </>
+          )}
         </Sidebar>
         {children}
       </SidebarPage>

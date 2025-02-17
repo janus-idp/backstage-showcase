@@ -37,6 +37,28 @@ export interface Config {
         [key: string]: unknown;
       };
     };
+    sidebar?: {
+      /**
+       * Show the logo in the sidebar
+       * @visibility frontend
+       */
+      logo?: boolean;
+      /**
+       * Show the search in the sidebar
+       * @visibility frontend
+       */
+      search?: boolean;
+      /**
+       * Show the settings in the sidebar
+       * @visibility frontend
+       */
+      settings?: boolean;
+      /**
+       * Show the administration in the sidebar
+       * @visibility frontend
+       */
+      administration?: boolean;
+    };
   };
   /** @deepVisibility frontend */
   dynamicPlugins: {

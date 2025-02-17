@@ -74,7 +74,6 @@ const ScalprumRoot = ({
     dynamicRootConfig: {
       dynamicRoutes: [],
       menuItems: [],
-      searchMenuItem: [],
       entityTabOverrides: {},
       mountPoints: {},
       scaffolderFieldExtensions: [],
