@@ -43,7 +43,7 @@ export class OperatorScript {
   }
 
   getDeploymentYamlPath(): string {
-    return "./e2e-tests/playwright/data/backstage-operator.yaml";
+    return process.cwd() + "/playwright/data/backstage-operator.yaml";
   }
 
   async installBackstageCRD(namespace = "default") {
