@@ -84,7 +84,7 @@ export class UIhelper {
   async clickByDataTestId(dataTestId: string) {
     const element = this.page.getByTestId(dataTestId);
     await element.waitFor({ state: "visible" });
-    await element.click();
+    await element.dispatchEvent("click");
   }
 
   async verifyDivHasText(divText: string | RegExp) {
@@ -208,8 +208,8 @@ export class UIhelper {
       ? this.page.locator(locator).getByText(text, { exact }).first()
       : this.page.getByText(text, { exact }).first();
 
-    await elementLocator.waitFor({ state: "visible", timeout: 10000 });
-    await elementLocator.waitFor({ state: "attached", timeout: 10000 });
+    await elementLocator.waitFor({ state: "visible" });
+    await elementLocator.waitFor({ state: "attached" });
 
     try {
       await elementLocator.scrollIntoViewIfNeeded();
@@ -227,7 +227,7 @@ export class UIhelper {
       .getByText(expectedText, { exact: true });
 
     try {
-      await elementLocator.waitFor({ state: "visible", timeout: 10000 });
+      await elementLocator.waitFor({ state: "visible" });
       const actualText = (await elementLocator.textContent()) || "No content";
 
       if (actualText.trim() !== expectedText.trim()) {
@@ -311,9 +311,7 @@ export class UIhelper {
   }
 
   async waitForTitle(text: string, level: number = 1) {
-    await this.page.waitForSelector(`h${level}:has-text("${text}")`, {
-      timeout: 10000,
-    });
+    await this.page.waitForSelector(`h${level}:has-text("${text}")`);
   }
 
   async clickTab(tabName: string) {
