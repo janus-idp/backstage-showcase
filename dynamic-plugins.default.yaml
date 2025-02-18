@@ -526,6 +526,10 @@ plugins:
   - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-header
     disabled: true
     pluginConfig:
+      app:
+        sidebar:
+          search: false
+          settings: false
       dynamicPlugins:
         frontend:
           default.main-menu-items:
