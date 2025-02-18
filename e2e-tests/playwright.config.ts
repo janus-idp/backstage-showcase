@@ -9,18 +9,6 @@ const k8sSpecificConfig = {
   },
 };
 
-// const smokeTestConfig = {
-//   name: "smoke-tests",
-//   ...useCommonDeviceAndViewportConfig,
-//   testMatch: [
-//     "**/playwright/e2e/catalog-timestamp.spec.ts",
-//     "**/playwright/e2e/plugins/bulk-import.spec.ts",
-//     "**/playwright/e2e/plugins/http-request.spec.ts",
-//     "**/playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts",
-//     "**/playwright/e2e/plugins/frontend/sidebar.spec.ts",
-//   ],
-// };
-
 export default defineConfig({
   timeout: 90 * 1000,
   testDir: "./playwright",
@@ -74,6 +62,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/plugins/tekton/tekton.spec.ts",
+        "**/playwright/e2e/audit-log/**/*.spec.ts",
       ],
     },
     {
