@@ -810,6 +810,7 @@ check_and_test() {
   if check_backstage_running "${release_name}" "${namespace}" "${url}" "${max_attempts}" "${wait_seconds}"; then
     echo "Display pods for verification..."
     oc get pods -n "${namespace}"
+    sleep 300
     run_tests "${release_name}" "${namespace}"
   else
     echo "Backstage is not running. Exiting..."
