@@ -73,23 +73,22 @@ const useStyles = makeStyles()({
    * ```
    */
   pageWithoutFixHeight: {
-    // Use (min) full height of the viewport because the inner main content has otherwise
-    // another background color then the overall page content (on the right side).
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-
+    // Use 100vh for the complete viewport content and makes the page content part scrollable.
     '> div': {
+      height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      flexGrow: 1,
     },
 
+    // Finally unset the Backstage default 100vh value for the inner content
+    // to solve the double scrollbar issue.
     '> div > main': {
-      // Finally unset the Backstage default 100vh value for the inner content
-      // to solve the double scrollbar issue.
       height: 'unset',
       flexGrow: 1,
+    },
+    // Same for techdocs!
+    '.techdocs-reader-page > main': {
+      height: 'unset',
     },
   },
   sidebarItem: {
