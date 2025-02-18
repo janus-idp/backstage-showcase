@@ -6,11 +6,13 @@ import * as constants from "../../utils/authenticationProviders/constants";
 import { HelmActions } from "../../utils/helm";
 import { Common } from "../../utils/common";
 import { runShellCmd } from "../../utils/helper";
+import { LOGGER } from "../../utils/logger";
 
 test.only("Check the middleware is working", async ({ page }) => {
   test.slow();
   const common = new Common(page);
   const cwd = process.cwd();
+  LOGGER.info(`yarn commands starting...`);
   await runShellCmd(`
     git clone https://github.com/gashcrumb/dynamic-plugins-root-http-middleware.git "${cwd}/middleware"
     cd "${cwd}/middleware"
@@ -23,6 +25,7 @@ test.only("Check the middleware is working", async ({ page }) => {
     echo "Running yarn export-local..."
     yarn export-local
     `);
+  LOGGER.info(`yarn commands ran`);
   const middlewarePlugins = [
     "--set global.dynamic.includes[0]=dynamic-plugins.default.yaml",
     "--set global.dynamic.plugins[0].package=./local-plugins/internal-backstage-plugin-middleware-header-example-dynamic",
