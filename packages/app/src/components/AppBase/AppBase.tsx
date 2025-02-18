@@ -75,8 +75,8 @@ const AppBase = () => {
     <AppProvider>
       <AlertDisplay />
       <OAuthRequestDialog />
+      <ConfigUpdater />
       <AppRouter>
-        <ConfigUpdater />
         <ApplicationListener />
         <Root>
           <ApplicationProvider>
