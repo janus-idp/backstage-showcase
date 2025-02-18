@@ -37,6 +37,28 @@ export interface Config {
         [key: string]: unknown;
       };
     };
+    sidebar?: {
+      /**
+       * Show the logo in the sidebar
+       * @visibility frontend
+       */
+      logo?: boolean;
+      /**
+       * Show the search in the sidebar
+       * @visibility frontend
+       */
+      search?: boolean;
+      /**
+       * Show the settings in the sidebar
+       * @visibility frontend
+       */
+      settings?: boolean;
+      /**
+       * Show the administration in the sidebar
+       * @visibility frontend
+       */
+      administration?: boolean;
+    };
   };
   /** @deepVisibility frontend */
   dynamicPlugins: {
@@ -135,8 +157,8 @@ export interface Config {
    */
   dangerouslyAllowSignInWithoutUserInCatalog?: boolean;
   /**
-   * The option to includes transient parent groups when determining user group membership
+   * The option to includes transitive parent groups when determining user group membership
    * @visibility frontend
    */
-  includeTransientGroupOwnership?: boolean;
+  includeTransitiveGroupOwnership?: boolean;
 }

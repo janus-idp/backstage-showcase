@@ -71,7 +71,7 @@ test.describe.skip("GitHub Happy path", () => {
 
     await uiHelper.openSidebar("Catalog");
     await uiHelper.selectMuiBox("Kind", "User");
-    await uiHelper.searchInputPlaceholder("rhdh");
+    await uiHelper.searchInputAriaLabel("rhdh");
     await uiHelper.verifyRowsInTable(["rhdh-qe"]);
   });
 
