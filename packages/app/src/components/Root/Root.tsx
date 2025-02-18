@@ -73,20 +73,24 @@ const useStyles = makeStyles()({
    * ```
    */
   pageWithoutFixHeight: {
-    // Use 100vh for the complete viewport content and makes the page content part scrollable.
+    // Use 100vh for the complete viewport (similar to how Backstage does it)
+    // and makes the page content part scrollable below...
+    // But instead of using 100vh on the content below,
+    // we use it here so that it includes the header.
     '> div': {
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
     },
 
-    // Finally unset the Backstage default 100vh value for the inner content
-    // to solve the double scrollbar issue.
+    // But we unset the Backstage default 100vh value here and use flex box
+    // to grow to the full height of the parent container.
     '> div > main': {
       height: 'unset',
       flexGrow: 1,
     },
-    // Same for techdocs!
+    // This solves the same issue for techdocs, which was reported as
+    // https://issues.redhat.com/browse/RHIDP-4637
     '.techdocs-reader-page > main': {
       height: 'unset',
     },
