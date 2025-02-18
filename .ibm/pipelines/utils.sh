@@ -360,23 +360,6 @@ uninstall_helmchart() {
   fi
 }
 
-local_install_middleware_plugins(){
-  initial_dir=$(pwd)
-  git clone https://github.com/gashcrumb/dynamic-plugins-root-http-middleware.git "${DIR}/middleware"
-  (
-    cd "${DIR}/middleware"
-    echo "Running yarn install..."
-    yarn install
-    echo "Running yarn tsc..."
-    yarn tsc
-    echo "Running yarn build..."
-    yarn build
-    echo "Running yarn export-local..."
-    yarn export-local
-  )
-  cd "$initial_dir"
-}
-
 configure_namespace() {
   local project=$1
   echo "Deleting and recreating namespace: $project"
@@ -754,7 +737,6 @@ delete_tekton_pipelines() {
 }
 
 cluster_setup() {
-  local_install_middleware_plugins
   install_pipelines_operator
   install_acm_operator
   install_crunchy_postgres_operator

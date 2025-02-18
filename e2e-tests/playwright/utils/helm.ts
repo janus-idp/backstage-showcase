@@ -56,4 +56,22 @@ export class HelmActions {
     });
     return result;
   }
+
+  static async installHelmRelease(namespace: string) {
+    await runShellCmd(
+      `helm repo add openshift-helm-charts https://charts.openshift.io/`,
+    );
+    await runShellCmd(
+      `helm show values openshift-helm-charts/redhat-developer-hub --version 1.0.0-1 > values.yaml`,
+    );
+
+    const list = await runShellCmd(`helm list -n rhdh-nil`);
+    console.log(list);
+    await new KubeClient().setKubeContext("default");
+    await runShellCmd(
+      `helm upgrade -i rhdh -f values.yaml openshift-helm-charts/redhat-developer-hub \
+      --wait --timeout 300s -n ${namespace} \
+      --set global.clusterRouterBase=apps.alxdq5slv4a572c9df.eastus.aroapp.io`,
+    );
+  }
 }
