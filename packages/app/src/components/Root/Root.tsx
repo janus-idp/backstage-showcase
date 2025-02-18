@@ -36,25 +36,60 @@ import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
 
 const useStyles = makeStyles()({
-  // This is a workaround to remove the fix height of the Page component
-  // to support the application headers (and the global header plugin)
-  // without having multiple scrollbars.
-  //
-  // This solves also the duplicate scrollbar issues in tech docs:
-  // https://issues.redhat.com/browse/RHIDP-4637 (Scrollbar for docs behaves weirdly if there are over a page of headings)
-  //
-  // Which was also reported and tried to fix upstream:
-  // https://github.com/backstage/backstage/issues/13717
-  // https://github.com/backstage/backstage/pull/14138
-  // https://github.com/backstage/backstage/issues/19427
-  // https://github.com/backstage/backstage/issues/22745
-  //
-  // See also
-  // https://github.com/backstage/backstage/blob/v1.35.0/packages/core-components/src/layout/Page/Page.tsx#L31-L34
+  /**
+   * This is a workaround to remove the fix height of the Page component
+   * to support the application headers (and the global header plugin)
+   * without having multiple scrollbars.
+   *
+   * This solves also the duplicate scrollbar issues in tech docs:
+   * https://issues.redhat.com/browse/RHIDP-4637 (Scrollbar for docs behaves weirdly if there are over a page of headings)
+   *
+   * Which was also reported and tried to fix upstream:
+   * https://github.com/backstage/backstage/issues/13717
+   * https://github.com/backstage/backstage/pull/14138
+   * https://github.com/backstage/backstage/issues/19427
+   * https://github.com/backstage/backstage/issues/22745
+   *
+   * See also
+   * https://github.com/backstage/backstage/blob/v1.35.0/packages/core-components/src/layout/Page/Page.tsx#L31-L34
+   *
+   * The following rules are based on the current DOM structure
+   *
+   * ```
+   * <body>
+   *   <div id="root">
+   *     // snackbars and toasts
+   *     <div className="pageWithoutFixHeight">
+   *       <nav />                               // Optional nav(s) if a header with position: above-sidebar is configured
+   *       <div>                                 // Backstage SidebarPage component
+   *         <nav />                             // Optional nav(s) if a header with position: above-main-content is configured
+   *         <nav aria-label="sidebar nav" />    // Sidebar content
+   *         <main />                            // Backstage Page component
+   *       </div>
+   *     </div>
+   *   </div>
+   *   // some modals and other overlays
+   * </body>
+   * ```
+   */
   pageWithoutFixHeight: {
+    // Use (min) full height of the viewport because the inner main content has otherwise
+    // another background color then the overall page content (on the right side).
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+
+    '> div': {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+    },
+
     '> div > main': {
+      // Finally unset the Backstage default 100vh value for the inner content
+      // to solve the double scrollbar issue.
       height: 'unset',
-      minHeight: '100vh',
+      flexGrow: 1,
     },
   },
   sidebarItem: {
@@ -285,69 +320,67 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   };
 
   return (
-    <>
+    <div className={pageWithoutFixHeight}>
       <ApplicationHeaders position="above-sidebar" />
-      <div className={pageWithoutFixHeight}>
-        <SidebarPage>
-          <ApplicationHeaders position="above-main-content" />
-          <Sidebar>
-            {showLogo && <SidebarLogo />}
-            {showSearch ? (
-              <>
-                <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
-                  <SidebarSearchModal />
-                </SidebarGroup>
-                <SidebarDivider />
-              </>
-            ) : (
-              <Box sx={{ height: '1.2rem' }} />
-            )}
-            <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
-              {/* Global nav, not org-specific */}
-              {renderMenuItems(true, false)}
-              {/* End global nav */}
+      <SidebarPage>
+        <ApplicationHeaders position="above-main-content" />
+        <Sidebar>
+          {showLogo && <SidebarLogo />}
+          {showSearch ? (
+            <>
+              <SidebarGroup label="Search" icon={<SearchIcon />} to="/search">
+                <SidebarSearchModal />
+              </SidebarGroup>
               <SidebarDivider />
-              <SidebarScrollWrapper>
-                {renderMenuItems(false, false)}
-                {dynamicRoutes.map(({ scope, menuItem, path }) => {
-                  if (menuItem && 'Component' in menuItem) {
-                    return (
-                      <menuItem.Component
-                        {...(menuItem.config?.props || {})}
-                        key={`${scope}/${path}`}
-                        to={path}
-                      />
-                    );
-                  }
-                  return null;
-                })}
-              </SidebarScrollWrapper>
-            </SidebarGroup>
-            <SidebarSpace />
-            {showAdministration && (
-              <>
-                <SidebarDivider />
-                <SidebarGroup label="Administration" icon={<AdminIcon />}>
-                  {renderMenuItems(false, true)}
-                </SidebarGroup>
-              </>
-            )}
-            {showSettings && (
-              <>
-                <SidebarDivider />
-                <SidebarGroup
-                  label="Settings"
-                  to="/settings"
-                  icon={<AccountCircleOutlinedIcon />}
-                >
-                  <SidebarSettings icon={AccountCircleOutlinedIcon} />
-                </SidebarGroup>
-              </>
-            )}
-          </Sidebar>
-          {children}
-        </SidebarPage>
-      </div>
-    </>
+            </>
+          ) : (
+            <Box sx={{ height: '1.2rem' }} />
+          )}
+          <SidebarGroup label="Menu" icon={<MuiMenuIcon />}>
+            {/* Global nav, not org-specific */}
+            {renderMenuItems(true, false)}
+            {/* End global nav */}
+            <SidebarDivider />
+            <SidebarScrollWrapper>
+              {renderMenuItems(false, false)}
+              {dynamicRoutes.map(({ scope, menuItem, path }) => {
+                if (menuItem && 'Component' in menuItem) {
+                  return (
+                    <menuItem.Component
+                      {...(menuItem.config?.props || {})}
+                      key={`${scope}/${path}`}
+                      to={path}
+                    />
+                  );
+                }
+                return null;
+              })}
+            </SidebarScrollWrapper>
+          </SidebarGroup>
+          <SidebarSpace />
+          {showAdministration && (
+            <>
+              <SidebarDivider />
+              <SidebarGroup label="Administration" icon={<AdminIcon />}>
+                {renderMenuItems(false, true)}
+              </SidebarGroup>
+            </>
+          )}
+          {showSettings && (
+            <>
+              <SidebarDivider />
+              <SidebarGroup
+                label="Settings"
+                to="/settings"
+                icon={<AccountCircleOutlinedIcon />}
+              >
+                <SidebarSettings icon={AccountCircleOutlinedIcon} />
+              </SidebarGroup>
+            </>
+          )}
+        </Sidebar>
+        {children}
+      </SidebarPage>
+    </div>
   );
 };
