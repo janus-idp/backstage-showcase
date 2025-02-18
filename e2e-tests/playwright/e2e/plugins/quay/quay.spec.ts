@@ -38,7 +38,8 @@ test.describe("Test Quay.io plugin", () => {
     await uiHelper.verifyCellsInTable(allCellsIdentifier);
   });
 
-  test("Check Security Scan details", async () => {
-    await uiHelper.verifyCellsInTable(ImageRegistry.getScanCellsIdentifier());
+  test("Check Security Scan details", async ({page}) => {
+    const cell = await ImageRegistry.getScanCell(page);
+    await expect(cell).toBeVisible();
   });
 });
