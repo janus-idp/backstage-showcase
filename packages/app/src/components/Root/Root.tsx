@@ -36,6 +36,27 @@ import { MenuIcon } from './MenuIcon';
 import { SidebarLogo } from './SidebarLogo';
 
 const useStyles = makeStyles()({
+  // This is a workaround to remove the fix height of the Page component
+  // to support the application headers (and the global header plugin)
+  // without having multiple scrollbars.
+  //
+  // This solves also the duplicate scrollbar issues in tech docs:
+  // https://issues.redhat.com/browse/RHIDP-4637 (Scrollbar for docs behaves weirdly if there are over a page of headings)
+  //
+  // Which was also reported and tried to fix upstream:
+  // https://github.com/backstage/backstage/issues/13717
+  // https://github.com/backstage/backstage/pull/14138
+  // https://github.com/backstage/backstage/issues/19427
+  // https://github.com/backstage/backstage/issues/22745
+  //
+  // See also
+  // https://github.com/backstage/backstage/blob/v1.35.0/packages/core-components/src/layout/Page/Page.tsx#L31-L34
+  pageWithoutFixHeight: {
+    '> div > main': {
+      height: 'unset',
+      minHeight: '100vh',
+    },
+  },
   sidebarItem: {
     textDecorationLine: 'none',
   },
@@ -51,7 +72,7 @@ const SideBarItemWrapper = (props: SidebarItemProps) => {
   return (
     <SidebarItem
       {...props}
-      className={`${sidebarItem}${props.className ?? ''}`}
+      className={`${sidebarItem} ${props.className ?? ''}`}
     />
   );
 };
@@ -103,6 +124,10 @@ const getMenuItem = (menuItem: ResolvedMenuItem, isNestedMenuItem = false) => {
 };
 
 export const Root = ({ children }: PropsWithChildren<{}>) => {
+  const {
+    classes: { pageWithoutFixHeight },
+  } = useStyles();
+
   const { dynamicRoutes, menuItems } = useContext(DynamicRootContext);
 
   const configApi = useApi(configApiRef);
@@ -262,7 +287,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
   return (
     <>
       <ApplicationHeaders position="above-sidebar" />
-      <Box sx={{ height: '100vh', overflow: 'auto', scrollbarWidth: 'none' }}>
+      <div className={pageWithoutFixHeight}>
         <SidebarPage>
           <ApplicationHeaders position="above-main-content" />
           <Sidebar>
@@ -322,7 +347,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
           </Sidebar>
           {children}
         </SidebarPage>
-      </Box>
+      </div>
     </>
   );
 };
