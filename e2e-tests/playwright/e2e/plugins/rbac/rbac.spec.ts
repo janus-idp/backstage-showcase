@@ -374,7 +374,7 @@ test.describe.skip("Test RBAC", () => {
 
     // eslint-disable-next-line no-empty-pattern
     test.beforeEach(async ({}, testInfo) => {
-      LOGGER.warning(
+      LOGGER.info(
         `beforeEach: Attempting setup for ${testInfo.title}, retry: ${testInfo.retry}`,
       );
     });

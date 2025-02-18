@@ -79,9 +79,11 @@ export class OperatorScript {
 
       if (url.includes("https")) {
         console.log("Extracted URL:", url);
+        LOGGER.info("Extracted URL:", url);
         this.rhdhUrl = url;
       } else {
         console.log("URL not found");
+        LOGGER.error("URL not found");
       }
     } catch (e) {
       LOGGER.error(e);
