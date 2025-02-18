@@ -39,8 +39,6 @@ test.describe("Test Quay.io plugin", () => {
   });
 
   test("Check Security Scan details", async () => {
-    await uiHelper.verifyCellsInTable(
-      ImageRegistry.getScanCellsIdentifier(),
-    );
+    await uiHelper.verifyCellsInTable(ImageRegistry.getScanCellsIdentifier());
   });
 });
