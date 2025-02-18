@@ -67,7 +67,7 @@ export class HelmActions {
 
     const list = await runShellCmd(`helm list -n rhdh-nil`);
     console.log(list);
-    await new KubeClient().setKubeContext("default");
+
     await runShellCmd(
       `helm upgrade -i rhdh -f values.yaml openshift-helm-charts/redhat-developer-hub \
       --wait --timeout 300s -n ${namespace} \

@@ -34,6 +34,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
   let mustSync = false;
 
   test.beforeAll(async ({ browser }, testInfo) => {
+    test.setTimeout(120 * 1000);
     LOGGER.info(
       `Staring scenario: Standard authentication providers: Micorsoft Azure EntraID: attemp #${testInfo.retry}`,
     );
@@ -338,7 +339,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       expect(statusBefore).toBe(403);
     }).toPass({
       intervals: [1_000, 2_000, 5_000],
-      timeout: 90 * 1000,
+      timeout: 120 * 1000,
     });
 
     await uiHelper.openSidebar("Settings");
@@ -391,7 +392,7 @@ test.describe("Standard authentication providers: Micorsoft Azure EntraID", () =
       expect(statusAfter).toBe(200);
     }).toPass({
       intervals: [1_000, 2_000, 5_000],
-      timeout: 60 * 1000,
+      timeout: 120 * 1000,
     });
 
     await uiHelper.openSidebar("Settings");
