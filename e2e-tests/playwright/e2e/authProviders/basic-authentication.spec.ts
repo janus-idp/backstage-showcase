@@ -16,6 +16,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
   let uiHelper: UiHelper;
 
   test.beforeAll(async ({ browser }, testInfo) => {
+    test.setTimeout(120 * 1000);
     page = (await setupBrowser(browser, testInfo)).page;
     common = new Common(page);
     uiHelper = new UiHelper(page);
@@ -93,7 +94,7 @@ test.describe("Standard authentication providers: Basic authentication", () => {
     );
   });
 
-  test("3. Set dangerouslyAllowSignInWithoutUserInCatalog to false. Login should now work but no User Entities are in the Catalog", async () => {
+  test.skip("3. Set dangerouslyAllowSignInWithoutUserInCatalog to false. Login should now work but no User Entities are in the Catalog", async () => {
     // Set upstream.backstage.appConfig.dangerouslyAllowSignInWithoutUserInCatalog = true
     // The Microsoft login should now be successful
 

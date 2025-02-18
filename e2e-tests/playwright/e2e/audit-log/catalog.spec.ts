@@ -4,7 +4,7 @@ import { UiHelper } from "../../utils/ui-helper";
 import { LogUtils } from "./log-utils";
 import { CatalogImport } from "../../support/pages/catalog-import";
 
-test.describe.skip("Audit Log check for Catalog Plugin", () => {
+test.describe("Audit Log check for Catalog Plugin", () => {
   let uiHelper: UiHelper;
   let common: Common;
   let catalogImport: CatalogImport;
