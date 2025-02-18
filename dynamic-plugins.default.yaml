@@ -524,7 +524,7 @@ plugins:
                   text: Bulk import
   # Global Header
   - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-header
-    disabled: true
+    disabled: false
     pluginConfig:
       app:
         sidebar:
@@ -588,7 +588,6 @@ plugins:
                 importName: LogoutButton
                 config:
                   priority: 10
-
 
   # Group: Global floating action button
   - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-floating-action-button
