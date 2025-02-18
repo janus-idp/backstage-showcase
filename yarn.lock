@@ -16045,9 +16045,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@red-hat-developer-hub/backstage-plugin-global-header@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@red-hat-developer-hub/backstage-plugin-global-header@npm:0.2.0"
+"@red-hat-developer-hub/backstage-plugin-global-header@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@red-hat-developer-hub/backstage-plugin-global-header@npm:1.0.0"
   dependencies:
     "@backstage/catalog-model": ^1.7.3
     "@backstage/core-components": ^0.16.3
@@ -16068,13 +16068,11 @@ __metadata:
     "@mui/material": 5.16.13
     "@mui/styled-engine": 5.16.13
     "@scalprum/react-core": 0.9.3
-    react-dom: 18.3.1
-    react-router-dom: ^6.26.2
     react-use: ^17.5.0
   peerDependencies:
     react: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
-  checksum: 4e9e95b9406671fc2405fb4aa3f3e21c4ba1db23f64b8776606d4c1511eb5e399733baa2d8b4000eb9b9c7eaa5911ec2b434fb9f18cf55eb7a34fa9c1b9bbed4
+  checksum: 6500dfcac091608b4eb466c1702f28934a276dd7cbf04aaafca167c74c605c6a520dfaa425f8669d21f5365e46b830a6acbb291206fe5b67bf7fde742823a586
   languageName: node
   linkType: hard
 
@@ -39727,7 +39725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.29.0, react-router-dom@npm:^6.26.2":
+"react-router-dom@npm:6.29.0":
   version: 6.29.0
   resolution: "react-router-dom@npm:6.29.0"
   dependencies:
@@ -40081,7 +40079,7 @@ __metadata:
     "@backstage/cli": 0.29.6
     "@janus-idp/cli": 3.2.0
     "@mui/material": 5.16.14
-    "@red-hat-developer-hub/backstage-plugin-global-header": 0.2.0
+    "@red-hat-developer-hub/backstage-plugin-global-header": 1.0.0
     typescript: 5.7.3
   languageName: unknown
   linkType: soft
