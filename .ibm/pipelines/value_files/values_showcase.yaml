@@ -18,7 +18,7 @@ global:
           proxy:  
             endpoints:  
               /add-test-header:  
-                target: https://${.Values.global.host}/api/simple-chat  
+                target: ${.Values.global.host}/api/simple-chat
                 credentials: forward  
                 headers:  
                   x-proxy-test-header: hello!  
