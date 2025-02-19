@@ -93,7 +93,23 @@ droute_send() {
       .targets.reportportal.processing.tfa.auto_finalization_threshold = ($auto_finalization_treshold | tonumber)
       ' data_router/data_router_metadata_template.json > "${ARTIFACT_DIR}/${project}/${metadata_output}"
 
-    oc rsync --progress=true --include="${metadata_output}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/"
+    # Send test by rsync to bastion pod.
+    local max_attempts=5
+    local wait_seconds=4
+    for ((i = 1; i <= max_attempts; i++)); do
+      echo "Attempt ${i} of ${max_attempts} to rsync test resuls to bastion pod."
+      if output=$(oc rsync --progress=true --include="${metadata_output}" --include="${JUNIT_RESULTS}" --exclude="*" -n "${droute_project}" "${ARTIFACT_DIR}/${project}/" "${droute_project}/${droute_pod_name}:${temp_droute}/" 2>&1); then
+        echo "$output"
+        break
+      fi
+      if ((i == max_attempts)); then
+        echo "Failed to rsync test results after ${max_attempts} attempts."
+        echo "Last rsync error details:"
+        echo "${output}"
+        echo "Troubleshooting steps:"
+        echo "1. Restart $droute_pod_name in $droute_project project/namespace"
+      fi
+    done
 
     # "Install" Data Router
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
