@@ -57,8 +57,7 @@ kubeTest.describe.serial("OpenShift Operator Tests", () => {
 
       LOGGER.info("rhdhUrl: " + operator.rhdhUrl);
       await page.waitForTimeout(60_000);
-      await page.goto(operator.rhdhUrl);
-      await common.loginAsGuest();
+      await common.loginAsGuest(operator.rhdhUrl);
       await uiHelper.openSidebar("Settings");
       const version13 = await page
         .locator(`body`, { hasText: `RHDH Version: ${oldVersion}.0` })
@@ -75,9 +74,8 @@ kubeTest.describe.serial("OpenShift Operator Tests", () => {
       );
       await page.waitForTimeout(120_000);
 
-      await page.goto(operator.rhdhUrl);
-      common.loginAsGuest();
-      uiHelper.openSidebar("Settings");
+      await common.loginAsGuest(operator.rhdhUrl);
+      await uiHelper.openSidebar("Settings");
       const version14 = await page
         .locator(`body`, { hasText: `RHDH Version: ${newVersion}.0` })
         .isVisible();
