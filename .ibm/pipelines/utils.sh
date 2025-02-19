@@ -173,6 +173,9 @@ droute_send() {
       set -e
     fi
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
+    if [ -n "${PULL_NUMBER:-}" ]; then
+      set +e
+    fi
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
   oc whoami --show-server
