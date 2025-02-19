@@ -36,7 +36,7 @@
     "export-dynamic:clean": "run export-dynamic --clean"
   },
   "dependencies": {
-    "@backstage/plugin-catalog-backend-module-github": "0.7.9",
+    "@backstage/plugin-catalog-backend-module-github": "0.7.6",
     "@backstage/plugin-catalog-backend-module-github-org": "0.3.3"
   },
   "devDependencies": {
