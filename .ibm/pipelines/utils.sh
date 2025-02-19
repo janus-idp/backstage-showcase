@@ -122,7 +122,7 @@ droute_send() {
     for ((i = 1; i <= max_attempts; i++)); do
       echo "Attempt ${i} of ${max_attempts} to send test results through Data Router."
       if output=$(oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "
-        ${temp_droute}/droute-linux-amd64 send --metadata ${temp_droute}/${METEDATA_OUTPUT} \
+        ${temp_droute}/droute-linux-amd64 send --metadata ${temp_droute}/${metadata_output} \
           --url '${DATA_ROUTER_URL}' \
           --username '${DATA_ROUTER_USERNAME}' \
           --password '${DATA_ROUTER_PASSWORD}' \
