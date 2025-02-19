@@ -812,7 +812,7 @@ initiate_sanity_plugin_checks_deployment() {
   helm upgrade -i "${RELEASE_NAME}" \
     -n "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" \
     --version "${CHART_VERSION}" \
-    -f "${DIR}/value_files/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}" \
+    -f "/tmp/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}" \
     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
     --set upstream.backstage.image.repository="${QUAY_REPO}" \
     --set upstream.backstage.image.tag="${TAG_NAME}"
