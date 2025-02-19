@@ -104,7 +104,7 @@ test.describe.serial('GitHub Happy path', () => {
     await uiHelper.clickTab('Issues');
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
-    const issuesCountText = `All repositories (${openIssues.length} Issues)*`;
+    const issuesCountText = `All repositories (${openIssues.length} Issue${openIssues.length === 1 ? '' : 's'})*`;
     await expect(page.locator(`text=${issuesCountText}`)).toBeVisible();
 
     for (const issue of openIssues.slice(0, 5)) {
