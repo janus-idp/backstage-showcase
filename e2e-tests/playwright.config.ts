@@ -62,6 +62,7 @@ export default defineConfig({
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/plugins/tekton/tekton.spec.ts",
+        "**/playwright/e2e/audit-log/**/*.spec.ts",
       ],
     },
     {
@@ -152,6 +153,16 @@ export default defineConfig({
       testMatch: [
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/verify-tls-config-health-check.spec.ts",
+      ],
+    },
+
+    {
+      name: "showcase-sanity-plugins",
+      testMatch: [
+        "**/playwright/e2e/catalog-timestamp.spec.ts",
+        "**/playwright/e2e/plugins/frontend/sidebar.spec.ts",
+        "**/playwright/e2e/home-page-customization.spec.ts",
+        "**/playwright/e2e/instance-health-check.spec.ts",
       ],
     },
   ],

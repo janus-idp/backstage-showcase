@@ -267,7 +267,7 @@ wait_for_svc(){
   local svc_name=$1
   local namespace=$2
   local timeout=${3:-300}
-  
+
   timeout "${timeout}" bash -c "
     echo ${svc_name}
     while ! oc get svc $svc_name -n $namespace &> /dev/null; do
@@ -666,7 +666,7 @@ install_acm_operator(){
   wait_for_svc multiclusterhub-operator-webhook open-cluster-management
   oc apply -f "${DIR}/cluster/operators/acm/multiclusterhub.yaml"
   # wait until multiclusterhub is Running.
-  timeout 900 bash -c 'while true; do 
+  timeout 900 bash -c 'while true; do
     CURRENT_PHASE=$(oc get multiclusterhub multiclusterhub -n open-cluster-management -o jsonpath="{.status.phase}")
     echo "MulticlusterHub Current Status: $CURRENT_PHASE"
     [[ "$CURRENT_PHASE" == "Running" ]] && echo "MulticlusterHub is now in Running phase." && break
@@ -799,6 +799,21 @@ initiate_runtime_deployment() {
     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
     --set upstream.backstage.image.repository="${QUAY_REPO}" \
     --set upstream.backstage.image.tag="${TAG_NAME}"
+}
+
+initiate_sanity_plugin_checks_deployment() {
+  configure_namespace "${NAME_SPACE_SANITY_PLUGINS_CHECK}"
+  uninstall_helmchart "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${RELEASE_NAME}"
+  oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE_SANITY_PLUGINS_CHECK}"
+  apply_yaml_files "${DIR}" "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${sanity_plugins_url}"
+  helm upgrade -i "${RELEASE_NAME}" \
+     -n "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" \
+     --version "${CHART_VERSION}" \
+     -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" \
+     -f "${DIR}/value_files/sanity-check-plugins.yaml" \
+     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+     --set upstream.backstage.image.repository="${QUAY_REPO}" \
+     --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
