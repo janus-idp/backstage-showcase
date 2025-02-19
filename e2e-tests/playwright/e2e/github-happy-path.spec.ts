@@ -105,9 +105,7 @@ test.describe.serial('GitHub Happy path', () => {
     const openIssues = await backstageShowcase.getGithubOpenIssues();
 
     const issuesCountText = `All repositories (${openIssues.length} Issues)*`;
-    await expect(page.locator(`text=${issuesCountText}`)).toBeVisible({
-      timeout: 10000,
-    });
+    await expect(page.locator(`text=${issuesCountText}`)).toBeVisible();
 
     for (const issue of openIssues.slice(0, 5)) {
       await uiHelper.verifyText(issue.title.replace(/\s+/g, ' '));
