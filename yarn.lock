@@ -1699,7 +1699,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/identity@npm:4.6.0, @azure/identity@npm:^4.0.0":
+"@azure/identity@npm:4.7.0":
+  version: 4.7.0
+  resolution: "@azure/identity@npm:4.7.0"
+  dependencies:
+    "@azure/abort-controller": ^2.0.0
+    "@azure/core-auth": ^1.9.0
+    "@azure/core-client": ^1.9.2
+    "@azure/core-rest-pipeline": ^1.17.0
+    "@azure/core-tracing": ^1.0.0
+    "@azure/core-util": ^1.11.0
+    "@azure/logger": ^1.0.0
+    "@azure/msal-browser": ^4.2.0
+    "@azure/msal-node": ^3.2.1
+    events: ^3.0.0
+    jws: ^4.0.0
+    open: ^10.1.0
+    stoppable: ^1.1.0
+    tslib: ^2.2.0
+  checksum: eb373d50d271c3d147e2d4f34367f5170c707039b26a7814f0337cce7e5334a3b96c35a699e344e0b6b8c83dd5fc5097193bae3a1d0493efbc44e472a47a81f0
+  languageName: node
+  linkType: hard
+
+"@azure/identity@npm:^4.0.0":
   version: 4.6.0
   resolution: "@azure/identity@npm:4.6.0"
   dependencies:
@@ -1739,6 +1761,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@azure/msal-browser@npm:^4.2.0":
+  version: 4.3.0
+  resolution: "@azure/msal-browser@npm:4.3.0"
+  dependencies:
+    "@azure/msal-common": 15.2.0
+  checksum: 35897168a51ea9d8a31d5aee222ead6b211bf43082a004596ef3fef5d912f91681bc59fba01ea6db2c580c1d31c42e5798c0b847751280dc7fc563695b0ca703
+  languageName: node
+  linkType: hard
+
 "@azure/msal-common@npm:14.15.0":
   version: 14.15.0
   resolution: "@azure/msal-common@npm:14.15.0"
@@ -1753,6 +1784,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@azure/msal-common@npm:15.2.0":
+  version: 15.2.0
+  resolution: "@azure/msal-common@npm:15.2.0"
+  checksum: 42f675ccb92bad894400fc3768fbad1b559dd46815e140972465e2a83d659b760ba94f9c0b94b9571ebf8571493d40f629448557ee87bb8db15e6292afd10abf
+  languageName: node
+  linkType: hard
+
 "@azure/msal-node@npm:^2.15.0":
   version: 2.15.0
   resolution: "@azure/msal-node@npm:2.15.0"
@@ -1761,6 +1799,17 @@ __metadata:
     jsonwebtoken: ^9.0.0
     uuid: ^8.3.0
   checksum: 10dd1c273e2465d519d28ee04d1c9e2e4ecfa2cab664b38677502c626139f86a16f7d78c645e6727d550a84dfa7773ebea1fb2cc7454870f3c6507d601e6ef2f
+  languageName: node
+  linkType: hard
+
+"@azure/msal-node@npm:^3.2.1":
+  version: 3.2.3
+  resolution: "@azure/msal-node@npm:3.2.3"
+  dependencies:
+    "@azure/msal-common": 15.2.0
+    jsonwebtoken: ^9.0.0
+    uuid: ^8.3.0
+  checksum: ec5aa9b3a48dfdbd25608c09b9d157e45ebaefd04455bc0618a6b395c01400447d1b4113d9c6b605f08e9fceb8565bbfe305d08c020a378135a996f35eb4a333
   languageName: node
   linkType: hard
 
@@ -26815,7 +26864,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "e2e-tests@workspace:e2e-tests"
   dependencies:
-    "@azure/identity": 4.6.0
+    "@azure/identity": 4.7.0
     "@keycloak/keycloak-admin-client": 25.0.6
     "@kubernetes/client-node": 0.22.3
     "@microsoft/microsoft-graph-client": 3.0.7
@@ -36914,7 +36963,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open@npm:^10.0.3":
+"open@npm:^10.0.3, open@npm:^10.1.0":
   version: 10.1.0
   resolution: "open@npm:10.1.0"
   dependencies:
