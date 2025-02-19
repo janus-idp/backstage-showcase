@@ -806,14 +806,16 @@ initiate_sanity_plugin_checks_deployment() {
   uninstall_helmchart "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${RELEASE_NAME}"
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE_SANITY_PLUGINS_CHECK}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${sanity_plugins_url}"
+  yq_merge_value_files "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_SANITY_PLUGINS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}"
+  mkdir -p "${ARTIFACT_DIR}/${NAME_SPACE_SANITY_PLUGINS_CHECK}"
+  cp -a "/tmp/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}" "${ARTIFACT_DIR}/${NAME_SPACE_SANITY_PLUGINS_CHECK}/" # Save the final value-file into the artifacts directory.
   helm upgrade -i "${RELEASE_NAME}" \
-     -n "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" \
-     --version "${CHART_VERSION}" \
-     -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" \
-     -f "${DIR}/value_files/sanity-check-plugins.yaml" \
-     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
-     --set upstream.backstage.image.repository="${QUAY_REPO}" \
-     --set upstream.backstage.image.tag="${TAG_NAME}"
+    -n "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" \
+    --version "${CHART_VERSION}" \
+    -f "${DIR}/value_files/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
