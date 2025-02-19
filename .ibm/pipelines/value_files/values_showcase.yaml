@@ -18,7 +18,7 @@ global:
           proxy:  
             endpoints:  
               /add-test-header:  
-                target: http://${RHDH_BASE_URL}/api/simple-chat  
+                target: https://${.Values.global.host}/api/simple-chat  
                 credentials: forward  
                 headers:  
                   x-proxy-test-header: hello!  
