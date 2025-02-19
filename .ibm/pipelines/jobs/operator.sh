@@ -10,7 +10,12 @@ install_rhdh_operator() {
   rm -f /tmp/install-rhdh-catalog-source.sh
   curl -L https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/main/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
   chmod +x /tmp/install-rhdh-catalog-source.sh
-  bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
+  if [ "$RELEASE_BRANCH_NAME" == "main" ]; then
+    bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
+  else
+    local operator_version="${RELEASE_BRANCH_NAME#release-}"
+    bash -x /tmp/install-rhdh-catalog-source.sh -v "$operator_version" --install-operator rhdh
+  fi
 }
 
 deploy_rhdh_operator() {
