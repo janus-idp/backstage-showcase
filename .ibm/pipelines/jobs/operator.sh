@@ -11,9 +11,11 @@ install_rhdh_operator() {
   curl -L https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/main/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
   chmod +x /tmp/install-rhdh-catalog-source.sh
   if [ "$RELEASE_BRANCH_NAME" == "main" ]; then
+    echo "Installing RHDH operator with '--next' flag"
     bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
   else
     local operator_version="${RELEASE_BRANCH_NAME#release-}"
+    echo "Installing RHDH operator with '-v $operator_version' flag"
     bash -x /tmp/install-rhdh-catalog-source.sh -v "$operator_version" --install-operator rhdh
   fi
 }
