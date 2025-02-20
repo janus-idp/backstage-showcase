@@ -218,28 +218,38 @@ reportportal_slack_alert() {
 
 # Merge the base YAML value file with the differences file for Kubernetes
 yq_merge_value_files() {
-  local base_file=$1
-  local diff_file=$2
+  local plugin_operation=$1 # Chose whether you want to merge or overwrite the plugins key (the second file will overwrite the first)
+  local base_file=$2
+  local diff_file=$3
   local step_1_file="/tmp/step-without-plugins.yaml"
   local step_2_file="/tmp/step-only-plugins.yaml"
-  local final_file=$3
-  # Step 1: Merge files, excluding the .global.dynamic.plugins key
-  # Values from `diff_file` override those in `base_file`
-  yq eval-all '
-    select(fileIndex == 0) * select(fileIndex == 1) |
-    del(.global.dynamic.plugins)
-  ' "${base_file}" "${diff_file}" > "${step_1_file}"
-  # Step 2: Merge files, combining the .global.dynamic.plugins key
-  # Values from `diff_file` take precedence; plugins are merged and deduplicated by the .package field
-  yq eval-all '
-    select(fileIndex == 0) *+ select(fileIndex == 1) |
-    .global.dynamic.plugins |= (reverse | unique_by(.package) | reverse)
-  ' "${base_file}" "${diff_file}" > "${step_2_file}"
-  # Step 3: Combine results from the previous steps and remove null values
-  # Values from `step_2_file` override those in `step_1_file`
-  yq eval-all '
-    select(fileIndex == 0) * select(fileIndex == 1) | del(.. | select(. == null))
-  ' "${step_2_file}" "${step_1_file}" > "${final_file}"
+  local final_file=$4
+  if [ "$plugin_operation" = "merge" ]; then
+    # Step 1: Merge files, excluding the .global.dynamic.plugins key
+    # Values from `diff_file` override those in `base_file`
+    yq eval-all '
+      select(fileIndex == 0) * select(fileIndex == 1) |
+      del(.global.dynamic.plugins)
+    ' "${base_file}" "${diff_file}" > "${step_1_file}"
+    # Step 2: Merge files, combining the .global.dynamic.plugins key
+    # Values from `diff_file` take precedence; plugins are merged and deduplicated by the .package field
+    yq eval-all '
+      select(fileIndex == 0) *+ select(fileIndex == 1) |
+      .global.dynamic.plugins |= (reverse | unique_by(.package) | reverse)
+    ' "${base_file}" "${diff_file}" > "${step_2_file}"
+    # Step 3: Combine results from the previous steps and remove null values
+    # Values from `step_2_file` override those in `step_1_file`
+    yq eval-all '
+      select(fileIndex == 0) * select(fileIndex == 1) | del(.. | select(. == null))
+    ' "${step_2_file}" "${step_1_file}" > "${final_file}"
+  elif [ "$plugin_operation" = "overwrite" ]; then
+    yq eval-all '
+    select(fileIndex == 0) * select(fileIndex == 1)
+  ' "${base_file}" "${diff_file}" > "${final_file}"
+  else
+    echo "Invalid operation with plugins key: $plugin_operation"
+    exit 1
+  fi
 }
 
 # Waits for a Kubernetes/OpenShift deployment to become ready within a specified timeout period
@@ -833,14 +843,16 @@ initiate_sanity_plugin_checks_deployment() {
   uninstall_helmchart "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${RELEASE_NAME}"
   oc apply -f "$DIR/resources/redis-cache/redis-deployment.yaml" --namespace="${NAME_SPACE_SANITY_PLUGINS_CHECK}"
   apply_yaml_files "${DIR}" "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${sanity_plugins_url}"
+  yq_merge_value_files "overwrite" "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" "${DIR}/value_files/${HELM_CHART_SANITY_PLUGINS_DIFF_VALUE_FILE_NAME}" "/tmp/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}"
+  mkdir -p "${ARTIFACT_DIR}/${NAME_SPACE_SANITY_PLUGINS_CHECK}"
+  cp -a "/tmp/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}" "${ARTIFACT_DIR}/${NAME_SPACE_SANITY_PLUGINS_CHECK}/" # Save the final value-file into the artifacts directory.
   helm upgrade -i "${RELEASE_NAME}" \
-     -n "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" \
-     --version "${CHART_VERSION}" \
-     -f "${DIR}/value_files/${HELM_CHART_VALUE_FILE_NAME}" \
-     -f "${DIR}/value_files/sanity-check-plugins.yaml" \
-     --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
-     --set upstream.backstage.image.repository="${QUAY_REPO}" \
-     --set upstream.backstage.image.tag="${TAG_NAME}"
+    -n "${NAME_SPACE_SANITY_PLUGINS_CHECK}" "${HELM_REPO_NAME}/${HELM_IMAGE_NAME}" \
+    --version "${CHART_VERSION}" \
+    -f "/tmp/${HELM_CHART_SANITY_PLUGINS_MERGED_VALUE_FILE_NAME}" \
+    --set global.clusterRouterBase="${K8S_CLUSTER_ROUTER_BASE}" \
+    --set upstream.backstage.image.repository="${QUAY_REPO}" \
+    --set upstream.backstage.image.tag="${TAG_NAME}"
 }
 
 check_and_test() {
