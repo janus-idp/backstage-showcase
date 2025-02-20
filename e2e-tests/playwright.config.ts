@@ -167,6 +167,6 @@ export default defineConfig({
     {
       name: "any-test",
       testMatch: "**/*.spec.ts", // Allows running any test file
-    }
+    },
   ],
 });
