@@ -39,6 +39,9 @@ droute_send() {
   if [[ "${OPENSHIFT_CI}" != "true" ]]; then return 0; fi
   temp_kubeconfig=$(mktemp) # Create temporary KUBECONFIG to open second `oc` session
   ( # Open subshell
+    if [ -n "${PULL_NUMBER:-}" ]; then
+      set +e
+    fi
     export KUBECONFIG="$temp_kubeconfig"
     local droute_version="1.2.2"
     local release_name=$1
@@ -162,7 +165,7 @@ droute_send() {
           ${DATA_ROUTER_REQUEST_ID}")
         # Try to extract the ReportPortal launch URL from the request. This fails if it doesn't contain the launch URL.
         REPORTPORTAL_LAUNCH_URL=$(echo "$DATA_ROUTER_REQUEST_OUTPUT" | yq e '.targets[0].events[] | select(.component == "reportportal-connector") | .message | fromjson | .[0].launch_url' -)
-        if [[ $? -eq 0 ]]; then
+        if [[ -n "$REPORTPORTAL_LAUNCH_URL" ]]; then
           reportportal_slack_alert $release_name $REPORTPORTAL_LAUNCH_URL
           return 0
         else
@@ -174,7 +177,7 @@ droute_send() {
     fi
     oc exec -n "${droute_project}" "${droute_pod_name}" -- /bin/bash -c "rm -rf ${temp_droute}/*"
     if [ -n "${PULL_NUMBER:-}" ]; then
-      set +e
+      set -e
     fi
   ) # Close subshell
   rm -f "$temp_kubeconfig" # Destroy temporary KUBECONFIG
