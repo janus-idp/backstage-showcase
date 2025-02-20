@@ -1699,7 +1699,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/identity@npm:4.6.0, @azure/identity@npm:^4.0.0":
+"@azure/identity@npm:4.7.0":
+  version: 4.7.0
+  resolution: "@azure/identity@npm:4.7.0"
+  dependencies:
+    "@azure/abort-controller": ^2.0.0
+    "@azure/core-auth": ^1.9.0
+    "@azure/core-client": ^1.9.2
+    "@azure/core-rest-pipeline": ^1.17.0
+    "@azure/core-tracing": ^1.0.0
+    "@azure/core-util": ^1.11.0
+    "@azure/logger": ^1.0.0
+    "@azure/msal-browser": ^4.2.0
+    "@azure/msal-node": ^3.2.1
+    events: ^3.0.0
+    jws: ^4.0.0
+    open: ^10.1.0
+    stoppable: ^1.1.0
+    tslib: ^2.2.0
+  checksum: eb373d50d271c3d147e2d4f34367f5170c707039b26a7814f0337cce7e5334a3b96c35a699e344e0b6b8c83dd5fc5097193bae3a1d0493efbc44e472a47a81f0
+  languageName: node
+  linkType: hard
+
+"@azure/identity@npm:^4.0.0":
   version: 4.6.0
   resolution: "@azure/identity@npm:4.6.0"
   dependencies:
@@ -1739,6 +1761,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@azure/msal-browser@npm:^4.2.0":
+  version: 4.3.0
+  resolution: "@azure/msal-browser@npm:4.3.0"
+  dependencies:
+    "@azure/msal-common": 15.2.0
+  checksum: 35897168a51ea9d8a31d5aee222ead6b211bf43082a004596ef3fef5d912f91681bc59fba01ea6db2c580c1d31c42e5798c0b847751280dc7fc563695b0ca703
+  languageName: node
+  linkType: hard
+
 "@azure/msal-common@npm:14.15.0":
   version: 14.15.0
   resolution: "@azure/msal-common@npm:14.15.0"
@@ -1753,6 +1784,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@azure/msal-common@npm:15.2.0":
+  version: 15.2.0
+  resolution: "@azure/msal-common@npm:15.2.0"
+  checksum: 42f675ccb92bad894400fc3768fbad1b559dd46815e140972465e2a83d659b760ba94f9c0b94b9571ebf8571493d40f629448557ee87bb8db15e6292afd10abf
+  languageName: node
+  linkType: hard
+
 "@azure/msal-node@npm:^2.15.0":
   version: 2.15.0
   resolution: "@azure/msal-node@npm:2.15.0"
@@ -1761,6 +1799,17 @@ __metadata:
     jsonwebtoken: ^9.0.0
     uuid: ^8.3.0
   checksum: 10dd1c273e2465d519d28ee04d1c9e2e4ecfa2cab664b38677502c626139f86a16f7d78c645e6727d550a84dfa7773ebea1fb2cc7454870f3c6507d601e6ef2f
+  languageName: node
+  linkType: hard
+
+"@azure/msal-node@npm:^3.2.1":
+  version: 3.2.3
+  resolution: "@azure/msal-node@npm:3.2.3"
+  dependencies:
+    "@azure/msal-common": 15.2.0
+    jsonwebtoken: ^9.0.0
+    uuid: ^8.3.0
+  checksum: ec5aa9b3a48dfdbd25608c09b9d157e45ebaefd04455bc0618a6b395c01400447d1b4113d9c6b605f08e9fceb8565bbfe305d08c020a378135a996f35eb4a333
   languageName: node
   linkType: hard
 
@@ -6661,7 +6710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-catalog-import@npm:0.12.9, @backstage/plugin-catalog-import@npm:^0.12.5":
+"@backstage/plugin-catalog-import@npm:0.12.9, @backstage/plugin-catalog-import@npm:^0.12.9":
   version: 0.12.9
   resolution: "@backstage/plugin-catalog-import@npm:0.12.9"
   dependencies:
@@ -16025,20 +16074,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@red-hat-developer-hub/backstage-plugin-bulk-import-backend@npm:5.2.0":
-  version: 5.2.0
-  resolution: "@red-hat-developer-hub/backstage-plugin-bulk-import-backend@npm:5.2.0"
+"@red-hat-developer-hub/backstage-plugin-bulk-import-backend@npm:5.3.0":
+  version: 5.3.0
+  resolution: "@red-hat-developer-hub/backstage-plugin-bulk-import-backend@npm:5.3.0"
   dependencies:
-    "@backstage/backend-defaults": ^0.5.2
-    "@backstage/backend-plugin-api": ^1.0.1
-    "@backstage/errors": ^1.2.4
-    "@backstage/integration": ^1.15.1
-    "@backstage/plugin-catalog-node": ^1.13.1
-    "@backstage/plugin-permission-common": ^0.8.1
-    "@backstage/plugin-permission-node": ^0.8.4
+    "@backstage/backend-defaults": ^0.7.0
+    "@backstage/backend-plugin-api": ^1.1.1
+    "@backstage/errors": ^1.2.7
+    "@backstage/integration": ^1.16.1
+    "@backstage/plugin-catalog-node": ^1.15.1
+    "@backstage/plugin-permission-common": ^0.8.4
+    "@backstage/plugin-permission-node": ^0.8.7
     "@octokit/auth-app": ^6.0.3
     "@octokit/rest": ^20.0.2
-    "@red-hat-developer-hub/backstage-plugin-bulk-import-common": ^1.4.1
+    "@red-hat-developer-hub/backstage-plugin-bulk-import-common": ^1.5.0
     ajv-formats: ^3.0.1
     express: ^4.17.1
     git-url-parse: ^14.0.0
@@ -16048,35 +16097,35 @@ __metadata:
     openapi-backend: ^5.10.6
   peerDependencies:
     "@janus-idp/backstage-plugin-audit-log-node": ^1.7.0
-  checksum: 444931627f68267456802686d7731564178e82fb5cae9165162975f711882eb7672b09bf82b53c9f76ef46025ffcb970aa6e3fa7167e08114684a4ed8a6d4b9f
+  checksum: 1e320d254b469f309378375bd28bd0d5a2654d20310a85ac74f0bcf47408b3dc6fd0c48da617849e35ac1196c53a2d194422129a6a9c03d8d1c29d9a9476365a
   languageName: node
   linkType: hard
 
-"@red-hat-developer-hub/backstage-plugin-bulk-import-common@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "@red-hat-developer-hub/backstage-plugin-bulk-import-common@npm:1.4.1"
+"@red-hat-developer-hub/backstage-plugin-bulk-import-common@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@red-hat-developer-hub/backstage-plugin-bulk-import-common@npm:1.5.0"
   peerDependencies:
-    "@backstage/plugin-permission-common": ^0.8.1
-  checksum: 8bdb460ff037424aa9949784de36d9e1da95054b8aeceb64671f8ffdedc1b32b8db31334aacf2a9d64ab2224f815fc7192c352e3e5a824bc1967914ed59fa86f
+    "@backstage/plugin-permission-common": ^0.8.4
+  checksum: 54fd40b96fc667cbd70ec91d6369212144fd1a2c7422da570eb7b83925214c63d06547be1eac61ccded27245a55fbf21e3388ab8c8a2d2a27f094997ecd2d305
   languageName: node
   linkType: hard
 
-"@red-hat-developer-hub/backstage-plugin-bulk-import@npm:1.10.3":
-  version: 1.10.3
-  resolution: "@red-hat-developer-hub/backstage-plugin-bulk-import@npm:1.10.3"
+"@red-hat-developer-hub/backstage-plugin-bulk-import@npm:1.11.0":
+  version: 1.11.0
+  resolution: "@red-hat-developer-hub/backstage-plugin-bulk-import@npm:1.11.0"
   dependencies:
-    "@backstage/catalog-model": ^1.7.0
-    "@backstage/core-components": ^0.15.1
-    "@backstage/core-plugin-api": ^1.10.0
-    "@backstage/plugin-catalog-import": ^0.12.5
-    "@backstage/plugin-catalog-react": ^1.14.0
-    "@backstage/plugin-permission-react": ^0.4.27
-    "@backstage/theme": ^0.6.0
+    "@backstage/catalog-model": ^1.7.3
+    "@backstage/core-components": ^0.16.3
+    "@backstage/core-plugin-api": ^1.10.3
+    "@backstage/plugin-catalog-import": ^0.12.9
+    "@backstage/plugin-catalog-react": ^1.15.1
+    "@backstage/plugin-permission-react": ^0.4.30
+    "@backstage/theme": ^0.6.3
     "@janus-idp/shared-react": ^2.13.1
-    "@mui/icons-material": 5.16.4
+    "@mui/icons-material": 5.16.13
     "@mui/material": ^5.12.2
     "@mui/styles": ^6.1.6
-    "@red-hat-developer-hub/backstage-plugin-bulk-import-common": ^1.4.1
+    "@red-hat-developer-hub/backstage-plugin-bulk-import-common": ^1.5.0
     "@tanstack/react-query": ^4.29.21
     formik: ^2.4.5
     js-yaml: ^4.1.0
@@ -16087,7 +16136,7 @@ __metadata:
   peerDependencies:
     react: 16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: ^6.0.0
-  checksum: 40cfb240adf556c392dcf8d2fc87cee5a29ec16cfe30adde1329a98769269fbf1bda04b1aa8ebd9b0d86da42c892b68f05412aec153771a2be986e3529032be5
+  checksum: 642f05ef141a4f599c8136642e5a29043f2c662e71b11c544c969ce671f27371756c369cbd3ac6c531530c76b0e5f0502b7f8f4f35bf6ac23aed7edc70bf7671
   languageName: node
   linkType: hard
 
@@ -22526,7 +22575,7 @@ __metadata:
     "@types/global-agent": 2.1.3
     app: "*"
     global-agent: 3.0.0
-    jose: 5.9.6
+    jose: 5.10.0
     prettier: 3.5.1
     undici: 6.21.1
     winston: 3.14.2
@@ -26840,7 +26889,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "e2e-tests@workspace:e2e-tests"
   dependencies:
-    "@azure/identity": 4.6.0
+    "@azure/identity": 4.7.0
     "@keycloak/keycloak-admin-client": 25.0.6
     "@kubernetes/client-node": 0.22.3
     "@microsoft/microsoft-graph-client": 3.0.7
@@ -32536,10 +32585,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:5.9.6, jose@npm:^5.0.0, jose@npm:^5.9.6":
-  version: 5.9.6
-  resolution: "jose@npm:5.9.6"
-  checksum: 4b536da0201858ed4c4582e8bb479081f11e0c63dd0f5e473adde16fc539785e1f2f0409bc1fc7cbbb5b68026776c960b4952da3a06f6fdfff0b9764c9127ae0
+"jose@npm:5.10.0":
+  version: 5.10.0
+  resolution: "jose@npm:5.10.0"
+  checksum: e80965ef3ab47baafac3517f53fa9c74b948b57690de524f51320c314cd545ef51ec7b18761605d58fb5965b7c5e12b2bb6ddae87a6ccf55e3f4ad077347d8d7
   languageName: node
   linkType: hard
 
@@ -32547,6 +32596,13 @@ __metadata:
   version: 4.15.9
   resolution: "jose@npm:4.15.9"
   checksum: 41abe1c99baa3cf8a78ebbf93da8f8e50e417b7a26754c4afa21865d87527b8ac2baf66de2c5f6accc3f7d7158658dae7364043677236ea1d07895b040097f15
+  languageName: node
+  linkType: hard
+
+"jose@npm:^5.0.0, jose@npm:^5.9.6":
+  version: 5.9.6
+  resolution: "jose@npm:5.9.6"
+  checksum: 4b536da0201858ed4c4582e8bb479081f11e0c63dd0f5e473adde16fc539785e1f2f0409bc1fc7cbbb5b68026776c960b4952da3a06f6fdfff0b9764c9127ae0
   languageName: node
   linkType: hard
 
@@ -36932,7 +36988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open@npm:^10.0.3":
+"open@npm:^10.0.3, open@npm:^10.1.0":
   version: 10.1.0
   resolution: "open@npm:10.1.0"
   dependencies:
@@ -40125,7 +40181,7 @@ __metadata:
   dependencies:
     "@backstage/cli": 0.29.6
     "@janus-idp/cli": 3.2.0
-    "@red-hat-developer-hub/backstage-plugin-bulk-import-backend": 5.2.0
+    "@red-hat-developer-hub/backstage-plugin-bulk-import-backend": 5.3.0
     typescript: 5.7.3
   languageName: unknown
   linkType: soft
@@ -40137,7 +40193,7 @@ __metadata:
     "@backstage/cli": 0.29.6
     "@janus-idp/cli": 3.2.0
     "@mui/material": 5.16.14
-    "@red-hat-developer-hub/backstage-plugin-bulk-import": 1.10.3
+    "@red-hat-developer-hub/backstage-plugin-bulk-import": 1.11.0
     typescript: 5.7.3
   languageName: unknown
   linkType: soft
