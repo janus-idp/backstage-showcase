@@ -8,9 +8,15 @@ install_rhdh_operator() {
 
   # Make sure script is up to date
   rm -f /tmp/install-rhdh-catalog-source.sh
-  curl -L https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/main/.rhdh/scripts/install-rhdh-catalog-source.sh > /tmp/install-rhdh-catalog-source.sh
+  curl -L "https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/${RELEASE_BRANCH_NAME}/.rhdh/scripts/install-rhdh-catalog-source.sh" > /tmp/install-rhdh-catalog-source.sh
   chmod +x /tmp/install-rhdh-catalog-source.sh
-  bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
+  if [ "$TAG_NAME" == "next" ]; then
+    echo "Installing RHDH operator with '--next' flag"
+    bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
+  else
+    echo "Installing RHDH operator with '-v $TAG_NAME' flag"
+    bash -x /tmp/install-rhdh-catalog-source.sh -v "$TAG_NAME" --install-operator rhdh
+  fi
 }
 
 deploy_rhdh_operator() {
