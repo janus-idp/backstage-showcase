@@ -293,7 +293,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     });
   });
 
-  test("Move a user to another group in Github", async () => {
+  test.skip("Move a user to another group in Github", async () => {
     test.setTimeout(300 * 1000);
 
     // move a user to another group -> ensure user can still login

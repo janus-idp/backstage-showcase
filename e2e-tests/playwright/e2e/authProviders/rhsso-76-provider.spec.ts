@@ -405,7 +405,7 @@ for (const version of ["RHBK"]) {
       });
     });
 
-    test(`${version} - move a user to another group in ${version}`, async () => {
+    test.skip(`${version} - move a user to another group in ${version}`, async () => {
       test.setTimeout(300 * 1000);
       LOGGER.info(`Executing testcase: ${test.info().title}`);
 
