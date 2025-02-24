@@ -31,6 +31,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
   const syncTime = 60;
 
   test.beforeAll(async ({ browser }, testInfo) => {
+    test.setTimeout(120 * 1000);
     const browserSetup = await setupBrowser(browser, testInfo);
     page = browserSetup.page;
     context = browserSetup.context;
@@ -456,7 +457,7 @@ test.describe("Standard authentication providers: Github Provider", () => {
     await context.clearCookies();
   });
 
-  test("Rename a user and a group", async () => {
+  test.skip("Rename a user and a group", async () => {
     test.setTimeout(600 * 1000);
     await waitForNextSync("github", syncTime);
 

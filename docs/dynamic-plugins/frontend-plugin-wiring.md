@@ -386,19 +386,54 @@ dynamicPlugins:
         - mountPoint: application/header # mount point for a global header
           importName: <header_component> # e.g., `GlobalHeader` for `red-hat-developer-hub.backstage-plugin-global-header`
           config:
-            layout:
-              position: above-main-content # options: `above-main-content` or `above-sidebar`
+            position: above-main-content # options: `above-main-content` or `above-sidebar`
 ```
 
 Each global header entry requires the following attributes:
 
 - `mountPoint`: Defines where the header will be added. Use `application/header` to specify it as a global header.
 - `importName`: Specifies the component exported by the global header plugin (e.g., `GlobalHeader`).
-- `config.layout.position`: Determines the header's position. Supported values are:
+- `config.position`: Determines the header's position. Supported values are:
   - `above-main-content`: Positions the header above the main content area.
   - `above-sidebar`: Positions the header above the sidebar.
 
 Users can configure multiple global headers at different positions by adding entries to the `mountPoints` field.
+
+### Adding application listeners
+
+The users can add application listeners using the `application/listener` mount point. Below is an example that uses the aforesaid mount point:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:  # plugin_package_name same as `scalprum.name` key in plugin's `package.json`
+      mountPoints:
+        - mountPoint: application/listener
+          importName: <exported listener component>
+```
+
+Users can configure multiple application listeners by adding entries to the `mountPoints` field.
+
+### Adding application providers
+
+The users can add application providers using the `application/provider` mount point. Below is an example that uses the aforesaid mount point to configure a context provider:
+
+```yaml
+# app-config.yaml
+dynamicPlugins:
+  frontend:
+    <package_name>:  # plugin_package_name same as `scalprum.name` key in plugin's `package.json`
+      dynamicRoutes:
+        - path: /<route>
+          importName: Component # Component you want to load on the route
+      mountPoints:
+        - mountPoint: application/provider
+          importName: <exported provider component>
+```
+
+Users can configure multiple application providers by adding entries to the `mountPoints` field.
+
 
 ## Customizing and Adding Entity tabs
 
@@ -543,6 +578,39 @@ dynamicPlugins:
 A plugin can specify multiple field extensions, in which case each field extension will need to supply an `importName` for each field extension.
 
 - `importName` is an optional import name that should reference the value returned the scaffolder field extension API
+- `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
+
+## Provide custom TechDocs addons
+
+The Backstage TechDocs component supports specifying [custom addons](https://backstage.io/docs/features/techdocs/addons/) to extend TechDocs functionality, like rendering a component or accessing and manipulating TechDocs's DOM.
+
+Here is an example of creating an addon:
+
+```typescript
+export const ExampleAddon = techdocsPlugin.provide(
+  createTechDocsAddonExtension({
+    name: "ExampleAddon",
+    location: TechDocsAddonLocations.Content,
+    component: ExampleTestAddon,
+  }),
+);
+```
+
+These components can be contributed by plugins by exposing the TechDocs addon component via the `techdocsAddons` configuration:
+
+```yaml
+dynamicPlugins:
+  frontend:
+    <package_name>: # same as `scalprum.name` key in plugin's `package.json`
+      techdocsAddons:
+        - importName: ExampleAddon
+          config:
+            props: ... # optional, React props to pass to the addon
+```
+
+A plugin can specify multiple addons, in which case each techdocsAddon will need to supply an `importName` for each addon.
+
+- `importName` name of an exported `Addon` component
 - `module` is an optional argument which allows you to specify which set of assets you want to access within the plugin. If not provided, the default module named `PluginRoot` is used. This is the same as the key in `scalprum.exposedModules` key in plugin's `package.json`.
 
 ## Add a custom Backstage theme or replace the provided theme

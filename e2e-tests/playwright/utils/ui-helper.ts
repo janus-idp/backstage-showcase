@@ -1,5 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { UI_HELPER_ELEMENTS } from "../support/pageObjects/global-obj";
+import { SidebarTabs } from "./navbar";
+import { SEARCH_OBJECTS_COMPONENTS } from "../support/pageObjects/page-obj";
 
 export class UIhelper {
   private page: Page;
@@ -28,11 +30,14 @@ export class UIhelper {
    * @param searchText - The text to be entered into the search input field.
    */
   async searchInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Search"]', searchText);
+    await this.page.fill(
+      SEARCH_OBJECTS_COMPONENTS.placeholderSearch,
+      searchText,
+    );
   }
 
-  async filterInputPlaceholder(searchText: string) {
-    await this.page.fill('input[placeholder="Filter"]', searchText);
+  async searchInputAriaLabel(searchText: string) {
+    await this.page.fill(SEARCH_OBJECTS_COMPONENTS.ariaLabelSearch, searchText);
   }
 
   async pressTab() {
@@ -79,7 +84,7 @@ export class UIhelper {
   async clickByDataTestId(dataTestId: string) {
     const element = this.page.getByTestId(dataTestId);
     await element.waitFor({ state: "visible" });
-    await element.click();
+    await element.dispatchEvent("click");
   }
 
   async verifyDivHasText(divText: string | RegExp) {
@@ -151,15 +156,15 @@ export class UIhelper {
   }
 
   async waitForSideBarVisible() {
-    await this.page.waitForSelector("nav a", { timeout: 10 * 1000 });
+    await this.page.waitForSelector("nav a", { timeout: 10_000 });
   }
 
-  async openSidebar(navBarText: string) {
+  async openSidebar(navBarText: SidebarTabs) {
     const navLink = this.page
       .locator(`nav a:has-text("${navBarText}")`)
       .first();
     await navLink.waitFor({ state: "visible" });
-    await navLink.click();
+    await navLink.dispatchEvent("click");
   }
 
   async openSidebarButton(navBarButtonLabel: string) {
@@ -203,8 +208,8 @@ export class UIhelper {
       ? this.page.locator(locator).getByText(text, { exact }).first()
       : this.page.getByText(text, { exact }).first();
 
-    await elementLocator.waitFor({ state: "visible", timeout: 10000 });
-    await elementLocator.waitFor({ state: "attached", timeout: 10000 });
+    await elementLocator.waitFor({ state: "visible" });
+    await elementLocator.waitFor({ state: "attached" });
 
     try {
       await elementLocator.scrollIntoViewIfNeeded();
@@ -222,7 +227,7 @@ export class UIhelper {
       .getByText(expectedText, { exact: true });
 
     try {
-      await elementLocator.waitFor({ state: "visible", timeout: 10000 });
+      await elementLocator.waitFor({ state: "visible" });
       const actualText = (await elementLocator.textContent()) || "No content";
 
       if (actualText.trim() !== expectedText.trim()) {
@@ -286,13 +291,13 @@ export class UIhelper {
     }
   }
 
-  async verifyHeading(heading: string | RegExp) {
+  async verifyHeading(heading: string | RegExp, timeout: number = 20000) {
     const headingLocator = this.page
       .locator("h1, h2, h3, h4, h5, h6")
       .filter({ hasText: heading })
       .first();
 
-    await headingLocator.waitFor({ state: "visible", timeout: 20000 });
+    await headingLocator.waitFor({ state: "visible", timeout: timeout });
     await expect(headingLocator).toBeVisible();
   }
 
@@ -306,13 +311,11 @@ export class UIhelper {
   }
 
   async waitForTitle(text: string, level: number = 1) {
-    await this.page.waitForSelector(`h${level}:has-text("${text}")`, {
-      timeout: 10000,
-    });
+    await this.page.waitForSelector(`h${level}:has-text("${text}")`);
   }
 
   async clickTab(tabName: string) {
-    const tabLocator = this.page.locator(`text="${tabName}"`);
+    const tabLocator = this.page.getByRole("tab", { name: tabName });
     await tabLocator.waitFor({ state: "visible" });
     await tabLocator.click();
   }
@@ -525,7 +528,9 @@ export class UIhelper {
   }
 
   async clickById(id: string) {
-    await this.page.click(`#${id}`);
+    const locator = this.page.locator(`#${id}`);
+    await locator.waitFor({ state: "attached" });
+    await locator.click();
   }
 
   async clickSpanByText(text: string) {
@@ -618,7 +623,7 @@ export class UIhelper {
   }
 
   async verifyTextInTooltip(text: string | RegExp) {
-    const tooltip = await this.page.getByRole("tooltip").getByText(text);
-    expect(tooltip).toBeVisible();
+    const tooltip = this.page.getByRole("tooltip").getByText(text);
+    await expect(tooltip).toBeVisible();
   }
 }

@@ -106,6 +106,7 @@ For more information on setting up the OAuth2 Proxy auth provider, consult the [
           #    - resolver: preferredUsernameMatchingUserEntityName
           #    - resolver: emailMatchingUserEntityProfileEmail
           #    - resolver: emailLocalPartMatchingUserEntityName
+          #    - resolver: oidcSubClaimMatchingKeycloakUserId
   ```
 
 In an example using Keycloak for authentication with the OIDC provider, there are a few steps that need to be taken to get everything working:
@@ -122,6 +123,7 @@ In an example using Keycloak for authentication with the OIDC provider, there ar
 The default resolver provided by the `oidc` auth provider is the `emailLocalPartMatchingUserEntityName` resolver.
 
 If you want to use a different resolver, add the resolver you want to use in the `auth.providers.oidc.[environment].signIn.resolvers` configuration as soon in the example above, and it will override the default resolver.
+* For enhanced security, consider using the `oidcSubClaimMatchingKeycloakUserId` resolver which matches the user with the immutable `sub` parameter from OIDC to the Keycloak user ID.
 
 For more information on setting up the OIDC auth provider, consult the [Backstage documentation](https://backstage.io/docs/auth/oidc#the-configuration).
 
@@ -186,6 +188,30 @@ To enable this option:
 
 ```yaml
 dangerouslyAllowSignInWithoutUserInCatalog: true
+auth:
+  providers:
+    # provider configs ...
+```
+
+### includeTransitiveGroupOwnership configuration value
+
+This option allows users to add transitive parent groups into the resolved user group membership during the authentication process. i.e., the parent group of the user's direct group will be included in the user ownership entities. By default, this option is set to false. 
+
+For instance, with this group hierarchy:
+
+```
+group_admin  
+  └── group_developers  
+        └── user_alice  
+```
+
+- If `includeTransitiveGroupOwnership: false`, `user_alice` is only a member of `group_developers`.
+- If `includeTransitiveGroupOwnership: true`, `user_alice` is a member of `group_developers` AND `group_admin`.
+
+To enable this option:
+
+```yaml
+includeTransitiveGroupOwnership: true
 auth:
   providers:
     # provider configs ...

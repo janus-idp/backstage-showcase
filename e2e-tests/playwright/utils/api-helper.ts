@@ -65,7 +65,7 @@ export class APIHelper {
   }
 
   static async createGitHubRepo(owner: string, repoName: string) {
-    await APIHelper.githubRequest(
+    const response = await APIHelper.githubRequest(
       "POST",
       GITHUB_API_ENDPOINTS.createRepo(owner),
       {
@@ -73,13 +73,14 @@ export class APIHelper {
         private: false,
       },
     );
+    expect(response.status() === 201 || response.ok()).toBeTruthy();
   }
 
   static async initCommit(owner: string, repo: string, branch = "main") {
     const content = Buffer.from(
       "This is the initial commit for the repository.",
     ).toString("base64");
-    await APIHelper.githubRequest(
+    const response = await APIHelper.githubRequest(
       "PUT",
       `${GITHUB_API_ENDPOINTS.contents(owner, repo)}/initial-commit.md`,
       {
@@ -88,6 +89,7 @@ export class APIHelper {
         branch: branch,
       },
     );
+    expect(response.status() === 201 || response.ok()).toBeTruthy();
   }
 
   static async deleteGitHubRepo(owner: string, repoName: string) {

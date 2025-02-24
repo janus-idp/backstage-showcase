@@ -20,10 +20,13 @@ import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { SearchPage as BackstageSearchPage } from '@backstage/plugin-search';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 
+import getDynamicRootConfig from '../../utils/dynamicUI/getDynamicRootConfig';
 import { entityPage } from '../catalog/EntityPage';
 import DynamicRootContext from '../DynamicRoot/DynamicRootContext';
 import { LearningPaths } from '../learningPaths/LearningPathsPage';
 import { Root } from '../Root';
+import { ApplicationListener } from '../Root/ApplicationListener';
+import { ApplicationProvider } from '../Root/ApplicationProvider';
 import ConfigUpdater from '../Root/ConfigUpdater';
 import { SearchPage } from '../search/SearchPage';
 import { settingsPage } from '../UserSettings/SettingsPages';
@@ -74,66 +77,73 @@ const AppBase = () => {
       <OAuthRequestDialog />
       <AppRouter>
         <ConfigUpdater />
+        <ApplicationListener />
         <Root>
-          <FlatRoutes>
-            <Route
-              path="/catalog"
-              element={
-                <CatalogIndexPage pagination columns={myCustomColumnsFunc} />
-              }
-            />
-            <Route
-              path="/catalog/:namespace/:kind/:name"
-              element={<CatalogEntityPage />}
-            >
-              {entityPage(entityTabOverrides)}
-            </Route>
-            <Route
-              path="/create"
-              element={
-                <ScaffolderPage
-                  headerOptions={{ title: 'Software Templates' }}
-                />
-              }
-            >
-              <ScaffolderFieldExtensions>
-                {scaffolderFieldExtensions.map(
-                  ({ scope, module, importName, Component }) => (
-                    <Component key={`${scope}-${module}-${importName}`} />
-                  ),
-                )}
-              </ScaffolderFieldExtensions>
-              scaffolderFieldExtensions
-            </Route>
-            <Route path="/api-docs" element={<ApiExplorerPage />} />
-            <Route
-              path="/catalog-import"
-              element={
-                <RequirePermission permission={catalogEntityCreatePermission}>
-                  <CatalogImportPage />
-                </RequirePermission>
-              }
-            />
-            <Route path="/search" element={<BackstageSearchPage />}>
-              <SearchPage />
-            </Route>
-            <Route path="/settings" element={<UserSettingsPage />}>
-              {settingsPage}
-            </Route>
-            <Route path="/catalog-graph" element={<CatalogGraphPage />} />
-            <Route path="/learning-paths" element={<LearningPaths />} />
-            {dynamicRoutes.map(
-              ({ Component, staticJSXContent, path, config: { props } }) => (
-                <Route
-                  key={path}
-                  path={path}
-                  element={<Component {...props} />}
-                >
-                  {staticJSXContent}
-                </Route>
-              ),
-            )}
-          </FlatRoutes>
+          <ApplicationProvider>
+            <FlatRoutes>
+              <Route
+                path="/catalog"
+                element={
+                  <CatalogIndexPage pagination columns={myCustomColumnsFunc} />
+                }
+              />
+              <Route
+                path="/catalog/:namespace/:kind/:name"
+                element={<CatalogEntityPage />}
+              >
+                {entityPage(entityTabOverrides)}
+              </Route>
+              <Route
+                path="/create"
+                element={
+                  <ScaffolderPage
+                    headerOptions={{ title: 'Software Templates' }}
+                  />
+                }
+              >
+                <ScaffolderFieldExtensions>
+                  {scaffolderFieldExtensions.map(
+                    ({ scope, module, importName, Component }) => (
+                      <Component key={`${scope}-${module}-${importName}`} />
+                    ),
+                  )}
+                </ScaffolderFieldExtensions>
+                scaffolderFieldExtensions
+              </Route>
+              <Route path="/api-docs" element={<ApiExplorerPage />} />
+              <Route
+                path="/catalog-import"
+                element={
+                  <RequirePermission permission={catalogEntityCreatePermission}>
+                    <CatalogImportPage />
+                  </RequirePermission>
+                }
+              />
+              <Route path="/search" element={<BackstageSearchPage />}>
+                <SearchPage />
+              </Route>
+              <Route path="/settings" element={<UserSettingsPage />}>
+                {settingsPage}
+              </Route>
+              <Route path="/catalog-graph" element={<CatalogGraphPage />} />
+              <Route path="/learning-paths" element={<LearningPaths />} />
+              {dynamicRoutes.map(
+                ({ Component, staticJSXContent, path, config: { props } }) => {
+                  return (
+                    <Route
+                      key={path}
+                      path={path}
+                      element={<Component {...props} />}
+                    >
+                      {typeof staticJSXContent === 'function'
+                        ? staticJSXContent(getDynamicRootConfig())
+                        : staticJSXContent}
+                    </Route>
+                  );
+                },
+              )}
+            </FlatRoutes>
+          </ApplicationProvider>
         </Root>
       </AppRouter>
     </AppProvider>

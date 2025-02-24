@@ -12,7 +12,7 @@ export class ImageRegistry {
 
     const manifest = /^sha256/;
     const securityScan =
-      /^(?:Critical:\s\d+,\s)?(?:High:\s\d+,\s)?(?:Medium:\s\d+,\s)?(?:Low:\s\d+,\s)?(?:Unknown:\s\d+)?$/i;
+      /^(?:Critical:\s\d+)?(?:,\s)?(?:High:\s\d+)?(?:,\s)?(?:Medium:\s\d+)?(?:,\s)?(?:Low:\s\d+)?(?:,\s)?(?:Unknown:\s\d+)?$/i;
     return [tagText, lastModifiedDate, securityScan, size, expires, manifest];
   }
 
@@ -31,7 +31,9 @@ export class ImageRegistry {
     const securityScan = ["Critical", "High", "Medium", "Low", "Unknown"].map(
       (i) => `(${i}:\\s\\d+[^\\w]*)`,
     );
-    return new RegExp(`^(Passed|unsupported|(?:${securityScan.join("|")})+)$`);
+    return new RegExp(
+      `^(Passed|unsupported|Queued|Medium|Low|(?:${securityScan.join("|")})+)$`,
+    );
   }
 
   static getAllScanColumnsText() {

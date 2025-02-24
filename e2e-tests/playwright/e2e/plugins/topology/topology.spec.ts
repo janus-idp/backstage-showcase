@@ -10,7 +10,11 @@ test.describe("Test Topology Plugin", () => {
   let catalog: Catalog;
   let topology: Topology;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    if (testInfo.retry > 0) {
+      // progressively increase test timeout for retries
+      test.setTimeout(testInfo.timeout + testInfo.timeout * 0.25);
+    }
     common = new Common(page);
     uiHelper = new UIhelper(page);
     catalog = new Catalog(page);
@@ -19,12 +23,11 @@ test.describe("Test Topology Plugin", () => {
   });
 
   test("Verify pods visibility in the Topology tab", async ({ page }) => {
+    test.setTimeout(150000);
     await catalog.goToBackstageJanusProject();
     await uiHelper.clickTab("Topology");
     await uiHelper.verifyText("backstage-janus");
     await page.getByRole("button", { name: "Fit to Screen" }).click();
-    // await uiHelper.verifyText("rhdh");
-    // await uiHelper.verifyText("rhdh-rbac");
     await uiHelper.verifyText("topology-test");
     await uiHelper.verifyButtonURL("Open URL", "topology-test-route", {
       locator: `[data-test-id="topology-test"]`,
@@ -38,13 +41,26 @@ test.describe("Test Topology Plugin", () => {
     await uiHelper.clickTab("Resources");
     await uiHelper.verifyHeading("Pods");
     await uiHelper.verifyHeading("Services");
-    await uiHelper.verifyHeading("Routes");
-    await expect(
-      page.getByRole("link", { name: "topology-test-route" }),
-    ).toBeVisible();
+    if (await page.getByText("Ingresses").isVisible()) {
+      await uiHelper.verifyHeading("Ingresses");
+      await uiHelper.verifyText("I");
+      await expect(
+        page
+          .getByTestId("ingress-list")
+          .getByRole("link", { name: "topology-test-route" })
+          .first(),
+      ).toBeVisible();
+      await expect(page.locator("pre").first()).toBeVisible();
+    } else {
+      await uiHelper.verifyHeading("Routes");
+      await uiHelper.verifyText("RT");
+      await expect(
+        page.getByRole("link", { name: "topology-test-route" }).first(),
+      ).toBeVisible();
+    }
+    await uiHelper.verifyText("Location:");
     await expect(page.getByTitle("Deployment")).toBeVisible();
     await uiHelper.verifyText("S");
-    await uiHelper.verifyText("RT");
     await expect(page.locator("rect").first()).toBeVisible();
     await uiHelper.clickTab("Details");
     await page.getByLabel("Pod").hover();
@@ -61,20 +77,18 @@ test.describe("Test Topology Plugin", () => {
     );
     await uiHelper.clickTab("Resources");
     await uiHelper.verifyText("P");
-    expect(await page.getByTestId("icon-with-title-Running")).toBeVisible();
-    expect(
-      await page.getByTestId("icon-with-title-Running").locator("svg"),
+    await expect(page.getByTestId("icon-with-title-Running")).toBeVisible();
+    await expect(
+      page.getByTestId("icon-with-title-Running").locator("svg"),
     ).toBeVisible();
-    expect(
-      await page
-        .getByTestId("icon-with-title-Running")
-        .getByTestId("status-text"),
+    await expect(
+      page.getByTestId("icon-with-title-Running").getByTestId("status-text"),
     ).toHaveText("Running");
     await uiHelper.verifyHeading("PipelineRuns");
     await uiHelper.verifyText("PL");
     await uiHelper.verifyText("PLR");
     await page.getByTestId("status-ok").first().click();
     await uiHelper.verifyDivHasText("Pipeline SucceededTask");
-    await uiHelper.verifyText("2 Succeeded");
+    await uiHelper.verifyText("Pipeline Succeeded");
   });
 });

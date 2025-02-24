@@ -8,10 +8,11 @@ export class Topology {
   }
 
   async hoverOnPodStatusIndicator() {
-    await this.page
+    const locator = this.page
       .locator('[data-test-id="topology-test"]')
-      .getByText("Pod")
-      .first()
-      .hover({});
+      .getByText("1")
+      .first();
+    await locator.hover();
+    await this.page.waitForTimeout(1000);
   }
 }

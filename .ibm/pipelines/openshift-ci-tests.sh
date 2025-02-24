@@ -12,9 +12,13 @@ OVERALL_RESULT=0
 # shellcheck disable=SC2317
 cleanup() {
   echo "Cleaning up before exiting"
-  if [[ "$JOB_NAME" == *aks* && "${OPENSHIFT_CI}" == "true" ]]; then
-    # If the job is for Azure Kubernetes Service (AKS), stop the AKS cluster.
-    az_aks_stop "${AKS_NIGHTLY_CLUSTER_NAME}" "${AKS_NIGHTLY_CLUSTER_RESOURCEGROUP}"
+  if [[ "${OPENSHIFT_CI}" == "true" ]]; then
+    case "$JOB_NAME" in
+      *gke*)
+        echo "Calling cleanup_gke"
+        cleanup_gke
+        ;;
+    esac
   fi
   rm -rf ~/tmpbin
 }
@@ -29,6 +33,7 @@ SCRIPTS=(
     "jobs/main.sh"
     "jobs/operator.sh"
     "jobs/periodic.sh"
+    "jobs/auth-providers.sh"
 )
 
 # Source each script dynamically
@@ -46,6 +51,10 @@ main() {
       echo "Calling handle_aks"
       handle_aks
       ;;
+    *e2e-tests-nightly-auth-providers)
+      echo "Calling handle_auth_providers"
+      handle_auth_providers
+      ;;
     *gke*)
       echo "Calling handle_gke"
       handle_gke
@@ -54,7 +63,7 @@ main() {
       echo "Calling Operator"
       handle_operator
       ;;
-    *periodic*)
+    *nightly*)
       echo "Calling handle_periodic"
       handle_nightly
       ;;

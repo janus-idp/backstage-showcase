@@ -1,6 +1,10 @@
 export const HOME_PAGE_COMPONENTS = {
-  searchBar: 'input[aria-label="Search"]',
   MuiAccordion: 'div[class*="MuiAccordion-root-"]',
+};
+
+export const SEARCH_OBJECTS_COMPONENTS = {
+  ariaLabelSearch: 'input[aria-label="Search"]',
+  placeholderSearch: 'input[placeholder="Search"]',
 };
 
 export const CATALOG_IMPORT_COMPONENTS = {
