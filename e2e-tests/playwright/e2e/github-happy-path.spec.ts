@@ -78,6 +78,10 @@ test.describe.serial("GitHub Happy path", () => {
     await common.loginAsGithubUser();
   });
 
+  test("Login as a Github user.", async () => {
+    await common.loginAsGithubUser();
+  });
+
   test("Verify Profile is Github Account Name in the Settings page", async () => {
     await uiHelper.openSidebar("Settings");
     await expect(page).toHaveURL("/settings");
