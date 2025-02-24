@@ -164,5 +164,9 @@ export default defineConfig({
         "**/playwright/e2e/instance-health-check.spec.ts",
       ],
     },
+    {
+      name: "any-test",
+      testMatch: "**/*.spec.ts", // Allows running any test file
+    },
   ],
 });
