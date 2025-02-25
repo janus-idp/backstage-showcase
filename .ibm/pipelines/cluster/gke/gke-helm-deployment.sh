@@ -1,9 +1,12 @@
 #!/bin/bash
 
-initiate_gke_deployment() {
+# shellcheck source=.ibm/pipelines/utils.sh
+source "$DIR"/utils.sh
+# shellcheck source=.ibm/pipelines/cluster/gke/gcloud.sh
+source "$DIR"/cluster/gke/gcloud.sh
+
+initiate_gke_helm_deployment() {
   gcloud_ssl_cert_create $GKE_CERT_NAME $GKE_INSTANCE_DOMAIN_NAME $GOOGLE_CLOUD_PROJECT
-  install_tekton_pipelines
-  add_helm_repos
   delete_namespace "${NAME_SPACE_RBAC_K8S}"
   configure_namespace "${NAME_SPACE_K8S}"
   uninstall_helmchart "${NAME_SPACE_K8S}" "${RELEASE_NAME}"
@@ -24,10 +27,8 @@ initiate_gke_deployment() {
     --set upstream.ingress.annotations."ingress\.gcp\.kubernetes\.io/pre-shared-cert"="${GKE_CERT_NAME}"
 }
 
-initiate_rbac_gke_deployment() {
+initiate_rbac_gke_helm_deployment() {
   gcloud_ssl_cert_create $GKE_CERT_NAME $GKE_INSTANCE_DOMAIN_NAME $GOOGLE_CLOUD_PROJECT
-  install_tekton_pipelines
-  add_helm_repos
   delete_namespace "${NAME_SPACE_K8S}"
   configure_namespace "${NAME_SPACE_RBAC_K8S}"
   uninstall_helmchart "${NAME_SPACE_RBAC_K8S}" "${RELEASE_NAME_RBAC}"
