@@ -307,12 +307,12 @@ wait_for_svc(){
 
   timeout "${timeout}" bash -c "
     echo ${svc_name}
-    while ! oc get svc $svc_name -n $namespace &> /dev/null; do
-      echo \"Waiting for ${svc_name} service to be created...\"
+    while ! kubectl get endpoints $svc_name -n $namespace &> /dev/null; do
+      echo \"Waiting for ${svc_name} endpoints to be ready...\"
       sleep 5
     done
     echo \"Service ${svc_name} is created.\"
-    " || echo "Error: Timed out waiting for $svc_name service creation."
+    " || echo "Error: Timed out waiting for $svc_name endpoints."
 }
 
 # Creates an OpenShift Operator subscription
@@ -870,6 +870,7 @@ check_and_test() {
   if check_backstage_running "${release_name}" "${namespace}" "${url}" "${max_attempts}" "${wait_seconds}"; then
     echo "Display pods for verification..."
     oc get pods -n "${namespace}"
+    sleep 300
     run_tests "${release_name}" "${namespace}"
   else
     echo "Backstage is not running. Exiting..."
