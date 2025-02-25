@@ -82,7 +82,8 @@ test.describe.serial("GitHub Happy path", () => {
   });
 
   test("Verify Profile is Github Account Name in the Settings page", async () => {
-    await uiHelper.openSidebar("Settings");
+    await uiHelper.clickByDataTestId("KeyboardArrowDownOutlinedIcon");
+    await clickLinkByHref(page, "/settings");
     await expect(page).toHaveURL("/settings");
     await uiHelper.verifyHeading(process.env.GH_USER_ID);
     await uiHelper.verifyHeading(`User Entity: ${process.env.GH_USER_ID}`);
@@ -246,3 +247,9 @@ test.describe.serial("GitHub Happy path", () => {
     await page.close();
   });
 });
+
+async function clickLinkByHref(page: Page, href: string) {
+  const link = page.locator(`a[href="${href}"]`);
+  await link.waitFor({ state: "visible" });
+  await link.dispatchEvent("click");
+}
