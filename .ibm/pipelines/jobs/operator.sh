@@ -10,12 +10,13 @@ install_rhdh_operator() {
   rm -f /tmp/install-rhdh-catalog-source.sh
   curl -L "https://raw.githubusercontent.com/redhat-developer/rhdh-operator/refs/heads/${RELEASE_BRANCH_NAME}/.rhdh/scripts/install-rhdh-catalog-source.sh" > /tmp/install-rhdh-catalog-source.sh
   chmod +x /tmp/install-rhdh-catalog-source.sh
-  if [ "$TAG_NAME" == "next" ]; then
+  if [[ "$PULL_BASE_REF" == *release* ]]; then
+    local operator_version="${PULL_BASE_REF#release-}"
+    echo "Installing RHDH operator with '-v $operator_version' flag"
+    bash -x /tmp/install-rhdh-catalog-source.sh -v "$operator_version" --install-operator rhdh
+  else
     echo "Installing RHDH operator with '--next' flag"
     bash -x /tmp/install-rhdh-catalog-source.sh --next --install-operator rhdh
-  else
-    echo "Installing RHDH operator with '-v $TAG_NAME' flag"
-    bash -x /tmp/install-rhdh-catalog-source.sh -v "$TAG_NAME" --install-operator rhdh
   fi
 }
 
