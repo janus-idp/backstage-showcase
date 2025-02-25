@@ -15,5 +15,6 @@ test.only("Check the middleware is working", async ({ page }) => {
   await page.getByRole("checkbox", { name: "Use Proxy" }).check();
   await page.getByRole("textbox").fill("hi");
   await page.getByRole("textbox").press("Enter");
+  await page.waitForTimeout(1_000);
   test.fail();
 });
