@@ -1,20 +1,18 @@
 // https://github.com/gashcrumb/dynamic-plugins-root-http-middleware/tree/main/plugins/middleware-header-example
-
-import test from "@playwright/test";
-
+import test, { expect } from "@playwright/test";
 import { Common } from "../../utils/common";
-import { LOGGER } from "../../utils/logger";
 
-test.only("Check the middleware is working", async ({ page }) => {
-  test.slow();
+test("Check the middleware is working", async ({ page }) => {
   const common = new Common(page);
-  LOGGER.info(`yarn commands starting...`);
 
   await common.loginAsGuest();
   await page.goto("/simple-chat", { waitUntil: "networkidle" });
   await page.getByRole("checkbox", { name: "Use Proxy" }).check();
   await page.getByRole("textbox").fill("hi");
+
+  const responsePromise = page.waitForResponse("**/api/proxy/add-test-header");
   await page.getByRole("textbox").press("Enter");
-  await page.waitForTimeout(1_000);
-  test.fail();
+  const response = await responsePromise;
+  const headers = await response.allHeaders();
+  expect(headers["x-proxy-test-header"]);
 });
