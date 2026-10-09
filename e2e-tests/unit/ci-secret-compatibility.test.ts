@@ -40,6 +40,8 @@ function setup(mount: string, failedDownload = false) {
   return spawnSync(
     "/bin/bash",
     [
+      "--noprofile",
+      "--norc",
       "-euc",
       `
 cat() { command cat "$MOUNT/\${1##*/}"; }
