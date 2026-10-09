@@ -151,6 +151,7 @@ export function generateHelmValuesYaml(): string {
   const printfRelease = (suffix: string) => tpl(`printf "%s-${suffix}" .Release.Name`);
 
   const values = {
+    extraEnv: [{ name: "SEGMENT_TEST_MODE", value: "true" }],
     commonLabels: { "backstage.io/kubernetes-id": "developer-hub" },
     image: { pullPolicy: "Always" },
     // Runtime tests only cover ConfigMap changes and DB connectivity, so the
@@ -371,6 +372,7 @@ export function generateBackstageCR(config: RuntimeDeployConfig): BackstageCR {
   const fullImage = imageRefToString(config.image);
 
   const envs: Array<Record<string, unknown>> = [
+    { name: "SEGMENT_TEST_MODE", value: "true" },
     { name: "NODE_OPTIONS", value: "--no-node-snapshot" },
     { name: "NODE_ENV", value: "production" },
     { name: "NODE_TLS_REJECT_UNAUTHORIZED", value: "0" },
