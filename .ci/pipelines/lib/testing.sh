@@ -26,6 +26,26 @@ readonly _TESTING_ERR_MISSING_PARAMS="Missing required parameters"
 # Test Execution
 # ==============================================================================
 
+# Install once per E2E workspace and save the log with the project's artifacts.
+testing::install_dependencies() {
+  if [[ "${_TESTING_DEPENDENCIES_INSTALLED_DIR:-}" == "$PWD" ]]; then
+    return 0
+  fi
+
+  local install_log="${ARTIFACT_DIR}/${1}/setup/yarn-install.log"
+  mkdir -p "$(dirname "${install_log}")" || return 1
+  # Avoid Yarn 4.17.1's settled-promise HTTP retry race for this install only.
+  if YARN_HTTP_RETRY=0 yarn install --immutable > "${install_log}" 2>&1; then
+    _TESTING_DEPENDENCIES_INSTALLED_DIR="$PWD"
+    log::success "Yarn install completed successfully. Log: ${install_log}"
+    return 0
+  else
+    local install_status=$?
+    cat "${install_log}"
+    return "${install_status}"
+  fi
+}
+
 # Run Playwright tests against a Backstage deployment
 # Args:
 #   $1 - release_name: The Helm release name
@@ -68,14 +88,12 @@ testing::run_tests() {
   local e2e_tests_dir
   e2e_tests_dir=$(pwd)
 
-  yarn install --immutable > /tmp/yarn.install.log.txt 2>&1
-  local install_status=$?
-  if [[ $install_status -ne 0 ]]; then
-    log::error "=== YARN INSTALL FAILED ==="
-    cat /tmp/yarn.install.log.txt
-    exit $install_status
+  if testing::install_dependencies "${artifacts_subdir}"; then
+    :
   else
-    log::success "Yarn install completed successfully."
+    local install_status=$?
+    log::error "=== YARN INSTALL FAILED ==="
+    exit "${install_status}"
   fi
 
   yarn playwright install chromium
