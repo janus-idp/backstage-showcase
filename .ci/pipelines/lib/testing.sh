@@ -26,58 +26,24 @@ readonly _TESTING_ERR_MISSING_PARAMS="Missing required parameters"
 # Test Execution
 # ==============================================================================
 
-# Install once for the E2E workspace, reusing its cache after transient failures.
-# Args: artifacts_subdir (typically the first Playwright project in the job)
-# Returns: the install exit code; callers must not start Playwright on failure.
+# Install once per E2E workspace and save the log with the project's artifacts.
 testing::install_dependencies() {
-  local artifacts_subdir=$1
   if [[ "${_TESTING_DEPENDENCIES_INSTALLED_DIR:-}" == "$PWD" ]]; then
-    log::info "Reusing installed E2E dependencies for ${PWD}"
     return 0
   fi
 
-  local log_dir="${ARTIFACT_DIR}/${artifacts_subdir}/setup"
-  mkdir -p "${log_dir}" || return 1
-
-  local attempt install_status install_log
-  for ((attempt = 1; attempt <= 3; attempt++)); do
-    install_log="${log_dir}/yarn-install-attempt-${attempt}.log"
-    log::info "Installing E2E dependencies (attempt ${attempt}/3)"
-    # Yarn 4.17.1's bundled got can retry an already settled promise and crash.
-    # Disable that HTTP retry path; retry the whole process below instead.
-    # Keep this scoped to install, preserving the release branch's Yarn version.
-    if YARN_HTTP_RETRY=0 yarn install --immutable > "${install_log}" 2>&1; then
-      _TESTING_DEPENDENCIES_INSTALLED_DIR="$PWD"
-      log::success "Yarn install completed successfully. Log: ${install_log}"
-      return 0
-    else
-      install_status=$?
-    fi
-
-    log::error "Yarn install failed (exit ${install_status}). Log: ${install_log}"
+  local install_log="${ARTIFACT_DIR}/${1}/setup/yarn-install.log"
+  mkdir -p "$(dirname "${install_log}")" || return 1
+  # Avoid Yarn 4.17.1's settled-promise HTTP retry race for this install only.
+  if YARN_HTTP_RETRY=0 yarn install --immutable > "${install_log}" 2>&1; then
+    _TESTING_DEPENDENCIES_INSTALLED_DIR="$PWD"
+    log::success "Yarn install completed successfully. Log: ${install_log}"
+    return 0
+  else
+    local install_status=$?
     cat "${install_log}"
-    if ((attempt == 3)) || ! testing::_is_transient_install_failure "${install_log}"; then
-      return "${install_status}"
-    fi
-    log::warn "Transient Yarn failure, retrying in $((attempt * 5))s..."
-    sleep "$((attempt * 5))"
-  done
-}
-
-# Permanent lockfile, checksum, cache, and configuration errors must fail fast,
-# even if the log also contains a transient error. Restrict network matching to
-# diagnostic lines: uncaught errors can dump minified Yarn source containing
-# every network error name, which must not turn unrelated crashes into retries.
-testing::_is_transient_install_failure() {
-  local install_log=$1
-  if grep -Eq 'YN0018:|YN0028:|YN0056:|Usage Error:' "${install_log}"; then
-    return 1
+    return "${install_status}"
   fi
-  if grep -Fq 'Error: The `onCancel` handler was attached after the promise settled.' "${install_log}"; then
-    return 0
-  fi
-  grep -E '^(Error:|RequestError:|[[:space:]➤]*YN[0-9]{4}:)' "${install_log}" \
-    | grep -Eq 'ETIMEDOUT|ESOCKETTIMEDOUT|ECONNRESET|ECONNREFUSED|EAI_AGAIN|ENETUNREACH|socket hang up|Response [Cc]ode:? (408|429|500|502|503|504)([[:space:]]|$)'
 }
 
 # Run Playwright tests against a Backstage deployment
