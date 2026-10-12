@@ -11,7 +11,7 @@
 # OCI image. Set CATALOG_INDEX_IMAGE (required — see populate.sh and
 # docs/e2e-tests/local-e2e-harness.md) before running populate.sh.
 #
-# The auth/homepage test fixtures below are pinned for release-2.1 compatibility.
+# The auth test fixture below is pinned for release-2.1 compatibility.
 # Re-run populate.sh after editing this file.
 includes:
   - dynamic-plugins.default.yaml
@@ -38,28 +38,25 @@ plugins:
   - package: ref://red-hat-developer-hub-backstage-plugin-quickstart
     enabled: false
 
-  # Extensions stack — catalog index DPDY still lists local ./dynamic-plugins/dist paths
-  # for these; disabled so populate.sh works OCI-only off-cluster.
-  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions-dynamic
+  # Extensions stack — not exercised by cluster-free specs.
+  - package: ref://red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions
     enabled: false
-  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-extensions
+  - package: ref://red-hat-developer-hub-backstage-plugin-extensions
     enabled: false
-  - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-extensions-backend-dynamic
+  - package: ref://red-hat-developer-hub-backstage-plugin-extensions-backend
     enabled: false
 
-  # --- Enabled for cluster-free E2E (catalog defaults, except the two fixture pins) ---
+  # --- Enabled for cluster-free E2E (catalog defaults, except the auth fixture pin) ---
 
-  # Temporary release-2.1 fixtures: the dev server does not load dynamic auth
-  # schemas, and the test overlay targets the pre-3.0 homepage's page:home.
-  # Disable catalog copies before installing the compatible fixture versions.
+  # Homepage follows the release catalog, including the NFS fixes from overlay #4288.
   - package: ref://red-hat-developer-hub-backstage-plugin-homepage
-    enabled: false
-  - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-homepage:bs_1.54.6__1.18.0
     enabled: true
   # Sign-in page + auth APIs, drawer infra, and SCM integrations (pluginId: 'app').
   # Without app-auth, guest sign-in falls back to upstream's default page (no
   # "Select a sign-in method" heading) — what guest-signin-happy-path and
   # github-happy-path exercise.
+  # The dev server does not load dynamic auth schemas, so retain this temporary
+  # release-2.1 fixture and disable the catalog copy before installing it.
   - package: ref://red-hat-developer-hub-backstage-plugin-app-auth
     enabled: false
   - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-app-auth:bs_1.54.6__1.1.0

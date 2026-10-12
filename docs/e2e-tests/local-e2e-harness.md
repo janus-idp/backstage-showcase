@@ -98,11 +98,11 @@ for how that's wired).
 - `smoke-test` — guest sign-in plus the home-page welcome heading (dynamic-home-page
   plugin); its readiness poll uses the same proxied `/healthcheck`.
 - `home-page-customization` — the Quick Access, Featured Docs, Top Visited, and
-  Recently Visited widgets, using the `home-page-layout:home/dynamic-homepage-layout`
+  Recently Visited widgets, using the `home-page-layout:homepage/dynamic-homepage-layout`
   `app.extensions` customization mirrored from
   `.ci/pipelines/resources/config_map/dynamic-plugins-config.yaml` into
   `app-config.local-e2e.yaml`. NFS home-page cards are a fixed set of built-in widgets
-  (`home-page-widget:home/*`) — the legacy Placeholder/Markdown/Random Joke mount-point
+  (`home-page-widget:homepage/*`) — the legacy Placeholder/Markdown/Random Joke mount-point
   cards have no NFS equivalent and are no longer asserted. Its `@cluster-free-capable` "Quick
   Access" assertion only checks the card's title text, not real link data (see "Known
   issues" for why); the file's other, untagged "Verify Customized Quick Access" test
@@ -122,9 +122,7 @@ for how that's wired).
   profile menu.
 - `settings.spec.ts` — language toggle (needs `api:app/app-language.availableLanguages`
   in `app.extensions`, not just `i18n.locales`), French label switching, pin-sidebar
-  toggle, and identity-card ownership ("Guest User, team-a"). The pin-sidebar check
-  verifies the same API menu entry disappears and reappears when toggled, without
-  assuming a particular home-page title or translation.
+  toggle, and identity-card ownership ("Guest User, team-a").
 
 Not enablable yet:
 
@@ -166,12 +164,12 @@ just `run`), which is why this harness boots the dev servers directly instead.
 
 ## Known issues / limits
 
-- **Release-2.1 fixture pins.** The cluster-free dev server loads only static config
-  schemas, so the harness pins `app-auth` 1.1.0 (development Guest selection) and
-  homepage 1.18.0 (`page:home`, matching the test overlay). Guest uses the catalog's
-  0.2.22 visibility backport via `ref://`, as do the cluster CI showcase jobs.
-  Remove the frontend pins when the harness supports dynamic schemas and
-  the Homepage 3 configuration migration is validated.
+- **Release-2.1 auth fixture pin.** The cluster-free dev server loads only static config
+  schemas, so the harness pins `app-auth` 1.1.0 (development Guest selection).
+  Homepage follows the release catalog, with `page:homepage`, translations, and
+  nine backend-selected widgets matching the CI fixture. Guest also uses the
+  catalog's visibility backport via `ref://`, as do the cluster CI showcase jobs.
+  Remove the auth pin when the dev server supports dynamic auth schemas.
 - **Re-run `populate.sh` after changing the harness plugin set.** Overrides in
   `e2e-tests/local-harness/dynamic-plugins.yaml` (`enabled: false` + `ref://`) only
   take effect through the generated `dynamic-plugins-root/app-config.dynamic-plugins.yaml`,
