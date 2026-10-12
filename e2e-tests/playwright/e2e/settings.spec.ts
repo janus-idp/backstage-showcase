@@ -36,7 +36,6 @@ test.describe(`Settings page`, { tag: "@layer3-equivalent" }, () => {
     await settingsPage.uncheckCheckbox(t["user-settings"]["fr"]["pinToggle.ariaLabelTitle"]);
     await settingsPage.verifySidebarMenuItemHidden(t["rhdh"]["fr"]["menuItem.apis"]);
     await settingsPage.checkCheckbox(t["user-settings"]["fr"]["pinToggle.ariaLabelTitle"]);
-    // app-defaults localizes PageBlueprint titles in the sidebar.
-    await settingsPage.verifySidebarMenuItemVisible("Accueil");
+    await settingsPage.verifySidebarMenuItemVisible(t["rhdh"]["fr"]["menuItem.home"]);
   });
 });
