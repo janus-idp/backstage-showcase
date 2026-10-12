@@ -23,6 +23,11 @@ slots and attach the actual PostgreSQL version rather than assuming `latest-*`.
 
 ## Interrupted-run recovery
 
+A slot cleans databases left by earlier runs before deploying, reusing the same
+exact-prefix cleanup as teardown. Runs sharing a database host must not overlap,
+including Helm and Operator runs. Earlier-run cleanup failures are reported in
+the target attachment; current-run cleanup remains mandatory.
+
 A forcibly terminated runner may leave resources. Use the `cloudsql-target` and
 `cloudsql-cleanup` attachments to identify the namespace and exact database prefix.
 Stop that run's RHDH pods, then use an independent Auth Proxy to drop only its
@@ -32,3 +37,7 @@ with `FORCE`.
 For RDS/Azure, use the `runtime-database-target` and `runtime-database-cleanup`
 attachments and a direct TLS connection to recover the exact run/slot prefix.
 Cleanup failures include remaining session metadata without query text or credentials.
+
+Runtime tests do not retry entire deployments. Transport retries remain bounded
+inside the helpers. During CI, non-secret phase records are written directly to
+`$ARTIFACT_DIR/showcase-runtime/runtime-progress/`, including before report publication.

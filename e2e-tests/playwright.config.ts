@@ -185,6 +185,8 @@ export default defineConfig({
     {
       name: PW_PROJECT.SHOWCASE_RUNTIME,
       workers: 1,
+      // Transport retries are bounded in the helpers; avoid replaying full deployments.
+      retries: 0,
       timeout: 10 * 60 * 1000,
       testMatch: [
         "**/playwright/e2e/configuration-test/config-map.spec.ts",

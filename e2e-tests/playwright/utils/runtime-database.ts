@@ -1,7 +1,8 @@
-import { Client, type QueryConfig } from "pg";
+import type { Client, QueryConfig } from "pg";
 
 import { sleep } from "./poll-until";
 import { readCertificateFile } from "./postgres-config";
+import { RuntimeSqlClient } from "./runtime-sql-client";
 
 export type ExternalDatabaseProvider = "rds" | "azure";
 /** DROP DATABASE can checkpoint storage on small managed instances; bound DDL separately from reads. */
@@ -140,6 +141,50 @@ export async function clearOwnedDatabases(
     throw new Error(`Database cleanup left resources for ${prefix}`);
 }
 
+export interface SlotCleanup {
+  retired: string[];
+  failed: string[];
+}
+
+/**
+ * Clear this slot's databases left by any earlier, interrupted run, then the current run's.
+ * Runs against one database host never overlap, so every other run on the slot is finished.
+ */
+export async function clearSlotDatabases(
+  client: OwnedDatabaseClient,
+  currentPrefix: string,
+): Promise<SlotCleanup> {
+  assertOwnedDatabasePrefix(currentPrefix);
+  // rt_<run>_rds1_ -> ^rt_[a-f0-9]{12}_rds1_ ; csql_<run>_1_ -> ^csql_[a-f0-9]{12}_1_
+  const slotPattern = `^${currentPrefix.replace(/_[a-f0-9]{12}_/u, "_[a-f0-9]{12}_")}`;
+  const { rows } = await client.query({
+    text: "SELECT datname FROM pg_database WHERE NOT datistemplate AND datname ~ $1",
+    values: [slotPattern],
+    query_timeout: 10_000,
+  });
+  const matcher = new RegExp(slotPattern, "u");
+  const stale = new Set(
+    rows
+      .map((row) => row.datname)
+      .filter((name) => matcher.test(name))
+      .map((name) => name.slice(0, currentPrefix.length))
+      .filter((prefix) => prefix !== currentPrefix),
+  );
+  const cleanup: SlotCleanup = { retired: [], failed: [] };
+  for (const prefix of stale) {
+    try {
+      await clearOwnedDatabases(client, prefix);
+      cleanup.retired.push(prefix);
+    } catch (error) {
+      // Another run's leftovers must not fail this run; the next run on the slot retries.
+      console.warn(`Could not retire stale runtime databases ${prefix}: ${String(error)}`);
+      cleanup.failed.push(prefix);
+    }
+  }
+  await clearOwnedDatabases(client, currentPrefix);
+  return cleanup;
+}
+
 /** Finish every close attempt before cleanup, even if an individual connection fails. */
 export async function closeDatabaseClients(clients: Set<{ end(): Promise<void> }>): Promise<void> {
   const results = await Promise.allSettled([...clients].map((client) => client.end()));
@@ -159,7 +204,7 @@ export async function connectExternalDatabase(
   statementTimeoutMs = 30_000,
 ): Promise<Client> {
   for (let attempt = 0; ; attempt++) {
-    const client = new Client({
+    const client = new RuntimeSqlClient({
       host: inputs.host,
       port: inputs.port,
       user: inputs.user,

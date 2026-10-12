@@ -71,7 +71,9 @@ describe("owned runtime teardown", () => {
         text.replaceAll("fake-password", "[REDACTED]").replaceAll("fake-api-token", "[REDACTED]"),
       ),
     ).resolves.toBeUndefined();
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining("Runtime pod logs unavailable"));
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining("Runtime diagnostic runtime-pods unavailable"),
+    );
     expect(warn.mock.calls.flat().join(" ")).not.toMatch(/fake-password|fake-api-token/u);
   });
 });
@@ -80,14 +82,19 @@ describe("ordered runtime lifecycle", () => {
   it("rejects readiness from an old observed generation", async () => {
     vi.useFakeTimers();
     const kube = kubeClient();
-    const read = vi
-      .spyOn(kube.appsApi, "readNamespacedDeployment")
+    vi.spyOn(kube.appsApi, "readNamespacedDeployment")
       .mockResolvedValueOnce(response(deployment(1)))
       .mockResolvedValue(response(deployment(2)));
-    const ready = waitForRuntimeRollout(kube, "runtime", "backstage-rhdh");
+    let rolledOut = false;
+    const ready = waitForRuntimeRollout(kube, "runtime", "backstage-rhdh").then(() => {
+      rolledOut = true;
+      return rolledOut;
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(rolledOut).toBe(false);
     await vi.advanceTimersByTimeAsync(2_000);
     await ready;
-    expect(read).toHaveBeenCalledTimes(2);
+    expect(rolledOut).toBe(true);
   });
   it("stops through the CR and waits for initializing/terminating pods to disappear", async () => {
     vi.useFakeTimers();
@@ -102,9 +109,16 @@ describe("ordered runtime lifecycle", () => {
     vi.spyOn(kube.coreV1Api, "listNamespacedPod")
       .mockResolvedValueOnce(response({ items: [{ metadata: { name: "backstage-rhdh-old" } }] }))
       .mockResolvedValue(response({ items: [] }));
-    const stop = stopRuntimeApplication(kube, "runtime", "rhdh", "operator");
+    let stopped = false;
+    const stop = stopRuntimeApplication(kube, "runtime", "rhdh", "operator").then(() => {
+      stopped = true;
+      return stopped;
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(stopped).toBe(false);
     await vi.advanceTimersByTimeAsync(2_000);
     await stop;
+    expect(stopped).toBe(true);
     expect(scale).not.toHaveBeenCalled();
     expect(replace.mock.calls[0][5]).toMatchObject({
       spec: { deployment: { patch: { spec: { replicas: 0 } } } },

@@ -1,8 +1,8 @@
-# The chart ships default-deny NetworkPolicies that only allow DNS, HTTPS,
-# Redis and PostgreSQL egress from the backend pod. CI proxies traffic to
-# plain-HTTP routes (test-backstage-customization-provider, add-test-header),
-# so restore full egress for the backend in CI namespaces. NetworkPolicies are
-# additive, so this does not weaken the chart's ingress rules.
+# The chart and Operator restrict backend egress to DNS, HTTPS, Redis, and
+# PostgreSQL. CI proxies traffic to plain-HTTP routes
+# (test-backstage-customization-provider, add-test-header), so restore full
+# egress for the backend in CI namespaces. NetworkPolicies are additive, and
+# separate selectors cover the Helm chart and Operator pod labels.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -12,6 +12,26 @@ spec:
     matchLabels:
       app.kubernetes.io/name: developer-hub
       app.kubernetes.io/component: backstage
+  policyTypes:
+    - Egress
+  egress:
+    - {}
+---
+# Operator Backend pod labels derive from the fixed `rhdh` and `rhdh-rbac`
+# Backstage CR names. Match both Backend values; `Exists` would also select
+# Operator-managed PostgreSQL pods, which use the same label key.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: rhdh-ci-allow-operator-backend-egress
+spec:
+  podSelector:
+    matchExpressions:
+      - key: rhdh.redhat.com/app
+        operator: In
+        values:
+          - backstage-rhdh
+          - backstage-rhdh-rbac
   policyTypes:
     - Egress
   egress:

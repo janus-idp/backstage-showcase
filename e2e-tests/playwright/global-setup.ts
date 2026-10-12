@@ -2,8 +2,10 @@ import { randomBytes } from "node:crypto";
 
 import { request as playwrightRequest } from "@playwright/test";
 
+import { PW_PROJECT, isProjectSelected } from "./projects";
 import { parseProxy } from "./utils/proxy";
 import { ensureRuntimeDeployed } from "./utils/runtime-deploy";
+import { prepareRuntimeImages } from "./utils/runtime-images";
 import { waitForRhdhReady } from "./utils/wait-for-rhdh-ready";
 
 /**
@@ -18,6 +20,12 @@ export default async function globalSetup(): Promise<void> {
   // Workers (including replacements after a retry) inherit one ownership ID.
   process.env.CLOUDSQL_RUN_ID = randomBytes(6).toString("hex");
   process.env.RUNTIME_RUN_ID = process.env.CLOUDSQL_RUN_ID;
+  if (
+    isProjectSelected(PW_PROJECT.SHOWCASE_RUNTIME) ||
+    process.env.RUNTIME_AUTO_DEPLOY === "true"
+  ) {
+    await prepareRuntimeImages();
+  }
   if (
     (process.env.BASE_URL === undefined || process.env.BASE_URL === "") &&
     process.env.RUNTIME_AUTO_DEPLOY === "true"

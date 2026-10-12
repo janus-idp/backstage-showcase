@@ -3,11 +3,13 @@ import type { Client } from "pg";
 
 import { base64Encode, discoverRouterBase, resolveInstallMethod } from "../../utils/helper";
 import { KubeClient } from "../../utils/kube-client";
+import { generateUntrustedCaCertificate } from "../../utils/runtime-ca";
 import { createRuntimeCatalogProbe } from "../../utils/runtime-catalog";
 import { resolveConfig, RUNTIME_DB_SECRET } from "../../utils/runtime-config";
 import {
   connectExternalDatabase,
   clearOwnedDatabases,
+  clearSlotDatabases,
   closeDatabaseClients,
   readExternalDatabaseInputs,
   runtimeDatabasePrefix,
@@ -22,6 +24,7 @@ import {
   collectRuntimeDiagnostics,
   runtimeRevision,
 } from "../../utils/runtime-lifecycle";
+import { createRuntimeProgress } from "../../utils/runtime-progress";
 import { restartRuntime } from "../../utils/runtime-restart";
 import { verifyRuntimeRejectsUntrustedCa } from "../../utils/runtime-tls";
 import { test as base } from "../coverage/test";
@@ -72,8 +75,19 @@ export const test = base.extend<{
         databasePrefix: prefix,
       };
       const method = resolveInstallMethod();
-      const kube = new KubeClient();
+      const kube = new KubeClient(30_000);
       const namespace = config.namespace;
+      const progress = createRuntimeProgress(info, {
+        runId,
+        namespace,
+        databasePrefix: prefix,
+        provider,
+        slot,
+        installMethod: method,
+      });
+      // Verify local tooling before creating a namespace or touching any database.
+      const untrustedCa =
+        slot === 1 ? await progress.run("preflight-ca", generateUntrustedCaCertificate) : undefined;
       const clients = new Set<Client>();
       let apiToken = "";
       const redact = (text: string) => {
@@ -84,35 +98,38 @@ export const test = base.extend<{
         { type: "namespace", description: namespace },
         { type: "database", description: `${provider} slot ${slot}` },
       );
-      await resetRuntimeNamespace(kube, namespace, runId);
+      await progress.run("reset-namespace", () => resetRuntimeNamespace(kube, namespace, runId));
       let setupError: unknown;
       try {
-        const admin = await connectExternalDatabase(
-          inputs,
-          "postgres",
-          RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
-        );
-        try {
-          await clearOwnedDatabases(admin, prefix);
-          const version = await admin.query<{ version: string; version_number: string }>(
-            "SELECT current_setting('server_version') AS version, current_setting('server_version_num') AS version_number",
+        await progress.run("prepare-databases", async () => {
+          const admin = await connectExternalDatabase(
+            inputs,
+            "postgres",
+            RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
           );
-          await info.attach("runtime-database-target", {
-            body: JSON.stringify({
-              provider,
-              slot,
-              namespace,
-              databasePrefix: prefix,
-              installMethod: method,
-              postgres: version.rows[0],
-              chart: config.helm,
-              image: config.image,
-            }),
-            contentType: "application/json",
-          });
-        } finally {
-          await admin.end();
-        }
+          try {
+            const slotCleanup = await clearSlotDatabases(admin, prefix);
+            const version = await admin.query<{ version: string; version_number: string }>(
+              "SELECT current_setting('server_version') AS version, current_setting('server_version_num') AS version_number",
+            );
+            await info.attach("runtime-database-target", {
+              body: JSON.stringify({
+                provider,
+                slot,
+                namespace,
+                databasePrefix: prefix,
+                installMethod: method,
+                postgres: version.rows[0],
+                slotCleanup,
+                chart: config.helm,
+                image: config.image,
+              }),
+              contentType: "application/json",
+            });
+          } finally {
+            await admin.end();
+          }
+        });
         await kube.createOrUpdateSecret(
           {
             metadata: { name: RUNTIME_DB_SECRET },
@@ -138,7 +155,8 @@ export const test = base.extend<{
           `${provider}-${runId}-${slot}`,
         );
         apiToken = probe.apiToken;
-        const handle = await deployRuntime(config, method, kube);
+        const handle = await progress.run("deploy", () => deployRuntime(config, method, kube));
+        const finishTest = progress.begin("test");
         await use({
           ...handle,
           ...probe,
@@ -151,39 +169,57 @@ export const test = base.extend<{
             });
             return client;
           },
-          restart: (whileStopped) => restartRuntime(kube, config, method, whileStopped),
+          restart: (whileStopped) =>
+            progress.run("restart", () => restartRuntime(kube, config, method, whileStopped)),
           verifyUntrustedCa: () =>
-            verifyRuntimeRejectsUntrustedCa(kube, config, method, inputs.certificate, info, redact),
+            progress.run("reject-ca-and-recover", () =>
+              verifyRuntimeRejectsUntrustedCa(
+                kube,
+                config,
+                method,
+                inputs.certificate,
+                info,
+                redact,
+                untrustedCa,
+              ),
+            ),
         });
+        finishTest(info.status === info.expectedStatus);
       } catch (error) {
         setupError = error;
       }
-      await collectRuntimeDiagnostics(kube, namespace, info, redact);
+      await progress.run("diagnostics", () =>
+        collectRuntimeDiagnostics(kube, namespace, info, redact),
+      );
       const errors: unknown[] = [];
       let stopped = false;
       try {
-        await deleteRuntimeApplication(kube, namespace, config.releaseName, method);
+        await progress.run("stop-application", () =>
+          deleteRuntimeApplication(kube, namespace, config.releaseName, method),
+        );
         stopped = true;
       } catch (error) {
         errors.push(error);
       }
       try {
-        await closeDatabaseClients(clients);
+        await progress.run("close-sql-clients", () => closeDatabaseClients(clients));
       } catch (error) {
         errors.push(error);
       }
       if (stopped) {
         try {
-          const cleanup = await connectExternalDatabase(
-            inputs,
-            "postgres",
-            RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
-          );
-          try {
-            await clearOwnedDatabases(cleanup, prefix);
-          } finally {
-            await cleanup.end();
-          }
+          await progress.run("drop-databases", async () => {
+            const cleanup = await connectExternalDatabase(
+              inputs,
+              "postgres",
+              RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
+            );
+            try {
+              await clearOwnedDatabases(cleanup, prefix);
+            } finally {
+              await cleanup.end();
+            }
+          });
           await info.attach("runtime-database-cleanup", {
             body: JSON.stringify({ databasePrefix: prefix, completed: true }),
             contentType: "application/json",
@@ -193,7 +229,9 @@ export const test = base.extend<{
         }
       }
       try {
-        await deleteOwnedRuntimeNamespace(kube, namespace, runId);
+        await progress.run("delete-namespace", () =>
+          deleteOwnedRuntimeNamespace(kube, namespace, runId),
+        );
       } catch (error) {
         errors.push(error);
       }

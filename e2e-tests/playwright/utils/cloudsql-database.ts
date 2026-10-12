@@ -1,10 +1,11 @@
-import { Client } from "pg";
+import type { Client } from "pg";
 
 import { buildCloudSqlProxy, buildCloudSqlProxyVolume } from "./cloudsql-config";
 import { KubeClient } from "./kube-client";
 import { pollUntil } from "./poll-until";
 import { PortForwardSession } from "./port-forward";
 import { closeDatabaseClients } from "./runtime-database";
+import { RuntimeSqlClient } from "./runtime-sql-client";
 
 /** Independent of the application pod, including while RHDH is stopped or broken. */
 export class CloudSqlDatabaseSession {
@@ -80,7 +81,7 @@ export class CloudSqlDatabaseSession {
       }
     }
     if (this.port === undefined) throw new Error("Cloud SQL cleanup tunnel has not started");
-    const client = new Client({
+    const client = new RuntimeSqlClient({
       host: "127.0.0.1",
       port: this.port,
       user: this.user,

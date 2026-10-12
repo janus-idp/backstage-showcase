@@ -17,6 +17,7 @@ import { createRuntimeCatalogProbe } from "../../utils/runtime-catalog";
 import { resolveConfig } from "../../utils/runtime-config";
 import {
   clearOwnedDatabases,
+  clearSlotDatabases,
   RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
 } from "../../utils/runtime-database";
 import { deployRuntime, type RuntimeDeploymentHandle } from "../../utils/runtime-deploy";
@@ -26,6 +27,7 @@ import {
   deleteRuntimeApplication,
   collectRuntimeDiagnostics,
 } from "../../utils/runtime-lifecycle";
+import { createRuntimeProgress } from "../../utils/runtime-progress";
 import { restartRuntime } from "../../utils/runtime-restart";
 import { test as base } from "../coverage/test";
 import { withRuntimeRequest } from "./runtime-request";
@@ -90,13 +92,23 @@ export const test = base.extend<{ cloudSqlSlot: number; cloudSqlRuntime: CloudSq
         apiToken === ""
           ? text.replaceAll(inputs.password, "[REDACTED]")
           : text.replaceAll(inputs.password, "[REDACTED]").replaceAll(apiToken, "[REDACTED]");
-      const kube = new KubeClient();
+      const kube = new KubeClient(30_000);
       const namespace = config.namespace;
+      const progress = createRuntimeProgress(testInfo, {
+        runId,
+        namespace,
+        databasePrefix,
+        provider: "cloudsql",
+        slot: cloudSqlSlot,
+        installMethod,
+      });
       testInfo.annotations.push(
         { type: "namespace", description: namespace },
         { type: "database", description: instance.split(":")[2] },
       );
-      await resetRuntimeNamespace(kube, namespace, runId, ownerLabel);
+      await progress.run("reset-namespace", () =>
+        resetRuntimeNamespace(kube, namespace, runId, ownerLabel),
+      );
       const sql = new CloudSqlDatabaseSession(kube, namespace, inputs.user, inputs.password);
       let sqlReady = false;
       let setupError: unknown;
@@ -123,18 +135,21 @@ export const test = base.extend<{ cloudSqlSlot: number; cloudSqlRuntime: CloudSq
           },
           namespace,
         );
-        const admin = await sql.start(instance, RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS);
+        const admin = await progress.run("start-proxy", () =>
+          sql.start(instance, RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS),
+        );
         sqlReady = true;
-        const version = await (async () => {
+        const { version, slotCleanup } = await progress.run("prepare-databases", async () => {
           try {
-            await clearOwnedDatabases(admin, databasePrefix);
-            return await admin.query<{ version: string; version_number: string }>(
+            const cleared = await clearSlotDatabases(admin, databasePrefix);
+            const result = await admin.query<{ version: string; version_number: string }>(
               "SELECT current_setting('server_version') AS version, current_setting('server_version_num') AS version_number",
             );
+            return { version: result, slotCleanup: cleared };
           } finally {
             await admin.end();
           }
-        })();
+        });
         await testInfo.attach("cloudsql-target", {
           body: JSON.stringify(
             {
@@ -145,13 +160,17 @@ export const test = base.extend<{ cloudSqlSlot: number; cloudSqlRuntime: CloudSq
               chart: config.helm,
               image: config.image,
               postgres: version.rows[0],
+              slotCleanup,
             },
             null,
             2,
           ),
           contentType: "application/json",
         });
-        const handle = await deployRuntime(config, installMethod, kube);
+        const handle = await progress.run("deploy", () =>
+          deployRuntime(config, installMethod, kube),
+        );
+        const finishTest = progress.begin("test");
         await use({
           ...handle,
           databasePrefix,
@@ -159,27 +178,39 @@ export const test = base.extend<{ cloudSqlSlot: number; cloudSqlRuntime: CloudSq
           apiToken,
           connect: (database) => sql.connect(database),
           async restart(whileStopped) {
-            await restartRuntime(kube, config, installMethod, whileStopped);
+            await progress.run("restart", () =>
+              restartRuntime(kube, config, installMethod, whileStopped),
+            );
           },
         });
+        finishTest(testInfo.status === testInfo.expectedStatus);
       } catch (error) {
         setupError = error;
       }
       // Capture the application and proxy evidence even on setup failure, before deleting it.
-      await collectRuntimeDiagnostics(kube, namespace, testInfo, redact);
+      await progress.run("diagnostics", () =>
+        collectRuntimeDiagnostics(kube, namespace, testInfo, redact),
+      );
       const cleanupErrors: unknown[] = [];
       try {
-        await deleteRuntimeApplication(kube, namespace, config.releaseName, installMethod, [
-          sql.podName,
-        ]);
+        await progress.run("stop-application", () =>
+          deleteRuntimeApplication(kube, namespace, config.releaseName, installMethod, [
+            sql.podName,
+          ]),
+        );
         if (sqlReady) {
-          await sql.closeClients();
-          const cleanupClient = await sql.connect("postgres", RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS);
-          try {
-            await clearOwnedDatabases(cleanupClient, databasePrefix);
-          } finally {
-            await cleanupClient.end();
-          }
+          await progress.run("close-sql-clients", () => sql.closeClients());
+          await progress.run("drop-databases", async () => {
+            const cleanupClient = await sql.connect(
+              "postgres",
+              RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
+            );
+            try {
+              await clearOwnedDatabases(cleanupClient, databasePrefix);
+            } finally {
+              await cleanupClient.end();
+            }
+          });
         }
         await testInfo.attach("cloudsql-cleanup", {
           body: JSON.stringify({ databasePrefix, completed: sqlReady }),
@@ -189,12 +220,14 @@ export const test = base.extend<{ cloudSqlSlot: number; cloudSqlRuntime: CloudSq
         cleanupErrors.push(error);
       }
       try {
-        await sql.close();
+        await progress.run("close-proxy", () => sql.close());
       } catch (error) {
         cleanupErrors.push(error);
       }
       try {
-        await deleteOwnedRuntimeNamespace(kube, namespace, runId, ownerLabel);
+        await progress.run("delete-namespace", () =>
+          deleteOwnedRuntimeNamespace(kube, namespace, runId, ownerLabel),
+        );
       } catch (error) {
         cleanupErrors.push(error);
       }

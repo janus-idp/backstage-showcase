@@ -263,46 +263,44 @@ export async function collectRuntimeDiagnostics(
   info: Pick<TestInfo, "attach">,
   redact: (text: string) => string,
 ): Promise<void> {
-  const attach = async (name: string, action: () => Promise<unknown>) => {
+  const attach = async <T>(name: string, action: () => Promise<T>): Promise<T | undefined> => {
     try {
       const result = await action();
       await info.attach(name, {
         body: redact(typeof result === "string" ? result : JSON.stringify(result, null, 2)),
         contentType: "text/plain",
       });
+      return result;
     } catch (error) {
       console.warn(`Runtime diagnostic ${name} unavailable: ${redact(String(error))}`);
+      return undefined;
     }
   };
-  await attach(
-    "runtime-deployments",
-    async () => (await kube.appsApi.listNamespacedDeployment(namespace)).body,
-  );
-  await attach(
-    "runtime-events",
-    async () => (await kube.coreV1Api.listNamespacedEvent(namespace)).body,
-  );
-  await attach(
-    "runtime-pods",
-    async () => (await kube.coreV1Api.listNamespacedPod(namespace)).body,
-  );
-  try {
-    const pods = await kube.coreV1Api.listNamespacedPod(namespace);
-    for (const pod of pods.body.items) {
-      const name = pod.metadata?.name;
-      if (name === undefined) continue;
-      for (const container of [
-        ...(pod.spec?.initContainers ?? []),
-        ...(pod.spec?.containers ?? []),
-      ]) {
-        await attach(`${name}-${container.name}`, () =>
-          run("oc", ["logs", "-n", namespace, name, "-c", container.name, "--tail=500"], {
-            timeout: 30_000,
-          }),
+  const [, , pods] = await Promise.all([
+    attach(
+      "runtime-deployments",
+      async () => (await kube.appsApi.listNamespacedDeployment(namespace)).body,
+    ),
+    attach(
+      "runtime-events",
+      async () => (await kube.coreV1Api.listNamespacedEvent(namespace)).body,
+    ),
+    attach("runtime-pods", async () => (await kube.coreV1Api.listNamespacedPod(namespace)).body),
+  ]);
+  if (pods !== undefined) {
+    await Promise.all(
+      pods.items.flatMap((pod) => {
+        const name = pod.metadata?.name;
+        if (name === undefined) return [];
+        return [...(pod.spec?.initContainers ?? []), ...(pod.spec?.containers ?? [])].map(
+          (container) =>
+            attach(`${name}-${container.name}`, () =>
+              run("oc", ["logs", "-n", namespace, name, "-c", container.name, "--tail=500"], {
+                timeout: 30_000,
+              }),
+            ),
         );
-      }
-    }
-  } catch (error) {
-    console.warn(`Runtime pod logs unavailable: ${redact(String(error))}`);
+      }),
+    );
   }
 }

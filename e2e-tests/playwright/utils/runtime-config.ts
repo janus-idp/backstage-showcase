@@ -135,7 +135,17 @@ export function resolveConfig(routerBase: string): RuntimeDeployConfig {
   const namespace = process.env.NAME_SPACE_RUNTIME ?? "showcase-runtime";
   const imageRegistry = process.env.IMAGE_REGISTRY ?? "quay.io";
   const imageRepo = process.env.IMAGE_REPO ?? "rhdh-community/rhdh";
-  const imageTag = process.env.TAG_NAME ?? "next";
+  const imageDigest = process.env.IMAGE_DIGEST?.trim();
+  const imageTag =
+    imageDigest === undefined || imageDigest === ""
+      ? (process.env.TAG_NAME ?? "next")
+      : imageDigest;
+  if (
+    ((imageDigest !== undefined && imageDigest !== "") || imageTag.startsWith("sha256:")) &&
+    !/^sha256:[a-f0-9]{64}$/u.test(imageTag)
+  ) {
+    throw new Error("IMAGE_DIGEST must be a complete SHA-256 image digest");
+  }
   const internalPostgresqlImage = buildImageRef(
     process.env.POSTGRESQL_IMAGE_REGISTRY!,
     process.env.POSTGRESQL_IMAGE_REPO!,

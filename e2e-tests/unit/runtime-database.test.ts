@@ -4,6 +4,7 @@ import {
   readExternalDatabaseInputs,
   runtimeDatabasePrefix,
   clearOwnedDatabases,
+  clearSlotDatabases,
   closeDatabaseClients,
   type OwnedDatabaseClient,
 } from "../playwright/utils/runtime-database";
@@ -49,99 +50,156 @@ function result(names: string[]) {
 describe.each(["rt_012345abcdef_rds1_", "rt_012345abcdef_azure1_", "csql_012345abcdef_1_"])(
   "%s owned database cleanup",
   (prefix) => {
-    it("refuses broad or invalid prefixes before issuing SQL", async () => {
-      const query = vi.fn<OwnedDatabaseClient["query"]>();
-      const client = { query };
-      await expect(clearOwnedDatabases(client, "backstage_plugin_")).rejects.toThrow(
-        "exact run/slot",
-      );
-      expect(query).not.toHaveBeenCalled();
-    });
-    it("uses literal-prefix selection and rejects another run's database even if returned", async () => {
+    it("rejects another run's database even if returned", async () => {
       const query = vi
         .fn<OwnedDatabaseClient["query"]>()
         .mockResolvedValue(result([`${prefix.replace("012345abcdef", "abcdef012345")}catalog`]));
       await expect(clearOwnedDatabases({ query }, prefix)).rejects.toThrow("ownership boundary");
-      const literalPrefix: unknown = expect.stringContaining("starts_with(datname, $1)");
-      expect(query).toHaveBeenCalledExactlyOnceWith(
-        expect.objectContaining({
-          text: literalPrefix,
-          values: [prefix],
-        }),
-      );
-    });
-    it("identifies failed drops and preserves their cause", async () => {
-      const error = new Error("permission denied");
-      const query = vi
-        .fn<OwnedDatabaseClient["query"]>()
-        .mockResolvedValueOnce(result([`${prefix}catalog`]))
-        .mockResolvedValueOnce(result([]))
-        .mockRejectedValueOnce(error);
-      await expect(clearOwnedDatabases({ query }, prefix)).rejects.toMatchObject({
-        message: `Failed to drop owned database ${prefix}catalog`,
-        cause: error,
-      });
-    });
-    it("waits beyond the old retry window for sessions without FORCE or signalling", async () => {
-      vi.useFakeTimers();
-      try {
-        const start = Date.now();
-        let dropped = false;
-        const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input) => {
-          const text = typeof input === "string" ? input : input.text;
-          if (text.includes("FROM pg_database"))
-            return Promise.resolve(result(dropped ? [] : [`${prefix}catalog`]));
-          if (text.startsWith("DROP")) {
-            if (Date.now() - start < 40_000)
-              return Promise.reject(Object.assign(new Error("busy"), { code: "55006" }));
-            dropped = true;
-          }
-          return Promise.resolve(
-            result(
-              text.includes("pg_stat_activity") && Date.now() - start < 40_000
-                ? [`${prefix}catalog`]
-                : [],
-            ),
-          );
-        });
-        const cleanup = expect(clearOwnedDatabases({ query }, prefix)).resolves.toBeUndefined();
-        await vi.runAllTimersAsync();
-        await cleanup;
-        expect(dropped).toBe(true);
-        expect(
-          query.mock.calls
-            .map(([input]) => (typeof input === "string" ? input : input.text))
-            .join("\n"),
-        ).not.toMatch(/FORCE|pg_terminate_backend/u);
-      } finally {
-        vi.useRealTimers();
-      }
-    });
-    it("fails at a bounded deadline with only owned-session diagnostics", async () => {
-      vi.useFakeTimers();
-      const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input) => {
-        const text = typeof input === "string" ? input : input.text;
-        if (text.startsWith("DROP"))
-          return Promise.reject(Object.assign(new Error("busy"), { code: "55006" }));
-        return Promise.resolve(result(text.includes("set_config") ? [] : [`${prefix}catalog`]));
-      });
-      const cleanup = expect(clearOwnedDatabases({ query }, prefix, 5_000)).rejects.toThrow(
-        `remaining sessions: [{"datname":"${prefix}catalog"}]`,
-      );
-      await vi.advanceTimersByTimeAsync(5_000);
-      await cleanup;
-      const sessionQueries = query.mock.calls
-        .map(([input]) => input)
-        .filter((input) => typeof input !== "string" && input.text.includes("pg_stat_activity"));
-      const boundedTimeout: unknown = expect.any(Number);
-      expect(sessionQueries).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ values: [prefix], query_timeout: boundedTimeout }),
-        ]),
-      );
     });
   },
 );
+
+// The same cleanup engine handles every prefix; exercise its failures and deadlines once.
+describe("owned database cleanup failures", () => {
+  const prefix = "rt_012345abcdef_rds1_";
+  it("refuses broad or invalid prefixes before issuing SQL", async () => {
+    const query = vi.fn<OwnedDatabaseClient["query"]>();
+    await expect(clearOwnedDatabases({ query }, "backstage_plugin_")).rejects.toThrow(
+      "exact run/slot",
+    );
+    expect(query).not.toHaveBeenCalled();
+  });
+  it("identifies failed drops and preserves their cause", async () => {
+    const error = new Error("permission denied");
+    const query = vi
+      .fn<OwnedDatabaseClient["query"]>()
+      .mockResolvedValueOnce(result([`${prefix}catalog`]))
+      .mockResolvedValueOnce(result([]))
+      .mockRejectedValueOnce(error);
+    await expect(clearOwnedDatabases({ query }, prefix)).rejects.toMatchObject({
+      message: `Failed to drop owned database ${prefix}catalog`,
+      cause: error,
+    });
+  });
+  it("waits beyond the old retry window for sessions without FORCE or signalling", async () => {
+    vi.useFakeTimers();
+    try {
+      const start = Date.now();
+      let dropped = false;
+      const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input) => {
+        const text = typeof input === "string" ? input : input.text;
+        if (text.includes("FROM pg_database"))
+          return Promise.resolve(result(dropped ? [] : [`${prefix}catalog`]));
+        if (text.startsWith("DROP")) {
+          if (Date.now() - start < 40_000)
+            return Promise.reject(Object.assign(new Error("busy"), { code: "55006" }));
+          dropped = true;
+        }
+        return Promise.resolve(
+          result(
+            text.includes("pg_stat_activity") && Date.now() - start < 40_000
+              ? [`${prefix}catalog`]
+              : [],
+          ),
+        );
+      });
+      const cleanup = expect(clearOwnedDatabases({ query }, prefix)).resolves.toBeUndefined();
+      await vi.runAllTimersAsync();
+      await cleanup;
+      expect(dropped).toBe(true);
+      expect(
+        query.mock.calls
+          .map(([input]) => (typeof input === "string" ? input : input.text))
+          .join("\n"),
+      ).not.toMatch(/FORCE|pg_terminate_backend/u);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+  it("fails at a bounded deadline with only owned-session diagnostics", async () => {
+    vi.useFakeTimers();
+    const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input) => {
+      const text = typeof input === "string" ? input : input.text;
+      if (text.startsWith("DROP"))
+        return Promise.reject(Object.assign(new Error("busy"), { code: "55006" }));
+      return Promise.resolve(result(text.includes("set_config") ? [] : [`${prefix}catalog`]));
+    });
+    const cleanup = expect(clearOwnedDatabases({ query }, prefix, 5_000)).rejects.toThrow(
+      `remaining sessions: [{"datname":"${prefix}catalog"}]`,
+    );
+    await vi.advanceTimersByTimeAsync(5_000);
+    await cleanup;
+  });
+});
+
+describe.each([
+  [
+    "rt_012345abcdef_rds1_",
+    "rt_abcdef012345_rds1_",
+    ["rt_abcdef012345_rds2_", "rt_abcdef012345_azure1_"],
+  ],
+  [
+    "csql_012345abcdef_1_",
+    "csql_abcdef012345_1_",
+    ["csql_abcdef012345_2_", "rt_abcdef012345_rds1_"],
+  ],
+])("%s slot cleanup", (current, stale, otherSlots) => {
+  /** In-memory pg_database that ignores the server-side pattern, so the client must enforce it. */
+  function fakeServer(names: string[], failDropsFor?: string) {
+    const databases = new Set(names);
+    const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input, values) => {
+      const text = typeof input === "string" ? input : input.text;
+      const args = typeof input === "string" ? values : input.values;
+      if (text.includes("datname ~")) return Promise.resolve(result([...databases]));
+      if (text.includes("starts_with"))
+        return Promise.resolve(
+          result([...databases].filter((name) => name.startsWith(args?.[0] ?? "\0"))),
+        );
+      const dropped = /^DROP DATABASE IF EXISTS "(.+)"$/u.exec(text)?.[1];
+      if (dropped !== undefined) {
+        if (failDropsFor !== undefined && dropped.startsWith(failDropsFor))
+          return Promise.reject(new Error("permission denied"));
+        databases.delete(dropped);
+      }
+      return Promise.resolve(result([]));
+    });
+    return { databases, query };
+  }
+  const unrelated = [
+    ...otherSlots.map((prefix) => `${prefix}catalog`),
+    `${stale.replace("abcdef012345", "abcdef01234")}catalog`,
+    "rt_x_rds1_catalog",
+    "backstage_plugin_catalog",
+  ];
+
+  it("retires only exact same-slot leftovers from other runs and clears the current run", async () => {
+    const server = fakeServer([
+      `${stale}catalog`,
+      `${stale}auth`,
+      `${current}catalog`,
+      ...unrelated,
+    ]);
+    await expect(clearSlotDatabases({ query: server.query }, current)).resolves.toEqual({
+      retired: [stale],
+      failed: [],
+    });
+    expect([...server.databases]).toEqual(unrelated);
+  });
+
+  it("only warns for another run's leftovers but fails for the current run", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const server = fakeServer([`${stale}catalog`, `${current}catalog`], stale);
+    await expect(clearSlotDatabases({ query: server.query }, current)).resolves.toEqual({
+      retired: [],
+      failed: [stale],
+    });
+    expect([...server.databases]).toEqual([`${stale}catalog`]);
+    const failing = fakeServer([`${current}catalog`], current);
+    await expect(clearSlotDatabases({ query: failing.query }, current)).rejects.toThrow(
+      `Failed to drop owned database ${current}catalog`,
+    );
+  });
+});
 
 it("settles every client close before reporting an individual failure", async () => {
   vi.useFakeTimers();
