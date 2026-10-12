@@ -213,9 +213,7 @@ fips_configure_custom_ca_ingress() {
   local ingress_namespace="openshift-ingress"
   local tmpdir
   tmpdir=$(mktemp -d)
-
-  # Ensure cleanup on exit
-  trap 'rm -rf "${tmpdir}"' EXIT
+  export FIPS_CERT_TMPDIR="${tmpdir}"
 
   log::info "Generating wildcard certificate for domain: ${wildcard_domain}"
 
@@ -285,7 +283,7 @@ EOF
 
   # Clean up temporary files immediately
   rm -rf "${tmpdir}"
-  trap - EXIT
+  unset FIPS_CERT_TMPDIR
 
   # Patch the default IngressController to use the custom certificate
   log::info "Patching default IngressController to use custom certificate..."

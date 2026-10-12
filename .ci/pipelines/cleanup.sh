@@ -45,6 +45,9 @@ cleanup() {
   if [[ -n "${DISCONNECTED_TMPDIR:-}" && -d "${DISCONNECTED_TMPDIR}" ]]; then
     rm -rf "${DISCONNECTED_TMPDIR}"
   fi
+  if [[ -n "${FIPS_CERT_TMPDIR:-}" && -d "${FIPS_CERT_TMPDIR}" ]]; then
+    rm -rf "${FIPS_CERT_TMPDIR}"
+  fi
   if [[ -n "${POSTGRES_UPGRADE_DUMP_FILE:-}" ]]; then
     rm -f "${POSTGRES_UPGRADE_DUMP_FILE}" "${POSTGRES_UPGRADE_DUMP_FILE}.restore.log"
   fi

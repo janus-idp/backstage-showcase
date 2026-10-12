@@ -6,6 +6,7 @@
   "scripts": {
     "test:stability": "playwright test --project=showcase --retries=0",
     "showcase": "playwright test --project=showcase",
+    "showcase-fips": "playwright test --project=showcase-fips",
     "showcase-rbac": "playwright test --project=showcase-rbac",
     "showcase-k8s": "playwright test --project=showcase-k8s",
     "showcase-rbac-k8s": "playwright test --project=showcase-rbac-k8s",
