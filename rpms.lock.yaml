@@ -3440,13 +3440,13 @@ arches:
     name: elfutils-libs
     evr: 0.194-2.el10_2
     sourcerpm: elfutils-0.194-2.el10_2.src.rpm
-  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/baseos/os/Packages/e/environment-modules-5.6.1-2.el10.x86_64.rpm
+  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/baseos/os/Packages/e/environment-modules-5.6.1-2.el10_2.1.x86_64.rpm
     repoid: ubi-10-for-x86_64-baseos-rpms
-    size: 831860
-    checksum: sha256:7c084d64908c5c026d75c052194c08c70d56de2af8f8fd5ca4120895a30f2d75
+    size: 831731
+    checksum: sha256:d50c7a7ee1e2af22f12d94eecbfa1296e8b3f08df08b6c5647ab910978110a05
     name: environment-modules
-    evr: 5.6.1-2.el10
-    sourcerpm: environment-modules-5.6.1-2.el10.src.rpm
+    evr: 5.6.1-2.el10_2.1
+    sourcerpm: environment-modules-5.6.1-2.el10_2.1.src.rpm
   - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/baseos/os/Packages/e/expat-2.7.3-1.el10_2.5.x86_64.rpm
     repoid: ubi-10-for-x86_64-baseos-rpms
     size: 130906
@@ -4752,12 +4752,12 @@ arches:
     checksum: sha256:c00334fd7c0a0b607a5baa3b2badf0d49d254b9417ace5401418680ad8012f27
     name: elfutils
     evr: 0.194-2.el10_2
-  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/baseos/source/SRPMS/Packages/e/environment-modules-5.6.1-2.el10.src.rpm
+  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/baseos/source/SRPMS/Packages/e/environment-modules-5.6.1-2.el10_2.1.src.rpm
     repoid: ubi-10-for-x86_64-baseos-source-rpms
-    size: 2144202
-    checksum: sha256:e0a4d876fab914179dd7f9d7a627ed744294133389bc0a18565b56f214da3445
+    size: 2146797
+    checksum: sha256:38f4397c5b41f1ff880b4763cbb613dc5dac0de0bcdb2c4965e40b367cf33cbd
     name: environment-modules
-    evr: 5.6.1-2.el10
+    evr: 5.6.1-2.el10_2.1
   - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/baseos/source/SRPMS/Packages/e/expat-2.7.3-1.el10_2.5.src.rpm
     repoid: ubi-10-for-x86_64-baseos-source-rpms
     size: 881935
