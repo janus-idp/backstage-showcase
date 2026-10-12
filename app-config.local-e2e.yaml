@@ -21,6 +21,12 @@ auth:
       # Required because auth.environment may resolve outside "development" in CI.
       dangerouslyAllowOutsideDevelopment: true
 
+# app-auth 1.2.0 no longer injects Guest in development; auth.providers is not
+# frontend-visible. Explicit signInPage is required. packages/app/config.d.ts must
+# declare it @visibility frontend so package start does not filter it out.
+# Same regression as #5619 (OCP ConfigMaps); see rhdh-plugins #4716.
+signInPage: guest
+
 backend:
   database:
     client: better-sqlite3

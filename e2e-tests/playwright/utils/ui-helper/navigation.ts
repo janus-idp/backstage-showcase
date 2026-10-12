@@ -43,8 +43,8 @@ export async function goToSelfServicePage(page: Page) {
   await clickLink(page, {
     ariaLabel: t["rhdh"][lang]["menuItem.selfService"],
   });
-  // The scaffolder page title is "Create" (sidebar) with H2 "Templates".
-  await verifyHeading(page, "Create");
+  // RHDH overrides the scaffolder page title to Self-service (RHDHBUGS-3676).
+  await verifyHeading(page, "Self-service");
 }
 
 export async function waitForSideBarVisible(page: Page) {
