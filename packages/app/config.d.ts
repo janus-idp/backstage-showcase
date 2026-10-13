@@ -14,6 +14,16 @@ export interface Config {
      */
     proxyPath?: string;
   };
+
+  /**
+   * Which sign-in provider buttons appear (and in what order).
+   * Declared here so `packages/app` package start keeps the key frontend-visible;
+   * the app-auth dynamic plugin schema is not loaded into the app CLI filter.
+   * Same key as `@red-hat-developer-hub/backstage-plugin-app-auth` config.d.ts.
+   * @visibility frontend
+   */
+  signInPage?: string | string[];
+
   app: {
     branding?: {
       /**
