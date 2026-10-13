@@ -140,7 +140,7 @@ describe("fetchJson", () => {
       http.createServer(() => {}),
       "http",
     );
-    await expect(fetchJson(`${base}/main.js.map`, 50)).rejects.toThrow(/Timed out/u);
+    await expect(fetchJson(`${base}/main.js.map`, 50)).rejects.toThrow(/Timeout 50ms/u);
   });
 
   // The reason fetchJson exists: CI routes present certificates Node does not trust.

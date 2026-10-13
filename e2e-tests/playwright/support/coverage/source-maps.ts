@@ -3,14 +3,14 @@
 // Two reasons not to leave this to monocart's own resolver:
 // - It fetches `*.js.map` with Node's certificate checks and logs a failure only at
 //   debug level. CI clusters serve RHDH behind router certificates the test process
-//   does not trust (the specs set ignoreHTTPSErrors for the same reason), so every
-//   map would silently fail to load.
+//   does not trust, so every map would silently fail to load. The specs reach the
+//   same routes through Playwright with `ignoreHTTPSErrors` (playwright.config.ts);
+//   the maps are fetched the same way.
 // - A bundle whose map did not load skips `sourceFilter` entirely and lands in the
 //   report under its minified URL, which Codecov cannot match to the repository.
 // Resolving here lets an entry without a map be dropped instead.
 
-import http from "node:http";
-import https from "node:https";
+import { request } from "@playwright/test";
 
 import { isAppBundle } from "./source-paths";
 
@@ -34,41 +34,24 @@ export function isCoverageEntry(value: unknown): value is CoverageEntry {
   );
 }
 
-/** Fetch a JSON document over http(s), tolerating untrusted certificates. */
-export function fetchJson(
+/**
+ * Fetch a JSON document the way the specs reach the app: through Playwright, with the
+ * `ignoreHTTPSErrors` setting playwright.config.ts uses for the cluster routes.
+ */
+export async function fetchJson(
   url: string,
   timeoutMs = SOURCE_MAP_TIMEOUT_MS,
 ): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const client = url.startsWith("https:") ? https : http;
-    const request = client.get(
-      url,
-      { rejectUnauthorized: false, timeout: timeoutMs },
-      (response) => {
-        if (response.statusCode !== 200) {
-          response.resume();
-          reject(new Error(`HTTP ${response.statusCode} for ${url}`));
-          return;
-        }
-        let body = "";
-        response.setEncoding("utf8");
-        response.on("data", (chunk: string) => {
-          body += chunk;
-        });
-        response.on("end", () => {
-          try {
-            resolve(JSON.parse(body));
-          } catch (error) {
-            reject(error instanceof Error ? error : new Error(String(error)));
-          }
-        });
-      },
-    );
-    request.on("timeout", () => {
-      request.destroy(new Error(`Timed out after ${timeoutMs}ms: ${url}`));
-    });
-    request.on("error", reject);
-  });
+  const context = await request.newContext({ ignoreHTTPSErrors: true });
+  try {
+    const response = await context.get(url, { timeout: timeoutMs });
+    if (!response.ok()) {
+      throw new Error(`HTTP ${response.status()} for ${url}`);
+    }
+    return JSON.parse(await response.text());
+  } finally {
+    await context.dispose();
+  }
 }
 
 /** The absolute URL of the entry's external source map, if its source names one. */

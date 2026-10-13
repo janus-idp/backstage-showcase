@@ -31,8 +31,9 @@ Scope of this mechanism:
    Istanbul format and emit a merged LCOV + HTML report under `coverage/e2e/`.
 3. **Source maps and repository paths.** The deployed image serves `packages/app`
    as minified bundles with source maps whose sources read `webpack://app/./src/...`.
-   `support/coverage/source-maps.ts` fetches each bundle's map once (tolerating the
-   cluster route's untrusted certificate) and drops bundles whose map does not load;
+   `support/coverage/source-maps.ts` fetches each bundle's map once, through Playwright
+   with the same `ignoreHTTPSErrors` the specs use for the cluster route, and drops
+   bundles whose map does not load;
    `support/coverage/source-paths.ts` keeps only `packages/app/src/**` and names each
    file by its repository path. Unfiltered, a first page load reports ~3,300 files,
    17 of them in this repository.
