@@ -20,7 +20,8 @@ Scope of this mechanism:
 
 ## How it works
 
-1. **Opt-in via env var.** When `COLLECT_COVERAGE=true`, a Playwright fixture
+1. **Enabled by env var.** When `COLLECT_COVERAGE=true` (set by the OCP PR check,
+   off elsewhere), a Playwright fixture
    (`e2e-tests/playwright/support/coverage/test.ts`) extends the base `test`
    and wraps each run with `page.coverage.startJSCoverage()` / `stopJSCoverage()`.
    Raw V8 coverage is persisted per test as JSON under `coverage/e2e-raw/`.
@@ -141,9 +142,12 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   reach Prow. The upload passes it to the Codecov CLI through the environment, never as
   an argument. Without it the upload is skipped
   and the report is still saved as the `coverage` artifact.
-- Presubmits test a local merge of the PR onto its base branch, whose SHA GitHub has
-  never seen. The upload is therefore attributed to the PR head (`PULL_PULL_SHA`, or
-  `JOB_SPEC` for a Gangway re-run) with `--pr`, and skipped when neither is known.
+- The upload is attributed to the PR head (`PULL_PULL_SHA`) with `--pr`, never to the
+  checkout's HEAD, which is a local merge of the PR onto its base that GitHub has never
+  seen. It runs only when the job tested the PR's own image (`TAG_NAME` is
+  `pr-<number>-<sha8>`), so CI- or docs-only PRs (which deploy `next`), Gangway
+  re-runs with an overridden tag, and openshift/release rehearsals collect coverage
+  as an artifact but upload nothing.
 - Coverage is reporting, not a gate: a failed collection, report or upload logs a
   warning and never changes the job result.
 - Uploads go to PR head commits only. Codecov carries a flag forward from the commit
@@ -158,6 +162,8 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 | `COLLECT_COVERAGE` | (unset) | Set to `true` to enable coverage collection |
 | `COVERAGE_OUTPUT_DIR` | `<cwd>/coverage/e2e-raw` | Where per-test raw V8 coverage is written |
 | `COVERAGE_REPORT_DIR` | `<cwd>/coverage/e2e` | Where the merged Istanbul report is written |
+| `CODECOV_TOKEN` | (unset) | Codecov upload token; CI reads it from `/tmp/secrets/CODECOV_TOKEN`. Without it the upload is skipped |
+| `CODECOV_BIN` | (unset) | Use this Codecov CLI instead of downloading one (the unit tests point it at a stub) |
 | `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter will wait for `monocart.CoverageReport.generate()` before aborting. Prevents a CI job from hanging if coverage aggregation stalls |
 
 Raw coverage file names include the spec title path, worker index, and retry
@@ -194,7 +200,8 @@ Approach B would build a second `rhdh:<tag>-coverage` image with
 
 - Its gain over this approach is fidelity for `packages/app`, and with source maps
   in the image this approach already reports `packages/app/src` by repository path.
-- `packages/app` is a thin shell (about 80 source files in the bundle); the code that
+- `packages/app` is a thin shell (about 80 source files in the bundle, of which an
+  initial page load executes 17); the code that
   carries RHDH's behaviour lives in plugins, which RHIDP-13411 instruments at build
   time for the overlay E2E runs (RHIDP-11866).
 - It would add an image build to every PR and a second image to keep in step with

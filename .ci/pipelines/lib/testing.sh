@@ -96,7 +96,7 @@ testing::run_tests() {
     fi
   fi
 
-  # RHIDP-13243: V8 coverage collection for E2E tests (opt-in).
+  # RHIDP-13243: V8 coverage collection for E2E tests.
   # handle_ocp_pull turns it on for the PR check (RHIDP-13242). When enabled, the
   # coverage fixture wraps page.coverage.startJSCoverage/stopJSCoverage and
   # the reporter merges raw JSON into lcov via monocart-coverage-reports.
@@ -158,65 +158,61 @@ testing::run_tests() {
   return "$test_result"
 }
 
-# Publishes a JUnit file to SHARED_DIR, gzipped to stay under the Kubernetes
-# Secret 1 MiB limit; an oversized entry is dropped because it would break the
-# downstream Slack reporting for every run in the job.
-# Args:
-#   $1 - artifacts_subdir (names the SHARED_DIR entry)
-#   $2 - path to the JUnit file already copied into ARTIFACT_DIR
-# RHIDP-13242: The commit and PR an E2E coverage upload belongs to.
-# Presubmits test a local merge of the PR onto its base branch, so `git rev-parse
-# HEAD` names a commit GitHub has never seen and Codecov would file the upload
-# under it. The PR head comes from Prow (PULL_PULL_SHA) or, for a Gangway re-run,
-# from JOB_SPEC. Prints "<sha> <pr>"; prints nothing when no PR head is known.
-testing::_coverage_pr_target() {
-  local sha="${PULL_PULL_SHA:-}"
-  if [[ -z "${sha}" && -n "${JOB_SPEC:-}" ]]; then
-    sha=$(jq -r '.refs.pulls[0].sha // empty' <<< "${JOB_SPEC}" 2> /dev/null || true)
-  fi
-  local pr="${PULL_NUMBER:-${GIT_PR_NUMBER:-}}"
-  if [[ "${sha}" =~ ^[0-9a-f]{40}$ && "${pr}" =~ ^[0-9]+$ ]]; then
-    echo "${sha} ${pr}"
-  fi
+# RHIDP-13242: The PR head an E2E coverage upload belongs to, as "<sha> <pr>".
+# Prints nothing unless this run tested the PR's own image (TAG_NAME
+# pr-<number>-<sha8>, set by the Prow step for presubmits). That excludes runs whose
+# coverage does not describe the PR head: CI- or docs-only PRs that deploy `next`,
+# Gangway re-runs with an overridden tag, and rehearsals, whose PULL_* variables
+# describe the openshift/release PR. The checkout's own HEAD is never used: it is a
+# local merge of the PR onto its base that GitHub has never seen.
+testing::_coverage_pr_head() {
+  local sha="${PULL_PULL_SHA:-}" pr="${PULL_NUMBER:-}"
+  [[ "${sha}" =~ ^[0-9a-f]{40}$ && "${pr}" =~ ^[0-9]+$ ]] || return 0
+  [[ "${TAG_NAME:-}" == "pr-${pr}-${sha:0:8}" ]] || return 0
+  echo "${sha} ${pr}"
 }
 
 # RHIDP-13242: Upload the merged E2E lcov to Codecov under the rhdh-e2e-frontend
 # flag. Never fails the job: coverage is reporting, not a gate, and the report is
 # already saved as an artifact by the caller.
+# Args:
+#   $1 - path to the merged lcov.info
 testing::_upload_e2e_coverage() {
   local lcov_file="$1"
   if [[ -z "${CODECOV_TOKEN:-}" ]]; then
     log::info "CODECOV_TOKEN not set — skipping Codecov upload. Coverage report saved as artifact."
     return 0
   fi
-  local target sha pr
-  target=$(testing::_coverage_pr_target)
-  if [[ -z "${target}" ]]; then
-    log::warn "No PR head commit to attribute E2E coverage to — skipping Codecov upload"
+  local head sha pr
+  head=$(testing::_coverage_pr_head)
+  if [[ -z "${head}" ]]; then
+    log::info "Run did not test a PR image (TAG_NAME=${TAG_NAME:-unset}) — skipping Codecov upload"
     return 0
   fi
-  read -r sha pr <<< "${target}"
+  read -r sha pr <<< "${head}"
 
-  log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."
-  # CODECOV_BIN lets the unit tests point at a stub instead of downloading the CLI.
-  local codecov_bin="${CODECOV_BIN:-/tmp/codecov}"
-  if [[ ! -x "$codecov_bin" ]]; then
-    curl -sL -o "$codecov_bin" https://cli.codecov.io/latest/linux/codecov
-    curl -sL -o "${codecov_bin}.SHA256SUM" https://cli.codecov.io/latest/linux/codecov.SHA256SUM
-    if (cd /tmp && sha256sum --check --strict codecov.SHA256SUM); then
-      rm -f "${codecov_bin}.SHA256SUM"
-      chmod +x "$codecov_bin"
-    else
-      log::warn "Codecov CLI checksum verification failed — skipping upload"
-      rm -f "$codecov_bin" "${codecov_bin}.SHA256SUM"
-      return 0
+  # CODECOV_BIN replaces the download with a given CLI (the unit tests use a stub).
+  local codecov_bin="${CODECOV_BIN:-}"
+  if [[ -z "${codecov_bin}" ]]; then
+    codecov_bin="/tmp/codecov"
+    if [[ ! -x "${codecov_bin}" ]]; then
+      curl -sL -o "${codecov_bin}" https://cli.codecov.io/latest/linux/codecov
+      curl -sL -o "${codecov_bin}.SHA256SUM" https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+      if (cd /tmp && sha256sum --check --strict codecov.SHA256SUM); then
+        rm -f "${codecov_bin}.SHA256SUM"
+        chmod +x "${codecov_bin}"
+      else
+        log::warn "Codecov CLI checksum verification failed — skipping upload"
+        rm -f "${codecov_bin}" "${codecov_bin}.SHA256SUM"
+        return 0
+      fi
     fi
   fi
-  # The CLI reads CODECOV_TOKEN from the environment; passing it as --token would
-  # put the secret in the process arguments (.claude/rules/ci-e2e-testing.md).
-  # --fail-on-error makes the CLI exit non-zero on upload issues so we
-  # can log it; the || ensures we never block the pipeline for coverage.
-  CODECOV_TOKEN="${CODECOV_TOKEN}" "$codecov_bin" upload-process \
+
+  log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."
+  # No --token: the CLI reads CODECOV_TOKEN from the environment, and the CI rules
+  # keep secrets out of process arguments (.claude/rules/ci-e2e-testing.md).
+  "${codecov_bin}" upload-process \
     --file "${lcov_file}" \
     --flag rhdh-e2e-frontend \
     --slug redhat-developer/rhdh \
@@ -225,6 +221,12 @@ testing::_upload_e2e_coverage() {
     --fail-on-error || log::warn "Codecov E2E coverage upload failed (non-fatal)"
 }
 
+# Publishes a JUnit file to SHARED_DIR, gzipped to stay under the Kubernetes
+# Secret 1 MiB limit; an oversized entry is dropped because it would break the
+# downstream Slack reporting for every run in the job.
+# Args:
+#   $1 - artifacts_subdir (names the SHARED_DIR entry)
+#   $2 - path to the JUnit file already copied into ARTIFACT_DIR
 testing::_publish_junit_to_shared_dir() {
   local artifacts_subdir=$1 junit_in_artifact_dir=$2
   local target="${SHARED_DIR}/junit-results-${artifacts_subdir}.xml.gz"
