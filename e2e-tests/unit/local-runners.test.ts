@@ -400,6 +400,35 @@ fi`,
     expect(first.exitCode).toBe(143);
     expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
   }, 15_000);
+
+  it("holds the lock when cancelled while secrets are loading", async () => {
+    mock(
+      "secrets",
+      `
+if [[ "$1" == --help ]]; then printf '%s\\n' --stream-secrets; exit; fi
+printf 'secrets loading\\n' >> "$EVENTS"
+trap 'printf "secrets stopping\\n" >> "$EVENTS"; while [[ ! -f "$RELEASE" ]]; do sleep 0.05; done; exit 143' TERM
+while true; do sleep 0.05; done`,
+    );
+    const first = spawn("/bin/bash", [join(root, "e2e-tests/local-run.sh"), ...runArgs], {
+      env,
+      stdio: "ignore",
+    });
+    const completed = once(first, "exit");
+    try {
+      await expect.poll(events, { timeout: 10_000 }).toContain("secrets loading");
+      first.kill("SIGTERM");
+      await expect.poll(events).toContain("secrets stopping");
+      expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(true);
+    } finally {
+      writeFileSync(join(root, "release"), "");
+      first.kill("SIGTERM");
+      await completed;
+    }
+    expect(first.exitCode).toBe(143);
+    expect(events()).not.toContain("podman run");
+    expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
+  });
 });
 
 describe("cluster claim login", () => {

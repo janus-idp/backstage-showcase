@@ -116,22 +116,25 @@ if ! mkdir "$RUN_LOCK_DIR" 2> /dev/null; then
   log::info "If a previous run was killed, confirm it has stopped before removing this lock directory."
   exit 1
 fi
-RUNNER_PID=''
 LOG_PID=''
 local_run::cleanup() {
   rm -f "$RUN_LOCK_DIR/output"
   rmdir "$RUN_LOCK_DIR"
 }
 local_run::interrupt() {
-  local signal=$1 exit_code=$2
+  local signal=$1 exit_code=$2 pid runner_signalled=false
   trap '' INT TERM HUP
-  if [[ -n "$RUNNER_PID" ]]; then
-    kill -s "$signal" "$RUNNER_PID" 2> /dev/null || true
-    wait "$RUNNER_PID" 2> /dev/null || true
-  fi
+  # Ask bash for its jobs instead of reading a PID variable: a job exists from
+  # the moment it is forked, before the following line can record $!.
+  for pid in $(jobs -p); do
+    [[ "$pid" == "$LOG_PID" ]] && continue
+    kill -s "$signal" "$pid" 2> /dev/null || true
+    wait "$pid" 2> /dev/null || true
+    runner_signalled=true
+  done
   if [[ -n "$LOG_PID" ]]; then
-    # The FIFO reader may still be waiting for a writer during startup.
-    if [[ -z "$RUNNER_PID" ]]; then
+    # Without a runner the FIFO reader is still waiting for a writer.
+    if [[ "$runner_signalled" == false ]]; then
       kill "$LOG_PID" 2> /dev/null || true
     fi
     wait "$LOG_PID" 2> /dev/null || true
@@ -497,17 +500,15 @@ echo ""
 CONTAINER_EXIT_CODE=0
 export CONTAINER_PLATFORM JOB_NAME IMAGE_REGISTRY IMAGE_REPO TAG_NAME
 export SKIP_TESTS DISCONNECTED LOCAL_DISCONNECTED RUNNER_IMAGE
-# Keep the CLI PID so cancellation can signal it and wait for its child to stop
-# before releasing the checkout lock. Drain the log before reporting the result.
+# Cancellation signals every background job and waits for it to stop before
+# releasing the checkout lock. Drain the log before reporting the result.
 mkfifo "$RUN_LOCK_DIR/output"
 tee "$CONTAINER_LOG" < "$RUN_LOCK_DIR/output" &
 LOG_PID=$!
 local_secrets::exec_with_stream "$SCRIPT_DIR" "$SECRET_PROFILE" \
   bash "$SCRIPT_DIR/local-run-container.sh" \
   > "$RUN_LOCK_DIR/output" 2>&1 &
-RUNNER_PID=$!
-wait "$RUNNER_PID" || CONTAINER_EXIT_CODE=$?
-RUNNER_PID=''
+wait "$!" || CONTAINER_EXIT_CODE=$?
 wait "$LOG_PID"
 LOG_PID=''
 
