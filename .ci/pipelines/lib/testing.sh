@@ -50,6 +50,11 @@ testing::run_tests() {
     return 1
   fi
 
+  if [[ "${SKIP_TESTS:-false}" == "true" ]]; then
+    log::info "SKIP_TESTS=true, skipping Playwright project '${playwright_project}'"
+    return 0
+  fi
+
   test_run_tracker::register "$artifacts_subdir"
   test_run_tracker::mark_deploy_success
 
