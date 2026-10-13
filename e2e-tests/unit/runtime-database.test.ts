@@ -7,6 +7,7 @@ import {
   clearOwnedDatabases,
   clearSlotDatabases,
   closeDatabaseClients,
+  dropOwnedDatabases,
   type OwnedDatabaseClient,
 } from "../playwright/utils/runtime-database";
 
@@ -235,4 +236,13 @@ it("settles every client close before reporting an individual failure", async ()
   await closing;
   expect(closed).toBe(true);
   expect(clients.size).toBe(0);
+});
+
+it("closes the cleanup connection even when the drop fails", async () => {
+  const end = vi.fn<() => Promise<void>>(() => Promise.resolve());
+  const query = vi.fn<OwnedDatabaseClient["query"]>(() => Promise.reject(new Error("list failed")));
+  await expect(
+    dropOwnedDatabases(() => Promise.resolve({ query, end }), "rt_012345abcdef_rds1_"),
+  ).rejects.toThrow("list failed");
+  expect(end).toHaveBeenCalledOnce();
 });

@@ -158,6 +158,19 @@ export async function clearOwnedDatabases(
     throw new Error(`Database cleanup left resources for ${prefix}`);
 }
 
+/** Teardown drop on a dedicated admin connection, closed whatever the outcome. */
+export async function dropOwnedDatabases(
+  connect: () => Promise<OwnedDatabaseClient & { end(): Promise<void> }>,
+  prefix: string,
+): Promise<void> {
+  const client = await connect();
+  try {
+    await clearOwnedDatabases(client, prefix);
+  } finally {
+    await client.end();
+  }
+}
+
 export interface SlotCleanup {
   retired: string[];
   failed: string[];

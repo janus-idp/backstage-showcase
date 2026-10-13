@@ -8,9 +8,9 @@ import { createRuntimeCatalogProbe } from "../../utils/runtime-catalog";
 import { resolveConfig, RUNTIME_DB_SECRET } from "../../utils/runtime-config";
 import {
   connectExternalDatabase,
-  clearOwnedDatabases,
   clearSlotDatabases,
   closeDatabaseClients,
+  dropOwnedDatabases,
   firstConfiguredExternalDatabaseSlot,
   readExternalDatabaseInputs,
   runtimeDatabasePrefix,
@@ -27,6 +27,7 @@ import {
 } from "../../utils/runtime-lifecycle";
 import { createRuntimeProgress } from "../../utils/runtime-progress";
 import { restartRuntime } from "../../utils/runtime-restart";
+import { teardownRuntime } from "../../utils/runtime-teardown";
 import { verifyRuntimeRejectsUntrustedCa } from "../../utils/runtime-tls";
 import { test as base } from "../coverage/test";
 import { withRuntimeRequest } from "./runtime-request";
@@ -194,64 +195,27 @@ export const test = base.extend<{
       } catch (error) {
         setupError = error;
       }
-      await progress.run("diagnostics", () =>
-        collectRuntimeDiagnostics(kube, namespace, info, redact),
-      );
-      const errors: unknown[] = [];
-      let stopped = false;
-      try {
-        await progress.run("stop-application", () =>
+      await teardownRuntime({
+        label: `${provider} slot ${slot}`,
+        setupError,
+        redact,
+        progress,
+        collectDiagnostics: () => collectRuntimeDiagnostics(kube, namespace, info, redact),
+        stopApplication: () =>
           deleteRuntimeApplication(kube, namespace, config.releaseName, method),
-        );
-        stopped = true;
-      } catch (error) {
-        errors.push(error);
-      }
-      try {
-        await progress.run("close-sql-clients", () => closeDatabaseClients(clients));
-      } catch (error) {
-        errors.push(error);
-      }
-      if (stopped) {
-        try {
-          await progress.run("drop-databases", async () => {
-            const cleanup = await connectExternalDatabase(
-              inputs,
-              "postgres",
-              RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
-            );
-            try {
-              await clearOwnedDatabases(cleanup, prefix);
-            } finally {
-              await cleanup.end();
-            }
-          });
-          await info.attach("runtime-database-cleanup", {
-            body: JSON.stringify({ databasePrefix: prefix, completed: true }),
+        closeSqlClients: () => closeDatabaseClients(clients),
+        dropDatabases: () =>
+          dropOwnedDatabases(
+            () => connectExternalDatabase(inputs, "postgres", RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS),
+            prefix,
+          ),
+        reportCleanup: (completed) =>
+          info.attach("runtime-database-cleanup", {
+            body: JSON.stringify({ databasePrefix: prefix, completed }),
             contentType: "application/json",
-          });
-        } catch (error) {
-          errors.push(error);
-        }
-      }
-      try {
-        await progress.run("delete-namespace", () =>
-          deleteOwnedRuntimeNamespace(kube, namespace, runId),
-        );
-      } catch (error) {
-        errors.push(error);
-      }
-      if (errors.length > 0) {
-        if (setupError !== undefined) errors.unshift(setupError);
-        throw new AggregateError(
-          errors,
-          `${provider} slot ${slot} failed: ${errors.map((error) => redact(String(error))).join("; ")}`,
-        );
-      }
-      if (setupError !== undefined)
-        throw setupError instanceof Error
-          ? setupError
-          : new Error("External database setup failed", { cause: setupError });
+          }),
+        deleteNamespace: () => deleteOwnedRuntimeNamespace(kube, namespace, runId),
+      });
     },
     { timeout: 1_800_000 },
   ],
