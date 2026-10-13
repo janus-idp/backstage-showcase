@@ -186,13 +186,13 @@ arches:
     name: glibc-locale-source
     evr: 2.39-142.el10_2
     sourcerpm: glibc-2.39-142.el10_2.src.rpm
-  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/appstream/os/Packages/k/kernel-headers-6.12.0-211.64.1.el10_2.aarch64.rpm
+  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/appstream/os/Packages/k/kernel-headers-6.12.0-211.65.1.el10_2.aarch64.rpm
     repoid: ubi-10-for-aarch64-appstream-rpms
-    size: 3731213
-    checksum: sha256:0b02c47c8b021f11b3b2397b23957e7e750088a96534d45d392a202c22db868c
+    size: 3733181
+    checksum: sha256:05bb2985e3753cc030a1bce87a5194183abe56447a0d4735bba526cd291b3f63
     name: kernel-headers
-    evr: 6.12.0-211.64.1.el10_2
-    sourcerpm: kernel-6.12.0-211.64.1.el10_2.src.rpm
+    evr: 6.12.0-211.65.1.el10_2
+    sourcerpm: kernel-6.12.0-211.65.1.el10_2.src.rpm
   - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/appstream/os/Packages/l/libX11-1.8.10-1.el10.aarch64.rpm
     repoid: ubi-10-for-aarch64-appstream-rpms
     size: 659666
@@ -774,13 +774,13 @@ arches:
     name: elfutils-libs
     evr: 0.194-2.el10_2
     sourcerpm: elfutils-0.194-2.el10_2.src.rpm
-  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/baseos/os/Packages/e/environment-modules-5.6.1-2.el10.aarch64.rpm
+  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/baseos/os/Packages/e/environment-modules-5.6.1-2.el10_2.1.aarch64.rpm
     repoid: ubi-10-for-aarch64-baseos-rpms
-    size: 832601
-    checksum: sha256:f5d493fa97a61e76003e36d8d2841158294200de1eeadc6052fde53618c894d1
+    size: 832448
+    checksum: sha256:b7fae1eaf38a0f5c74dc393eb0865e133afbf568b047cdcf3ae083383759db50
     name: environment-modules
-    evr: 5.6.1-2.el10
-    sourcerpm: environment-modules-5.6.1-2.el10.src.rpm
+    evr: 5.6.1-2.el10_2.1
+    sourcerpm: environment-modules-5.6.1-2.el10_2.1.src.rpm
   - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/baseos/os/Packages/e/expat-2.7.3-1.el10_2.5.aarch64.rpm
     repoid: ubi-10-for-aarch64-baseos-rpms
     size: 126568
@@ -2093,12 +2093,12 @@ arches:
     checksum: sha256:c00334fd7c0a0b607a5baa3b2badf0d49d254b9417ace5401418680ad8012f27
     name: elfutils
     evr: 0.194-2.el10_2
-  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/baseos/source/SRPMS/Packages/e/environment-modules-5.6.1-2.el10.src.rpm
+  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/baseos/source/SRPMS/Packages/e/environment-modules-5.6.1-2.el10_2.1.src.rpm
     repoid: ubi-10-for-aarch64-baseos-source-rpms
-    size: 2144202
-    checksum: sha256:e0a4d876fab914179dd7f9d7a627ed744294133389bc0a18565b56f214da3445
+    size: 2146797
+    checksum: sha256:38f4397c5b41f1ff880b4763cbb613dc5dac0de0bcdb2c4965e40b367cf33cbd
     name: environment-modules
-    evr: 5.6.1-2.el10
+    evr: 5.6.1-2.el10_2.1
   - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/aarch64/baseos/source/SRPMS/Packages/e/expat-2.7.3-1.el10_2.5.src.rpm
     repoid: ubi-10-for-aarch64-baseos-source-rpms
     size: 881935
@@ -2866,13 +2866,13 @@ arches:
     name: glibc-locale-source
     evr: 2.39-142.el10_2
     sourcerpm: glibc-2.39-142.el10_2.src.rpm
-  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/appstream/os/Packages/k/kernel-headers-6.12.0-211.64.1.el10_2.x86_64.rpm
+  - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/appstream/os/Packages/k/kernel-headers-6.12.0-211.65.1.el10_2.x86_64.rpm
     repoid: ubi-10-for-x86_64-appstream-rpms
-    size: 3769401
-    checksum: sha256:6882a1bbd480625faac766cbdb44e983802c32de21623ed46852a3e02d9c29ec
+    size: 3771357
+    checksum: sha256:070ebdfcc579eac5d4cb3d1d6a01ae289dc1d6acf752860d3271f93ea6727286
     name: kernel-headers
-    evr: 6.12.0-211.64.1.el10_2
-    sourcerpm: kernel-6.12.0-211.64.1.el10_2.src.rpm
+    evr: 6.12.0-211.65.1.el10_2
+    sourcerpm: kernel-6.12.0-211.65.1.el10_2.src.rpm
   - url: https://cdn-ubi.redhat.com/content/public/ubi/dist/ubi10/10/x86_64/appstream/os/Packages/l/libX11-1.8.10-1.el10.x86_64.rpm
     repoid: ubi-10-for-x86_64-appstream-rpms
     size: 670376
