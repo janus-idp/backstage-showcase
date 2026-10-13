@@ -105,7 +105,7 @@ cd e2e-tests
 ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-ocp-disconnected-helm-nightly -r rhdh-community/rhdh -t next -s
 ```
 
-`local-run.sh` refuses disconnected jobs unless `oc` is logged into OpenShift. It passes `DISCONNECTED=true` and `LOCAL_DISCONNECTED=1`; the runner writes mirror auth/CA under `${SHARED_DIR}/disconnected-mirror/` (not on the host). Prefer Operator first when validating `OCP_INTERNAL`, then Helm. Air-gap prepare details live in rhdh-operator — do not paste them here.
+`local-run.sh` refuses disconnected jobs unless `oc` is logged into OpenShift. It passes `DISCONNECTED=true` and `LOCAL_DISCONNECTED=1`; the runner writes the mirror CA under `${SHARED_DIR}/disconnected-mirror/` and keeps the merged pull secret in a private container-only temporary directory. Prefer Operator first when validating `OCP_INTERNAL`, then Helm. Air-gap prepare details live in rhdh-operator — do not paste them here.
 
 **Parameters:**
 - `-j / --job`: The **full Prow CI job name** extracted from the Prow URL. The `openshift-ci-tests.sh` handler uses bash glob patterns (like `*ocp*helm*nightly*`) to match, so the full name works correctly. Example: `periodic-ci-redhat-developer-rhdh-main-e2e-ocp-v4-20-helm-nightly`
