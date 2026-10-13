@@ -92,6 +92,9 @@ raw fields. See
 and
 [cross-step data requirements](https://docs.ci.openshift.org/architecture/step-registry/#sharing-data-between-steps).
 
+Secret names, entry points, and handling rules are collected in
+[Managing E2E Secrets](../../docs/e2e-tests/managing-e2e-secrets.md).
+
 ## Debugging
 
 Any RHDH team member can use the
@@ -100,12 +103,11 @@ ephemeral cluster claimed by a CI job for investigation.
 
 ### Prerequisites
 
-- `bw`, `oc`, `curl`, and `node` CLIs installed
-- E2E dependencies installed with `yarn install` in `e2e-tests`; this provides the pinned
-  `rhdh-e2e-secrets` CLI
+- `bw`, `oc`, `curl`, and `node` CLIs installed, E2E dependencies installed, and an unlocked
+  Bitwarden session — see
+  [Managing E2E Secrets](../../docs/e2e-tests/managing-e2e-secrets.md#running-with-secrets)
 - Access to the `ephemeral_cluster/` items in the Bitwarden `rhdh-qe` collection (request access in
   [#rhdh-e2e-tests](https://redhat-internal.slack.com/archives/rhdh-e2e-tests) if needed)
-- An unlocked Bitwarden session: `export BW_SESSION=$(bw unlock --raw)`
 - For **PR-triggered jobs**: add `[debug]` to your PR title to enable the HTPasswd identity
   provider, then re-trigger the job with `/test e2e-ocp-helm`
 

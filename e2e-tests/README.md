@@ -56,8 +56,8 @@ Before running, ensure you have:
 
 1. **Podman** installed and running with at least **8GB RAM** and **4 CPUs**
 2. **oc CLI** installed and logged into your OpenShift cluster (`oc login`)
-3. **Bitwarden CLI** installed and access to the `rhdh-qe` collection
-4. E2E dependencies installed with `yarn install` (includes the pinned `rhdh-e2e-secrets` CLI)
+3. **Bitwarden CLI** installed, with access to the `rhdh-qe` collection and an unlocked session — see [Managing E2E Secrets](../docs/e2e-tests/managing-e2e-secrets.md)
+4. E2E dependencies installed with `yarn install`
 5. **jq** installed (for JSON parsing)
 
 #### Installing Prerequisites (macOS)
@@ -75,21 +75,9 @@ podman machine start
 
 Install `podman`, `oc`, `kubectl`, `bw`, `jq`, `rsync`, and `curl` using your distribution's package manager.
 
-Unlock Bitwarden before using either local runner:
-
-```bash
-export BW_SESSION=$(bw unlock --raw)
-```
-
-The scripts use the pinned `node_modules/.bin/rhdh-e2e-secrets` by default. Set
-`RHDH_E2E_SECRETS_BIN` only when explicitly testing a different CLI build.
-
-`local-run.sh` retrieves and validates the Bitwarden profile before creating cluster
-resources. Only one invocation may run per checkout because the work copy and log
-are shared. Concurrent invocations fail immediately. The lock is removed on normal
-exit; after an uncatchable termination, confirm the previous runner has stopped
-before removing its `e2e-tests/.local-test/run.lock/output` FIFO, then remove the
-empty `e2e-tests/.local-test/run.lock` directory with `rmdir`.
+Both local runners load secrets from Bitwarden. Unlocking, the secret names, recovery from
+failed checks, and the single-run lock are described in
+[Managing E2E Secrets](../docs/e2e-tests/managing-e2e-secrets.md).
 
 ### Getting a Cluster
 
@@ -205,9 +193,14 @@ The container will deploy RHDH and exit. You'll see next steps printed in the te
 ```bash
 cd e2e-tests
 yarn install
-BASE_URL=https://your-showcase-url \
+BASE_URL=https://your-showcase-url NAME_SPACE=showcase \
   ./local-test.sh -- --project=showcase --headed
 ```
+
+`local-test.sh` requires the namespace variable of the selected project (`NAME_SPACE`,
+`NAME_SPACE_RBAC`, or `NAME_SPACE_RUNTIME`); the commands below assume it is exported.
+`showcase-runtime` needs further caller-provided values on the host — see
+[Running with Secrets](../docs/e2e-tests/managing-e2e-secrets.md#running-with-secrets).
 
 #### Useful Playwright Commands
 
@@ -522,7 +515,8 @@ Run `oc login` before `local-run.sh`. For cluster-aware host tests, explicitly s
 
 #### Error: BW_SESSION is required
 
-Unlock Bitwarden and export the returned session: `export BW_SESSION=$(bw unlock --raw)`.
+Unlock Bitwarden and export the returned session; see
+[Early Bitwarden Checks and Recovery](../docs/e2e-tests/managing-e2e-secrets.md#early-bitwarden-checks-and-recovery).
 
 #### Error: Image does not exist
 

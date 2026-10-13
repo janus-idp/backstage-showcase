@@ -149,7 +149,7 @@ are prepared correctly:
 
 ```bash
 cd e2e-tests
-export BW_SESSION=$(bw unlock --raw)
+BW_SESSION="$(env -u BW_CLEANEXIT bw unlock --raw)" && export BW_SESSION
 BASE_URL=https://deployed-rhdh.example.com NAME_SPACE=showcase ./local-test.sh -- --project=showcase --headed
 ```
 
@@ -157,6 +157,11 @@ Set `NAME_SPACE_RBAC` for RBAC projects and `NAME_SPACE_RUNTIME` for the runtime
 corresponding deployed namespace. Caller-supplied namespaces and cluster connection values
 are preserved. Host and container runs both download the current public AWS RDS CA bundle;
 a failed download never falls back to a stored bundle.
+
+Secret names, both Bitwarden profiles, recovery from failed checks, and creating or rotating
+secrets are documented in `docs/e2e-tests/managing-e2e-secrets.md`; generic CLI usage lives in the
+[upstream Secrets API](https://redhat-developer.github.io/rhdh-e2e-test-utils/api/secrets.html).
+Read that guide before changing a local runner or adding a secret.
 
 Package aliases for CI or an already prepared environment:
 
@@ -233,7 +238,7 @@ from the separate ephemeral-cluster profile.
 Keep runtime secret files outside `SHARED_DIR` (flat cross-step state) and `ARTIFACT_DIR`
 (public artifacts). The host adapter removes its private certificate directory after the
 test process exits; container secrets retain their tmpfs lifecycle. Keep tracing disabled for secret-bearing
-commands. Store each GSM credential as a separate raw field for Prow censoring, as documented
+commands, and keep secret values out of process arguments and container environment flags. Store each GSM credential as a separate raw field for Prow censoring, as documented
 in [OpenShift CI secret protection guidance](https://docs.ci.openshift.org/how-tos/adding-a-new-secret-to-ci-gsm/#protecting-secrets-from-leaking).
 
 ### Test Configuration
