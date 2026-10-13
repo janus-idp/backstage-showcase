@@ -1,5 +1,13 @@
 import { spawnSync } from "node:child_process";
-import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -31,14 +39,18 @@ afterEach(() => {
   rmSync(root, { recursive: true, force: true });
 });
 
-function upload(env: Record<string, string>) {
+/**
+ * Sources testing.sh and runs the upload. `prelude` runs first, so a test can
+ * replace commands such as curl with shell functions.
+ */
+function upload(env: Record<string, string>, prelude = "") {
   const result = spawnSync(
     "/bin/bash",
     [
       "--noprofile",
       "--norc",
       "-euc",
-      'source "$DIR/lib/testing.sh"; testing::_upload_e2e_coverage "$ROOT/lcov.info"',
+      `${prelude}\nsource "$DIR/lib/testing.sh"; testing::_upload_e2e_coverage "$ROOT/lcov.info"`,
     ],
     {
       env: {
@@ -56,63 +68,110 @@ function upload(env: Record<string, string>) {
     },
   );
   const argvFile = join(root, "argv");
-  const argv = existsSync(argvFile) ? readFileSync(argvFile, "utf8").trim().split("\n") : null;
-  return { ...result, argv };
-}
-
-function flag(argv: string[], name: string): string | undefined {
-  const index = argv.indexOf(name);
-  return index === -1 ? undefined : argv[index + 1];
+  // Empty when the CLI was never invoked.
+  const argv = existsSync(argvFile) ? readFileSync(argvFile, "utf8").trim().split("\n") : [];
+  return { ...result, argv, output: result.stdout + result.stderr };
 }
 
 describe("testing::_upload_e2e_coverage", () => {
   it("uploads to the PR head commit Prow reports, not the merge commit", () => {
     const { status, argv } = upload({ CODECOV_TOKEN: "token", ...PR_RUN });
     expect(status).toBe(0);
-    expect(argv).not.toBeNull();
-    expect(flag(argv!, "--sha")).toBe(PR_HEAD);
-    expect(flag(argv!, "--pr")).toBe("4321");
-    expect(flag(argv!, "--flag")).toBe("rhdh-e2e-frontend");
-    expect(flag(argv!, "--file")).toBe(join(root, "lcov.info"));
+    expect(argv).toEqual([
+      "upload-process",
+      "--file",
+      join(root, "lcov.info"),
+      "--flag",
+      "rhdh-e2e-frontend",
+      "--slug",
+      "redhat-developer/rhdh",
+      "--sha",
+      PR_HEAD,
+      "--pr",
+      "4321",
+      "--fail-on-error",
+    ]);
   });
 
   it("hands the token to the CLI through the environment, never its arguments", () => {
     const { argv } = upload({ CODECOV_TOKEN: "s3cr3t-token", ...PR_RUN });
-    expect(argv).not.toBeNull();
-    expect(argv!.join(" ")).not.toContain("s3cr3t-token");
-    expect(argv).not.toContain("--token");
+    expect(argv).toContain("upload-process");
+    expect(argv.join(" ")).not.toContain("s3cr3t-token");
     expect(readFileSync(join(root, "token"), "utf8")).toBe("s3cr3t-token");
+  });
+
+  it("accepts a tag whose sha prefix git lengthened past 8 characters", () => {
+    const { argv } = upload({
+      CODECOV_TOKEN: "token",
+      ...PR_RUN,
+      TAG_NAME: `pr-4321-${PR_HEAD.slice(0, 11)}`,
+    });
+    expect(argv).toContain(PR_HEAD);
   });
 
   it.each([
     ["a CI-only PR that deployed `next`", { ...PR_RUN, TAG_NAME: "next" }],
     ["a tag built from another commit", { ...PR_RUN, TAG_NAME: "pr-4321-ffffffff" }],
+    ["a tag for another PR", { ...PR_RUN, TAG_NAME: `pr-1-${PR_HEAD.slice(0, 8)}` }],
+    ["a tag too short to identify a commit", { ...PR_RUN, TAG_NAME: "pr-4321-0123" }],
     // Rehearsals: PULL_* describe the openshift/release PR, the image is not an rhdh PR's.
     ["a rehearsal", { PULL_PULL_SHA: "a".repeat(40), PULL_NUMBER: "70001", TAG_NAME: "next" }],
     ["no PR at all (periodic)", { TAG_NAME: "next" }],
-    ["a malformed sha", { ...PR_RUN, PULL_PULL_SHA: "HEAD" }],
+    // Each malformed value comes with a tag that would otherwise match it, so only
+    // the format check can reject it.
+    [
+      "a malformed sha",
+      { PULL_PULL_SHA: "not-a-hex-sha", PULL_NUMBER: "4321", TAG_NAME: "pr-4321-not-a-hex" },
+    ],
     [
       "a non-numeric PR",
       { ...PR_RUN, PULL_NUMBER: "abc", TAG_NAME: `pr-abc-${PR_HEAD.slice(0, 8)}` },
     ],
   ])("skips the upload, without failing, for %s", (_, env) => {
-    const { status, argv, stdout, stderr } = upload({ CODECOV_TOKEN: "token", ...env });
+    const { status, argv, output } = upload({ CODECOV_TOKEN: "token", ...env });
     expect(status).toBe(0);
-    expect(argv).toBeNull();
-    expect(stdout + stderr).toContain("did not test a PR image");
+    expect(argv).toEqual([]);
+    expect(output).toContain("did not test a PR image");
   });
 
   it("skips the upload when no token is mounted", () => {
-    const { status, argv, stdout, stderr } = upload({ ...PR_RUN });
+    const { status, argv, output } = upload({ ...PR_RUN });
     expect(status).toBe(0);
-    expect(argv).toBeNull();
-    expect(stdout + stderr).toContain("CODECOV_TOKEN not set");
+    expect(argv).toEqual([]);
+    expect(output).toContain("CODECOV_TOKEN not set");
   });
 
   it("does not fail the job when the upload itself fails", () => {
     writeFileSync(join(root, "codecov"), "#!/bin/bash\nexit 1\n");
-    const { status, stdout, stderr } = upload({ CODECOV_TOKEN: "token", ...PR_RUN });
+    const { status, output } = upload({ CODECOV_TOKEN: "token", ...PR_RUN });
     expect(status).toBe(0);
-    expect(stdout + stderr).toContain("upload failed (non-fatal)");
+    expect(output).toContain("upload failed (non-fatal)");
+  });
+});
+
+describe("testing::_codecov_cli download", () => {
+  // A fresh directory, so the CLI is not already there and has to be fetched.
+  function downloadTarget() {
+    const directory = join(root, "download");
+    mkdirSync(directory);
+    return join(directory, "codecov");
+  }
+
+  it.each([
+    ["the download fails", "curl() { return 22; }"],
+    [
+      "the checksum does not match",
+      'curl() { printf fake > "${@: -2:1}"; }\nsha256sum() { return 1; }',
+    ],
+  ])("skips the upload, leaves nothing behind, when %s", (_, prelude) => {
+    const target = downloadTarget();
+    const { status, output } = upload(
+      { CODECOV_TOKEN: "token", ...PR_RUN, CODECOV_BIN: target },
+      prelude,
+    );
+    expect(status).toBe(0);
+    expect(output).toContain("Could not fetch a checksum-verified Codecov CLI");
+    expect(existsSync(target)).toBe(false);
+    expect(existsSync(`${target}.SHA256SUM`)).toBe(false);
   });
 });

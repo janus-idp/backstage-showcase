@@ -159,17 +159,39 @@ testing::run_tests() {
 }
 
 # RHIDP-13242: The PR head an E2E coverage upload belongs to, as "<sha> <pr>".
-# Prints nothing unless this run tested the PR's own image (TAG_NAME
-# pr-<number>-<sha8>, set by the Prow step for presubmits). That excludes runs whose
-# coverage does not describe the PR head: CI- or docs-only PRs that deploy `next`,
-# Gangway re-runs with an overridden tag, and rehearsals, whose PULL_* variables
-# describe the openshift/release PR. The checkout's own HEAD is never used: it is a
-# local merge of the PR onto its base that GitHub has never seen.
+# Prints nothing unless this run tested the PR's own image: the Prow step tags it
+# pr-<number>-<sha prefix>, with `git rev-parse --short=8`, which returns more than 8
+# characters when 8 are ambiguous. That excludes runs whose coverage does not describe
+# the PR head: CI- or docs-only PRs that deploy `next`, Gangway re-runs with an
+# overridden tag, and rehearsals, whose PULL_* variables describe the
+# openshift/release PR. The checkout's own HEAD is never used: it is a local merge of
+# the PR onto its base that GitHub has never seen.
 testing::_coverage_pr_head() {
   local sha="${PULL_PULL_SHA:-}" pr="${PULL_NUMBER:-}"
   [[ "${sha}" =~ ^[0-9a-f]{40}$ && "${pr}" =~ ^[0-9]+$ ]] || return 0
-  [[ "${TAG_NAME:-}" == "pr-${pr}-${sha:0:8}" ]] || return 0
+  local tag_sha="${TAG_NAME:-}"
+  tag_sha="${tag_sha#"pr-${pr}-"}"
+  [[ "${TAG_NAME:-}" == "pr-${pr}-${tag_sha}" && ${#tag_sha} -ge 8 && "${sha}" == "${tag_sha}"* ]] || return 0
   echo "${sha} ${pr}"
+}
+
+# RHIDP-13242: Prints the path of a checksum-verified Codecov CLI, downloading it to
+# CODECOV_BIN (default /tmp/codecov) unless an executable is already there. The unit
+# tests point CODECOV_BIN at a stub. The file must be named `codecov`, because that is
+# the name the published SHA256SUM lists.
+testing::_codecov_cli() {
+  local bin="${CODECOV_BIN:-/tmp/codecov}" url="https://cli.codecov.io/latest/linux/codecov"
+  if [[ ! -x "${bin}" ]]; then
+    if ! curl -fsSL --retry 3 -o "${bin}" "${url}" \
+      || ! curl -fsSL --retry 3 -o "${bin}.SHA256SUM" "${url}.SHA256SUM" \
+      || ! (cd "$(dirname "${bin}")" && sha256sum --check --strict codecov.SHA256SUM >&2); then
+      rm -f "${bin}" "${bin}.SHA256SUM"
+      return 1
+    fi
+    rm -f "${bin}.SHA256SUM"
+    chmod +x "${bin}"
+  fi
+  echo "${bin}"
 }
 
 # RHIDP-13242: Upload the merged E2E lcov to Codecov under the rhdh-e2e-frontend
@@ -183,30 +205,16 @@ testing::_upload_e2e_coverage() {
     log::info "CODECOV_TOKEN not set — skipping Codecov upload. Coverage report saved as artifact."
     return 0
   fi
-  local head sha pr
+  local head sha pr codecov_bin
   head=$(testing::_coverage_pr_head)
   if [[ -z "${head}" ]]; then
     log::info "Run did not test a PR image (TAG_NAME=${TAG_NAME:-unset}) — skipping Codecov upload"
     return 0
   fi
   read -r sha pr <<< "${head}"
-
-  # CODECOV_BIN replaces the download with a given CLI (the unit tests use a stub).
-  local codecov_bin="${CODECOV_BIN:-}"
-  if [[ -z "${codecov_bin}" ]]; then
-    codecov_bin="/tmp/codecov"
-    if [[ ! -x "${codecov_bin}" ]]; then
-      curl -sL -o "${codecov_bin}" https://cli.codecov.io/latest/linux/codecov
-      curl -sL -o "${codecov_bin}.SHA256SUM" https://cli.codecov.io/latest/linux/codecov.SHA256SUM
-      if (cd /tmp && sha256sum --check --strict codecov.SHA256SUM); then
-        rm -f "${codecov_bin}.SHA256SUM"
-        chmod +x "${codecov_bin}"
-      else
-        log::warn "Codecov CLI checksum verification failed — skipping upload"
-        rm -f "${codecov_bin}" "${codecov_bin}.SHA256SUM"
-        return 0
-      fi
-    fi
+  if ! codecov_bin=$(testing::_codecov_cli); then
+    log::warn "Could not fetch a checksum-verified Codecov CLI — skipping upload"
+    return 0
   fi
 
   log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."

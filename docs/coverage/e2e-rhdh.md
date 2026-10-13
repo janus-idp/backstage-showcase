@@ -145,7 +145,7 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 - The upload is attributed to the PR head (`PULL_PULL_SHA`) with `--pr`, never to the
   checkout's HEAD, which is a local merge of the PR onto its base that GitHub has never
   seen. It runs only when the job tested the PR's own image (`TAG_NAME` is
-  `pr-<number>-<sha8>`), so CI- or docs-only PRs (which deploy `next`), Gangway
+  `pr-<number>-<head sha prefix>`), so CI- or docs-only PRs (which deploy `next`), Gangway
   re-runs with an overridden tag, and openshift/release rehearsals collect coverage
   as an artifact but upload nothing.
 - Coverage is reporting, not a gate: a failed collection, report or upload logs a
@@ -163,7 +163,7 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 | `COVERAGE_OUTPUT_DIR` | `<cwd>/coverage/e2e-raw` | Where per-test raw V8 coverage is written |
 | `COVERAGE_REPORT_DIR` | `<cwd>/coverage/e2e` | Where the merged Istanbul report is written |
 | `CODECOV_TOKEN` | (unset) | Codecov upload token; CI reads it from `/tmp/secrets/CODECOV_TOKEN`. Without it the upload is skipped |
-| `CODECOV_BIN` | (unset) | Use this Codecov CLI instead of downloading one (the unit tests point it at a stub) |
+| `CODECOV_BIN` | `/tmp/codecov` | Where the Codecov CLI lives. Used as-is when already executable (the unit tests point it at a stub), otherwise downloaded there and checksum-verified |
 | `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter will wait for `monocart.CoverageReport.generate()` before aborting. Prevents a CI job from hanging if coverage aggregation stalls |
 
 Raw coverage file names include the spec title path, worker index, and retry
