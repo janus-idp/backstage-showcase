@@ -1,11 +1,4 @@
 export interface Config {
-  /**
-   * Sign-in providers rendered by the app-auth plugin. The frontend cannot
-   * read auth.providers, so the local E2E harness selects guest explicitly.
-   * @visibility frontend
-   */
-  signInPage?: string | string[];
-
   /** Configurations for the backstage(janus) instance */
   developerHub?: {
     /**
