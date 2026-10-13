@@ -88,7 +88,7 @@ jobs:
           catalog_index_image: ${{ inputs.catalog_index_image }}
 
       - name: Populate dynamic-plugins-root (OCI)
-        # populate.sh resolves {{inherit}} against the catalog index DPDY, then
+        # populate.sh resolves ref:// against the catalog index DPDY, then
         # installs the harness plugin set from quay.io.
         env:
           CATALOG_INDEX_IMAGE: ${{ steps.index.outputs.image }}

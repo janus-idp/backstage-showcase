@@ -102,6 +102,7 @@ export default defineConfig({
         "**/playwright/e2e/auth-providers/**/*.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-rds.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-azure-db.spec.ts",
+        "**/playwright/e2e/external-database/verify-tls-config-with-external-cloudsql.spec.ts",
         "**/playwright/e2e/plugin-division-mode-schema/*.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/fips-compliance.spec.ts",
@@ -145,6 +146,7 @@ export default defineConfig({
         "**/playwright/e2e/external-database/verify-tls-config-with-external-rds.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-azure-db.spec.ts",
         "**/playwright/e2e/fips-compliance.spec.ts",
+        "**/playwright/e2e/external-database/verify-tls-config-with-external-cloudsql.spec.ts",
       ],
       retries: 1,
     },
@@ -165,6 +167,7 @@ export default defineConfig({
         "**/playwright/e2e/audit-log/**/*.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-rds.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-azure-db.spec.ts",
+        "**/playwright/e2e/external-database/verify-tls-config-with-external-cloudsql.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/github-happy-path.spec.ts",
         "**/playwright/e2e/plugin-division-mode-schema/*.spec.ts",
@@ -191,6 +194,7 @@ export default defineConfig({
         "**/playwright/e2e/audit-log/**/*.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-rds.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-azure-db.spec.ts",
+        "**/playwright/e2e/external-database/verify-tls-config-with-external-cloudsql.spec.ts",
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/github-happy-path.spec.ts",
         "**/playwright/e2e/plugin-division-mode-schema/*.spec.ts",
@@ -205,12 +209,15 @@ export default defineConfig({
     {
       name: PW_PROJECT.SHOWCASE_RUNTIME,
       workers: 1,
+      // Transport retries are bounded in the helpers; avoid replaying full deployments.
+      retries: 0,
       timeout: 10 * 60 * 1000,
       testMatch: [
         "**/playwright/e2e/configuration-test/config-map.spec.ts",
         "**/playwright/e2e/plugin-division-mode-schema/verify-schema-mode.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-rds.spec.ts",
         "**/playwright/e2e/external-database/verify-tls-config-with-external-azure-db.spec.ts",
+        "**/playwright/e2e/external-database/verify-tls-config-with-external-cloudsql.spec.ts",
       ],
     },
 

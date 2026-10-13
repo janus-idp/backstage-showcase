@@ -64,13 +64,49 @@ export async function waitForBackstageCrd(
   throw new Error(`Backstage CRD not available after ${timeoutMs}ms`);
 }
 
+const transportFailures = new Set(["ESOCKETTIMEDOUT", "ETIMEDOUT", "ECONNRESET"]);
+
+/**
+ * Bound each API request and retry idempotent reads on transport failures: a stalled
+ * connection otherwise hangs a poll loop indefinitely. Writes are never replayed.
+ */
+function withRequestTimeout<T extends k8s.CoreV1Api | k8s.AppsV1Api | k8s.CustomObjectsApi>(
+  api: T,
+  timeoutMs: number,
+): T {
+  api.addInterceptor((options) => {
+    options.timeout = timeoutMs;
+  });
+  return new Proxy(api, {
+    get(target, property, receiver) {
+      const value: unknown = Reflect.get(target, property, receiver);
+      if (typeof value !== "function" || typeof property !== "string") return value;
+      if (!/^(?:read|list|get)/u.test(property)) return value;
+      return async (...args: unknown[]): Promise<unknown> => {
+        for (let attempt = 1; ; attempt++) {
+          try {
+            const result: unknown = await Reflect.apply(value, target, args);
+            return result;
+          } catch (error) {
+            const code: unknown =
+              typeof error === "object" && error !== null ? Reflect.get(error, "code") : undefined;
+            if (attempt >= 3 || typeof code !== "string" || !transportFailures.has(code))
+              throw error;
+            console.log(`Kubernetes ${property} failed with ${code}; retrying (${attempt}/3)`);
+          }
+        }
+      };
+    },
+  });
+}
+
 export class KubeClient {
   coreV1Api: k8s.CoreV1Api;
   appsApi: k8s.AppsV1Api;
   customObjectsApi: k8s.CustomObjectsApi;
   kc: k8s.KubeConfig;
 
-  constructor() {
+  constructor(requestTimeoutMs?: number) {
     try {
       this.kc = new k8s.KubeConfig();
       this.kc.loadFromOptions({
@@ -100,6 +136,11 @@ export class KubeClient {
       this.appsApi = this.kc.makeApiClient(k8s.AppsV1Api);
       this.coreV1Api = this.kc.makeApiClient(k8s.CoreV1Api);
       this.customObjectsApi = this.kc.makeApiClient(k8s.CustomObjectsApi);
+      if (requestTimeoutMs !== undefined) {
+        this.appsApi = withRequestTimeout(this.appsApi, requestTimeoutMs);
+        this.coreV1Api = withRequestTimeout(this.coreV1Api, requestTimeoutMs);
+        this.customObjectsApi = withRequestTimeout(this.customObjectsApi, requestTimeoutMs);
+      }
     } catch (e) {
       console.log(`Error initializing KubeClient: ${getKubeApiErrorMessage(e)}`);
       throw e;

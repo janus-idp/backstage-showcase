@@ -32,3 +32,11 @@ export const PW_PROJECT = projectsJson as {
   readonly SHOWCASE_LOCALIZATION_IT: string;
   readonly SHOWCASE_LOCALIZATION_JA: string;
 };
+
+/** CI selects projects explicitly; support both accepted CLI forms. */
+export function isProjectSelected(name: string, args = process.argv): boolean {
+  return args.some(
+    (arg, index) =>
+      arg === `--project=${name}` || (arg === "--project" && args[index + 1] === name),
+  );
+}
