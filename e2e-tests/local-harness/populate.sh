@@ -12,7 +12,7 @@
 # harness set in e2e-tests/local-harness/dynamic-plugins.yaml). The plugin sanity
 # check drives this hook through populate-catalog-index.sh.
 #
-# {{inherit}} tags resolve against the full dynamic-plugins.default.yaml — by
+# ref:// references resolve against the full dynamic-plugins.default.yaml — by
 # default the repo-root file (same as Helm/CI `includes: dynamic-plugins.default.yaml`).
 # Set CATALOG_INDEX_IMAGE to extract the full catalog DPDY from a catalog-index
 # OCI image instead (same technique as production CATALOG_INDEX_IMAGE).
