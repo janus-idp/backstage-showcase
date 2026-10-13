@@ -4,10 +4,13 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RUNNER_IMAGE="${RUNNER_IMAGE:-quay.io/rhdh-community/rhdh-e2e-runner:main}"
 RUN_CONFIG_FILE="$SCRIPT_DIR/.local-test/run-config.env"
+SECRET_PROFILE="$SCRIPT_DIR/e2e-secrets.profile.json"
 
 # Source logging library
 # shellcheck source=../.ci/pipelines/lib/log.sh
 source "$SCRIPT_DIR/../.ci/pipelines/lib/log.sh"
+# shellcheck source=e2e-tests/local-secrets.sh
+source "$SCRIPT_DIR/local-secrets.sh"
 
 # ========== CLI Flags ==========
 show_help() {
@@ -38,17 +41,20 @@ Examples:
   # Deploy downstream RHEL 9 next image on OCP, skip tests
   ./local-run.sh --repo rhdh/rhdh-hub-rhel9 --tag next --skip-tests
 
-  # Test a PR image on OCP
-  ./local-run.sh --pr 4023 --skip-tests
+  # Deploy and test a PR image on OCP
+  ./local-run.sh -j pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm --pr 4023
+
+  # Deploy a PR image for host-side debugging
+  ./local-run.sh -j pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm --pr 4023 --skip-tests
 
   # Run on AKS
-  ./local-run.sh -j periodic-ci-aks-helm-nightly -r rhdh/rhdh-hub-rhel9 -t next -s
+  ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-aks-helm-nightly -r rhdh/rhdh-hub-rhel10 -t next -s
 
   # Run on EKS
-  ./local-run.sh -j periodic-ci-eks-helm-nightly -r rhdh/rhdh-hub-rhel9 -t next -s
+  ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-eks-helm-nightly -r rhdh/rhdh-hub-rhel10 -t next -s
 
   # Run on GKE
-  ./local-run.sh -j periodic-ci-gke-helm-nightly -r rhdh/rhdh-hub-rhel9 -t next -s
+  ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-gke-helm-nightly -r rhdh/rhdh-hub-rhel10 -t next -s
 
   # Disconnected OCP (requires a real OpenShift cluster; uses internal image registry)
   ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-ocp-disconnected-operator-nightly -r rhdh-community/rhdh -t next -s
@@ -104,13 +110,54 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+# The work copy and log are shared by this checkout. mkdir is an atomic lock
+# on macOS and Linux; never remove another invocation's lock automatically.
+RUN_LOCK_DIR="$SCRIPT_DIR/.local-test/run.lock"
+mkdir -p "$SCRIPT_DIR/.local-test"
+if ! mkdir "$RUN_LOCK_DIR" 2> /dev/null; then
+  log::error "Another local run owns $RUN_LOCK_DIR. Concurrent runs are not supported."
+  log::info "If a previous run was killed, confirm it has stopped before removing this lock directory."
+  exit 1
+fi
+LOG_PID=''
+local_run::cleanup() {
+  rm -f "$RUN_LOCK_DIR/output"
+  rmdir "$RUN_LOCK_DIR"
+}
+local_run::interrupt() {
+  local exit_code=$1 pid runner_signalled=false
+  trap '' INT TERM HUP
+  # Ask bash for its jobs instead of reading a PID variable: a job exists from
+  # the moment it is forked, before the following line can record $!.
+  for pid in $(jobs -p); do
+    [[ "$pid" == "$LOG_PID" ]] && continue
+    # Background shells can inherit ignored SIGINT; use SIGTERM to stop the
+    # wrapped runner while preserving the caller's signal in our exit code.
+    kill -TERM "$pid" 2> /dev/null || true
+    wait "$pid" 2> /dev/null || true
+    runner_signalled=true
+  done
+  if [[ -n "$LOG_PID" ]]; then
+    # Without a runner the FIFO reader is still waiting for a writer.
+    if [[ "$runner_signalled" == false ]]; then
+      kill "$LOG_PID" 2> /dev/null || true
+    fi
+    wait "$LOG_PID" 2> /dev/null || true
+  fi
+  exit "$exit_code"
+}
+trap local_run::cleanup EXIT
+trap 'local_run::interrupt 130' INT
+trap 'local_run::interrupt 143' TERM
+trap 'local_run::interrupt 129' HUP
+
 # ========== Prerequisites Check ==========
 PREREQ_FAILED=false
 MISSING_CMDS=""
 
 # Check required binaries
 # Note: kubectl is needed for AKS/EKS, oc is needed for OCP
-for cmd in podman oc kubectl vault jq curl rsync; do
+for cmd in podman oc kubectl node jq curl rsync; do
   if ! command -v "$cmd" &> /dev/null; then
     MISSING_CMDS="$MISSING_CMDS $cmd"
     PREREQ_FAILED=true
@@ -156,7 +203,7 @@ if [[ -n "$MISSING_CMDS" ]]; then
   if [[ "$HOST_OS" == "Darwin" ]]; then
     log::info "    brew install podman jq rsync openshift-cli kubernetes-cli"
     log::info "    (bc is pre-installed on macOS, install via 'brew install bc' if missing)"
-    log::info "    brew tap hashicorp/tap && brew install hashicorp/tap/vault"
+    log::info "    brew install node"
   else
     log::info "    Install the missing tools using your package manager"
   fi
@@ -165,6 +212,7 @@ fi
 if [[ "$PREREQ_FAILED" == "true" ]]; then
   exit 1
 fi
+local_secrets::preflight "$SCRIPT_DIR" "$SECRET_PROFILE" || exit 1
 
 # ========== Interactive Configuration ==========
 log::section "RHDH Local Test Runner"
@@ -435,7 +483,7 @@ fi
 # Pull runner image (always attempt; fall back to local copy if pull fails)
 log::section "Pulling runner container image"
 if ! podman pull "$RUNNER_IMAGE"; then
-  if podman image exists "$RUNNER_IMAGE" 2>/dev/null; then
+  if podman image exists "$RUNNER_IMAGE" 2> /dev/null; then
     log::info "Pull failed but image exists locally: $RUNNER_IMAGE"
   else
     log::error "Failed to pull image and no local copy: $RUNNER_IMAGE"
@@ -443,87 +491,8 @@ if ! podman pull "$RUNNER_IMAGE"; then
   fi
 fi
 
-export VAULT_ADDR='https://vault.ci.openshift.org'
-
-# Login to vault and capture the token (reuse only if the token can read QE secrets)
-log::section "Vault Login"
-vault_token_usable() {
-  local token=${1:-}
-  [[ -n "$token" ]] || return 1
-  VAULT_TOKEN="$token" vault kv get -mount="kv" "selfservice/rhdh-qe/rhdh" > /dev/null 2>&1
-}
-
-if [[ -n "${VAULT_TOKEN:-}" ]] && vault_token_usable "$VAULT_TOKEN"; then
-  log::info "Using existing VAULT_TOKEN from environment"
-elif existing_token=$(vault print token 2>/dev/null) && vault_token_usable "$existing_token"; then
-  VAULT_TOKEN="$existing_token"
-  log::info "Reusing existing vault token from local vault CLI"
-elif [[ -n "${VAULT_TOKEN:-}" ]] || [[ -n "${existing_token:-}" ]]; then
-  log::warn "Existing vault token cannot read QE secrets; falling back to OIDC login"
-  vault login -no-print -method=oidc
-  VAULT_TOKEN=$(vault print token)
-else
-  vault login -no-print -method=oidc
-  VAULT_TOKEN=$(vault print token)
-fi
-export VAULT_TOKEN
-
-# Set up cluster access based on platform (CONTAINER_PLATFORM already derived above)
-log::section "Setting up cluster access"
-log::info "CONTAINER_PLATFORM: $CONTAINER_PLATFORM"
-
-SA_NAME="rhdh-local-tester"
-SA_NAMESPACE="rhdh-local-test"
-SA_BINDING_NAME="${SA_NAME}-binding"
-
-# Check cluster connectivity and create service account token based on platform
-if [[ "$CONTAINER_PLATFORM" == "ocp" || "$CONTAINER_PLATFORM" == "osd-gcp" ]]; then
-  # OpenShift platforms - use oc commands
-  if ! oc cluster-info &> /dev/null; then
-    log::error "Not logged into OpenShift cluster"
-    log::info "  Run: oc login <cluster-url>"
-    exit 1
-  fi
-  K8S_CLUSTER_URL=$(oc whoami --show-server)
-  oc create namespace "$SA_NAMESPACE" 2> /dev/null || log::info "Namespace already exists"
-  oc create serviceaccount "$SA_NAME" -n "$SA_NAMESPACE" 2> /dev/null || log::info "Service account already exists"
-  oc adm policy add-cluster-role-to-user cluster-admin "system:serviceaccount:${SA_NAMESPACE}:${SA_NAME}" 2> /dev/null || true
-  K8S_CLUSTER_TOKEN=$(oc create token "$SA_NAME" -n "$SA_NAMESPACE" --duration=8h)
-else
-  # Non-OpenShift platforms (AKS, EKS, GKE) - use kubectl commands
-  if ! kubectl cluster-info &> /dev/null; then
-    log::error "Cannot connect to Kubernetes cluster"
-    log::info "  Ensure your kubeconfig is set correctly"
-    log::info "  Run: kubectl cluster-info"
-    exit 1
-  fi
-  K8S_CLUSTER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
-
-  # Create service account and acquire a short-lived token via TokenRequest API
-  kubectl create namespace "$SA_NAMESPACE" 2> /dev/null || log::info "Namespace already exists"
-  kubectl create serviceaccount "$SA_NAME" -n "$SA_NAMESPACE" 2> /dev/null || log::info "Service account already exists"
-  kubectl create clusterrolebinding "$SA_BINDING_NAME" \
-    --clusterrole=cluster-admin \
-    --serviceaccount="${SA_NAMESPACE}:${SA_NAME}" 2> /dev/null || true
-
-  log::info "Creating short-lived token for service account (8h TTL)"
-  K8S_CLUSTER_TOKEN=$(kubectl create token "$SA_NAME" -n "$SA_NAMESPACE" --duration=8h)
-  log::info "Acquired short-lived token for the service account"
-fi
-log::info "K8S_CLUSTER_URL: $K8S_CLUSTER_URL"
-
-# Copy repo to work directory (keeps original repo clean)
-log::section "Copying repo to work directory"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-WORK_DIR="$SCRIPT_DIR/.local-test/rhdh"
-rm -rf "$WORK_DIR"
-mkdir -p "$WORK_DIR"
-rsync -a --exclude='node_modules' --exclude='.local-test' --exclude='playwright-report' --exclude='test-results' "$REPO_ROOT/" "$WORK_DIR/"
-log::info "Work copy created at: $WORK_DIR"
-
-# Run container with vault credentials and OC token
-log::section "Starting Container (rhdh-e2e-runner)"
-log::info "Running container (rhdh-e2e-runner)..."
+# Retrieve and validate the profile before the helper mutates cluster resources.
+log::section "Loading secrets and starting local runner"
 log::info "This will deploy RHDH to your cluster and run tests (if enabled)."
 echo ""
 
@@ -534,33 +503,23 @@ log::info "Container log: $CONTAINER_LOG"
 echo ""
 
 CONTAINER_EXIT_CODE=0
-# no -t: stdout is piped to tee and CI has no TTY
-podman run -v "$WORK_DIR":/tmp/rhdh \
-  -v "$SCRIPT_DIR/container-init.sh":/tmp/container-init.sh:ro \
-  -i -u root --privileged \
-  --mount type=tmpfs,destination=/tmp/secrets \
-  -e VAULT_ADDR="$VAULT_ADDR" \
-  -e VAULT_TOKEN="$VAULT_TOKEN" \
-  -e K8S_CLUSTER_URL="$K8S_CLUSTER_URL" \
-  -e K8S_CLUSTER_TOKEN="$K8S_CLUSTER_TOKEN" \
-  -e CONTAINER_PLATFORM="$CONTAINER_PLATFORM" \
-  -e JOB_NAME="$JOB_NAME" \
-  -e IMAGE_REGISTRY="$IMAGE_REGISTRY" \
-  -e IMAGE_REPO="$IMAGE_REPO" \
-  -e TAG_NAME="$TAG_NAME" \
-  -e POSTGRESQL_IMAGE_REGISTRY="${POSTGRESQL_IMAGE_REGISTRY:-}" \
-  -e POSTGRESQL_IMAGE_REPO="${POSTGRESQL_IMAGE_REPO:-}" \
-  -e POSTGRESQL_IMAGE_TAG="${POSTGRESQL_IMAGE_TAG:-}" \
-  -e SKIP_TESTS="$SKIP_TESTS" \
-  -e DISCONNECTED="$DISCONNECTED" \
-  -e LOCAL_DISCONNECTED="${LOCAL_DISCONNECTED:-}" \
-  "$RUNNER_IMAGE" \
-  /bin/bash /tmp/container-init.sh 2>&1 | tee "$CONTAINER_LOG"
-CONTAINER_EXIT_CODE=${PIPESTATUS[0]}
+export CONTAINER_PLATFORM JOB_NAME IMAGE_REGISTRY IMAGE_REPO TAG_NAME
+export SKIP_TESTS DISCONNECTED LOCAL_DISCONNECTED RUNNER_IMAGE
+# Cancellation signals every background job and waits for it to stop before
+# releasing the checkout lock. Drain the log before reporting the result.
+mkfifo "$RUN_LOCK_DIR/output"
+tee "$CONTAINER_LOG" < "$RUN_LOCK_DIR/output" &
+LOG_PID=$!
+local_secrets::exec_with_stream "$SCRIPT_DIR" "$SECRET_PROFILE" \
+  bash "$SCRIPT_DIR/local-run-container.sh" \
+  > "$RUN_LOCK_DIR/output" 2>&1 &
+wait "$!" || CONTAINER_EXIT_CODE=$?
+wait "$LOG_PID"
+LOG_PID=''
 
 # Container has exited - show next steps
 echo ""
-log::section "Container (rhdh-e2e-runner) Finished - Back on Host"
+log::section "Local Runner Finished - Back on Host"
 log::info "You are now back on your host machine."
 if [[ "$CONTAINER_PLATFORM" == "ocp" || "$CONTAINER_PLATFORM" == "osd-gcp" ]]; then
   log::info "You are still logged into the cluster via 'oc' CLI."
@@ -570,7 +529,7 @@ fi
 echo ""
 
 if [[ "$CONTAINER_EXIT_CODE" -ne 0 ]]; then
-  log::error "Container (rhdh-e2e-runner) exited with error code: $CONTAINER_EXIT_CODE"
+  log::error "Local runner failed during secret loading, cluster setup, or container execution (exit code: $CONTAINER_EXIT_CODE)."
   echo ""
   log::info "Troubleshooting:"
   echo "   - Container log: $CONTAINER_LOG"
@@ -586,34 +545,45 @@ if [[ "$CONTAINER_EXIT_CODE" -ne 0 ]]; then
   exit $CONTAINER_EXIT_CODE
 fi
 
+local_run::print_host_setup() {
+  log::info "Prepare host dependencies, namespaces, and cluster credentials:"
+  echo "   yarn install"
+  echo "   export NAME_SPACE=showcase NAME_SPACE_RBAC=showcase-rbac NAME_SPACE_RUNTIME=showcase-runtime"
+  if [[ "$CONTAINER_PLATFORM" == "ocp" || "$CONTAINER_PLATFORM" == "osd-gcp" ]]; then
+    echo '   K8S_CLUSTER_URL="$(oc whoami --show-server)" && export K8S_CLUSTER_URL'
+    echo '   K8S_CLUSTER_TOKEN="$(oc create token rhdh-local-tester -n rhdh-local-test --duration=8h)" && export K8S_CLUSTER_TOKEN'
+  else
+    echo '   K8S_CLUSTER_URL="$(kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}")" && export K8S_CLUSTER_URL'
+    echo '   K8S_CLUSTER_TOKEN="$(kubectl create token rhdh-local-tester -n rhdh-local-test --duration=8h)" && export K8S_CLUSTER_TOKEN'
+  fi
+  echo ""
+  log::info "Bitwarden prerequisites: ../docs/e2e-tests/managing-e2e-secrets.md"
+  echo ""
+}
+
 if [[ "$SKIP_TESTS" == "true" ]]; then
   log::section "Next Steps: Run Tests Locally (headed mode)"
   echo ""
-  log::info "1. Setup environment variables:"
-  echo "   source local-test-setup.sh           # For Showcase tests"
-  echo "   source local-test-setup.sh rbac      # For RBAC tests"
-  echo ""
-  log::info "2. Install dependencies and run tests:"
-  echo "   yarn install"
-  echo "   yarn playwright test --headed"
-  echo ""
+  local_run::print_host_setup
   log::info "Useful Playwright commands:"
   echo ""
   echo "   # Run all tests for a project"
-  echo "   yarn playwright test --headed --project=showcase"
-  echo "   yarn playwright test --headed --project=showcase-rbac"
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed"
+  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed"
   echo ""
   echo "   # Run a specific test file (use --workers=1 for sequential execution)"
-  echo "   yarn playwright test --headed --project=showcase-rbac --workers=1 playwright/e2e/plugins/rbac/rbac.spec.ts"
-  echo "   yarn playwright test --headed --project=showcase --workers=1 playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts"
+  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed --workers=1 playwright/e2e/audit-log/auditor-rbac.spec.ts"
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed --workers=1 playwright/e2e/guest-signin-happy-path.spec.ts"
   echo ""
   echo "   # Run tests matching a pattern"
-  echo "   yarn playwright test --headed --project=showcase-rbac --workers=1 -g \"guest user\""
-  echo "   yarn playwright test --headed --project=showcase --workers=1 -g \"catalog\""
+  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed --workers=1 -g \"role-read\""
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed --workers=1 -g \"Verify Profile is Guest\""
   echo ""
   echo "   # Interactive UI mode"
-  echo "   yarn playwright test --ui --project=showcase"
-  echo "   yarn playwright test --ui --project=showcase-rbac"
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --ui"
+  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --ui"
+  echo ""
+  log::info "Host reports: npx playwright show-report playwright-report"
   echo ""
 else
   log::section "Tests Completed"
@@ -623,7 +593,16 @@ else
   echo "   npx playwright show-report .local-test/rhdh/.local-test/artifact_dir/showcase"
   echo ""
   log::info "To re-run tests locally (headed mode):"
-  echo "   source local-test-setup.sh"
-  echo "   yarn playwright test --headed"
+  local_run::print_host_setup
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed"
+  echo ""
+fi
+
+if [[ "$JOB_NAME" == pull-ci-*ocp*helm* ]]; then
+  log::info "To reproduce the OCP Helm PR check on the host (CI workers and retries):"
+  echo "   export JOB_NAME=\"$JOB_NAME\" IS_OPENSHIFT=true CONTAINER_PLATFORM=ocp"
+  echo "   CI=true BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase"
+  echo "   CI=true BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac"
+  echo "   # Add --retries=0 when investigating first-attempt failures."
   echo ""
 fi
