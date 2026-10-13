@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SECRET_PROFILE="${SCRIPT_DIR}/../../e2e-tests/ephemeral-cluster-secrets.profile.json"
@@ -124,7 +124,10 @@ fi
 cluster_api="https://api.${namespace}.rhdh-qe.devcluster.openshift.com:6443"
 log::info "Logging in to cluster: $cluster_api"
 
-if ! oc login "$cluster_api" --username "$CLUSTER_ADMIN_USERNAME" --password "$CLUSTER_ADMIN_PASSWORD" --insecure-skip-tls-verify=true; then
+# The password is answered on stdin so it never appears in process arguments.
+if ! oc login "$cluster_api" --username "$CLUSTER_ADMIN_USERNAME" \
+  --insecure-skip-tls-verify=true --request-timeout=30s \
+  < <(printf '%s\n' "$CLUSTER_ADMIN_PASSWORD"); then
   log::error "Login failed. The cluster may be expired or the HTPasswd identity provider is not configured."
   log::info "To enable cluster login for investigation:"
   log::info "  1. Add [debug] to your PR title  →  e.g. 'fix: my change [debug]'"
