@@ -43,10 +43,11 @@ export function defineExternalPostgresTests(provider: ExternalDatabaseProvider):
             await admin.end();
           }
         });
-        // Exercise certificate rejection once per provider rather than on every version slot.
-        if (slot === 1) {
+        // Exercise certificate rejection once per provider: on its first configured slot.
+        const { verifyUntrustedCa } = externalRuntime;
+        if (verifyUntrustedCa !== undefined) {
           await test.step("Reject an unrelated CA in the RHDH database connection", async () => {
-            await externalRuntime.verifyUntrustedCa();
+            await verifyUntrustedCa();
             await waitForRhdhReady(request, 180_000);
           });
         }

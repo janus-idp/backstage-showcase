@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  firstConfiguredExternalDatabaseSlot,
   readExternalDatabaseInputs,
   runtimeDatabasePrefix,
   clearOwnedDatabases,
@@ -32,6 +33,16 @@ describe.each(["rds", "azure"] as const)("%s optional runtime inputs", (provider
         [`${root}_PASSWORD`]: "fake",
       }),
     ).toThrow("CA bundle");
+  });
+  it("assigns the wrong-CA check to the first configured slot", () => {
+    expect(firstConfiguredExternalDatabaseSlot(provider, {})).toBeNull();
+    expect(
+      firstConfiguredExternalDatabaseSlot(provider, {
+        [`${root}_1_HOST`]: " ",
+        [`${root}_3_HOST`]: "three.example.test",
+        [`${root}_4_HOST`]: "four.example.test",
+      }),
+    ).toBe(3);
   });
 });
 

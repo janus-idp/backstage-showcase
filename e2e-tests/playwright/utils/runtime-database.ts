@@ -15,6 +15,23 @@ export interface ExternalDatabaseInputs {
   certificate: string;
 }
 
+function slotHost(
+  provider: ExternalDatabaseProvider,
+  slot: number,
+  env: NodeJS.ProcessEnv,
+): string | null {
+  const host = env[`${provider === "rds" ? "RDS" : "AZURE_DB"}_${slot}_HOST`]?.trim();
+  return host === undefined || host === "" ? null : host;
+}
+
+/** Provider-wide checks run once, on whichever slot is configured first. */
+export function firstConfiguredExternalDatabaseSlot(
+  provider: ExternalDatabaseProvider,
+  env: NodeJS.ProcessEnv = process.env,
+): number | null {
+  return [1, 2, 3, 4].find((slot) => slotHost(provider, slot, env) !== null) ?? null;
+}
+
 export function readExternalDatabaseInputs(
   provider: ExternalDatabaseProvider,
   slot: number,
@@ -22,8 +39,8 @@ export function readExternalDatabaseInputs(
 ): ExternalDatabaseInputs | null {
   if (![1, 2, 3, 4].includes(slot)) throw new Error("External database slot must be 1..4");
   const root = provider === "rds" ? "RDS" : "AZURE_DB";
-  const host = env[`${root}_${slot}_HOST`]?.trim();
-  if (host === undefined || host === "") return null;
+  const host = slotHost(provider, slot, env);
+  if (host === null) return null;
   const user = env[`${root}_USER`];
   const password = env[`${root}_PASSWORD`];
   const caPath =

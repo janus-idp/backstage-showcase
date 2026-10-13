@@ -11,6 +11,7 @@ import {
   clearOwnedDatabases,
   clearSlotDatabases,
   closeDatabaseClients,
+  firstConfiguredExternalDatabaseSlot,
   readExternalDatabaseInputs,
   runtimeDatabasePrefix,
   RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
@@ -36,7 +37,8 @@ interface ExternalRuntime extends RuntimeDeploymentHandle {
   apiToken: string;
   connect(database?: string): Promise<Client>;
   restart(whileStopped?: () => Promise<void>): Promise<void>;
-  verifyUntrustedCa(): Promise<void>;
+  /** Present only on the provider's first configured slot, which owns the check. */
+  verifyUntrustedCa?: () => Promise<void>;
 }
 type Target = { provider: ExternalDatabaseProvider; slot: number };
 
@@ -86,8 +88,10 @@ export const test = base.extend<{
         installMethod: method,
       });
       // Verify local tooling before creating a namespace or touching any database.
-      const untrustedCa =
-        slot === 1 ? await progress.run("preflight-ca", generateUntrustedCaCertificate) : undefined;
+      const checksUntrustedCa = slot === firstConfiguredExternalDatabaseSlot(provider);
+      const untrustedCa = checksUntrustedCa
+        ? await progress.run("preflight-ca", generateUntrustedCaCertificate)
+        : undefined;
       const clients = new Set<Client>();
       let apiToken = "";
       const redact = (text: string) => {
@@ -171,18 +175,20 @@ export const test = base.extend<{
           },
           restart: (whileStopped) =>
             progress.run("restart", () => restartRuntime(kube, config, method, whileStopped)),
-          verifyUntrustedCa: () =>
-            progress.run("reject-ca-and-recover", () =>
-              verifyRuntimeRejectsUntrustedCa(
-                kube,
-                config,
-                method,
-                inputs.certificate,
-                info,
-                redact,
-                untrustedCa,
-              ),
-            ),
+          verifyUntrustedCa: checksUntrustedCa
+            ? () =>
+                progress.run("reject-ca-and-recover", () =>
+                  verifyRuntimeRejectsUntrustedCa(
+                    kube,
+                    config,
+                    method,
+                    inputs.certificate,
+                    info,
+                    redact,
+                    untrustedCa,
+                  ),
+                )
+            : undefined,
         });
         finishTest(info.status === info.expectedStatus);
       } catch (error) {
