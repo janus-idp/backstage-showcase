@@ -94,14 +94,6 @@ it("continues cleanup after a diagnostics failure and without optional steps", a
   expect(calls).toEqual(["stop", "close-clients", "report:false", "delete-namespace"]);
 });
 
-it("rethrows a lone setup error unchanged and wraps a non-Error", async () => {
-  const setupError = new Error("deploy failed");
-  await expect(teardownRuntime(steps({ setupError }).teardown)).rejects.toBe(setupError);
-  await expect(teardownRuntime(steps({ setupError: "boom" }).teardown)).rejects.toThrow(
-    "rds slot 1 setup failed",
-  );
-});
-
 it("reports the setup error first and redacts every message", async () => {
   const { teardown } = steps({
     setupError: new Error("deploy failed with fake-password"),

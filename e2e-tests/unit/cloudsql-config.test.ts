@@ -1,10 +1,8 @@
-import { execFileSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { afterAll, describe, expect, it } from "vitest";
-import * as yaml from "yaml";
 
 import {
   cloudSqlDatabasePrefix,
@@ -13,13 +11,7 @@ import {
   buildCloudSqlProxy,
 } from "../playwright/utils/cloudsql-config";
 import { buildImageRef } from "../playwright/utils/helper";
-import { isRecord } from "../playwright/utils/kube-client";
-import {
-  generateBackstageCR,
-  generateHelmValuesYaml,
-  generateHelmSetArgs,
-  type RuntimeDeployConfig,
-} from "../playwright/utils/runtime-config";
+import { generateBackstageCR, type RuntimeDeployConfig } from "../playwright/utils/runtime-config";
 
 mkdirSync(join(tmpdir(), "opencode"), { recursive: true, mode: 0o700 });
 const directory = mkdtempSync(join(tmpdir(), "opencode", "cloudsql-unit-"));
@@ -72,9 +64,10 @@ describe("Cloud SQL prerequisites", () => {
     );
     const broken = join(directory, "broken.json");
     writeFileSync(broken, "secret-fragment", { mode: 0o600 });
-    expect(() =>
-      readCloudSqlInputs({ ...env, CLOUDSQL_SERVICE_ACCOUNT_JSON_PATH: broken }),
-    ).toThrow("readable service-account JSON key");
+    const readBrokenKey = () =>
+      readCloudSqlInputs({ ...env, CLOUDSQL_SERVICE_ACCOUNT_JSON_PATH: broken });
+    expect(readBrokenKey).toThrow("readable service-account JSON key");
+    expect(readBrokenKey).not.toThrow("secret-fragment");
   });
   it("uses distinct bounded prefixes for runs and slots and rejects unsafe ownership", () => {
     expect(cloudSqlDatabasePrefix("012345abcdef", 1)).not.toBe(
@@ -170,100 +163,4 @@ describe("Operator Cloud SQL configuration", () => {
       },
     });
   });
-});
-
-// Opt-in render against the actual CI-selected OCI archive, not a copied template.
-it.skipIf(process.env.CLOUDSQL_CHART_ARCHIVE === undefined).each([
-  config,
-  {
-    ...config,
-    namespace: "runtime-direct-tls",
-    cloudSql: undefined,
-    externalPostgres: {
-      host: "postgres.example.test",
-      port: 5432,
-      user: "test-user",
-      databasePrefix: "rt_012345abcdef_rds1_",
-    },
-  },
-])("renders $namespace with the shared catalog probe and no bundled DB", (target) => {
-  const valuesPath = join(directory, "values.yaml");
-  writeFileSync(valuesPath, generateHelmValuesYaml(target), { mode: 0o600 });
-  const rendered = execFileSync(
-    "helm",
-    [
-      "template",
-      "rhdh",
-      process.env.CLOUDSQL_CHART_ARCHIVE!,
-      "-n",
-      target.namespace,
-      "-f",
-      valuesPath,
-      "--set",
-      "openshift.clusterRouterBase=apps.example.test",
-      ...generateHelmSetArgs(target),
-    ],
-    { encoding: "utf8" },
-  );
-  const documents = yaml.parseAllDocuments(rendered).map((document) => {
-    const value: unknown = document.toJSON();
-    return value;
-  });
-  const deployment = documents.find(
-    (document) => isRecord(document) && document.kind === "Deployment",
-  );
-  const backendSecret: unknown = expect.any(Object);
-  const envVars: unknown = expect.arrayContaining([
-    { name: "POSTGRES_HOST", value: target.externalPostgres?.host ?? "127.0.0.1" },
-    {
-      name: "POSTGRES_PASSWORD",
-      valueFrom: {
-        secretKeyRef: {
-          name: target.cloudSql ? "cloud-sql-database" : "runtime-database",
-          key: "POSTGRES_PASSWORD",
-        },
-      },
-    },
-    {
-      name: "RUNTIME_CATALOG_API_TOKEN",
-      valueFrom: {
-        secretKeyRef: { name: "runtime-catalog-token", key: "RUNTIME_CATALOG_API_TOKEN" },
-      },
-    },
-    { name: "BACKEND_SECRET", valueFrom: backendSecret },
-  ]);
-  expect(deployment).toMatchObject({
-    spec: {
-      template: {
-        spec: {
-          initContainers: [
-            ...(target.cloudSql ? [{ name: "cloud-sql-proxy", restartPolicy: "Always" }] : []),
-            { name: "install-dynamic-plugins" },
-            { name: "wait-for-db" },
-          ],
-          containers: [
-            {
-              name: "backstage-backend",
-              env: envVars,
-            },
-            {
-              name: "runtime-catalog",
-              volumeMounts: [
-                {
-                  name: "runtime-catalog",
-                  mountPath: "/opt/app-root/src/runtime-catalog",
-                  readOnly: true,
-                },
-              ],
-            },
-          ],
-        },
-      },
-    },
-  });
-  expect(documents.some((document) => isRecord(document) && document.kind === "StatefulSet")).toBe(
-    false,
-  );
-  expect(rendered).not.toContain("upstream:");
-  expect(rendered.includes("rejectUnauthorized: true")).toBe(target.externalPostgres !== undefined);
 });

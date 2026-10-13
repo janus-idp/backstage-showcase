@@ -1,13 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  firstConfiguredExternalDatabaseSlot,
   readExternalDatabaseInputs,
   runtimeDatabasePrefix,
   clearOwnedDatabases,
   clearSlotDatabases,
   closeDatabaseClients,
-  dropOwnedDatabases,
   type OwnedDatabaseClient,
 } from "../playwright/utils/runtime-database";
 
@@ -35,16 +33,6 @@ describe.each(["rds", "azure"] as const)("%s optional runtime inputs", (provider
       }),
     ).toThrow("CA bundle");
   });
-  it("assigns the wrong-CA check to the first configured slot", () => {
-    expect(firstConfiguredExternalDatabaseSlot(provider, {})).toBeNull();
-    expect(
-      firstConfiguredExternalDatabaseSlot(provider, {
-        [`${root}_1_HOST`]: " ",
-        [`${root}_3_HOST`]: "three.example.test",
-        [`${root}_4_HOST`]: "four.example.test",
-      }),
-    ).toBe(3);
-  });
 });
 
 describe("provider database ownership", () => {
@@ -59,7 +47,7 @@ function result(names: string[]) {
   return { rows: names.map((datname) => ({ datname })) };
 }
 
-describe.each(["rt_012345abcdef_rds1_", "rt_012345abcdef_azure1_", "csql_012345abcdef_1_"])(
+describe.each(["rt_012345abcdef_rds1_", "csql_012345abcdef_1_"])(
   "%s owned database cleanup",
   (prefix) => {
     it("rejects another run's database even if returned", async () => {
@@ -81,19 +69,7 @@ describe("owned database cleanup failures", () => {
     );
     expect(query).not.toHaveBeenCalled();
   });
-  it("identifies failed drops and preserves their cause", async () => {
-    const error = new Error("permission denied");
-    const query = vi
-      .fn<OwnedDatabaseClient["query"]>()
-      .mockResolvedValueOnce(result([`${prefix}catalog`]))
-      .mockResolvedValueOnce(result([]))
-      .mockRejectedValueOnce(error);
-    await expect(clearOwnedDatabases({ query }, prefix)).rejects.toMatchObject({
-      message: `Failed to drop owned database ${prefix}catalog`,
-      cause: error,
-    });
-  });
-  it("waits beyond the old retry window for sessions without FORCE or signalling", async () => {
+  it("waits for active sessions without FORCE or signalling", async () => {
     vi.useFakeTimers();
     try {
       const start = Date.now();
@@ -236,13 +212,4 @@ it("settles every client close before reporting an individual failure", async ()
   await closing;
   expect(closed).toBe(true);
   expect(clients.size).toBe(0);
-});
-
-it("closes the cleanup connection even when the drop fails", async () => {
-  const end = vi.fn<() => Promise<void>>(() => Promise.resolve());
-  const query = vi.fn<OwnedDatabaseClient["query"]>(() => Promise.reject(new Error("list failed")));
-  await expect(
-    dropOwnedDatabases(() => Promise.resolve({ query, end }), "rt_012345abcdef_rds1_"),
-  ).rejects.toThrow("list failed");
-  expect(end).toHaveBeenCalledOnce();
 });

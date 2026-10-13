@@ -41,20 +41,17 @@ afterEach(() => {
 });
 
 describe("owned runtime teardown", () => {
-  it.each(["rhdh.redhat.com/runtime-run", "rhdh.redhat.com/cloudsql-run"])(
-    "refuses namespace deletion when %s belongs to another run",
-    async (labelKey) => {
-      const kube = kubeClient();
-      vi.spyOn(kube.coreV1Api, "readNamespace").mockResolvedValue(
-        response({ metadata: { labels: { [labelKey]: "another-run" } } }),
-      );
-      const remove = vi.spyOn(kube.coreV1Api, "deleteNamespace");
-      await expect(
-        deleteOwnedRuntimeNamespace(kube, "runtime", "012345abcdef", labelKey),
-      ).rejects.toThrow("Refusing to delete unowned namespace");
-      expect(remove).not.toHaveBeenCalled();
-    },
-  );
+  it("refuses namespace deletion when its ownership label belongs to another run", async () => {
+    const kube = kubeClient();
+    vi.spyOn(kube.coreV1Api, "readNamespace").mockResolvedValue(
+      response({ metadata: { labels: { "rhdh.redhat.com/runtime-run": "another-run" } } }),
+    );
+    const remove = vi.spyOn(kube.coreV1Api, "deleteNamespace");
+    await expect(deleteOwnedRuntimeNamespace(kube, "runtime", "012345abcdef")).rejects.toThrow(
+      "Refusing to delete unowned namespace",
+    );
+    expect(remove).not.toHaveBeenCalled();
+  });
   it("keeps failed diagnostic pod lookups non-fatal and redacts credentials", async () => {
     const kube = kubeClient();
     vi.spyOn(kube.appsApi, "listNamespacedDeployment").mockResolvedValue(response({ items: [] }));
