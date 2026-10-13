@@ -40,12 +40,18 @@ disconnected::retry_on_local_registry() {
 }
 
 # Bootstrap MIRROR_* for local disconnected runs on a connected OpenShift cluster.
-# Exposes the cluster image registry route and writes auth/CA under
+# Exposes the cluster image registry route and writes the public route CA under
 # ${SHARED_DIR}/disconnected-mirror/ (inside the e2e-runner worktree mount).
+# Registry credentials are written to the private ${DISCONNECTED_TMPDIR}, which
+# stays inside the runner container and is never bind-mounted from the host.
 # Call after oc login when LOCAL_DISCONNECTED=1, before require_env/setup_auth.
 disconnected::setup_local_ocp_mirror() {
   if [[ -z "${SHARED_DIR:-}" ]]; then
-    log::error "SHARED_DIR is unset; cannot write local disconnected mirror credentials"
+    log::error "SHARED_DIR is unset; cannot write the local disconnected mirror CA"
+    return 1
+  fi
+  if [[ -z "${DISCONNECTED_TMPDIR:-}" || ! -d "${DISCONNECTED_TMPDIR}" ]]; then
+    log::error "DISCONNECTED_TMPDIR is not a directory; cannot write local disconnected mirror credentials"
     return 1
   fi
 
@@ -99,8 +105,8 @@ disconnected::setup_local_ocp_mirror() {
   fi
   export MIRROR_REGISTRY_CA="${ca_path}"
 
-  local pull_secret_path="${mirror_dir}/pull-secret.json"
-  local base_json="${mirror_dir}/base-pull-secret.json"
+  local pull_secret_path="${DISCONNECTED_TMPDIR}/pull-secret.json"
+  local base_json="${DISCONNECTED_TMPDIR}/base-pull-secret.json"
   if ! oc get secret pull-secret -n openshift-config \
     -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d > "${base_json}" 2> /dev/null \
     || [[ ! -s "${base_json}" ]]; then
@@ -166,18 +172,6 @@ disconnected::setup_local_ocp_mirror() {
     done < <(find /tmp/secrets -type f -print0 2> /dev/null || true)
   fi
 
-  # Local Bitwarden runs receive the Red Hat pull secret as an environment
-  # value. Merge it without materializing the source value under the worktree.
-  if [[ -n "${REGISTRY_REDHAT_IO_SERVICE_ACCOUNT_DOCKERCONFIGJSON:-}" ]] \
-    && jq -e '.auths | type == "object"' \
-      <<< "${REGISTRY_REDHAT_IO_SERVICE_ACCOUNT_DOCKERCONFIGJSON}" > /dev/null 2>&1; then
-    jq -s '.[0] * {auths: ((.[0].auths // {}) * (.[1].auths // {}))}' \
-      "${pull_secret_path}" \
-      <(printf '%s' "${REGISTRY_REDHAT_IO_SERVICE_ACCOUNT_DOCKERCONFIGJSON}") \
-      > "${pull_secret_path}.tmp" \
-      && mv "${pull_secret_path}.tmp" "${pull_secret_path}"
-  fi
-
   export MIRROR_REGISTRY_PULL_SECRET="${pull_secret_path}"
   export DISCONNECTED=true
 
@@ -189,7 +183,7 @@ disconnected::setup_local_ocp_mirror() {
   # but rejects the manifest write ("denied"). Pre-create the push targets.
   disconnected::ensure_local_mirror_projects || return 1
 
-  log::success "Local OCP mirror credentials under ${mirror_dir}"
+  log::success "Local OCP mirror CA under ${mirror_dir}; credentials under ${DISCONNECTED_TMPDIR}"
   log::info "MIRROR_REGISTRY_PULL_SECRET=${MIRROR_REGISTRY_PULL_SECRET}"
   log::info "MIRROR_REGISTRY_CA=${MIRROR_REGISTRY_CA}"
 }
