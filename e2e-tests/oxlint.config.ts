@@ -207,5 +207,12 @@ export default defineConfig({
         "eslint/no-empty-pattern": "off",
       },
     },
+    {
+      // Configuration files can exceed the default line limit
+      files: ["playwright.config.ts"],
+      rules: {
+        "eslint/max-lines": "off",
+      },
+    },
   ],
 });
