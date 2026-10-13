@@ -28,9 +28,14 @@ Scope of this mechanism:
    (`e2e-tests/playwright/support/coverage/reporter.ts`) reads the raw files at
    `onEnd` and uses `monocart-coverage-reports` to convert V8 output to
    Istanbul format and emit a merged LCOV + HTML report under `coverage/e2e/`.
-3. **Codecov upload (CI, follow-up).** A CI step uploads `coverage/e2e/lcov.info`
-   to Codecov with the flag `rhdh-e2e-frontend`. This step lands in a follow-up
-   PR (see Known Limitations below).
+3. **Mapping to repository paths.** The deployed image serves `packages/app` as
+   minified bundles with source maps whose sources read `webpack://app/./src/...`.
+   `support/coverage/source-paths.ts` keeps only `packages/app/src/**` and names
+   each file by its repository path; without it the report lists ~3,300 bundled
+   `node_modules` files and none that Codecov can match to this repository.
+4. **Codecov upload (CI).** `testing::_upload_e2e_coverage` in
+   `.ci/pipelines/lib/testing.sh` uploads `coverage/e2e/lcov.info` with the flag
+   `rhdh-e2e-frontend`, attributed to the PR head commit (see "CI wiring" below).
 
 With `COLLECT_COVERAGE` unset (the default), the fixture and reporter are no-ops
 and the E2E suite runs identically to the pre-coverage configuration.
@@ -121,9 +126,28 @@ cannot fail a test.
 
 ### Specs that have not migrated
 
-Run normally and simply do not contribute to coverage data. Migration is
-phased by design — this PR lands the scaffolding; spec migration happens
-incrementally in follow-up PRs so each batch can be reviewed in isolation.
+Run normally and simply do not contribute to coverage data. All specs that drive
+the UI have migrated; new specs should import from `@support/coverage/test`.
+
+## CI wiring
+
+- `handle_ocp_pull` (`.ci/pipelines/jobs/ocp-pull.sh`) sets `COLLECT_COVERAGE=true`, so
+  the `e2e-ocp-helm` PR check collects coverage for both the `showcase` and
+  `showcase-rbac` projects. Each upload lands on the same commit and flag, and Codecov
+  merges them.
+- `CODECOV_TOKEN` is read from `/tmp/secrets/CODECOV_TOKEN`, the `rhdh` Vault bundle
+  OpenShift CI mounts into the step. **The key must exist in that bundle**; the GitHub
+  Actions secret of the same name does not reach Prow. Without it the upload is skipped
+  and the report is still saved as the `coverage` artifact.
+- Presubmits test a local merge of the PR onto its base branch, whose SHA GitHub has
+  never seen. The upload is therefore attributed to the PR head (`PULL_PULL_SHA`, or
+  `JOB_SPEC` for a Gangway re-run) with `--pr`, and skipped when neither is known.
+- Coverage is reporting, not a gate: a failed collection, report or upload logs a
+  warning and never changes the job result.
+- Uploads go to PR head commits only. Codecov carries a flag forward from the commit
+  it was uploaded to, and a squash merge creates a new commit on `main`, so the flag
+  shows on PRs but not on `main`'s dashboard. Uploading from a `main` nightly would
+  close that gap.
 
 ## Environment variables
 
@@ -143,17 +167,15 @@ parallel workers and retries never overwrite each other's output.
 - **Chromium only.** `page.coverage` is a CDP feature and is not available in
   Firefox or WebKit. Chromium is the default browser for this suite, so this
   is not a practical issue today.
-- **Source maps required for navigable reports.** The deployed RHDH must ship
-  source maps (or an equivalent mapping) for the report to link back to original
-  source. If source maps are missing, coverage still works but will point to
-  minified bundles. Validating source-map availability in the deployed image is
-  a task in RHIDP-13243.
-- **CI upload not wired yet.** This PR lands the collection + aggregation
-  infrastructure. The Codecov upload step in the Playwright CI jobs (handle_ocp_pull,
-  handle_ocp_nightly) is a follow-up task.
-- **Specs not yet migrated.** This PR does not modify any existing spec. A
-  follow-up PR migrates specs to the extended `test` import so they start
-  contributing coverage data.
+- **Source maps required.** The mapping depends on the image shipping
+  `packages/app/dist/static/*.js.map`, which the Backstage production build emits
+  (`devtool: "source-map"`) and the Containerfile keeps. Verified against
+  `quay.io/rhdh-community/rhdh:next`. If they disappear, the report is empty rather
+  than wrong, because no source would match `packages/app/src/**`.
+- **Frontend of this repository only.** `packages/app` is the only frontend package
+  here; plugins load from their own bundles and are covered under RHIDP-11866.
+- **Three specs do not contribute.** The `external-database/verify-tls-config-*`
+  specs exercise database connectivity, not the UI, and do not import the fixture.
 
 ## Related coverage flags in Codecov
 
@@ -161,8 +183,23 @@ parallel workers and retries never overwrite each other's output.
 |---|---|---|
 | `rhdh` | Jest (`packages/*`, `plugins/*`) | Unit / integration |
 | `rhdh-e2e-frontend` (new) | Playwright `page.coverage` | E2E frontend — this doc |
-| `rhdh-e2e-full` (future) | Instrumented showcase image variant | E2E frontend, higher fidelity (RHIDP-13244) |
 | `overlays-e2e-<plugin>` (future) | CoverPort Tekton | Upstream plugins via OCI (RHIDP-11866) |
+
+## Approach B: instrumented showcase image (RHIDP-13244), no-go
+
+Approach B would build a second `rhdh:<tag>-coverage` image with
+`babel-plugin-istanbul` and read `window.__coverage__` after each test. Not pursued:
+
+- Its gain over this approach is fidelity for `packages/app`, and with source maps
+  in the image this approach already reports `packages/app/src` by repository path.
+- `packages/app` is a thin shell (about 80 source files in the bundle); the code that
+  carries RHDH's behaviour lives in plugins, which RHIDP-13411 instruments at build
+  time for the overlay E2E runs (RHIDP-11866).
+- It would add an image build to every PR and a second image to keep in step with
+  the production one.
+
+Revisit if branch coverage of `packages/app` becomes a requirement: V8 block coverage
+reports branches less precisely than Istanbul instrumentation.
 
 ## References
 

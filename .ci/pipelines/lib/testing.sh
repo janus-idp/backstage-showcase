@@ -97,7 +97,7 @@ testing::run_tests() {
   fi
 
   # RHIDP-13243: V8 coverage collection for E2E tests (opt-in).
-  # Set COLLECT_COVERAGE=true in the job config to enable. When enabled, the
+  # handle_ocp_pull turns it on for the PR check (RHIDP-13242). When enabled, the
   # coverage fixture wraps page.coverage.startJSCoverage/stopJSCoverage and
   # the reporter merges raw JSON into lcov via monocart-coverage-reports.
   export COLLECT_COVERAGE="${COLLECT_COVERAGE:-false}"
@@ -135,33 +135,7 @@ testing::run_tests() {
   # RHIDP-13243: Save and upload E2E coverage report
   if [[ -f "${e2e_tests_dir}/coverage/e2e/lcov.info" ]]; then
     common::save_artifact "${artifacts_subdir}" "${e2e_tests_dir}/coverage/e2e/" "coverage" || true
-    if [[ -n "${CODECOV_TOKEN:-}" ]]; then
-      log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend)..."
-      local codecov_bin="/tmp/codecov"
-      if [[ ! -x "$codecov_bin" ]]; then
-        curl -sL -o "$codecov_bin" https://cli.codecov.io/latest/linux/codecov
-        curl -sL -o "${codecov_bin}.SHA256SUM" https://cli.codecov.io/latest/linux/codecov.SHA256SUM
-        if (cd /tmp && sha256sum --check --strict codecov.SHA256SUM); then
-          rm -f "${codecov_bin}.SHA256SUM"
-          chmod +x "$codecov_bin"
-        else
-          log::warn "Codecov CLI checksum verification failed — skipping upload"
-          rm -f "$codecov_bin" "${codecov_bin}.SHA256SUM"
-        fi
-      fi
-      if [[ -x "$codecov_bin" ]]; then
-        # --fail-on-error makes the CLI exit non-zero on upload issues so we
-        # can log it; the || ensures we never block the pipeline for coverage.
-        "$codecov_bin" upload-process \
-          --token "${CODECOV_TOKEN}" \
-          --file "${e2e_tests_dir}/coverage/e2e/lcov.info" \
-          --flag rhdh-e2e-frontend \
-          --slug redhat-developer/rhdh \
-          --fail-on-error || log::warn "Codecov E2E coverage upload failed (non-fatal)"
-      fi
-    else
-      log::info "CODECOV_TOKEN not set — skipping Codecov upload. Coverage report saved as artifact."
-    fi
+    testing::_upload_e2e_coverage "${e2e_tests_dir}/coverage/e2e/lcov.info"
   fi
 
   echo "Playwright project '${playwright_project}' in namespace '${namespace}' (artifacts: ${artifacts_subdir}) RESULT: ${test_result}"
@@ -190,6 +164,66 @@ testing::run_tests() {
 # Args:
 #   $1 - artifacts_subdir (names the SHARED_DIR entry)
 #   $2 - path to the JUnit file already copied into ARTIFACT_DIR
+# RHIDP-13242: The commit and PR an E2E coverage upload belongs to.
+# Presubmits test a local merge of the PR onto its base branch, so `git rev-parse
+# HEAD` names a commit GitHub has never seen and Codecov would file the upload
+# under it. The PR head comes from Prow (PULL_PULL_SHA) or, for a Gangway re-run,
+# from JOB_SPEC. Prints "<sha> <pr>"; prints nothing when no PR head is known.
+testing::_coverage_pr_target() {
+  local sha="${PULL_PULL_SHA:-}"
+  if [[ -z "${sha}" && -n "${JOB_SPEC:-}" ]]; then
+    sha=$(jq -r '.refs.pulls[0].sha // empty' <<< "${JOB_SPEC}" 2> /dev/null || true)
+  fi
+  local pr="${PULL_NUMBER:-${GIT_PR_NUMBER:-}}"
+  if [[ "${sha}" =~ ^[0-9a-f]{40}$ && "${pr}" =~ ^[0-9]+$ ]]; then
+    echo "${sha} ${pr}"
+  fi
+}
+
+# RHIDP-13242: Upload the merged E2E lcov to Codecov under the rhdh-e2e-frontend
+# flag. Never fails the job: coverage is reporting, not a gate, and the report is
+# already saved as an artifact by the caller.
+testing::_upload_e2e_coverage() {
+  local lcov_file="$1"
+  if [[ -z "${CODECOV_TOKEN:-}" ]]; then
+    log::info "CODECOV_TOKEN not set — skipping Codecov upload. Coverage report saved as artifact."
+    return 0
+  fi
+  local target sha pr
+  target=$(testing::_coverage_pr_target)
+  if [[ -z "${target}" ]]; then
+    log::warn "No PR head commit to attribute E2E coverage to — skipping Codecov upload"
+    return 0
+  fi
+  read -r sha pr <<< "${target}"
+
+  log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."
+  # CODECOV_BIN lets the unit tests point at a stub instead of downloading the CLI.
+  local codecov_bin="${CODECOV_BIN:-/tmp/codecov}"
+  if [[ ! -x "$codecov_bin" ]]; then
+    curl -sL -o "$codecov_bin" https://cli.codecov.io/latest/linux/codecov
+    curl -sL -o "${codecov_bin}.SHA256SUM" https://cli.codecov.io/latest/linux/codecov.SHA256SUM
+    if (cd /tmp && sha256sum --check --strict codecov.SHA256SUM); then
+      rm -f "${codecov_bin}.SHA256SUM"
+      chmod +x "$codecov_bin"
+    else
+      log::warn "Codecov CLI checksum verification failed — skipping upload"
+      rm -f "$codecov_bin" "${codecov_bin}.SHA256SUM"
+      return 0
+    fi
+  fi
+  # --fail-on-error makes the CLI exit non-zero on upload issues so we
+  # can log it; the || ensures we never block the pipeline for coverage.
+  "$codecov_bin" upload-process \
+    --token "${CODECOV_TOKEN}" \
+    --file "${lcov_file}" \
+    --flag rhdh-e2e-frontend \
+    --slug redhat-developer/rhdh \
+    --sha "${sha}" \
+    --pr "${pr}" \
+    --fail-on-error || log::warn "Codecov E2E coverage upload failed (non-fatal)"
+}
+
 testing::_publish_junit_to_shared_dir() {
   local artifacts_subdir=$1 junit_in_artifact_dir=$2
   local target="${SHARED_DIR}/junit-results-${artifacts_subdir}.xml.gz"
