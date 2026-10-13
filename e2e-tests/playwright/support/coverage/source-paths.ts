@@ -3,9 +3,9 @@
 // The deployed RHDH serves packages/app as minified bundles under /static/,
 // each with a source map whose sources read `webpack://app/./src/...`.
 // monocart unpacks those into `app/src/...` and, left unfiltered, also emits
-// every bundled node_modules file and the webpack runtime: ~3,300 files, of
-// which only ~20 exist in this repository. Codecov drops paths it cannot find
-// in the repo, so the upload has to name repository paths exactly.
+// every bundled node_modules file and the webpack runtime: a first page load
+// reports ~3,300 files, 17 of them in this repository. Codecov drops paths it
+// cannot find in the repo, so the upload has to name repository paths exactly.
 
 import type { CoverageReportOptions } from "monocart-coverage-reports";
 
@@ -40,11 +40,11 @@ export function isAppSource(sourcePath: string): boolean {
   return toRepoPath(sourcePath).startsWith(REPO_APP_SOURCE_PREFIX);
 }
 
+// Bundles are already narrowed to the app's own by SourceMapLoader (source-maps.ts).
 export const coverageSourceOptions: Pick<
   CoverageReportOptions,
-  "entryFilter" | "sourceFilter" | "sourcePath"
+  "sourceFilter" | "sourcePath"
 > = {
-  entryFilter: isAppBundle,
   sourceFilter: isAppSource,
   sourcePath: toRepoPath,
 };

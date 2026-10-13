@@ -8,6 +8,7 @@
     "./instrumentation": "./instrumentation.ts",
     "./paths": "./paths.ts",
     "./source-paths": "./source-paths.ts",
+    "./source-maps": "./source-maps.ts",
     "./reporter": "./reporter.ts"
   }
 }

@@ -17,9 +17,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
+
 import type { Reporter } from "@playwright/test/reporter";
 import { CoverageReport } from "monocart-coverage-reports";
+
 import { COVERAGE_RAW_DIR, COVERAGE_REPORT_DIR } from "./paths";
+import { SourceMapLoader } from "./source-maps";
 import { coverageSourceOptions } from "./source-paths";
 
 const generateTimeoutMs = Number(
@@ -60,6 +63,38 @@ async function withTimeout<T>(
     return await Promise.race([promise, timeout]);
   } finally {
     controller.abort();
+  }
+}
+
+/**
+ * Add each raw coverage file to the report, one at a time: each holds the full text
+ * of every bundle the page loaded (~6 MB per test against the showcase image), so
+ * parsing them all up front multiplies peak memory by the number of tests. Only the
+ * app's bundles with a loadable source map are added (see source-maps.ts).
+ */
+export async function mergeRawCoverage(
+  report: { add: (entries: unknown[]) => Promise<unknown> },
+  rawFiles: string[],
+  sourceMaps: SourceMapLoader,
+): Promise<void> {
+  for (const file of rawFiles) {
+    const content = await fs.readFile(
+      path.join(COVERAGE_RAW_DIR, file),
+      "utf-8",
+    );
+    const parsed: unknown = JSON.parse(content);
+    if (!isUnknownArray(parsed)) {
+      console.warn(
+        `[coverage] Skipping ${file}: expected an array of V8 script coverage entries, got ${typeof parsed}`,
+      );
+      continue;
+    }
+    await report.add(await sourceMaps.attach(parsed));
+  }
+  if (sourceMaps.failures.length > 0) {
+    console.warn(
+      `[coverage] ${sourceMaps.failures.length} source map(s) could not be loaded; their bundles are left out of the report.`,
+    );
   }
 }
 
@@ -121,40 +156,24 @@ class CoverageReporter implements Reporter {
       const report = new CoverageReport({
         name: "RHDH E2E Coverage",
         outputDir: COVERAGE_REPORT_DIR,
-        reports: [
-          ["v8"],
-          ["lcov"],
-          ["html"],
-          ["json-summary"],
-          ["console-summary"],
-        ],
+        reports: [["lcov"], ["html"], ["json-summary"], ["console-summary"]],
         cleanCache: true,
         ...coverageSourceOptions,
       });
 
-      // One file at a time: each holds the full text of every bundle the page
-      // loaded (~6 MB per test against the showcase image), so parsing them all
-      // up front multiplies peak memory by the number of tests.
-      for (const file of rawFiles) {
-        const content = await fs.readFile(
-          path.join(COVERAGE_RAW_DIR, file),
-          "utf-8",
-        );
-        const parsed: unknown = JSON.parse(content);
-        if (!isUnknownArray(parsed)) {
-          console.warn(
-            `[coverage] Skipping ${file}: expected an array of V8 script coverage entries, got ${typeof parsed}`,
-          );
-          continue;
-        }
-        await report.add(parsed);
-      }
-
-      await withTimeout(
-        report.generate(),
+      // Merging fetches source maps from the deployment, so it shares the timeout.
+      const results = await withTimeout(
+        mergeRawCoverage(report, rawFiles, new SourceMapLoader()).then(() =>
+          report.generate(),
+        ),
         generateTimeoutMs,
-        "[coverage] report.generate()",
+        "[coverage] merging and generating the report",
       );
+      if ((results?.files.length ?? 0) === 0) {
+        console.warn(
+          "[coverage] The report names no packages/app source. Were the app's source maps reachable?",
+        );
+      }
       console.log(`[coverage] Merged report written to ${COVERAGE_REPORT_DIR}`);
     } catch (err) {
       console.error(

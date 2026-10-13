@@ -5,25 +5,25 @@ import { isAppBundle, isAppSource, toRepoPath } from "../playwright/support/cove
 // Shapes taken from a real run against quay.io/rhdh-community/rhdh:next: monocart
 // unpacks `webpack://app/./src/App.tsx` into `app/src/App.tsx`.
 describe("toRepoPath", () => {
-  it("maps an app source onto its repository path", () => {
-    expect(toRepoPath("app/src/App.tsx")).toBe("packages/app/src/App.tsx");
-    expect(toRepoPath("app/src/modules/catalog/index.tsx")).toBe(
-      "packages/app/src/modules/catalog/index.tsx",
-    );
+  it.each([
+    ["app/src/App.tsx", "packages/app/src/App.tsx"],
+    ["app/src/modules/catalog/index.tsx", "packages/app/src/modules/catalog/index.tsx"],
+  ])("maps %s onto its repository path", (sourcePath, expected) => {
+    expect(toRepoPath(sourcePath)).toBe(expected);
   });
 
-  it("leaves anything else untouched", () => {
-    expect(toRepoPath("app/node_modules/yaml/dist/index.js")).toBe(
-      "app/node_modules/yaml/dist/index.js",
-    );
-    expect(toRepoPath("packages/app/src/App.tsx")).toBe("packages/app/src/App.tsx");
-  });
+  it.each(["app/node_modules/yaml/dist/index.js", "packages/app/src/App.tsx"])(
+    "leaves %s untouched",
+    (sourcePath) => {
+      expect(toRepoPath(sourcePath)).toBe(sourcePath);
+    },
+  );
 });
 
 describe("isAppSource", () => {
-  it("keeps app sources in either form, since monocart rewrites before filtering", () => {
-    expect(isAppSource("app/src/App.tsx")).toBe(true);
-    expect(isAppSource("packages/app/src/App.tsx")).toBe(true);
+  // monocart rewrites the path before filtering, so both forms reach isAppSource.
+  it.each(["app/src/App.tsx", "packages/app/src/App.tsx"])("keeps %s", (sourcePath) => {
+    expect(isAppSource(sourcePath)).toBe(true);
   });
 
   it.each([
