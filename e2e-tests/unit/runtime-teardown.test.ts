@@ -120,3 +120,45 @@ it("reports the setup error first and redacts nested errors and stacks", async (
   });
   expect(inspect(error, { depth: null })).not.toContain("fake-password");
 });
+
+it("redacts a setup error after successful cleanup without exposing raw metadata", async () => {
+  const setupError = Object.assign(
+    new Error("deploy failed with fake-password", {
+      cause: new AggregateError([new Error("nested fake-password")], "cause with fake-password"),
+    }),
+    { credentials: { password: "fake-password" } },
+  );
+  setupError.name = "DeploymentError fake-password";
+  const { calls, teardown } = steps({ setupError });
+  const error: unknown = await teardownRuntime(teardown).catch((caught: unknown) => caught);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).not.toBeInstanceOf(AggregateError);
+  expect(error).toMatchObject({
+    message: "deploy failed with [REDACTED]",
+    name: "DeploymentError [REDACTED]",
+    stack: setupError.stack?.replaceAll("fake-password", "[REDACTED]"),
+  });
+  expect(inspect(error, { depth: null })).not.toContain("fake-password");
+  expect(calls).toEqual([
+    "diagnostics",
+    "stop",
+    "close-clients",
+    "drop",
+    "report:true",
+    "close-proxy",
+    "delete-namespace",
+  ]);
+});
+
+it.each([
+  { type: "string", setupError: "deploy failed with fake-password" },
+  { type: "object", setupError: { password: "fake-password" } },
+])("hides a non-Error $type setup failure after successful cleanup", async ({ setupError }) => {
+  const { teardown } = steps({ setupError });
+  const error: unknown = await teardownRuntime(teardown).catch((caught: unknown) => caught);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).not.toBeInstanceOf(AggregateError);
+  expect(error).toMatchObject({ message: "rds slot 1 setup failed" });
+  expect(error).not.toHaveProperty("cause");
+  expect(inspect(error, { depth: null })).not.toContain("fake-password");
+});
