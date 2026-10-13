@@ -19,7 +19,7 @@ sign in."_
 
 Run the same script CI uses — it installs the harness plugin set
 (`e2e-tests/local-harness/dynamic-plugins.yaml`) from the public OCI registry (quay.io)
-via `install-dynamic-plugins` + skopeo, with `{{inherit}}` resolved against
+via `install-dynamic-plugins` + skopeo, with `ref://` resolved against
 `dynamic-plugins.default.yaml` extracted from a catalog-index OCI image.
 **`CATALOG_INDEX_IMAGE` is required** to extract the full catalog DPDY from a catalog-index OCI image
 `dynamic-plugins.default.yaml`. Pinned to the same CLI version as CI. No source build
@@ -122,10 +122,7 @@ for how that's wired).
   profile menu.
 - `settings.spec.ts` — language toggle (needs `api:app/app-language.availableLanguages`
   in `app.extensions`, not just `i18n.locales`), French label switching, pin-sidebar
-  toggle, and identity-card ownership ("Guest User, team-a"). NFS sidebar page titles
-  stay in upstream English ("Home") even after switching AppLanguageApi to French —
-  only GlobalHeader chrome translates; the final assertion checks "Home", not
-  `menuItem.home` ("Accueil").
+  toggle, and identity-card ownership ("Guest User, team-a").
 
 The application-provider and application-listener specs and provider page fixture
 were retired under RHIDP-17025 because their OCI test plugins expose only the old
@@ -176,11 +173,11 @@ just `run`), which is why this harness boots the dev servers directly instead.
 ## Known issues / limits
 
 - **Re-run `populate.sh` after changing the harness plugin set.** Overrides in
-  `e2e-tests/local-harness/dynamic-plugins.yaml` (`enabled: false` + `{{inherit}}`) only
+  `e2e-tests/local-harness/dynamic-plugins.yaml` (`enabled: false` + `ref://`) only
   take effect through the generated `dynamic-plugins-root/app-config.dynamic-plugins.yaml`,
   which the webServer loads last. A stale populate leaves unwanted plugins installed.
 - **Plugin sanity uses a separate config overlay.** Default `populate.sh` disables
-  segment, adoption-insights, extensions (dist), and other plugins not needed for
+  segment, adoption-insights, extensions, and other plugins not needed for
   cluster-free specs. If you switch to `populate-catalog-index.sh` (full index), use
   `app-config.plugin-sanity.yaml` (via `e2e:plugin-sanity`) for provider stubs.
 - **Live-external-service specs** (real k8s cluster, GitHub org, Quay, Tekton, Keycloak)
@@ -225,7 +222,7 @@ just `run`), which is why this harness boots the dev servers directly instead.
   - The harness had pinned an outdated ghcr overlays build
     (`bs_1.49.4__1.21.6`, predating RHDH's current Backstage 1.52.0) driven through the
     legacy OFS `dynamicPlugins.frontend.*.mountPoints` config bridge — switching to the
-    `{{inherit}}`-resolved `quay.io` build fixed the stale-build half of it.
+    catalog-selected `quay.io` build fixed the stale-build half of it.
   - More fundamentally, the mountPoints bridge was the wrong mechanism entirely: the
     global-header plugin ships its own native NFS extensions
     (`gh-component:global-header/*`, `gh-menu-item:global-header/*`, defined in
