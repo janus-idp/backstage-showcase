@@ -135,9 +135,11 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   the `e2e-ocp-helm` PR check collects coverage for both the `showcase` and
   `showcase-rbac` projects. Each upload lands on the same commit and flag, and Codecov
   merges them.
-- `CODECOV_TOKEN` is read from `/tmp/secrets/CODECOV_TOKEN`, the `rhdh` Vault bundle
-  OpenShift CI mounts into the step. **The key must exist in that bundle**; the GitHub
-  Actions secret of the same name does not reach Prow. Without it the upload is skipped
+- `CODECOV_TOKEN` is read from `/tmp/secrets/CODECOV_TOKEN`, the `rhdh` credentials
+  bundle (Google Secret Manager) OpenShift CI mounts into the step. **The key must exist
+  in that bundle**, as its own field; the GitHub Actions secret of the same name does not
+  reach Prow. The upload passes it to the Codecov CLI through the environment, never as
+  an argument. Without it the upload is skipped
   and the report is still saved as the `coverage` artifact.
 - Presubmits test a local merge of the PR onto its base branch, whose SHA GitHub has
   never seen. The upload is therefore attributed to the PR head (`PULL_PULL_SHA`, or

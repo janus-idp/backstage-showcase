@@ -212,10 +212,11 @@ testing::_upload_e2e_coverage() {
       return 0
     fi
   fi
+  # The CLI reads CODECOV_TOKEN from the environment; passing it as --token would
+  # put the secret in the process arguments (.claude/rules/ci-e2e-testing.md).
   # --fail-on-error makes the CLI exit non-zero on upload issues so we
   # can log it; the || ensures we never block the pipeline for coverage.
-  "$codecov_bin" upload-process \
-    --token "${CODECOV_TOKEN}" \
+  CODECOV_TOKEN="${CODECOV_TOKEN}" "$codecov_bin" upload-process \
     --file "${lcov_file}" \
     --flag rhdh-e2e-frontend \
     --slug redhat-developer/rhdh \

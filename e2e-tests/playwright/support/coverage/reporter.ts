@@ -132,27 +132,22 @@ class CoverageReporter implements Reporter {
         ...coverageSourceOptions,
       });
 
-      const entriesPerFile = await Promise.all(
-        rawFiles.map(async (file) => {
-          const content = await fs.readFile(
-            path.join(COVERAGE_RAW_DIR, file),
-            "utf-8",
+      // One file at a time: each holds the full text of every bundle the page
+      // loaded (~6 MB per test against the showcase image), so parsing them all
+      // up front multiplies peak memory by the number of tests.
+      for (const file of rawFiles) {
+        const content = await fs.readFile(
+          path.join(COVERAGE_RAW_DIR, file),
+          "utf-8",
+        );
+        const parsed: unknown = JSON.parse(content);
+        if (!isUnknownArray(parsed)) {
+          console.warn(
+            `[coverage] Skipping ${file}: expected an array of V8 script coverage entries, got ${typeof parsed}`,
           );
-          const parsed: unknown = JSON.parse(content);
-          if (!isUnknownArray(parsed)) {
-            console.warn(
-              `[coverage] Skipping ${file}: expected an array of V8 script coverage entries, got ${typeof parsed}`,
-            );
-            return null;
-          }
-          return parsed;
-        }),
-      );
-
-      for (const entries of entriesPerFile) {
-        if (entries !== null) {
-          await report.add(entries);
+          continue;
         }
+        await report.add(parsed);
       }
 
       await withTimeout(

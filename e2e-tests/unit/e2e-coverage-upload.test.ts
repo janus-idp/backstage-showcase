@@ -15,8 +15,11 @@ let root: string;
 
 beforeEach(() => {
   root = mkdtempSync(join(tmpdir(), "rhdh-e2e-coverage-upload-"));
-  // Records its argv instead of talking to Codecov.
-  writeFileSync(join(root, "codecov"), `#!/bin/bash\nprintf '%s\\n' "$@" > "${root}/argv"\n`);
+  // Records its argv and the token it can see instead of talking to Codecov.
+  writeFileSync(
+    join(root, "codecov"),
+    `#!/bin/bash\nprintf '%s\\n' "$@" > "${root}/argv"\nprintf '%s' "\${CODECOV_TOKEN:-}" > "${root}/token"\n`,
+  );
   chmodSync(join(root, "codecov"), 0o755);
 });
 
@@ -71,6 +74,18 @@ describe("testing::_upload_e2e_coverage", () => {
     expect(flag(argv!, "--pr")).toBe("4321");
     expect(flag(argv!, "--flag")).toBe("rhdh-e2e-frontend");
     expect(flag(argv!, "--file")).toBe(join(root, "lcov.info"));
+  });
+
+  it("hands the token to the CLI through the environment, never its arguments", () => {
+    const { argv } = upload({
+      CODECOV_TOKEN: "s3cr3t-token",
+      PULL_PULL_SHA: PR_HEAD,
+      PULL_NUMBER: "1",
+    });
+    expect(argv).not.toBeNull();
+    expect(argv!.join(" ")).not.toContain("s3cr3t-token");
+    expect(argv).not.toContain("--token");
+    expect(readFileSync(join(root, "token"), "utf8")).toBe("s3cr3t-token");
   });
 
   it("falls back to JOB_SPEC and GIT_PR_NUMBER for a Gangway re-run", () => {
