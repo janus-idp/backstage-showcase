@@ -8,8 +8,9 @@
 // Activated only when COLLECT_COVERAGE=true. When inactive, the reporter is
 // a no-op so the default reporter set (html, list, junit) is unaffected.
 //
-// The merged report goes to coverage/e2e/ and can be uploaded to Codecov with
-// the flag `rhdh-e2e-frontend` by a CI step (follow-up).
+// The merged report goes to coverage/e2e/, limited to packages/app sources and
+// named by repository path (see source-paths.ts), and testing.sh uploads it to
+// Codecov with the flag `rhdh-e2e-frontend`.
 //
 // Dependencies (dev): monocart-coverage-reports
 
@@ -19,6 +20,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import type { Reporter } from "@playwright/test/reporter";
 import { CoverageReport } from "monocart-coverage-reports";
 import { COVERAGE_RAW_DIR, COVERAGE_REPORT_DIR } from "./paths";
+import { coverageSourceOptions } from "./source-paths";
 
 const generateTimeoutMs = Number(
   process.env.COVERAGE_GENERATE_TIMEOUT_MS ?? 2 * 60 * 1000,
@@ -127,6 +129,7 @@ class CoverageReporter implements Reporter {
           ["console-summary"],
         ],
         cleanCache: true,
+        ...coverageSourceOptions,
       });
 
       const entriesPerFile = await Promise.all(
