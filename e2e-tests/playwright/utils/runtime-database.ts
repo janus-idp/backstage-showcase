@@ -167,7 +167,14 @@ export async function dropOwnedDatabases(
   try {
     await clearOwnedDatabases(client, prefix);
   } finally {
-    await client.end();
+    try {
+      await client.end();
+    } catch (error) {
+      // Closing must not hide a DROP error or mark a completed drop as incomplete.
+      console.warn(
+        `Runtime database cleanup connection for ${prefix} failed to close: ${String(error)}`,
+      );
+    }
   }
 }
 

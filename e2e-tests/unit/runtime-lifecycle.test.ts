@@ -6,6 +6,7 @@ import type { TestInfo } from "@playwright/test";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { KubeClient } from "../playwright/utils/kube-client";
+import { BACKSTAGE_CR_API_VERSION } from "../playwright/utils/runtime-config";
 import {
   stopRuntimeApplication,
   waitForRuntimeRollout,
@@ -117,6 +118,7 @@ describe("ordered runtime lifecycle", () => {
     await stop;
     expect(stopped).toBe(true);
     expect(scale).not.toHaveBeenCalled();
+    expect(replace.mock.calls[0].slice(0, 2)).toEqual(BACKSTAGE_CR_API_VERSION.split("/"));
     expect(replace.mock.calls[0][5]).toMatchObject({
       spec: { deployment: { patch: { spec: { replicas: 0 } } } },
     });

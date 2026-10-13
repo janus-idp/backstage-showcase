@@ -56,7 +56,7 @@ const guestAuthProviderPlugin = {
   enabled: true,
 };
 
-/** Backstage CRD API version — update when the CRD version bumps. */
+/** Current Operator API from rhdh-operator/api/current-types.go; shared by all runtime CR calls. */
 export const BACKSTAGE_CR_API_VERSION = "rhdh.redhat.com/v1alpha5";
 
 // ─── Resolved configuration ─────────────────────────────────────────────────

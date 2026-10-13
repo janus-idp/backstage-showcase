@@ -1,3 +1,5 @@
+import { inspect } from "node:util";
+
 import { expect, it } from "vitest";
 
 import { teardownRuntime, type RuntimeTeardown } from "../playwright/utils/runtime-teardown";
@@ -94,9 +96,12 @@ it("continues cleanup after a diagnostics failure and without optional steps", a
   expect(calls).toEqual(["stop", "close-clients", "report:false", "delete-namespace"]);
 });
 
-it("reports the setup error first and redacts every message", async () => {
+it("reports the setup error first and redacts nested errors and stacks", async () => {
+  const setupError = new Error("deploy failed with fake-password", {
+    cause: new AggregateError([new Error("nested fake-password")], "cause with fake-password"),
+  });
   const { teardown } = steps({
-    setupError: new Error("deploy failed with fake-password"),
+    setupError,
     deleteNamespace: failing("namespace stuck"),
   });
   const error: unknown = await teardownRuntime(teardown).catch((caught: unknown) => caught);
@@ -104,5 +109,14 @@ it("reports the setup error first and redacts every message", async () => {
   expect(String(error)).toContain(
     "rds slot 1 failed: Error: deploy failed with [REDACTED]; Error: namespace stuck",
   );
-  expect(String(error)).not.toContain("fake-password");
+  expect(error).toMatchObject({
+    errors: [
+      {
+        message: "deploy failed with [REDACTED]",
+        stack: setupError.stack?.replaceAll("fake-password", "[REDACTED]"),
+      },
+      { message: "namespace stuck" },
+    ],
+  });
+  expect(inspect(error, { depth: null })).not.toContain("fake-password");
 });

@@ -6,6 +6,8 @@ import {
   clearOwnedDatabases,
   clearSlotDatabases,
   closeDatabaseClients,
+  dropOwnedDatabases,
+  RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
   type OwnedDatabaseClient,
 } from "../playwright/utils/runtime-database";
 
@@ -118,6 +120,38 @@ describe("owned database cleanup failures", () => {
     await vi.advanceTimersByTimeAsync(5_000);
     await cleanup;
   });
+});
+
+it("preserves drop outcomes and session diagnostics when admin shutdown fails", async () => {
+  vi.useFakeTimers();
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  const prefix = "rt_012345abcdef_rds1_";
+  const busyError = Object.assign(new Error("busy"), { code: "55006" });
+  let busy = true;
+  let databases = [`${prefix}catalog`];
+  const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input) => {
+    const text = typeof input === "string" ? input : input.text;
+    if (text.startsWith("DROP")) {
+      if (busy) return Promise.reject(busyError);
+      databases = [];
+    }
+    return Promise.resolve(result(text.includes("set_config") ? [] : databases));
+  });
+  const end = vi.fn<() => Promise<void>>().mockRejectedValue(new Error("shutdown timed out"));
+  const connect = () => Promise.resolve({ query, end });
+  const dropping = dropOwnedDatabases(connect, prefix).catch((error: unknown) => error);
+  await vi.advanceTimersByTimeAsync(RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS);
+  const error = await dropping;
+  expect(error).toBeInstanceOf(AggregateError);
+  expect(String(error)).toContain(`remaining sessions: [{"datname":"${prefix}catalog"}]`);
+  expect(error).toMatchObject({ errors: [busyError, expect.any(Error)] });
+
+  busy = false;
+  await expect(dropOwnedDatabases(connect, prefix)).resolves.toBeUndefined();
+  expect(databases).toEqual([]);
+  expect(end).toHaveBeenCalledTimes(2);
+  expect(warn).toHaveBeenCalledTimes(2);
+  expect(warn.mock.calls.flat().join(" ")).toContain("shutdown timed out");
 });
 
 describe.each([

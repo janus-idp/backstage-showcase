@@ -46,11 +46,18 @@ export async function teardownRuntime(steps: RuntimeTeardown): Promise<void> {
 
   const { setupError } = steps;
   if (errors.length > 0) {
-    const all = setupError === undefined ? errors : [setupError, ...errors];
-    throw new AggregateError(
-      all,
-      `${steps.label} failed: ${all.map((error) => steps.redact(String(error))).join("; ")}`,
-    );
+    const all = (setupError === undefined ? errors : [setupError, ...errors]).map((error) => {
+      // Report-only copies keep raw causes, nested aggregates, and custom properties private.
+      const reported = new Error(
+        steps.redact(error instanceof Error ? error.message : String(error)),
+      );
+      if (error instanceof Error) {
+        reported.name = steps.redact(error.name);
+        reported.stack = steps.redact(error.stack ?? String(error));
+      }
+      return reported;
+    });
+    throw new AggregateError(all, `${steps.label} failed: ${all.map(String).join("; ")}`);
   }
   if (setupError !== undefined) {
     throw setupError instanceof Error

@@ -5,8 +5,10 @@ import type { TestInfo } from "@playwright/test";
 import { resolveInstallMethod, run } from "./helper";
 import { KubeClient, getErrorStatusCode, getRhdhDeploymentName, isRecord } from "./kube-client";
 import { pollUntil } from "./poll-until";
+import { BACKSTAGE_CR_API_VERSION } from "./runtime-config";
 
 const ownerLabel = "rhdh.redhat.com/runtime-run";
+const [backstageGroup, backstageVersion] = BACKSTAGE_CR_API_VERSION.split("/");
 const record = (value: unknown): Record<string, unknown> => (isRecord(value) ? value : {});
 
 export async function deleteOwnedRuntimeNamespace(
@@ -75,8 +77,8 @@ export async function patchRuntimeCR(
   patch: object,
 ): Promise<void> {
   await kube.customObjectsApi.patchNamespacedCustomObject(
-    "rhdh.redhat.com",
-    "v1alpha5",
+    backstageGroup,
+    backstageVersion,
     namespace,
     "backstages",
     releaseName,
@@ -170,8 +172,8 @@ export async function setRuntimeDatabaseEnv(
     return;
   }
   const response = await kube.customObjectsApi.getNamespacedCustomObject(
-    "rhdh.redhat.com",
-    "v1alpha5",
+    backstageGroup,
+    backstageVersion,
     namespace,
     "backstages",
     releaseName,
