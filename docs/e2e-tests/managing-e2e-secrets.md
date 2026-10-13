@@ -41,17 +41,12 @@ Before doing anything else, each entry point checks that the pinned CLI exists a
 | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Unable to find the pinned rhdh-e2e-secrets CLI` | Run `yarn install` in `e2e-tests`.                                                                                                                                                                                    |
 | `rhdh-e2e-secrets must support --stream-secrets` | The installed `@red-hat-developer-hub/e2e-test-utils` is too old; reinstall the version pinned in `e2e-tests/package.json`.                                                                                           |
-| `BW_SESSION is required`                         | Unlock the CLI vault and export the session in the shell that launches the script.                                                                                                                                    |
-| Secrets fail to load with a session set          | Run `bw status`. If `unauthenticated`, run `bw login`; if `locked` or stale, unlock again and export a fresh session.                                                                                                 |
+| `BW_SESSION is required`                         | Complete the [upstream local-command prerequisites](https://redhat-developer.github.io/rhdh-e2e-test-utils/api/secrets.html#local-command) in the shell that launches the script.                                     |
+| Secrets fail to load with a session set          | Check the session and collection access using the [upstream Secrets API guidance](https://redhat-developer.github.io/rhdh-e2e-test-utils/api/secrets.html).                                                           |
 | `Another local run owns …/run.lock`              | Only one `local-run.sh` may run per checkout. After an uncatchable termination, confirm the previous runner has stopped, remove `e2e-tests/.local-test/run.lock/output`, then `rmdir e2e-tests/.local-test/run.lock`. |
 
-To unlock, or to refresh a session:
-
-```bash
-BW_SESSION="$(env -u BW_CLEANEXIT bw unlock --raw)" && export BW_SESSION
-```
-
-`env -u BW_CLEANEXIT` stops Bitwarden's clean-exit setting from hiding failures, and assigning before `export` preserves an unlock failure instead of masking it with `export`'s exit status.
+For host cluster-token setup, CI-equivalent OCP Helm commands, and report locations, see the
+[local runner README](../../e2e-tests/README.md#running-tests-locally-in-headed-mode-recommended-for-debugging).
 
 ## Creating, Rotating, and Removing Secrets
 

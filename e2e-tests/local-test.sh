@@ -19,8 +19,12 @@ Set NAME_SPACE for showcase projects, NAME_SPACE_RBAC for RBAC projects,
 and NAME_SPACE_RUNTIME for showcase-runtime to the deployed namespace.
 
 Examples:
-  BASE_URL=https://backstage.example.com ./local-test.sh -- --project=showcase --headed
-  BASE_URL=https://backstage.example.com ./local-test.sh -- --project=showcase-rbac playwright/e2e/rbac.spec.ts
+  BASE_URL=https://backstage.example.com NAME_SPACE=showcase ./local-test.sh -- --project=showcase --headed playwright/e2e/guest-signin-happy-path.spec.ts
+  BASE_URL=https://backstage-rbac.example.com NAME_SPACE_RBAC=showcase-rbac ./local-test.sh -- --project=showcase-rbac playwright/e2e/audit-log/auditor-rbac.spec.ts
+
+For the full host suites, set K8S_CLUSTER_URL and K8S_CLUSTER_TOKEN first.
+Connection setup, CI-equivalent runs, and report locations: README.md
+Bitwarden prerequisites: ../docs/e2e-tests/managing-e2e-secrets.md
 EOF
 }
 

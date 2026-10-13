@@ -41,17 +41,20 @@ Examples:
   # Deploy downstream RHEL 9 next image on OCP, skip tests
   ./local-run.sh --repo rhdh/rhdh-hub-rhel9 --tag next --skip-tests
 
-  # Test a PR image on OCP
-  ./local-run.sh --pr 4023 --skip-tests
+  # Deploy and test a PR image on OCP
+  ./local-run.sh -j pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm --pr 4023
+
+  # Deploy a PR image for host-side debugging
+  ./local-run.sh -j pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm --pr 4023 --skip-tests
 
   # Run on AKS
-  ./local-run.sh -j periodic-ci-aks-helm-nightly -r rhdh/rhdh-hub-rhel9 -t next -s
+  ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-aks-helm-nightly -r rhdh/rhdh-hub-rhel10 -t next -s
 
   # Run on EKS
-  ./local-run.sh -j periodic-ci-eks-helm-nightly -r rhdh/rhdh-hub-rhel9 -t next -s
+  ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-eks-helm-nightly -r rhdh/rhdh-hub-rhel10 -t next -s
 
   # Run on GKE
-  ./local-run.sh -j periodic-ci-gke-helm-nightly -r rhdh/rhdh-hub-rhel9 -t next -s
+  ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-gke-helm-nightly -r rhdh/rhdh-hub-rhel10 -t next -s
 
   # Disconnected OCP (requires a real OpenShift cluster; uses internal image registry)
   ./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-ocp-disconnected-operator-nightly -r rhdh-community/rhdh -t next -s
@@ -122,13 +125,15 @@ local_run::cleanup() {
   rmdir "$RUN_LOCK_DIR"
 }
 local_run::interrupt() {
-  local signal=$1 exit_code=$2 pid runner_signalled=false
+  local exit_code=$1 pid runner_signalled=false
   trap '' INT TERM HUP
   # Ask bash for its jobs instead of reading a PID variable: a job exists from
   # the moment it is forked, before the following line can record $!.
   for pid in $(jobs -p); do
     [[ "$pid" == "$LOG_PID" ]] && continue
-    kill -s "$signal" "$pid" 2> /dev/null || true
+    # Background shells can inherit ignored SIGINT; use SIGTERM to stop the
+    # wrapped runner while preserving the caller's signal in our exit code.
+    kill -TERM "$pid" 2> /dev/null || true
     wait "$pid" 2> /dev/null || true
     runner_signalled=true
   done
@@ -142,9 +147,9 @@ local_run::interrupt() {
   exit "$exit_code"
 }
 trap local_run::cleanup EXIT
-trap 'local_run::interrupt INT 130' INT
-trap 'local_run::interrupt TERM 143' TERM
-trap 'local_run::interrupt HUP 129' HUP
+trap 'local_run::interrupt 130' INT
+trap 'local_run::interrupt 143' TERM
+trap 'local_run::interrupt 129' HUP
 
 # ========== Prerequisites Check ==========
 PREREQ_FAILED=false
@@ -540,17 +545,26 @@ if [[ "$CONTAINER_EXIT_CODE" -ne 0 ]]; then
   exit $CONTAINER_EXIT_CODE
 fi
 
+local_run::print_host_setup() {
+  log::info "Prepare host dependencies, namespaces, and cluster credentials:"
+  echo "   yarn install"
+  echo "   export NAME_SPACE=showcase NAME_SPACE_RBAC=showcase-rbac NAME_SPACE_RUNTIME=showcase-runtime"
+  if [[ "$CONTAINER_PLATFORM" == "ocp" || "$CONTAINER_PLATFORM" == "osd-gcp" ]]; then
+    echo '   K8S_CLUSTER_URL="$(oc whoami --show-server)" && export K8S_CLUSTER_URL'
+    echo '   K8S_CLUSTER_TOKEN="$(oc create token rhdh-local-tester -n rhdh-local-test --duration=8h)" && export K8S_CLUSTER_TOKEN'
+  else
+    echo '   K8S_CLUSTER_URL="$(kubectl config view --minify -o jsonpath="{.clusters[0].cluster.server}")" && export K8S_CLUSTER_URL'
+    echo '   K8S_CLUSTER_TOKEN="$(kubectl create token rhdh-local-tester -n rhdh-local-test --duration=8h)" && export K8S_CLUSTER_TOKEN'
+  fi
+  echo ""
+  log::info "Bitwarden prerequisites: ../docs/e2e-tests/managing-e2e-secrets.md"
+  echo ""
+}
+
 if [[ "$SKIP_TESTS" == "true" ]]; then
   log::section "Next Steps: Run Tests Locally (headed mode)"
   echo ""
-  log::info "1. Unlock Bitwarden if needed:"
-  echo '   export BW_SESSION=$(bw unlock --raw)'
-  echo ""
-  log::info "2. Install dependencies and run tests against the URL printed above:"
-  echo "   yarn install"
-  echo "   export NAME_SPACE=showcase NAME_SPACE_RBAC=showcase-rbac NAME_SPACE_RUNTIME=showcase-runtime"
-  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed"
-  echo ""
+  local_run::print_host_setup
   log::info "Useful Playwright commands:"
   echo ""
   echo "   # Run all tests for a project"
@@ -558,16 +572,18 @@ if [[ "$SKIP_TESTS" == "true" ]]; then
   echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed"
   echo ""
   echo "   # Run a specific test file (use --workers=1 for sequential execution)"
-  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed --workers=1 playwright/e2e/plugins/rbac/rbac.spec.ts"
-  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed --workers=1 playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts"
+  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed --workers=1 playwright/e2e/audit-log/auditor-rbac.spec.ts"
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed --workers=1 playwright/e2e/guest-signin-happy-path.spec.ts"
   echo ""
   echo "   # Run tests matching a pattern"
-  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed --workers=1 -g \"guest user\""
-  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed --workers=1 -g \"catalog\""
+  echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --headed --workers=1 -g \"role-read\""
+  echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed --workers=1 -g \"Verify Profile is Guest\""
   echo ""
   echo "   # Interactive UI mode"
   echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --ui"
   echo "   BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac --ui"
+  echo ""
+  log::info "Host reports: npx playwright show-report playwright-report"
   echo ""
 else
   log::section "Tests Completed"
@@ -577,7 +593,16 @@ else
   echo "   npx playwright show-report .local-test/rhdh/.local-test/artifact_dir/showcase"
   echo ""
   log::info "To re-run tests locally (headed mode):"
-  echo "   export NAME_SPACE=showcase NAME_SPACE_RBAC=showcase-rbac NAME_SPACE_RUNTIME=showcase-runtime"
+  local_run::print_host_setup
   echo "   BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase --headed"
+  echo ""
+fi
+
+if [[ "$JOB_NAME" == pull-ci-*ocp*helm* ]]; then
+  log::info "To reproduce the OCP Helm PR check on the host (CI workers and retries):"
+  echo "   export JOB_NAME=\"$JOB_NAME\" IS_OPENSHIFT=true CONTAINER_PLATFORM=ocp"
+  echo "   CI=true BASE_URL=<showcase-url> ./local-test.sh -- --project=showcase"
+  echo "   CI=true BASE_URL=<rbac-url> ./local-test.sh -- --project=showcase-rbac"
+  echo "   # Add --retries=0 when investigating first-attempt failures."
   echo ""
 fi
