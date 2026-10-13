@@ -28,8 +28,25 @@ export function createRuntimeProgress(info: ProgressInfo, identity: RuntimeIdent
           "runtime-progress",
           `${safe(info.testId)}-${info.retry}.jsonl`,
         );
+  // Progress is evidence, never control flow: a full disk must not skip a cleanup phase.
+  let fileAvailable = true;
+  const persist = (write: () => void) => {
+    if (!fileAvailable) return;
+    try {
+      write();
+    } catch (error) {
+      fileAvailable = false;
+      const code: unknown =
+        typeof error === "object" && error !== null ? Reflect.get(error, "code") : undefined;
+      console.warn(
+        `[runtime] Progress file unavailable (${typeof code === "string" ? code : "unknown"}); continuing with console records only`,
+      );
+    }
+  };
   // Default modes: the content is whitelisted and the artifact uploader may run as another user.
-  mkdirSync(dirname(path), { recursive: true });
+  persist(() => {
+    mkdirSync(dirname(path), { recursive: true });
+  });
 
   const record = (
     phase: string,
@@ -56,8 +73,10 @@ export function createRuntimeProgress(info: ProgressInfo, identity: RuntimeIdent
       errorCode: typeof code === "string" || typeof code === "number" ? code : undefined,
     };
     const line = JSON.stringify(item);
-    appendFileSync(path, `${line}\n`);
     console.log(`[runtime] ${line}`);
+    persist(() => {
+      appendFileSync(path, `${line}\n`);
+    });
   };
   return {
     /** For phases that end outside one callback, such as the test body between fixture `use` calls. */
