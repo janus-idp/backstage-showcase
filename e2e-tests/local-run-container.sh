@@ -51,7 +51,7 @@ PODMAN_ARGS=(
   run
   -v "$WORK_DIR":/tmp/rhdh
   -v "$SCRIPT_DIR/container-init.sh":/tmp/container-init.sh:ro
-  -i -u root --privileged --rm
+  -i -u root --privileged --rm --init
   --mount "type=tmpfs,destination=/tmp/secrets,tmpfs-mode=0700"
   -e K8S_CLUSTER_URL="$K8S_CLUSTER_URL"
   -e CONTAINER_PLATFORM="$CONTAINER_PLATFORM"

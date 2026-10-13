@@ -370,38 +370,50 @@ fi`,
     expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
   }, 15_000);
 
-  it("holds the lock during cancellation until the runner has stopped", async () => {
-    mock(
-      "podman",
-      `
+  it.each([
+    ["SIGTERM", 143],
+    ["SIGINT", 130],
+    ["SIGHUP", 129],
+  ] as const)(
+    "holds the lock until the runner stops after %s",
+    async (signal, exitCode) => {
+      mock(
+        "podman",
+        `
 printf 'podman %s\\n' "$1" >> "$EVENTS"
 if [[ "$1" == run ]]; then
   trap 'printf "stopping\\n" >> "$EVENTS"; while [[ ! -f "$RELEASE" ]]; do sleep 0.05; done; exit 143' TERM
   while true; do sleep 0.05; done
 fi`,
-    );
-    const first = spawn("/bin/bash", [join(root, "e2e-tests/local-run.sh"), ...runArgs], {
-      env,
-      stdio: "ignore",
-    });
-    const completed = once(first, "exit");
-    try {
-      await expect.poll(events, { timeout: 10_000 }).toContain("podman run");
-      first.kill("SIGTERM");
-      await expect.poll(events).toContain("stopping");
-      const result = run("e2e-tests/local-run.sh", runArgs);
-      expect(result.status).toBe(1);
-      expect(result.stdout + result.stderr).toContain("Concurrent runs are not supported");
-    } finally {
-      writeFileSync(join(root, "release"), "");
-      first.kill("SIGTERM");
-      await completed;
-    }
-    expect(first.exitCode).toBe(143);
-    expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
-  }, 15_000);
+      );
+      const first = spawn("/bin/bash", [join(root, "e2e-tests/local-run.sh"), ...runArgs], {
+        env,
+        stdio: "ignore",
+      });
+      const completed = once(first, "exit");
+      try {
+        await expect.poll(events, { timeout: 10_000 }).toContain("podman run");
+        first.kill(signal);
+        await expect.poll(events).toContain("stopping");
+        const result = run("e2e-tests/local-run.sh", runArgs);
+        expect(result.status).toBe(1);
+        expect(result.stdout + result.stderr).toContain("Concurrent runs are not supported");
+      } finally {
+        writeFileSync(join(root, "release"), "");
+        first.kill("SIGTERM");
+        await completed;
+      }
+      expect(first.exitCode).toBe(exitCode);
+      expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
+    },
+    15_000,
+  );
 
-  it("holds the lock when cancelled while secrets are loading", async () => {
+  it.each([
+    ["SIGTERM", 143],
+    ["SIGINT", 130],
+    ["SIGHUP", 129],
+  ] as const)("holds the lock when secrets are loading after %s", async (signal, exitCode) => {
     mock(
       "secrets",
       `
@@ -417,7 +429,7 @@ while true; do sleep 0.05; done`,
     const completed = once(first, "exit");
     try {
       await expect.poll(events, { timeout: 10_000 }).toContain("secrets loading");
-      first.kill("SIGTERM");
+      first.kill(signal);
       await expect.poll(events).toContain("secrets stopping");
       expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(true);
     } finally {
@@ -425,7 +437,7 @@ while true; do sleep 0.05; done`,
       first.kill("SIGTERM");
       await completed;
     }
-    expect(first.exitCode).toBe(143);
+    expect(first.exitCode).toBe(exitCode);
     expect(events()).not.toContain("podman run");
     expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
   });

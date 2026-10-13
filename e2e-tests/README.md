@@ -75,8 +75,9 @@ podman machine start
 
 Install `podman`, `oc`, `kubectl`, `bw`, `jq`, `rsync`, and `curl` using your distribution's package manager.
 
-Both local runners load secrets from Bitwarden. Unlocking, the secret names, recovery from
-failed checks, and the single-run lock are described in
+Both local runners load secrets from Bitwarden. Authentication is covered by the
+[upstream Secrets API documentation](https://redhat-developer.github.io/rhdh-e2e-test-utils/api/secrets.html#local-command).
+Repository-specific secret names, failed checks, and the single-run lock are described in
 [Managing E2E Secrets](../docs/e2e-tests/managing-e2e-secrets.md).
 
 ### Getting a Cluster
@@ -122,7 +123,7 @@ cd e2e-tests
 
 Follow the interactive prompts to select:
 
-1. **Run mode**: Deploy only (default, for headed debugging) or Deploy and run tests
+1. **Run mode**: **1** = Deploy only (default, for headed debugging); **2** = Deploy and run tests
 2. **Job type**: OCP Helm PR tests, Nightly tests, Operator tests, etc.
 3. **Image type**:
    - **Downstream RHEL 9** (`quay.io/rhdh/rhdh-hub-rhel9`): `next`, `latest`, or release-specific tag (maintenance branches)
@@ -136,8 +137,11 @@ After the container finishes, you're back on your host with the cluster still ac
 For automation or quick runs, use CLI flags to skip interactive prompts:
 
 ```bash
-# Test a PR image
-./local-run.sh --pr 4023 --skip-tests
+# Deploy and test a PR image
+./local-run.sh -j pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm --pr 4023
+
+# Deploy a PR image for host-side debugging
+./local-run.sh -j pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm --pr 4023 --skip-tests
 
 # Deploy downstream next image
 ./local-run.sh --repo rhdh/rhdh-hub-rhel10 --tag next --skip-tests
@@ -162,15 +166,16 @@ Disconnected Operator and Helm nightlies can be started only via `local-run.sh` 
 
 `local-run.sh` sets `DISCONNECTED=true` and `LOCAL_DISCONNECTED=1` for `*disconnected*` jobs. The e2e-runner bootstraps `MIRROR_*` **inside the container**, using the cluster image registry route: the public route CA goes under `${SHARED_DIR}/disconnected-mirror/` (worktree mount), and the merged registry pull secret stays in a private container-only temporary directory. Operator prepare uses `--to-registry OCP_INTERNAL`; Helm oc-mirrors to the exposed registry route. For air-gap prepare semantics, see [rhdh-operator](https://github.com/redhat-developer/rhdh-operator) docs — this path does not duplicate them.
 
-| Flag               | Description                                                              |
-| ------------------ | ------------------------------------------------------------------------ |
-| `-j, --job`        | Job name                                                                 |
-| `-R, --registry`   | Image registry (default: `quay.io`)                                      |
-| `-r, --repo`       | Image repository (e.g., `rhdh/rhdh-hub-rhel10` or `rhdh/rhdh-hub-rhel9`) |
-| `-t, --tag`        | Image tag (e.g., `next`, `latest`, `1.5`)                                |
-| `-p, --pr`         | PR number (sets repo to `rhdh-community/rhdh`, tag to `pr-<number>`)     |
-| `-s, --skip-tests` | Deploy only, skip running tests                                          |
-| `-h, --help`       | Show help message                                                        |
+| Flag                 | Description                                                                        |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| `-j, --job`          | Job name                                                                           |
+| `-R, --registry`     | Image registry (default: `quay.io`)                                                |
+| `-r, --repo`         | Image repository (e.g., `rhdh/rhdh-hub-rhel10` or `rhdh/rhdh-hub-rhel9`)           |
+| `-t, --tag`          | Image tag (e.g., `next`, `latest`, `1.5`)                                          |
+| `-p, --pr`           | PR number (sets repo to `rhdh-community/rhdh`, tag to `pr-<number>`)               |
+| `-i, --runner-image` | Override the runner image (default: `quay.io/rhdh-community/rhdh-e2e-runner:main`) |
+| `-s, --skip-tests`   | Deploy only, skip running tests                                                    |
+| `-h, --help`         | Show help message                                                                  |
 
 ---
 
@@ -193,12 +198,26 @@ The container will deploy RHDH and exit. You'll see next steps printed in the te
 ```bash
 cd e2e-tests
 yarn install
-BASE_URL=https://your-showcase-url NAME_SPACE=showcase \
+
+# Match these to the deployed namespaces.
+export NAME_SPACE=showcase NAME_SPACE_RBAC=showcase-rbac
+
+# The full showcase suites include cluster-aware tests. local-run.sh created this
+# service account; request a fresh token using your current cluster login.
+K8S_CLUSTER_URL="$(oc whoami --show-server)" && export K8S_CLUSTER_URL
+K8S_CLUSTER_TOKEN="$(oc create token rhdh-local-tester -n rhdh-local-test --duration=8h)" && export K8S_CLUSTER_TOKEN
+
+BASE_URL=https://your-showcase-url \
   ./local-test.sh -- --project=showcase --headed
 ```
 
 `local-test.sh` requires the namespace variable of the selected project (`NAME_SPACE`,
-`NAME_SPACE_RBAC`, or `NAME_SPACE_RUNTIME`); the commands below assume it is exported.
+`NAME_SPACE_RBAC`, or `NAME_SPACE_RUNTIME`). Run the setup above before the host examples
+below, and use the URL of the deployment matching the selected project. For Kubernetes,
+read the API server with `kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'`
+and request the token with `kubectl create token rhdh-local-tester -n rhdh-local-test --duration=8h`.
+Both CLIs must target the cluster hosting the deployment. Authentication prerequisites
+are linked from [Managing E2E Secrets](../docs/e2e-tests/managing-e2e-secrets.md#running-with-secrets).
 `showcase-runtime` needs further caller-provided values on the host — see
 [Running with Secrets](../docs/e2e-tests/managing-e2e-secrets.md#running-with-secrets).
 
@@ -209,14 +228,14 @@ BASE_URL=https://your-showcase-url NAME_SPACE=showcase \
 BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed
 
 # Run a specific test file (use --project to specify which project)
-BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts
+BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed playwright/e2e/guest-signin-happy-path.spec.ts
 
 # Run RBAC tests against the RBAC deployment URL
-BASE_URL=https://your-rbac-url ./local-test.sh -- --project=showcase-rbac --headed playwright/e2e/plugins/rbac/rbac.spec.ts
+BASE_URL=https://your-rbac-url ./local-test.sh -- --project=showcase-rbac --headed playwright/e2e/audit-log/auditor-rbac.spec.ts
 
 # Run tests matching a pattern (by test name)
-BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed -g "guest user"
-BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed -g "catalog"
+BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed -g "Verify Profile is Guest"
+BASE_URL=https://your-rbac-url ./local-test.sh -- --project=showcase-rbac --headed -g "role-read"
 
 # Run with trace for debugging
 BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed --trace on
@@ -224,8 +243,8 @@ BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --heade
 # Run in UI mode (interactive debugging with time-travel)
 BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --ui
 
-# View the last test report
-npx playwright show-report .local-test/rhdh/.local-test/artifact_dir/showcase
+# View the last host test report
+npx playwright show-report playwright-report
 ```
 
 > **Tip:** UI mode (`--ui`) opens an interactive browser where you can:
@@ -235,6 +254,37 @@ npx playwright show-report .local-test/rhdh/.local-test/artifact_dir/showcase
 > - Step through test actions with time-travel debugging
 > - Inspect DOM snapshots at each step
 > - View console logs and network requests
+
+### Reproducing the OCP Helm PR Check on the Host
+
+After the deployment and host connection setup above, run both projects sequentially
+against their respective URLs. `CI=true` selects the worker count and retries configured
+in `playwright.config.ts` (three workers and two retries by default, with project-specific
+overrides). The job and platform variables reproduce the OCP Helm PR check's test selection
+and installation-method detection.
+
+```bash
+export JOB_NAME=pull-ci-redhat-developer-rhdh-main-e2e-ocp-helm
+export IS_OPENSHIFT=true CONTAINER_PLATFORM=ocp
+
+CI=true BASE_URL=https://your-showcase-url \
+  ./local-test.sh -- --project=showcase
+
+CI=true BASE_URL=https://your-rbac-url \
+  ./local-test.sh -- --project=showcase-rbac
+```
+
+For first-attempt failure investigation, add `--retries=0`. To run a single test with
+one worker and a visible browser, use an existing spec and a matching test name:
+
+```bash
+BASE_URL=https://your-showcase-url ./local-test.sh -- \
+  --project=showcase --no-deps --workers=1 --retries=0 --headed \
+  playwright/e2e/guest-signin-happy-path.spec.ts -g "Verify Profile is Guest"
+```
+
+`./local-run.sh -j "$JOB_NAME" --pr 4023` runs the complete deployment and both projects
+in the runner container, including CI environment setup and artifact collection.
 
 ---
 
@@ -284,16 +334,22 @@ In CI, set the `PLAYWRIGHT_GREP` environment variable (consumed by
 
 #### Job Types
 
-All job types are supported as long as you're logged into the target cluster (`oc login` or `kubectl login`).
+Log in to the target OpenShift cluster with `oc login`, or configure your Kubernetes
+kubeconfig so `kubectl cluster-info` reaches the target cluster.
 
-| Option | JOB_NAME Pattern                        | Description                |
-| ------ | --------------------------------------- | -------------------------- |
-| 1      | `*pull*ocp*helm*`                       | OCP Helm PR tests          |
-| 2      | `*ocp*helm*nightly*`                    | OCP Helm Nightly tests     |
-| 3      | `*ocp*operator*nightly*`                | OCP Operator Nightly tests |
-| 4      | `*ocp*helm*upgrade*nightly*`            | OCP Helm Upgrade tests     |
-| 5      | `*ocp*operator*auth-providers*nightly*` | Auth Providers tests       |
-| 6      | Custom                                  | Enter your own JOB_NAME    |
+| Option | JOB_NAME Pattern                        | Description                             |
+| ------ | --------------------------------------- | --------------------------------------- |
+| 1      | `*pull*ocp*helm*`                       | OCP Helm PR tests                       |
+| 2      | `*ocp*helm*nightly*`                    | OCP Helm Nightly tests                  |
+| 3      | `*ocp*operator*nightly*`                | OCP Operator Nightly tests              |
+| 4      | `*ocp*helm*upgrade*nightly*`            | OCP Helm Upgrade tests                  |
+| 5      | `*ocp*operator*auth-providers*nightly*` | Auth Providers tests                    |
+| 6      | `*aks*helm*nightly*`                    | AKS Helm Nightly tests                  |
+| 7      | `*eks*helm*nightly*`                    | EKS Helm Nightly tests                  |
+| 8      | `*gke*helm*nightly*`                    | GKE Helm Nightly tests                  |
+| 9      | `*ocp*disconnected*operator*nightly*`   | Disconnected OCP Operator Nightly tests |
+| 10     | `*ocp*disconnected*helm*nightly*`       | Disconnected OCP Helm Nightly tests     |
+| 11     | Custom                                  | Enter the full Prow JOB_NAME            |
 
 **Other supported patterns** (use Custom option):
 
@@ -302,25 +358,31 @@ All job types are supported as long as you're logged into the target cluster (`o
 - `*gke*helm*nightly*` / `*gke*operator*nightly*` - Google GKE
 - `*osd-gcp*helm*nightly*` / `*osd-gcp*operator*nightly*` - OSD GCP
 
-#### Image Repositories
+#### Image Types
 
-| Option | Repository             | Description                          |
-| ------ | ---------------------- | ------------------------------------ |
-| 1      | `rhdh-community/rhdh`  | Community image (default)            |
-| 2      | `rhdh/rhdh-hub-rhel10` | Red Hat RHEL 10 image (`main` / 2.y) |
-| 3      | `rhdh/rhdh-hub-rhel9`  | Red Hat RHEL 9 image (1.y only)      |
-| 4      | Custom                 | Enter your own repository            |
+| Option | Repository                                | Description                           |
+| ------ | ----------------------------------------- | ------------------------------------- |
+| 1      | `quay.io/rhdh/rhdh-hub-rhel9`             | Downstream RHEL 9 image               |
+| 2      | `quay.io/rhdh/rhdh-hub-rhel10`            | Downstream RHEL 10 image (default)    |
+| 3      | `quay.io/rhdh-community/rhdh`             | PR image; enter a PR number           |
+| 4      | `registry.redhat.io/rhdh/rhdh-hub-rhel9`  | Released RHEL 9 image                 |
+| 5      | `registry.redhat.io/rhdh/rhdh-hub-rhel10` | Released RHEL 10 image                |
+| 6      | Custom                                    | Enter a registry, repository, and tag |
 
-#### Image Tags
+#### Downstream Image Tags
 
-| Option | Tag           | Description                         |
-| ------ | ------------- | ----------------------------------- |
-| 1      | `next`        | Latest development build (default)  |
-| 2      | `latest`      | Latest stable release               |
-| 3      | `pr-<number>` | PR-specific build (e.g., `pr-4020`) |
-| 4      | Custom        | Enter your own tag                  |
+Downstream image types 1 and 2 offer these tag choices. PR image type 3 derives
+`pr-<number>` from the PR number; released and custom types prompt for the tag directly.
+
+| Option | Tag         | Description                        |
+| ------ | ----------- | ---------------------------------- |
+| 1      | `next`      | Latest development build (default) |
+| 2      | `latest`    | Latest stable release              |
+| 3      | Release tag | Enter a release-specific tag       |
 
 ### Examples
+
+Host examples use the [namespace and cluster-token setup above](#running-tests-locally-in-headed-mode-recommended-for-debugging).
 
 #### Example 1: Test a PR image
 
@@ -331,10 +393,9 @@ cd e2e-tests
 ./local-run.sh
 
 # Select:
+#   Run: 2 (Deploy and run tests)
 #   Job: 1 (OCP Helm PR tests)
-#   Repo: 1 (rhdh-community/rhdh)
-#   Tag: 3 (PR image) → Enter: 4020
-#   Run: 1 (Deploy and run tests)
+#   Image type: 3 (PR image) → Enter PR number: 4020
 ```
 
 #### Example 2: Deploy only, debug tests locally
@@ -346,14 +407,14 @@ cd e2e-tests
 ./local-run.sh
 
 # Select:
+#   Run: 1 (Deploy only)
 #   Job: 1 (OCP Helm PR tests)
-#   Repo: 1 (rhdh-community/rhdh)
+#   Image type: 2 (Downstream RHEL 10)
 #   Tag: 1 (next)
-#   Run: 2 (Deploy only)
 
 # Use the URL printed by local-run.sh:
 BASE_URL=https://your-showcase-url \
-  ./local-test.sh -- --project=showcase --headed -g "guest user"
+  ./local-test.sh -- --project=showcase --headed -g "Verify Profile is Guest"
 ```
 
 #### Example 3: Test Red Hat image with nightly job
@@ -365,10 +426,10 @@ cd e2e-tests
 ./local-run.sh
 
 # Select:
+#   Run: 2 (Deploy and run tests)
 #   Job: 2 (OCP Helm Nightly)
-#   Repo: 2 (rhdh/rhdh-hub-rhel9)
+#   Image type: 2 (Downstream RHEL 10)
 #   Tag: 1 (next)
-#   Run: 1 (Deploy and run tests)
 ```
 
 #### Example 4: Test RBAC functionality locally
@@ -399,10 +460,10 @@ cd e2e-tests
 ./local-run.sh
 
 # Select:
-#   Job: 6 (Custom) → Enter: periodic-ci-aks-helm-nightly
-#   Repo: 1 (rhdh-community/rhdh)
+#   Run: 2 (Deploy and run tests)
+#   Job: 6 (AKS Helm Nightly), 7 (EKS Helm Nightly), or 8 (GKE Helm Nightly)
+#   Image type: 2 (Downstream RHEL 10)
 #   Tag: 1 (next)
-#   Run: 1 (Deploy and run tests)
 ```
 
 #### Example 6: Run a single test file
@@ -411,7 +472,7 @@ cd e2e-tests
 cd e2e-tests
 yarn install
 BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --headed \
-  playwright/e2e/plugins/quick-access-and-tech-radar.spec.ts
+  playwright/e2e/guest-signin-happy-path.spec.ts
 ```
 
 #### Example 7: Run tests with trace for debugging
@@ -419,7 +480,7 @@ BASE_URL=https://your-showcase-url ./local-test.sh -- --project=showcase --heade
 ```bash
 cd e2e-tests
 BASE_URL=https://your-showcase-url ./local-test.sh -- \
-  --project=showcase --headed --trace on -g "catalog"
+  --project=showcase --headed --trace on -g "Catalog"
 ```
 
 #### Example 8: Interactive debugging with UI mode
@@ -496,17 +557,41 @@ download leaves no certificate file and never falls back to a stored RDS bundle.
 
 ### Artifacts and Logs
 
-Test artifacts are saved to `e2e-tests/.local-test/rhdh/.local-test/`:
+Container test artifacts are saved to `e2e-tests/.local-test/rhdh/.local-test/`:
 
 - `artifact_dir/` - Test artifacts, screenshots, traces
 - `shared_dir/` - Shared data between test runs
 - `config.env` - Deployment configuration retained for deployment troubleshooting
 
+Host runs use `e2e-tests/playwright-report/` for the HTML report,
+`e2e-tests/test-results/` for screenshots and traces, and `e2e-tests/junit-results.xml`
+for JUnit results by default. Each host invocation replaces its previous report;
+run the projects sequentially and save reports you want to retain before starting another run.
+
+From `e2e-tests`, open the appropriate report:
+
+```bash
+# Latest host run
+npx playwright show-report playwright-report
+
+# Container OCP Helm PR-check runs
+npx playwright show-report .local-test/rhdh/.local-test/artifact_dir/showcase
+npx playwright show-report .local-test/rhdh/.local-test/artifact_dir/showcase-rbac
+```
+
+### Cancelling a Local Run
+
+Press Ctrl+C or send SIGTERM to `local-run.sh` to stop the runner. Podman's init process
+forwards termination to the container's processes. The wrapper drains its log and holds
+the checkout lock until the runner exits, then removes the lock. Ctrl+C exits with code
+130; SIGTERM exits with code 143.
+
 ### Troubleshooting
 
 #### Error: Script failed
 
-The container will drop into an interactive shell for debugging. Check logs, run commands, and investigate.
+Check `e2e-tests/.local-test/container.log` and the container artifacts above for the
+failing step. The runner exits with the failure code and removes its container.
 
 #### Error: Not logged into OpenShift
 
