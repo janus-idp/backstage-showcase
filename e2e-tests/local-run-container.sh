@@ -37,7 +37,6 @@ else
     --serviceaccount="${SA_NAMESPACE}:${SA_NAME}" 2> /dev/null || true
   K8S_CLUSTER_TOKEN=$(kubectl create token "$SA_NAME" -n "$SA_NAMESPACE" --duration=8h)
 fi
-export RHDH_LOCAL_TEST_CLUSTER_TOKEN="$K8S_CLUSTER_TOKEN"
 log::info "K8S_CLUSTER_URL: $K8S_CLUSTER_URL"
 
 log::section "Copying repo to work directory"
@@ -55,7 +54,6 @@ PODMAN_ARGS=(
   -i -u root --privileged --rm
   --mount "type=tmpfs,destination=/tmp/secrets,tmpfs-mode=0700"
   -e K8S_CLUSTER_URL="$K8S_CLUSTER_URL"
-  --env RHDH_LOCAL_TEST_CLUSTER_TOKEN
   -e CONTAINER_PLATFORM="$CONTAINER_PLATFORM"
   -e JOB_NAME="$JOB_NAME"
   -e IMAGE_REGISTRY="$IMAGE_REGISTRY"
@@ -70,4 +68,9 @@ PODMAN_ARGS=(
   "$RUNNER_IMAGE"
   /bin/bash /tmp/container-init.sh
 )
-exec podman "${PODMAN_ARGS[@]}" 0<&3 3<&-
+# The generated token precedes the secret stream on stdin so it never appears
+# in the container environment, podman inspect output, or process arguments.
+exec podman "${PODMAN_ARGS[@]}" 0< <(
+  printf '%s\n' "$K8S_CLUSTER_TOKEN"
+  cat <&3
+) 3<&-

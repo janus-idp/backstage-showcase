@@ -429,6 +429,28 @@ while true; do sleep 0.05; done`,
     expect(events()).not.toContain("podman run");
     expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
   });
+
+  it("passes the cluster token on stdin ahead of the secret stream", () => {
+    mock(
+      "podman",
+      `
+printf 'podman %s\\n' "$1" >> "$EVENTS"
+if [[ "$1" == run ]]; then
+  printf '%s\\n' "$*" > "$EVENTS.args"
+  env > "$EVENTS.env"
+  IFS= read -r token
+  printf '%s' "$token" > "$EVENTS.token"
+  head -c 8 > "$EVENTS.header"
+  cat > /dev/null
+fi`,
+    );
+    const result = run("e2e-tests/local-run.sh", runArgs);
+    expect(result.status).toBe(0);
+    expect(readFileSync(join(root, "events.token"), "utf8")).toBe("synthetic-token");
+    expect(readFileSync(join(root, "events.header"), "utf8")).toBe("RHDHSEC1");
+    expect(readFileSync(join(root, "events.args"), "utf8")).not.toContain("TOKEN");
+    expect(readFileSync(join(root, "events.env"), "utf8")).not.toContain("synthetic-token");
+  });
 });
 
 describe("cluster claim login", () => {

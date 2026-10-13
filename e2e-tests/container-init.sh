@@ -19,26 +19,26 @@ trap handle_error ERR
 
 set -e
 
-# Secret values are streamed by local-run.sh and materialized in the private
-# tmpfs mounted at the same /tmp/secrets path used by OpenShift CI.
+# local-run.sh sends the generated cluster token as the first stdin line and
+# the secret stream after it. bash reads a pipe one byte at a time, so the
+# stream is left intact for the decoder, which creates the private directory
+# on the tmpfs mounted at the same /tmp/secrets path used by OpenShift CI.
 log::section "Reading host-provided secrets"
-mkdir -p /tmp/secrets
-chmod 700 /tmp/secrets
+IFS= read -r K8S_CLUSTER_TOKEN || true
+if [[ -z "${K8S_CLUSTER_TOKEN:-}" ]]; then
+  log::error "Generated cluster token was not provided by the host"
+  exit 1
+fi
 node /tmp/rhdh/e2e-tests/decode-secret-stream.ts /tmp/secrets
-exec 0</dev/null
+exec 0< /dev/null
 log::success "Secret stream decoded"
 
 # Login using service account token from host
 log::section "Cluster Service Account and Token Management"
 
-# K8S_CLUSTER_URL, RHDH_LOCAL_TEST_CLUSTER_TOKEN, and CONTAINER_PLATFORM are passed from local-run.sh
+# K8S_CLUSTER_URL and CONTAINER_PLATFORM are passed from local-run.sh
 export K8S_CLUSTER_URL
-if [[ -z "${RHDH_LOCAL_TEST_CLUSTER_TOKEN:-}" ]]; then
-  log::error "Generated cluster token was not provided by the host"
-  exit 1
-fi
-export K8S_CLUSTER_TOKEN="$RHDH_LOCAL_TEST_CLUSTER_TOKEN"
-unset RHDH_LOCAL_TEST_CLUSTER_TOKEN
+export K8S_CLUSTER_TOKEN
 export CONTAINER_PLATFORM
 log::info "K8S_CLUSTER_URL: $K8S_CLUSTER_URL"
 log::info "CONTAINER_PLATFORM: $CONTAINER_PLATFORM"
