@@ -29,11 +29,13 @@ Scope of this mechanism:
    (`e2e-tests/playwright/support/coverage/reporter.ts`) reads the raw files at
    `onEnd` and uses `monocart-coverage-reports` to convert V8 output to
    Istanbul format and emit a merged LCOV + HTML report under `coverage/e2e/`.
-3. **Mapping to repository paths.** The deployed image serves `packages/app` as
-   minified bundles with source maps whose sources read `webpack://app/./src/...`.
-   `support/coverage/source-paths.ts` keeps only `packages/app/src/**` and names
-   each file by its repository path; without it the report lists ~3,300 bundled
-   `node_modules` files and none that Codecov can match to this repository.
+3. **Source maps and repository paths.** The deployed image serves `packages/app`
+   as minified bundles with source maps whose sources read `webpack://app/./src/...`.
+   `support/coverage/source-maps.ts` fetches each bundle's map once (tolerating the
+   cluster route's untrusted certificate) and drops bundles whose map does not load;
+   `support/coverage/source-paths.ts` keeps only `packages/app/src/**` and names each
+   file by its repository path. Unfiltered, a first page load reports ~3,300 files,
+   17 of them in this repository.
 4. **Codecov upload (CI).** `testing::_upload_e2e_coverage` in
    `.ci/pipelines/lib/testing.sh` uploads `coverage/e2e/lcov.info` with the flag
    `rhdh-e2e-frontend`, attributed to the PR head commit (see "CI wiring" below).
@@ -136,12 +138,16 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   the `e2e-ocp-helm` PR check collects coverage for both the `showcase` and
   `showcase-rbac` projects. Each upload lands on the same commit and flag, and Codecov
   merges them.
-- `CODECOV_TOKEN` is read from `/tmp/secrets/CODECOV_TOKEN`, the `rhdh` credentials
-  bundle (Google Secret Manager) OpenShift CI mounts into the step. **The key must exist
-  in that bundle**, as its own field; the GitHub Actions secret of the same name does not
-  reach Prow. The upload passes it to the Codecov CLI through the environment, never as
-  an argument. Without it the upload is skipped
-  and the report is still saved as the `coverage` artifact.
+- The token is read from `/tmp/secrets/CODECOV_TOKEN`, a field of the `rhdh` credentials
+  bundle (Google Secret Manager) that OpenShift CI mounts into the step. **The field must
+  exist**; the GitHub Actions secret of the same name does not reach Prow. It is read
+  only at upload time and handed to the Codecov CLI through that one command's
+  environment, never as an argument and never exported to the rest of the job. Without
+  it the upload is skipped and the report is still saved as the `coverage` artifact.
+- The CLI is a pinned release (`testing::_codecov_cli`), downloaded over HTTPS only and
+  checksum-verified. The upload runs with `--network-root-folder` at the repository root:
+  Codecov keeps only report paths that appear in that tree's `git ls-files`, and the job
+  runs from `e2e-tests/`. A report that names no source file is not uploaded.
 - The upload is attributed to the PR head (`PULL_PULL_SHA`) with `--pr`, never to the
   checkout's HEAD, which is a local merge of the PR onto its base that GitHub has never
   seen. It runs only when the job tested the PR's own image (`TAG_NAME` is
@@ -154,6 +160,10 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   it was uploaded to, and a squash merge creates a new commit on `main`, so the flag
   shows on PRs but not on `main`'s dashboard. Uploading from a `main` nightly would
   close that gap.
+- For the same reason, the repository-wide `project`/`patch` statuses and components in
+  `codecov.yml` combine every flag: on a PR with an E2E upload they include E2E
+  coverage, while `main` has unit coverage only. They are informational, but the PR's
+  project delta for `packages/app` reflects the extra flag, not only the change.
 
 ## Environment variables
 
@@ -162,9 +172,10 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 | `COLLECT_COVERAGE` | (unset) | Set to `true` to enable coverage collection |
 | `COVERAGE_OUTPUT_DIR` | `<cwd>/coverage/e2e-raw` | Where per-test raw V8 coverage is written |
 | `COVERAGE_REPORT_DIR` | `<cwd>/coverage/e2e` | Where the merged Istanbul report is written |
-| `CODECOV_TOKEN` | (unset) | Codecov upload token; CI reads it from `/tmp/secrets/CODECOV_TOKEN`. Without it the upload is skipped |
-| `CODECOV_BIN` | `/tmp/codecov` | Where the Codecov CLI lives. Used as-is when already executable (the unit tests point it at a stub), otherwise downloaded there and checksum-verified |
-| `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter will wait for `monocart.CoverageReport.generate()` before aborting. Prevents a CI job from hanging if coverage aggregation stalls |
+| `CODECOV_TOKEN` | (unset) | Codecov upload token. When unset, it is read from `CODECOV_TOKEN_FILE`; without either the upload is skipped |
+| `CODECOV_TOKEN_FILE` | `/tmp/secrets/CODECOV_TOKEN` | Where CI mounts the token |
+| `CODECOV_BIN` | `/tmp/codecov` | Where the Codecov CLI lives. Used as-is when already executable, otherwise downloaded there and checksum-verified |
+| `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter spends merging raw files (including fetching source maps) and generating the report. Prevents a CI job from hanging if a route or the aggregation stalls |
 
 Raw coverage file names include the spec title path, worker index, and retry
 number (for example `Smoke_test_basic_flow-w0-r0-1714003200000.json`) so
@@ -177,13 +188,14 @@ parallel workers and retries never overwrite each other's output.
   is not a practical issue today.
 - **Source maps required.** The mapping depends on the image shipping
   `packages/app/dist/static/*.js.map`, which the Backstage production build emits
-  (`devtool: "source-map"`) and the Containerfile keeps. Verified against
-  `quay.io/rhdh-community/rhdh:next`. If they disappear, the report is empty rather
-  than wrong, because no source would match `packages/app/src/**`.
+  (`devtool: "source-map"`) and the Containerfile keeps (checked against
+  `quay.io/rhdh-community/rhdh:next`, October 2026). If they disappear, the report is
+  empty rather than wrong, the reporter warns, and nothing is uploaded.
 - **Frontend of this repository only.** `packages/app` is the only frontend package
   here; plugins load from their own bundles and are covered under RHIDP-11866.
-- **Three specs do not contribute.** The `external-database/verify-tls-config-*`
-  specs exercise database connectivity, not the UI, and do not import the fixture.
+- **Three specs do not contribute.** `verify-tls-config-with-external-azure-db`,
+  `-cloudsql` and `-rds` exercise database connectivity, not the UI, and do not import
+  the fixture.
 
 ## Related coverage flags in Codecov
 
@@ -200,8 +212,8 @@ Approach B would build a second `rhdh:<tag>-coverage` image with
 
 - Its gain over this approach is fidelity for `packages/app`, and with source maps
   in the image this approach already reports `packages/app/src` by repository path.
-- `packages/app` is a thin shell (about 80 source files in the bundle, of which an
-  initial page load executes 17); the code that
+- `packages/app` is a thin shell (63 source files in the bundle, of which a first page
+  load executes 17); the code that
   carries RHDH's behaviour lives in plugins, which RHIDP-13411 instruments at build
   time for the overlay E2E runs (RHIDP-11866).
 - It would add an image build to every PR and a second image to keep in step with

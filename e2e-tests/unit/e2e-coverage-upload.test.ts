@@ -33,6 +33,7 @@ beforeEach(() => {
     `#!/bin/bash\nprintf '%s\\n' "$@" > "${root}/argv"\nprintf '%s' "\${CODECOV_TOKEN:-}" > "${root}/token"\n`,
   );
   chmodSync(join(root, "codecov"), 0o755);
+  writeFileSync(join(root, "lcov.info"), "SF:packages/app/src/App.tsx\nDA:1,1\nend_of_record\n");
 });
 
 afterEach(() => {
@@ -61,6 +62,8 @@ function upload(env: Record<string, string>, prelude = "") {
         ARTIFACT_DIR: root,
         SHARED_DIR: root,
         CODECOV_BIN: join(root, "codecov"),
+        // Never the real mount, whatever the machine running the tests has there.
+        CODECOV_TOKEN_FILE: join(root, "no-token-file"),
         ...env,
       },
       encoding: "utf8",
@@ -79,8 +82,12 @@ describe("testing::_upload_e2e_coverage", () => {
     expect(status).toBe(0);
     expect(argv).toEqual([
       "upload-process",
+      "--disable-search",
       "--file",
       join(root, "lcov.info"),
+      // Codecov keeps only report paths present in this tree's `git ls-files`.
+      "--network-root-folder",
+      repository.replace(/\/$/u, ""),
       "--flag",
       "rhdh-e2e-frontend",
       "--slug",
@@ -100,6 +107,21 @@ describe("testing::_upload_e2e_coverage", () => {
     expect(readFileSync(join(root, "token"), "utf8")).toBe("s3cr3t-token");
   });
 
+  it("reads the token from the mounted secret when the environment has none", () => {
+    writeFileSync(join(root, "mounted-token"), "from-the-bundle");
+    const { argv } = upload({ ...PR_RUN, CODECOV_TOKEN_FILE: join(root, "mounted-token") });
+    expect(argv).toContain("upload-process");
+    expect(readFileSync(join(root, "token"), "utf8")).toBe("from-the-bundle");
+  });
+
+  it("skips the upload when the report names no source file", () => {
+    writeFileSync(join(root, "lcov.info"), "TN:\n");
+    const { status, argv, output } = upload({ CODECOV_TOKEN: "token", ...PR_RUN });
+    expect(status).toBe(0);
+    expect(argv).toEqual([]);
+    expect(output).toContain("names no source file");
+  });
+
   it("accepts a tag whose sha prefix git lengthened past 8 characters", () => {
     const { argv } = upload({
       CODECOV_TOKEN: "token",
@@ -114,8 +136,12 @@ describe("testing::_upload_e2e_coverage", () => {
     ["a tag built from another commit", { ...PR_RUN, TAG_NAME: "pr-4321-ffffffff" }],
     ["a tag for another PR", { ...PR_RUN, TAG_NAME: `pr-1-${PR_HEAD.slice(0, 8)}` }],
     ["a tag too short to identify a commit", { ...PR_RUN, TAG_NAME: "pr-4321-0123" }],
-    // Rehearsals: PULL_* describe the openshift/release PR, the image is not an rhdh PR's.
-    ["a rehearsal", { PULL_PULL_SHA: "a".repeat(40), PULL_NUMBER: "70001", TAG_NAME: "next" }],
+    // Rehearsals: PULL_* describe the openshift/release PR, while the tag (when the step
+    // builds one at all) names an rhdh PR.
+    [
+      "a rehearsal",
+      { PULL_PULL_SHA: "a".repeat(40), PULL_NUMBER: "70001", TAG_NAME: PR_IMAGE_TAG },
+    ],
     ["no PR at all (periodic)", { TAG_NAME: "next" }],
     // Each malformed value comes with a tag that would otherwise match it, so only
     // the format check can reject it.
@@ -138,7 +164,7 @@ describe("testing::_upload_e2e_coverage", () => {
     const { status, argv, output } = upload({ ...PR_RUN });
     expect(status).toBe(0);
     expect(argv).toEqual([]);
-    expect(output).toContain("CODECOV_TOKEN not set");
+    expect(output).toContain("No Codecov token mounted");
   });
 
   it("does not fail the job when the upload itself fails", () => {
@@ -149,6 +175,10 @@ describe("testing::_upload_e2e_coverage", () => {
   });
 });
 
+// A curl that writes CONTENT to every -o target, then exits with STATUS.
+const fakeCurl = (content: string, status = 0) =>
+  `curl() { while [[ $# -gt 0 ]]; do if [[ $1 == -o ]]; then ${content} > "$2"; shift; fi; shift; done; return ${status}; }`;
+
 describe("testing::_codecov_cli download", () => {
   // A fresh directory, so the CLI is not already there and has to be fetched.
   function downloadTarget() {
@@ -157,12 +187,24 @@ describe("testing::_codecov_cli download", () => {
     return join(directory, "codecov");
   }
 
+  it("downloads, verifies and uses the CLI when none is there yet", () => {
+    const target = downloadTarget();
+    // The real sha256sum prints "OK" on stdout, which must not end up in the CLI path
+    // the upload captures.
+    const prelude = `${fakeCurl('cat "$ROOT/codecov"')}\nsha256sum() { echo "codecov: OK"; }`;
+    const { status, argv } = upload(
+      { CODECOV_TOKEN: "token", ...PR_RUN, CODECOV_BIN: target },
+      prelude,
+    );
+    expect(status).toBe(0);
+    expect(argv[0]).toBe("upload-process");
+    expect(existsSync(`${target}.SHA256SUM`)).toBe(false);
+  });
+
   it.each([
-    ["the download fails", "curl() { return 22; }"],
-    [
-      "the checksum does not match",
-      'curl() { printf fake > "${@: -2:1}"; }\nsha256sum() { return 1; }',
-    ],
+    // Writes part of each file before failing, as an interrupted transfer would.
+    ["the download fails", fakeCurl("printf partial", 22)],
+    ["the checksum does not match", `${fakeCurl("printf fake")}\nsha256sum() { return 1; }`],
   ])("skips the upload, leaves nothing behind, when %s", (_, prelude) => {
     const target = downloadTarget();
     const { status, output } = upload(

@@ -178,11 +178,6 @@ CLOUDSQL_INSTANCE_3="${CLOUDSQL_INSTANCE_3:-$(cat /tmp/secrets/CLOUDSQL_INSTANCE
 CLOUDSQL_INSTANCE_4="${CLOUDSQL_INSTANCE_4:-$(cat /tmp/secrets/CLOUDSQL_INSTANCE_4 2> /dev/null || true)}"
 CLOUDSQL_SERVICE_ACCOUNT_JSON_PATH="${CLOUDSQL_SERVICE_ACCOUNT_JSON_PATH:-/tmp/secrets/cloudsql-service-account.json}"
 
-# Codecov upload token for the rhdh-e2e-frontend flag (RHIDP-13242). Optional: the
-# E2E coverage upload in testing.sh is skipped when it is empty, so a bundle without
-# the key degrades to "coverage kept as an artifact" instead of failing the job.
-CODECOV_TOKEN="${CODECOV_TOKEN:-$(cat /tmp/secrets/CODECOV_TOKEN 2> /dev/null || true)}"
-
 JUNIT_RESULTS="junit-results.xml"
 
 REDIS_USERNAME=temp

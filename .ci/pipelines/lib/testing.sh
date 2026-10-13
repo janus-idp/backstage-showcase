@@ -158,32 +158,33 @@ testing::run_tests() {
   return "$test_result"
 }
 
-# RHIDP-13242: The PR head an E2E coverage upload belongs to, as "<sha> <pr>".
-# Prints nothing unless this run tested the PR's own image: the Prow step tags it
-# pr-<number>-<sha prefix>, with `git rev-parse --short=8`, which returns more than 8
-# characters when 8 are ambiguous. That excludes runs whose coverage does not describe
-# the PR head: CI- or docs-only PRs that deploy `next`, Gangway re-runs with an
-# overridden tag, and rehearsals, whose PULL_* variables describe the
-# openshift/release PR. The checkout's own HEAD is never used: it is a local merge of
-# the PR onto its base that GitHub has never seen.
+# RHIDP-13242: Prints "<sha> <pr>" for the PR whose image this run tested, or
+# nothing. The Prow step tags that image pr-<number>-<sha prefix>; any other tag
+# (`next`, an override, a rehearsal) means the coverage does not describe the PR
+# head. See docs/coverage/e2e-rhdh.md, "CI wiring".
+# Uses globals: PULL_PULL_SHA, PULL_NUMBER, TAG_NAME
 testing::_coverage_pr_head() {
   local sha="${PULL_PULL_SHA:-}" pr="${PULL_NUMBER:-}"
   [[ "${sha}" =~ ^[0-9a-f]{40}$ && "${pr}" =~ ^[0-9]+$ ]] || return 0
   local tag_sha="${TAG_NAME:-}"
   tag_sha="${tag_sha#"pr-${pr}-"}"
+  # `git rev-parse --short=8` lengthens the prefix when 8 characters are ambiguous.
   [[ "${TAG_NAME:-}" == "pr-${pr}-${tag_sha}" && ${#tag_sha} -ge 8 && "${sha}" == "${tag_sha}"* ]] || return 0
   echo "${sha} ${pr}"
 }
 
-# RHIDP-13242: Prints the path of a checksum-verified Codecov CLI, downloading it to
-# CODECOV_BIN (default /tmp/codecov) unless an executable is already there. The unit
-# tests point CODECOV_BIN at a stub. The file must be named `codecov`, because that is
-# the name the published SHA256SUM lists.
+# RHIDP-13242: Prints the path of a checksum-verified Codecov CLI, downloading the
+# pinned version unless an executable is already at CODECOV_BIN. The file must be
+# named `codecov`: that is the name the published SHA256SUM lists.
+# Uses globals: CODECOV_BIN (default /tmp/codecov)
 testing::_codecov_cli() {
-  local bin="${CODECOV_BIN:-/tmp/codecov}" url="https://cli.codecov.io/latest/linux/codecov"
+  # Pinned: the checksum comes from the same host as the binary, so the version
+  # pin is what bounds what can arrive. Bumping it is a supply-chain decision.
+  local version="v11.3.1"
+  local bin="${CODECOV_BIN:-/tmp/codecov}" url="https://cli.codecov.io/${version}/linux/codecov"
   if [[ ! -x "${bin}" ]]; then
-    if ! curl -fsSL --retry 3 -o "${bin}" "${url}" \
-      || ! curl -fsSL --retry 3 -o "${bin}.SHA256SUM" "${url}.SHA256SUM" \
+    if ! curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' --tlsv1.2 \
+      -o "${bin}" "${url}" -o "${bin}.SHA256SUM" "${url}.SHA256SUM" \
       || ! (cd "$(dirname "${bin}")" && sha256sum --check --strict codecov.SHA256SUM >&2); then
       rm -f "${bin}" "${bin}.SHA256SUM"
       return 1
@@ -195,17 +196,27 @@ testing::_codecov_cli() {
 }
 
 # RHIDP-13242: Upload the merged E2E lcov to Codecov under the rhdh-e2e-frontend
-# flag. Never fails the job: coverage is reporting, not a gate, and the report is
-# already saved as an artifact by the caller.
+# flag. Never fails the job: coverage is reporting, not a gate, and the caller has
+# already saved the report as an artifact.
 # Args:
 #   $1 - path to the merged lcov.info
+# Uses globals: CODECOV_TOKEN, or the file at CODECOV_TOKEN_FILE
+#   (default /tmp/secrets/CODECOV_TOKEN); DIR
 testing::_upload_e2e_coverage() {
   local lcov_file="$1"
-  if [[ -z "${CODECOV_TOKEN:-}" ]]; then
-    log::info "CODECOV_TOKEN not set — skipping Codecov upload. Coverage report saved as artifact."
+  # Read here rather than in env_variables.sh, so the token reaches only the CLI
+  # and not every process the job starts.
+  local token="${CODECOV_TOKEN:-}"
+  [[ -n "${token}" ]] || token=$(cat "${CODECOV_TOKEN_FILE:-/tmp/secrets/CODECOV_TOKEN}" 2> /dev/null || true)
+  if [[ -z "${token}" ]]; then
+    log::info "No Codecov token mounted — skipping Codecov upload. Coverage report saved as artifact."
     return 0
   fi
-  local head sha pr codecov_bin
+  if ! grep -q '^SF:' "${lcov_file}"; then
+    log::warn "E2E lcov names no source file (were the app's source maps reachable?) — skipping Codecov upload"
+    return 0
+  fi
+  local head sha pr codecov_bin repo_root
   head=$(testing::_coverage_pr_head)
   if [[ -z "${head}" ]]; then
     log::info "Run did not test a PR image (TAG_NAME=${TAG_NAME:-unset}) — skipping Codecov upload"
@@ -216,12 +227,20 @@ testing::_upload_e2e_coverage() {
     log::warn "Could not fetch a checksum-verified Codecov CLI — skipping upload"
     return 0
   fi
+  # Codecov drops report paths missing from the uploaded file list, which the CLI
+  # builds from `git ls-files` in --network-root-folder (default: cwd, here e2e-tests/).
+  if ! repo_root=$(git -C "${DIR}" rev-parse --show-toplevel 2> /dev/null); then
+    log::warn "Could not resolve the repository root — skipping Codecov upload"
+    return 0
+  fi
 
   log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."
-  # No --token: the CLI reads CODECOV_TOKEN from the environment, and the CI rules
-  # keep secrets out of process arguments (.claude/rules/ci-e2e-testing.md).
-  "${codecov_bin}" upload-process \
+  # The token goes through the environment of this one command, never argv
+  # (.claude/rules/ci-e2e-testing.md).
+  CODECOV_TOKEN="${token}" "${codecov_bin}" upload-process \
+    --disable-search \
     --file "${lcov_file}" \
+    --network-root-folder "${repo_root}" \
     --flag rhdh-e2e-frontend \
     --slug redhat-developer/rhdh \
     --sha "${sha}" \
