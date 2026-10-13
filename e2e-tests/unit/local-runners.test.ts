@@ -499,6 +499,20 @@ describe("cluster claim login", () => {
     expect(result.stderr).not.toContain("synthetic-password");
   });
 
+  it("bounds the login request and keeps the password off the command line", () => {
+    mock(
+      "oc",
+      `
+printf 'oc %s\\n' "$*" >> "$EVENTS"
+[[ "$1" != login ]] || cat > "$EVENTS.stdin"`,
+    );
+    const result = run(".ci/pipelines/ocp-cluster-claim-login.sh", [prow, "--no-console"]);
+    expect(result.status).toBe(0);
+    expect(events()).toContain("--request-timeout=30s");
+    expect(events()).not.toContain("synthetic-password");
+    expect(readFileSync(join(root, "events.stdin"), "utf8")).toBe("synthetic-password\n");
+  });
+
   it.each([prow, `${prow}/`, `${prow}?focus=claim#logs`])(
     "fetches the claim once and succeeds non-interactively: %s",
     (url) => {
