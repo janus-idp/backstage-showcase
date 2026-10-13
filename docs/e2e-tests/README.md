@@ -27,6 +27,8 @@ yarn install
 yarn playwright install chromium
 ```
 
+For local secret loading and this repository's secret naming conventions, see [Managing E2E Secrets](./managing-e2e-secrets.md).
+
 ## Adding a Test
 
 Before adding a new E2E spec, check the
