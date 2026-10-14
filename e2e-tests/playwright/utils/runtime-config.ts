@@ -238,16 +238,21 @@ export function generateHelmValuesYaml(config?: RuntimeDeployConfig): string {
     ...(config?.catalogProbe === true
       ? {
           extraContainers: [buildRuntimeCatalogServer(imageRefToString(config.image))],
-          extraEnv: [
+        }
+      : {}),
+    extraEnv: [
+      { name: "SEGMENT_TEST_MODE", value: "true" },
+      ...(config?.catalogProbe === true
+        ? [
             {
               name: RUNTIME_CATALOG_TOKEN_KEY,
               valueFrom: {
                 secretKeyRef: { name: RUNTIME_CATALOG_SECRET, key: RUNTIME_CATALOG_TOKEN_KEY },
               },
             },
-          ],
-        }
-      : {}),
+          ]
+        : []),
+    ],
     commonLabels: { "backstage.io/kubernetes-id": "developer-hub" },
     image: { pullPolicy: "Always" },
     // Runtime tests only cover ConfigMap changes and DB connectivity, so the
@@ -486,6 +491,7 @@ export function generateBackstageCR(config: RuntimeDeployConfig): BackstageCR {
   const external = config.externalPostgres;
 
   const envs: Array<Record<string, unknown>> = [
+    { name: "SEGMENT_TEST_MODE", value: "true" },
     { name: "NODE_OPTIONS", value: "--no-node-snapshot" },
     { name: "NODE_ENV", value: "production" },
     { name: "NODE_TLS_REJECT_UNAUTHORIZED", value: "0" },
