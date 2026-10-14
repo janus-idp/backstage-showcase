@@ -1,0 +1,164 @@
+import { inspect } from "node:util";
+
+import { expect, it } from "vitest";
+
+import { teardownRuntime, type RuntimeTeardown } from "../playwright/utils/runtime-teardown";
+
+function steps(overrides: Partial<RuntimeTeardown> = {}) {
+  const calls: string[] = [];
+  const step = (name: string) => () => {
+    calls.push(name);
+    return Promise.resolve();
+  };
+  const teardown: RuntimeTeardown = {
+    label: "rds slot 1",
+    setupError: undefined,
+    redact: (text) => text.replaceAll("fake-password", "[REDACTED]"),
+    progress: { run: (_phase, action) => action() },
+    collectDiagnostics: step("diagnostics"),
+    stopApplication: step("stop"),
+    closeSqlClients: step("close-clients"),
+    dropDatabases: step("drop"),
+    reportCleanup: (completed) => {
+      calls.push(`report:${completed}`);
+      return Promise.resolve();
+    },
+    closeProxy: step("close-proxy"),
+    deleteNamespace: step("delete-namespace"),
+    ...overrides,
+  };
+  return { calls, teardown };
+}
+const failing = (message: string) => () => Promise.reject(new Error(message));
+
+it("runs every phase in order and records each one", async () => {
+  const phases: string[] = [];
+  const { calls, teardown } = steps({
+    progress: {
+      run: (phase, action) => {
+        phases.push(phase);
+        return action();
+      },
+    },
+  });
+  await teardownRuntime(teardown);
+  expect(calls).toEqual([
+    "diagnostics",
+    "stop",
+    "close-clients",
+    "drop",
+    "report:true",
+    "close-proxy",
+    "delete-namespace",
+  ]);
+  expect(phases).toEqual([
+    "diagnostics",
+    "stop-application",
+    "close-sql-clients",
+    "drop-databases",
+    "close-proxy",
+    "delete-namespace",
+  ]);
+});
+
+it("still drops databases and deletes the namespace when closing clients fails", async () => {
+  const { calls, teardown } = steps({ closeSqlClients: failing("close failed") });
+  await expect(teardownRuntime(teardown)).rejects.toThrow("rds slot 1 failed: Error: close failed");
+  expect(calls).toEqual([
+    "diagnostics",
+    "stop",
+    "drop",
+    "report:true",
+    "close-proxy",
+    "delete-namespace",
+  ]);
+});
+
+it("never drops databases under an application that did not stop", async () => {
+  const { calls, teardown } = steps({ stopApplication: failing("stop failed") });
+  await expect(teardownRuntime(teardown)).rejects.toThrow("stop failed");
+  expect(calls).toEqual([
+    "diagnostics",
+    "close-clients",
+    "report:false",
+    "close-proxy",
+    "delete-namespace",
+  ]);
+});
+
+it("continues cleanup after a diagnostics failure and without optional steps", async () => {
+  const { calls, teardown } = steps({
+    collectDiagnostics: failing("diagnostics failed"),
+    dropDatabases: undefined,
+    closeProxy: undefined,
+  });
+  await expect(teardownRuntime(teardown)).rejects.toThrow("diagnostics failed");
+  expect(calls).toEqual(["stop", "close-clients", "report:false", "delete-namespace"]);
+});
+
+it("reports the setup error first and redacts nested errors and stacks", async () => {
+  const setupError = new Error("deploy failed with fake-password", {
+    cause: new AggregateError([new Error("nested fake-password")], "cause with fake-password"),
+  });
+  const { teardown } = steps({
+    setupError,
+    deleteNamespace: failing("namespace stuck"),
+  });
+  const error: unknown = await teardownRuntime(teardown).catch((caught: unknown) => caught);
+  expect(error).toBeInstanceOf(AggregateError);
+  expect(String(error)).toContain(
+    "rds slot 1 failed: Error: deploy failed with [REDACTED]; Error: namespace stuck",
+  );
+  expect(error).toMatchObject({
+    errors: [
+      {
+        message: "deploy failed with [REDACTED]",
+        stack: setupError.stack?.replaceAll("fake-password", "[REDACTED]"),
+      },
+      { message: "namespace stuck" },
+    ],
+  });
+  expect(inspect(error, { depth: null })).not.toContain("fake-password");
+});
+
+it("redacts a setup error after successful cleanup without exposing raw metadata", async () => {
+  const setupError = Object.assign(
+    new Error("deploy failed with fake-password", {
+      cause: new AggregateError([new Error("nested fake-password")], "cause with fake-password"),
+    }),
+    { credentials: { password: "fake-password" } },
+  );
+  setupError.name = "DeploymentError fake-password";
+  const { calls, teardown } = steps({ setupError });
+  const error: unknown = await teardownRuntime(teardown).catch((caught: unknown) => caught);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).not.toBeInstanceOf(AggregateError);
+  expect(error).toMatchObject({
+    message: "deploy failed with [REDACTED]",
+    name: "DeploymentError [REDACTED]",
+    stack: setupError.stack?.replaceAll("fake-password", "[REDACTED]"),
+  });
+  expect(inspect(error, { depth: null })).not.toContain("fake-password");
+  expect(calls).toEqual([
+    "diagnostics",
+    "stop",
+    "close-clients",
+    "drop",
+    "report:true",
+    "close-proxy",
+    "delete-namespace",
+  ]);
+});
+
+it.each([
+  { type: "string", setupError: "deploy failed with fake-password" },
+  { type: "object", setupError: { password: "fake-password" } },
+])("hides a non-Error $type setup failure after successful cleanup", async ({ setupError }) => {
+  const { teardown } = steps({ setupError });
+  const error: unknown = await teardownRuntime(teardown).catch((caught: unknown) => caught);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).not.toBeInstanceOf(AggregateError);
+  expect(error).toMatchObject({ message: "rds slot 1 setup failed" });
+  expect(error).not.toHaveProperty("cause");
+  expect(inspect(error, { depth: null })).not.toContain("fake-password");
+});

@@ -6,6 +6,8 @@ const generatedFilePattern = /\.(?:mdc?|jsonc?)$/;
  * @type {import('lint-staged').Configuration}
  */
 module.exports = {
+  "{e2e-tests/**,.ci/pipelines/**,.lintstagedrc.cjs}": () =>
+    "yarn --cwd e2e-tests test:unit",
   "{.rulesync/**,.cursor/**,.cursorignore,.claude/**,.opencode/**,opencode.jsonc,rulesync.jsonc,.rulesyncignore,.lintstagedrc.cjs,package.json,yarn.lock}":
     (filenames) => {
       const normalizedFilenames = filenames.map((filename) =>

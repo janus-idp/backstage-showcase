@@ -179,7 +179,7 @@ describe("original CI secret sourcing", () => {
     await fixtures();
     const result = setup(join(root, "local"), true);
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain("RDS TLS tests will not run");
+    expect(result.stdout).toContain("configured RDS targets will fail CA validation");
     expect(() => readFileSync(join(root, "aws-ca.pem"))).toThrow(/ENOENT/u);
   });
 });

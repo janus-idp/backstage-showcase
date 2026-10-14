@@ -1,7 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import * as yaml from "yaml";
 
-import { buildImageRef, parseCatalogIndexImage } from "../playwright/utils/helper";
+import {
+  buildImageRef,
+  imageRefToString,
+  parseCatalogIndexImage,
+} from "../playwright/utils/helper";
 import { isRecord } from "../playwright/utils/kube-client/helpers";
 import {
   generateBackstageCR,
@@ -9,7 +13,29 @@ import {
   generateHelmSetArgs,
   generateHelmValuesYaml,
   type RuntimeDeployConfig,
+  resolveConfig,
 } from "../playwright/utils/runtime-config";
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
+it("keeps the CI-resolved digest when a moving application tag changes", () => {
+  const digest = `sha256:${"a".repeat(64)}`;
+  vi.stubEnv("IMAGE_DIGEST", digest);
+  vi.stubEnv("IMAGE_REGISTRY", "quay.io");
+  vi.stubEnv("IMAGE_REPO", "rhdh-community/rhdh");
+  vi.stubEnv("TAG_NAME", "next");
+  vi.stubEnv("POSTGRESQL_IMAGE_REGISTRY", "quay.io");
+  vi.stubEnv("POSTGRESQL_IMAGE_REPO", "fedora/postgresql-18");
+  vi.stubEnv("POSTGRESQL_IMAGE_TAG", "latest");
+  const initial = resolveConfig("apps.example.test");
+  vi.stubEnv("TAG_NAME", "changed-after-startup");
+  expect(imageRefToString(resolveConfig("apps.example.test").image)).toBe(
+    imageRefToString(initial.image),
+  );
+  expect(imageRefToString(initial.image)).toBe(`quay.io/rhdh-community/rhdh@${digest}`);
+});
 
 const config: RuntimeDeployConfig = {
   releaseName: "rhdh",
@@ -175,9 +201,9 @@ describe("generateHelmValuesYaml", () => {
 });
 
 describe("generateDynamicPluginsYaml", () => {
-  it("loads no catalog defaults and only the guest auth provider", () => {
+  it("loads the same RHDH frontend defaults as Helm and enables guest authentication", () => {
     expect(yaml.parse(generateDynamicPluginsYaml())).toMatchObject({
-      includes: [],
+      includes: ["dynamic-plugins.default.yaml"],
       plugins: [{ enabled: true }],
     });
     expect(generateDynamicPluginsYaml()).toMatch(guestProviderPackage);

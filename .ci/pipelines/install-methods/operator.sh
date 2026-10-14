@@ -19,7 +19,9 @@ ensure_registry_default_route() {
   if [[ "${IS_OPENSHIFT}" != "true" ]]; then
     return 0
   fi
-  if ! oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"defaultRoute":true}}'; then
+  # The installer also disables redirects, which rolls the registry Deployment.
+  # Apply both settings before probing so its first login cannot hit that rollout.
+  if ! oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"defaultRoute":true,"disableRedirect":true}}'; then
     log::warn "Could not patch the image registry to expose the default route"
     return 0
   fi
@@ -83,13 +85,13 @@ install_rhdh_operator() {
     # override_operator_backstage_image to patch — leaving the stale
     # RELATED_IMAGE_backstage digest in effect. OLM v1 coverage has its own
     # dedicated flows (e.g. the disconnected jobs).
-    if ! common::retry "$max_attempts" 10 bash -x /tmp/install-rhdh-catalog-source.sh --olm-version v0 --next --install-operator rhdh; then
+    if ! common::retry "$max_attempts" 10 bash /tmp/install-rhdh-catalog-source.sh --olm-version v0 --next --install-operator rhdh; then
       log::error "Failed install RHDH Operator after ${max_attempts} attempts."
       return 1
     fi
   else
     log::info "Installing RHDH operator with '-v $RELEASE_VERSION' flag"
-    if ! common::retry "$max_attempts" 10 bash -x /tmp/install-rhdh-catalog-source.sh --olm-version v0 -v "$RELEASE_VERSION" --install-operator rhdh; then
+    if ! common::retry "$max_attempts" 10 bash /tmp/install-rhdh-catalog-source.sh --olm-version v0 -v "$RELEASE_VERSION" --install-operator rhdh; then
       log::error "Failed install RHDH Operator after ${max_attempts} attempts."
       return 1
     fi
