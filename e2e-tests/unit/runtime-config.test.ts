@@ -131,6 +131,18 @@ describe("generateHelmSetArgs", () => {
 });
 
 describe("generateHelmValuesYaml", () => {
+  it("keeps Segment in test mode alongside the catalog probe token", () => {
+    expect(helmValues()).toMatchObject({
+      extraEnv: [{ name: "SEGMENT_TEST_MODE", value: "true" }],
+    });
+    expect(yaml.parse(generateHelmValuesYaml({ ...config, catalogProbe: true }))).toMatchObject({
+      extraEnv: [
+        { name: "SEGMENT_TEST_MODE", value: "true" },
+        { name: "RUNTIME_CATALOG_API_TOKEN", valueFrom: { secretKeyRef: {} } },
+      ],
+    });
+  });
+
   it("uses only 2.y top-level keys", () => {
     expect(Object.keys(helmValues())).not.toContain("global");
     expect(Object.keys(helmValues())).not.toContain("upstream");
@@ -220,6 +232,14 @@ describe("generateBackstageCR", () => {
     const patch = generateBackstageCR(config).spec.deployment?.patch as PodSpecPatch;
     return patch.spec.template.spec.initContainers;
   }
+
+  it("sets Segment test mode on operator runtime deployments", () => {
+    const application = generateBackstageCR(config).spec.application;
+    if (!isRecord(application) || !isRecord(application.extraEnvs)) {
+      throw new Error("Operator extraEnvs are missing");
+    }
+    expect(application.extraEnvs.envs).toContainEqual({ name: "SEGMENT_TEST_MODE", value: "true" });
+  });
 
   it("waits for the release PostgreSQL service before Backstage starts", () => {
     const waitForDb = initContainers().find((container) => container.name === "wait-for-db");
