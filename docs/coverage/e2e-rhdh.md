@@ -139,12 +139,12 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   the `e2e-ocp-helm` PR check collects coverage for both the `showcase` and
   `showcase-rbac` projects. Each upload lands on the same commit and flag, and Codecov
   merges them.
-- The token is read from `/tmp/secrets/CODECOV_TOKEN`, a field of the `rhdh` credentials
-  bundle (Google Secret Manager) that OpenShift CI mounts into the step. **The field must
-  exist**; the GitHub Actions secret of the same name does not reach Prow. It is read
-  only at upload time and handed to the Codecov CLI through that one command's
-  environment, never as an argument and never exported to the rest of the job. Without
-  it the upload is skipped and the report is still saved as the `coverage` artifact.
+- `env_variables.sh` reads the token from `/tmp/secrets/CODECOV_TOKEN`, a field of the
+  `rhdh` credentials bundle (Google Secret Manager) that OpenShift CI mounts into the
+  step, like every other CI secret. **The field must exist**; the GitHub Actions secret
+  of the same name does not reach Prow. The Codecov CLI reads it from the environment,
+  never as an argument. Without it the upload is skipped and the report is still saved
+  as the `coverage` artifact.
 - The CLI is a pinned release (`testing::_codecov_cli`), downloaded over HTTPS only and
   checksum-verified. The upload runs with `--network-root-folder` at the repository root:
   Codecov keeps only report paths that appear in that tree's `git ls-files`, and the job
@@ -173,8 +173,7 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 | `COLLECT_COVERAGE` | (unset) | Set to `true` to enable coverage collection |
 | `COVERAGE_OUTPUT_DIR` | `<cwd>/coverage/e2e-raw` | Where per-test raw V8 coverage is written |
 | `COVERAGE_REPORT_DIR` | `<cwd>/coverage/e2e` | Where the merged Istanbul report is written |
-| `CODECOV_TOKEN` | (unset) | Codecov upload token. When unset, it is read from `CODECOV_TOKEN_FILE`; without either the upload is skipped |
-| `CODECOV_TOKEN_FILE` | `/tmp/secrets/CODECOV_TOKEN` | Where CI mounts the token |
+| `CODECOV_TOKEN` | `/tmp/secrets/CODECOV_TOKEN` in CI | Codecov upload token, set by `env_variables.sh`. When empty the upload is skipped |
 | `CODECOV_BIN` | `/tmp/codecov` | Where the Codecov CLI lives. Used as-is when already executable, otherwise downloaded there and checksum-verified |
 | `COVERAGE_MERGE_TIMEOUT_MS` | `300000` (5 min) | Maximum time the reporter spends merging raw files, including fetching source maps (each map fetch is also capped at 30 s). Prevents a CI job from hanging if a route stalls |
 | `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter spends generating the report after merging. Prevents a CI job from hanging if the aggregation stalls |

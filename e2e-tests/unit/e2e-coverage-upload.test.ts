@@ -62,8 +62,6 @@ function upload(env: Record<string, string>, prelude = "") {
         ARTIFACT_DIR: root,
         SHARED_DIR: root,
         CODECOV_BIN: join(root, "codecov"),
-        // Never the real mount, whatever the machine running the tests has there.
-        CODECOV_TOKEN_FILE: join(root, "no-token-file"),
         ...env,
       },
       encoding: "utf8",
@@ -105,13 +103,6 @@ describe("testing::_upload_e2e_coverage", () => {
     expect(argv).toContain("upload-process");
     expect(argv.join(" ")).not.toContain("s3cr3t-token");
     expect(readFileSync(join(root, "token"), "utf8")).toBe("s3cr3t-token");
-  });
-
-  it("reads the token from the mounted secret when the environment has none", () => {
-    writeFileSync(join(root, "mounted-token"), "from-the-bundle");
-    const { argv } = upload({ ...PR_RUN, CODECOV_TOKEN_FILE: join(root, "mounted-token") });
-    expect(argv).toContain("upload-process");
-    expect(readFileSync(join(root, "token"), "utf8")).toBe("from-the-bundle");
   });
 
   it("skips the upload when the report names no source file", () => {

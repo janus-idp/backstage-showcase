@@ -199,15 +199,10 @@ testing::_codecov_cli() {
 # already saved the report as an artifact.
 # Args:
 #   $1 - path to the merged lcov.info
-# Uses globals: CODECOV_TOKEN, or the file at CODECOV_TOKEN_FILE
-#   (default /tmp/secrets/CODECOV_TOKEN); DIR
+# Uses globals: CODECOV_TOKEN (env_variables.sh), DIR
 testing::_upload_e2e_coverage() {
   local lcov_file="$1"
-  # Read here rather than in env_variables.sh, so the token reaches only the CLI
-  # and not every process the job starts.
-  local token="${CODECOV_TOKEN:-}"
-  [[ -n "${token}" ]] || token=$(cat "${CODECOV_TOKEN_FILE:-/tmp/secrets/CODECOV_TOKEN}" 2> /dev/null || true)
-  if [[ -z "${token}" ]]; then
+  if [[ -z "${CODECOV_TOKEN:-}" ]]; then
     log::info "No Codecov token mounted — skipping Codecov upload. Coverage report saved as artifact."
     return 0
   fi
@@ -234,9 +229,9 @@ testing::_upload_e2e_coverage() {
   fi
 
   log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."
-  # The token goes through the environment of this one command, never argv,
+  # The CLI reads CODECOV_TOKEN from the environment; never pass it in argv,
   # where any process listing would show it.
-  CODECOV_TOKEN="${token}" "${codecov_bin}" upload-process \
+  "${codecov_bin}" upload-process \
     --disable-search \
     --file "${lcov_file}" \
     --network-root-folder "${repo_root}" \
