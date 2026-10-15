@@ -17,7 +17,7 @@ const PROTOCOL_RE = /^Protocol\s*:\s*(.+)$/imu;
 const NEGOTIATED_GROUP_RE = /^Negotiated TLS1\.3 group:\s*(\S+)/imu;
 const VERIFY_RETURN_CODE_RE = /^Verify return code:\s*(\d+)\s*\(/imu;
 
-export function isHybridMlKemGroup(group: string | undefined): group is HybridMlKemGroup {
+export function isHybridMlKemGroup(group?: string): group is HybridMlKemGroup {
   if (group === undefined || group === "") {
     return false;
   }
@@ -30,11 +30,12 @@ export function parseOpenSslSClientOutput(output: string): OpenSslSClientResult 
   const groupMatch = NEGOTIATED_GROUP_RE.exec(output);
   const verifyMatch = VERIFY_RETURN_CODE_RE.exec(output);
 
+  const verifyCodeRaw = verifyMatch?.[1];
   return {
     protocol: protocolMatch?.[1]?.trim(),
     negotiatedGroup: groupMatch?.[1],
     verifyReturnCode:
-      verifyMatch?.[1] !== undefined ? Number.parseInt(verifyMatch[1], 10) : undefined,
+      verifyCodeRaw === undefined ? undefined : Math.trunc(Number(verifyCodeRaw)),
   };
 }
 
@@ -76,5 +77,5 @@ export function buildGitlabFetchProbeCommand(host: string, token?: string): stri
 }
 
 function shellQuote(value: string): string {
-  return `'${value.replace(/'/gu, `'\\''`)}'`;
+  return `'${value.replaceAll("'", `'\\''`)}'`;
 }

@@ -46,7 +46,7 @@ describe("isHybridMlKemGroup", () => {
   it("rejects classical groups and missing values", () => {
     expect(isHybridMlKemGroup("x25519")).toBe(false);
     expect(isHybridMlKemGroup("P-256")).toBe(false);
-    expect(isHybridMlKemGroup(undefined)).toBe(false);
+    expect(isHybridMlKemGroup()).toBe(false);
     expect(isHybridMlKemGroup("")).toBe(false);
   });
 });

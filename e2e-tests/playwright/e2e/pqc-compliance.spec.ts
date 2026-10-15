@@ -76,7 +76,7 @@ test.describe("PQC Compliance Validation", () => {
       buildGitlabFetchProbeCommand(host, token),
       30_000,
     );
-    const fetchStatus = `${fetchResult.stdout}`.trim();
+    const fetchStatus = fetchResult.stdout.trim();
     console.log(`[PQC] Node fetch /api/v4/version status: ${fetchStatus}`);
     expect(
       fetchStatus,
@@ -107,10 +107,11 @@ async function findReadyHubPod(
     if (pod.status?.phase !== "Running") {
       continue;
     }
-    const ready = pod.status.containerStatuses?.some(
-      (status) => status.name === BACKSTAGE_BACKEND_CONTAINER && status.ready === true,
-    );
-    if (ready === true) {
+    const ready =
+      pod.status.containerStatuses?.some(
+        (status) => status.name === BACKSTAGE_BACKEND_CONTAINER && status.ready,
+      ) ?? false;
+    if (ready) {
       return name;
     }
   }
