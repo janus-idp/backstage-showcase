@@ -201,6 +201,28 @@ describe("testing::_codecov_cli download", () => {
     expect(existsSync(`${target}.SHA256SUM`)).toBe(false);
   });
 
+  // The published SHA256SUM names the file `codecov`; CODECOV_BIN may be named anything.
+  // GNU only, as in CI: BSD sha256sum has no --strict.
+  it.skipIf(!spawnSync("sha256sum", ["--version"], { encoding: "utf8" }).stdout?.includes("GNU"))(
+    "verifies the real checksum when CODECOV_BIN has another name",
+    () => {
+      const directory = join(root, "download");
+      mkdirSync(directory);
+      const target = join(directory, "codecov-cli");
+      const digest = spawnSync("sha256sum", [join(root, "codecov")], {
+        encoding: "utf8",
+      }).stdout.split(" ")[0];
+      // First -o gets the binary, second the published checksum line.
+      const prelude = `curl() { local n=0; while [[ $# -gt 0 ]]; do if [[ $1 == -o ]]; then if ((n++ == 0)); then cat "$ROOT/codecov" > "$2"; else echo "${digest}  codecov" > "$2"; fi; shift; fi; shift; done; }`;
+      const { status, argv } = upload(
+        { CODECOV_TOKEN: "token", ...PR_RUN, CODECOV_BIN: target },
+        prelude,
+      );
+      expect(status).toBe(0);
+      expect(argv[0]).toBe("upload-process");
+    },
+  );
+
   it.each([
     // Writes part of each file before failing, as an interrupted transfer would.
     ["the download fails", fakeCurl("printf partial", 22)],

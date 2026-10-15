@@ -39,6 +39,49 @@ async function merge(files: Record<string, unknown>, fetchMap: () => Promise<unk
   return add;
 }
 
+describe("buildReport", () => {
+  it("does not let slow source maps use up the generate budget", async () => {
+    vi.stubEnv("COVERAGE_GENERATE_TIMEOUT_MS", "50");
+    writeFileSync(
+      join(rawDir, "a.json"),
+      JSON.stringify([bundle("https://rhdh.test/static/main.js")]),
+    );
+    const { buildReport } = await import("../playwright/support/coverage/reporter");
+    const slowMap = () =>
+      new Promise<unknown>((resolve) => {
+        setTimeout(() => {
+          resolve(MAP);
+        }, 150);
+      });
+    const report = {
+      add: vi.fn<(entries: unknown[]) => Promise<unknown>>(() => Promise.resolve(null)),
+      generate: vi.fn<() => Promise<string>>(() => Promise.resolve("report")),
+    };
+
+    await expect(buildReport(report, ["a.json"], new SourceMapLoader(slowMap))).resolves.toBe(
+      "report",
+    );
+  });
+
+  it("gives up on a merge that outlasts its own budget", async () => {
+    vi.stubEnv("COVERAGE_MERGE_TIMEOUT_MS", "50");
+    writeFileSync(
+      join(rawDir, "a.json"),
+      JSON.stringify([bundle("https://rhdh.test/static/main.js")]),
+    );
+    const { buildReport } = await import("../playwright/support/coverage/reporter");
+    const report = {
+      add: vi.fn<(entries: unknown[]) => Promise<unknown>>(() => Promise.resolve(null)),
+      generate: vi.fn<() => Promise<string>>(() => Promise.resolve("report")),
+    };
+
+    await expect(
+      buildReport(report, ["a.json"], new SourceMapLoader(() => new Promise<unknown>(() => {}))),
+    ).rejects.toThrow(/merging raw coverage timed out/u);
+    expect(report.generate).not.toHaveBeenCalled();
+  });
+});
+
 describe("mergeRawCoverage", () => {
   it("adds each file's app bundles, with their source maps attached", async () => {
     const add = await merge(

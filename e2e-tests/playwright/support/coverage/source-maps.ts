@@ -54,9 +54,18 @@ export async function fetchJson(
   }
 }
 
+function sourceMapReferenceOf(entry: CoverageEntry): string | undefined {
+  return SOURCE_MAPPING_URL.exec(entry.source ?? "")?.[1];
+}
+
+/** Whether the entry carries its map inline, which monocart decodes on its own. */
+export function hasInlineSourceMap(entry: CoverageEntry): boolean {
+  return sourceMapReferenceOf(entry)?.startsWith("data:") ?? false;
+}
+
 /** The absolute URL of the entry's external source map, if its source names one. */
 export function sourceMapUrlOf(entry: CoverageEntry): string | undefined {
-  const reference = SOURCE_MAPPING_URL.exec(entry.source ?? "")?.[1];
+  const reference = sourceMapReferenceOf(entry);
   if (reference === undefined || reference.startsWith("data:")) {
     return undefined;
   }
@@ -69,7 +78,8 @@ export function sourceMapUrlOf(entry: CoverageEntry): string | undefined {
 
 /**
  * Keeps the app's bundles and attaches each one's source map, fetched once per URL
- * across every raw coverage file. Entries whose map cannot be loaded are dropped.
+ * across every raw coverage file. Entries with an inline map pass through as they
+ * are; entries whose external map cannot be loaded are dropped.
  */
 export class SourceMapLoader {
   private readonly maps = new Map<string, Promise<unknown>>();
@@ -91,6 +101,10 @@ export class SourceMapLoader {
     );
     const mapped: CoverageEntry[] = [];
     for (const entry of appEntries) {
+      if (hasInlineSourceMap(entry)) {
+        mapped.push(entry);
+        continue;
+      }
       const url = sourceMapUrlOf(entry);
       const sourceMap = url === undefined ? null : await this.load(url);
       if (sourceMap !== null) {

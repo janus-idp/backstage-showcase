@@ -176,7 +176,8 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 | `CODECOV_TOKEN` | (unset) | Codecov upload token. When unset, it is read from `CODECOV_TOKEN_FILE`; without either the upload is skipped |
 | `CODECOV_TOKEN_FILE` | `/tmp/secrets/CODECOV_TOKEN` | Where CI mounts the token |
 | `CODECOV_BIN` | `/tmp/codecov` | Where the Codecov CLI lives. Used as-is when already executable, otherwise downloaded there and checksum-verified |
-| `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter spends merging raw files (including fetching source maps) and generating the report. Prevents a CI job from hanging if a route or the aggregation stalls |
+| `COVERAGE_MERGE_TIMEOUT_MS` | `300000` (5 min) | Maximum time the reporter spends merging raw files, including fetching source maps (each map fetch is also capped at 30 s). Prevents a CI job from hanging if a route stalls |
+| `COVERAGE_GENERATE_TIMEOUT_MS` | `120000` (2 min) | Maximum time the reporter spends generating the report after merging. Prevents a CI job from hanging if the aggregation stalls |
 
 Raw coverage file names include the spec title path, worker index, and retry
 number (for example `Smoke_test_basic_flow-w0-r0-1714003200000.json`) so

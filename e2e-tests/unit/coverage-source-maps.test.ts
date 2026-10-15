@@ -91,6 +91,16 @@ describe("SourceMapLoader", () => {
     expect(loader.failures).toEqual(["https://rhdh.test/static/main.js.map"]);
   });
 
+  it("passes a bundle with an inline map through without fetching", async () => {
+    const fetchMap = vi.fn<(url: string) => Promise<unknown>>(() => Promise.resolve(MAP));
+    const inline = bundle("https://rhdh.test/static/main.js", "data:application/json;base64,e30=");
+
+    const attached = await new SourceMapLoader(fetchMap).attach([inline]);
+
+    expect(attached).toEqual([inline]);
+    expect(fetchMap).not.toHaveBeenCalled();
+  });
+
   it("drops a bundle that names no map", async () => {
     const attached = await new SourceMapLoader(() => Promise.resolve(MAP)).attach([
       { url: "https://rhdh.test/static/main.js", source: "console.log(1);" },

@@ -28,6 +28,9 @@ import { coverageSourceOptions } from "./source-paths";
 const generateTimeoutMs = Number(
   process.env.COVERAGE_GENERATE_TIMEOUT_MS ?? 2 * 60 * 1000,
 );
+const mergeTimeoutMs = Number(
+  process.env.COVERAGE_MERGE_TIMEOUT_MS ?? 5 * 60 * 1000,
+);
 
 function isENOENT(err: unknown): boolean {
   return (
@@ -98,6 +101,30 @@ export async function mergeRawCoverage(
   }
 }
 
+/**
+ * Merge, then generate, each under its own budget: slow source-map fetches must not
+ * use up the time report generation needs.
+ */
+export async function buildReport<T>(
+  report: {
+    add: (entries: unknown[]) => Promise<unknown>;
+    generate: () => Promise<T>;
+  },
+  rawFiles: string[],
+  sourceMaps: SourceMapLoader,
+): Promise<T> {
+  await withTimeout(
+    mergeRawCoverage(report, rawFiles, sourceMaps),
+    mergeTimeoutMs,
+    "[coverage] merging raw coverage",
+  );
+  return withTimeout(
+    report.generate(),
+    generateTimeoutMs,
+    "[coverage] report.generate()",
+  );
+}
+
 class CoverageReporter implements Reporter {
   private enabled = process.env.COLLECT_COVERAGE === "true";
 
@@ -161,13 +188,10 @@ class CoverageReporter implements Reporter {
         ...coverageSourceOptions,
       });
 
-      // Merging fetches source maps from the deployment, so it shares the timeout.
-      const results = await withTimeout(
-        mergeRawCoverage(report, rawFiles, new SourceMapLoader()).then(() =>
-          report.generate(),
-        ),
-        generateTimeoutMs,
-        "[coverage] merging and generating the report",
+      const results = await buildReport(
+        report,
+        rawFiles,
+        new SourceMapLoader(),
       );
       if ((results?.files.length ?? 0) === 0) {
         console.warn(

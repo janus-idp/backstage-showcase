@@ -174,8 +174,7 @@ testing::_coverage_pr_head() {
 }
 
 # RHIDP-13242: Prints the path of a checksum-verified Codecov CLI, downloading the
-# pinned version unless an executable is already at CODECOV_BIN. The file must be
-# named `codecov`: that is the name the published SHA256SUM lists.
+# pinned version unless an executable is already at CODECOV_BIN.
 # Uses globals: CODECOV_BIN (default /tmp/codecov)
 testing::_codecov_cli() {
   # Pinned: the checksum comes from the same host as the binary, so the version
@@ -185,7 +184,7 @@ testing::_codecov_cli() {
   if [[ ! -x "${bin}" ]]; then
     if ! curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' --tlsv1.2 \
       -o "${bin}" "${url}" -o "${bin}.SHA256SUM" "${url}.SHA256SUM" \
-      || ! (cd "$(dirname "${bin}")" && sha256sum --check --strict codecov.SHA256SUM >&2); then
+      || ! printf '%s  %s\n' "$(cut -d' ' -f1 "${bin}.SHA256SUM")" "${bin}" | sha256sum --check --strict >&2; then
       rm -f "${bin}" "${bin}.SHA256SUM"
       return 1
     fi
