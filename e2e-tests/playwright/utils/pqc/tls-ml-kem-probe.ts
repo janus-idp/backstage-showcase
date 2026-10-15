@@ -34,8 +34,7 @@ export function parseOpenSslSClientOutput(output: string): OpenSslSClientResult 
   return {
     protocol: protocolMatch?.[1]?.trim(),
     negotiatedGroup: groupMatch?.[1],
-    verifyReturnCode:
-      verifyCodeRaw === undefined ? undefined : Math.trunc(Number(verifyCodeRaw)),
+    verifyReturnCode: verifyCodeRaw === undefined ? undefined : Math.trunc(Number(verifyCodeRaw)),
   };
 }
 
@@ -66,9 +65,7 @@ export function buildGitlabSClientCommand(host: string): string[] {
 export function buildGitlabFetchProbeCommand(host: string, token?: string): string[] {
   const url = `https://${host}/api/v4/version`;
   const headers =
-    token !== undefined && token !== ""
-      ? `{ "PRIVATE-TOKEN": ${JSON.stringify(token)} }`
-      : "{}";
+    token !== undefined && token !== "" ? `{ "PRIVATE-TOKEN": ${JSON.stringify(token)} }` : "{}";
   return [
     "node",
     "-e",
