@@ -80,6 +80,34 @@ describe("buildReport", () => {
     ).rejects.toThrow(/merging raw coverage timed out/u);
     expect(report.generate).not.toHaveBeenCalled();
   });
+
+  it("stops adding once the merge has timed out", async () => {
+    vi.stubEnv("COVERAGE_MERGE_TIMEOUT_MS", "50");
+    writeFileSync(
+      join(rawDir, "a.json"),
+      JSON.stringify([bundle("https://rhdh.test/static/main.js")]),
+    );
+    const { buildReport } = await import("../playwright/support/coverage/reporter");
+    // Arrives after the budget, so the merge is still running when buildReport gives up.
+    const lateMap = () =>
+      new Promise<unknown>((resolve) => {
+        setTimeout(() => {
+          resolve(MAP);
+        }, 150);
+      });
+    const report = {
+      add: vi.fn<(entries: unknown[]) => Promise<unknown>>(() => Promise.resolve(null)),
+      generate: vi.fn<() => Promise<string>>(() => Promise.resolve("report")),
+    };
+
+    await expect(buildReport(report, ["a.json"], new SourceMapLoader(lateMap))).rejects.toThrow(
+      /timed out/u,
+    );
+    await new Promise((resolve) => {
+      setTimeout(resolve, 300);
+    });
+    expect(report.add).not.toHaveBeenCalled();
+  });
 });
 
 describe("mergeRawCoverage", () => {

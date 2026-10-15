@@ -234,8 +234,8 @@ testing::_upload_e2e_coverage() {
   fi
 
   log::info "Uploading E2E coverage to Codecov (flag: rhdh-e2e-frontend, PR #${pr}, ${sha})..."
-  # The token goes through the environment of this one command, never argv
-  # (.claude/rules/ci-e2e-testing.md).
+  # The token goes through the environment of this one command, never argv,
+  # where any process listing would show it.
   CODECOV_TOKEN="${token}" "${codecov_bin}" upload-process \
     --disable-search \
     --file "${lcov_file}" \

@@ -167,6 +167,16 @@ describe("testing::_upload_e2e_coverage", () => {
     expect(output).toContain("No Codecov token mounted");
   });
 
+  it("skips the upload when the repository root cannot be resolved", () => {
+    const { status, argv, output } = upload(
+      { CODECOV_TOKEN: "token", ...PR_RUN },
+      "git() { return 128; }",
+    );
+    expect(status).toBe(0);
+    expect(argv).toEqual([]);
+    expect(output).toContain("Could not resolve the repository root");
+  });
+
   it("does not fail the job when the upload itself fails", () => {
     writeFileSync(join(root, "codecov"), "#!/bin/bash\nexit 1\n");
     const { status, output } = upload({ CODECOV_TOKEN: "token", ...PR_RUN });
@@ -199,6 +209,14 @@ describe("testing::_codecov_cli download", () => {
     expect(status).toBe(0);
     expect(argv[0]).toBe("upload-process");
     expect(existsSync(`${target}.SHA256SUM`)).toBe(false);
+  });
+
+  it("checks the published digest against CODECOV_BIN's own path", () => {
+    const target = downloadTarget().replace(/codecov$/u, "codecov-cli");
+    // The published file names `codecov`; the check must name the path actually written.
+    const prelude = `${fakeCurl('echo "abc123  codecov"')}\nsha256sum() { cat > "$ROOT/checked"; }`;
+    upload({ CODECOV_TOKEN: "token", ...PR_RUN, CODECOV_BIN: target }, prelude);
+    expect(readFileSync(join(root, "checked"), "utf8")).toBe(`abc123  ${target}\n`);
   });
 
   // The published SHA256SUM names the file `codecov`; CODECOV_BIN may be named anything.

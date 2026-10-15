@@ -59,7 +59,7 @@ function sourceMapReferenceOf(entry: CoverageEntry): string | undefined {
 }
 
 /** Whether the entry carries its map inline, which monocart decodes on its own. */
-export function hasInlineSourceMap(entry: CoverageEntry): boolean {
+function hasInlineSourceMap(entry: CoverageEntry): boolean {
   return sourceMapReferenceOf(entry)?.startsWith("data:") ?? false;
 }
 

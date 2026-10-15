@@ -79,8 +79,10 @@ export async function mergeRawCoverage(
   report: { add: (entries: unknown[]) => Promise<unknown> },
   rawFiles: string[],
   sourceMaps: SourceMapLoader,
+  signal?: AbortSignal,
 ): Promise<void> {
   for (const file of rawFiles) {
+    signal?.throwIfAborted();
     const content = await fs.readFile(
       path.join(COVERAGE_RAW_DIR, file),
       "utf-8",
@@ -92,7 +94,9 @@ export async function mergeRawCoverage(
       );
       continue;
     }
-    await report.add(await sourceMaps.attach(parsed));
+    const entries = await sourceMaps.attach(parsed);
+    signal?.throwIfAborted();
+    await report.add(entries);
   }
   if (sourceMaps.failures.length > 0) {
     console.warn(
@@ -103,7 +107,7 @@ export async function mergeRawCoverage(
 
 /**
  * Merge, then generate, each under its own budget: slow source-map fetches must not
- * use up the time report generation needs.
+ * use up the time report generation needs. A merge that times out stops adding.
  */
 export async function buildReport<T>(
   report: {
@@ -113,11 +117,16 @@ export async function buildReport<T>(
   rawFiles: string[],
   sourceMaps: SourceMapLoader,
 ): Promise<T> {
-  await withTimeout(
-    mergeRawCoverage(report, rawFiles, sourceMaps),
-    mergeTimeoutMs,
-    "[coverage] merging raw coverage",
-  );
+  const merging = new AbortController();
+  try {
+    await withTimeout(
+      mergeRawCoverage(report, rawFiles, sourceMaps, merging.signal),
+      mergeTimeoutMs,
+      "[coverage] merging raw coverage",
+    );
+  } finally {
+    merging.abort();
+  }
   return withTimeout(
     report.generate(),
     generateTimeoutMs,
