@@ -1,5 +1,8 @@
 dynamicPlugins:
   plugins:
+    # This list replaces the base lane plugins; retain authenticated guest sessions.
+    - package: ref://backstage-plugin-auth-backend-module-guest-provider
+      enabled: true
     #  sanity check https://issues.redhat.com/browse/RHIDP-5301
     - package: ref://backstage-plugin-catalog-backend-module-gitlab-org
       enabled: true
