@@ -57,7 +57,7 @@ Set `DEBUG_SCHEMA_MODE_PF=1` to log port-forward output.
 
 Tests run in the `showcase-runtime` Playwright project together with `config-map.spec.ts` (see [`playwright.config.ts`](../../../playwright.config.ts)).
 
-**Pipeline entrypoint**: [`.ci/pipelines/openshift-ci-tests.sh`](../../../../.ci/pipelines/openshift-ci-tests.sh) → `jobs/ocp-nightly.sh`
+**Pipeline entrypoint**: [`.ci/pipelines/openshift-ci-tests.sh`](../../../../.ci/pipelines/openshift-ci-tests.sh) → `jobs/ocp-runtime.sh` (`e2e-ocp-helm-runtime-nightly` or `e2e-ocp-operator-runtime-nightly`)
 
 **Environment baseline**: [`.ci/pipelines/env_variables.sh`](../../../../.ci/pipelines/env_variables.sh)
 
