@@ -173,22 +173,31 @@ testing::_coverage_pr_head() {
   echo "${sha} ${pr}"
 }
 
-# RHIDP-13242: Prints the path of a checksum-verified Codecov CLI, downloading the
-# pinned version unless an executable is already at CODECOV_BIN.
+# RHIDP-13242: Prints the path of a checksum-verified Codecov CLI for this machine's
+# architecture, downloading the pinned release unless an executable is already at
+# CODECOV_BIN. The build farm runs steps on both x86_64 and aarch64 nodes.
 # Uses globals: CODECOV_BIN (default /tmp/codecov)
 testing::_codecov_cli() {
-  # Pinned: the checksum comes from the same host as the binary, so the version
-  # pin is what bounds what can arrive. Bumping it is a supply-chain decision.
-  local version="v11.3.1"
-  local bin="${CODECOV_BIN:-/tmp/codecov}" url="https://cli.codecov.io/${version}/linux/codecov"
+  # Pinned version and digests (from the GitHub release's asset digests): bumping
+  # the version means updating both, and it is a supply-chain decision.
+  local version="v11.3.1" asset digest arch
+  arch=$(uname -m)
+  case "${arch}" in
+    x86_64) asset="codecovcli_linux" digest="ca1d64196d2d34771084afe76ea657d581bf628e31d993ff8e52ea09cc88a56d" ;;
+    aarch64 | arm64) asset="codecovcli_linux_arm64" digest="baff0923257c20b8594154c9651e7a6848f9783dc4392c6ce71791fec11a5913" ;;
+    *)
+      log::warn "No Codecov CLI build for architecture ${arch}"
+      return 1
+      ;;
+  esac
+  local bin="${CODECOV_BIN:-/tmp/codecov}"
   if [[ ! -x "${bin}" ]]; then
-    if ! curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' --tlsv1.2 \
-      -o "${bin}" "${url}" -o "${bin}.SHA256SUM" "${url}.SHA256SUM" \
-      || ! printf '%s  %s\n' "$(cut -d' ' -f1 "${bin}.SHA256SUM")" "${bin}" | sha256sum --check --strict >&2; then
-      rm -f "${bin}" "${bin}.SHA256SUM"
+    if ! curl -fsSL --retry 3 --proto '=https' --proto-redir '=https' --tlsv1.2 -o "${bin}" \
+      "https://github.com/codecov/codecov-cli/releases/download/${version}/${asset}" \
+      || ! printf '%s  %s\n' "${digest}" "${bin}" | sha256sum --check --strict >&2; then
+      rm -f "${bin}"
       return 1
     fi
-    rm -f "${bin}.SHA256SUM"
     chmod +x "${bin}"
   fi
   echo "${bin}"
