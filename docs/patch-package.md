@@ -3,9 +3,11 @@
 ## Recommended: Yarn patches via rhdh-skills
 
 For current RHDH release lines, prefer Yarn Berry patches (`.yarn/patches/`,
-`package.json` `resolutions`, lockfile updates) built from the
-[redhat-developer/backstage](https://github.com/redhat-developer/backstage)
-`patch/release-*` maintenance fork.
+`package.json` `resolutions`, lockfile updates) built from a local
+[backstage/backstage](https://github.com/backstage/backstage) checkout of the
+release tag named in this repo’s [`backstage.json`](../backstage.json)
+(`"version": "x.y.z"` → git tag `vx.y.z`). That file pins a version string only,
+not a commit SHA.
 
 The agent workflow lives in
 `/rhdh-patch-backstage` in the
