@@ -38,3 +38,9 @@ ingress:
     ingress.gcp.kubernetes.io/pre-shared-cert: ""
     networking.gke.io/v1beta1.FrontendConfig: rhdh-gke-ingress-security-config
   className: gce
+  # GCE needs Prefix so /healthcheck and other subpaths reach RHDH.
+  hosts:
+    - host: "{{ .Values.host }}"
+      paths:
+        - path: /
+          pathType: Prefix

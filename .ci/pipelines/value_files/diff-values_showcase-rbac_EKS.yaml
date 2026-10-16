@@ -76,3 +76,9 @@ ingress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: "443"
     external-dns.alpha.kubernetes.io/hostname: $EKS_INSTANCE_DOMAIN_NAME
+  # ALB needs Prefix so /healthcheck and other subpaths reach RHDH.
+  hosts:
+    - host: "{{ .Values.host }}"
+      paths:
+        - path: /
+          pathType: Prefix
