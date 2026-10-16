@@ -148,8 +148,9 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
 - The CLI is a pinned GitHub release (`testing::_codecov_cli`) for the node's architecture
   (the build farm runs steps on both x86_64 and aarch64), downloaded over HTTPS only and
   verified against a SHA-256 digest pinned in the script. The upload runs with
-  `--network-root-folder` at the repository root: Codecov keeps only report paths that appear in that tree's `git ls-files`, and the job
-  runs from `e2e-tests/`. A report that names no source file is not uploaded.
+  `--network-root-folder` at the repository root: Codecov keeps only report paths that
+  appear in that tree's `git ls-files`, and the job runs from `e2e-tests/`. A report
+  that names no source file is not uploaded.
 - The upload is attributed to the PR head (`PULL_PULL_SHA`) with `--pr`, never to the
   checkout's HEAD, which is a local merge of the PR onto its base that GitHub has never
   seen. It runs only when the job tested the PR's own image (`TAG_NAME` is

@@ -225,15 +225,26 @@ describe("testing::_codecov_cli download", () => {
     expect(readFileSync(join(root, "checked"), "utf8")).toBe(`${digest}  ${target}\n`);
   });
 
-  it("skips the upload, without downloading, on an architecture with no CLI build", () => {
-    const target = downloadTarget();
-    const { status, argv, output } = upload(
-      { CODECOV_TOKEN: "token", ...PR_RUN, CODECOV_BIN: target },
+  it("uses an executable already at CODECOV_BIN on any architecture, without downloading", () => {
+    const { status, argv } = upload(
+      { CODECOV_TOKEN: "token", ...PR_RUN },
       `${fakeArch("s390x")}\n${fakeCurl("printf binary")}`,
     );
     expect(status).toBe(0);
+    expect(argv[0]).toBe("upload-process");
+    expect(existsSync(join(root, "curl-args"))).toBe(false);
+  });
+
+  // `uname -m` says arm64 only on macOS, where a Linux build cannot run either.
+  it.each(["s390x", "arm64"])("skips the upload, without downloading, on %s", (arch) => {
+    const target = downloadTarget();
+    const { status, argv, output } = upload(
+      { CODECOV_TOKEN: "token", ...PR_RUN, CODECOV_BIN: target },
+      `${fakeArch(arch)}\n${fakeCurl("printf binary")}`,
+    );
+    expect(status).toBe(0);
     expect(argv).toEqual([]);
-    expect(output).toContain("No Codecov CLI build for architecture s390x");
+    expect(output).toContain(`No Codecov CLI build for architecture ${arch}`);
     expect(existsSync(join(root, "curl-args"))).toBe(false);
   });
 
