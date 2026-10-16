@@ -8,8 +8,9 @@ For current RHDH release lines, prefer Yarn Berry patches (`.yarn/patches/`,
 `patch/release-*` maintenance fork.
 
 The agent workflow lives in
-[`rhdh-patch-backstage`](https://github.com/redhat-developer/rhdh-skills/tree/main/skills/ci/rhdh-patch-backstage)
-in [redhat-developer/rhdh-skills](https://github.com/redhat-developer/rhdh-skills).
+`/rhdh-patch-backstage` in the
+[rhdh-skills `ci/` pack](https://github.com/redhat-developer/rhdh-skills/tree/main/skills/ci)
+([redhat-developer/rhdh-skills](https://github.com/redhat-developer/rhdh-skills)).
 Install the pack (`npx skills add redhat-developer/rhdh-skills --global`) and use
 `/rhdh-patch-backstage`, or follow that skill’s steps manually.
 
