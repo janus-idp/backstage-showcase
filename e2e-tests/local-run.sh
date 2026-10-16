@@ -418,7 +418,8 @@ EOF
 fi
 
 if [[ "$JOB_NAME" == *ocp*runtime*nightly* && "$SKIP_TESTS" == "true" ]]; then
-  log::warn "Runtime jobs deploy RHDH from Playwright. Omit -s or select 'Deploy and run tests' to run them."
+  log::error "Runtime jobs deploy RHDH from Playwright. Omit -s or select 'Deploy and run tests' to run them."
+  exit 1
 fi
 
 # Verify image exists (only supported for quay.io)
