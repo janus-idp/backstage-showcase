@@ -61,6 +61,22 @@ export function buildDescriptorKey(name: string, specs: string[]): string {
 }
 
 /**
+ * Prefixes plain semver ranges with `npm:` so that `Manifest.load` creates
+ * descriptors whose ranges match the Yarn lockfile format.
+ */
+function prefixRangesWithNpm(
+  deps: Record<string, string> | undefined,
+): Record<string, string> | undefined {
+  if (!deps) return deps;
+  return Object.fromEntries(
+    Object.entries(deps).map(([name, range]) => [
+      name,
+      range.startsWith("npm:") ? range : `npm:${range}`,
+    ]),
+  );
+}
+
+/**
  * Builds a lockfile entry object for a given package version, mirroring
  * the serialization in Yarn's `Project.generateLockfile()`. The checksum
  * is left undefined — `yarn install` will fetch the tarball and fill it in.
@@ -73,8 +89,17 @@ export function buildLockEntry(
   const ident = structUtils.parseIdent(name);
   const locator = structUtils.makeLocator(ident, `${NPM_PROTOCOL}${version}`);
 
+  // Peer dependencies use plain semver ranges in the lockfile, so only
+  // regular/dev/optional dependencies need the `npm:` protocol prefix.
+  const metaWithNpm = {
+    ...meta,
+    dependencies: prefixRangesWithNpm(meta.dependencies),
+    devDependencies: prefixRangesWithNpm(meta.devDependencies),
+    optionalDependencies: prefixRangesWithNpm(meta.optionalDependencies),
+  };
+
   const manifest = new Manifest();
-  manifest.load(meta as any);
+  manifest.load(metaWithNpm as any);
   manifest.name = null;
   manifest.languageName = "node";
 
