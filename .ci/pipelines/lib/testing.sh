@@ -184,7 +184,8 @@ testing::_codecov_cli() {
     return 0
   fi
   # Pinned version and digests (from the GitHub release's asset digests): bumping
-  # the version means updating both, and it is a supply-chain decision.
+  # the version means updating both digests, here and in e2e-coverage-upload.test.ts,
+  # and it is a supply-chain decision.
   local version="v11.3.1" asset digest arch
   arch=$(uname -m)
   case "${arch}" in
@@ -229,7 +230,7 @@ testing::_upload_e2e_coverage() {
   fi
   read -r sha pr <<< "${head}"
   if ! codecov_bin=$(testing::_codecov_cli); then
-    log::warn "Could not fetch a checksum-verified Codecov CLI — skipping upload"
+    log::warn "No checksum-verified Codecov CLI available — skipping upload"
     return 0
   fi
   # Codecov drops report paths missing from the uploaded file list, which the CLI
