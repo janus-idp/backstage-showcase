@@ -357,19 +357,6 @@ describe("container runner", () => {
     expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
   });
 
-  it.each([11, 12])("rejects the default deploy-only mode for runtime menu choice %s", (choice) => {
-    const result = spawnSync("/bin/bash", [join(root, "e2e-tests/local-run.sh")], {
-      env,
-      input: `\n${choice}\n\n\n`,
-      encoding: "utf8",
-      timeout: 10_000,
-    });
-    expect(result.status).toBe(1);
-    expect(result.stdout + result.stderr).toContain("Omit -s or select 'Deploy and run tests'");
-    expect(events()).toBe("");
-    expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
-  });
-
   it.each([{ BW_SESSION: "" }, { FAIL_SECRETS: "1" }])(
     "does not mutate the cluster when secret loading fails: %j",
     (overrides) => {

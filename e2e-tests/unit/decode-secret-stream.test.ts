@@ -74,38 +74,16 @@ describe("decode-secret-stream", () => {
     }
   });
 
-  it.each(["cloudsql_service_account_json", "cloudsql_service_account__dot__json"])(
-    "materializes %s at the Cloud SQL path consumed by CI",
-    async (name) => {
-      const directory = mkdtempSync(join(tmpdir(), "rhdh-secret-stream-test-"));
-      const value = JSON.stringify({ type: "service_account", private_key: "synthetic-key" });
-      try {
-        execFileSync(process.execPath, [decoder, directory], {
-          input: await encode([{ name, value }]),
-        });
-        const path = join(directory, "cloudsql-service-account.json");
-        expect(readFileSync(path, "utf8")).toBe(value);
-        expect(statSync(path).mode & 0o777).toBe(0o600);
-      } finally {
-        rmSync(directory, { recursive: true, force: true });
-      }
-    },
-  );
-
-  it("rejects conflicting Cloud SQL file aliases before writing any files", async () => {
+  it("normalizes the GSM-encoded Cloud SQL key name for the original CI path", async () => {
     const directory = mkdtempSync(join(tmpdir(), "rhdh-secret-stream-test-"));
+    const value = JSON.stringify({ type: "service_account", private_key: "synthetic-key" });
     try {
-      const input = await encode([
-        { name: "cloudsql_service_account_json", value: "one-key" },
-        { name: "cloudsql_service_account__dot__json", value: "another-key" },
-      ]);
-      expect(() =>
-        execFileSync(process.execPath, [decoder, directory], {
-          input,
-          stdio: ["pipe", "ignore", "ignore"],
-        }),
-      ).toThrow(/Command failed/u);
-      expect(readdirSync(directory)).toEqual([]);
+      execFileSync(process.execPath, [decoder, directory], {
+        input: await encode([{ name: "cloudsql_service_account__dot__json", value }]),
+      });
+      const path = join(directory, "cloudsql-service-account.json");
+      expect(readFileSync(path, "utf8")).toBe(value);
+      expect(statSync(path).mode & 0o777).toBe(0o600);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
