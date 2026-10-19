@@ -18,8 +18,8 @@ Container Platform (OCP).
 `e2e-ocp-helm-runtime-localization-nightly` runs `showcase-runtime`, then the five localization
 projects against a separate Helm showcase deployment on the same cluster. The currently configured
 `e2e-ocp-helm-localization-nightly` job also runs this combined flow, allowing CI verification
-before the job is renamed in openshift/release. Operator runtime coverage remains runtime-only.
-The existing `e2e-ocp-helm-runtime-nightly` name retains its runtime-only behavior.
+before the job is renamed in openshift/release. Operator runtime coverage remains runtime-only. The
+existing `e2e-ocp-helm-runtime-nightly` name retains its runtime-only behavior.
 
 The handler is [`jobs/ocp-runtime.sh`](jobs/ocp-runtime.sh); general OCP-version and OSD-GCP
 nightlies run their standard projects without runtime tests. See the
