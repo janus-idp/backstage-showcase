@@ -119,11 +119,13 @@ main() {
       handle_ocp_helm_upgrade
       ;;
     *ocp*helm*localization*nightly*)
-      log::info "Sourcing ocp-localization.sh"
-      # shellcheck source=.ci/pipelines/jobs/ocp-localization.sh
-      source "${DIR}/jobs/ocp-localization.sh"
-      log::info "Calling handle_ocp_localization"
-      handle_ocp_localization
+      # Matches the combined runtime-localization name and the currently
+      # configured localization job used to verify it before the CI rename.
+      log::info "Sourcing ocp-runtime.sh"
+      # shellcheck source=.ci/pipelines/jobs/ocp-runtime.sh
+      source "${DIR}/jobs/ocp-runtime.sh"
+      log::info "Calling handle_ocp_helm_runtime_localization"
+      handle_ocp_helm_runtime_localization
       ;;
     *ocp*helm*runtime*nightly*)
       log::info "Sourcing ocp-runtime.sh"

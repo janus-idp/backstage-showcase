@@ -67,7 +67,7 @@ Fullsend's GitHub issues are the automated overlay tracker. For overlay bugs tha
 | | Nightly (Periodic) Jobs | PR Check (Presubmit) Jobs |
 |---|---|---|
 | **Trigger** | Scheduled (usually once per night) | On PR creation/update, or `/ok-to-test` |
-| **Scope** | Standard jobs: showcase and RBAC, plus Helm sanity plugins; dedicated jobs: runtime, localization, auth providers | Mandatory check: showcase + RBAC; optional nightly variants on request |
+| **Scope** | Standard jobs: showcase and RBAC, plus Helm sanity plugins; dedicated jobs: runtime (Helm also combines localization), auth providers | Mandatory check: showcase + RBAC; optional nightly variants on request |
 | **Platforms** | OCP (multiple versions), AKS, EKS, GKE, OSD-GCP | OCP only (single version) |
 | **Install methods** | Helm and Operator | Helm only |
 | **Alert channel** | `#rhdh-e2e-alerts` / `#rhdh-e2e-alerts-{version}` | PR status checks on GitHub |
@@ -424,17 +424,17 @@ Same as OCP nightly but deploys RHDH using the Operator instead of Helm. See [`o
 - Uses Backstage CR (`rhdh-start.yaml`) instead of Helm release
 - OSD-GCP Operator jobs use the same handler and projects; runtime tests have dedicated jobs
 
-### OCP Runtime (`ocp-runtime`)
+### OCP Runtime and Localization (`ocp-runtime`)
 
-`e2e-ocp-helm-runtime-nightly` and `e2e-ocp-operator-runtime-nightly` run only `showcase-runtime` on OCP 4.20 for `main` and `release-2.1`. See [`ocp-runtime.sh`](../../.ci/pipelines/jobs/ocp-runtime.sh).
+`e2e-ocp-helm-runtime-localization-nightly` runs `showcase-runtime`, then the five localization projects sequentially on the same OCP 4.20 cluster. The currently configured `e2e-ocp-helm-localization-nightly` name selects this same combined handler for CI verification before the Prow job is renamed. `e2e-ocp-helm-runtime-nightly` and `e2e-ocp-operator-runtime-nightly` remain runtime-only. See [`ocp-runtime.sh`](../../.ci/pipelines/jobs/ocp-runtime.sh).
 
-**Namespaces**: `showcase-runtime` by default, plus per-run external-database target namespaces created by the TypeScript fixtures.
+**Namespaces**: `showcase-runtime` by default, plus per-run external-database target namespaces created by the TypeScript fixtures. The combined Helm job deploys a separate showcase instance in `NAME_SPACE` (default `showcase`) for localization after runtime finishes.
 
 **Coverage**: ConfigMap changes, `pluginDivisionMode: schema`, and configured RDS, Azure PostgreSQL, and Cloud SQL TLS/persistence scenarios. The suite creates its own deployments and internal PostgreSQL; Operator runs first prepare the RHDH Operator. Crunchy setup is not required.
 
-**Artifacts**: Each Helm or Operator job has a `showcase-runtime` report and JUnit output. In GCS, the outer artifact directory uses the runtime job name; the inner test-step directory still uses `redhat-developer-rhdh-ocp-helm-nightly` or `redhat-developer-rhdh-ocp-operator-nightly`.
+**Artifacts**: Each runtime invocation has a `showcase-runtime` report and JUnit output. The combined job additionally has `showcase-localization-{de,es,fr,it,ja}` reports and status entries, with failures aggregated across all six runs. In GCS, the outer artifact directory uses the job name; the inner test-step directory still uses `redhat-developer-rhdh-ocp-helm-nightly` or `redhat-developer-rhdh-ocp-operator-nightly`.
 
-**Coordination**: Twice-weekly cron spacing plus per-job `max_concurrency: 1`; no cross-job or cross-branch database lock. Check active shared-database users before triggering either optional presubmit or a local run. Release-1.10 nightlies still use the shared databases and can delete another run's databases during cleanup. See [runtime schedules and local commands](CI.md#runtime-tests).
+**Coordination**: Cron spacing plus per-job `max_concurrency: 1`; no cross-job or cross-branch database lock. The existing localization job now uses the shared databases too. Check active users before triggering an optional presubmit or a local run. Release-1.10 nightlies still use the shared databases and can delete another run's databases during cleanup. The combined Helm step may exceed the default two-hour budget; record timings for a follow-up openshift/release timeout/schedule change. See [runtime schedules and local commands](CI.md#runtime-tests).
 
 ### OCP PR Check (`ocp-pull`)
 

@@ -33,6 +33,7 @@ Tests skip if the required credentials or connection metadata are still missing 
 ### CI Behavior
 
 - **`e2e-ocp-helm-runtime-nightly` / `e2e-ocp-operator-runtime-nightly`**: Run the schema tests in `showcase-runtime`, including when triggered as optional presubmits.
+- **Combined Helm runtime/localization flow**: Runs the same runtime suite before the localization projects. Both `e2e-ocp-helm-runtime-localization-nightly` and the currently configured `e2e-ocp-helm-localization-nightly` name select this flow; use the latter for CI verification before the Prow rename.
 - **Regular OCP-version and OSD-GCP nightlies, the mandatory PR check, and AKS/EKS/GKE jobs**: Do not select the schema-mode spec.
 
 ## CI Integration
@@ -47,7 +48,7 @@ Set `DEBUG_SCHEMA_MODE_PF=1` to log port-forward output.
 
 Tests run in the `showcase-runtime` Playwright project together with `config-map.spec.ts` (see [`playwright.config.ts`](../../../playwright.config.ts)).
 
-**Pipeline entrypoint**: [`.ci/pipelines/openshift-ci-tests.sh`](../../../../.ci/pipelines/openshift-ci-tests.sh) → `jobs/ocp-runtime.sh` (`e2e-ocp-helm-runtime-nightly` or `e2e-ocp-operator-runtime-nightly`)
+**Pipeline entrypoint**: [`.ci/pipelines/openshift-ci-tests.sh`](../../../../.ci/pipelines/openshift-ci-tests.sh) → `jobs/ocp-runtime.sh` (runtime-only jobs or the combined Helm runtime/localization flow)
 
 **Environment baseline**: [`.ci/pipelines/env_variables.sh`](../../../../.ci/pipelines/env_variables.sh)
 

@@ -17,10 +17,18 @@ source "$DIR"/install-methods/operator.sh
 source "$DIR"/lib/testing.sh
 # shellcheck source=.ci/pipelines/playwright-projects.sh
 source "$DIR"/playwright-projects.sh
+# shellcheck source=.ci/pipelines/jobs/ocp-localization.sh
+source "$DIR"/jobs/ocp-localization.sh
 
 handle_ocp_helm_runtime() {
   export INSTALL_METHOD="helm"
   run_ocp_runtime_tests
+}
+
+handle_ocp_helm_runtime_localization() {
+  handle_ocp_helm_runtime
+  # Keep localization on its own showcase deployment and Playwright projects.
+  run_ocp_localization_suite
 }
 
 handle_ocp_operator_runtime() {
@@ -48,4 +56,5 @@ run_ocp_runtime_tests() {
   export RUNTIME_AUTO_DEPLOY="true"
   # run_tests records failures in OVERALL_RESULT and publishes runtime artifacts.
   testing::run_tests "${RELEASE_NAME}" "${NAME_SPACE_RUNTIME}" "${PW_PROJECT_SHOWCASE_RUNTIME}" || true
+  unset RUNTIME_AUTO_DEPLOY
 }

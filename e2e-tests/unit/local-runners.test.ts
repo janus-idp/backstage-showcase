@@ -345,17 +345,20 @@ while true; do sleep 0.05; done`,
 });
 
 describe("container runner", () => {
-  it.each(["helm", "operator"])("rejects deploy-only %s runtime CLI runs", (method) => {
-    const result = run("e2e-tests/local-run.sh", [
-      ...runArgs,
-      "-j",
-      `periodic-ci-redhat-developer-rhdh-main-e2e-ocp-${method}-runtime-nightly`,
-    ]);
-    expect(result.status).toBe(1);
-    expect(result.stdout + result.stderr).toContain("Omit -s or select 'Deploy and run tests'");
-    expect(events()).toBe("");
-    expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
-  });
+  it.each(["helm-runtime", "operator-runtime", "helm-runtime-localization", "helm-localization"])(
+    "rejects deploy-only %s CLI runs",
+    (suite) => {
+      const result = run("e2e-tests/local-run.sh", [
+        ...runArgs,
+        "-j",
+        `periodic-ci-redhat-developer-rhdh-main-e2e-ocp-${suite}-nightly`,
+      ]);
+      expect(result.status).toBe(1);
+      expect(result.stdout + result.stderr).toContain("Omit -s or select 'Deploy and run tests'");
+      expect(events()).toBe("");
+      expect(existsSync(join(root, "e2e-tests/.local-test/run.lock"))).toBe(false);
+    },
+  );
 
   it.each([{ BW_SESSION: "" }, { FAIL_SECRETS: "1" }])(
     "does not mutate the cluster when secret loading fails: %j",
