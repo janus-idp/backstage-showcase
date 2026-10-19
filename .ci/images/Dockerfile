@@ -1,6 +1,6 @@
 # Base image from Microsoft Playwright
 # Playwright v1.59.1-noble includes Node 24.14.1
-FROM mcr.microsoft.com/playwright:v1.59.1-noble@sha256:040190be07ce081a025d95f2aeab57b588bed4f19165c1c93cb765372d368463
+FROM mcr.microsoft.com/playwright:v1.59.1-noble@sha256:eac9b0a5312cdab40ee8c2429df5bf19bffdccf8f3bf3c42268e173f97541645
 
 # Set environment variables for the container
 ENV CI=1 \
