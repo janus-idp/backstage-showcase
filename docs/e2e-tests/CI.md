@@ -88,6 +88,7 @@ Nightly tests are run to ensure the stability and reliability of our codebase ov
 
 - **OCP Nightly Tests:** Run on ephemeral OpenShift clusters provisioned via Hive cluster pools on AWS. Multiple OCP versions are tested.
 - **OCP Operator Nightly Tests:** Same as OCP nightly but deploy RHDH using the Operator instead of Helm.
+- **OCP Runtime and Localization Tests:** Dedicated jobs run `showcase-runtime` on one baseline OCP version; the combined Helm job then runs localization against its own showcase deployment. See [Runtime Tests](#runtime-tests).
 - **AKS Nightly Tests:** Nightly tests on Azure Kubernetes Service (AKS) using ephemeral clusters provisioned by [Mapt](https://github.com/redhat-developer/mapt). AKS is exclusively used for nightly runs (no PR checks).
 - **EKS Nightly Tests:** Nightly tests on AWS Elastic Kubernetes Service (EKS) using ephemeral clusters provisioned by Mapt.
 - **GKE Nightly Tests:** Nightly tests on Google Kubernetes Engine using a long-running shared cluster.
@@ -101,20 +102,54 @@ The nightly job for the `main` branch also runs against three OpenShift Containe
 
 ### Localization Tests
 
-Localization tests verify that the RHDH UI displays correctly translated strings for supported languages. These tests run in a dedicated `e2e-ocp-helm-localization-nightly` nightly job.
+Localization tests verify that the RHDH UI displays correctly translated strings for supported languages. They run after the runtime suite in the combined Helm flow described in [Runtime Tests](#runtime-tests). The currently configured `e2e-ocp-helm-localization-nightly` job selects this combined flow until the job is renamed.
 
 - **Supported Languages:** German (de), Spanish (es), French (fr), Italian (it), and Japanese (ja)
-- **When They Run:** Localization tests run in their own nightly job with a dedicated showcase deployment.
+- **Deployment:** A separate Helm showcase deployment, including the customization provider, is created after runtime completes. It uses internal PostgreSQL without installing Crunchy.
 - **Playwright Projects:** `showcase-localization-de`, `showcase-localization-es`, `showcase-localization-fr`, `showcase-localization-it`, `showcase-localization-ja`
 
-The localization test implementation is in `.ci/pipelines/jobs/ocp-localization.sh` (`run_localization_tests()` function).
+The localization implementation is in `.ci/pipelines/jobs/ocp-localization.sh` (`run_ocp_localization_suite()` and `run_localization_tests()`). Each locale uses a separate Playwright invocation: `LOCALE` is process-wide and several page objects resolve translations at module load. Runtime keeps its one-worker, no-retry configuration; localization keeps its smoke dependency and CI retries. Runtime failures are recorded without preventing localization from running, and each invocation publishes its own artifacts and contributes to the overall result.
+
+### Runtime Tests
+
+The runtime and combined Helm handlers use the baseline **OCP 4.20** cluster. Job-name routing is:
+
+| Job | Installation method | Playwright projects (in order) |
+| --- | --- | --- |
+| `e2e-ocp-helm-runtime-localization-nightly` | Helm | `showcase-runtime`, then DE, ES, FR, IT, JA localization projects |
+| `e2e-ocp-helm-localization-nightly` (current CI entry point) | Helm | Same combined flow |
+| `e2e-ocp-helm-runtime-nightly` (runtime-only entry point) | Helm | `showcase-runtime` |
+| `e2e-ocp-operator-runtime-nightly` | Operator | `showcase-runtime` |
+
+The [runtime handler](../../.ci/pipelines/jobs/ocp-runtime.sh) enables `RUNTIME_AUTO_DEPLOY` and invokes Playwright without a pre-set `BASE_URL`. The TypeScript deployment helpers create the runtime instance, its internal PostgreSQL database, and separate targets for configured AWS RDS, Azure PostgreSQL, and Google Cloud SQL slots. Coverage includes ConfigMap changes, `pluginDivisionMode: schema`, external-database TLS validation, and persistence across restarts. Operator runs first install the RHDH Operator; neither runtime job needs a Crunchy PostgreSQL deployment.
+
+The combined Helm handler clears `RUNTIME_AUTO_DEPLOY` after runtime finishes, deploys showcase in `NAME_SPACE` (default `showcase`), and runs the localization projects against its explicit URL. The runtime instance stays isolated in `NAME_SPACE_RUNTIME` (default `showcase-runtime`). Runtime runs first to keep the shared-database usage window at the start of the job. Operator jobs do not run localization.
+
+Regular Helm and Operator nightlies, including version-specific OCP and OSD-GCP variants, run their standard projects without `showcase-runtime`. Helm's external Crunchy PostgreSQL TLS check remains in `showcase` across the OCP version matrix. Managed-database coverage exercises both installation methods on the baseline OCP version instead of the full managed-database/OCP cross-product.
+
+For CI verification before the job rename, trigger the configured optional presubmit with `/test e2e-ocp-helm-localization-nightly`. This runs runtime and all five locales. The new `e2e-ocp-helm-runtime-localization-nightly` name is supported by this repository but requires separate openshift/release configuration before it can be triggered in Prow. The authoritative schedules are in the openshift/release configurations for [main](https://github.com/openshift/release/blob/main/ci-operator/config/redhat-developer/rhdh/redhat-developer-rhdh-main.yaml) and [release-2.1](https://github.com/openshift/release/blob/main/ci-operator/config/redhat-developer/rhdh/redhat-developer-rhdh-release-2.1.yaml). Runtime-only jobs are introduced by [openshift/release#86896](https://github.com/openshift/release/pull/86896).
+
+**Execution budget:** The shared Helm nightly test step has the default two-hour timeout. Runtime alone has taken about 90 minutes in CI, and localization adds deployment and five test runs. Record combined CI timings: a longer step timeout and the final job rename/schedule require a separate openshift/release change. `cluster_claim.timeout` controls cluster acquisition, not the test-step execution budget.
+
+**Shared database coordination:** Cron spacing keeps scheduled users of the long-lived database slots apart, including release-1.10 nightlies, which still run runtime tests in their general handlers. `max_concurrency: 1` limits each job individually; it does not serialize Helm against Operator, different branches, or periodic against presubmit jobs. There is no shared database lock. Before a manual, presubmit, or local run, check for active shared-database users and allow delayed jobs to finish. Release-1.10 cleanup drops all non-system databases on shared RDS/Azure hosts; overlapping it can delete another runtime run's databases.
+
+Each runtime invocation publishes a `showcase-runtime` Playwright report, test results, and JUnit artifacts through the existing test runner and Slack/Data Router post steps. The combined job also publishes separate `showcase-localization-{de,es,fr,it,ja}` artifacts and status entries. The test step remains `redhat-developer-rhdh-ocp-helm-nightly` or `redhat-developer-rhdh-ocp-operator-nightly` regardless of the outer job name.
+
+To run either job locally, follow [Managing E2E Secrets](managing-e2e-secrets.md#running-with-secrets), log in to an OCP cluster, and run from `e2e-tests`:
+
+```bash
+./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-ocp-helm-runtime-localization-nightly -r rhdh-community/rhdh -t next
+./local-run.sh -j periodic-ci-redhat-developer-rhdh-main-e2e-ocp-operator-runtime-nightly -r rhdh-community/rhdh -t next
+```
+
+Run them sequentially and omit `-s`: runtime deployments are created by the tests, so deploy-only mode skips them too.
 
 ### CI Job Definitions
 
 #### Nightly Test Job
 
 - **Purpose:** Ensure ongoing stability and detect regressions in different environments.
-- **Trigger:** Scheduled to run every night.
+- **Trigger:** Scheduled according to each job's cron configuration; some suites run twice weekly.
 - **Environments:**
   - **OCP:** Ephemeral clusters from Hive pools (multiple OCP versions).
   - **AKS/EKS:** Ephemeral clusters provisioned by [Mapt](https://github.com/redhat-developer/mapt).

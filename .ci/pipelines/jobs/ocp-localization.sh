@@ -16,15 +16,11 @@ source "$DIR"/lib/testing.sh
 # shellcheck source=.ci/pipelines/playwright-projects.sh
 source "$DIR"/playwright-projects.sh
 
-handle_ocp_localization() {
+run_ocp_localization_suite() {
   export NAME_SPACE="${NAME_SPACE:-showcase-localization-nightly}"
 
-  common::oc_login
-
-  K8S_CLUSTER_ROUTER_BASE=$(oc get route console -n openshift-console -o=jsonpath='{.spec.host}' | sed 's/^[^.]*\.//')
-  export K8S_CLUSTER_ROUTER_BASE
-
-  cluster_setup_ocp_helm
+  # The runtime handler has already logged in and discovered the router base.
+  # Showcase uses the chart's internal PostgreSQL, so Crunchy is not needed.
   base_deployment "${PW_PROJECT_SHOWCASE}"
   deploy_test_backstage_customization_provider "${NAME_SPACE}"
 

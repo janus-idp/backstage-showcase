@@ -121,7 +121,8 @@ test.beforeAll(async ({ }, testInfo) => {
 7. **Localization Tests** (`playwright/e2e/localization/`)
    - Verify UI displays correctly translated strings
    - Supports **German (de)**, **Spanish (es)**, **French (fr)**, **Italian (it)**, and **Japanese (ja)**
-   - Runs in a dedicated `e2e-ocp-helm-localization-nightly` nightly job
+   - Runs after runtime in the combined Helm flow (`e2e-ocp-helm-runtime-localization-nightly`); the currently configured `e2e-ocp-helm-localization-nightly` name selects the same flow for CI verification before the Prow rename
+   - Uses a separate showcase deployment and one Playwright invocation per locale; Operator runtime jobs do not run localization
    - Uses `showcase-localization-de`, `showcase-localization-es`, `showcase-localization-fr`, `showcase-localization-it`, `showcase-localization-ja` Playwright projects
    - Translation files located in `translations/` directory
    - Test helper: `e2e-tests/playwright/e2e/localization/locale.ts`
@@ -389,11 +390,20 @@ The main script dispatches to job-specific handlers in `.ci/pipelines/jobs/`:
 - `handle_eks_helm` / `handle_eks_operator`: EKS Helm/Operator deployment
 - `handle_gke_helm` / `handle_gke_operator`: GKE Helm/Operator deployment
 - `handle_ocp_nightly`: OCP Helm nightly tests (also handles OSD-GCP Helm)
-- `handle_ocp_localization`: OCP Helm localization nightly tests
+- `handle_ocp_helm_runtime_localization`: Runtime followed by five localization projects on a separate Helm showcase deployment; handles both the combined name and the currently configured Helm localization job
 - `handle_ocp_operator`: OCP Operator nightly tests (also handles OSD-GCP Operator)
+- `handle_ocp_helm_runtime` / `handle_ocp_operator_runtime`: Dedicated OCP runtime jobs (`jobs/ocp-runtime.sh`), running only `showcase-runtime` on one baseline OCP version
 - `handle_ocp_pull`: OCP PR checks
 - `handle_auth_providers`: Auth provider tests
 - `handle_ocp_helm_upgrade`: Upgrade scenario tests
+
+Runtime jobs replace runtime execution in regular OCP-version and OSD-GCP nightlies.
+The combined Helm flow clears `RUNTIME_AUTO_DEPLOY` before localization, preserves
+separate project artifacts, and aggregates failures across all six invocations.
+Match Helm localization names before the broader runtime pattern in the dispatcher.
+They rely on cron spacing and per-job `max_concurrency: 1`, without a shared database
+lock. Before manual or local runtime/localization runs, check active shared-database users,
+including release-1.10 nightlies. See `docs/e2e-tests/CI.md#runtime-tests`.
 
 #### Special Case: showcase-auth-providers Deployment
 
