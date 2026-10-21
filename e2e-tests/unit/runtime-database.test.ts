@@ -228,22 +228,28 @@ describe.each([
 
   it("leaves another run on the slot alone while it may still be running", async () => {
     const now = Date.UTC(2026, 9, 21, 5, 30);
-    const live = (age: number) => stale.replace("abcdef012345", newRuntimeRunId(now - age));
-    const young = live(RUNTIME_RUN_MAX_AGE_MS - 60_000);
-    const old = live(RUNTIME_RUN_MAX_AGE_MS + 60_000);
-    const server = fakeServer([`${young}catalog`, `${old}catalog`, `${current}catalog`]);
+    const startedAgo = (ms: number) => stale.replace("abcdef012345", newRuntimeRunId(now - ms));
+    const young = startedAgo(RUNTIME_RUN_MAX_AGE_MS - 60_000);
+    const skewed = startedAgo(-30_000);
+    const old = startedAgo(RUNTIME_RUN_MAX_AGE_MS + 60_000);
+    const server = fakeServer([
+      `${young}catalog`,
+      `${skewed}catalog`,
+      `${old}catalog`,
+      `${current}catalog`,
+    ]);
     await expect(clearSlotDatabases({ query: server.query }, current, now)).resolves.toEqual({
       retired: [old],
       failed: [],
-      active: [young],
+      active: [young, skewed],
     });
-    expect([...server.databases]).toEqual([`${young}catalog`]);
+    expect([...server.databases]).toEqual([`${young}catalog`, `${skewed}catalog`]);
   });
 });
 
 it("starts each run id with its start time so other runs can tell its age", () => {
   const now = Date.UTC(2026, 9, 21, 5, 30);
-  const runId = newRuntimeRunId(now);
+  const runId = newRuntimeRunId(now + 999);
   expect(runId).toMatch(/^[a-f0-9]{12}$/u);
   expect(Number.parseInt(runId.slice(0, 8), 16) * 1000).toBe(now);
   expect(runtimeDatabasePrefix(runId, "rds", 1)).toBe(`rt_${runId}_rds1_`);
