@@ -19,8 +19,10 @@ Single-context repo (most repos):
 /
 ├── GLOSSARY.md
 ├── docs/adr/
-│   ├── 0001-event-sourced-orders.md
-│   └── 0002-postgres-for-write-model.md
+│   ├── 0001-dynamic-plugins-as-delivery-model.md        ← naming convention
+│   ├── 0002-e2e-on-openshift-ci-prow.md
+│   ├── 0003-yarn-patches-for-upstream-fixes.md
+│   └── 0004-oci-catalog-index-plugin-distribution.md
 └── src/
 ```
 
