@@ -11,3 +11,7 @@ Canonical five, applied as Jira labels: `needs-triage`, `needs-info`, `ready-for
 ### Domain docs
 
 Single-context: `GLOSSARY.md` + `docs/adr/` at repo root. See `docs/agents/domain.md`.
+
+### Repo knowledge
+
+`CONTEXT.md` at repo root holds consolidated repo knowledge (E2E testing, CI/CD, security practices). Skills live in `.agents/skills/` (Agent Skills open standard).
