@@ -104,12 +104,12 @@ export async function configurePostgresCredentials(
   await kubeClient.createOrUpdateSecret(secret, namespace);
 }
 
-const ownedDatabasePrefix = "backstage_plugin_";
+const defaultPluginDatabasePrefix = "backstage_plugin_";
 
 /**
- * Drop the databases release-1.x RHDH creates (default plugin prefix) on a
- * shared PostgreSQL instance. Runtime tests from newer branches use the same
- * hosts with their own prefix, so their databases must survive.
+ * Drop the databases RHDH creates with the default plugin prefix on a shared
+ * PostgreSQL instance. Runtime tests of main and 2.x use the same hosts with an
+ * `rt_` prefix, so their databases must survive.
  *
  * @param credentials - Database connection credentials
  * @param credentials.host - PostgreSQL host
@@ -157,10 +157,10 @@ export async function clearDatabase(credentials: {
 
     const databases = result.rows
       .map((row) => row.datname)
-      .filter((db) => db.startsWith(ownedDatabasePrefix));
+      .filter((db) => db.startsWith(defaultPluginDatabasePrefix));
 
     if (databases.length === 0) {
-      console.log(`No ${ownedDatabasePrefix}* databases found to drop`);
+      console.log(`No ${defaultPluginDatabasePrefix}* databases found to drop`);
       return;
     }
 
