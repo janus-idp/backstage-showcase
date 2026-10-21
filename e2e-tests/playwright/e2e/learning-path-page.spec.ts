@@ -114,8 +114,11 @@ test.describe("Learning Paths", { tag: "@layer3-equivalent" }, () => {
         .click();
 
       await expect(guestPage).toHaveURL(/\/learning-paths(?:\?|$)/u);
+      // The plugin header toolbar repeats the title as a second h1; check the page's own.
       await expect(
-        guestPage.getByRole("heading", { name: /Learning Paths|Parcours d'apprentissage/u }),
+        guestPage
+          .getByRole("main")
+          .getByRole("heading", { name: /Learning Paths|Parcours d'apprentissage/u }),
       ).toBeVisible();
       await expect(guestPage.getByText("Building Operators on OpenShift")).toBeVisible();
     },
