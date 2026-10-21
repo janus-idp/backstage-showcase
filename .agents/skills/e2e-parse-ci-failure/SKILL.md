@@ -3,8 +3,6 @@ name: e2e-parse-ci-failure
 description: >-
   Parse a Prow CI job URL or Jira ticket to extract E2E test failure details
   including test name, spec file, release branch, platform, and error messages
-targets:
-  - '*'
 ---
 # Parse CI Failure
 
@@ -88,7 +86,7 @@ Use Jira MCP tools to read the ticket. Extract:
 
 ## Job Name Mapping
 
-Refer to the **e2e-fix-workflow** rule for all mapping tables: job name to release branch, job name to platform and deployment method, job name to Playwright projects, release branch to image repo/tag, and job name to `local-run.sh` `-j` parameter. Those tables are the single source of truth and should not be duplicated here.
+Refer to `docs/agents/knowledge/e2e-fix-workflow.md` for all mapping tables: job name to release branch, job name to platform and deployment method, job name to Playwright projects, release branch to image repo/tag, and job name to `local-run.sh` `-j` parameter. Those tables are the single source of truth and should not be duplicated here.
 
 When parsing a job name, apply those mapping tables to derive: release branch, platform, deployment method, Playwright projects, and `local-run.sh` flags (`-j`, `-r`, `-t`).
 

@@ -1,10 +1,4 @@
----
-root: false
-targets:
-  - '*'
-globs: []
----
-# RHDH (Red Hat Developer Hub) Repository Context
+# E2E Testing
 
 This document serves as a comprehensive starting point for LLMs working with the RHDH repository. It provides detailed information about the e2e-tests, testing infrastructure and CI/CD pipeline.
 

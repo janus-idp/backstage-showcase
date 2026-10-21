@@ -3,8 +3,6 @@ name: e2e-diagnose-and-fix
 description: >-
   Analyze a failing E2E test, determine root cause, and fix it using Playwright
   Test Agents and RHDH project conventions
-targets:
-  - '*'
 ---
 # Diagnose and Fix
 
@@ -218,8 +216,8 @@ Use `@playwright-test-generator` when a test needs major rework and you need to 
 Every fix **must** follow Playwright best practices. Before writing or modifying test code, consult these resources in order:
 
 1. **Project rules** (always available locally):
-   - `playwright-locators` rule — locator priority, anti-patterns, assertions, Page Objects, DataGrid handling
-   - `ci-e2e-testing` rule — test structure, component annotations, project configuration, CI scripts
+   - `docs/agents/knowledge/playwright-locators.md` — locator priority, anti-patterns, assertions, Page Objects, DataGrid handling
+   - `docs/agents/knowledge/e2e-testing.md` — test structure, component annotations, project configuration, CI scripts
 
 2. **Official Playwright docs** (fetch via Context7 if available, otherwise use web):
    - Best practices: https://playwright.dev/docs/best-practices

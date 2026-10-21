@@ -1,26 +1,6 @@
----
-root: false
-targets:
-  - '*'
-globs: []
----
 # E2E Test Fix Workflow
 
-Reference knowledge for the `/fix-e2e` command. For detailed instructions, load the corresponding skill for each phase.
-
-## Workflow Overview
-
-The `/fix-e2e` command orchestrates a 7-phase workflow to autonomously fix E2E CI failures:
-
-1. **Parse CI Failure** (`e2e-parse-ci-failure`) — Extract failure details from Prow URL, Playwright report, or Jira ticket
-2. **Setup Fix Branch** — Create a branch from the correct upstream release branch
-3. **Deploy RHDH** (`e2e-deploy-rhdh`) — Deploy RHDH to a cluster using `local-run.sh`
-4. **Reproduce Failure** (`e2e-reproduce-failure`) — Confirm the failure reproduces locally
-5. **Diagnose and Fix** (`e2e-diagnose-and-fix`) — Analyze root cause and implement a fix
-6. **Verify Fix** (`e2e-verify-fix`) — Run the test multiple times and check code quality
-7. **Submit and Review** (`e2e-submit-and-review`) — Create PR, trigger review, monitor CI
-
-**Critical rule**: No phase may be skipped without **explicit user approval**.
+Reference knowledge for the `fix-e2e` skill. The phase sequence, decision gates, and approval rules live in `.agents/skills/fix-e2e/SKILL.md`; this file holds the mapping tables and environment details those skills consult.
 
 ## Job Name Mapping Tables
 

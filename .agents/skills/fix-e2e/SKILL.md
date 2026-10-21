@@ -83,7 +83,7 @@ cd e2e-tests
 
 Use the **full Prow CI job name** for `-j` (not shortened names).
 
-Derive the image repo (`-r`) and tag (`-t`) from the release branch — see the `e2e-fix-workflow` rule for the derivation logic.
+Derive the image repo (`-r`) and tag (`-t`) from the release branch — see `docs/agents/knowledge/e2e-fix-workflow.md` for the derivation logic.
 
 After deployment completes, unlock Bitwarden and use the URL printed by the deployment:
 ```bash

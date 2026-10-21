@@ -3,8 +3,6 @@ name: e2e-verify-fix
 description: >-
   Verify an E2E test fix by running the test multiple times and checking code
   quality
-targets:
-  - '*'
 ---
 # Verify Fix
 

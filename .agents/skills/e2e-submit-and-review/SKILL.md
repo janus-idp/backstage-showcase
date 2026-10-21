@@ -3,8 +3,6 @@ name: e2e-submit-and-review
 description: >-
   Create a PR for an E2E test fix, trigger Qodo agentic review, address review
   comments, and monitor CI results
-targets:
-  - '*'
 ---
 # Submit and Review
 

@@ -1,9 +1,3 @@
----
-root: false
-targets:
-  - '*'
-globs: []
----
 # RHDH Extensions Catalog - Plugin Metadata Workflow
 
 This cursor rule provides an automated workflow for adding dynamic plugin metadata to the RHDH Extensions Catalog.

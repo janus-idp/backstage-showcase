@@ -3,8 +3,6 @@ name: e2e-reproduce-failure
 description: >-
   Run a specific failing E2E test against a deployed RHDH instance to confirm
   the failure and determine if it is consistent or flaky
-targets:
-  - '*'
 ---
 # Reproduce Failure
 
@@ -200,4 +198,4 @@ On failure, screenshots and videos are saved in `test-results/<test-path>/`:
 
 ## Test Project Reference
 
-Refer to the e2e-fix-workflow rule for the Playwright project → config map mapping.
+Refer to `docs/agents/knowledge/e2e-fix-workflow.md` for the Playwright project → config map mapping.

@@ -12,4 +12,4 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
-Labels are applied in Jira. Fullsend's own GitHub labels (`ready-to-code`, `type/*`, `component/*`) are fullsend-internal and are not managed here.
+Labels are applied in Jira. Fullsend manages its own GitHub labels (`ready-to-code`, `type/*`, `component/*`) independently of this table.

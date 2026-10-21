@@ -1,9 +1,3 @@
----
-root: false
-targets:
-  - '*'
-globs: []
----
 # GitHub Workflows Security Best Practices
 
 This rule provides comprehensive guidance for creating secure GitHub Actions workflows, based on the [GitHub Security Lab](https://securitylab.github.com/) blog series on GitHub Actions security.
@@ -20,7 +14,6 @@ This rule provides comprehensive guidance for creating secure GitHub Actions wor
 - [Repository-Specific Patterns](#repository-specific-patterns)
 - [Reusable Actions](#reusable-actions)
 
----
 
 ## Untrusted Input Handling
 
@@ -99,7 +92,6 @@ The following context expressions are **especially dangerous** because they are 
     echo "Title: $PR_TITLE"
 ```
 
----
 
 ## pull_request_target Security
 
@@ -262,7 +254,6 @@ jobs:
           persist-credentials: false
 ```
 
----
 
 ## Action Pinning and Permissions
 
@@ -339,7 +330,6 @@ permissions:
   packages: write
 ```
 
----
 
 ## Environment Variable Safety
 
@@ -393,7 +383,6 @@ Only write trusted, validated data to `GITHUB_ENV`:
   run: echo "Result: ${{ steps.compute.outputs.result }}"
 ```
 
----
 
 ## Artifact Security
 
@@ -448,7 +437,6 @@ jobs:
     # Add validation as needed
 ```
 
----
 
 ## Repository-Specific Patterns
 
@@ -518,7 +506,6 @@ jobs:
     # Proceeds only after environment approval
 ```
 
----
 
 ## Reusable Actions
 
@@ -586,7 +573,6 @@ This repository provides the following reusable actions:
 | `.github/actions/docker-build` | Build Docker images with hermetic build |
 | `.github/actions/get-sha` | Get short SHA for tagging |
 
----
 
 ## Quick Reference Checklist
 
@@ -603,7 +589,6 @@ When creating or reviewing a workflow, verify:
 - [ ] Artifacts from untrusted sources are validated before use
 - [ ] Concurrency is configured to prevent duplicate runs
 
----
 
 ## References
 

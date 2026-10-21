@@ -1,11 +1,3 @@
----
-root: false
-targets:
-  - '*'
-globs:
-  - e2e-tests/playwright/**/*.spec.ts
-  - e2e-tests/playwright/**/*.test.ts
----
 # E2E Coverage: Use Instrumented Imports
 
 When creating or modifying Playwright spec files under `e2e-tests/playwright/`, always use the coverage-instrumented `test` and `expect` instead of importing directly from `@playwright/test`.

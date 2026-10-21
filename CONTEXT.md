@@ -1,6 +1,6 @@
 # RHDH Repo Context
 
-High-level orientation for agents working in this repo. Detailed knowledge lives in `docs/agents/knowledge/` — do not add it here.
+High-level orientation for agents working in this repo. Detailed topics live in `docs/agents/knowledge/`, indexed below — add new detailed knowledge as its own file there.
 
 ## What this repo is
 
@@ -16,10 +16,3 @@ Red Hat Developer Hub (RHDH): Red Hat's supported distribution of Backstage. Yar
 | Extensions catalog plugin metadata | `docs/agents/knowledge/plugin-metadata-workflow.md` |
 | GitHub Workflows security | `docs/agents/knowledge/github-workflows-security.md` |
 | Playwright locator best practices | `docs/agents/knowledge/playwright-locators.md` |
-
-## Conventions
-
-- New detailed knowledge gets its own file in `docs/agents/knowledge/` (or a topical subdirectory), listed in the index above. `CONTEXT.md` stays high-level.
-- Domain vocabulary: `GLOSSARY.md` (see `docs/agents/domain.md`). Decisions: `docs/adr/`.
-- Skills and agent workflows: `.agents/skills/`. Agent config: `AGENTS.md` + `docs/agents/`.
-- No vendored dotfile directories for AI harnesses — see `AGENTS.md`.

@@ -1,9 +1,3 @@
----
-root: false
-targets:
-  - '*'
-globs: []
----
 # Playwright Locator Best Practices
 
 ## Locator Priority (Use in Order)

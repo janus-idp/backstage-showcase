@@ -3,8 +3,6 @@ name: e2e-deploy-rhdh
 description: >-
   Deploy RHDH to an OpenShift cluster using local-run.sh for E2E test execution,
   with autonomous error recovery for deployment failures
-targets:
-  - '*'
 ---
 # Deploy RHDH
 
@@ -117,7 +115,7 @@ cd e2e-tests
 
 ### Image Selection
 
-Refer to the `e2e-fix-workflow` rule for the release branch to image repo/tag mapping table.
+Refer to `docs/agents/knowledge/e2e-fix-workflow.md` for the release branch to image repo/tag mapping table.
 
 ### Deploy-Only Mode (OCP Jobs Only)
 
