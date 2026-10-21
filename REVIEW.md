@@ -13,6 +13,10 @@ knowledge doc for each area the diff touches (index in `CONTEXT.md`).
   (`docs/agents/knowledge/github-workflows-security.md`).
 - **Upstream drift**: `.yarn/patches` or `resolutions` changes that bypass the
   `patch-backstage` workflow.
+- **Plugin versions off the index**: plugin-set changes belong in
+  `dynamic-plugins.default.yaml` (generated from the OCI catalog index —
+  ADR-0004); a PR adding wrapper packages or build steps for plugins reverts
+  a recorded decision.
 - **Config that misroutes**: `app-config` changes hardcoding values that belong
   in `${ENV_VAR}` placeholders.
 - **Docs that lie**: README or knowledge-doc lines the diff makes stale — flag
