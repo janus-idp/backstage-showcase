@@ -1,3 +1,5 @@
+import { randomBytes } from "node:crypto";
+
 import type { Client, QueryConfig } from "pg";
 
 import { sleep } from "./poll-until";
@@ -62,6 +64,22 @@ export function runtimeDatabasePrefix(
   if (!/^[a-f0-9]{12}$/u.test(runId) || ![1, 2, 3, 4].includes(slot))
     throw new Error("Invalid runtime database ownership");
   return `rt_${runId}_${provider}${slot}_`;
+}
+
+/** Longer than any job that runs these tests; a younger run on the slot may still be live. */
+export const RUNTIME_RUN_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+
+/** 12 hex chars: start time in seconds (8), then randomness (4), so its age is readable. */
+export function newRuntimeRunId(now = Date.now()): string {
+  const seconds = Math.floor(now / 1000)
+    .toString(16)
+    .padStart(8, "0");
+  return `${seconds}${randomBytes(2).toString("hex")}`;
+}
+
+function runStartedAt(prefix: string): number {
+  const runId = /_([a-f0-9]{12})_/u.exec(prefix)?.[1] ?? "";
+  return Number.parseInt(runId.slice(0, 8), 16) * 1000;
 }
 
 export interface OwnedDatabaseClient {
@@ -181,15 +199,19 @@ export async function dropOwnedDatabases(
 export interface SlotCleanup {
   retired: string[];
   failed: string[];
+  /** Other runs on this slot young enough to still be running; left untouched. */
+  active: string[];
 }
 
 /**
- * Clear this slot's databases left by any earlier, interrupted run, then the current run's.
- * Runs against one database host never overlap, so every other run on the slot is finished.
+ * Clear this slot's databases left by earlier, interrupted runs, then the current run's.
+ * Nightlies and PR jobs on every branch share the database hosts, so another run on the slot
+ * may still be live: only runs older than RUNTIME_RUN_MAX_AGE_MS are retired.
  */
 export async function clearSlotDatabases(
   client: OwnedDatabaseClient,
   currentPrefix: string,
+  now = Date.now(),
 ): Promise<SlotCleanup> {
   assertOwnedDatabasePrefix(currentPrefix);
   // rt_<run>_rds1_ -> ^rt_[a-f0-9]{12}_rds1_ ; csql_<run>_1_ -> ^csql_[a-f0-9]{12}_1_
@@ -207,8 +229,13 @@ export async function clearSlotDatabases(
       .map((name) => name.slice(0, currentPrefix.length))
       .filter((prefix) => prefix !== currentPrefix),
   );
-  const cleanup: SlotCleanup = { retired: [], failed: [] };
+  const cleanup: SlotCleanup = { retired: [], failed: [], active: [] };
   for (const prefix of stale) {
+    const age = now - runStartedAt(prefix);
+    if (age >= 0 && age < RUNTIME_RUN_MAX_AGE_MS) {
+      cleanup.active.push(prefix);
+      continue;
+    }
     try {
       await clearOwnedDatabases(client, prefix);
       cleanup.retired.push(prefix);
