@@ -4,7 +4,7 @@ High-level orientation for agents working in this repo. Detailed topics live in 
 
 ## What this repo is
 
-Red Hat Developer Hub (RHDH): Red Hat's supported distribution of Backstage. Yarn monorepo (`packages/*`, `plugins/*`), with E2E tests in `e2e-tests/` and dynamic plugin wrappers in `dynamic-plugins/`.
+Red Hat Developer Hub (RHDH): Red Hat's supported distribution of Backstage. Yarn monorepo (`packages/*`, `plugins/*`), with E2E tests in `e2e-tests/` and dynamic plugins installed at build time into `dynamic-plugins-root/`.
 
 ## Knowledge index
 
