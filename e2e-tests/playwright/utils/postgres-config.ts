@@ -100,9 +100,12 @@ export async function configurePostgresCredentials(
   await kubeClient.createOrUpdateSecret(secret, namespace);
 }
 
+const ownedDatabasePrefix = "backstage_plugin_";
+
 /**
- * Clear all non-system databases from a PostgreSQL instance.
- * Used to clean up after external database tests.
+ * Drop the databases this branch's RHDH creates (default plugin prefix) on a
+ * shared PostgreSQL instance. Other branches' runs use the same hosts, so their
+ * databases must survive.
  *
  * @param credentials - Database connection credentials
  * @param credentials.host - PostgreSQL host
@@ -119,18 +122,6 @@ export async function clearDatabase(credentials: {
   certificatePath?: string;
 }): Promise<void> {
   console.log("Starting database cleanup process...");
-
-  // System databases that should never be dropped (includes cloud provider managed databases)
-  const systemDatabases = [
-    "postgres",
-    "template0",
-    "template1",
-    // AWS RDS system databases
-    "rdsadmin",
-    // Azure Database for PostgreSQL system databases
-    "azure_maintenance",
-    "azure_sys",
-  ];
 
   // Read certificate if path is provided
   let ssl: { ca: string } | boolean = true;
@@ -162,7 +153,7 @@ export async function clearDatabase(credentials: {
 
     const databases = result.rows
       .map((row) => row.datname)
-      .filter((db) => !systemDatabases.includes(db));
+      .filter((db) => db.startsWith(ownedDatabasePrefix));
 
     if (databases.length === 0) {
       console.log("No databases found to drop");
