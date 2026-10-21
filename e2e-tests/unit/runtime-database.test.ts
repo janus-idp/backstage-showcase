@@ -76,7 +76,7 @@ describe("owned database cleanup failures", () => {
     );
     expect(query).not.toHaveBeenCalled();
   });
-  it("waits for active sessions without FORCE or signalling", async () => {
+  it("waits for active sessions without FORCE, ending only its own role's sessions", async () => {
     vi.useFakeTimers();
     try {
       const start = Date.now();
@@ -102,11 +102,40 @@ describe("owned database cleanup failures", () => {
       await vi.runAllTimersAsync();
       await cleanup;
       expect(dropped).toBe(true);
-      expect(
-        query.mock.calls
-          .map(([input]) => (typeof input === "string" ? input : input.text))
-          .join("\n"),
-      ).not.toMatch(/FORCE|pg_terminate_backend/u);
+      const sql = query.mock.calls.map(([input]) =>
+        typeof input === "string" ? input : input.text,
+      );
+      expect(sql.join("\n")).not.toMatch(/FORCE/u);
+      const terminations = sql.filter((text) => text.includes("pg_terminate_backend"));
+      expect(terminations.length).toBeGreaterThan(0);
+      for (const text of terminations) expect(text).toContain("usename = current_user");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+  it("drops a database whose only sessions are its role's orphans from a stopped pod", async () => {
+    vi.useFakeTimers();
+    try {
+      let orphans = true;
+      let databases = [`${prefix}catalog`];
+      const query = vi.fn<OwnedDatabaseClient["query"]>().mockImplementation((input) => {
+        const text = typeof input === "string" ? input : input.text;
+        if (text.includes("pg_terminate_backend")) orphans = false;
+        if (text.startsWith("DROP")) {
+          if (orphans) return Promise.reject(Object.assign(new Error("busy"), { code: "55006" }));
+          databases = [];
+        }
+        if (text.includes("FROM pg_database")) return Promise.resolve(result(databases));
+        if (text.includes("pg_stat_activity") && !text.includes("pg_terminate_backend"))
+          return Promise.resolve(result(orphans ? [`${prefix}catalog`] : []));
+        return Promise.resolve(result([]));
+      });
+      const cleanup = expect(
+        clearOwnedDatabases({ query }, prefix, 10_000),
+      ).resolves.toBeUndefined();
+      await vi.advanceTimersByTimeAsync(10_000);
+      await cleanup;
+      expect(databases).toEqual([]);
     } finally {
       vi.useRealTimers();
     }

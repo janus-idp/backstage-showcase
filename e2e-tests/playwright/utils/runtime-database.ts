@@ -150,17 +150,23 @@ export async function clearOwnedDatabases(
         if (!busy) throw new Error(`Failed to drop owned database ${name}`, { cause: error });
         let sessions: Array<{ datname: string }> = [];
         try {
+          // Backends of a stopped pod can outlive it until TCP keepalive. Ending this role's own
+          // sessions needs no privilege and never signals the provider's processes.
+          await query(
+            "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1 AND usename = current_user AND pid <> pg_backend_pid()",
+            [name],
+          );
           do {
             sessions = (
               await query(
-                "SELECT pid, datname, backend_type, state, wait_event_type, wait_event FROM pg_stat_activity WHERE starts_with(datname, $1)",
+                "SELECT pid, datname, usename, backend_type, state, wait_event_type, wait_event FROM pg_stat_activity WHERE starts_with(datname, $1)",
                 [prefix],
                 true,
               )
             ).rows;
             if (sessions.some((session) => !session.datname.startsWith(prefix)))
               throw new Error("Session escaped runtime ownership boundary", { cause: error });
-            // Backends can linger after pod termination. Do not signal privileged processes.
+            // Other roles' sessions are left to end on their own.
             await sleep(Math.min(2_000, Math.max(0, deadline - Date.now())));
           } while (sessions.length > 0 && Date.now() < deadline);
           if (Date.now() >= deadline)
