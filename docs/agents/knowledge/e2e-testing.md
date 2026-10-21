@@ -503,16 +503,16 @@ brew install gnu-sed
 ## Documentation References
 
 ### Core Documentation
-- [E2E Testing CI Documentation](docs/e2e-tests/CI.md)
-- [Dynamic Plugins Documentation](docs/dynamic-plugins/index.md)
-- [Authentication Providers README](e2e-tests/playwright/e2e/auth-providers/README.md)
-- [OpenShift CI Pipeline README](.ci/pipelines/README.md)
+- [E2E Testing CI Documentation](../../../docs/e2e-tests/CI.md)
+- [Dynamic Plugins Documentation](../../../docs/dynamic-plugins/index.md)
+- [Authentication Providers README](../../../e2e-tests/playwright/e2e/auth-providers/README.md)
+- [OpenShift CI Pipeline README](../../../.ci/pipelines/README.md)
 
 ### Configuration Files
-- [Playwright Project Names (Single Source of Truth)](e2e-tests/playwright/projects.json)
-- [Playwright Configuration](e2e-tests/playwright.config.ts)
-- [Package Configuration](e2e-tests/package.json)
-- [CI Test Script](.ci/pipelines/openshift-ci-tests.sh)
+- [Playwright Project Names (Single Source of Truth)](../../../e2e-tests/playwright/projects.json)
+- [Playwright Configuration](../../../e2e-tests/playwright.config.ts)
+- [Package Configuration](../../../e2e-tests/package.json)
+- [CI Test Script](../../../.ci/pipelines/openshift-ci-tests.sh)
 
 ### External Resources
 - [OpenShift CI Documentation](https://docs.ci.openshift.org/)
@@ -522,9 +522,9 @@ brew install gnu-sed
 - [Dynamic Plugins Guide](https://github.com/backstage/backstage/tree/master/packages/backend-dynamic-feature-service)
 
 ### Key Scripts and Tools
-- [Cluster Login Script](.ci/pipelines/ocp-cluster-claim-login.sh)
-- [Test Reporting Script](.ci/pipelines/reporting.sh)
-- [Environment Variables](.ci/pipelines/env_variables.sh)
+- [Cluster Login Script](../../../.ci/pipelines/ocp-cluster-claim-login.sh)
+- [Test Reporting Script](../../../.ci/pipelines/reporting.sh)
+- [Environment Variables](../../../.ci/pipelines/env_variables.sh)
 - [Dynamic Plugin Installer](https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/install-dynamic-plugins)
 
 ## Test Configuration Files (Config Maps)
