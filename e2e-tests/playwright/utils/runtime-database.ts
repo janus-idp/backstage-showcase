@@ -69,17 +69,20 @@ export function runtimeDatabasePrefix(
 /** Longer than any job that runs these tests; a younger run on the slot may still be live. */
 export const RUNTIME_RUN_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 
-/** 12 hex chars: start time in seconds (8), then randomness (4), so its age is readable. */
+/** Leading hex chars of a run id that hold its start time in seconds; the rest are random. */
+const RUN_ID_TIME_HEX_CHARS = 8;
+
+/** Start time first, so other runs on the slot can read this run's age from its prefix. */
 export function newRuntimeRunId(now = Date.now()): string {
   const seconds = Math.floor(now / 1000)
     .toString(16)
-    .padStart(8, "0");
+    .padStart(RUN_ID_TIME_HEX_CHARS, "0");
   return `${seconds}${randomBytes(2).toString("hex")}`;
 }
 
 function runStartedAt(prefix: string): number {
   const runId = /_([a-f0-9]{12})_/u.exec(prefix)?.[1] ?? "";
-  return Number.parseInt(runId.slice(0, 8), 16) * 1000;
+  return Number.parseInt(runId.slice(0, RUN_ID_TIME_HEX_CHARS), 16) * 1000;
 }
 
 export interface OwnedDatabaseClient {
