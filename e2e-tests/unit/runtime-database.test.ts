@@ -7,7 +7,9 @@ import {
   clearSlotDatabases,
   closeDatabaseClients,
   dropOwnedDatabases,
+  newRuntimeRunId,
   RUNTIME_DATABASE_CLEANUP_TIMEOUT_MS,
+  RUNTIME_RUN_MAX_AGE_MS,
   type OwnedDatabaseClient,
 } from "../playwright/utils/runtime-database";
 
@@ -204,6 +206,7 @@ describe.each([
     await expect(clearSlotDatabases({ query: server.query }, current)).resolves.toEqual({
       retired: [stale],
       failed: [],
+      active: [],
     });
     expect([...server.databases]).toEqual(unrelated);
   });
@@ -214,6 +217,7 @@ describe.each([
     await expect(clearSlotDatabases({ query: server.query }, current)).resolves.toEqual({
       retired: [],
       failed: [stale],
+      active: [],
     });
     expect([...server.databases]).toEqual([`${stale}catalog`]);
     const failing = fakeServer([`${current}catalog`], current);
@@ -221,6 +225,28 @@ describe.each([
       `Failed to drop owned database ${current}catalog`,
     );
   });
+
+  it("leaves another run on the slot alone while it may still be running", async () => {
+    const now = Date.UTC(2026, 9, 21, 5, 30);
+    const live = (age: number) => stale.replace("abcdef012345", newRuntimeRunId(now - age));
+    const young = live(RUNTIME_RUN_MAX_AGE_MS - 60_000);
+    const old = live(RUNTIME_RUN_MAX_AGE_MS + 60_000);
+    const server = fakeServer([`${young}catalog`, `${old}catalog`, `${current}catalog`]);
+    await expect(clearSlotDatabases({ query: server.query }, current, now)).resolves.toEqual({
+      retired: [old],
+      failed: [],
+      active: [young],
+    });
+    expect([...server.databases]).toEqual([`${young}catalog`]);
+  });
+});
+
+it("starts each run id with its start time so other runs can tell its age", () => {
+  const now = Date.UTC(2026, 9, 21, 5, 30);
+  const runId = newRuntimeRunId(now);
+  expect(runId).toMatch(/^[a-f0-9]{12}$/u);
+  expect(Number.parseInt(runId.slice(0, 8), 16) * 1000).toBe(now);
+  expect(runtimeDatabasePrefix(runId, "rds", 1)).toBe(`rt_${runId}_rds1_`);
 });
 
 it("settles every client close before reporting an individual failure", async () => {
