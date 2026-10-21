@@ -57,7 +57,7 @@ then **`HUSKY=0 git checkout -B patch/release-<RHDH_VERSION> FETCH_HEAD`** when 
 cd <RHDH_ROOT> && HUSKY=0 git fetch <RHDH_CORE_REMOTE> release-<V> && HUSKY=0 git checkout release-<V> && HUSKY=0 git pull <RHDH_CORE_REMOTE> release-<V>
 ```
 
-**Rulesync:** Edit **`SKILL.md` only** under **`.rulesync/skills/patch-backstage/`** (rulesync expects **one directory per skill** with **`SKILL.md`** inside; a flat **`*.md`** at **`skills/`** root is ignored). With **`"skills"`** and **`"simulateSkills": true`** in **`rulesync.jsonc`**, **`yarn rulesync:generate`** writes **both** **`.claude/skills/`** and **`.cursor/skills/`** from that tree (rulesync treats Cursor skill output as “simulated”). Stage and commit generated paths with **`.rulesync/`** after edits.
+**Skills:** Edit **`SKILL.md`** (and **`WORKFLOW.md`**) directly under **`.agents/skills/patch-backstage/`** (one directory per skill, **`SKILL.md`** inside). Stage and commit **`.agents/skills/`** after edits.
 
 ## Agent execution
 
@@ -191,4 +191,4 @@ Incomplete until every patched package shows a **patch locator** in **`yarn.lock
 | **`yarn why` / lockfile: no `@patch:`** | Remove bare semver **`resolutions`** for that pkg; use one **`patch:`** locator; drop wrong range keys; reinstall |
 | Build fails (missing types) | Maintenance root **`yarn install`** / **`yarn tsc`**, then **`cd`** package **`yarn build`** |
 | Patch wrong version | Use **`yarn why`** version, not RHDH meta-version |
-| Skill not in Cursor | **`.rulesync/skills/`** may not sync to **`.cursor/`**—see **Rulesync / Cursor** |
+| Skill edits not picked up | Skills live in **`.agents/skills/`**; restart/reload the agent if it caches skills |

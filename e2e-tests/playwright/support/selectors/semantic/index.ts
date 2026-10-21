@@ -14,7 +14,7 @@ import { semanticSelectorsStructure } from "./structure";
  * 4. CSS selectors (locator) - Last resort only
  *
  * @see https://playwright.dev/docs/locators
- * @see .cursor/rules/playwright-locators.mdc
+ * @see CONTEXT.md (Playwright Locator Best Practices)
  */
 export const SemanticSelectors = {
   ...semanticSelectorsAccessibility,

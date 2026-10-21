@@ -1,6 +1,6 @@
 # RHDH Repo Context
 
-Shared knowledge for agents working in this repo. Consolidated from the former `.rulesync/rules/`.
+Shared knowledge for agents working in this repo.
 
 ## Contents
 

@@ -16,7 +16,7 @@ Use this skill after verifying the fix (via `e2e-verify-fix`) when all tests pas
 
 ## Step 0: Resolve Pre-Commit Hooks
 
-Before committing, ensure all related workspaces have their dependencies installed so pre-commit hooks (lint-staged, rulesync, etc.) pass:
+Before committing, ensure all related workspaces have their dependencies installed so pre-commit hooks (lint-staged, e2e-tests unit tests) pass:
 
 ```bash
 # Root workspace
