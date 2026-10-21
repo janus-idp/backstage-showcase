@@ -103,9 +103,9 @@ export async function configurePostgresCredentials(
 const ownedDatabasePrefix = "backstage_plugin_";
 
 /**
- * Drop the databases this branch's RHDH creates (default plugin prefix) on a
- * shared PostgreSQL instance. Other branches' runs use the same hosts, so their
- * databases must survive.
+ * Drop the databases release-1.x RHDH creates (default plugin prefix) on a
+ * shared PostgreSQL instance. Runtime tests from newer branches use the same
+ * hosts with their own prefix, so their databases must survive.
  *
  * @param credentials - Database connection credentials
  * @param credentials.host - PostgreSQL host
@@ -156,7 +156,7 @@ export async function clearDatabase(credentials: {
       .filter((db) => db.startsWith(ownedDatabasePrefix));
 
     if (databases.length === 0) {
-      console.log("No databases found to drop");
+      console.log(`No ${ownedDatabasePrefix}* databases found to drop`);
       return;
     }
 
