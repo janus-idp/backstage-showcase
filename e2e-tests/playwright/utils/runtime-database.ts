@@ -222,7 +222,7 @@ export async function clearSlotDatabases(
     query_timeout: 10_000,
   });
   const matcher = new RegExp(slotPattern, "u");
-  const stale = new Set(
+  const otherRuns = new Set(
     rows
       .map((row) => row.datname)
       .filter((name) => matcher.test(name))
@@ -230,9 +230,9 @@ export async function clearSlotDatabases(
       .filter((prefix) => prefix !== currentPrefix),
   );
   const cleanup: SlotCleanup = { retired: [], failed: [], active: [] };
-  for (const prefix of stale) {
-    const age = now - runStartedAt(prefix);
-    if (age >= 0 && age < RUNTIME_RUN_MAX_AGE_MS) {
+  for (const prefix of otherRuns) {
+    // Either sign: a run on a node whose clock is ahead looks like it starts in the future.
+    if (Math.abs(now - runStartedAt(prefix)) < RUNTIME_RUN_MAX_AGE_MS) {
       cleanup.active.push(prefix);
       continue;
     }
