@@ -13,6 +13,9 @@ import {
   type OwnedDatabaseClient,
 } from "../playwright/utils/runtime-database";
 
+/** A whole second, so a run id's start time round-trips exactly. */
+const FIXED_NOW = Date.UTC(2026, 9, 21, 5, 30);
+
 afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
@@ -227,11 +230,13 @@ describe.each([
   });
 
   it("leaves another run on the slot alone while it may still be running", async () => {
-    const now = Date.UTC(2026, 9, 21, 5, 30);
+    const now = FIXED_NOW;
+    const margin = 60_000;
+    const clockAhead = 30_000;
     const startedAgo = (ms: number) => stale.replace("abcdef012345", newRuntimeRunId(now - ms));
-    const young = startedAgo(RUNTIME_RUN_MAX_AGE_MS - 60_000);
-    const skewed = startedAgo(-30_000);
-    const old = startedAgo(RUNTIME_RUN_MAX_AGE_MS + 60_000);
+    const young = startedAgo(RUNTIME_RUN_MAX_AGE_MS - margin);
+    const skewed = startedAgo(-clockAhead);
+    const old = startedAgo(RUNTIME_RUN_MAX_AGE_MS + margin);
     const server = fakeServer([
       `${young}catalog`,
       `${skewed}catalog`,
@@ -248,8 +253,9 @@ describe.each([
 });
 
 it("starts each run id with its start time so other runs can tell its age", () => {
-  const now = Date.UTC(2026, 9, 21, 5, 30);
-  const runId = newRuntimeRunId(now + 999);
+  const now = FIXED_NOW;
+  const lastMsOfSecond = 999;
+  const runId = newRuntimeRunId(now + lastMsOfSecond);
   expect(runId).toMatch(/^[a-f0-9]{12}$/u);
   expect(Number.parseInt(runId.slice(0, 8), 16) * 1000).toBe(now);
   expect(runtimeDatabasePrefix(runId, "rds", 1)).toBe(`rt_${runId}_rds1_`);
