@@ -16,7 +16,8 @@ set -uo pipefail
 # Constants
 #######################################
 readonly LOCAL_CACHE_BASEDIR='./hermeto-cache/'
-readonly HERMETO_IMAGE='quay.io/konflux-ci/hermeto:latest'
+# Same pin as .github/actions/docker-build: 0.63.0 (:latest) ships amd64 only.
+readonly HERMETO_IMAGE='quay.io/konflux-ci/hermeto:0.62.0@sha256:79e498bf5a4f7f5bdb2ba9ee790d4a9a002f5ad3c95de0068d18df7a55f6c14c'
 
 # Target platform for cross-builds (e.g., linux/arm64, linux/amd64)
 # Set via environment variable or defaults to native platform
@@ -191,7 +192,7 @@ build_cache() {
   # Ensure the local cache dir exists
   mkdir -p "${local_cache_output_dir}"
 
-  # Ensure the latest hermeto image
+  # Ensure the pinned hermeto image is present
   podman pull "${platform_args[@]}" "${HERMETO_IMAGE}"
 
   # Build cache
