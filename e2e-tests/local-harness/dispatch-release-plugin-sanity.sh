@@ -5,17 +5,22 @@
 # backend it ships with. GitHub only fires `schedule` on the default branch,
 # so main's scheduled run calls this.
 #
-# Waits for every dispatched run and exits non-zero if any of them failed.
+# Waits for every dispatched run and exits non-zero unless all of them succeed.
 #
 # Usage (GH_TOKEN needs actions:write on the repository):
-#   GITHUB_REPOSITORY=owner/repo ./e2e-tests/local-harness/dispatch-release-plugin-sanity.sh [count]
+#   GITHUB_REPOSITORY=owner/repo ./e2e-tests/local-harness/dispatch-release-plugin-sanity.sh
 set -euo pipefail
 
 : "${GITHUB_REPOSITORY:?GITHUB_REPOSITORY is required}"
-RELEASE_COUNT="${1:-2}"
+RELEASE_COUNT="${RELEASE_COUNT:-2}"
 WORKFLOW="e2e-cluster-free.yaml"
 HARNESS_MARKER="e2e-tests/local-harness/populate-catalog-index.sh"
 SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
+
+if [[ ! "${RELEASE_COUNT}" =~ ^[1-9][0-9]*$ ]]; then
+  echo "RELEASE_COUNT must be a positive integer, got: ${RELEASE_COUNT}" >&2
+  exit 1
+fi
 
 # Only a 404 means "no harness"; any other API error must fail the job rather
 # than read as "nothing to check".
@@ -27,41 +32,56 @@ has_harness() {
   exit 1
 }
 
-all_branches=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/branches" --jq '.[].name')
-mapfile -t candidates < <(grep -E '^release-[0-9]+\.[0-9]+$' <<< "${all_branches}" | sort -rV)
+all_branches=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/branches?per_page=100" --jq '.[].name')
 
 branches=()
-for branch in "${candidates[@]}"; do
-  # Branches older than the harness have nothing to run; the list is sorted
-  # newest first, so the first one without it ends the search.
+while read -r branch; do
+  # Sorted newest first, so the first branch older than the harness ends the
+  # search.
   has_harness "${branch}" || break
   branches+=("${branch}")
   ((${#branches[@]} < RELEASE_COUNT)) || break
-done
+done < <(grep -E '^release-[0-9]+\.[0-9]+$' <<< "${all_branches}" | sort -rV || true)
 
 if ((${#branches[@]} == 0)); then
   echo "No release branch carries ${HARNESS_MARKER}; nothing to dispatch."
   exit 0
 fi
 
-declare -A run_ids
+# A failed dispatch is recorded and skipped, so the runs already dispatched are
+# still waited on and reported.
+run_ids=()
+run_urls=()
 for branch in "${branches[@]}"; do
-  run_ids[${branch}]=$(gh api -X POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${WORKFLOW}/dispatches" \
-    -f ref="${branch}" -F return_run_details=true --jq '.workflow_run_id')
-  echo "Dispatched plugin-sanity on ${branch}: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${run_ids[${branch}]}"
+  response=$(gh api -X POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${WORKFLOW}/dispatches" \
+    -f ref="${branch}" -F return_run_details=true --jq '"\(.workflow_run_id) \(.html_url)"') || response=""
+  if [[ -z "${response}" ]]; then
+    echo "Failed to dispatch plugin-sanity on ${branch}" >&2
+  else
+    echo "Dispatched plugin-sanity on ${branch}: ${response#* }"
+  fi
+  run_ids+=("${response%% *}")
+  run_urls+=("${response#* }")
 done
 
 echo "### Release plugin-sanity" >> "${SUMMARY}"
 failed=0
-for branch in "${branches[@]}"; do
-  run_id="${run_ids[${branch}]}"
-  gh run watch "${run_id}" --repo "${GITHUB_REPOSITORY}" --interval 60 > /dev/null || true
-  # Report the real conclusion, so a run cancelled by a manual dispatch on the
-  # same branch (shared concurrency group) does not read as a plugin failure.
-  result=$(gh run view "${run_id}" --repo "${GITHUB_REPOSITORY}" --json conclusion --jq '.conclusion')
+for i in "${!branches[@]}"; do
+  branch="${branches[i]}"
+  run_id="${run_ids[i]}"
+  if [[ ! "${run_id}" =~ ^[0-9]+$ ]]; then
+    result="dispatch failed"
+  else
+    gh run watch "${run_id}" --repo "${GITHUB_REPOSITORY}" --interval 60 > /dev/null || true
+    # The real conclusion, so a run cancelled through the concurrency group it
+    # shares with manual dispatches on the same branch does not read as a
+    # plugin failure.
+    result=$(gh run view "${run_id}" --repo "${GITHUB_REPOSITORY}" --json conclusion --jq '.conclusion') \
+      || result="unknown"
+  fi
   [[ "${result}" == "success" ]] || failed=1
   echo "${branch}: ${result}"
-  echo "- \`${branch}\`: ${result} ([run](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${run_id}))" >> "${SUMMARY}"
+  echo "- \`${branch}\`: ${result} ${run_urls[i]:+([run](${run_urls[i]}))}" >> "${SUMMARY}"
 done
 
 exit "${failed}"

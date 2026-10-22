@@ -197,14 +197,19 @@ The `plugin-sanity` job in the same workflow installs every plugin in a catalog 
 fails when an installed plugin does not load. It runs daily:
 
 - on `main`, against `quay.io/rhdh/plugin-catalog-index:next`;
-- on the two newest `release-X.Y` branches that carry the harness, against
-  `plugin-catalog-index:X.Y`. GitHub only schedules the default branch, so main's
-  `release-plugin-sanity` job dispatches each branch on its own ref and fails if any of
-  those runs fails. Branches older than the harness (1.10 and earlier) are not covered.
+- on up to two of the newest `release-X.Y` branches that carry the harness, against
+  `plugin-catalog-index:X.Y`. That tag follows the newest index build of the stream, so
+  RC and z-stream builds are checked as they land. GitHub only schedules the default
+  branch, so main's `release-plugin-sanity` job dispatches each branch on its own ref and
+  fails unless all of those runs succeed. Branches older than the harness (1.10 and
+  earlier) are not covered.
 
-For an RC, dispatch the workflow on the release branch with the `catalog_index_image`
-input. Packages that cannot boot standalone are listed in `plugin-sanity-excludes.txt`,
-each with its tracking ticket and where it is covered instead.
+To check one specific index build, dispatch the workflow on the release branch with the
+`catalog_index_image` input (for example `quay.io/rhdh/plugin-catalog-index:2.1-110`).
+A manual dispatch and the scheduled one share a concurrency group on that branch, so
+whichever starts second cancels the other. Packages that cannot boot standalone are
+listed in `plugin-sanity-excludes.txt`, each with its tracking ticket and where it is
+covered instead.
 
 ## NFS frontend (`packages/app`)
 

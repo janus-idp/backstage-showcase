@@ -197,4 +197,4 @@ jobs:
       - name: Run plugin-sanity on the newest release branches
         env:
           GH_TOKEN: ${{ github.token }}
-        run: ./e2e-tests/local-harness/dispatch-release-plugin-sanity.sh 2
+        run: ./e2e-tests/local-harness/dispatch-release-plugin-sanity.sh
