@@ -97,7 +97,8 @@ testing::run_tests() {
   fi
 
   # RHIDP-13243: V8 coverage collection for E2E tests.
-  # handle_ocp_pull turns it on for the PR check (RHIDP-13242). When enabled, the
+  # handle_ocp_pull (PR check) and handle_ocp_nightly (main nightly only) turn it
+  # on (RHIDP-13242). When enabled, the
   # coverage fixture wraps page.coverage.startJSCoverage/stopJSCoverage and
   # the reporter merges raw JSON into lcov via monocart-coverage-reports.
   export COLLECT_COVERAGE="${COLLECT_COVERAGE:-false}"
@@ -203,7 +204,7 @@ testing::_coverage_main_commit() {
   sha=$(timeout 60 skopeo inspect --override-os linux --override-arch amd64 "docker://${image_ids#docker-pullable://}" 2> /dev/null \
     | jq -r '.Labels["org.opencontainers.image.revision"] // empty' 2> /dev/null)
   if [[ ! "${sha}" =~ ^[0-9a-f]{40}$ ]]; then
-    log::warn "${image_ids} has no commit revision label"
+    log::warn "Could not read a commit revision label from ${image_ids}"
     return 0
   fi
   if ! testing::_commit_on_main "${sha}"; then
@@ -270,7 +271,7 @@ testing::_codecov_cli() {
 # Args:
 #   $1 - path to the merged lcov.info
 #   $2 - namespace: (optional) where the tested RHDH runs
-# Uses globals: CODECOV_TOKEN (env_variables.sh), DIR
+# Uses globals: CODECOV_TOKEN (env_variables.sh), DIR, COVERAGE_MAIN_SHA (set here)
 testing::_upload_e2e_coverage() {
   local lcov_file="$1"
   local namespace="${2:-}"
@@ -294,6 +295,14 @@ testing::_upload_e2e_coverage() {
       log::info "Run did not test a PR image or a main build (TAG_NAME=${TAG_NAME:-unset}) — skipping Codecov upload"
       return 0
     fi
+    # `next` is rebuilt on every merge, so a later project can run a newer image.
+    # Keep the job on one commit: a commit holding only some projects' uploads
+    # would hide the rest, since carryforward skips commits that have the flag.
+    if [[ -n "${COVERAGE_MAIN_SHA:-}" && "${sha}" != "${COVERAGE_MAIN_SHA}" ]]; then
+      log::warn "This job uploads E2E coverage for ${COVERAGE_MAIN_SHA}; skipping ${sha}"
+      return 0
+    fi
+    COVERAGE_MAIN_SHA="${sha}"
     target="main"
     target_args=(--sha "${sha}" --branch main)
   fi

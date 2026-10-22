@@ -166,7 +166,9 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   commit there. `testing::_coverage_main_commit` takes the image digest the RHDH pods in
   the tested namespace ran, reads its `org.opencontainers.image.revision` label with
   `skopeo`, checks that `main` contains that commit, and uploads with `--branch main`.
-  The label, not the checkout, names the commit, because `next` can lag `main`. Other
+  The label, not the checkout, names the commit, because `next` can lag `main`.
+  `next` is also rebuilt on every merge, so the first project's commit is kept for the
+  job and a project that ran a newer image skips its upload. Other
   nightlies, a tag other than `next`, a missing label, or a commit outside `main` skip
   the upload. Codecov carries a flag forward from a commit's parent
   (`carryforward: true` in `codecov.yml`), so commits processed before the upload do

@@ -275,15 +275,46 @@ describe("testing::_upload_e2e_coverage from the main nightly", () => {
   });
 
   it.each([
-    ["the image has no revision label", null, "", "no commit revision label"],
-    ["the label is not a commit sha", "v2.1.0", "", "no commit revision label"],
-    ["main does not contain the commit", unknown, githubSays("diverged"), "Could not confirm that main contains"],
-    ["GitHub cannot be reached", unknown, "curl() { return 7; }", "Could not confirm that main contains"],
+    ["the image has no revision label", null, "", "Could not read a commit revision label"],
+    ["the label is not a commit sha", "v2.1.0", "", "Could not read a commit revision label"],
+    [
+      "main does not contain the commit",
+      unknown,
+      githubSays("diverged"),
+      "Could not confirm that main contains",
+    ],
+    [
+      "GitHub cannot be reached",
+      unknown,
+      "curl() { return 7; }",
+      "Could not confirm that main contains",
+    ],
   ])("skips the upload, without failing, when %s", (_, revision, prelude, message) => {
     const { status, argv, output } = mainUpload(revision, { prelude });
     expect(status).toBe(0);
     expect(argv).toEqual([]);
     expect(output).toContain(message);
+  });
+
+  it("reads the commit from pods that run the image by digest", () => {
+    const { argv } = mainUpload(onMain, { pods: `${DIGEST} ${DIGEST}` });
+    expect(argv).toContain(onMain);
+    expect(readFileSync(join(root, "skopeo-args"), "utf8")).toContain(`docker://${DIGEST}\n`);
+  });
+
+  // `next` is rebuilt on every merge, so projects deployed later can run a newer image.
+  it.each([
+    ["uploads again for the commit this job already uploaded", onMain, true],
+    ["skips a newer commit than the one this job already uploaded", unknown, false],
+  ])("%s", (_, pinned, uploads) => {
+    const { status, argv, output } = mainUpload(onMain, { env: { COVERAGE_MAIN_SHA: pinned } });
+    expect(status).toBe(0);
+    if (uploads) {
+      expect(argv).toContain(onMain);
+    } else {
+      expect(argv).toEqual([]);
+      expect(output).toContain(`uploads E2E coverage for ${unknown}; skipping ${onMain}`);
+    }
   });
 
   it("keeps attributing PR runs to the PR head", () => {
