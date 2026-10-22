@@ -29,6 +29,13 @@ argocd:
 techRadar:
   url: https://tech-radar.invalid/data.json
 
+# The scorecard Jira module's proxy target defaults to ${JIRA_URL}, which is
+# unset off-cluster; proxy refuses to start without a string target.
+proxy:
+  endpoints:
+    "/jira/api":
+      target: https://jira.invalid
+
 # @backstage/plugin-kubernetes-backend. The index ships a pluginConfig pointing
 # these at ${K8S_CLUSTER_NAME} / ${K8S_CLUSTER_URL} / ${K8S_CLUSTER_TOKEN},
 # which only exist in the cluster deployment; off-cluster they expand to empty
