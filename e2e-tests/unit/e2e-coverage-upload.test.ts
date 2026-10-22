@@ -188,8 +188,9 @@ describe("testing::_upload_e2e_coverage from the main nightly", () => {
   const MAIN_JOB = "periodic-ci-redhat-developer-rhdh-main-e2e-ocp-helm-nightly";
   const DIGEST = `quay.io/rhdh-community/rhdh@sha256:${"d".repeat(64)}`;
   const MAIN_RUN = { CODECOV_TOKEN: "token", JOB_NAME: MAIN_JOB, TAG_NAME: "next" };
-  // A commit this checkout has and HEAD contains.
-  const onMain = spawnSync("git", ["-C", repository, "rev-parse", "HEAD~1"], {
+  // A commit this checkout has and HEAD contains. HEAD itself, because CI checks
+  // out with fetch-depth 1 and has no parent commit.
+  const onMain = spawnSync("git", ["-C", repository, "rev-parse", "HEAD"], {
     encoding: "utf8",
   }).stdout.trim();
   // A well-formed commit this checkout does not have, so GitHub is asked.
