@@ -32,8 +32,8 @@ on:
       - "e2e-tests/local-harness/resolve-catalog-index-image.sh"
   # The catalog index is built outside this repo and changes on its own, so the
   # plugin sanity job needs a trigger that is not tied to a commit here. GitHub
-  # only runs `schedule` from the default branch, so this covers the `next`
-  # index; use the dispatch input below to check a release branch's index.
+  # only runs `schedule` from the default branch: it checks the `next` index
+  # here and dispatches the release branches (release-plugin-sanity below).
   schedule:
     - cron: "0 5 * * *"
   workflow_dispatch:
@@ -177,3 +177,24 @@ jobs:
             e2e-tests/playwright-report-plugin-sanity
             e2e-tests/plugin-sanity.log
           retention-days: 7
+
+  release-plugin-sanity:
+    name: release-plugin-sanity
+    runs-on: ubuntu-latest
+    # Each release branch runs plugin-sanity on its own ref, against its own
+    # index tag and backend; this job only dispatches and waits for them.
+    if: ${{ github.event_name == 'schedule' }}
+    timeout-minutes: 60
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Run plugin-sanity on the newest release branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./e2e-tests/local-harness/dispatch-release-plugin-sanity.sh 2

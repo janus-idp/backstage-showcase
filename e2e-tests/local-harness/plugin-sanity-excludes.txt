@@ -36,26 +36,12 @@
 # Re-evaluate when the orchestrator backend gains a standalone-friendly init
 # path: keeping an entry here means the check is being told not to look at the
 # class of breakage it exists to catch.
+#
+# Coverage meanwhile: the orchestrator E2E in rhdh-plugin-export-overlays
+# (e2e-ocp-helm and its nightly), which loads the overlay build, not this
+# index artifact. No rhdh job loads it.
 red-hat-developer-hub-backstage-plugin-orchestrator-backend(@|:)
 
 # TODO(RHIDP-15961): module on the orchestrator backend plugin - excluded with its host plugin.
 # (Also requires orchestrator.workflowLogProvider.loki.baseUrl at startup.)
 red-hat-developer-hub-backstage-plugin-orchestrator-backend-module-loki(@|:)
-
-# TODO(RHDHBUGS-3515): the three below are not published to any public registry: `skopeo inspect
-# --no-creds` reports "unauthorized" for the whole repository, on quay.io and on
-# registry.access.redhat.com alike. Note these are tag-style refs
-# (:1.11.0--x.y.z); every digest-pinned ref the index declares does resolve
-# anonymously via the CLI's quay.io fallback, so this is about publication, not
-# about the digest-lookup trap described above.
-#
-# Excluding them costs real coverage - homepage in particular is a core plugin.
-# Re-check periodically with:
-#   skopeo inspect --no-creds docker://quay.io/rhdh/<name>:<tag>
-# and delete the entry the moment it resolves.
-red-hat-developer-hub-backstage-plugin-homepage(@|:)
-red-hat-developer-hub-backstage-plugin-intelligent-assistant(@|:)
-red-hat-developer-hub-backstage-plugin-intelligent-assistant-backend(@|:)
-
-# TODO(RHDHBUGS-3678): https://redhat.atlassian.net/browse/RHDHBUGS-3678
-backstage-community-plugin-auth-backend-module-keycloak-provider(@|:)

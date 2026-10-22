@@ -190,6 +190,22 @@ cluster-free phase: it installs deps + skopeo, resolves a catalog index image, p
 image is built. It triggers on `e2e-tests/**` and `app-config*.yaml` changes; the scope
 can widen to `packages/app/**` / `packages/backend/**` once it is proven stable.
 
+### Plugin sanity
+
+The `plugin-sanity` job in the same workflow installs every plugin in a catalog index
+(`populate-catalog-index.sh`), boots the backend with `app-config.plugin-sanity.yaml`, and
+fails when an installed plugin does not load. It runs daily:
+
+- on `main`, against `quay.io/rhdh/plugin-catalog-index:next`;
+- on the two newest `release-X.Y` branches that carry the harness, against
+  `plugin-catalog-index:X.Y`. GitHub only schedules the default branch, so main's
+  `release-plugin-sanity` job dispatches each branch on its own ref and fails if any of
+  those runs fails. Branches older than the harness (1.10 and earlier) are not covered.
+
+For an RC, dispatch the workflow on the release branch with the `catalog_index_image`
+input. Packages that cannot boot standalone are listed in `plugin-sanity-excludes.txt`,
+each with its tracking ticket and where it is covered instead.
+
 ## NFS frontend (`packages/app`)
 
 The harness targets the NFS frontend (`packages/app`). The backend serves standard
