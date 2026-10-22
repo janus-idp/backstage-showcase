@@ -176,6 +176,147 @@ describe("testing::_upload_e2e_coverage", () => {
   });
 });
 
+// A curl that records its arguments and prints a GitHub compare response.
+const githubSays = (status: string) =>
+  `curl() { printf '%s\\n' "$@" > "$ROOT/curl-args"; echo '{"status":"${status}"}'; }`;
+
+// The main OCP Helm nightly uploads to the main commit its `next` image was built
+// from, named by the image's revision label, not to the checkout's HEAD.
+describe("testing::_upload_e2e_coverage from the main nightly", () => {
+  const MAIN_JOB = "periodic-ci-redhat-developer-rhdh-main-e2e-ocp-helm-nightly";
+  const DIGEST = `quay.io/rhdh-community/rhdh@sha256:${"d".repeat(64)}`;
+  const MAIN_RUN = { CODECOV_TOKEN: "token", JOB_NAME: MAIN_JOB, TAG_NAME: "next" };
+  // A commit this checkout has and HEAD contains.
+  const onMain = spawnSync("git", ["-C", repository, "rev-parse", "HEAD~1"], {
+    encoding: "utf8",
+  }).stdout.trim();
+  // A well-formed commit this checkout does not have, so GitHub is asked.
+  const unknown = "e".repeat(40);
+
+  /**
+   * Puts fake `oc` and `skopeo` executables first on PATH (they run under
+   * `timeout`, so shell functions cannot replace them). `pods` is what
+   * `oc get pods` prints: one "<image> <imageID>" line per container.
+   */
+  function mainUpload(
+    revision: string | null,
+    {
+      pods = `quay.io/rhdh-community/rhdh:next ${DIGEST}\nregistry.redhat.io/postgresql:16 x@sha256:1`,
+      env = {},
+      prelude = "",
+      namespace = "showcase-ci-nightly",
+    }: { pods?: string; env?: Record<string, string>; prelude?: string; namespace?: string } = {},
+  ) {
+    const bin = join(root, "bin");
+    mkdirSync(bin, { recursive: true });
+    writeFileSync(join(bin, "oc"), `#!/bin/bash\nprintf '%b\\n' ${JSON.stringify(pods)}\n`);
+    const labels = revision === null ? {} : { "org.opencontainers.image.revision": revision };
+    writeFileSync(
+      join(bin, "skopeo"),
+      `#!/bin/bash\nprintf '%s\\n' "$@" > "${root}/skopeo-args"\ncat <<'JSON'\n${JSON.stringify({ Labels: labels })}\nJSON\n`,
+    );
+    chmodSync(join(bin, "oc"), 0o755);
+    chmodSync(join(bin, "skopeo"), 0o755);
+    const result = spawnSync(
+      "/bin/bash",
+      [
+        "--noprofile",
+        "--norc",
+        "-euc",
+        `${prelude}\nsource "$DIR/lib/testing.sh"; testing::_upload_e2e_coverage "$ROOT/lcov.info" ${JSON.stringify(namespace)}`,
+      ],
+      {
+        env: {
+          PATH: `${bin}:${process.env.PATH}`,
+          HOME: root,
+          ROOT: root,
+          DIR: join(repository, ".ci/pipelines"),
+          ARTIFACT_DIR: root,
+          SHARED_DIR: root,
+          CODECOV_BIN: join(root, "codecov"),
+          ...MAIN_RUN,
+          ...env,
+        },
+        encoding: "utf8",
+        timeout: 10_000,
+      },
+    );
+    const argvFile = join(root, "argv");
+    const argv = existsSync(argvFile) ? readFileSync(argvFile, "utf8").trim().split("\n") : [];
+    return { ...result, argv, output: result.stdout + result.stderr };
+  }
+
+  it("uploads to the image's revision on main, with --branch and no --pr", () => {
+    const { status, argv } = mainUpload(onMain);
+    expect(status).toBe(0);
+    expect(argv.slice(-6)).toEqual([
+      "redhat-developer/rhdh",
+      "--sha",
+      onMain,
+      "--branch",
+      "main",
+      "--fail-on-error",
+    ]);
+    expect(argv).not.toContain("--pr");
+    // The digest the pods ran, not the moving `next` tag.
+    expect(readFileSync(join(root, "skopeo-args"), "utf8")).toContain(`docker://${DIGEST}\n`);
+  });
+
+  it.each(["ahead", "identical"])(
+    "asks GitHub when the checkout lacks the commit, and uploads when main is %s",
+    (state) => {
+      const { argv } = mainUpload(unknown, { prelude: githubSays(state) });
+      expect(argv).toContain(unknown);
+      expect(readFileSync(join(root, "curl-args"), "utf8")).toContain(
+        `https://api.github.com/repos/redhat-developer/rhdh/compare/${unknown}...main\n`,
+      );
+    },
+  );
+
+  it.each([
+    ["another nightly", { env: { JOB_NAME: MAIN_JOB.replace("-ocp-", "-ocp-v4-20-") } }, ""],
+    [
+      "a release branch nightly",
+      { env: { JOB_NAME: MAIN_JOB.replace("main", "release-2.1") } },
+      "",
+    ],
+    ["a tag other than next", { env: { TAG_NAME: "2.1-122" } }, ""],
+    ["no namespace", { namespace: "" }, ""],
+    ["no RHDH pod", { pods: "registry.redhat.io/postgresql:16 x@sha256:1" }, "found: none"],
+    [
+      "pods on two digests",
+      {
+        pods: `quay.io/rhdh-community/rhdh:next ${DIGEST}\nquay.io/rhdh-community/rhdh:next ${DIGEST.replace(/d+$/u, "f".repeat(64))}`,
+      },
+      "Expected one",
+    ],
+  ])("skips the upload, without failing, for %s", (_, options, message) => {
+    const { status, argv, output } = mainUpload(onMain, options);
+    expect(status).toBe(0);
+    expect(argv).toEqual([]);
+    expect(output).toContain(message || "did not test a PR image or a main build");
+  });
+
+  it.each([
+    ["the image has no revision label", null, "", "no commit revision label"],
+    ["the label is not a commit sha", "v2.1.0", "", "no commit revision label"],
+    ["main does not contain the commit", unknown, githubSays("diverged"), "not a commit on main"],
+    ["GitHub cannot be reached", unknown, "curl() { return 7; }", "not a commit on main"],
+  ])("skips the upload, without failing, when %s", (_, revision, prelude, message) => {
+    const { status, argv, output } = mainUpload(revision, { prelude });
+    expect(status).toBe(0);
+    expect(argv).toEqual([]);
+    expect(output).toContain(message);
+  });
+
+  it("keeps attributing PR runs to the PR head", () => {
+    const { argv } = mainUpload(onMain, { env: PR_RUN });
+    expect(argv).toContain("--pr");
+    expect(argv).toContain(PR_HEAD);
+    expect(existsSync(join(root, "skopeo-args"))).toBe(false);
+  });
+});
+
 // A curl that records its arguments, writes CONTENT to its -o target, then exits
 // with STATUS.
 const fakeCurl = (content: string, status = 0) =>
