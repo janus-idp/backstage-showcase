@@ -71,7 +71,8 @@ runs:
       env:
         COMPONENT_DIR: ${{ inputs.componentDirectory }}
       run: |
-        echo "HERMETO_IMAGE=quay.io/konflux-ci/hermeto:latest" >> $GITHUB_ENV
+        # hermeto 0.63.0 (:latest) ships amd64 only; bump once a multi-arch release is out.
+        echo "HERMETO_IMAGE=quay.io/konflux-ci/hermeto:0.62.0@sha256:79e498bf5a4f7f5bdb2ba9ee790d4a9a002f5ad3c95de0068d18df7a55f6c14c" >> $GITHUB_ENV
         echo "LOCAL_CACHE_DIR=./hermeto-cache/$(basename "$COMPONENT_DIR")" >> $GITHUB_ENV
         echo "COMPONENT_ABS_DIR=${GITHUB_WORKSPACE}/${COMPONENT_DIR}" >> $GITHUB_ENV
 
