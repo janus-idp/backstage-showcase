@@ -277,8 +277,8 @@ describe("testing::_upload_e2e_coverage from the main nightly", () => {
   it.each([
     ["the image has no revision label", null, "", "no commit revision label"],
     ["the label is not a commit sha", "v2.1.0", "", "no commit revision label"],
-    ["main does not contain the commit", unknown, githubSays("diverged"), "not a commit on main"],
-    ["GitHub cannot be reached", unknown, "curl() { return 7; }", "not a commit on main"],
+    ["main does not contain the commit", unknown, githubSays("diverged"), "Could not confirm that main contains"],
+    ["GitHub cannot be reached", unknown, "curl() { return 7; }", "Could not confirm that main contains"],
   ])("skips the upload, without failing, when %s", (_, revision, prelude, message) => {
     const { status, argv, output } = mainUpload(revision, { prelude });
     expect(status).toBe(0);

@@ -173,6 +173,12 @@ testing::_coverage_pr_head() {
   echo "${sha} ${pr}"
 }
 
+# RHIDP-13242: Succeeds for the one nightly that uploads E2E coverage to main.
+# Uses globals: JOB_NAME
+testing::is_main_coverage_nightly() {
+  [[ "${JOB_NAME:-}" == *-rhdh-main-e2e-ocp-helm-nightly ]]
+}
+
 # RHIDP-13242: Prints the main commit the RHDH image in a namespace was built from,
 # or nothing. Only the main OCP Helm nightly deploying `next` qualifies; the commit
 # is the image's org.opencontainers.image.revision label, read from the digest the
@@ -182,7 +188,7 @@ testing::_coverage_pr_head() {
 # Uses globals: JOB_NAME, TAG_NAME, IMAGE_REGISTRY, IMAGE_REPO, DIR
 testing::_coverage_main_commit() {
   local namespace="${1:-}"
-  [[ "${JOB_NAME:-}" == *-rhdh-main-e2e-ocp-helm-nightly && "${TAG_NAME:-}" == "next" && -n "${namespace}" ]] || return 0
+  testing::is_main_coverage_nightly && [[ "${TAG_NAME:-}" == "next" && -n "${namespace}" ]] || return 0
 
   local image="${IMAGE_REGISTRY:-quay.io}/${IMAGE_REPO:-rhdh-community/rhdh}" image_ids
   image_ids=$(timeout 60 oc get pods -n "${namespace}" \
@@ -201,7 +207,7 @@ testing::_coverage_main_commit() {
     return 0
   fi
   if ! testing::_commit_on_main "${sha}"; then
-    log::warn "Image revision ${sha} is not a commit on main"
+    log::warn "Could not confirm that main contains image revision ${sha}"
     return 0
   fi
   echo "${sha}"
