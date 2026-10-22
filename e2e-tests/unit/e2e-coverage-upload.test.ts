@@ -303,18 +303,16 @@ describe("testing::_upload_e2e_coverage from the main nightly", () => {
   });
 
   // `next` is rebuilt on every merge, so projects deployed later can run a newer image.
-  it.each([
-    ["uploads again for the commit this job already uploaded", onMain, true],
-    ["skips a newer commit than the one this job already uploaded", unknown, false],
-  ])("%s", (_, pinned, uploads) => {
-    const { status, argv, output } = mainUpload(onMain, { env: { COVERAGE_MAIN_SHA: pinned } });
+  it("uploads again for the commit this job already uploaded", () => {
+    const { argv } = mainUpload(onMain, { env: { COVERAGE_MAIN_SHA: onMain } });
+    expect(argv).toContain(onMain);
+  });
+
+  it("skips a newer commit than the one this job already uploaded", () => {
+    const { status, argv, output } = mainUpload(onMain, { env: { COVERAGE_MAIN_SHA: unknown } });
     expect(status).toBe(0);
-    if (uploads) {
-      expect(argv).toContain(onMain);
-    } else {
-      expect(argv).toEqual([]);
-      expect(output).toContain(`uploads E2E coverage for ${unknown}; skipping ${onMain}`);
-    }
+    expect(argv).toEqual([]);
+    expect(output).toContain(`uploads E2E coverage for ${unknown}; skipping ${onMain}`);
   });
 
   it("keeps attributing PR runs to the PR head", () => {
