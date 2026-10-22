@@ -17,14 +17,18 @@ WORKFLOW="e2e-cluster-free.yaml"
 HARNESS_MARKER="e2e-tests/local-harness/populate-catalog-index.sh"
 SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/null}"
 
+# Only a 404 means "no harness"; any other API error must fail the job rather
+# than read as "nothing to check".
 has_harness() {
-  gh api "repos/${GITHUB_REPOSITORY}/contents/${HARNESS_MARKER}?ref=$1" --silent 2> /dev/null
+  local out
+  out=$(gh api "repos/${GITHUB_REPOSITORY}/contents/${HARNESS_MARKER}?ref=$1" --silent 2>&1) && return 0
+  [[ "${out}" == *"HTTP 404"* ]] && return 1
+  echo "${out}" >&2
+  exit 1
 }
 
-mapfile -t candidates < <(
-  gh api --paginate "repos/${GITHUB_REPOSITORY}/branches" --jq '.[].name' \
-    | grep -E '^release-[0-9]+\.[0-9]+$' | sort -rV
-)
+all_branches=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/branches" --jq '.[].name')
+mapfile -t candidates < <(grep -E '^release-[0-9]+\.[0-9]+$' <<< "${all_branches}" | sort -rV)
 
 branches=()
 for branch in "${candidates[@]}"; do
@@ -51,13 +55,11 @@ echo "### Release plugin-sanity" >> "${SUMMARY}"
 failed=0
 for branch in "${branches[@]}"; do
   run_id="${run_ids[${branch}]}"
-  # --exit-status turns a failed run into a non-zero exit.
-  if gh run watch "${run_id}" --repo "${GITHUB_REPOSITORY}" --interval 60 --exit-status > /dev/null; then
-    result="success"
-  else
-    result="failure"
-    failed=1
-  fi
+  gh run watch "${run_id}" --repo "${GITHUB_REPOSITORY}" --interval 60 > /dev/null || true
+  # Report the real conclusion, so a run cancelled by a manual dispatch on the
+  # same branch (shared concurrency group) does not read as a plugin failure.
+  result=$(gh run view "${run_id}" --repo "${GITHUB_REPOSITORY}" --json conclusion --jq '.conclusion')
+  [[ "${result}" == "success" ]] || failed=1
   echo "${branch}: ${result}"
   echo "- \`${branch}\`: ${result} ([run](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${run_id}))" >> "${SUMMARY}"
 done
