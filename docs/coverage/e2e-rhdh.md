@@ -168,8 +168,10 @@ the UI have migrated; new specs should import from `@support/coverage/test`.
   `skopeo`, checks that `main` contains that commit, and uploads with `--branch main`.
   The label, not the checkout, names the commit, because `next` can lag `main`. Other
   nightlies, a tag other than `next`, a missing label, or a commit outside `main` skip
-  the upload. Codecov carries the flag forward (`carryforward: true` in `codecov.yml`)
-  to later `main` commits that only have unit uploads.
+  the upload. Codecov carries a flag forward from a commit's parent
+  (`carryforward: true` in `codecov.yml`), so commits processed before the upload do
+  not get it: the flag first shows once an upload lands on the newest processed
+  commit, and later unit-only commits keep it from then on.
 - The repository-wide `project`/`patch` statuses and components in `codecov.yml`
   combine every flag: on a PR with an E2E upload they include E2E coverage, while
   `main` gets it only from the nightly, which can lag behind. They are informational,

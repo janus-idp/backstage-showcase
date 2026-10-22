@@ -41,21 +41,23 @@ afterEach(() => {
 });
 
 /**
- * Sources testing.sh and runs the upload. `prelude` runs first, so a test can
- * replace commands such as curl with shell functions.
+ * Sources testing.sh and runs the upload for `namespace`. `prelude` runs first, so a
+ * test can replace commands such as curl with shell functions; executables in
+ * `$ROOT/bin` come first on PATH.
  */
-function upload(env: Record<string, string>, prelude = "") {
+function upload(env: Record<string, string>, prelude = "", namespace = "") {
   const result = spawnSync(
     "/bin/bash",
     [
       "--noprofile",
       "--norc",
       "-euc",
-      `${prelude}\nsource "$DIR/lib/testing.sh"; testing::_upload_e2e_coverage "$ROOT/lcov.info"`,
+      `${prelude}\nsource "$DIR/lib/testing.sh"; testing::_upload_e2e_coverage "$ROOT/lcov.info" "$NAMESPACE"`,
     ],
     {
       env: {
-        PATH: process.env.PATH,
+        PATH: `${join(root, "bin")}:${process.env.PATH}`,
+        NAMESPACE: namespace,
         HOME: root,
         ROOT: root,
         DIR: join(repository, ".ci/pipelines"),
@@ -194,7 +196,7 @@ describe("testing::_upload_e2e_coverage from the main nightly", () => {
   const unknown = "e".repeat(40);
 
   /**
-   * Puts fake `oc` and `skopeo` executables first on PATH (they run under
+   * Puts fake `oc` and `skopeo` executables in `$ROOT/bin` (they run under
    * `timeout`, so shell functions cannot replace them). `pods` is what
    * `oc get pods` prints: one "<image> <imageID>" line per container.
    */
@@ -217,33 +219,7 @@ describe("testing::_upload_e2e_coverage from the main nightly", () => {
     );
     chmodSync(join(bin, "oc"), 0o755);
     chmodSync(join(bin, "skopeo"), 0o755);
-    const result = spawnSync(
-      "/bin/bash",
-      [
-        "--noprofile",
-        "--norc",
-        "-euc",
-        `${prelude}\nsource "$DIR/lib/testing.sh"; testing::_upload_e2e_coverage "$ROOT/lcov.info" ${JSON.stringify(namespace)}`,
-      ],
-      {
-        env: {
-          PATH: `${bin}:${process.env.PATH}`,
-          HOME: root,
-          ROOT: root,
-          DIR: join(repository, ".ci/pipelines"),
-          ARTIFACT_DIR: root,
-          SHARED_DIR: root,
-          CODECOV_BIN: join(root, "codecov"),
-          ...MAIN_RUN,
-          ...env,
-        },
-        encoding: "utf8",
-        timeout: 10_000,
-      },
-    );
-    const argvFile = join(root, "argv");
-    const argv = existsSync(argvFile) ? readFileSync(argvFile, "utf8").trim().split("\n") : [];
-    return { ...result, argv, output: result.stdout + result.stderr };
+    return upload({ ...MAIN_RUN, ...env }, prelude, namespace);
   }
 
   it("uploads to the image's revision on main, with --branch and no --pr", () => {
