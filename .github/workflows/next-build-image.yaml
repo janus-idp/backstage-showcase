@@ -92,8 +92,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$LOCAL_CACHE_DIR"
+          # Absolute bind mount — a relative path is treated as a podman named volume.
+          CACHE_ABS="$(cd "$LOCAL_CACHE_DIR" && pwd)"
           podman run --rm --platform linux/amd64 \
-            -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+            -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE" \
             --log-level INFO \
             fetch-deps --dev-package-managers \
             --source . \

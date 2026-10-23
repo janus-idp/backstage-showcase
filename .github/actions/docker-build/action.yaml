@@ -107,9 +107,12 @@ runs:
       run: |        
         set -euo pipefail
 
+        mkdir -p "${LOCAL_CACHE_DIR}"
+        # Absolute bind mount — a relative path is treated as a podman named volume.
+        CACHE_ABS="$(cd "${LOCAL_CACHE_DIR}" && pwd)"
         # hermeto:latest is linux/amd64-only; always pin platform (no-op on amd64 hosts).
         HERMETO_PODMAN=(podman run --rm --platform linux/amd64 \
-          -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE")
+          -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE")
 
         if [ -n "$PREFETCHED_CACHE_DIR" ]; then
           echo "::group::Using prefetched hermeto cache"
@@ -124,10 +127,6 @@ runs:
             echo "::error::hermeto fetch-deps cannot run under qemu on arm (yarn SIGSEGV). Prefetch on amd64 and pass prefetchedCacheDir."
             exit 1
           fi
-
-          echo "::group::Creating local cache directory"
-          mkdir -p "${LOCAL_CACHE_DIR}"
-          echo "::endgroup::"
 
           echo "::group::Fetching dependencies with hermeto"
           "${HERMETO_PODMAN[@]}" \
@@ -157,7 +156,7 @@ runs:
           inject-files /cachi2/output
         echo "::endgroup::"
 
-        echo LOCAL_CACHE_DIR_REALPATH=$(realpath "${LOCAL_CACHE_DIR}") >> $GITHUB_ENV
+        echo LOCAL_CACHE_DIR_REALPATH="$CACHE_ABS" >> $GITHUB_ENV
 
     - name: "Fix Cache Ownership for Non-Root Buildah"
       shell: bash
