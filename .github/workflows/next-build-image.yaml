@@ -57,9 +57,64 @@ env:
   REGISTRY_IMAGE: ${{ vars.QUAY_RHDH_IMAGE_REPO || 'rhdh-community/rhdh' }}
 
 jobs:
+  # hermeto:latest is amd64-only and yarn/node SIGSEGVs under qemu-user, so fetch
+  # once on amd64 (rpm lockfile still covers aarch64) and share the cache to the
+  # multi-arch build matrix.
+  prefetch-hermeto:
+    name: Prefetch Hermeto Cache
+    if: github.repository == 'redhat-developer/rhdh' || vars.QUAY_RHDH_IMAGE_REPO != '' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.checkout_ref || github.ref }}
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+
+      - name: Fetch dependencies with hermeto
+        env:
+          HERMETO_IMAGE: quay.io/konflux-ci/hermeto:latest
+          LOCAL_CACHE_DIR: hermeto-cache/rhdh
+        run: |
+          set -euo pipefail
+          mkdir -p "$LOCAL_CACHE_DIR"
+          podman run --rm --platform linux/amd64 \
+            -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+            --log-level INFO \
+            fetch-deps --dev-package-managers \
+            --source . \
+            --output /cachi2/output \
+            '[{"type": "rpm", "path": "."}, {"type": "yarn","path": "."}, {"type": "pip","path": "./python", "allow_binary": "false"}]'
+          test -d "$LOCAL_CACHE_DIR/output"
+          du -sh "$LOCAL_CACHE_DIR"
+
+      - name: Upload hermeto cache
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hermeto-cache
+          path: hermeto-cache/rhdh
+          retention-days: 1
+          if-no-files-found: error
+
   build-image:
     name: Build Image
     if: github.repository == 'redhat-developer/rhdh' || vars.QUAY_RHDH_IMAGE_REPO != '' || github.event_name == 'workflow_dispatch'
+    needs:
+      - prefetch-hermeto
     env:
       HAS_QUAY_AUTH: ${{ secrets.QUAY_USERNAME != '' && secrets.QUAY_TOKEN != '' }}
     strategy:
@@ -107,6 +162,12 @@ jobs:
           rm -rf .github/actions/docker-build
           cp -a _workflow_overlay/.github/actions/docker-build .github/actions/docker-build
           rm -rf _workflow_overlay
+
+      - name: Download hermeto cache
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: hermeto-cache
+          path: hermeto-cache/rhdh
 
       - name: Prepare
         env:
@@ -195,6 +256,7 @@ jobs:
             org.opencontainers.image.expires=${{ env.EXPIRES_AFTER }}
           platform: ${{ env.PLATFORM }}
           skipArtifactUpload: true
+          prefetchedCacheDir: hermeto-cache/rhdh
 
       - name: Push Image to Registry
         id: push-image
