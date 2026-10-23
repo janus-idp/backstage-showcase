@@ -54,9 +54,9 @@ env:
   REGISTRY_IMAGE: rhdh-community/rhdh
 
 jobs:
-  # hermeto:latest is amd64-only and yarn/node SIGSEGVs under qemu-user, so fetch
-  # once on amd64 (rpm lockfile + yarn supportedArchitectures cover aarch64) and
-  # share the cache to the multi-arch build matrix.
+  # hermeto:latest is amd64-only (yarn under qemu SIGSEGVs), so run the full hermeto
+  # pipeline once on amd64 — fetch-deps (both yarn CPUs) + generate-env + inject-files —
+  # and share the ready cache to native amd64/arm64 builders (no hermeto/qemu on arm).
   prefetch-hermeto:
     name: Prefetch Hermeto Cache
     runs-on: ubuntu-24.04
@@ -108,8 +108,10 @@ jobs:
             '    - glibc' \
             >> .yarnrc.yml
 
-          podman run --rm --platform linux/amd64 \
-            -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+          HERMETO_PODMAN=(podman run --rm --platform linux/amd64 \
+            -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE")
+
+          "${HERMETO_PODMAN[@]}" \
             --log-level INFO \
             fetch-deps --dev-package-managers \
             --source . \
@@ -122,6 +124,17 @@ jobs:
             find "$LOCAL_CACHE_DIR/output/deps/yarn/cache" -name '*linux-*' | head -40 || true
             exit 1
           fi
+
+          # Finish hermeto on amd64 so arm builders never need the hermeto image/qemu:
+          # generate-env → cachi2.env; inject-files → rpm createrepo metadata in the cache.
+          "${HERMETO_PODMAN[@]}" \
+            --log-level INFO \
+            generate-env --format env \
+            --output /cachi2/cachi2.env /cachi2/output
+          "${HERMETO_PODMAN[@]}" \
+            --log-level INFO \
+            inject-files /cachi2/output
+          test -f "$LOCAL_CACHE_DIR/cachi2.env"
           du -sh "$LOCAL_CACHE_DIR"
 
       - name: Upload hermeto cache

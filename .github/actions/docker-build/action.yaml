@@ -42,9 +42,9 @@ inputs:
     default: 'false'
   prefetchedCacheDir:
     description: >
-      If set, skip hermeto fetch-deps and reuse this cache directory (must contain
-      output/ from a prior fetch-deps). Needed for arm builders: hermeto:latest is
-      amd64-only and yarn under qemu-user SIGSEGVs, so fetch on amd64 and share.
+      If set, skip hermeto entirely and reuse this cache (must already include
+      output/ plus cachi2.env from fetch-deps + generate-env + inject-files on
+      amd64). Used by multi-arch builds so arm runners never pull hermeto:latest.
     required: false
     default: ''
 
@@ -87,19 +87,6 @@ runs:
         fi
         echo "COMPONENT_ABS_DIR=${GITHUB_WORKSPACE}/${COMPONENT_DIR}" >> $GITHUB_ENV
 
-    # hermeto:latest is amd64-only. generate-env/inject-files are pure Python and
-    # work under qemu; fetch-deps must not run under qemu (yarn/node SIGSEGVs).
-    - name: Enable qemu for amd64 hermeto on arm runners
-      if: runner.arch == 'ARM64'
-      shell: bash
-      run: |
-        set -euo pipefail
-        if [ ! -e /proc/sys/fs/binfmt_misc/qemu-x86_64 ]; then
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
-        fi
-        podman run --rm --platform linux/amd64 "$HERMETO_IMAGE" --help >/dev/null
-
     - name: Cache dependencies with hermeto
       shell: bash
       env:
@@ -110,33 +97,41 @@ runs:
         mkdir -p "${LOCAL_CACHE_DIR}"
         # Absolute bind mount — a relative path is treated as a podman named volume.
         CACHE_ABS="$(cd "${LOCAL_CACHE_DIR}" && pwd)"
-        # hermeto:latest is linux/amd64-only; always pin platform (no-op on amd64 hosts).
-        HERMETO_PODMAN=(podman run --rm --platform linux/amd64 \
-          -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE")
 
         if [ -n "$PREFETCHED_CACHE_DIR" ]; then
+          # Multi-arch path: hermeto already ran on amd64 (fetch + generate-env + inject).
           echo "::group::Using prefetched hermeto cache"
           if [ ! -d "${LOCAL_CACHE_DIR}/output" ]; then
-            echo "::error::prefetchedCacheDir '$LOCAL_CACHE_DIR' has no output/ (run fetch-deps on amd64 first)"
+            echo "::error::prefetchedCacheDir '$LOCAL_CACHE_DIR' has no output/"
+            exit 1
+          fi
+          if [ ! -f "${LOCAL_CACHE_DIR}/cachi2.env" ]; then
+            echo "::error::prefetchedCacheDir '$LOCAL_CACHE_DIR' has no cachi2.env (prefetch must run generate-env)"
             exit 1
           fi
           ls -la "$LOCAL_CACHE_DIR"
           echo "::endgroup::"
-        else
-          if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "arm64" ]; then
-            echo "::error::hermeto fetch-deps cannot run under qemu on arm (yarn SIGSEGV). Prefetch on amd64 and pass prefetchedCacheDir."
-            exit 1
-          fi
-
-          echo "::group::Fetching dependencies with hermeto"
-          "${HERMETO_PODMAN[@]}" \
-            --log-level DEBUG \
-            fetch-deps --dev-package-managers \
-            --source . \
-            --output /cachi2/output \
-            '[{"type": "rpm", "path": "."}, {"type": "yarn","path": "."}, {"type": "yarn","path": "./dynamic-plugins"}, {"type": "pip","path": "./python", "allow_binary": "false"}]'
-          echo "::endgroup::"
+          echo LOCAL_CACHE_DIR_REALPATH="$CACHE_ABS" >> $GITHUB_ENV
+          exit 0
         fi
+
+        if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "arm64" ]; then
+          echo "::error::hermeto cannot run on arm (image is amd64-only; yarn under qemu SIGSEGVs). Prefetch on amd64 and pass prefetchedCacheDir."
+          exit 1
+        fi
+
+        # hermeto:latest is linux/amd64-only; pin platform (no-op on amd64 hosts).
+        HERMETO_PODMAN=(podman run --rm --platform linux/amd64 \
+          -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE")
+
+        echo "::group::Fetching dependencies with hermeto"
+        "${HERMETO_PODMAN[@]}" \
+          --log-level DEBUG \
+          fetch-deps --dev-package-managers \
+          --source . \
+          --output /cachi2/output \
+          '[{"type": "rpm", "path": "."}, {"type": "yarn","path": "."}, {"type": "yarn","path": "./dynamic-plugins"}, {"type": "pip","path": "./python", "allow_binary": "false"}]'
+        echo "::endgroup::"
 
         if [ ! -d "${LOCAL_CACHE_DIR}/output" ]; then
           echo "::error::No hermeto output directory at ${LOCAL_CACHE_DIR}/output"
