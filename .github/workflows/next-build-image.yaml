@@ -54,8 +54,90 @@ env:
   REGISTRY_IMAGE: rhdh-community/rhdh
 
 jobs:
+  # hermeto:latest is amd64-only and yarn/node SIGSEGVs under qemu-user, so fetch
+  # once on amd64 (rpm lockfile + yarn supportedArchitectures cover aarch64) and
+  # share the cache to the multi-arch build matrix.
+  prefetch-hermeto:
+    name: Prefetch Hermeto Cache
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.checkout_ref || github.ref }}
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+
+      - name: Fetch dependencies with hermeto
+        env:
+          HERMETO_IMAGE: quay.io/konflux-ci/hermeto:latest
+          LOCAL_CACHE_DIR: hermeto-cache/rhdh
+        run: |
+          set -euo pipefail
+          mkdir -p "$LOCAL_CACHE_DIR"
+          # Absolute bind mount — a relative path is treated as a podman named volume.
+          CACHE_ABS="$(cd "$LOCAL_CACHE_DIR" && pwd)"
+
+          # Prefetch optional native deps for BOTH image arches in one hermeto run.
+          # Default yarn behavior only fetches the host CPU (x64 here), so arm64 builds
+          # later miss @esbuild/linux-arm64 / @swc/core-linux-arm64-* and try the network
+          # under buildah --network=none → ERR_SOCKET_CLOSED_BEFORE_CONNECTION.
+          printf '%s\n' \
+            '' \
+            '# CI multi-arch prefetch only (not committed): both community image arches.' \
+            'supportedArchitectures:' \
+            '  os:' \
+            '    - linux' \
+            '  cpu:' \
+            '    - x64' \
+            '    - arm64' \
+            '  libc:' \
+            '    - glibc' \
+            >> .yarnrc.yml
+
+          podman run --rm --platform linux/amd64 \
+            -v "$PWD:/source:z" -v "$CACHE_ABS:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+            --log-level INFO \
+            fetch-deps --dev-package-managers \
+            --source . \
+            --output /cachi2/output \
+            '[{"type": "rpm", "path": "."}, {"type": "yarn","path": "."}, {"type": "yarn","path": "./dynamic-plugins"}, {"type": "pip","path": "./python", "allow_binary": "false"}]'
+          test -d "$LOCAL_CACHE_DIR/output"
+          # Sanity: arm64 optional packages must be in the shared yarn mirror.
+          if ! find "$LOCAL_CACHE_DIR/output/deps/yarn" -name '*linux-arm64*' | head -1 | grep -q .; then
+            echo "::error::hermeto yarn cache has no linux-arm64 packages; multi-arch arm builds will fail offline"
+            find "$LOCAL_CACHE_DIR/output/deps/yarn/cache" -name '*linux-*' | head -40 || true
+            exit 1
+          fi
+          du -sh "$LOCAL_CACHE_DIR"
+
+      - name: Upload hermeto cache
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hermeto-cache
+          path: hermeto-cache/rhdh
+          # hermeto writes .build-config.json under output/; v4 excludes dotfiles by default
+          include-hidden-files: true
+          retention-days: 1
+          if-no-files-found: error
+
   build-image:
     name: Build Image
+    needs:
+      - prefetch-hermeto
     env:
       HAS_QUAY_AUTH: ${{ secrets.QUAY_USERNAME != '' && secrets.QUAY_TOKEN != '' }}
     strategy:
@@ -97,6 +179,12 @@ jobs:
           rm -rf .github/actions/docker-build
           cp -a _workflow_overlay/.github/actions/docker-build .github/actions/docker-build
           rm -rf _workflow_overlay
+
+      - name: Download hermeto cache
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: hermeto-cache
+          path: hermeto-cache/rhdh
 
       - name: Prepare
         env:
@@ -185,6 +273,7 @@ jobs:
             org.opencontainers.image.expires=${{ env.EXPIRES_AFTER }}
           platform: ${{ env.PLATFORM }}
           skipArtifactUpload: true
+          prefetchedCacheDir: hermeto-cache/rhdh
 
       - name: Push Image to Registry
         id: push-image
