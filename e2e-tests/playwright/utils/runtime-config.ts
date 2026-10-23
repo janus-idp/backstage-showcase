@@ -54,8 +54,7 @@ const homeExtensions = [
  * token, so anything that needs one (user identity, TechDocs) returns 401.
  */
 const guestAuthProviderPlugin = {
-  package:
-    "oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-plugin-auth-backend-module-guest-provider:bs_1.54.6__0.2.22",
+  package: "ref://backstage-plugin-auth-backend-module-guest-provider",
   enabled: true,
 };
 
