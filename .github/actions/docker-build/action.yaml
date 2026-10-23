@@ -75,30 +75,50 @@ runs:
         echo "LOCAL_CACHE_DIR=./hermeto-cache/$(basename "$COMPONENT_DIR")" >> $GITHUB_ENV
         echo "COMPONENT_ABS_DIR=${GITHUB_WORKSPACE}/${COMPONENT_DIR}" >> $GITHUB_ENV
 
+    # quay.io/konflux-ci/hermeto:latest is amd64-only. On arm runners, run it
+    # under linux/amd64 (qemu). rpms.lock.yaml still lists both arches, so the
+    # prefetch remains multi-arch for the subsequent buildah --platform build.
+    - name: Enable qemu for amd64 hermeto on arm runners
+      if: runner.arch == 'ARM64'
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ ! -e /proc/sys/fs/binfmt_misc/qemu-x86_64 ]; then
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+        fi
+        # Smoke-test that the amd64 hermeto image can start under qemu
+        podman run --rm --platform linux/amd64 "$HERMETO_IMAGE" --help >/dev/null
+
     - name: Cache dependencies with hermeto
       shell: bash
       run: |        
-        set -ex
+        set -euo pipefail
 
         echo "::group::Creating local cache directory"
-        mkdir -p ${{ env.LOCAL_CACHE_DIR }} || echo "Failed to create local cache directory"
+        mkdir -p "${{ env.LOCAL_CACHE_DIR }}"
         echo "::endgroup::"
+
+        # hermeto:latest publishes only linux/amd64; force that platform on all
+        # runners so arm jobs do not fail with "no image found in manifest list".
+        HERMETO_PODMAN=(podman run --rm --platform linux/amd64 \
+          -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE")
         
         echo "::group::Fetching dependencies with hermeto"
         # Build hermeto cache for rpm, yarn, and pip
-        podman run --rm -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+        "${HERMETO_PODMAN[@]}" \
           --log-level DEBUG \
           fetch-deps --dev-package-managers \
           --source . \
           --output /cachi2/output \
-          '[{"type": "rpm", "path": "."}, {"type": "yarn","path": "."}, {"type": "yarn","path": "./dynamic-plugins"}, {"type": "pip","path": "./python", "allow_binary": "false"}]'  || echo "Fetch-deps failed"
+          '[{"type": "rpm", "path": "."}, {"type": "yarn","path": "."}, {"type": "yarn","path": "./dynamic-plugins"}, {"type": "pip","path": "./python", "allow_binary": "false"}]'
         echo "::endgroup::"
         
         if [ -d ${{ env.LOCAL_CACHE_DIR }}/output ]; then
           echo "::group::Generating environment file"
           
           # Generate environment file
-          podman run --rm -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+          "${HERMETO_PODMAN[@]}" \
                       --log-level DEBUG \
                       generate-env --format env \
                       --output /cachi2/cachi2.env /cachi2/output
@@ -112,9 +132,9 @@ runs:
         if [ -d ${{ env.LOCAL_CACHE_DIR }}/output ]; then
           echo "::group::Injecting files"
           
-          podman run --rm -v "$PWD:/source:z" -v "$LOCAL_CACHE_DIR:/cachi2:z" -w /source "$HERMETO_IMAGE" \
+          "${HERMETO_PODMAN[@]}" \
             --log-level DEBUG \
-            inject-files /cachi2/output || echo "Inject-files failed"
+            inject-files /cachi2/output
           echo "::endgroup::"
 
         else

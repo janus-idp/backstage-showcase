@@ -15,8 +15,22 @@
 name: Build Next and Tag Image
 
 on:
-  # workflow_dispatch so that it can be triggered manually if needed
+  # workflow_dispatch so that it can be triggered manually if needed.
+  # To republish a release tag with the workflow from main (e.g. after a CI fix):
+  #   gh workflow run next-build-image.yaml --ref main \
+  #     -f checkout_ref=1.10.6 -f image_tag=1.10.6
   workflow_dispatch:
+    inputs:
+      checkout_ref:
+        description: 'Git ref to build (tag/branch/sha). Empty = the branch selected for this run.'
+        required: false
+        default: ''
+        type: string
+      image_tag:
+        description: 'Override image tag name (e.g. 1.10.6). Empty = derive from checkout_ref / branch.'
+        required: false
+        default: ''
+        type: string
   schedule:
     # run at 3:18 UTC every day
     - cron: "18 3 * * *"
@@ -60,10 +74,35 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
+          # For tag republish: build sources from checkout_ref while the workflow
+          # YAML itself comes from the branch selected in the Actions UI (main).
+          ref: ${{ github.event.inputs.checkout_ref || github.ref }}
+
+      # When republishing an older tag, overlay the docker-build action from the
+      # workflow commit (github.sha) so CI fixes on main apply without retagging.
+      - name: Overlay docker-build action from workflow ref
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.checkout_ref != ''
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: |
+            .github/actions/docker-build
+          sparse-checkout-cone-mode: true
+          path: _workflow_overlay
+
+      - name: Apply docker-build action overlay
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.checkout_ref != ''
+        run: |
+          set -euo pipefail
+          rm -rf .github/actions/docker-build
+          cp -a _workflow_overlay/.github/actions/docker-build .github/actions/docker-build
+          rm -rf _workflow_overlay
 
       - name: Prepare
         env:
           MATRIX_OS: ${{ matrix.os }}
+          INPUT_CHECKOUT_REF: ${{ github.event.inputs.checkout_ref || '' }}
+          INPUT_IMAGE_TAG: ${{ github.event.inputs.image_tag || '' }}
         run: |
           if [ "$MATRIX_OS" == "ubuntu-24.04" ]; then
             platform="linux/amd64"
@@ -74,7 +113,17 @@ jobs:
             exit 1
           fi
 
-          ref_name="$GITHUB_REF_NAME"
+          if [ -n "$INPUT_IMAGE_TAG" ]; then
+            ref_name="$INPUT_IMAGE_TAG"
+          elif [ -n "$INPUT_CHECKOUT_REF" ]; then
+            ref_name="$INPUT_CHECKOUT_REF"
+          else
+            ref_name="$GITHUB_REF_NAME"
+          fi
+          # Normalize refs/tags/1.10.6 or origin/1.10.6 → 1.10.6
+          ref_name="${ref_name#refs/tags/}"
+          ref_name="${ref_name#refs/heads/}"
+          ref_name="${ref_name##*/}"
 
           if [ "$ref_name" == "main" ]; then
             ref_name="next"
@@ -182,8 +231,21 @@ jobs:
             password: ${{ secrets.QUAY_TOKEN }}
 
         - name: Prepare
+          env:
+            INPUT_CHECKOUT_REF: ${{ github.event.inputs.checkout_ref || '' }}
+            INPUT_IMAGE_TAG: ${{ github.event.inputs.image_tag || '' }}
           run: |
-            ref_name="$GITHUB_REF_NAME"
+            if [ -n "$INPUT_IMAGE_TAG" ]; then
+              ref_name="$INPUT_IMAGE_TAG"
+            elif [ -n "$INPUT_CHECKOUT_REF" ]; then
+              ref_name="$INPUT_CHECKOUT_REF"
+            else
+              ref_name="$GITHUB_REF_NAME"
+            fi
+            ref_name="${ref_name#refs/tags/}"
+            ref_name="${ref_name#refs/heads/}"
+            ref_name="${ref_name##*/}"
+
             if [ "$ref_name" == "main" ]; then
               ref_name="next"
             elif [[ "$ref_name" =~ ^release-([0-9]+)\.([0-9]+) ]]; then
@@ -213,6 +275,7 @@ jobs:
           uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
           with:
             fetch-depth: 0
+            ref: ${{ github.event.inputs.checkout_ref || github.ref }}
 
         - name: Download digests
           uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
