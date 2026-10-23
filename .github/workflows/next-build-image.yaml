@@ -109,6 +109,8 @@ jobs:
         with:
           name: hermeto-cache
           path: hermeto-cache/rhdh
+          # hermeto writes .build-config.json under output/; v4 excludes dotfiles by default
+          include-hidden-files: true
           retention-days: 1
           if-no-files-found: error
 
