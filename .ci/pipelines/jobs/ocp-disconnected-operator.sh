@@ -51,8 +51,8 @@ handle_ocp_disconnected_operator() {
   # default skopeo/umoci/podman-build path. Nested Podman in this CI pod cannot
   # initialize storage (newuidmap / VFS chown both fail under hostUsers: false).
   # CATALOG_INDEX_IMAGE is the plugin catalog index — do not pass it as
-  # --index-image (OLM operator catalog). Used only for mirror-plugins.sh below,
-  # then cleared so deploy does not inject :next defaults onto the GA hub.
+  # --index-image (OLM operator catalog). It is consumed by mirror-plugins.sh and
+  # injected into the Backstage CR by deploy_rhdh_operator.
   #
   # OLM version: leave default (auto). On OCP 4.21+ this selects OLM v1.
   local filter_versions="${RELEASE_VERSION}"
@@ -63,7 +63,6 @@ handle_ocp_disconnected_operator() {
   # Mirroring every historical RHDH operator version (* / next) is unnecessary
   # for smoke and flakes on quay CDN EOF (CI) or overwhelms the integrated
   # registry (local). Pin to the chart major.minor (e.g. 2.0-80-CI → 2.0).
-  # Release branches already pass a concrete version (e.g. 1.9) and skip this.
   if [[ "${filter_versions}" == "*" ]]; then
     local chart_mm=""
     if [[ -n "${CHART_VERSION:-}" && "${CHART_VERSION}" =~ ^([0-9]+\.[0-9]+) ]]; then
@@ -84,7 +83,53 @@ handle_ocp_disconnected_operator() {
     log::error "CONTAINER_PLATFORM_VERSION is unset or invalid ('${ocp_version}'); expected OpenShift major.minor"
     return 1
   fi
-  local index_image="registry.redhat.io/redhat/redhat-operator-index:v${ocp_version}"
+  # A CI chart tag (x.y-N-CI) means the run deploys a stream build, so mirror the
+  # RHDH CI catalog built from the same commit as the hub and plugin catalogs.
+  # Released charts (x.y.z) pair with the published Red Hat catalog, the only one
+  # carrying released bundles, even when the image itself is pulled from quay.
+  # That catalog still needs the rhdh-operator defaultChannel fix
+  # (rhdh-operator#3822) for a filtered oc-mirror run to accept it.
+  local use_ci_catalog="false"
+  if [[ "${IMAGE_REGISTRY}" != "registry.redhat.io" && "${CHART_VERSION:-}" == *-CI ]]; then
+    use_ci_catalog="true"
+  fi
+
+  local index_image=""
+  local registries_conf=""
+  if [[ "${use_ci_catalog}" == "true" ]]; then
+    # rhdh-operator publishes one catalog per release stream and OCP minor,
+    # e.g. quay.io/rhdh/iib:next-v4.21-x86_64 (amd64 only; the jobs run on
+    # amd64 clusters).
+    index_image="quay.io/rhdh/iib:${RELEASE_VERSION}-v${ocp_version}-x86_64"
+    skopeo inspect --raw "docker://${index_image}" > /dev/null || {
+      log::error "RHDH CI operator catalog ${index_image} not found or unreadable"
+      return 1
+    }
+
+    # The CI bundle's RELATED_IMAGE refs point at registry.redhat.io/rhdh/*
+    # (plus the stage/access aliases), whose digests exist on quay.io/rhdh only.
+    # Rewrite those pulls for the oc-mirror run with containers/image
+    # registries.conf (CONTAINERS_REGISTRIES_CONF), the same mechanism the
+    # medik8s-disconnected-catalogsource CI step uses. Images in other
+    # repositories (e.g. registry.redhat.io/rhel10/postgresql-18) keep their
+    # original source and are pulled with the CI credentials.
+    registries_conf="${DISCONNECTED_TMPDIR}/oc-mirror-registries.conf"
+    cat > "${registries_conf}" << 'EOF'
+[[registry]]
+prefix = "registry.redhat.io/rhdh"
+location = "quay.io/rhdh"
+
+[[registry]]
+prefix = "registry.stage.redhat.io/rhdh"
+location = "quay.io/rhdh"
+
+[[registry]]
+prefix = "registry.access.redhat.com/rhdh"
+location = "quay.io/rhdh"
+EOF
+  else
+    index_image="registry.redhat.io/redhat/redhat-operator-index:v${ocp_version}"
+  fi
   log::info "Using OCP ${ocp_version} (CONTAINER_PLATFORM_VERSION); index image ${index_image}"
 
   # Local connected OCP: OCP_INTERNAL sentinel (same as omit-on-OCP). CI bastion
@@ -115,18 +160,40 @@ handle_ocp_disconnected_operator() {
   # external registries. Catalogd must trust the mirror CA and authenticate
   # before ClusterCatalog can reach Serving=True. Skip on LOCAL_DISCONNECTED —
   # OCP_INTERNAL path configures internal registry trust itself.
+  local mcp_snapshot
   if [[ "${LOCAL_DISCONNECTED:-}" != "1" ]]; then
+    # Snapshot before the additionalTrustedCA patch: it also rolls the nodes.
+    mcp_snapshot=$(disconnected::snapshot_mcp_rendered_configs)
+
     disconnected::ensure_olm_mirror_pull_secret || return 1
     disconnected::ensure_mirror_registry_ca || return 1
-    disconnected::wait_mcp_updated
+    disconnected::wait_mcp_updated "${mcp_snapshot}"
   else
     log::info "LOCAL_DISCONNECTED=1: skipping external bastion CA/pull-secret pre-prepare helpers"
   fi
 
+  local -a prepare_cmd=(bash "${prepare_script_path}" "${prepare_args[@]}")
+  if [[ -n "${registries_conf}" ]]; then
+    # Scoped to this call: CATALOG_INDEX_IMAGE and the plugin pulls keep their
+    # own registry configuration.
+    prepare_cmd=(env CONTAINERS_REGISTRIES_CONF="${registries_conf}" "${prepare_cmd[@]}")
+    log::info "Redirecting registry.redhat.io/rhdh to quay.io/rhdh via ${registries_conf}"
+  fi
+
+  # prepare applies the IDMS; snapshot first so the wait below can tell whether
+  # the MCO has already rendered it.
+  mcp_snapshot=$(disconnected::snapshot_mcp_rendered_configs)
+
+  # TEMPORARY: the installer ClusterRole rendered by
+  # prepare-restricted-environment.sh lags behind the bundle's required
+  # permissions on OLM v1. Remove once redhat-developer/rhdh-operator#3923 is
+  # released (RHDHBUGS-4056).
+  disconnected::grant_operator_installer_rbac || return 1
+
   log::info "Running prepare-restricted-environment.sh with: ${prepare_args[*]}"
   if ! disconnected::retry_on_local_registry 5 \
     disconnected::with_unset_registry_auth_file \
-    bash "${prepare_script_path}" "${prepare_args[@]}"; then
+    "${prepare_cmd[@]}"; then
     log::error "prepare-restricted-environment.sh failed — aborting"
     return 1
   fi
@@ -162,7 +229,7 @@ handle_ocp_disconnected_operator() {
   # prepare-restricted-environment.sh applies IDMS/CatalogSource which triggers
   # a MachineConfig update and node rolling. Wait for completion before deploying
   # workloads, same as the Helm path.
-  disconnected::wait_mcp_updated
+  disconnected::wait_mcp_updated "${mcp_snapshot}"
 
   if [[ "${LOCAL_DISCONNECTED:-}" == "1" ]]; then
     # Catalogd needs the registry + image-puller grants above before Serving=True.
@@ -193,13 +260,15 @@ handle_ocp_disconnected_operator() {
   disconnected::mirror_plugins || return 1
 
   # Pin CATALOG_INDEX_IMAGE to the digest actually pushed (hub profile default
-  # digest is often absent from the mirror). Homepage package is the digest-pinned
-  # OCI exported as HOMEPAGE_PLUGIN_PACKAGE (ref:// cannot resolve with includes: []).
+  # digest is often absent from the mirror). mirror_plugins exported the
+  # digest-pinned OCI package for each smoke plugin (ref:// cannot resolve with
+  # includes: []).
   disconnected::resolve_catalog_index_image || return 1
 
   log::section "Namespace and Secrets"
 
   namespace::configure "${NAME_SPACE}"
+  disconnected::allow_mirror_registry_egress "${NAME_SPACE}" || return 1
   if [[ "${LOCAL_DISCONNECTED:-}" == "1" ]]; then
     disconnected::ensure_local_image_pull_access "${NAME_SPACE}" || return 1
   fi
@@ -208,7 +277,7 @@ handle_ocp_disconnected_operator() {
   # from the mirror (registries.conf alone is not enough — TLS verify fails).
   disconnected::create_mirror_registry_ca_configmap "${NAME_SPACE}" || return 1
   disconnected::create_plugin_registry_auth_secret "${NAME_SPACE}" || return 1
-  disconnected::create_homepage_plugins_configmap "${NAME_SPACE}" || return 1
+  disconnected::create_smoke_plugins_configmap "${NAME_SPACE}" || return 1
 
   # Operator mounts one volume per extraFiles ConfigMap name. policy.json cannot
   # share rhdh-plugin-mirror-conf or reconcile fails with duplicate volume keys.
@@ -240,7 +309,11 @@ handle_ocp_disconnected_operator() {
 
   cp "${cr_temp}" "${ARTIFACT_DIR}/disconnected-backstage-cr.yaml" 2> /dev/null || true
 
-  deploy_rhdh_operator "${NAME_SPACE}" "${cr_temp}"
+  deploy_rhdh_operator "${NAME_SPACE}" "${cr_temp}" || {
+    log::error "Backstage CR did not produce a deployment — dumping OLM v1 status"
+    disconnected::dump_olm_v1_status "rhdh-operator"
+    return 1
+  }
   log::success "Backstage CR deployed in ${NAME_SPACE}"
 
   log::section "Smoke Test"
